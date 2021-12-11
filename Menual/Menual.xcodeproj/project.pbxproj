@@ -20,6 +20,7 @@
 		9888DE19276482CC0091918F /* AppComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DE18276482CC0091918F /* AppComponent.swift */; };
 		9888DE1B276483DD0091918F /* AppRootComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DE1A276483DD0091918F /* AppRootComponent.swift */; };
 		9888DE1D276484950091918F /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DE1C276484950091918F /* RootTabBarController.swift */; };
+		9888DE2027648B420091918F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9888DE1F27648B420091918F /* SnapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9888DE0E276481D00091918F /* RIBs in Frameworks */,
+				9888DE2027648B420091918F /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +174,7 @@
 			name = Menual;
 			packageProductDependencies = (
 				9888DE0D276481D00091918F /* RIBs */,
+				9888DE1F27648B420091918F /* SnapKit */,
 			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
@@ -247,6 +250,7 @@
 			mainGroup = 9888DDD027646EFF0091918F;
 			packageReferences = (
 				9888DE0C276481D00091918F /* XCRemoteSwiftPackageReference "RIBs" */,
+				9888DE1E27648B420091918F /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = 9888DDDA27646EFF0091918F /* Products */;
 			projectDirPath = "";
@@ -660,6 +664,14 @@
 				minimumVersion = 0.9.2;
 			};
 		};
+		9888DE1E27648B420091918F /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				branch = develop;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -667,6 +679,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9888DE0C276481D00091918F /* XCRemoteSwiftPackageReference "RIBs" */;
 			productName = RIBs;
+		};
+		9888DE1F27648B420091918F /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9888DE1E27648B420091918F /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
