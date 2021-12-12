@@ -6,6 +6,8 @@ target 'Menual' do
   use_frameworks!
 
   # Pods for Menual
+
+  inhibit_all_warnings!
   pod 'RIBs', '~> 0.9'
   pod 'SnapKit', '~> 5.0.0'
 

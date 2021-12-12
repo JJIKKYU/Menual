@@ -24,7 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let result = AppRootBuilder(dependency: AppComponent()).build()
         self.launchRouter = result.launchRouter
         self.urlHandler = result.urlHandler
-        launchRouter?.launch(from: window)
+        
+        launchRouter?.launchFromWindow(window)
         
         return true
     }
