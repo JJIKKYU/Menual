@@ -11,7 +11,7 @@ import RxSwift
 
 protocol AppRootRouting: Routing {
     func cleanupViews()
-    
+    func attachMainHome()
 }
 
 protocol AppRootPresentable: Presentable {
@@ -23,7 +23,10 @@ protocol AppRootListener: AnyObject {
     
 }
 
-final class AppRootInteractor: PresentableInteractor<AppRootPresentable>, AppRootInteractable, AppRootPresentableListener, URLHandler {
+final class AppRootInteractor: PresentableInteractor<AppRootPresentable>,
+                               AppRootInteractable,
+                               AppRootPresentableListener,
+                               URLHandler {
     func handle(_ url: URL) {
         
     }
@@ -42,7 +45,7 @@ final class AppRootInteractor: PresentableInteractor<AppRootPresentable>, AppRoo
 
     override func didBecomeActive() {
         super.didBecomeActive()
-        // TODO: Implement business logic here.
+        
     }
 
     override func willResignActive() {

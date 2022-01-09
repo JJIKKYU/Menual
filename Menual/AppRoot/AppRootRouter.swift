@@ -7,24 +7,44 @@
 
 import RIBs
 
-protocol AppRootInteractable: Interactable {
+protocol AppRootInteractable: Interactable,
+                                DiaryWritingListener
+{
     var router: AppRootRouting? { get set }
     var listener: AppRootListener? { get set }
 }
 
 protocol AppRootViewControllable: ViewControllable {
-    
+    func setViewController(_ viewController: ViewControllable)
 }
-//LaunchRouter<AppRootInteractable, AppRootViewControllable>
+
 final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControllable>, AppRootRouting {
     
-    // TODO: Constructor inject child builder protocols to allow building children.
-    override init(
+    private let diaryWriting: DiaryWritingBuildable
+    
+    private var diaryWritingRouting: ViewableRouting?
+    
+    init(
         interactor: AppRootInteractable,
-        viewController: AppRootViewControllable
+        viewController: AppRootViewControllable,
+        diaryWriting: DiaryWritingBuildable
     ) {
+        self.diaryWriting = diaryWriting
+        
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
+    }
+    
+    override func didLoad() {
+        attachMainHome()
+    }
+    
+    func attachMainHome() {
+        let diaryWritingRouting = diaryWriting.build(withListener: interactor)
+        
+        attachChild(diaryWritingRouting)
+        
+        viewController.setViewController(diaryWritingRouting.viewControllable)
     }
     
     func cleanupViews() {

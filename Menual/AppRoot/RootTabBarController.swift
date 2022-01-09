@@ -8,6 +8,7 @@
 import UIKit
 import RIBs
 
+/*
 protocol AppRootPresentableListener: AnyObject {
   
 }
@@ -27,3 +28,4 @@ final class RootTabBarController: UITabBarController, AppRootViewControllable, A
     super.setViewControllers(viewControllers.map(\.uiviewController), animated: false)
   }
 }
+*/

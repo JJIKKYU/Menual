@@ -22,6 +22,11 @@
 		9888DE19276482CC0091918F /* AppComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DE18276482CC0091918F /* AppComponent.swift */; };
 		9888DE1B276483DD0091918F /* AppRootComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DE1A276483DD0091918F /* AppRootComponent.swift */; };
 		9888DE1D276484950091918F /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DE1C276484950091918F /* RootTabBarController.swift */; };
+		988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1870278ACB4B00DF81DA /* DiaryWritingRouter.swift */; };
+		988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1871278ACB4B00DF81DA /* DiaryWritingViewController.swift */; };
+		988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1872278ACB4B00DF81DA /* DiaryWritingBuilder.swift */; };
+		988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1873278ACB4B00DF81DA /* DiaryWritingInteractor.swift */; };
+		988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1878278AD17500DF81DA /* AppRootViewController.swift */; };
 		9D65621A6BC58BDB19B31435 /* Pods_MenualTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B7AFEEEC2884EE3D9B20D25 /* Pods_MenualTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +72,11 @@
 		9888DE18276482CC0091918F /* AppComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppComponent.swift; sourceTree = "<group>"; };
 		9888DE1A276483DD0091918F /* AppRootComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootComponent.swift; sourceTree = "<group>"; };
 		9888DE1C276484950091918F /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
+		988A1870278ACB4B00DF81DA /* DiaryWritingRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingRouter.swift; sourceTree = "<group>"; };
+		988A1871278ACB4B00DF81DA /* DiaryWritingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingViewController.swift; sourceTree = "<group>"; };
+		988A1872278ACB4B00DF81DA /* DiaryWritingBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingBuilder.swift; sourceTree = "<group>"; };
+		988A1873278ACB4B00DF81DA /* DiaryWritingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingInteractor.swift; sourceTree = "<group>"; };
+		988A1878278AD17500DF81DA /* AppRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootViewController.swift; sourceTree = "<group>"; };
 		9D128C3C26B0CD2866B637F4 /* Pods_Menual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53C98DCB5D2180263C3A986 /* Pods-MenualTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenualTests.release.xcconfig"; path = "Target Support Files/Pods-MenualTests/Pods-MenualTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -170,6 +180,7 @@
 				98281EBF278AC14700736D59 /* Platform */,
 				98281EC0278AC14C00736D59 /* Profile */,
 				98281EC5278AC26600736D59 /* Register */,
+				988A186D278ACA7A00DF81DA /* Diary */,
 			);
 			path = Menual;
 			sourceTree = "<group>";
@@ -198,6 +209,7 @@
 				9888DE122764825F0091918F /* AppRootBuilder.swift */,
 				9888DE132764825F0091918F /* AppRootInteractor.swift */,
 				9888DE1A276483DD0091918F /* AppRootComponent.swift */,
+				988A1878278AD17500DF81DA /* AppRootViewController.swift */,
 				9888DE1C276484950091918F /* RootTabBarController.swift */,
 			);
 			path = AppRoot;
@@ -210,6 +222,25 @@
 				9888DE18276482CC0091918F /* AppComponent.swift */,
 			);
 			path = AppDelegate;
+			sourceTree = "<group>";
+		};
+		988A186D278ACA7A00DF81DA /* Diary */ = {
+			isa = PBXGroup;
+			children = (
+				988A186F278ACB2F00DF81DA /* DiaryWriting */,
+			);
+			path = Diary;
+			sourceTree = "<group>";
+		};
+		988A186F278ACB2F00DF81DA /* DiaryWriting */ = {
+			isa = PBXGroup;
+			children = (
+				988A1870278ACB4B00DF81DA /* DiaryWritingRouter.swift */,
+				988A1871278ACB4B00DF81DA /* DiaryWritingViewController.swift */,
+				988A1872278ACB4B00DF81DA /* DiaryWritingBuilder.swift */,
+				988A1873278ACB4B00DF81DA /* DiaryWritingInteractor.swift */,
+			);
+			path = DiaryWriting;
 			sourceTree = "<group>";
 		};
 		C136E0769DBA6A801D667AFF /* Pods */ = {
@@ -474,12 +505,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
+				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
+				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
 				9888DE1B276483DD0091918F /* AppRootComponent.swift in Sources */,
+				988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */,
 				9888DE142764825F0091918F /* AppRootRouter.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
 				9888DE162764825F0091918F /* AppRootInteractor.swift in Sources */,
+				988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */,
 				9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

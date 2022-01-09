@@ -23,22 +23,24 @@ final class AppRootBuilder: Builder<AppRootDependency>, AppRootBuildable {
         super.init(dependency: dependency)
     }
     
+    // TODO: - 초기화면 결정
+    // 1. 유저가 로그인 상태인지 비로그인 상태인지 판단하고 첫 화면을 띄워줘야 할 것 같다.
+    // 2. 비로그인이어도 글쓰기 페이지를 메인 화면으로 갈 거라면... 해놔야겠는데.
     func build() -> (launchRouter: LaunchRouting, urlHandler: URLHandler) {
         
-        print("AppRootBuild!")
-        
-        let tabBar = RootTabBarController()
-        
-        let _ = AppRootComponent(
+        let viewController = AppRootViewController()
+        let component = AppRootComponent(
             dependency: dependency,
-            rootViewController: tabBar
+            rootViewController: viewController
         )
         
-        let interactor = AppRootInteractor(presenter: tabBar)
+        let interactor = AppRootInteractor(presenter: viewController)
+        let diaryWriting = DiaryWritingBuilder(dependency: component)
         
         let router = AppRootRouter(
             interactor: interactor,
-            viewController: tabBar
+            viewController: viewController,
+            diaryWriting: diaryWriting
         )
         
         return (router, interactor)

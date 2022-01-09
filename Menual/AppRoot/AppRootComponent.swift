@@ -20,3 +20,9 @@ final class AppRootComponent: Component<AppRootDependency> {
         super.init(dependency: dependency)
     }
 }
+
+//MARK: - DiaryWriting Dependency
+
+extension AppRootComponent: DiaryWritingDependency {
+    
+}
