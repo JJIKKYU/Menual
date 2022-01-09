@@ -97,6 +97,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		98281EBF278AC14700736D59 /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Platform;
+			sourceTree = "<group>";
+		};
+		98281EC0278AC14C00736D59 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				98281EC2278AC16400736D59 /* ProfileHome */,
+				98281EC1278AC15F00736D59 /* Register */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		98281EC1278AC15F00736D59 /* Register */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Register;
+			sourceTree = "<group>";
+		};
+		98281EC2278AC16400736D59 /* ProfileHome */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ProfileHome;
+			sourceTree = "<group>";
+		};
 		9888DDD027646EFF0091918F = {
 			isa = PBXGroup;
 			children = (
@@ -122,6 +152,8 @@
 		9888DDDB27646EFF0091918F /* Menual */ = {
 			isa = PBXGroup;
 			children = (
+				98281EC0278AC14C00736D59 /* Profile */,
+				98281EBF278AC14700736D59 /* Platform */,
 				9888DE17276482670091918F /* AppDelegate */,
 				9888DE0F276481EA0091918F /* AppRoot */,
 				9888DDE527646F000091918F /* Assets.xcassets */,
@@ -179,7 +211,6 @@
 				2F6083CA813FC6C00D4C96D8 /* Pods-MenualTests.debug.xcconfig */,
 				A53C98DCB5D2180263C3A986 /* Pods-MenualTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
