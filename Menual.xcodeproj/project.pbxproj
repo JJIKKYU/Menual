@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2D39C205FB069F46C2298721 /* Pods_Menual_MenualUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906BFBDD86A4807682FB5575 /* Pods_Menual_MenualUITests.framework */; };
 		4EBC70F2CBEBE10BE9514170 /* Pods_Menual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D128C3C26B0CD2866B637F4 /* Pods_Menual.framework */; };
+		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
 		9888DDE927646F000091918F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE727646F000091918F /* LaunchScreen.storyboard */; };
@@ -49,6 +50,7 @@
 		611BE1DAFD06695449F2132F /* Pods-Menual-MenualUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual-MenualUITests.release.xcconfig"; path = "Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests.release.xcconfig"; sourceTree = "<group>"; };
 		8AB1EEBE6F2C30203EE560C0 /* Pods-Menual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.release.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.release.xcconfig"; sourceTree = "<group>"; };
 		906BFBDD86A4807682FB5575 /* Pods_Menual_MenualUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual_MenualUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9888DDD927646EFF0091918F /* Menual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9888DDDC27646EFF0091918F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9888DDE527646F000091918F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -108,16 +110,8 @@
 			isa = PBXGroup;
 			children = (
 				98281EC2278AC16400736D59 /* ProfileHome */,
-				98281EC1278AC15F00736D59 /* Register */,
 			);
 			path = Profile;
-			sourceTree = "<group>";
-		};
-		98281EC1278AC15F00736D59 /* Register */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Register;
 			sourceTree = "<group>";
 		};
 		98281EC2278AC16400736D59 /* ProfileHome */ = {
@@ -125,6 +119,21 @@
 			children = (
 			);
 			path = ProfileHome;
+			sourceTree = "<group>";
+		};
+		98281EC5278AC26600736D59 /* Register */ = {
+			isa = PBXGroup;
+			children = (
+				98281EC8278AC35600736D59 /* RegisterHome */,
+			);
+			path = Register;
+			sourceTree = "<group>";
+		};
+		98281EC8278AC35600736D59 /* RegisterHome */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = RegisterHome;
 			sourceTree = "<group>";
 		};
 		9888DDD027646EFF0091918F = {
@@ -152,13 +161,15 @@
 		9888DDDB27646EFF0091918F /* Menual */ = {
 			isa = PBXGroup;
 			children = (
-				98281EC0278AC14C00736D59 /* Profile */,
-				98281EBF278AC14700736D59 /* Platform */,
+				98281EC9278AC6A900736D59 /* GoogleService-Info.plist */,
+				9888DDEA27646F000091918F /* Info.plist */,
+				9888DDE527646F000091918F /* Assets.xcassets */,
 				9888DE17276482670091918F /* AppDelegate */,
 				9888DE0F276481EA0091918F /* AppRoot */,
-				9888DDE527646F000091918F /* Assets.xcassets */,
 				9888DDE727646F000091918F /* LaunchScreen.storyboard */,
-				9888DDEA27646F000091918F /* Info.plist */,
+				98281EBF278AC14700736D59 /* Platform */,
+				98281EC0278AC14C00736D59 /* Profile */,
+				98281EC5278AC26600736D59 /* Register */,
 			);
 			path = Menual;
 			sourceTree = "<group>";
@@ -335,6 +346,7 @@
 			files = (
 				9888DDE927646F000091918F /* LaunchScreen.storyboard in Resources */,
 				9888DDE627646F000091918F /* Assets.xcassets in Resources */,
+				98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,8 +657,10 @@
 				INFOPLIST_FILE = Menual/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -656,7 +670,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -673,8 +687,10 @@
 				INFOPLIST_FILE = Menual/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -684,7 +700,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
