@@ -1,13 +1,6 @@
 osx_image: xcode11.7
 language: swift
 os: osx
-install: swift package update
-script:
-  - swift build
-  - swift test
-cache:
-  directories:
-  - Pods
 xcode_workspace: TravisCITest.xcworkspace
 xcode_scheme: TravisCITest
 xcode_destination: platform=iOS Simulator,OS=13.7,name=iPhone 8
