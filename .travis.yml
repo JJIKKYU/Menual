@@ -12,5 +12,4 @@ xcode_workspace: TravisCITest.xcworkspace
 xcode_scheme: TravisCITest
 xcode_destination: platform=iOS Simulator,OS=13.7,name=iPhone 8
 before_install:
-- carthage bootstrap --platform iOS --cache-builds
 - pod install
