@@ -29,7 +29,7 @@ final class AppRootBuilder: Builder<AppRootDependency>, AppRootBuildable {
         
         let tabBar = RootTabBarController()
         
-        let component = AppRootComponent(
+        let _ = AppRootComponent(
             dependency: dependency,
             rootViewController: tabBar
         )
