@@ -44,6 +44,11 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
         
         attachChild(diaryWritingRouting)
         
+        // viewController가 많아지면 여기에 추가해서 진행
+        let viewControllers = [
+            NavigationControllerable(root: diaryWritingRouting.viewControllable)
+        ]
+        
         viewController.setViewController(diaryWritingRouting.viewControllable)
     }
     

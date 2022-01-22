@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2D39C205FB069F46C2298721 /* Pods_Menual_MenualUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906BFBDD86A4807682FB5575 /* Pods_Menual_MenualUITests.framework */; };
 		4EBC70F2CBEBE10BE9514170 /* Pods_Menual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D128C3C26B0CD2866B637F4 /* Pods_Menual.framework */; };
+		980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924AF279BC84D0034D0CC /* RIBs+Util.swift */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
@@ -55,6 +56,7 @@
 		611BE1DAFD06695449F2132F /* Pods-Menual-MenualUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual-MenualUITests.release.xcconfig"; path = "Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests.release.xcconfig"; sourceTree = "<group>"; };
 		8AB1EEBE6F2C30203EE560C0 /* Pods-Menual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.release.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.release.xcconfig"; sourceTree = "<group>"; };
 		906BFBDD86A4807682FB5575 /* Pods_Menual_MenualUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual_MenualUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		980924AF279BC84D0034D0CC /* RIBs+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RIBs+Util.swift"; sourceTree = "<group>"; };
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9888DDD927646EFF0091918F /* Menual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9888DDDC27646EFF0091918F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -109,9 +111,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		980924AE279BC83D0034D0CC /* RIBsUtil */ = {
+			isa = PBXGroup;
+			children = (
+				980924AF279BC84D0034D0CC /* RIBs+Util.swift */,
+			);
+			path = RIBsUtil;
+			sourceTree = "<group>";
+		};
 		98281EBF278AC14700736D59 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				980924AE279BC83D0034D0CC /* RIBsUtil */,
 			);
 			path = Platform;
 			sourceTree = "<group>";
@@ -171,16 +182,16 @@
 		9888DDDB27646EFF0091918F /* Menual */ = {
 			isa = PBXGroup;
 			children = (
-				98281EC9278AC6A900736D59 /* GoogleService-Info.plist */,
-				9888DDEA27646F000091918F /* Info.plist */,
 				9888DDE527646F000091918F /* Assets.xcassets */,
+				98281EC9278AC6A900736D59 /* GoogleService-Info.plist */,
+				9888DDE727646F000091918F /* LaunchScreen.storyboard */,
+				9888DDEA27646F000091918F /* Info.plist */,
 				9888DE17276482670091918F /* AppDelegate */,
 				9888DE0F276481EA0091918F /* AppRoot */,
-				9888DDE727646F000091918F /* LaunchScreen.storyboard */,
+				988A186D278ACA7A00DF81DA /* Diary */,
 				98281EBF278AC14700736D59 /* Platform */,
 				98281EC0278AC14C00736D59 /* Profile */,
 				98281EC5278AC26600736D59 /* Register */,
-				988A186D278ACA7A00DF81DA /* Diary */,
 			);
 			path = Menual;
 			sourceTree = "<group>";
@@ -506,6 +517,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */,
+				980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
@@ -696,7 +708,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -726,7 +738,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
