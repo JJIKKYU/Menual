@@ -11,6 +11,7 @@ import RxSwift
 protocol RegisterHomeRouting: Routing {
     func cleanupViews()
     func attachRegisterID()
+    func attachRegisterPW()
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
 }
 
@@ -41,5 +42,10 @@ final class RegisterHomeInteractor: Interactor, RegisterHomeInteractable {
     
     func pressedNextBtn() {
         print("RegisterHome :: pressedNextBtn from registerID")
+        router?.attachRegisterPW()
+    }
+    
+    func pressedNextBtnPW() {
+        print("RegisterHome :: pressedNextBtn from registerPW")
     }
 }

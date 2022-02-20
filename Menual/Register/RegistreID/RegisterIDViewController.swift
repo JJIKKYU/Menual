@@ -28,6 +28,15 @@ final class RegisterIDViewController: UIViewController, RegisterIDPresentable, R
         return stackView
     }()
     
+    private let progressBar: UIProgressView = {
+        let pv = UIProgressView()
+        pv.progressViewStyle = .bar
+        pv.progressTintColor = .yellow
+        pv.trackTintColor = .gray
+        pv.setProgress(0.5, animated: true)
+        return pv
+    }()
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -47,6 +56,7 @@ final class RegisterIDViewController: UIViewController, RegisterIDPresentable, R
     private let emailTextField: UITextField = {
         let textField = UITextField()
         textField.textColor = .white
+        textField.backgroundColor = .gray
         textField.attributedPlaceholder = NSAttributedString(
             string: "ex) menual@mail.com",
             attributes: [NSAttributedString.Key.foregroundColor : UIColor.white]
@@ -70,6 +80,12 @@ final class RegisterIDViewController: UIViewController, RegisterIDPresentable, R
         return btn
     }()
     
+    private let backBtn: UIBarButtonItem = {
+        let item = UIBarButtonItem()
+        item.title = ""
+        return item
+    }()
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
@@ -91,14 +107,21 @@ final class RegisterIDViewController: UIViewController, RegisterIDPresentable, R
 extension RegisterIDViewController {
     func setupViews() {
         title = "회원가입"
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = backBtn
         print("RegisterID :: setupViews")
         view.addSubview(stackView)
         
+        stackView.addArrangedSubview(progressBar)
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subLabel)
         stackView.addArrangedSubview(emailTextField)
         stackView.addArrangedSubview(textFieldErrorLabel)
         stackView.addArrangedSubview(nextButton)
+        
+        
+        progressBar.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+        }
         
         nextButton.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()

@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol RegisterHomeInteractable: Interactable, RegisterHomeListener, RegisterIDListener {
+protocol RegisterHomeInteractable: Interactable, RegisterHomeListener, RegisterIDListener, RegisterPWListener {
     var router: RegisterHomeRouting? { get set }
     var listener: RegisterHomeListener? { get set }
 }
@@ -26,15 +26,18 @@ final class RegisterHomeRouter: Router<RegisterHomeInteractable>, RegisterHomeRo
     // 부모가 보내준 뷰컨트롤러
     private let viewController: ViewControllable
     
-    private let registerIDBuilable: RegisterIDBuildable
+    private let registerIDBuildable: RegisterIDBuildable
+    private let registerPWBuildable: RegisterPWBuildable
 
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: RegisterHomeInteractable,
         viewController: ViewControllable,
-        registerIDBuilable: RegisterIDBuildable
+        registerIDBuilable: RegisterIDBuildable,
+        registerPWBuildable: RegisterPWBuildable
     ) {
-        self.registerIDBuilable = registerIDBuilable
+        self.registerIDBuildable = registerIDBuilable
+        self.registerPWBuildable = registerPWBuildable
         self.viewController = viewController
         
         super.init(interactor: interactor)
@@ -55,7 +58,7 @@ final class RegisterHomeRouter: Router<RegisterHomeInteractable>, RegisterHomeRo
     
     func attachRegisterID() {
 //         let registerID = RegisterIDBuilder.build(withl)
-        let registerID = registerIDBuilable.build(withListener: interactor)
+        let registerID = registerIDBuildable.build(withListener: interactor)
         attachChild(registerID)
         
         let navigation = NavigationControllerable(root: registerID.viewControllable)
@@ -65,5 +68,13 @@ final class RegisterHomeRouter: Router<RegisterHomeInteractable>, RegisterHomeRo
         viewController.present(navigation, animated: false, completion: nil)
         // viewController.present(registerID.viewControllable, animated: false, completion: nil)
         print("attachRegisterID!, viewcontroller = \(viewController.uiviewController.classForCoder)")
+    }
+    
+    func attachRegisterPW() {
+        let registerPW = registerPWBuildable.build(withListener: interactor)
+        attachChild(registerPW)
+        self.navigationControllable?.pushViewController(registerPW.viewControllable, animated: true)
+        
+        print("RegisterHome :: attachRegisterPW")
     }
 }

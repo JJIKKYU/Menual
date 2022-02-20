@@ -12,7 +12,7 @@ protocol RegisterHomeDependency: Dependency {
     var registerHomeBuildable: RegisterHomeBuildable { get }
 }
 
-final class RegisterHomeComponent: Component<RegisterHomeDependency>, RegisterIDDependency {
+final class RegisterHomeComponent: Component<RegisterHomeDependency>, RegisterIDDependency, RegisterPWDependency {
     var registerHomeBuildable: RegisterHomeBuildable { dependency.registerHomeBuildable }
 
     // TODO: Make sure to convert the variable into lower-camelcase.
@@ -40,6 +40,7 @@ final class RegisterHomeBuilder: Builder<RegisterHomeDependency>, RegisterHomeBu
         let component = RegisterHomeComponent(dependency: dependency)
 
         let registerIDBuildable = RegisterIDBuilder(dependency: component)
+        let registerPWBuildable = RegisterPWBuilder(dependency: component)
         
         let interactor = RegisterHomeInteractor()
         interactor.listener = listener
@@ -47,7 +48,8 @@ final class RegisterHomeBuilder: Builder<RegisterHomeDependency>, RegisterHomeBu
         return RegisterHomeRouter(
             interactor: interactor,
             viewController: component.RegisterHomeBaseViewController,
-            registerIDBuilable: registerIDBuildable
+            registerIDBuilable: registerIDBuildable,
+            registerPWBuildable: registerPWBuildable
         )
     }
 }

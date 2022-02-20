@@ -18,11 +18,11 @@ protocol RegisterPWPresentable: Presentable {
 }
 
 protocol RegisterPWListener: AnyObject {
-    // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
+    func pressedNextBtnPW()
 }
 
 final class RegisterPWInteractor: PresentableInteractor<RegisterPWPresentable>, RegisterPWInteractable, RegisterPWPresentableListener {
-
+    
     weak var router: RegisterPWRouting?
     weak var listener: RegisterPWListener?
 
@@ -41,5 +41,9 @@ final class RegisterPWInteractor: PresentableInteractor<RegisterPWPresentable>, 
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+    
+    func pressedNextBtnPW() {
+        listener?.pressedNextBtnPW()
     }
 }
