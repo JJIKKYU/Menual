@@ -16,9 +16,11 @@ final class RegisterHomeComponent: Component<RegisterHomeDependency>, RegisterID
     var registerHomeBuildable: RegisterHomeBuildable { dependency.registerHomeBuildable }
 
     // TODO: Make sure to convert the variable into lower-camelcase.
+    
     fileprivate var RegisterHomeBaseViewController: ViewControllable {
         return dependency.registerHomeBaseController
     }
+     
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }

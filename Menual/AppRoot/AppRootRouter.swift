@@ -8,7 +8,9 @@
 import RIBs
 
 protocol AppRootInteractable: Interactable,
-                                DiaryWritingListener, RegisterHomeListener
+                                DiaryWritingListener,
+                              RegisterHomeListener,
+                              LoginHomeListener
 {
     var router: AppRootRouting? { get set }
     var listener: AppRootListener? { get set }
@@ -22,23 +24,22 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
     
     private let diaryWriting: DiaryWritingBuildable
     private let registerHome: RegisterHomeBuildable
-    // private let registerID: RegisterIDBuildable
+    private let loginHome: LoginHomeBuildable
     
     private var diaryWritingRouting: ViewableRouting?
     private var registerHomeRouting: ViewableRouting?
-    // private let registerIDRouting: ViewableRouting?
+    private var loginHomeRouting: ViewableRouting?
     
     init(
         interactor: AppRootInteractable,
         viewController: AppRootViewControllable,
         diaryWriting: DiaryWritingBuildable,
-        registerHome: RegisterHomeBuildable
-       //  registerID: RegisterIDBuildable
+        registerHome: RegisterHomeBuildable,
+        loginHome: LoginHomeBuildable
     ) {
-        // self.registerID = registerID
         self.diaryWriting = diaryWriting
         self.registerHome = registerHome
-        // self.registerIDRouting = .none
+        self.loginHome = loginHome
         
         super.init(interactor: interactor, viewController: viewController)
 
@@ -53,10 +54,13 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
         let registerHomeRouting = registerHome.build(withListener: interactor)
         // let registerIDRouting = registerID.build(withListener: interactor)
         let diaryWritingRouting = diaryWriting.build(withListener: interactor)
+        let loginHomeRouting = loginHome.build(withListener: interactor)
         
         // attachChild(diaryWritingRouting)
         // attachChild(registerHomeRouting)
-        attachChild(registerHomeRouting)
+        
+        // attachChild(registerHomeRouting)
+        attachChild(loginHomeRouting)
         
         // viewController가 많아지면 여기에 추가해서 진행
         /*
@@ -66,11 +70,11 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
         ]
          */
         
-        // let navigation = NavigationControllerable(root: registerHomeRouting.)
-         // navigation.navigationController.modalPresentationStyle = .fullScreen
+         let navigation = NavigationControllerable(root: loginHomeRouting.viewControllable)
+         navigation.navigationController.modalPresentationStyle = .fullScreen
         
         //viewController.setViewController(diaryWritingRouting.viewControllable)
-        // viewController.setViewController(navigation)
+         viewController.setViewController(navigation)
     }
     
     func cleanupViews() {

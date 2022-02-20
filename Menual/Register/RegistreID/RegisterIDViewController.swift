@@ -107,6 +107,7 @@ final class RegisterIDViewController: UIViewController, RegisterIDPresentable, R
 extension RegisterIDViewController {
     func setupViews() {
         title = "회원가입"
+        self.view.backgroundColor = .black
         self.navigationController?.navigationBar.topItem?.backBarButtonItem = backBtn
         print("RegisterID :: setupViews")
         view.addSubview(stackView)

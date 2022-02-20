@@ -62,10 +62,26 @@ final class RegisterHomeRouter: Router<RegisterHomeInteractable>, RegisterHomeRo
         attachChild(registerID)
         
         let navigation = NavigationControllerable(root: registerID.viewControllable)
-        navigation.navigationController.modalPresentationStyle = .fullScreen
+        // navigation.navigationController.modalPresentationStyle = .fullScreen
+        // navigation.navigationController.modalTransitionStyle = .crossDissolve
+  
+        /*
+        navigation.navigationController.navigationBar.backgroundColor = .black
+        navigation.navigationController.navigationBar.isTranslucent = false
+        navigation.navigationController.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigation.navigationController.navigationBar.shadowImage = UIImage()
+        navigation.navigationController.navigationBar.tintColor = .white
+        navigation.navigationController.navigationBar.barTintColor = .white
+        navigation.navigationController.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+        
+         */
+        
+        
         // navigation.navigationController.presentationController?.delegate = interactor.prese
         self.navigationControllable = navigation
-        viewController.present(navigation, animated: false, completion: nil)
+        // navigation.pushViewController(registerID.viewControllable, animated: true)
+        
+        topViewController()?.present(navigation.navigationController, animated: true, completion: nil)
         // viewController.present(registerID.viewControllable, animated: false, completion: nil)
         print("attachRegisterID!, viewcontroller = \(viewController.uiviewController.classForCoder)")
     }
@@ -77,4 +93,19 @@ final class RegisterHomeRouter: Router<RegisterHomeInteractable>, RegisterHomeRo
         
         print("RegisterHome :: attachRegisterPW")
     }
+    
+    func topViewController() -> UIViewController? {
+        if let keyWindow = UIApplication.shared.keyWindow {
+            if var viewController = keyWindow.rootViewController {
+                while viewController.presentedViewController != nil {
+                    viewController = viewController.presentedViewController!
+                }
+                print("topViewController -> \(String(describing: viewController))")
+                return viewController
+            }
+        }
+        return nil
+    }
+
 }
+
