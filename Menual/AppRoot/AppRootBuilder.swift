@@ -36,11 +36,15 @@ final class AppRootBuilder: Builder<AppRootDependency>, AppRootBuildable {
         
         let interactor = AppRootInteractor(presenter: viewController)
         let diaryWriting = DiaryWritingBuilder(dependency: component)
+        let registerHome = RegisterHomeBuilder(dependency: component)
+//         let registerID = RegisterIDBuilder(dependency: component)
         
         let router = AppRootRouter(
             interactor: interactor,
             viewController: viewController,
-            diaryWriting: diaryWriting
+            diaryWriting: diaryWriting,
+            registerHome: registerHome
+   //         registerID: registerID
         )
         
         return (router, interactor)

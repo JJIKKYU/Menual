@@ -23,6 +23,10 @@ final class AppRootComponent: Component<AppRootDependency> {
 
 //MARK: - DiaryWriting Dependency
 
-extension AppRootComponent: DiaryWritingDependency {
+extension AppRootComponent: DiaryWritingDependency, RegisterHomeDependency {
+    var registerHomeBuildable: RegisterHomeBuildable {
+        return RegisterHomeBuilder(dependency: self)
+    }
     
+    var registerHomeBaseController: ViewControllable { rootViewController.topViewControllable }
 }

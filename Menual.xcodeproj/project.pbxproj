@@ -15,6 +15,17 @@
 		980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */; };
 		980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
+		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
+		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
+		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
+		985E0EF827C21DEC00057951 /* RegisterIDInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF427C21DEC00057951 /* RegisterIDInteractor.swift */; };
+		985E0EFC27C21E9900057951 /* RegisterHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF927C21E9900057951 /* RegisterHomeRouter.swift */; };
+		985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EFA27C21E9900057951 /* RegisterHomeBuilder.swift */; };
+		985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EFB27C21E9900057951 /* RegisterHomeInteractor.swift */; };
+		985E0F0427C232E300057951 /* RegisterPWRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0027C232E300057951 /* RegisterPWRouter.swift */; };
+		985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0127C232E300057951 /* RegisterPWViewController.swift */; };
+		985E0F0627C232E300057951 /* RegisterPWBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0227C232E300057951 /* RegisterPWBuilder.swift */; };
+		985E0F0727C232E300057951 /* RegisterPWInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0327C232E300057951 /* RegisterPWInteractor.swift */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
 		9888DDE927646F000091918F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE727646F000091918F /* LaunchScreen.storyboard */; };
@@ -66,6 +77,17 @@
 		980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeBuilder.swift; sourceTree = "<group>"; };
 		980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeInteractor.swift; sourceTree = "<group>"; };
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
+		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
+		985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDBuilder.swift; sourceTree = "<group>"; };
+		985E0EF427C21DEC00057951 /* RegisterIDInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDInteractor.swift; sourceTree = "<group>"; };
+		985E0EF927C21E9900057951 /* RegisterHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterHomeRouter.swift; sourceTree = "<group>"; };
+		985E0EFA27C21E9900057951 /* RegisterHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterHomeBuilder.swift; sourceTree = "<group>"; };
+		985E0EFB27C21E9900057951 /* RegisterHomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterHomeInteractor.swift; sourceTree = "<group>"; };
+		985E0F0027C232E300057951 /* RegisterPWRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterPWRouter.swift; sourceTree = "<group>"; };
+		985E0F0127C232E300057951 /* RegisterPWViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterPWViewController.swift; sourceTree = "<group>"; };
+		985E0F0227C232E300057951 /* RegisterPWBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterPWBuilder.swift; sourceTree = "<group>"; };
+		985E0F0327C232E300057951 /* RegisterPWInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterPWInteractor.swift; sourceTree = "<group>"; };
 		9888DDD927646EFF0091918F /* Menual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9888DDDC27646EFF0091918F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9888DDE527646F000091918F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -164,6 +186,8 @@
 		98281EC5278AC26600736D59 /* Register */ = {
 			isa = PBXGroup;
 			children = (
+				985E0EFF27C232D100057951 /* RegisterPW */,
+				985E0EF027C21DD700057951 /* RegistreID */,
 				98281EC8278AC35600736D59 /* RegisterHome */,
 			);
 			path = Register;
@@ -172,8 +196,33 @@
 		98281EC8278AC35600736D59 /* RegisterHome */ = {
 			isa = PBXGroup;
 			children = (
+				985E0EF927C21E9900057951 /* RegisterHomeRouter.swift */,
+				985E0EFA27C21E9900057951 /* RegisterHomeBuilder.swift */,
+				985E0EFB27C21E9900057951 /* RegisterHomeInteractor.swift */,
 			);
 			path = RegisterHome;
+			sourceTree = "<group>";
+		};
+		985E0EF027C21DD700057951 /* RegistreID */ = {
+			isa = PBXGroup;
+			children = (
+				985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */,
+				985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */,
+				985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */,
+				985E0EF427C21DEC00057951 /* RegisterIDInteractor.swift */,
+			);
+			path = RegistreID;
+			sourceTree = "<group>";
+		};
+		985E0EFF27C232D100057951 /* RegisterPW */ = {
+			isa = PBXGroup;
+			children = (
+				985E0F0027C232E300057951 /* RegisterPWRouter.swift */,
+				985E0F0127C232E300057951 /* RegisterPWViewController.swift */,
+				985E0F0227C232E300057951 /* RegisterPWBuilder.swift */,
+				985E0F0327C232E300057951 /* RegisterPWInteractor.swift */,
+			);
+			path = RegisterPW;
 			sourceTree = "<group>";
 		};
 		9888DDD027646EFF0091918F = {
@@ -541,14 +590,25 @@
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
+				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
+				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				9888DE1B276483DD0091918F /* AppRootComponent.swift in Sources */,
 				988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */,
+				985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */,
 				9888DE142764825F0091918F /* AppRootRouter.swift in Sources */,
+				985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
+				985E0F0627C232E300057951 /* RegisterPWBuilder.swift in Sources */,
 				980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */,
+				985E0F0727C232E300057951 /* RegisterPWInteractor.swift in Sources */,
+				985E0EFC27C21E9900057951 /* RegisterHomeRouter.swift in Sources */,
+				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,
+				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
 				9888DE162764825F0091918F /* AppRootInteractor.swift in Sources */,
+				985E0EF827C21DEC00057951 /* RegisterIDInteractor.swift in Sources */,
 				980924B6279BCD670034D0CC /* DiaryHomeRouter.swift in Sources */,
+				985E0F0427C232E300057951 /* RegisterPWRouter.swift in Sources */,
 				988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */,
 				980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */,
 				9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */,
