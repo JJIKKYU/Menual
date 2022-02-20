@@ -10,16 +10,14 @@ import RIBs
 protocol RegisterHomeInteractable: Interactable, RegisterHomeListener, RegisterIDListener, RegisterPWListener {
     var router: RegisterHomeRouting? { get set }
     var listener: RegisterHomeListener? { get set }
+    var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
 }
 
 protocol RegisterHomeViewControllable: ViewControllable {
-    // TODO: Declare methods the router invokes to manipulate the view hierarchy. Since
-    // this RIB does not own its own view, this protocol is conformed to by one of this
-    // RIB's ancestor RIBs' view.
+    
 }
 
 final class RegisterHomeRouter: Router<RegisterHomeInteractable>, RegisterHomeRouting {
-    
     // topupRouter가 Push 및 Pop을 할 때 필요하기 때문에, 가지고 있을 것.
     private var navigationControllable: NavigationControllerable?
     
@@ -47,6 +45,11 @@ final class RegisterHomeRouter: Router<RegisterHomeInteractable>, RegisterHomeRo
     func cleanupViews() {
         // TODO: Since this router does not own its view, it needs to cleanup the views
         // it may have added to the view hierarchy, when its interactor is deactivated.
+        print("RegisterHome :: CleanupViews")
+        if viewController.uiviewController.presentationController != nil,
+           navigationControllable != nil {
+            navigationControllable?.dismiss(completion: nil)
+        }
     }
     
     override func didLoad() {
@@ -62,6 +65,7 @@ final class RegisterHomeRouter: Router<RegisterHomeInteractable>, RegisterHomeRo
         attachChild(registerID)
         
         let navigation = NavigationControllerable(root: registerID.viewControllable)
+        navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
         // navigation.navigationController.modalPresentationStyle = .fullScreen
         // navigation.navigationController.modalTransitionStyle = .crossDissolve
   
@@ -92,6 +96,10 @@ final class RegisterHomeRouter: Router<RegisterHomeInteractable>, RegisterHomeRo
         self.navigationControllable?.pushViewController(registerPW.viewControllable, animated: true)
         
         print("RegisterHome :: attachRegisterPW")
+    }
+    
+    func registerDidClose() {
+        print("!!")
     }
     
     func topViewController() -> UIViewController? {

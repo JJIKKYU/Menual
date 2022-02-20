@@ -30,6 +30,7 @@
 		985E0F0E27C2690500057951 /* LoginHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0A27C2690500057951 /* LoginHomeViewController.swift */; };
 		985E0F0F27C2690500057951 /* LoginHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0B27C2690500057951 /* LoginHomeBuilder.swift */; };
 		985E0F1027C2690500057951 /* LoginHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0C27C2690500057951 /* LoginHomeInteractor.swift */; };
+		985E0F1327C2750D00057951 /* AdaptivePresentationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
 		9888DDE927646F000091918F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE727646F000091918F /* LaunchScreen.storyboard */; };
@@ -96,6 +97,7 @@
 		985E0F0A27C2690500057951 /* LoginHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginHomeViewController.swift; sourceTree = "<group>"; };
 		985E0F0B27C2690500057951 /* LoginHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginHomeBuilder.swift; sourceTree = "<group>"; };
 		985E0F0C27C2690500057951 /* LoginHomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginHomeInteractor.swift; sourceTree = "<group>"; };
+		985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptivePresentationControllerDelegate.swift; sourceTree = "<group>"; };
 		9888DDD927646EFF0091918F /* Menual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9888DDDC27646EFF0091918F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9888DDE527646F000091918F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				980924AF279BC84D0034D0CC /* RIBs+Util.swift */,
+				985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */,
 			);
 			path = RIBsUtil;
 			sourceTree = "<group>";
@@ -614,6 +617,7 @@
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				985E0F0F27C2690500057951 /* LoginHomeBuilder.swift in Sources */,
+				985E0F1327C2750D00057951 /* AdaptivePresentationControllerDelegate.swift in Sources */,
 				9888DE1B276483DD0091918F /* AppRootComponent.swift in Sources */,
 				988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */,
 				985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */,

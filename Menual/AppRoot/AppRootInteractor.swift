@@ -27,6 +27,8 @@ final class AppRootInteractor: PresentableInteractor<AppRootPresentable>,
                                AppRootInteractable,
                                AppRootPresentableListener,
                                URLHandler {
+    
+    
     func handle(_ url: URL) {
         
     }

@@ -44,7 +44,7 @@ final class RegisterHomeBuilder: Builder<RegisterHomeDependency>, RegisterHomeBu
         let registerIDBuildable = RegisterIDBuilder(dependency: component)
         let registerPWBuildable = RegisterPWBuilder(dependency: component)
         
-        let interactor = RegisterHomeInteractor()
+        let interactor = RegisterHomeInteractor(dependency: dependency)
         interactor.listener = listener
         
         return RegisterHomeRouter(

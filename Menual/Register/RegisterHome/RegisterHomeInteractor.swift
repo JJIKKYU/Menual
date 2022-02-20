@@ -12,20 +12,34 @@ protocol RegisterHomeRouting: Routing {
     func cleanupViews()
     func attachRegisterID()
     func attachRegisterPW()
+    func registerDidClose()
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
 }
 
 protocol RegisterHomeListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
+    // func registerHomeDidClose()
 }
 
-final class RegisterHomeInteractor: Interactor, RegisterHomeInteractable {
+final class RegisterHomeInteractor: Interactor, RegisterHomeInteractable, AdaptivePresentationControllerDelegate {
+    
+    let presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
+    
     weak var router: RegisterHomeRouting?
     weak var listener: RegisterHomeListener?
+    
+    private let dependency: RegisterHomeDependency
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
-    override init() {}
+    init(
+        dependency: RegisterHomeDependency
+    ) {
+        self.dependency = dependency
+        self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
+        super.init()
+        self.presentationDelegateProxy.delegate = self
+    }
 
     override func didBecomeActive() {
         super.didBecomeActive()
@@ -47,5 +61,11 @@ final class RegisterHomeInteractor: Interactor, RegisterHomeInteractable {
     
     func pressedNextBtnPW() {
         print("RegisterHome :: pressedNextBtn from registerPW")
+    }
+    
+    func presentationControllerDidDismiss() {
+        print("!!")
+        router?.cleanupViews()
+        // listener?.registerHomeDidClose()
     }
 }
