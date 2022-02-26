@@ -18,6 +18,7 @@ protocol RegisterHomeViewControllable: ViewControllable {
 }
 
 final class RegisterHomeRouter: Router<RegisterHomeInteractable>, RegisterHomeRouting {
+
     // topupRouter가 Push 및 Pop을 할 때 필요하기 때문에, 가지고 있을 것.
     private var navigationControllable: NavigationControllerable?
     
@@ -99,7 +100,7 @@ final class RegisterHomeRouter: Router<RegisterHomeInteractable>, RegisterHomeRo
     }
     
     func registerDidClose() {
-        print("!!")
+        
     }
     
     func topViewController() -> UIViewController? {

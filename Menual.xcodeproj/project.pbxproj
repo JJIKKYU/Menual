@@ -48,6 +48,7 @@
 		988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1872278ACB4B00DF81DA /* DiaryWritingBuilder.swift */; };
 		988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1873278ACB4B00DF81DA /* DiaryWritingInteractor.swift */; };
 		988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1878278AD17500DF81DA /* AppRootViewController.swift */; };
+		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		9D65621A6BC58BDB19B31435 /* Pods_MenualTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B7AFEEEC2884EE3D9B20D25 /* Pods_MenualTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -119,6 +120,7 @@
 		988A1872278ACB4B00DF81DA /* DiaryWritingBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingBuilder.swift; sourceTree = "<group>"; };
 		988A1873278ACB4B00DF81DA /* DiaryWritingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingInteractor.swift; sourceTree = "<group>"; };
 		988A1878278AD17500DF81DA /* AppRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootViewController.swift; sourceTree = "<group>"; };
+		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		9D128C3C26B0CD2866B637F4 /* Pods_Menual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53C98DCB5D2180263C3A986 /* Pods-MenualTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenualTests.release.xcconfig"; path = "Target Support Files/Pods-MenualTests/Pods-MenualTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -174,6 +176,7 @@
 		98281EBF278AC14700736D59 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				98BEF34527C9FD6E0037CF6D /* MenualUtil */,
 				980924AE279BC83D0034D0CC /* RIBsUtil */,
 			);
 			path = Platform;
@@ -344,6 +347,14 @@
 				988A1873278ACB4B00DF81DA /* DiaryWritingInteractor.swift */,
 			);
 			path = DiaryWriting;
+			sourceTree = "<group>";
+		};
+		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
+			isa = PBXGroup;
+			children = (
+				98BEF34627C9FD8F0037CF6D /* Color+Util.swift */,
+			);
+			path = MenualUtil;
 			sourceTree = "<group>";
 		};
 		C136E0769DBA6A801D667AFF /* Pods */ = {
@@ -623,6 +634,7 @@
 				985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */,
 				9888DE142764825F0091918F /* AppRootRouter.swift in Sources */,
 				985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */,
+				98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
 				985E0F0627C232E300057951 /* RegisterPWBuilder.swift in Sources */,
 				985E0F0E27C2690500057951 /* LoginHomeViewController.swift in Sources */,
