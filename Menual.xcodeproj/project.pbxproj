@@ -49,6 +49,7 @@
 		988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1873278ACB4B00DF81DA /* DiaryWritingInteractor.swift */; };
 		988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1878278AD17500DF81DA /* AppRootViewController.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
+		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		9D65621A6BC58BDB19B31435 /* Pods_MenualTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B7AFEEEC2884EE3D9B20D25 /* Pods_MenualTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -121,6 +122,7 @@
 		988A1873278ACB4B00DF81DA /* DiaryWritingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingInteractor.swift; sourceTree = "<group>"; };
 		988A1878278AD17500DF81DA /* AppRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootViewController.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
+		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		9D128C3C26B0CD2866B637F4 /* Pods_Menual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53C98DCB5D2180263C3A986 /* Pods-MenualTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenualTests.release.xcconfig"; path = "Target Support Files/Pods-MenualTests/Pods-MenualTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -353,6 +355,7 @@
 			isa = PBXGroup;
 			children = (
 				98BEF34627C9FD8F0037CF6D /* Color+Util.swift */,
+				98BEF34827CA04830037CF6D /* Text+Util.swift */,
 			);
 			path = MenualUtil;
 			sourceTree = "<group>";
@@ -625,6 +628,7 @@
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
+				98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */,
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				985E0F0F27C2690500057951 /* LoginHomeBuilder.swift in Sources */,
