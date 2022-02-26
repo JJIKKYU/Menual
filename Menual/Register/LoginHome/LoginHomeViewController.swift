@@ -33,8 +33,12 @@ final class LoginHomeViewController: UIViewController, LoginHomePresentable, Log
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.appColor(.tint_main_100)
-        label.numberOfLines = 2
-        label.text = "MENUAL에" + "\n" + "오신 것을 환영해요"
+        label.numberOfLines = 4
+        // label.text = "MENUAL에" + "\n" + "오신 것을 환영해요"
+        
+        var text = "따뜻한 그림자는 청춘을 인간이 인도하겠다는 얼음 이것이다.\n 길지 인간의 설산에서 쓸쓸하랴? 풀밭에 길을 있는 청춘을 그들을 \n사랑의 싶이 이성은 말이다. 하여도 못할 너의 이상은 그들은 살았으며, \n피는 청춘을 심장은 위하여서."
+        // label.font = UIFont.AppTitle(.title_1)
+        label.attributedText = UIFont.AppBody(.body_2, text)
         return label
     }()
     
@@ -43,6 +47,7 @@ final class LoginHomeViewController: UIViewController, LoginHomePresentable, Log
         label.textColor = .white
         label.numberOfLines = 1
         label.text = "아이디"
+        label.font = UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 16)
         return label
     }()
     

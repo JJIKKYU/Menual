@@ -37,9 +37,9 @@ extension UIFont {
     class func SpoqaHanSansNeo(_ type: SpoqaHanSansNeoType) -> String {
         switch type {
         case .Regular:
-            return "AppleSDGothicNeo-Regular"
+            return "SpoqaHanSansNeo-Regular"
         case .Bold:
-            return "AppleSDGothicNeo-Bold"
+            return "SpoqaHanSansNeo-Bold"
         }
     }
     
@@ -47,37 +47,50 @@ extension UIFont {
     class func Montserrat(_ type: MontserratType) -> String {
         switch type {
         case .ExtraBold:
-            return ""
+            return "Montserrat-ExtraBold"
         }
     }
     
     // 디자인 시스템에 정의되어 있는 타이틀 리턴
-    class func AppTitle(_ title: TitleType) {
+    class func AppTitle(_ title: TitleType) -> UIFont! {
         switch title {
         case .title_1:
-            break
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 14)
         case .title_2:
-            break
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 16)
         case .title_3:
-            break
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 18)
         case .title_4:
-            break
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 21)
         case .title_5:
-            break
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 24)
         }
     }
     
     // 디자인 시스템에 정의되어 있는 바디 리턴
-    class func AppBody(_ body: BodyType) {
+    class func AppBody(_ body: BodyType, _ text: String) -> NSMutableAttributedString {
+        let attrString = NSMutableAttributedString(string: text)
+        let paragraphStyle = NSMutableParagraphStyle()
+        var font: UIFont?
+        
         switch body {
         case .body_4:
-            break
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 16)
         case .body_3:
-            break
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 14)
         case .body_2:
-            break
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 12)
         case .body_1:
-            break
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 10)
         }
+        
+        // 행간 조절
+        paragraphStyle.lineHeightMultiple = 1.28
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+        
+        // 폰트 적용
+        attrString.addAttribute(NSAttributedString.Key.font, value: font!, range: NSMakeRange(0, attrString.length))
+        
+        return attrString
     }
 }
