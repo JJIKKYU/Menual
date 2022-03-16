@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2D39C205FB069F46C2298721 /* Pods_Menual_MenualUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906BFBDD86A4807682FB5575 /* Pods_Menual_MenualUITests.framework */; };
 		4EBC70F2CBEBE10BE9514170 /* Pods_Menual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D128C3C26B0CD2866B637F4 /* Pods_Menual.framework */; };
+		9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9805D4D527E1B6C40035FB49 /* Elevation+Util.swift */; };
+		9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9805D4D727E1BB010035FB49 /* Corner+Util.swift */; };
 		980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924AF279BC84D0034D0CC /* RIBs+Util.swift */; };
 		980924B6279BCD670034D0CC /* DiaryHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B2279BCD670034D0CC /* DiaryHomeRouter.swift */; };
 		980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B3279BCD670034D0CC /* DiaryHomeViewController.swift */; };
@@ -81,6 +83,8 @@
 		611BE1DAFD06695449F2132F /* Pods-Menual-MenualUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual-MenualUITests.release.xcconfig"; path = "Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests.release.xcconfig"; sourceTree = "<group>"; };
 		8AB1EEBE6F2C30203EE560C0 /* Pods-Menual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.release.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.release.xcconfig"; sourceTree = "<group>"; };
 		906BFBDD86A4807682FB5575 /* Pods_Menual_MenualUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual_MenualUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9805D4D527E1B6C40035FB49 /* Elevation+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Elevation+Util.swift"; sourceTree = "<group>"; };
+		9805D4D727E1BB010035FB49 /* Corner+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Corner+Util.swift"; sourceTree = "<group>"; };
 		980924AF279BC84D0034D0CC /* RIBs+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RIBs+Util.swift"; sourceTree = "<group>"; };
 		980924B2279BCD670034D0CC /* DiaryHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeRouter.swift; sourceTree = "<group>"; };
 		980924B3279BCD670034D0CC /* DiaryHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeViewController.swift; sourceTree = "<group>"; };
@@ -363,6 +367,8 @@
 			children = (
 				98BEF34627C9FD8F0037CF6D /* Color+Util.swift */,
 				98BEF34827CA04830037CF6D /* Text+Util.swift */,
+				9805D4D527E1B6C40035FB49 /* Elevation+Util.swift */,
+				9805D4D727E1BB010035FB49 /* Corner+Util.swift */,
 			);
 			path = MenualUtil;
 			sourceTree = "<group>";
@@ -653,6 +659,7 @@
 				988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */,
 				980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
+				9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */,
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
@@ -682,6 +689,7 @@
 				985E0F0427C232E300057951 /* RegisterPWRouter.swift in Sources */,
 				988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */,
 				985E0F0D27C2690500057951 /* LoginHomeRouter.swift in Sources */,
+				9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */,
 				980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */,
 				9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */,
 				980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */,

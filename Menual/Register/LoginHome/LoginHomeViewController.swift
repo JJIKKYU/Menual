@@ -32,7 +32,7 @@ final class LoginHomeViewController: UIViewController, LoginHomePresentable, Log
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.appColor(.tint_main_100)
+        label.textColor = UIColor.AppColor(.tint_main_100)
         label.numberOfLines = 4
         // label.text = "MENUAL에" + "\n" + "오신 것을 환영해요"
         

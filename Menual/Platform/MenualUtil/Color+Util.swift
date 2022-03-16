@@ -58,7 +58,7 @@ extension UIColor {
         self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
     }
     
-    static func appColor(_ name: ColorStyle) -> UIColor {
+    static func AppColor(_ name: ColorStyle) -> UIColor {
         var isDarkMode: Bool = false
         
         if #available(iOS 13.0, *) {
