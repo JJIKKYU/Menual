@@ -23,6 +23,7 @@ enum TitleType {
     case title_3
     case title_4
     case title_5
+    case title_6
 }
 
 enum BodyType {
@@ -55,14 +56,16 @@ extension UIFont {
     class func AppTitle(_ title: TitleType) -> UIFont! {
         switch title {
         case .title_1:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 14)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 12)
         case .title_2:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 16)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 14)
         case .title_3:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 18)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 16)
         case .title_4:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 21)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 18)
         case .title_5:
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 21)
+        case .title_6:
             return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 24)
         }
     }
