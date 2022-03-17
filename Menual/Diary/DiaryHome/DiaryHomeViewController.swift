@@ -32,12 +32,23 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     override func viewDidLoad() {
       super.viewDidLoad()
-      
-        view.backgroundColor = .gray
+        view.backgroundColor = .clear
         print("DiaryHome!")
         
         title = "MENUAL"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: nil)
+        
+        // TBD 나중에 따로 변수로 만들어서 제작할 것
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(pressedSearchBtn))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(pressedMyPageBtn))
+    }
+    
+    @objc
+    func pressedSearchBtn() {
+        print("pressedSearchBtn!")
+    }
+    
+    @objc
+    func pressedMyPageBtn() {
+        print("pressedMyPageBtn!")
     }
 }
