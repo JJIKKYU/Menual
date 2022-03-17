@@ -9,9 +9,15 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("asd")
-            .bold()
-            .foregroundColor(.red)
+        VStack {
+            Text("안녕하세요")
+                .padding()
+            Text("하이요")
+                .padding()
+            Button("하잉하이") {
+                print("눌러봐")
+            }
+        }
     }
 }
 
