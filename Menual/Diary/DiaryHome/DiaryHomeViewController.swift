@@ -20,6 +20,25 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
 
     weak var listener: DiaryHomePresentableListener?
     
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "123"
+        return label
+    }()
+    
+    let scrollView: UIScrollView = {
+        let view = UIScrollView()
+        view.backgroundColor = UIColor(red: 0.098, green: 0.098, blue: 0.098, alpha: 1)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let testView: MomentsRoundView = {
+        let view = MomentsRoundView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
@@ -32,14 +51,41 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     override func viewDidLoad() {
       super.viewDidLoad()
-        view.backgroundColor = .clear
+        view.backgroundColor = .red
         print("DiaryHome!")
+        setViews()
         
         title = "MENUAL"
         
         // TBD 나중에 따로 변수로 만들어서 제작할 것
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(pressedSearchBtn))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(pressedMyPageBtn))
+    }
+    
+    func setViews() {
+        self.view.addSubview(scrollView)
+        scrollView.addSubview(titleLabel)
+        scrollView.addSubview(testView)
+        
+        scrollView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(20)
+        }
+        
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(1000)
+            make.leading.equalToSuperview().offset(20)
+            make.bottom.equalToSuperview().offset(-40)
+        }
+        
+        testView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalTo(300)
+            make.top.equalToSuperview().offset(100)
+            make.height.equalTo(200)
+        }
     }
     
     @objc

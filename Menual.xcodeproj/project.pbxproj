@@ -16,6 +16,7 @@
 		980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B3279BCD670034D0CC /* DiaryHomeViewController.swift */; };
 		980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */; };
 		980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */; };
+		98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98239BE527E323CB00E216F1 /* MomentsRoundView.swift */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
@@ -90,6 +91,7 @@
 		980924B3279BCD670034D0CC /* DiaryHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeViewController.swift; sourceTree = "<group>"; };
 		980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeBuilder.swift; sourceTree = "<group>"; };
 		980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeInteractor.swift; sourceTree = "<group>"; };
+		98239BE527E323CB00E216F1 /* MomentsRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsRoundView.swift; sourceTree = "<group>"; };
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
@@ -185,9 +187,26 @@
 			path = DiaryHome;
 			sourceTree = "<group>";
 		};
+		98239BE127E3234F00E216F1 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				98239BE227E3236100E216F1 /* Moments */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		98239BE227E3236100E216F1 /* Moments */ = {
+			isa = PBXGroup;
+			children = (
+				98239BE527E323CB00E216F1 /* MomentsRoundView.swift */,
+			);
+			path = Moments;
+			sourceTree = "<group>";
+		};
 		98281EBF278AC14700736D59 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				98239BE127E3234F00E216F1 /* DesignSystem */,
 				98BEF34527C9FD6E0037CF6D /* MenualUtil */,
 				980924AE279BC83D0034D0CC /* RIBsUtil */,
 			);
@@ -647,6 +666,7 @@
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
+				98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */,
 				98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */,
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
