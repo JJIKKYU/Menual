@@ -23,7 +23,7 @@ final class AppRootComponent: Component<AppRootDependency> {
 
 //MARK: - DiaryWriting Dependency
 
-extension AppRootComponent: DiaryWritingDependency, RegisterHomeDependency, LoginHomeDependency {
+extension AppRootComponent: DiaryWritingDependency, RegisterHomeDependency, LoginHomeDependency, DiaryHomeDependency {
     var registerHomeBuildable: RegisterHomeBuildable {
         return RegisterHomeBuilder(dependency: self)
     }

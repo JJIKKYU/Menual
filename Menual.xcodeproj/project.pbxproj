@@ -194,21 +194,6 @@
 			path = Platform;
 			sourceTree = "<group>";
 		};
-		98281EC0278AC14C00736D59 /* Profile */ = {
-			isa = PBXGroup;
-			children = (
-				98281EC2278AC16400736D59 /* ProfileHome */,
-			);
-			path = Profile;
-			sourceTree = "<group>";
-		};
-		98281EC2278AC16400736D59 /* ProfileHome */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ProfileHome;
-			sourceTree = "<group>";
-		};
 		98281EC5278AC26600736D59 /* Register */ = {
 			isa = PBXGroup;
 			children = (
@@ -297,7 +282,6 @@
 				9888DE0F276481EA0091918F /* AppRoot */,
 				988A186D278ACA7A00DF81DA /* Diary */,
 				98281EBF278AC14700736D59 /* Platform */,
-				98281EC0278AC14C00736D59 /* Profile */,
 				98281EC5278AC26600736D59 /* Register */,
 			);
 			path = Menual;
