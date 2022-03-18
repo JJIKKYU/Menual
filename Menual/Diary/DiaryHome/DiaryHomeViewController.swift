@@ -33,6 +33,22 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         return view
     }()
     
+    let leftBarButtonItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(image: Asset.search.image,
+                                   style: .done,
+                                   target: self,
+                                   action: #selector(pressedSearchBtn))
+        return item
+    }()
+    
+    let rightBarButtonItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(image: Asset.profile.image,
+                                   style: .done,
+                                   target: self,
+                                   action: #selector(pressedMyPageBtn))
+        return item
+    }()
+    
     let testView: MomentsRoundView = {
         let view = MomentsRoundView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -56,13 +72,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         setViews()
         
         title = "MENUAL"
-        
-        // TBD 나중에 따로 변수로 만들어서 제작할 것
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(pressedSearchBtn))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(pressedMyPageBtn))
     }
     
     func setViews() {
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+        navigationItem.rightBarButtonItem = rightBarButtonItem
+        
         self.view.addSubview(scrollView)
         scrollView.addSubview(titleLabel)
         scrollView.addSubview(testView)
