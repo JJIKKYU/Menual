@@ -17,6 +17,8 @@
 		980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */; };
 		980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */; };
 		98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98239BE527E323CB00E216F1 /* MomentsRoundView.swift */; };
+		98239BE927E43AB700E216F1 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98239BE827E43AB700E216F1 /* Icons.xcassets */; };
+		98239BED27E441B300E216F1 /* Icons+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98239BEC27E441B300E216F1 /* Icons+Generated.swift */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
@@ -92,6 +94,8 @@
 		980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeBuilder.swift; sourceTree = "<group>"; };
 		980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeInteractor.swift; sourceTree = "<group>"; };
 		98239BE527E323CB00E216F1 /* MomentsRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsRoundView.swift; sourceTree = "<group>"; };
+		98239BE827E43AB700E216F1 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
+		98239BEC27E441B300E216F1 /* Icons+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Icons+Generated.swift"; sourceTree = "<group>"; };
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
@@ -203,6 +207,14 @@
 			path = Moments;
 			sourceTree = "<group>";
 		};
+		98239BEB27E4419D00E216F1 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				98239BEC27E441B300E216F1 /* Icons+Generated.swift */,
+			);
+			path = Generated;
+			sourceTree = "<group>";
+		};
 		98281EBF278AC14700736D59 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
@@ -293,7 +305,6 @@
 			isa = PBXGroup;
 			children = (
 				98D0EBE627CA09640076136E /* MenualAssets */,
-				9888DDE527646F000091918F /* Assets.xcassets */,
 				98281EC9278AC6A900736D59 /* GoogleService-Info.plist */,
 				9888DDE727646F000091918F /* LaunchScreen.storyboard */,
 				9888DDEA27646F000091918F /* Info.plist */,
@@ -379,7 +390,10 @@
 		98D0EBE627CA09640076136E /* MenualAssets */ = {
 			isa = PBXGroup;
 			children = (
+				98239BEB27E4419D00E216F1 /* Generated */,
 				98D0EBE727CA096A0076136E /* Fonts */,
+				9888DDE527646F000091918F /* Assets.xcassets */,
+				98239BE827E43AB700E216F1 /* Icons.xcassets */,
 			);
 			path = MenualAssets;
 			sourceTree = "<group>";
@@ -429,6 +443,7 @@
 				9888DDD627646EFF0091918F /* Frameworks */,
 				9888DDD727646EFF0091918F /* Resources */,
 				2DF2EDED7EE75FACF216CD3C /* [CP] Embed Pods Frameworks */,
+				98239BEA27E43DA500E216F1 /* Run swiftgen */,
 			);
 			buildRules = (
 			);
@@ -528,6 +543,7 @@
 			files = (
 				9888DDE927646F000091918F /* LaunchScreen.storyboard in Resources */,
 				98D0EBEB27CA0AFF0076136E /* Montserrat ExtraBold.ttf in Resources */,
+				98239BE927E43AB700E216F1 /* Icons.xcassets in Resources */,
 				98D0EBEE27CA0E190076136E /* SpoqaHanSansNeo Regular.otf in Resources */,
 				9888DDE627646F000091918F /* Assets.xcassets in Resources */,
 				98D0EBEF27CA0E190076136E /* SpoqaHanSansNeo Bold.otf in Resources */,
@@ -608,6 +624,25 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		98239BEA27E43DA500E216F1 /* Run swiftgen */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run swiftgen";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "swiftgen xcassets --templateName swift5 --param forceProvidesNamespaces --output Menual/MenualAssets/Generated/Icons+Generated.swift Menual/MenualAssets/Icons.xcassets\n";
+		};
 		9E5A1826847B40272AB479BB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -663,6 +698,7 @@
 				980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
 				9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */,
+				98239BED27E441B300E216F1 /* Icons+Generated.swift in Sources */,
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,

@@ -36,6 +36,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     let testView: MomentsRoundView = {
         let view = MomentsRoundView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.image = Asset.Arrow.front.image
         return view
     }()
     
