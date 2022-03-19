@@ -33,7 +33,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         return view
     }()
     
-    let leftBarButtonItem: UIBarButtonItem = {
+    lazy var leftBarButtonItem: UIBarButtonItem = {
         let item = UIBarButtonItem(image: Asset.search.image,
                                    style: .done,
                                    target: self,
@@ -41,7 +41,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         return item
     }()
     
-    let rightBarButtonItem: UIBarButtonItem = {
+    lazy var rightBarButtonItem: UIBarButtonItem = {
         let item = UIBarButtonItem(image: Asset.profile.image,
                                    style: .done,
                                    target: self,
