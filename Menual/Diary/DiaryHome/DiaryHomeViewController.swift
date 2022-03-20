@@ -11,9 +11,8 @@ import UIKit
 import SnapKit
 
 protocol DiaryHomePresentableListener: AnyObject {
-    // TODO: Declare properties and methods that the view controller can invoke to perform
-    // business logic, such as signIn(). This protocol is implemented by the corresponding
-    // interactor class.
+    func pressedSearchBtn()
+    func pressedMyPageBtn()
 }
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
@@ -105,11 +104,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     @objc
     func pressedSearchBtn() {
-        print("pressedSearchBtn!")
+        listener?.pressedSearchBtn()
     }
     
     @objc
     func pressedMyPageBtn() {
-        print("pressedMyPageBtn!")
+        listener?.pressedMyPageBtn()
     }
 }

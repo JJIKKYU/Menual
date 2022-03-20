@@ -12,7 +12,7 @@ protocol DiaryHomeDependency: Dependency {
     // created by this RIB.
 }
 
-final class DiaryHomeComponent: Component<DiaryHomeDependency> {
+final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
@@ -31,9 +31,17 @@ final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
 
     func build(withListener listener: DiaryHomeListener) -> DiaryHomeRouting {
         let component = DiaryHomeComponent(dependency: dependency)
+        
+        let profileHomeBuildable = ProfileHomeBuilder(dependency: component)
+        
         let viewController = DiaryHomeViewController()
         let interactor = DiaryHomeInteractor(presenter: viewController)
         interactor.listener = listener
-        return DiaryHomeRouter(interactor: interactor, viewController: viewController)
+        
+        return DiaryHomeRouter(
+            interactor: interactor,
+            viewController: viewController,
+            profileHomeBuildable: profileHomeBuildable
+        )
     }
 }

@@ -9,7 +9,8 @@ import RIBs
 import RxSwift
 
 protocol DiaryHomeRouting: ViewableRouting {
-    // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
+    func attachMyPage()
+    func detachMyPage()
 }
 
 protocol DiaryHomePresentable: Presentable {
@@ -21,16 +22,24 @@ protocol DiaryHomeListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
 }
 
-final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, DiaryHomeInteractable, DiaryHomePresentableListener {
+final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, DiaryHomeInteractable, DiaryHomePresentableListener, AdaptivePresentationControllerDelegate {
+    
+    var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
+    
 
     weak var router: DiaryHomeRouting?
     weak var listener: DiaryHomeListener?
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
-    override init(presenter: DiaryHomePresentable) {
+    override init(
+        presenter: DiaryHomePresentable
+    ) {
+        self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
+        
         super.init(presenter: presenter)
         presenter.listener = self
+        self.presentationDelegateProxy.delegate = self
     }
 
     override func didBecomeActive() {
@@ -41,5 +50,24 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+    
+    // AdaptivePresentationControllerDelegate, Drag로 뷰를 Dismiss 시킬경우에 호출됨
+    func presentationControllerDidDismiss() {
+        print("!!")
+    }
+    
+    func pressedSearchBtn() {
+        print("DiaryHomeInteractor :: pressedSearchBtn!")
+    }
+    
+    func pressedMyPageBtn() {
+        print("DiaryHomeInteractor :: pressedMyPageBtn!")
+        router?.attachMyPage()
+    }
+    
+    func profileHomePressedBackBtn() {
+        print("DiaryHomeInteractor :: profileHomePressedBackBtn!")
+        router?.detachMyPage()
     }
 }

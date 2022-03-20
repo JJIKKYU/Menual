@@ -19,10 +19,11 @@ protocol ProfileHomePresentable: Presentable {
 
 protocol ProfileHomeListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
+    func profileHomePressedBackBtn()
 }
 
 final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>, ProfileHomeInteractable, ProfileHomePresentableListener {
-
+    
     weak var router: ProfileHomeRouting?
     weak var listener: ProfileHomeListener?
 
@@ -41,5 +42,11 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+    
+    // VC에서 뒤로가기 버튼을 눌렀을경우
+    func pressedBackBtn() {
+        // detach 하기 위해서 부모에게 넘겨줌
+        listener?.profileHomePressedBackBtn()
     }
 }

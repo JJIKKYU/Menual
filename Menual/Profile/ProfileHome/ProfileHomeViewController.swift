@@ -10,12 +10,39 @@ import RxSwift
 import UIKit
 
 protocol ProfileHomePresentableListener: AnyObject {
-    // TODO: Declare properties and methods that the view controller can invoke to perform
-    // business logic, such as signIn(). This protocol is implemented by the corresponding
-    // interactor class.
+    func pressedBackBtn()
 }
 
 final class ProfileHomeViewController: UIViewController, ProfileHomePresentable, ProfileHomeViewControllable {
 
     weak var listener: ProfileHomePresentableListener?
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        modalPresentationStyle = .fullScreen
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+      super.viewDidLoad()
+        view.backgroundColor = .red
+        print("ProfileHome!")
+        
+        title = "NYPAGE"
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Asset.Arrow.back.image,
+                                                           style: .done,
+                                                           target: self,
+                                                           action: #selector(pressedBackBtn))
+    }
+    
+    @objc
+    func pressedBackBtn() {
+        print("ProfileHomeVC :: pressedBackBtn!")
+        listener?.pressedBackBtn()
+    }
 }
