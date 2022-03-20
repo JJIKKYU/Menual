@@ -53,6 +53,10 @@
 		988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1872278ACB4B00DF81DA /* DiaryWritingBuilder.swift */; };
 		988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1873278ACB4B00DF81DA /* DiaryWritingInteractor.swift */; };
 		988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1878278AD17500DF81DA /* AppRootViewController.swift */; };
+		98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */; };
+		98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */; };
+		98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */; };
+		98934A9C27E6F13700178A8E /* ProfileHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9827E6F13700178A8E /* ProfileHomeInteractor.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98D0EBEB27CA0AFF0076136E /* Montserrat ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBEA27CA0AFF0076136E /* Montserrat ExtraBold.ttf */; };
@@ -134,6 +138,10 @@
 		988A1872278ACB4B00DF81DA /* DiaryWritingBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingBuilder.swift; sourceTree = "<group>"; };
 		988A1873278ACB4B00DF81DA /* DiaryWritingInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingInteractor.swift; sourceTree = "<group>"; };
 		988A1878278AD17500DF81DA /* AppRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootViewController.swift; sourceTree = "<group>"; };
+		98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeRouter.swift; sourceTree = "<group>"; };
+		98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeViewController.swift; sourceTree = "<group>"; };
+		98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeBuilder.swift; sourceTree = "<group>"; };
+		98934A9827E6F13700178A8E /* ProfileHomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeInteractor.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98D0EBEA27CA0AFF0076136E /* Montserrat ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat ExtraBold.ttf"; sourceTree = "<group>"; };
@@ -310,6 +318,7 @@
 				9888DDEA27646F000091918F /* Info.plist */,
 				9888DE17276482670091918F /* AppDelegate */,
 				9888DE0F276481EA0091918F /* AppRoot */,
+				98934A9327E6F11100178A8E /* Profile */,
 				988A186D278ACA7A00DF81DA /* Diary */,
 				98281EBF278AC14700736D59 /* Platform */,
 				98281EC5278AC26600736D59 /* Register */,
@@ -374,6 +383,25 @@
 				988A1873278ACB4B00DF81DA /* DiaryWritingInteractor.swift */,
 			);
 			path = DiaryWriting;
+			sourceTree = "<group>";
+		};
+		98934A9327E6F11100178A8E /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				98934A9427E6F11E00178A8E /* ProfileHome */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		98934A9427E6F11E00178A8E /* ProfileHome */ = {
+			isa = PBXGroup;
+			children = (
+				98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */,
+				98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */,
+				98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */,
+				98934A9827E6F13700178A8E /* ProfileHomeInteractor.swift */,
+			);
+			path = ProfileHome;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -711,6 +739,7 @@
 				988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */,
 				985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */,
 				9888DE142764825F0091918F /* AppRootRouter.swift in Sources */,
+				98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */,
 				985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */,
 				98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
@@ -722,14 +751,17 @@
 				985E0EFC27C21E9900057951 /* RegisterHomeRouter.swift in Sources */,
 				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,
 				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
+				98934A9C27E6F13700178A8E /* ProfileHomeInteractor.swift in Sources */,
 				9888DE162764825F0091918F /* AppRootInteractor.swift in Sources */,
 				985E0EF827C21DEC00057951 /* RegisterIDInteractor.swift in Sources */,
 				980924B6279BCD670034D0CC /* DiaryHomeRouter.swift in Sources */,
+				98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */,
 				985E0F0427C232E300057951 /* RegisterPWRouter.swift in Sources */,
 				988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */,
 				985E0F0D27C2690500057951 /* LoginHomeRouter.swift in Sources */,
 				9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */,
 				980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */,
+				98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */,
 				9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */,
 				980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */,
 			);
