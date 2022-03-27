@@ -9,6 +9,7 @@ import RIBs
 import RxSwift
 import UIKit
 import SnapKit
+import Then
 
 protocol DiaryHomePresentableListener: AnyObject {
     func pressedSearchBtn()
@@ -25,34 +26,38 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         return label
     }()
     
-    let scrollView: UIScrollView = {
-        let view = UIScrollView()
-        view.backgroundColor = UIColor(red: 0.098, green: 0.098, blue: 0.098, alpha: 1)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    let scrollView = UIScrollView().then {
+        $0.backgroundColor = UIColor(red: 0.098, green: 0.098, blue: 0.098, alpha: 1)
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
     
-    lazy var leftBarButtonItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(image: Asset.search.image,
-                                   style: .done,
-                                   target: self,
-                                   action: #selector(pressedSearchBtn))
-        return item
-    }()
+    lazy var leftBarButtonItem = UIBarButtonItem().then {
+        $0.image = Asset.search.image
+        $0.style = .done
+        $0.target = self
+        $0.action = #selector(pressedSearchBtn)
+    }
     
-    lazy var rightBarButtonItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(image: Asset.profile.image,
-                                   style: .done,
-                                   target: self,
-                                   action: #selector(pressedMyPageBtn))
-        return item
-    }()
+    lazy var rightBarButtonItem = UIBarButtonItem().then {
+        $0.image = Asset.profile.image
+        $0.target = self
+        $0.action = #selector(pressedMyPageBtn)
+        $0.style = .done
+    }
     
     let testView: MomentsRoundView = {
         let view = MomentsRoundView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+   
+    lazy var titleView = TitleView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.title = MenualString.title_moments
+        $0.rightTitle = "전체보기 >"
+        $0.titleButton.addTarget(self, action: #selector(pressedMomentsTitleBtn), for: .touchUpInside)
+        $0.rightButton.addTarget(self, action: #selector(pressedMomentsMoreBtn), for: .touchUpInside)
+    }
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -70,7 +75,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         print("DiaryHome!")
         setViews()
         
-        title = "MENUAL"
+        title = MenualString.title_menual
     }
     
     func setViews() {
@@ -80,10 +85,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.addSubview(scrollView)
         scrollView.addSubview(titleLabel)
         scrollView.addSubview(testView)
+        scrollView.addSubview(titleView)
         
         scrollView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
             make.top.equalToSuperview()
             make.bottom.equalToSuperview().offset(20)
         }
@@ -100,6 +106,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.top.equalToSuperview().offset(100)
             make.height.equalTo(200)
         }
+        
+        titleView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalToSuperview().offset(20)
+            make.height.equalTo(40)
+        }
     }
     
     @objc
@@ -110,5 +123,15 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     @objc
     func pressedMyPageBtn() {
         listener?.pressedMyPageBtn()
+    }
+    
+    @objc
+    func pressedMomentsTitleBtn() {
+        print("Moments Title Pressed!")
+    }
+    
+    @objc
+    func pressedMomentsMoreBtn() {
+        print("Moments More Pressed!")
     }
 }
