@@ -44,6 +44,7 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         viewController.present(navigation, animated: true, completion:  nil)
     }
 
+    // MARK: - MyPage (ProfileHome) 관련 함수
     func attachMyPage() {
         print("DiaryHomeRouter :: attachMyPage!")
         if profileHomeRouting != nil {

@@ -21,7 +21,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "123"
+        label.text = ""
         return label
     }()
     

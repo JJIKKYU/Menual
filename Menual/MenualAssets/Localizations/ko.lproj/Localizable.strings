@@ -1,0 +1,12 @@
+// MENUAL UX Localizations 적용 버전 = 1.01
+localizations_ver = "1.01";
+title_moments = "MOMENTS";
+title_menualList = "MY MENUAL";
+button_writeMenual = "{N}번째 메뉴얼 작성하기";
+title_aboutMe = "ABOUT ME";
+title_notice = "NOTICE";
+title_reminder = "REMINDER";
+button_apply = "적용하기";
+placeholder_search = "검색할 내용을 입력해주세요.";
+title_searchResult = "총 {N}개의 검색 결과";
+title_searchHistory = "최근 검색기록";

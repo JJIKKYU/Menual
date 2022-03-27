@@ -32,12 +32,20 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         view.backgroundColor = .red
         print("ProfileHome!")
         
-        title = "NYPAGE"
+        title = "MYPAGE"
+        
+        // 뒤로가기 제스쳐 가능하도록
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: Asset.Arrow.back.image,
                                                            style: .done,
                                                            target: self,
                                                            action: #selector(pressedBackBtn))
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        listener?.pressedBackBtn()
     }
     
     @objc
