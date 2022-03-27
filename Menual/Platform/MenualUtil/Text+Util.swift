@@ -70,6 +70,20 @@ extension UIFont {
         }
     }
     
+    // 디자인 시스템에 정의되어 있는 타이틀 리턴
+    class func AppBodyOnlyFont(_ body: BodyType) -> UIFont! {
+        switch body {
+        case .body_4:
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 16)
+        case .body_3:
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 14)
+        case .body_2:
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 12)
+        case .body_1:
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 10)
+        }
+    }
+    
     // 디자인 시스템에 정의되어 있는 바디 리턴
     class func AppBody(_ body: BodyType, _ text: String) -> NSMutableAttributedString {
         let attrString = NSMutableAttributedString(string: text)
