@@ -16,6 +16,9 @@ target 'Menual' do
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
   
+  # then 문법 사용
+  pod 'Then'
+  
 
   target 'MenualTests' do
     inherit! :search_paths
