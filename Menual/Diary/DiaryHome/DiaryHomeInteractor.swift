@@ -11,6 +11,8 @@ import RxSwift
 protocol DiaryHomeRouting: ViewableRouting {
     func attachMyPage()
     func detachMyPage()
+    func attachDiarySearch()
+    func detachDiarySearch()
 }
 
 protocol DiaryHomePresentable: Presentable {
@@ -57,10 +59,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         print("!!")
     }
     
-    func pressedSearchBtn() {
-        print("DiaryHomeInteractor :: pressedSearchBtn!")
-    }
-    
+    // MARK: - MyPage (ProfileHome) 관련 함수
     func pressedMyPageBtn() {
         print("DiaryHomeInteractor :: pressedMyPageBtn!")
         router?.attachMyPage()
@@ -69,5 +68,16 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     func profileHomePressedBackBtn() {
         print("DiaryHomeInteractor :: profileHomePressedBackBtn!")
         router?.detachMyPage()
+    }
+    
+    // MARK: - Diary Search (검색화면) 관련 함수
+    func pressedSearchBtn() {
+        print("DiaryHomeInteractor :: pressedSearchBtn!")
+        router?.attachDiarySearch()
+    }
+    
+    func diarySearchPressedBackBtn() {
+        print("DiaryHomeInteractor :: diarySearchPressedBackBtn!")
+        router?.detachDiarySearch()
     }
 }

@@ -45,11 +45,9 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.style = .done
     }
     
-    let testView: MomentsRoundView = {
-        let view = MomentsRoundView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+    let testView = MomentsRoundView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
    
     lazy var titleView = TitleView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false

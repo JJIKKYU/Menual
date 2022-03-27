@@ -14,3 +14,4 @@ title_searchHistory = "최근 검색기록"; // 검색
 title_showWeather = "날씨 입력한 메뉴얼만 보기"; // 필터
 title_showPlace = "장소 입력한 메뉴얼만 보기"; // 필터
 title_filter = "필터"; // 필터
+title_search = "SEARCH"; // 검색

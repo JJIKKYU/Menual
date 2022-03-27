@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DiaryHomeInteractable: Interactable, ProfileHomeListener {
+protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener {
     var router: DiaryHomeRouting? { get set }
     var listener: DiaryHomeListener? { get set }
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
@@ -23,13 +23,18 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     private let profileHomeBuildable: ProfileHomeBuildable
     private var profileHomeRouting: Routing?
     
+    private let diarySearchBuildable: DiarySearchBuildable
+    private var diarySearchRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DiaryHomeInteractable,
         viewController: DiaryHomeViewControllable,
-        profileHomeBuildable: ProfileHomeBuildable
+        profileHomeBuildable: ProfileHomeBuildable,
+        diarySearchBuildable: DiarySearchBuildable
     ) {
         self.profileHomeBuildable = profileHomeBuildable
+        self.diarySearchBuildable = diarySearchBuildable
         
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
@@ -67,5 +72,30 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         viewController.popViewController(animated: true)
         detachChild(router)
         profileHomeRouting = nil
+    }
+    
+    // MARK: - Diary Search (검색화면) 관련 함수
+    func attachDiarySearch() {
+        print("DiaryHomeRouter :: attachDiarySearch")
+        if diarySearchRouting != nil {
+            return
+        }
+        
+        let router = diarySearchBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        diarySearchRouting = router
+        attachChild(router)
+    }
+    
+    func detachDiarySearch() {
+        print("DiaryHomeRouter :: detachDiarySearch")
+        guard let router = diarySearchRouting else {
+            return
+        }
+        
+        viewController.popViewController(animated: true)
+        detachChild(router)
+        diarySearchRouting = nil
     }
 }

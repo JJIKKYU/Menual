@@ -24,4 +24,5 @@ struct MenualString {
     static let title_showWeather = "title_showWeather".localized
     static let title_showPlace = "title_showPlace".localized
     static let title_filter = "title_filter".localized
+    static let title_search = "title_search".localized
 }
