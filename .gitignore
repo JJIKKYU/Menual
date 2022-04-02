@@ -142,3 +142,8 @@ iOSInjectionProject/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,xcode,cocoapods,swift
+Gemfile
+Gemfile.lock
+fastlane/Appfile
+fastlane/Fastfile
+fastlane/README.md

@@ -32,14 +32,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset.search.image
+//        $0.image = Asset.search.image
         $0.style = .done
         $0.target = self
         $0.action = #selector(pressedSearchBtn)
     }
     
     lazy var rightBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset.profile.image
+//        $0.image = Asset.profile.image
         $0.target = self
         $0.action = #selector(pressedMyPageBtn)
         $0.style = .done
