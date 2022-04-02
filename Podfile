@@ -27,6 +27,7 @@ target 'Menual' do
 
   target 'MenualUITests' do
     # Pods for testing
+    pod 'RIBs', '~> 0.9'
   end
   
   # 설치시에 9.0으로 타겟 변경
