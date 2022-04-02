@@ -77,3 +77,57 @@ final class DiarySearchRoutingMock: DiarySearchRouting {
         
     }
 }
+
+final class DiarySearchInteractableMock: DiarySearchInteractable {
+    
+    var router: DiarySearchRouting?
+    var listener: DiarySearchListener?
+    var isActive: Bool {
+        isActiveSubject.value
+    }
+    var isActiveStream: Observable<Bool> { isActiveSubject.asObservable() }
+    private let isActiveSubject = Variable<Bool>(false)
+    
+    func activate() {
+        
+    }
+    
+    func deactivate() {
+        
+    }
+}
+
+final class DiarySearchViewControllerMock: DiarySearchPresentable, DiarySearchViewControllable {
+    var listener: DiarySearchPresentableListener?
+    var uiviewControllerSetCallCount: Int = 0
+    var uiviewController: UIViewController = UIViewController() {
+        didSet {
+            uiviewControllerSetCallCount += 1
+            
+        }
+    }
+    
+    init() {
+        
+    }
+}
+
+
+final class DiarySearchPresentableMock: DiarySearchPresentable {
+    var listener: DiarySearchPresentableListener?
+    
+    init() {
+        
+    }
+}
+
+final class DiarySearchDependencyMock: DiarySearchDependency {
+    
+}
+
+final class DiarySearchListenerMock: DiarySearchListener {
+    var diarySearchPressedBackBtnCallCount: Int = 0
+    func diarySearchPressedBackBtn() {
+        diarySearchPressedBackBtnCallCount += 1
+    }
+}

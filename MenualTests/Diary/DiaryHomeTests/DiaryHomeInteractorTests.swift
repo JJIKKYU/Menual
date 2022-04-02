@@ -13,6 +13,8 @@ final class DiaryHomeInteractorTests: XCTestCase {
     private var sut: DiaryHomeInteractor!
     private var presenter: DiaryHomePresentableMock!
     private var dependency: DiaryHomeDependencyMock!
+    private var listener: DiaryHomeListenerMock!
+    private var router: DiaryHomeRoutingMock!
 
     // TODO: declare other objects and mocks you need as private vars
 
@@ -22,17 +24,40 @@ final class DiaryHomeInteractorTests: XCTestCase {
         // TODO: instantiate objects and mocks
         self.presenter = DiaryHomePresentableMock()
         self.dependency = DiaryHomeDependencyMock()
+        self.listener = DiaryHomeListenerMock()
+
+        let interactor = DiaryHomeInteractor(presenter: self.presenter)
+
+        self.router = DiaryHomeRoutingMock(
+            interactable: interactor,
+            viewControllable: ViewControllableMock()
+        )
         
-        sut = DiaryHomeInteractor(presenter: self.presenter)
+        interactor.router = self.router
+        interactor.listener = self.listener
+        sut = interactor
     }
 
     // MARK: - Tests
-
-    func test_exampleObservable_callsRouterOrListener_exampleProtocol() {
+    func testPressedMyPageBtn() {
         // given
         
         // when
+        sut.activate()
+        sut.pressedMyPageBtn()
         
         // then
+        XCTAssertEqual(router.attachMyPageCallCount, 1)
+    }
+    
+    func testPressedHomeSearchBtn() {
+        // given
+        
+        // when
+        sut.activate()
+        sut.pressedSearchBtn()
+        
+        // then
+        XCTAssertEqual(router.attachDiarySearchCallCount, 1)
     }
 }

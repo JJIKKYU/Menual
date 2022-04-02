@@ -39,7 +39,6 @@
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
 		9888DDE927646F000091918F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE727646F000091918F /* LaunchScreen.storyboard */; };
-		9888DDF427646F000091918F /* MenualTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDF327646F000091918F /* MenualTests.swift */; };
 		9888DDFE27646F000091918F /* MenualUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDFD27646F000091918F /* MenualUITests.swift */; };
 		9888DE0027646F000091918F /* MenualUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDFF27646F000091918F /* MenualUITestsLaunchTests.swift */; };
 		9888DE142764825F0091918F /* AppRootRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DE112764825F0091918F /* AppRootRouter.swift */; };
@@ -59,6 +58,8 @@
 		988A2D3B27F82F3B0046C43A /* ViewControllableMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D3A27F82F3B0046C43A /* ViewControllableMock.swift */; };
 		988A2D3F27F8303F0046C43A /* ProfileHomeMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D3E27F8303F0046C43A /* ProfileHomeMock.swift */; };
 		988A2D4227F8312E0046C43A /* DiarySearchMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D4127F8312E0046C43A /* DiarySearchMock.swift */; };
+		988A2D4527F864F40046C43A /* DiarySearchInteractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D4327F864F40046C43A /* DiarySearchInteractorTests.swift */; };
+		988A2D4627F864F40046C43A /* DiarySearchRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D4427F864F40046C43A /* DiarySearchRouterTests.swift */; };
 		98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */; };
 		98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */; };
 		98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */; };
@@ -137,7 +138,6 @@
 		9888DDE827646F000091918F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9888DDEA27646F000091918F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9888DDEF27646F000091918F /* MenualTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenualTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9888DDF327646F000091918F /* MenualTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualTests.swift; sourceTree = "<group>"; };
 		9888DDF927646F000091918F /* MenualUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MenualUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9888DDFD27646F000091918F /* MenualUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualUITests.swift; sourceTree = "<group>"; };
 		9888DDFF27646F000091918F /* MenualUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualUITestsLaunchTests.swift; sourceTree = "<group>"; };
@@ -159,6 +159,8 @@
 		988A2D3A27F82F3B0046C43A /* ViewControllableMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllableMock.swift; sourceTree = "<group>"; };
 		988A2D3E27F8303F0046C43A /* ProfileHomeMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeMock.swift; sourceTree = "<group>"; };
 		988A2D4127F8312E0046C43A /* DiarySearchMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchMock.swift; sourceTree = "<group>"; };
+		988A2D4327F864F40046C43A /* DiarySearchInteractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchInteractorTests.swift; sourceTree = "<group>"; };
+		988A2D4427F864F40046C43A /* DiarySearchRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchRouterTests.swift; sourceTree = "<group>"; };
 		98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeRouter.swift; sourceTree = "<group>"; };
 		98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeViewController.swift; sourceTree = "<group>"; };
 		98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeBuilder.swift; sourceTree = "<group>"; };
@@ -371,7 +373,6 @@
 			children = (
 				988A2D3C27F830280046C43A /* Profile */,
 				988A2D3527F822EF0046C43A /* Diary */,
-				9888DDF327646F000091918F /* MenualTests.swift */,
 			);
 			path = MenualTests;
 			sourceTree = "<group>";
@@ -475,6 +476,8 @@
 			isa = PBXGroup;
 			children = (
 				988A2D4127F8312E0046C43A /* DiarySearchMock.swift */,
+				988A2D4327F864F40046C43A /* DiarySearchInteractorTests.swift */,
+				988A2D4427F864F40046C43A /* DiarySearchRouterTests.swift */,
 			);
 			path = DiarySearch;
 			sourceTree = "<group>";
@@ -905,10 +908,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9888DDF427646F000091918F /* MenualTests.swift in Sources */,
+				988A2D4527F864F40046C43A /* DiarySearchInteractorTests.swift in Sources */,
 				988A2D3F27F8303F0046C43A /* ProfileHomeMock.swift in Sources */,
 				988A2D3327F821F10046C43A /* DiaryHomeInteractorTests.swift in Sources */,
 				988A2D4227F8312E0046C43A /* DiarySearchMock.swift in Sources */,
+				988A2D4627F864F40046C43A /* DiarySearchRouterTests.swift in Sources */,
 				988A2D3827F823160046C43A /* DiaryHomeMock.swift in Sources */,
 				988A2D3427F821F10046C43A /* DiaryHomeRouterTests.swift in Sources */,
 			);
@@ -1086,7 +1090,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1119,7 +1123,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1150,7 +1154,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1176,7 +1180,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1201,7 +1205,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1225,7 +1229,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

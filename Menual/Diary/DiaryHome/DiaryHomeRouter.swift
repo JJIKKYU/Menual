@@ -11,6 +11,8 @@ protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchLi
     var router: DiaryHomeRouting? { get set }
     var listener: DiaryHomeListener? { get set }
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
+    
+    func pressedSearchBtn()
 }
 
 protocol DiaryHomeViewControllable: ViewControllable {

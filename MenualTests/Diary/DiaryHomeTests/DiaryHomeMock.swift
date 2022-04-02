@@ -15,9 +15,7 @@ final class DiaryHomePresentableMock: DiaryHomePresentable {
     
     // 구현해줘야하는 메소드도 fix 하면 바로 불러올 수 있음
     // 해당 메소드가 불렸는지, 몇 번 불렸는지 count 하거나 실제 값을 검증할 수 있음.
-    
     init() {
-        
     }
 }
 
@@ -26,7 +24,7 @@ final class DiaryHomeDependencyMock: DiaryHomeDependency {
 }
 
 final class DiaryHomeInteractableMock: DiaryHomeInteractable {
-    
+
     var router: DiaryHomeRouting?
     var listener: DiaryHomeListener?
     var isActive: Bool {
@@ -51,6 +49,11 @@ final class DiaryHomeInteractableMock: DiaryHomeInteractable {
     var diarySearchPressedBackBtnCallCount: Int = 0
     func diarySearchPressedBackBtn() {
         diarySearchPressedBackBtnCallCount += 1
+    }
+    
+    var pressedSearchBtnCallCount: Int = 0
+    func pressedSearchBtn() {
+        pressedSearchBtnCallCount += 1
     }
 }
 
@@ -127,12 +130,9 @@ final class DiaryHomeRoutingMock: DiaryHomeRouting {
     func detachChild(_ child: Routing) {
         detachChildCallCount += 1
     }
-    
-    
 }
 
 final class DiaryHomeBuildableMock: DiaryHomeBuildable {
-    
     var buildCallCount: Int = 0
     func build(withListener listener: DiaryHomeListener) -> DiaryHomeRouting {
         buildCallCount += 1
@@ -159,5 +159,8 @@ final class DiaryHomeViewControllableMock: DiaryHomePresentable, DiaryHomeViewCo
     init() {
         
     }
+}
+
+final class DiaryHomeListenerMock: DiaryHomeListener {
     
 }
