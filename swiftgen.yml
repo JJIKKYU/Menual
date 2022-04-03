@@ -26,7 +26,12 @@
    inputs:
      - Menual/MenualAssets/StandardIcons.xcassets
      - Menual/MenualAssets/ObjectIcons.xcassets
+     - Menual/MenualAssets/IllustrationIcons.xcassets
    outputs:
+     - templateName: swift5
+       params:
+         forceProvidesNamespaces: true
+       output: Menual/MenualAssets/Generated/Icons+Generated.swift
      - templateName: swift5
        params:
          forceProvidesNamespaces: true

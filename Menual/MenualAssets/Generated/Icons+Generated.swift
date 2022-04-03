@@ -19,6 +19,12 @@ internal typealias AssetImageTypeAlias = ImageAsset.Image
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 internal enum Asset {
+  internal enum IllustrationIcons {
+    internal static let emtpySpace = ImageAsset(name: "emtpy_space")
+    internal static let networkError = ImageAsset(name: "network_error")
+    internal static let pageError = ImageAsset(name: "page_error")
+    internal static let serviceCheck = ImageAsset(name: "service_check")
+  }
   internal enum ObjectIcons {
     internal enum Book {
       internal static let close = ImageAsset(name: "close")

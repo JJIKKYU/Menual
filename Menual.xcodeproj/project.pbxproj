@@ -61,6 +61,7 @@
 		988A2D4627F864F40046C43A /* DiarySearchRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D4427F864F40046C43A /* DiarySearchRouterTests.swift */; };
 		988A2D4827F948350046C43A /* ObjectIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 988A2D4727F948350046C43A /* ObjectIcons.xcassets */; };
 		988A2D5027F96BEF0046C43A /* Icons+Generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D4F27F96BEF0046C43A /* Icons+Generated.swift */; };
+		988A2D5227F971920046C43A /* IllustrationIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 988A2D5127F971920046C43A /* IllustrationIcons.xcassets */; };
 		98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */; };
 		98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */; };
 		98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */; };
@@ -163,6 +164,7 @@
 		988A2D4427F864F40046C43A /* DiarySearchRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchRouterTests.swift; sourceTree = "<group>"; };
 		988A2D4727F948350046C43A /* ObjectIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ObjectIcons.xcassets; sourceTree = "<group>"; };
 		988A2D4F27F96BEF0046C43A /* Icons+Generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Icons+Generated.swift"; sourceTree = "<group>"; };
+		988A2D5127F971920046C43A /* IllustrationIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = IllustrationIcons.xcassets; sourceTree = "<group>"; };
 		98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeRouter.swift; sourceTree = "<group>"; };
 		98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeViewController.swift; sourceTree = "<group>"; };
 		98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeBuilder.swift; sourceTree = "<group>"; };
@@ -534,6 +536,7 @@
 				9888DDE527646F000091918F /* Assets.xcassets */,
 				98239BE827E43AB700E216F1 /* StandardIcons.xcassets */,
 				988A2D4727F948350046C43A /* ObjectIcons.xcassets */,
+				988A2D5127F971920046C43A /* IllustrationIcons.xcassets */,
 			);
 			path = MenualAssets;
 			sourceTree = "<group>";
@@ -686,6 +689,7 @@
 				9888DDE927646F000091918F /* LaunchScreen.storyboard in Resources */,
 				98D0EBEB27CA0AFF0076136E /* Montserrat ExtraBold.ttf in Resources */,
 				98239BE927E43AB700E216F1 /* StandardIcons.xcassets in Resources */,
+				988A2D5227F971920046C43A /* IllustrationIcons.xcassets in Resources */,
 				988A2D4827F948350046C43A /* ObjectIcons.xcassets in Resources */,
 				98D0EBEE27CA0E190076136E /* SpoqaHanSansNeo Regular.otf in Resources */,
 				9888DDE627646F000091918F /* Assets.xcassets in Resources */,
