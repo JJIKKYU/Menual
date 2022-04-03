@@ -24,8 +24,13 @@
 ##   - To know which params are supported for a template, use `swiftgen template doc xcassets swift5` to open the template documentation on GitHub.
  xcassets:
    inputs:
-     - Menual/MenualAssets/Icons.xcassets
+     - Menual/MenualAssets/StandardIcons.xcassets
+     - Menual/MenualAssets/ObjectIcons.xcassets
    outputs:
+     - templateName: swift5
+       params:
+         forceProvidesNamespaces: true
+       output: Menual/MenualAssets/Generated/Icons+Generated.swift
      - templateName: swift5
        params:
          forceProvidesNamespaces: true

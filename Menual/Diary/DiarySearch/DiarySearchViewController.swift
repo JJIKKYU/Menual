@@ -36,10 +36,10 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         // 뒤로가기 제스쳐 가능하도록
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Asset.Arrow.back.image,
-//                                                           style: .done,
-//                                                           target: self,
-//                                                           action: #selector(pressedBackBtn))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Asset.StandardIcons.Arrow.back.image,
+                                                           style: .done,
+                                                           target: self,
+                                                           action: #selector(pressedBackBtn))
         
         title = MenualString.title_search
     }

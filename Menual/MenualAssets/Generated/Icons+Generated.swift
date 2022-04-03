@@ -19,75 +19,123 @@ internal typealias AssetImageTypeAlias = ImageAsset.Image
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 internal enum Asset {
-  internal static let add = ImageAsset(name: "add")
-  internal static let album = ImageAsset(name: "album")
-  internal static let alert = ImageAsset(name: "alert")
-  internal enum Arrow {
-    internal static let back = ImageAsset(name: "back")
-    internal enum Down {
-      internal static let big = ImageAsset(name: "big")
-      internal static let small = ImageAsset(name: "small")
+  internal enum ObjectIcons {
+    internal enum Book {
+      internal static let close = ImageAsset(name: "close")
+      internal static let `open` = ImageAsset(name: "open")
     }
-    internal static let front = ImageAsset(name: "front")
-    internal static let `left` = ImageAsset(name: "left")
-    internal static let `right` = ImageAsset(name: "right")
-    internal enum Up {
-      internal static let big = ImageAsset(name: "big")
-      internal static let small = ImageAsset(name: "small")
+    internal enum Calender {
+      internal static let table = ImageAsset(name: "table")
+      internal static let wall = ImageAsset(name: "wall")
     }
+    internal enum Clip {
+      internal static let bulldog = ImageAsset(name: "bulldog")
+      internal static let double = ImageAsset(name: "double")
+    }
+    internal enum Clock {
+      internal static let angled = ImageAsset(name: "angled")
+      internal static let round = ImageAsset(name: "round")
+    }
+    internal enum Coffee {
+      internal static let glasscup = ImageAsset(name: "glasscup")
+      internal static let papercup = ImageAsset(name: "papercup")
+    }
+    internal static let diary = ImageAsset(name: "diary")
+    internal static let drawer = ImageAsset(name: "drawer")
+    internal enum Flower {
+      internal static let _1 = ImageAsset(name: "1")
+      internal static let _2 = ImageAsset(name: "2")
+    }
+    internal enum Lamp {
+      internal static let angled = ImageAsset(name: "angled")
+      internal static let round = ImageAsset(name: "round")
+    }
+    internal static let mirror = ImageAsset(name: "mirror")
+    internal static let paper = ImageAsset(name: "paper")
+    internal static let stand = ImageAsset(name: "stand")
+    internal enum Stationery {
+      internal enum Pen {
+        internal static let _1 = ImageAsset(name: "1")
+        internal static let _2 = ImageAsset(name: "2")
+      }
+      internal enum Pin {
+        internal static let _1 = ImageAsset(name: "1")
+        internal static let _2 = ImageAsset(name: "2")
+      }
+    }
+    internal static let stopwatch = ImageAsset(name: "stopwatch")
+    internal static let tea = ImageAsset(name: "tea")
   }
-  internal static let bookmark = ImageAsset(name: "bookmark")
-  internal static let calendar = ImageAsset(name: "calendar")
-  internal static let camera = ImageAsset(name: "camera")
-  internal static let check = ImageAsset(name: "check")
-  internal enum Circle {
-    internal static let back = ImageAsset(name: "back")
-    internal enum Check {
+  internal enum StandardIcons {
+    internal static let album = ImageAsset(name: "album")
+    internal static let alert = ImageAsset(name: "alert")
+    internal enum Arrow {
+      internal static let back = ImageAsset(name: "back")
+      internal enum Down {
+        internal static let big = ImageAsset(name: "big")
+        internal static let small = ImageAsset(name: "small")
+      }
+      internal static let front = ImageAsset(name: "front")
+      internal static let `left` = ImageAsset(name: "left")
+      internal static let `right` = ImageAsset(name: "right")
+      internal enum Up {
+        internal static let big = ImageAsset(name: "big")
+        internal static let small = ImageAsset(name: "small")
+      }
+    }
+    internal static let bookmark = ImageAsset(name: "bookmark")
+    internal static let calendar = ImageAsset(name: "calendar")
+    internal static let camera = ImageAsset(name: "camera")
+    internal static let check = ImageAsset(name: "check")
+    internal enum Circle {
+      internal static let back = ImageAsset(name: "back")
+      internal enum Check {
+        internal static let active = ImageAsset(name: "active")
+        internal static let unactive = ImageAsset(name: "unactive")
+      }
+      internal static let close = ImageAsset(name: "close")
+      internal static let front = ImageAsset(name: "front")
+    }
+    internal static let close = ImageAsset(name: "close")
+    internal static let cloud = ImageAsset(name: "cloud")
+    internal static let delete = ImageAsset(name: "delete")
+    internal static let download = ImageAsset(name: "download")
+    internal static let erase = ImageAsset(name: "erase")
+    internal static let exclamation = ImageAsset(name: "exclamation")
+    internal static let filter = ImageAsset(name: "filter")
+    internal static let highlight = ImageAsset(name: "highlight")
+    internal static let information = ImageAsset(name: "information")
+    internal static let keyboard = ImageAsset(name: "keyboard")
+    internal static let lock = ImageAsset(name: "lock")
+    internal static let modify = ImageAsset(name: "modify")
+    internal static let more = ImageAsset(name: "more")
+    internal static let picture = ImageAsset(name: "picture")
+    internal static let place = ImageAsset(name: "place")
+    internal static let profile = ImageAsset(name: "profile")
+    internal static let question = ImageAsset(name: "question")
+    internal enum Radio {
       internal static let active = ImageAsset(name: "active")
       internal static let unactive = ImageAsset(name: "unactive")
     }
-    internal static let close = ImageAsset(name: "close")
-    internal static let front = ImageAsset(name: "front")
+    internal static let rain = ImageAsset(name: "rain")
+    internal static let read = ImageAsset(name: "read")
+    internal static let recomment = ImageAsset(name: "recomment")
+    internal static let search = ImageAsset(name: "search")
+    internal static let setting = ImageAsset(name: "setting")
+    internal static let share = ImageAsset(name: "share")
+    internal static let snow = ImageAsset(name: "snow")
+    internal static let storage = ImageAsset(name: "storage")
+    internal static let sun = ImageAsset(name: "sun")
+    internal static let thunder = ImageAsset(name: "thunder")
+    internal static let time = ImageAsset(name: "time")
+    internal static let unlock = ImageAsset(name: "unlock")
+    internal enum View {
+      internal static let active = ImageAsset(name: "active")
+      internal static let unactive = ImageAsset(name: "unactive")
+    }
+    internal static let wind = ImageAsset(name: "wind")
+    internal static let write = ImageAsset(name: "write")
   }
-  internal static let close = ImageAsset(name: "close")
-  internal static let cloud = ImageAsset(name: "cloud")
-  internal static let delete = ImageAsset(name: "delete")
-  internal static let download = ImageAsset(name: "download")
-  internal static let erase = ImageAsset(name: "erase")
-  internal static let exclamation = ImageAsset(name: "exclamation")
-  internal static let filter = ImageAsset(name: "filter")
-  internal static let highlight = ImageAsset(name: "highlight")
-  internal static let information = ImageAsset(name: "information")
-  internal static let keyboard = ImageAsset(name: "keyboard")
-  internal static let lock = ImageAsset(name: "lock")
-  internal static let modify = ImageAsset(name: "modify")
-  internal static let more = ImageAsset(name: "more")
-  internal static let picture = ImageAsset(name: "picture")
-  internal static let place = ImageAsset(name: "place")
-  internal static let profile = ImageAsset(name: "profile")
-  internal static let question = ImageAsset(name: "question")
-  internal enum Radio {
-    internal static let active = ImageAsset(name: "active")
-    internal static let unactive = ImageAsset(name: "unactive")
-  }
-  internal static let rain = ImageAsset(name: "rain")
-  internal static let read = ImageAsset(name: "read")
-  internal static let recomment = ImageAsset(name: "recomment")
-  internal static let search = ImageAsset(name: "search")
-  internal static let setting = ImageAsset(name: "setting")
-  internal static let share = ImageAsset(name: "share")
-  internal static let snow = ImageAsset(name: "snow")
-  internal static let storage = ImageAsset(name: "storage")
-  internal static let sun = ImageAsset(name: "sun")
-  internal static let thunder = ImageAsset(name: "thunder")
-  internal static let time = ImageAsset(name: "time")
-  internal static let unlock = ImageAsset(name: "unlock")
-  internal enum View {
-    internal static let active = ImageAsset(name: "active")
-    internal static let unactive = ImageAsset(name: "unactive")
-  }
-  internal static let wind = ImageAsset(name: "wind")
-  internal static let write = ImageAsset(name: "write")
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 
