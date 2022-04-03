@@ -17,6 +17,9 @@ enum CornerType {
 }
 
 extension UIView {
+    /**
+     CornerRadius System
+     */
     func AppCorner(_ type: CornerType) {
         switch type {
         case .tiny:

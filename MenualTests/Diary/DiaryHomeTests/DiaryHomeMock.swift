@@ -24,7 +24,6 @@ final class DiaryHomeDependencyMock: DiaryHomeDependency {
 }
 
 final class DiaryHomeInteractableMock: DiaryHomeInteractable {
-
     var router: DiaryHomeRouting?
     var listener: DiaryHomeListener?
     var isActive: Bool {
@@ -55,10 +54,14 @@ final class DiaryHomeInteractableMock: DiaryHomeInteractable {
     func pressedSearchBtn() {
         pressedSearchBtnCallCount += 1
     }
+    
+    var diaryMomentsPressedBackBtnCallCount: Int = 0
+    func diaryMomentsPressedBackBtn() {
+        diaryMomentsPressedBackBtnCallCount += 1
+    }
 }
 
 final class DiaryHomeRoutingMock: DiaryHomeRouting {
-    
     // Variables
     var viewControllable: ViewControllable
     
@@ -129,6 +132,16 @@ final class DiaryHomeRoutingMock: DiaryHomeRouting {
     var detachChildCallCount: Int = 0
     func detachChild(_ child: Routing) {
         detachChildCallCount += 1
+    }
+    
+    var attachDiaryMomentsCallCount: Int = 0
+    func attachDiaryMoments() {
+        attachDiaryMomentsCallCount += 1
+    }
+    
+    var detachDiaryMomentsCallCount: Int = 0
+    func detachDiaryMoments() {
+        detachDiaryMomentsCallCount += 1
     }
 }
 

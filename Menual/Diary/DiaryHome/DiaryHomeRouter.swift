@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener {
+protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryMomentsListener {
     var router: DiaryHomeRouting? { get set }
     var listener: DiaryHomeListener? { get set }
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
@@ -28,17 +28,25 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     private let diarySearchBuildable: DiarySearchBuildable
     private var diarySearchRouting: Routing?
     
+    private let diaryMomentsBuildable: DiaryMomentsBuildable
+    private var diaryMomentsRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DiaryHomeInteractable,
         viewController: DiaryHomeViewControllable,
         profileHomeBuildable: ProfileHomeBuildable,
-        diarySearchBuildable: DiarySearchBuildable
+        diarySearchBuildable: DiarySearchBuildable,
+        diaryMomentsBuildable: DiaryMomentsBuildable
     ) {
         self.profileHomeBuildable = profileHomeBuildable
         self.diarySearchBuildable = diarySearchBuildable
+        self.diaryMomentsBuildable = diaryMomentsBuildable
         
-        super.init(interactor: interactor, viewController: viewController)
+        super.init(
+            interactor: interactor,
+            viewController: viewController
+        )
         interactor.router = self
         navigationControllable = NavigationControllerable(root: viewController)
     }
@@ -99,5 +107,30 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         viewController.popViewController(animated: true)
         detachChild(router)
         diarySearchRouting = nil
+    }
+    
+    // MARK: - Diary Moments 관련 함수
+    func attachDiaryMoments() {
+        print("DiaryHomeRouter :: attachDiaryMoments")
+        if diaryMomentsRouting != nil {
+            return
+        }
+        
+        let router = diaryMomentsBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        diaryMomentsRouting = router
+        attachChild(router)
+    }
+    
+    func detachDiaryMoments() {
+        print("DiaryHomeRouter :: detachDiaryMoments")
+        guard let router = diaryMomentsRouting else {
+            return
+        }
+        
+        viewController.popViewController(animated: true)
+        detachChild(router)
+        diaryMomentsRouting = nil
     }
 }

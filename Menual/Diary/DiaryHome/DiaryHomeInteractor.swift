@@ -13,6 +13,8 @@ protocol DiaryHomeRouting: ViewableRouting {
     func detachMyPage()
     func attachDiarySearch()
     func detachDiarySearch()
+    func attachDiaryMoments()
+    func detachDiaryMoments()
 }
 
 protocol DiaryHomePresentable: Presentable {
@@ -25,7 +27,6 @@ protocol DiaryHomeListener: AnyObject {
 }
 
 final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, DiaryHomeInteractable, DiaryHomePresentableListener, AdaptivePresentationControllerDelegate {
-    
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
     
 
@@ -79,5 +80,21 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     func diarySearchPressedBackBtn() {
         print("DiaryHomeInteractor :: diarySearchPressedBackBtn!")
         router?.detachDiarySearch()
+    }
+    
+    // MARK: - Moments 관련 함수
+    func pressedMomentsTitleBtn() {
+        print("DiaryHomeInteractor :: pressedMomentsTitleBtn!")
+        router?.attachDiaryMoments()
+    }
+    
+    func pressedMomentsMoreBtn() {
+        print("DiaryHomeInteractor :: pressedMomentsMoreBtn!")
+        router?.attachDiaryMoments()
+    }
+    
+    func diaryMomentsPressedBackBtn() {
+        print("DiaryHomeInteractor :: diaryMomentsPressedBackBtn!")
+        router?.detachDiaryMoments()
     }
 }

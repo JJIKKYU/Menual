@@ -45,19 +45,37 @@ final class DiaryHomeInteractorTests: XCTestCase {
         // when
         sut.activate()
         sut.pressedMyPageBtn()
+        sut.profileHomePressedBackBtn()
         
         // then
         XCTAssertEqual(router.attachMyPageCallCount, 1)
+        XCTAssertEqual(router.detachMyPageCallCount, 1)
     }
     
-    func testPressedHomeSearchBtn() {
+    func testAttachDettachDiarySearch() {
         // given
         
         // when
         sut.activate()
         sut.pressedSearchBtn()
+        sut.diarySearchPressedBackBtn()
         
         // then
         XCTAssertEqual(router.attachDiarySearchCallCount, 1)
+        XCTAssertEqual(router.dettachDiarySearchCallCount, 1)
+    }
+    
+    func testAttachDettachDiaryMoments() {
+        // given
+        
+        // when
+        sut.activate()
+        sut.pressedMomentsMoreBtn()
+        sut.pressedMomentsTitleBtn()
+        sut.diaryMomentsPressedBackBtn()
+        
+        // then
+        XCTAssertEqual(router.attachDiaryMomentsCallCount, 2)
+        XCTAssertEqual(router.detachDiaryMomentsCallCount, 1)
     }
 }

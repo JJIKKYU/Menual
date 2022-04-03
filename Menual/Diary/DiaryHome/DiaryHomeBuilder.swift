@@ -12,7 +12,7 @@ protocol DiaryHomeDependency: Dependency {
     // created by this RIB.
 }
 
-final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency {
+final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
@@ -34,6 +34,7 @@ final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
         
         let profileHomeBuildable = ProfileHomeBuilder(dependency: component)
         let diarySearchBuildable = DiarySearchBuilder(dependency: component)
+        let diaryMomentsBuildable = DiaryMomentsBuilder(dependency: component)
         
         let viewController = DiaryHomeViewController()
         let interactor = DiaryHomeInteractor(presenter: viewController)
@@ -43,7 +44,8 @@ final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
             interactor: interactor,
             viewController: viewController,
             profileHomeBuildable: profileHomeBuildable,
-            diarySearchBuildable: diarySearchBuildable
+            diarySearchBuildable: diarySearchBuildable,
+            diaryMomentsBuildable: diaryMomentsBuildable
         )
     }
 }

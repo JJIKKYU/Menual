@@ -41,27 +41,21 @@ extension UIView {
         case .shadow_1:
             layer.shadowOffset = CGSize(width: 0, height: 4)
             layer.shadowRadius = 8
-            layer.cornerRadius = 8
         case .shadow_2:
             layer.shadowOffset = CGSize(width: 0, height: 8)
             layer.shadowRadius = 16
-            layer.cornerRadius = 16
         case .shadow_3:
             layer.shadowOffset = CGSize(width: 0, height: 12)
             layer.shadowRadius = 24
-            layer.cornerRadius = 24
         case .shadow_4:
             layer.shadowOffset = CGSize(width: 0, height: 16)
             layer.shadowRadius = 32
-            layer.cornerRadius = 32
         case .shadow_5:
             layer.shadowOffset = CGSize(width: 0, height: 20)
             layer.shadowRadius = 40
-            layer.cornerRadius = 40
         case .shadow_6:
             layer.shadowOffset = CGSize(width: 0, height: 24)
             layer.shadowRadius = 48
-            layer.cornerRadius = 48
         }
     }
 }

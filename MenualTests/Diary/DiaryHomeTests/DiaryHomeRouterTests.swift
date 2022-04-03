@@ -17,6 +17,7 @@ final class DiaryHomeRouterTests: XCTestCase {
     private var viewController: DiaryHomeViewControllableMock!
     private var profileHomeBuildable: ProfileHomeBuildableMock!
     private var diarySearchBuildable: DiarySearchBuildableMock!
+    private var diaryMomentsBuildable: DiaryMomentsBuildableMock!
 
     override func setUp() {
         super.setUp()
@@ -25,11 +26,14 @@ final class DiaryHomeRouterTests: XCTestCase {
         viewController = DiaryHomeViewControllableMock()
         profileHomeBuildable = ProfileHomeBuildableMock()
         diarySearchBuildable = DiarySearchBuildableMock()
+        diaryMomentsBuildable = DiaryMomentsBuildableMock()
         
         sut = DiaryHomeRouter(interactor: interactor,
                               viewController: viewController,
                               profileHomeBuildable: profileHomeBuildable,
-                              diarySearchBuildable: diarySearchBuildable)
+                              diarySearchBuildable: diarySearchBuildable,
+                              diaryMomentsBuildable: diaryMomentsBuildable
+        )
     }
 
     // MARK: - Tests
@@ -40,10 +44,10 @@ final class DiaryHomeRouterTests: XCTestCase {
         let router = ProfileHomeRoutingMock(
             interactable: Interactor(),
             viewControllable: ViewControllableMock())
-        var assignedListner: ProfileHomeListener?
+        var assignedListener: ProfileHomeListener?
         
         profileHomeBuildable.buildHandler = { listener in
-            assignedListner = listener
+            assignedListener = listener
             return router
         }
         
@@ -51,7 +55,7 @@ final class DiaryHomeRouterTests: XCTestCase {
         sut.attachMyPage()
         
         // then
-        XCTAssertTrue(assignedListner === interactor)
+        XCTAssertTrue(assignedListener === interactor)
         XCTAssertEqual(profileHomeBuildable.buildCallCount, 1)
     }
     
@@ -62,10 +66,10 @@ final class DiaryHomeRouterTests: XCTestCase {
             interactable: Interactor(),
             viewControllable: ViewControllableMock()
         )
-        var assignedListner: DiarySearchListener?
+        var assignedListener: DiarySearchListener?
         
         diarySearchBuildable.buildHandler = { listener in
-            assignedListner = listener
+            assignedListener = listener
             return router
         }
         
@@ -73,7 +77,29 @@ final class DiaryHomeRouterTests: XCTestCase {
         sut.attachDiarySearch()
         
         // then
-        XCTAssertTrue(assignedListner === interactor)
+        XCTAssertTrue(assignedListener === interactor)
         XCTAssertEqual(diarySearchBuildable.buildCallCount, 1)
+    }
+    
+    // 메인에서 Moments(DiaryMoments) RIBs가 제대로 Attach되는지 테스트
+    func testAttachDiaryMoments() {
+        // given
+        let router = DiaryMomentsRoutingMock(
+            interactable: Interactor(),
+            viewControllable: ViewControllableMock()
+        )
+        var assignedListener: DiaryMomentsListener?
+        
+        diaryMomentsBuildable.buildHandler = { listener in
+            assignedListener = listener
+            return router
+        }
+        
+        // when
+        sut.attachDiaryMoments()
+        
+        // then
+        XCTAssertTrue(assignedListener === interactor)
+        XCTAssertEqual(diaryMomentsBuildable.buildCallCount, 1)
     }
 }
