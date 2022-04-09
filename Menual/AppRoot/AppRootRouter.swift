@@ -8,7 +8,6 @@
 import RIBs
 
 protocol AppRootInteractable: Interactable,
-                                DiaryWritingListener,
                               RegisterHomeListener,
                               LoginHomeListener,
                               DiaryHomeListener
@@ -23,12 +22,10 @@ protocol AppRootViewControllable: ViewControllable {
 
 final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControllable>, AppRootRouting {
     
-    private let diaryWriting: DiaryWritingBuildable
     private let registerHome: RegisterHomeBuildable
     private let loginHome: LoginHomeBuildable
     private let diaryHome: DiaryHomeBuildable
     
-    private var diaryWritingRouting: ViewableRouting?
     private var registerHomeRouting: ViewableRouting?
     private var loginHomeRouting: ViewableRouting?
     private var diaryHomeRouting: ViewableRouting?
@@ -36,12 +33,10 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
     init(
         interactor: AppRootInteractable,
         viewController: AppRootViewControllable,
-        diaryWriting: DiaryWritingBuildable,
         registerHome: RegisterHomeBuildable,
         loginHome: LoginHomeBuildable,
         diaryHome: DiaryHomeBuildable
     ) {
-        self.diaryWriting = diaryWriting
         self.registerHome = registerHome
         self.loginHome = loginHome
         self.diaryHome = diaryHome
@@ -58,7 +53,6 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
     func attachMainHome() {
         let registerHomeRouting = registerHome.build(withListener: interactor)
         // let registerIDRouting = registerID.build(withListener: interactor)
-        let diaryWritingRouting = diaryWriting.build(withListener: interactor)
         let loginHomeRouting = loginHome.build(withListener: interactor)
         let diaryHomeRouting = diaryHome.build(withListener: interactor)
         

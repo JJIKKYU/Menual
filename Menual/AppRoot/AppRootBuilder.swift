@@ -35,7 +35,6 @@ final class AppRootBuilder: Builder<AppRootDependency>, AppRootBuildable {
         )
         
         let interactor = AppRootInteractor(presenter: viewController)
-        let diaryWriting = DiaryWritingBuilder(dependency: component)
         let registerHome = RegisterHomeBuilder(dependency: component)
         let loginHome = LoginHomeBuilder(dependency: component)
         let diaryHome = DiaryHomeBuilder(dependency: component)
@@ -43,7 +42,6 @@ final class AppRootBuilder: Builder<AppRootDependency>, AppRootBuildable {
         let router = AppRootRouter(
             interactor: interactor,
             viewController: viewController,
-            diaryWriting: diaryWriting,
             registerHome: registerHome,
             loginHome: loginHome,
             diaryHome: diaryHome

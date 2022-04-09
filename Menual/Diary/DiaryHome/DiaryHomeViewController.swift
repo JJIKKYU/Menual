@@ -16,6 +16,7 @@ protocol DiaryHomePresentableListener: AnyObject {
     func pressedMyPageBtn()
     func pressedMomentsTitleBtn()
     func pressedMomentsMoreBtn()
+    func pressedWritingBtn()
 }
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
@@ -59,6 +60,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.backgroundColor = Colors.tint.sub.n300
         $0.layer.cornerRadius = 4
         $0.AppShadow(.shadow_6)
+    }
+    
+    // 임시로 뷰 넘어가게 하려고 만든 버튼
+    lazy var wrtingBtnTest = UIButton().then {
+        $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
+        $0.setImage(Asset.StandardIcons.write.image, for: .normal)
     }
    
     lazy var momentsTitleView = TitleView().then {
@@ -123,6 +130,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         scrollView.addSubview(momentsCollectionView)
         scrollView.addSubview(myMenualTitleView)
         scrollView.addSubview(myMenualCollectionView)
+        
+        // 임시
+        fabWriteBtn.addSubview(wrtingBtnTest)
+        wrtingBtnTest.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
         
         scrollView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -205,6 +218,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     @objc
     func pressedMyMenualBtn() {
         
+    }
+    
+    @objc
+    func pressedFABWritingBtn() {
+        print("FABWritingBtn Pressed!")
+        listener?.pressedWritingBtn()
     }
 }
 

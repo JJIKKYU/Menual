@@ -19,10 +19,10 @@ protocol DiaryWritingPresentable: Presentable {
 
 protocol DiaryWritingListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
+    func diaryWritingPressedBackBtn()
 }
 
 final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentable>, DiaryWritingInteractable, DiaryWritingPresentableListener {
-
     weak var router: DiaryWritingRouting?
     weak var listener: DiaryWritingListener?
 
@@ -41,5 +41,9 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+    
+    func pressedBackBtn() {
+        listener?.diaryWritingPressedBackBtn()
     }
 }
