@@ -18,6 +18,7 @@ final class DiaryHomeRouterTests: XCTestCase {
     private var profileHomeBuildable: ProfileHomeBuildableMock!
     private var diarySearchBuildable: DiarySearchBuildableMock!
     private var diaryMomentsBuildable: DiaryMomentsBuildableMock!
+    private var diaryWritingBuildable: DiaryWritingBuildableMock!
 
     override func setUp() {
         super.setUp()
@@ -27,12 +28,14 @@ final class DiaryHomeRouterTests: XCTestCase {
         profileHomeBuildable = ProfileHomeBuildableMock()
         diarySearchBuildable = DiarySearchBuildableMock()
         diaryMomentsBuildable = DiaryMomentsBuildableMock()
+        diaryWritingBuildable = DiaryWritingBuildableMock()
         
         sut = DiaryHomeRouter(interactor: interactor,
                               viewController: viewController,
                               profileHomeBuildable: profileHomeBuildable,
                               diarySearchBuildable: diarySearchBuildable,
-                              diaryMomentsBuildable: diaryMomentsBuildable
+                              diaryMomentsBuildable: diaryMomentsBuildable,
+                              diaryWritingBuildable: diaryWritingBuildable
         )
     }
 
@@ -101,5 +104,27 @@ final class DiaryHomeRouterTests: XCTestCase {
         // then
         XCTAssertTrue(assignedListener === interactor)
         XCTAssertEqual(diaryMomentsBuildable.buildCallCount, 1)
+    }
+    
+    // 메인에서 글쓰기 페이지(DiaryWriting) RIBs가 제대로 Attach되는지 테스트
+    func testAttachDiaryWriting() {
+        // given
+        let router = DiaryWritingRoutingMock(
+            interactable: Interactor(),
+            viewControllable: ViewControllableMock()
+        )
+        var assignedListener: DiaryWritingListener?
+        
+        diaryWritingBuildable.buildHandler = { listener in
+            assignedListener = listener
+            return router
+        }
+        
+        // when
+        sut.attachDiaryWriting()
+        
+        // then
+        XCTAssertTrue(assignedListener === interactor)
+        XCTAssertEqual(diaryWritingBuildable.buildCallCount, 1)
     }
 }

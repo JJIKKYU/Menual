@@ -69,6 +69,7 @@
 		988A2D5F27F97C3E0046C43A /* DiaryMomentsInteractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D5D27F97C3E0046C43A /* DiaryMomentsInteractorTests.swift */; };
 		988A2D6027F97C3E0046C43A /* DiaryMomentsRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D5E27F97C3E0046C43A /* DiaryMomentsRouterTests.swift */; };
 		988A2D6227F97C480046C43A /* DiaryMomentsMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D6127F97C480046C43A /* DiaryMomentsMock.swift */; };
+		988A2D65280162790046C43A /* DiaryWritingMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D64280162790046C43A /* DiaryWritingMock.swift */; };
 		98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */; };
 		98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */; };
 		98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */; };
@@ -179,6 +180,7 @@
 		988A2D5D27F97C3E0046C43A /* DiaryMomentsInteractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryMomentsInteractorTests.swift; sourceTree = "<group>"; };
 		988A2D5E27F97C3E0046C43A /* DiaryMomentsRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryMomentsRouterTests.swift; sourceTree = "<group>"; };
 		988A2D6127F97C480046C43A /* DiaryMomentsMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryMomentsMock.swift; sourceTree = "<group>"; };
+		988A2D64280162790046C43A /* DiaryWritingMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingMock.swift; sourceTree = "<group>"; };
 		98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeRouter.swift; sourceTree = "<group>"; };
 		98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeViewController.swift; sourceTree = "<group>"; };
 		98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeBuilder.swift; sourceTree = "<group>"; };
@@ -451,6 +453,7 @@
 		988A2D3527F822EF0046C43A /* Diary */ = {
 			isa = PBXGroup;
 			children = (
+				988A2D632801626C0046C43A /* DiaryWriting */,
 				988A2D5C27F97C320046C43A /* DiaryMoments */,
 				988A2D4027F831210046C43A /* DiarySearch */,
 				988A2D3627F822F50046C43A /* DiaryHomeTests */,
@@ -521,6 +524,14 @@
 				988A2D6127F97C480046C43A /* DiaryMomentsMock.swift */,
 			);
 			path = DiaryMoments;
+			sourceTree = "<group>";
+		};
+		988A2D632801626C0046C43A /* DiaryWriting */ = {
+			isa = PBXGroup;
+			children = (
+				988A2D64280162790046C43A /* DiaryWritingMock.swift */,
+			);
+			path = DiaryWriting;
 			sourceTree = "<group>";
 		};
 		98934A9327E6F11100178A8E /* Profile */ = {
@@ -957,6 +968,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				988A2D65280162790046C43A /* DiaryWritingMock.swift in Sources */,
 				988A2D4527F864F40046C43A /* DiarySearchInteractorTests.swift in Sources */,
 				988A2D3F27F8303F0046C43A /* ProfileHomeMock.swift in Sources */,
 				988A2D5F27F97C3E0046C43A /* DiaryMomentsInteractorTests.swift in Sources */,

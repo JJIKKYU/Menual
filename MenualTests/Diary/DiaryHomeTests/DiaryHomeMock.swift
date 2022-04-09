@@ -59,6 +59,11 @@ final class DiaryHomeInteractableMock: DiaryHomeInteractable {
     func diaryMomentsPressedBackBtn() {
         diaryMomentsPressedBackBtnCallCount += 1
     }
+    
+    var diaryWritingPressedBackBtnCallCount: Int = 0
+    func diaryWritingPressedBackBtn() {
+        diaryWritingPressedBackBtnCallCount += 1
+    }
 }
 
 final class DiaryHomeRoutingMock: DiaryHomeRouting {
@@ -142,6 +147,16 @@ final class DiaryHomeRoutingMock: DiaryHomeRouting {
     var detachDiaryMomentsCallCount: Int = 0
     func detachDiaryMoments() {
         detachDiaryMomentsCallCount += 1
+    }
+    
+    var attachDiaryWritingCallCount: Int = 0
+    func attachDiaryWriting() {
+        attachDiaryWritingCallCount += 1
+    }
+    
+    var detachDiaryWritingCallCount: Int = 0
+    func detachDiaryWriting() {
+        detachDiaryWritingCallCount += 1
     }
 }
 
