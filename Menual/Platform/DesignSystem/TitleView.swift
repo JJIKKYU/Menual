@@ -23,13 +23,13 @@ class TitleView: UIView {
     lazy var titleButton = UIButton().then {
         $0.titleLabel?.font = UIFont.AppTitle(.title_4)
         $0.setTitle("TITLE VIEW", for: .normal)
-        $0.setTitleColor(Colors.grey.c100, for: .normal)
+        $0.setTitleColor(Colors.grey.g100, for: .normal)
     }
     
     lazy var rightButton = UIButton().then {
         $0.setTitle("Right Btn", for: .normal)
         $0.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_2)
-        $0.setTitleColor(Colors.grey.c100, for: .normal)
+        $0.setTitleColor(Colors.grey.g100, for: .normal)
     }
     
     override init(frame: CGRect) {

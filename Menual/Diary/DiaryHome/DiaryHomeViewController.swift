@@ -56,7 +56,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     // TODO: CustomView로 만들기
     var fabWriteBtn = UIView().then {
-        $0.backgroundColor = Colors.system.yellow.c200
+        $0.backgroundColor = Colors.tint.sub.n300
         $0.layer.cornerRadius = 4
         $0.AppShadow(.shadow_6)
     }
@@ -73,7 +73,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.translatesAutoresizingMaskIntoConstraints = false
         let flowlayout = UICollectionViewFlowLayout.init()
         $0.setCollectionViewLayout(flowlayout, animated: true)
-        $0.backgroundColor = Colors.main.tint.c100
+        $0.backgroundColor = Colors.tint.main.v100
     }
     
     lazy var myMenualTitleView = TitleView().then {
@@ -89,7 +89,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.translatesAutoresizingMaskIntoConstraints = false
         let flowlayout = UICollectionViewFlowLayout.init()
         $0.setCollectionViewLayout(flowlayout, animated: true)
-        $0.backgroundColor = Colors.main.tint.c100
+        $0.backgroundColor = Colors.tint.main.v100
     }
     
     // MARK: - VC 코드
@@ -226,6 +226,8 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
             }
             self.view.layoutIfNeeded()
             
+            // fabViewBtn 축소
+            // TODO: 따로 함수로 구현할 것
             self.fabWriteBtn.snp.remakeConstraints { make in
                 make.trailing.equalToSuperview().inset(20)
                 make.height.equalTo(50)
@@ -248,8 +250,10 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
                 make.height.equalTo(100)
                 make.top.equalTo(myMenualTitleView.snp.bottom).offset(20)
             }
-            
             self.view.layoutIfNeeded()
+            
+            // fabViewBtn 확장
+            // TODO: 따로 함수로 구현할 것
             self.fabWriteBtn.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(20)
                 make.trailing.equalToSuperview().inset(20)
