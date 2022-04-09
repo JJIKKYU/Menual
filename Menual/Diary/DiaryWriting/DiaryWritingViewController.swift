@@ -14,6 +14,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
     // business logic, such as signIn(). This protocol is implemented by the corresponding
     // interactor class.
     func pressedBackBtn()
+    func pressedCheckBtn()
 }
 
 final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable  {
@@ -25,6 +26,13 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.style = .done
         $0.target = self
         $0.action = #selector(pressedBackBtn)
+    }
+    
+    lazy var rightBarButtonItem = UIBarButtonItem().then {
+        $0.image = Asset.StandardIcons.check.image
+        $0.style = .done
+        $0.target = self
+        $0.action = #selector(pressedCheckBtn)
     }
     
     init() {
@@ -55,6 +63,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         title = MenualString.title_menual
         navigationItem.leftBarButtonItem = leftBarButtonItem
+        navigationItem.rightBarButtonItem = rightBarButtonItem
         view.backgroundColor = .gray
     }
 
@@ -62,5 +71,11 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     func pressedBackBtn() {
         print("pressedBackBtn!")
         listener?.pressedBackBtn()
+    }
+    
+    @objc
+    func pressedCheckBtn() {
+        print("PressedCheckBtn!")
+        listener?.pressedCheckBtn()
     }
 }

@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.launchRouter = result.launchRouter
         self.urlHandler = result.urlHandler
         
-        launchRouter?.launchFromWindow(window)
+        launchRouter?.launch(from: window)
         
         if #available(iOS 13.0, *){
             let navBarAppearance = UINavigationBarAppearance()

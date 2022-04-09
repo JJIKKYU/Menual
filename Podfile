@@ -8,8 +8,11 @@ target 'Menual' do
   # Pods for Menual
 
   inhibit_all_warnings!
-  pod 'RIBs', '~> 0.9'
+  pod 'RIBs', :git=> 'https://github.com/uber/RIBs', :tag => '0.9.2'
+  pod 'RxSwift'
+  pod 'RxRelay'
   pod 'SnapKit', '~> 5.0.0'
+  pod 'RealmSwift', '~>10'
 
   # Google
   pod 'Firebase/Analytics'
@@ -27,7 +30,7 @@ target 'Menual' do
 
   target 'MenualUITests' do
     # Pods for testing
-    pod 'RIBs', '~> 0.9'
+    pod 'RIBs', :git=> 'https://github.com/uber/RIBs', :tag => '0.9.2'
   end
   
   # 설치시에 9.0으로 타겟 변경

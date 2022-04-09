@@ -70,6 +70,8 @@
 		988A2D6027F97C3E0046C43A /* DiaryMomentsRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D5E27F97C3E0046C43A /* DiaryMomentsRouterTests.swift */; };
 		988A2D6227F97C480046C43A /* DiaryMomentsMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D6127F97C480046C43A /* DiaryMomentsMock.swift */; };
 		988A2D65280162790046C43A /* DiaryWritingMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D64280162790046C43A /* DiaryWritingMock.swift */; };
+		988A2D68280166AA0046C43A /* DiaryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D67280166AA0046C43A /* DiaryModel.swift */; };
+		988A2D6B280167D20046C43A /* DiaryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D6A280167D20046C43A /* DiaryRepository.swift */; };
 		98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */; };
 		98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */; };
 		98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */; };
@@ -181,6 +183,8 @@
 		988A2D5E27F97C3E0046C43A /* DiaryMomentsRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryMomentsRouterTests.swift; sourceTree = "<group>"; };
 		988A2D6127F97C480046C43A /* DiaryMomentsMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryMomentsMock.swift; sourceTree = "<group>"; };
 		988A2D64280162790046C43A /* DiaryWritingMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingMock.swift; sourceTree = "<group>"; };
+		988A2D67280166AA0046C43A /* DiaryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryModel.swift; sourceTree = "<group>"; };
+		988A2D6A280167D20046C43A /* DiaryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryRepository.swift; sourceTree = "<group>"; };
 		98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeRouter.swift; sourceTree = "<group>"; };
 		98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeViewController.swift; sourceTree = "<group>"; };
 		98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeBuilder.swift; sourceTree = "<group>"; };
@@ -431,6 +435,7 @@
 		988A186D278ACA7A00DF81DA /* Diary */ = {
 			isa = PBXGroup;
 			children = (
+				988A2D69280167B80046C43A /* DiaryRepository */,
 				988A2D5327F979ED0046C43A /* DiaryMoments */,
 				989AE03E27F08FF000177573 /* DiarySearch */,
 				980924B1279BCD590034D0CC /* DiaryHome */,
@@ -442,6 +447,7 @@
 		988A186F278ACB2F00DF81DA /* DiaryWriting */ = {
 			isa = PBXGroup;
 			children = (
+				988A2D66280166A00046C43A /* Model */,
 				988A1870278ACB4B00DF81DA /* DiaryWritingRouter.swift */,
 				988A1871278ACB4B00DF81DA /* DiaryWritingViewController.swift */,
 				988A1872278ACB4B00DF81DA /* DiaryWritingBuilder.swift */,
@@ -532,6 +538,22 @@
 				988A2D64280162790046C43A /* DiaryWritingMock.swift */,
 			);
 			path = DiaryWriting;
+			sourceTree = "<group>";
+		};
+		988A2D66280166A00046C43A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				988A2D67280166AA0046C43A /* DiaryModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		988A2D69280167B80046C43A /* DiaryRepository */ = {
+			isa = PBXGroup;
+			children = (
+				988A2D6A280167D20046C43A /* DiaryRepository.swift */,
+			);
+			path = DiaryRepository;
 			sourceTree = "<group>";
 		};
 		98934A9327E6F11100178A8E /* Profile */ = {
@@ -933,6 +955,7 @@
 				9888DE142764825F0091918F /* AppRootRouter.swift in Sources */,
 				98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */,
 				985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */,
+				988A2D68280166AA0046C43A /* DiaryModel.swift in Sources */,
 				988A2D5B27F97A000046C43A /* DiaryMomentsInteractor.swift in Sources */,
 				98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
@@ -947,6 +970,7 @@
 				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,
 				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
 				98934A9C27E6F13700178A8E /* ProfileHomeInteractor.swift in Sources */,
+				988A2D6B280167D20046C43A /* DiaryRepository.swift in Sources */,
 				9888DE162764825F0091918F /* AppRootInteractor.swift in Sources */,
 				985E0EF827C21DEC00057951 /* RegisterIDInteractor.swift in Sources */,
 				980924B6279BCD670034D0CC /* DiaryHomeRouter.swift in Sources */,

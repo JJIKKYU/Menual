@@ -47,4 +47,8 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     func pressedBackBtn() {
         listener?.diaryWritingPressedBackBtn()
     }
+    
+    func pressedCheckBtn() {
+        print("글 작성 완료 했죠?")
+    }
 }
