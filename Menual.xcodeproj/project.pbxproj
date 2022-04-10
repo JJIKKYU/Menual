@@ -79,6 +79,7 @@
 		989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AE04127F0900800177573 /* DiarySearchBuilder.swift */; };
 		989AE04627F0900800177573 /* DiarySearchInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AE04227F0900800177573 /* DiarySearchInteractor.swift */; };
 		98A2BD912802B43E00C1FB92 /* MyMenualCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD902802B43E00C1FB92 /* MyMenualCell.swift */; };
+		98A2BD942802BCE000C1FB92 /* DiaryRepositoryMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD932802BCE000C1FB92 /* DiaryRepositoryMock.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -191,6 +192,7 @@
 		989AE04127F0900800177573 /* DiarySearchBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchBuilder.swift; sourceTree = "<group>"; };
 		989AE04227F0900800177573 /* DiarySearchInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchInteractor.swift; sourceTree = "<group>"; };
 		98A2BD902802B43E00C1FB92 /* MyMenualCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMenualCell.swift; sourceTree = "<group>"; };
+		98A2BD932802BCE000C1FB92 /* DiaryRepositoryMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryRepositoryMock.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -458,6 +460,7 @@
 		988A2D3527F822EF0046C43A /* Diary */ = {
 			isa = PBXGroup;
 			children = (
+				98A2BD922802BCD200C1FB92 /* DiaryRepository */,
 				988A2D632801626C0046C43A /* DiaryWriting */,
 				988A2D5C27F97C320046C43A /* DiaryMoments */,
 				988A2D4027F831210046C43A /* DiarySearch */,
@@ -583,6 +586,14 @@
 				989AE04227F0900800177573 /* DiarySearchInteractor.swift */,
 			);
 			path = DiarySearch;
+			sourceTree = "<group>";
+		};
+		98A2BD922802BCD200C1FB92 /* DiaryRepository */ = {
+			isa = PBXGroup;
+			children = (
+				98A2BD932802BCE000C1FB92 /* DiaryRepositoryMock.swift */,
+			);
+			path = DiaryRepository;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -991,6 +1002,7 @@
 				988A2D65280162790046C43A /* DiaryWritingMock.swift in Sources */,
 				988A2D4527F864F40046C43A /* DiarySearchInteractorTests.swift in Sources */,
 				988A2D3F27F8303F0046C43A /* ProfileHomeMock.swift in Sources */,
+				98A2BD942802BCE000C1FB92 /* DiaryRepositoryMock.swift in Sources */,
 				988A2D5F27F97C3E0046C43A /* DiaryMomentsInteractorTests.swift in Sources */,
 				988A2D3327F821F10046C43A /* DiaryHomeInteractorTests.swift in Sources */,
 				988A2D6027F97C3E0046C43A /* DiaryMomentsRouterTests.swift in Sources */,
@@ -1174,7 +1186,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1207,7 +1219,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1238,7 +1250,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1264,7 +1276,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1289,7 +1301,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1313,7 +1325,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

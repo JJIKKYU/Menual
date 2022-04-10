@@ -8,6 +8,7 @@
 import Foundation
 import RealmSwift
 
+// MARK: - 앱에서 사용하는 DiaryModel
 public struct DiaryModel {
     let title: String
     let weather: String // TODO: 날씨 타입 추가
@@ -34,6 +35,7 @@ public struct DiaryModel {
     }
 }
 
+// MARK: - Realm에 저장하기 위한 Class
 class DiaryModelRealm: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
     @Persisted var title = ""

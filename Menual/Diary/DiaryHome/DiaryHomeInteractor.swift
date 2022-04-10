@@ -83,7 +83,11 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     }
     
     func getMyMenualCount() -> Int {
-        return dependency.diaryRepository.myMenualCount
+        return dependency.diaryRepository.diaryString.value.count
+    }
+    
+    func getMyMenualArr() -> [DiaryModel] {
+        return dependency.diaryRepository.diaryString.value
     }
     
     // AdaptivePresentationControllerDelegate, Drag로 뷰를 Dismiss 시킬경우에 호출됨

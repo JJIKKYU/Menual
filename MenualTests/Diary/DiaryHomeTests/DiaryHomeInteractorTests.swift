@@ -26,7 +26,10 @@ final class DiaryHomeInteractorTests: XCTestCase {
         self.dependency = DiaryHomeDependencyMock()
         self.listener = DiaryHomeListenerMock()
 
-        let interactor = DiaryHomeInteractor(presenter: self.presenter)
+        let interactor = DiaryHomeInteractor(
+            presenter: self.presenter,
+            dependency: self.dependency
+        )
 
         self.router = DiaryHomeRoutingMock(
             interactable: interactor,
@@ -39,6 +42,28 @@ final class DiaryHomeInteractorTests: XCTestCase {
     }
 
     // MARK: - Tests
+    func testActivate() {
+        // given
+        let diary = DiaryModel(title: "타이틀입니다",
+                               weather: "날씨입니다",
+                               location: "장소입니다",
+                               description: "내용입니다",
+                               image: "이미지입니다"
+        )
+        dependency.diaryRepository.addDiary(info: diary)
+        dependency.diaryRepository.addDiary(info: diary)
+        
+        // when
+        sut.activate()
+        let arr = sut.getMyMenualArr()
+        
+        // then
+        XCTAssertEqual(presenter.reloadTableViewCallCount, 1)
+        XCTAssertEqual(arr.count, 2)
+        XCTAssertEqual(arr[0].title, "타이틀입니다")
+        XCTAssertEqual(arr[1].title, "타이틀입니다")
+    }
+    
     func testPressedMyPageBtn() {
         // given
         

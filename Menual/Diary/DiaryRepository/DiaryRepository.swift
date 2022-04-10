@@ -15,8 +15,7 @@ public protocol DiaryRepository {
     // func addCard(info: AddPaymentMethodInfo) -> AnyPublisher<PaymentMethod, Error>
     // ReadOnlyCurrentValuePublisher<[PaymentMethod]> { get }
     
-    var diaryString: Observable<[DiaryModel]> { get }
-    var myMenualCount: Int { get }
+    var diaryString: BehaviorRelay<[DiaryModel]> { get }
     // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
     func fetch()
     func addDiary(info: DiaryModel)
@@ -24,10 +23,8 @@ public protocol DiaryRepository {
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
-    public var diaryString: Observable<[DiaryModel]> { diaryModelSubject }
-    
-    public var myMenualCount: Int = 0
-    public let diaryModelSubject = BehaviorSubject<[DiaryModel]>(value: [
+    public var diaryString: BehaviorRelay<[DiaryModel]> { diaryModelSubject }
+    public let diaryModelSubject = BehaviorRelay<[DiaryModel]>(value: [
         DiaryModel(title: "타이틀마", weather: "웨덜마", location: "로케이션마", description: "디스크립션마", image: "이미징마")
     ]
     )
@@ -62,10 +59,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         let realm = try! Realm()
         let result = realm.objects(DiaryModelRealm.self)
         
-        diaryModelSubject.onNext(result.map { DiaryModel($0) })
-        myMenualCount = result.count
-        
-        print("DiaryRepository :: fetch! \(myMenualCount)")
+        diaryModelSubject.accept(result.map { DiaryModel($0) })
     }
     
     public func addDiary(info: DiaryModel) {
@@ -81,9 +75,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
             realm.add(DiaryModelRealm(info))
         }
         
-        let result = realm.objects(DiaryModelRealm.self)
-        
-        diaryModelSubject.onNext(result.map { DiaryModel($0) })
-        myMenualCount = result.count
+        diaryModelSubject.accept(diaryModelSubject.value + [info])
     }
 }

@@ -124,7 +124,7 @@ final class DiaryWritingPresentableMock: DiaryWritingPresentable {
 }
 
 final class DiaryWritingDependencyMock: DiaryWritingDependency {
-    
+    var diaryRepository: DiaryRepository = DiaryRepositoryMock()
 }
 
 final class DiaryWRitingListenerMock: DiaryWritingListener {

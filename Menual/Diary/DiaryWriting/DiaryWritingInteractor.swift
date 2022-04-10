@@ -61,25 +61,11 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         listener?.diaryWritingPressedBackBtn()
     }
     
-    func pressedCheckBtn() {
-        print("글 작성 완료 했죠?")
-        self.writeDiary()
-    }
-}
-
-// 글 작성 로직 테스트
-extension DiaryWritingInteractor {
-    func writeDiary() {
-        print("DiaryWritingInteractor :: writeDiary!")
+    func writeDiary(info: DiaryModel) {
+        print("DiaryWritingInteractor :: writeDiary! info = \(info)")
         
         dependency.diaryRepository
-            .addDiary(info: DiaryModel(title: "타이틀입니다9999999", weather: "조아요", location: "집", description: "안녕하세요", image: "이미지"))
-        
-//        let realm = try! Realm()
-//        let newDiary = DiaryModelRealm(title: "타이틀입니다", weather: "조아요", location: "집", desc: "안녕하세요", image: "이미지")
-//
-//        try! realm.write {
-//            realm.add(newDiary)
-//        }
+            .addDiary(info: info)
+        listener?.diaryWritingPressedBackBtn()
     }
 }

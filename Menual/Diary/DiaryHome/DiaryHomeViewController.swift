@@ -19,6 +19,7 @@ protocol DiaryHomePresentableListener: AnyObject {
     func pressedWritingBtn()
     
     func getMyMenualCount() -> Int
+    func getMyMenualArr() -> [DiaryModel]
 }
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
@@ -98,6 +99,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.dataSource = self
         $0.backgroundColor = .gray
         $0.register(MyMenualCell.self, forCellReuseIdentifier: "MyMenualCell")
+        $0.estimatedRowHeight = 70.5
+        $0.rowHeight = 70.5
     }
     
     var isStickyMyMenualCollectionView: Bool = false
@@ -317,9 +320,19 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyMenualCell") else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyMenualCell") as? MyMenualCell else { return UITableViewCell() }
         
-        cell.backgroundColor = .red
+        cell.backgroundColor = .clear
+        
+        if let myMenualArr = listener?.getMyMenualArr() {
+            cell.title.text = myMenualArr[indexPath.row].title
+            cell.subTitle.text = myMenualArr[indexPath.row].description
+        } else {
+            cell.title.text = "타이틀마"
+            cell.subTitle.text = "서브 타이틀마"
+        }
+
+        
         return cell
     }
     

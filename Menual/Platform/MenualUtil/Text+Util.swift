@@ -85,9 +85,7 @@ extension UIFont {
     }
     
     // 디자인 시스템에 정의되어 있는 바디 리턴
-    class func AppBody(_ body: BodyType, _ text: String) -> NSMutableAttributedString {
-        let attrString = NSMutableAttributedString(string: text)
-        let paragraphStyle = NSMutableParagraphStyle()
+    class func AppBody(_ body: BodyType, _ color: UIColor) -> [NSAttributedString.Key:Any] {
         var font: UIFont?
         
         switch body {
@@ -102,12 +100,14 @@ extension UIFont {
         }
         
         // 행간 조절
-        paragraphStyle.lineHeightMultiple = 1.28
-        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attrString.length))
+        // paragraphStyle.lineHeightMultiple = 1.28
         
-        // 폰트 적용
-        attrString.addAttribute(NSAttributedString.Key.font, value: font!, range: NSMakeRange(0, attrString.length))
-        
-        return attrString
+        return [
+            .font: font!,
+            .paragraphStyle : NSMutableParagraphStyle().then {
+                $0.lineHeightMultiple = 1.44
+            },
+            .foregroundColor : color
+        ]
     }
 }

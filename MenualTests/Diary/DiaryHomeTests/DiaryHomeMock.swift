@@ -11,6 +11,11 @@ import RIBs
 @testable import Menual
 
 final class DiaryHomePresentableMock: DiaryHomePresentable {
+    var reloadTableViewCallCount = 0
+    func reloadTableView() {
+        reloadTableViewCallCount += 1
+    }
+    
     var listener: DiaryHomePresentableListener?
     
     // 구현해줘야하는 메소드도 fix 하면 바로 불러올 수 있음
@@ -19,8 +24,8 @@ final class DiaryHomePresentableMock: DiaryHomePresentable {
     }
 }
 
-final class DiaryHomeDependencyMock: DiaryHomeDependency {
-    // repository가 따로 없으니까 일단 비어있는 상태로
+final class DiaryHomeDependencyMock: DiaryHomeDependency, DiaryHomeInteractorDependency {
+    var diaryRepository: DiaryRepository = DiaryRepositoryMock()
 }
 
 final class DiaryHomeInteractableMock: DiaryHomeInteractable {
@@ -182,6 +187,11 @@ final class DiaryHomeViewControllableMock: DiaryHomePresentable, DiaryHomeViewCo
             uiviewControllerSetCallCount += 1
             
         }
+    }
+    
+    public var reloadTableViewCallCount = 0
+    func reloadTableView() {
+        reloadTableViewCallCount += 1
     }
     
     init() {
