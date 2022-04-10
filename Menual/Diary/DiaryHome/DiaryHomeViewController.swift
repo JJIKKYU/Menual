@@ -17,10 +17,12 @@ protocol DiaryHomePresentableListener: AnyObject {
     func pressedMomentsTitleBtn()
     func pressedMomentsMoreBtn()
     func pressedWritingBtn()
+    
+    func getMyMenualCount() -> Int
 }
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
-
+    
     weak var listener: DiaryHomePresentableListener?
     
     // MARK: - UI 코드
@@ -90,6 +92,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.titleButton.addTarget(self, action: #selector(pressedMyMenualBtn), for: .touchUpInside)
     }
     
+    lazy var myMenualTableView = UITableView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.delegate = self
+        $0.dataSource = self
+        $0.backgroundColor = .gray
+        $0.register(MyMenualCell.self, forCellReuseIdentifier: "MyMenualCell")
+    }
+    
     var isStickyMyMenualCollectionView: Bool = false
     let isEnableStickyHeaderYOffset: CGFloat = 360 // StickHeader가 작동해야 하는 yOffset Value
     lazy var myMenualCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout()).then {
@@ -130,6 +140,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         scrollView.addSubview(momentsCollectionView)
         scrollView.addSubview(myMenualTitleView)
         scrollView.addSubview(myMenualCollectionView)
+        scrollView.addSubview(myMenualTableView)
         
         // 임시
         fabWriteBtn.addSubview(wrtingBtnTest)
@@ -191,6 +202,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.top.equalTo(myMenualTitleView.snp.bottom).offset(20)
             make.height.equalTo(100)
         }
+        
+        myMenualTableView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.top.equalTo(myMenualCollectionView.snp.bottom).offset(20)
+        }
     }
     
     @objc
@@ -227,9 +245,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
 }
 
+// MARK: - Scroll View
 extension DiaryHomeViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        stickyMyMenualCollectionView(scrollView)
+        // stickyMyMenualCollectionView(scrollView)
     }
     
     // MyMenualCollectionView보다 아래로 스크롤 했을 경우 상단에 고정되도록
@@ -287,4 +306,26 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
             isStickyMyMenualCollectionView = false
         }
     }
+}
+
+// MARK: - UITableView Deleagte, Datasource
+extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return listener?.getMyMenualCount() ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyMenualCell") else { return UITableViewCell() }
+        
+        cell.backgroundColor = .red
+        return cell
+    }
+    
+    func reloadTableView() {
+        print("reloadTableView!")
+        myMenualTableView.reloadData()
+    }
+    
 }

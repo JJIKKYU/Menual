@@ -21,11 +21,16 @@ protocol DiaryHomeRouting: ViewableRouting {
 
 protocol DiaryHomePresentable: Presentable {
     var listener: DiaryHomePresentableListener? { get set }
-    // TODO: Declare methods the interactor can invoke the presenter to present data.
+    
+    func reloadTableView()
 }
 
 protocol DiaryHomeListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
+}
+
+protocol DiaryHomeInteractorDependency {
+    var diaryRepository: DiaryRepository { get }
 }
 
 final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, DiaryHomeInteractable, DiaryHomePresentableListener, AdaptivePresentationControllerDelegate {
@@ -35,12 +40,17 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
     weak var router: DiaryHomeRouting?
     weak var listener: DiaryHomeListener?
+    private let dependency: DiaryHomeInteractorDependency
+    private var disposebag: DisposeBag
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
-    override init(
-        presenter: DiaryHomePresentable
+    init(
+        presenter: DiaryHomePresentable,
+        dependency: DiaryHomeInteractorDependency
     ) {
+        self.dependency = dependency
+        self.disposebag = DisposeBag()
         self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
         
         super.init(presenter: presenter)
@@ -51,11 +61,29 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     override func didBecomeActive() {
         super.didBecomeActive()
         // TODO: Implement business logic here.
+        bind()
     }
 
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+    
+    func bind() {
+        print("DiaryHomeInteractor :: Bind!")
+
+        dependency.diaryRepository
+            .diaryString
+            .subscribe(onNext: { [weak self] diaryArr in
+                guard let self = self else { return }
+                print("diaryString 구독 중!, diary = \(diaryArr)")
+                self.presenter.reloadTableView()
+            })
+            .disposed(by: disposebag)
+    }
+    
+    func getMyMenualCount() -> Int {
+        return dependency.diaryRepository.myMenualCount
     }
     
     // AdaptivePresentationControllerDelegate, Drag로 뷰를 Dismiss 시킬경우에 호출됨

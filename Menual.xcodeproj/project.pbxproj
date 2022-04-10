@@ -78,6 +78,7 @@
 		989AE04427F0900800177573 /* DiarySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AE04027F0900800177573 /* DiarySearchViewController.swift */; };
 		989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AE04127F0900800177573 /* DiarySearchBuilder.swift */; };
 		989AE04627F0900800177573 /* DiarySearchInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AE04227F0900800177573 /* DiarySearchInteractor.swift */; };
+		98A2BD912802B43E00C1FB92 /* MyMenualCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD902802B43E00C1FB92 /* MyMenualCell.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -189,6 +190,7 @@
 		989AE04027F0900800177573 /* DiarySearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchViewController.swift; sourceTree = "<group>"; };
 		989AE04127F0900800177573 /* DiarySearchBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchBuilder.swift; sourceTree = "<group>"; };
 		989AE04227F0900800177573 /* DiarySearchInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchInteractor.swift; sourceTree = "<group>"; };
+		98A2BD902802B43E00C1FB92 /* MyMenualCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMenualCell.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 				980924B3279BCD670034D0CC /* DiaryHomeViewController.swift */,
 				980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */,
 				980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */,
+				98A2BD902802B43E00C1FB92 /* MyMenualCell.swift */,
 			);
 			path = DiaryHome;
 			sourceTree = "<group>";
@@ -937,6 +940,7 @@
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				988A2D5A27F97A000046C43A /* DiaryMomentsBuilder.swift in Sources */,
+				98A2BD912802B43E00C1FB92 /* MyMenualCell.swift in Sources */,
 				985E0F0F27C2690500057951 /* LoginHomeBuilder.swift in Sources */,
 				988A2D3B27F82F3B0046C43A /* ViewControllableMock.swift in Sources */,
 				98C24F5D27F05A0200E6768C /* TitleView.swift in Sources */,

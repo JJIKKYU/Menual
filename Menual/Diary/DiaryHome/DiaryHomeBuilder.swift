@@ -8,13 +8,14 @@
 import RIBs
 
 protocol DiaryHomeDependency: Dependency {
-    // TODO: Declare the set of dependencies required by this RIB, but cannot be
-    // created by this RIB.
+    // AppRootComponent에서 생성해서, 부모(AppRoot RIBs)로부터 받아옴
+    var diaryRepository: DiaryRepository { get }
 }
 
-final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency {
+final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency, DiaryHomeInteractorDependency {
 
-    // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
+    // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
+    var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
 
 // MARK: - Builder
@@ -38,7 +39,10 @@ final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
         let diaryWritingBuildable = DiaryWritingBuilder(dependency: component)
         
         let viewController = DiaryHomeViewController()
-        let interactor = DiaryHomeInteractor(presenter: viewController)
+        let interactor = DiaryHomeInteractor(
+            presenter: viewController,
+            dependency: component
+        )
         interactor.listener = listener
         
         return DiaryHomeRouter(

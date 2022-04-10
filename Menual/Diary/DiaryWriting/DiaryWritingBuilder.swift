@@ -8,13 +8,12 @@
 import RIBs
 
 protocol DiaryWritingDependency: Dependency {
-    // TODO: Declare the set of dependencies required by this RIB, but cannot be
-    // created by this RIB.
+    var diaryRepository: DiaryRepository { get }
 }
 
-final class DiaryWritingComponent: Component<DiaryWritingDependency> {
+final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWritingInteractorDependency {
 
-    // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
+    var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
 
 // MARK: - Builder
@@ -32,7 +31,10 @@ final class DiaryWritingBuilder: Builder<DiaryWritingDependency>, DiaryWritingBu
     func build(withListener listener: DiaryWritingListener) -> DiaryWritingRouting {
         let component = DiaryWritingComponent(dependency: dependency)
         let viewController = DiaryWritingViewController()
-        let interactor = DiaryWritingInteractor(presenter: viewController)
+        let interactor = DiaryWritingInteractor(
+            presenter: viewController,
+        dependency: component
+        )
         interactor.listener = listener
         return DiaryWritingRouter(interactor: interactor, viewController: viewController)
     }

@@ -8,26 +8,27 @@
 import Foundation
 import RxSwift
 import RxRelay
+import RealmSwift
+import RxRealm
 
 public protocol DiaryRepository {
     // func addCard(info: AddPaymentMethodInfo) -> AnyPublisher<PaymentMethod, Error>
     // ReadOnlyCurrentValuePublisher<[PaymentMethod]> { get }
     
     var diaryString: Observable<[DiaryModel]> { get }
+    var myMenualCount: Int { get }
     // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
     func fetch()
+    func addDiary(info: DiaryModel)
+    
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
     public var diaryString: Observable<[DiaryModel]> { diaryModelSubject }
     
+    public var myMenualCount: Int = 0
     public let diaryModelSubject = BehaviorSubject<[DiaryModel]>(value: [
         DiaryModel(title: "타이틀마", weather: "웨덜마", location: "로케이션마", description: "디스크립션마", image: "이미징마")
-//        PaymentMethod(id: "0", name: "우리은행", digits: "0123", color: "#f19a38ff", isPrimary: false),
-//        PaymentMethod(id: "1", name: "신한카드", digits: "0987", color: "#3478f6ff", isPrimary: false),
-//        PaymentMethod(id: "2", name: "현대카드", digits: "8121", color: "#78c5f5ff", isPrimary: false),
-//        PaymentMethod(id: "3", name: "국민은행", digits: "2812", color: "#65c466ff", isPrimary: false),
-//        PaymentMethod(id: "4", name: "카카오뱅크", digits: "8751", color: "#ffcc00ff", isPrimary: false)
     ]
     )
     
@@ -58,6 +59,31 @@ public final class DiaryRepositoryImp: DiaryRepository {
      */
     
     public func fetch() {
-        print("fetch!")
+        let realm = try! Realm()
+        let result = realm.objects(DiaryModelRealm.self)
+        
+        diaryModelSubject.onNext(result.map { DiaryModel($0) })
+        myMenualCount = result.count
+        
+        print("DiaryRepository :: fetch! \(myMenualCount)")
+    }
+    
+    public func addDiary(info: DiaryModel) {
+        // 1. 추가할 Diary를 info로 받는다
+        // 2. Realm에다가 새로운 Diary를 add 한다.
+        // 3. add한 diary를 담고 있는 Realm의 Observable를 반환한다.
+        
+        print("addDiary!")
+        // Realm에서 DiaryModelRealm Array를 받아온다.
+        let realm = try! Realm()
+        
+        try! realm.write {
+            realm.add(DiaryModelRealm(info))
+        }
+        
+        let result = realm.objects(DiaryModelRealm.self)
+        
+        diaryModelSubject.onNext(result.map { DiaryModel($0) })
+        myMenualCount = result.count
     }
 }

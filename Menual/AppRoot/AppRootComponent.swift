@@ -11,17 +11,23 @@ import RIBs
 final class AppRootComponent: Component<AppRootDependency> {
 
     private let rootViewController: ViewControllable
+    var diaryRepository: DiaryRepository
     
     init(
         dependency: AppRootDependency,
         rootViewController: ViewControllable
     ) {
         self.rootViewController = rootViewController
+        self.diaryRepository = DiaryRepositoryImp()
+        self.diaryRepository.fetch()
         super.init(dependency: dependency)
     }
 }
 
-extension AppRootComponent: RegisterHomeDependency, LoginHomeDependency, DiaryHomeDependency {
+extension AppRootComponent: RegisterHomeDependency,
+                            LoginHomeDependency,
+                            DiaryHomeDependency
+{
     var registerHomeBuildable: RegisterHomeBuildable {
         return RegisterHomeBuilder(dependency: self)
     }
