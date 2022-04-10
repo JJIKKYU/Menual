@@ -22,14 +22,14 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     weak var listener: DiaryWritingPresentableListener?
     
     lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset.StandardIcons.Arrow.back.image
+        $0.image = Asset._20px.Arrow.back.image
         $0.style = .done
         $0.target = self
         $0.action = #selector(pressedBackBtn)
     }
     
     lazy var rightBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset.StandardIcons.check.image
+        $0.image = Asset._20px.check.image
         $0.style = .done
         $0.target = self
         $0.action = #selector(pressedCheckBtn)

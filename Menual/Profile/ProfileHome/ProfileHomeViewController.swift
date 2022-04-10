@@ -37,7 +37,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         // 뒤로가기 제스쳐 가능하도록
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Asset.StandardIcons.Arrow.back.image,
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: Asset._20px.Arrow.back.image,
                                                            style: .done,
                                                            target: self,
                                                            action: #selector(pressedBackBtn))

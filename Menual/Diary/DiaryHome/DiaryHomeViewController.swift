@@ -38,14 +38,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset.StandardIcons.search.image
+        $0.image = Asset._20px.search.image
         $0.style = .done
         $0.target = self
         $0.action = #selector(pressedSearchBtn)
     }
     
     lazy var rightBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset.StandardIcons.profile.image
+        $0.image = Asset._20px.profile.image
         $0.target = self
         $0.action = #selector(pressedMyPageBtn)
         $0.style = .done
@@ -65,7 +65,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     // 임시로 뷰 넘어가게 하려고 만든 버튼
     lazy var wrtingBtnTest = UIButton().then {
         $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
-        $0.setImage(Asset.StandardIcons.write.image, for: .normal)
+        $0.setImage(Asset._20px.write.image, for: .normal)
     }
    
     lazy var momentsTitleView = TitleView().then {
