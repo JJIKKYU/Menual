@@ -20,6 +20,8 @@ protocol DiaryHomePresentableListener: AnyObject {
     
     func getMyMenualCount() -> Int
     func getMyMenualArr() -> [DiaryModel]
+    
+    func pressedDiaryCell()
 }
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
@@ -332,8 +334,13 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.subTitle.text = "서브 타이틀마"
         }
 
-        
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as? MyMenualCell
+        print("didSelectRotat = \(cell?.title)")
+        listener?.pressedDiaryCell()
     }
     
     func reloadTableView() {

@@ -20,6 +20,7 @@ protocol DiaryHomeViewControllable: ViewControllable {
 }
 
 final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeViewControllable>, DiaryHomeRouting {
+
     private var navigationControllable: NavigationControllerable?
     
     private let profileHomeBuildable: ProfileHomeBuildable
@@ -168,5 +169,29 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         viewController.popViewController(animated: true)
         detachChild(router)
         diaryWritingRouting = nil
+    }
+    
+    // MARK: - Diary detaill 관련 함수
+    
+    func attachDiaryDetail() {
+        if diaryDetailRouting != nil {
+            return
+        }
+        
+        let router = diaryDetailBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        diaryDetailRouting = router
+        attachChild(router)
+    }
+    
+    func detachDiaryDetail() {
+        guard let router = diaryDetailRouting else {
+            return
+        }
+        
+        viewController.popViewController(animated: true)
+        detachChild(router)
+        diaryDetailRouting = nil
     }
 }

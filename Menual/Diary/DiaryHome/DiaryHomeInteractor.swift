@@ -17,6 +17,8 @@ protocol DiaryHomeRouting: ViewableRouting {
     func detachDiaryMoments()
     func attachDiaryWriting()
     func detachDiaryWriting()
+    func attachDiaryDetail()
+    func detachDiaryDetail()
 }
 
 protocol DiaryHomePresentable: Presentable {
@@ -34,7 +36,7 @@ protocol DiaryHomeInteractorDependency {
 }
 
 final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, DiaryHomeInteractable, DiaryHomePresentableListener, AdaptivePresentationControllerDelegate {
-    
+
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
     
 
@@ -141,5 +143,14 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func diaryWritingPressedBackBtn() {
         router?.detachDiaryWriting()
+    }
+    
+    // MARK: - Diary detaill 관련 함수
+    func pressedDiaryCell() {
+        router?.attachDiaryDetail()
+    }
+    
+    func diaryDetailPressedBackBtn() {
+        router?.detachDiaryDetail()
     }
 }

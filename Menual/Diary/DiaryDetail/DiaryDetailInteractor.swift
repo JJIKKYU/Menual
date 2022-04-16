@@ -15,10 +15,12 @@ protocol DiaryDetailRouting: ViewableRouting {
 protocol DiaryDetailPresentable: Presentable {
     var listener: DiaryDetailPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
+    func pressedBackBtn()
 }
 
 protocol DiaryDetailListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
+    func diaryDetailPressedBackBtn()
 }
 
 final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>, DiaryDetailInteractable, DiaryDetailPresentableListener {
@@ -41,5 +43,9 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+    
+    func pressedBackBtn() {
+        listener?.diaryDetailPressedBackBtn()
     }
 }
