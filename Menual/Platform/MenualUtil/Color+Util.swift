@@ -243,6 +243,23 @@ enum Colors {
             )
         }
     }
+
+    enum background {
+
+        static var white: UIColor {
+            return color(
+                dark: UIColor(red: 0.9803921580314636, green: 0.9803921580314636, blue: 0.9803921580314636, alpha: 1),
+                light: UIColor(red: 0.9803921580314636, green: 0.9803921580314636, blue: 0.9803921580314636, alpha: 1)
+            )
+        }
+
+        static var black: UIColor {
+            return color(
+                dark: UIColor(red: 0.09803921729326248, green: 0.09803921729326248, blue: 0.09803921729326248, alpha: 1),
+                light: UIColor(red: 0.09803921729326248, green: 0.09803921729326248, blue: 0.09803921729326248, alpha: 1)
+            )
+        }
+    }
 }
 
 extension Colors {

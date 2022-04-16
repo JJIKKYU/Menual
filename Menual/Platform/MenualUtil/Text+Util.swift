@@ -33,6 +33,14 @@ enum BodyType {
     case body_1
 }
 
+enum HeadType {
+    case head_1
+    case head_2
+    case head_3
+    case head_4
+    case head_5
+}
+
 extension UIFont {
     // SpoqaHanSansNeo의 폰트 타입에 따라 폰트 이름 리턴
     class func SpoqaHanSansNeo(_ type: SpoqaHanSansNeoType) -> String {
@@ -109,5 +117,21 @@ extension UIFont {
             },
             .foregroundColor : color
         ]
+    }
+    
+    // 디자인 시스템에 정의되어 있는 헤드 리턴
+    class func AppHead(_ head: HeadType) -> UIFont! {
+        switch head {
+        case .head_1:
+            return UIFont(name: UIFont.Montserrat(.ExtraBold), size: 10)
+        case .head_2:
+            return UIFont(name: UIFont.Montserrat(.ExtraBold), size: 12)
+        case .head_3:
+            return UIFont(name: UIFont.Montserrat(.ExtraBold), size: 14)
+        case .head_4:
+            return UIFont(name: UIFont.Montserrat(.ExtraBold), size: 16)
+        case .head_5:
+            return UIFont(name: UIFont.Montserrat(.ExtraBold), size: 18)
+        }
     }
 }
