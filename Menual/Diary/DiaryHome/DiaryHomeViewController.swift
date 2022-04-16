@@ -48,7 +48,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     lazy var rightBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._20px.profile.image
+        $0.image = Asset._40px.stopwatch.image
         $0.target = self
         $0.action = #selector(pressedMyPageBtn)
         $0.style = .done
