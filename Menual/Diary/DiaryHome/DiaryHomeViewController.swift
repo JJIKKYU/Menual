@@ -35,20 +35,20 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }()
     
     lazy var scrollView = UIScrollView().then {
-        $0.backgroundColor = UIColor(red: 0.098, green: 0.098, blue: 0.098, alpha: 1)
+        $0.backgroundColor = Colors.background.black
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
     }
     
     lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._20px.search.image
+        $0.image = Asset._24px.search.image
         $0.style = .done
         $0.target = self
         $0.action = #selector(pressedSearchBtn)
     }
     
     lazy var rightBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._40px.stopwatch.image
+        $0.image = Asset._24px.profile.image
         $0.target = self
         $0.action = #selector(pressedMyPageBtn)
         $0.style = .done
@@ -68,7 +68,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     // 임시로 뷰 넘어가게 하려고 만든 버튼
     lazy var wrtingBtnTest = UIButton().then {
         $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
-        $0.setImage(Asset._20px.write.image, for: .normal)
+        $0.setImage(Asset._24px.write.image, for: .normal)
     }
    
     lazy var momentsTitleView = TitleView().then {

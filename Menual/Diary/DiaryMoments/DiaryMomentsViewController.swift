@@ -21,7 +21,7 @@ final class DiaryMomentsViewController: UIViewController, DiaryMomentsPresentabl
     weak var listener: DiaryMomentsPresentableListener?
     
     lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._20px.Arrow.back.image
+        $0.image = Asset._24px.Arrow.back.image
         $0.style = .done
         $0.target = self
         $0.action = #selector(pressedBackBtn)

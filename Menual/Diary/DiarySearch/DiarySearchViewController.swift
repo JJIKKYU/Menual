@@ -20,7 +20,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     weak var listener: DiarySearchPresentableListener?
     
     lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._20px.Arrow.back.image
+        $0.image = Asset._24px.Arrow.back.image
         $0.style = .done
         $0.target = self
         $0.action = #selector(pressedBackBtn)

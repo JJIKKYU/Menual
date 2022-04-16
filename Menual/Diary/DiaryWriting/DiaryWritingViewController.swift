@@ -23,14 +23,14 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     weak var listener: DiaryWritingPresentableListener?
     
     lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._20px.Arrow.back.image
+        $0.image = Asset._24px.Arrow.back.image
         $0.style = .done
         $0.target = self
         $0.action = #selector(pressedBackBtn)
     }
     
     lazy var rightBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._20px.check.image
+        $0.image = Asset._24px.check.image
         $0.style = .done
         $0.target = self
         $0.action = #selector(pressedCheckBtn)
@@ -54,7 +54,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        modalPresentationStyle = .fullScreen
     }
     
     required init?(coder: NSCoder) {
@@ -65,7 +64,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     override func viewDidLoad() {
       super.viewDidLoad()
       
-        view.backgroundColor = .gray
+        view.backgroundColor = .white
         setViews()
         print("DiaryWriting!")
     }

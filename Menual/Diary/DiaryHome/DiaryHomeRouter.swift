@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryMomentsListener, DiaryWritingListener {
+protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryMomentsListener, DiaryWritingListener, DiaryDetailListener {
     var router: DiaryHomeRouting? { get set }
     var listener: DiaryHomeListener? { get set }
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
@@ -34,6 +34,9 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     private let diaryWritingBuildable: DiaryWritingBuildable
     private var diaryWritingRouting: Routing?
     
+    private let diaryDetailBuildable: DiaryDetailBuildable
+    private var diaryDetailRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DiaryHomeInteractable,
@@ -41,12 +44,14 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         profileHomeBuildable: ProfileHomeBuildable,
         diarySearchBuildable: DiarySearchBuildable,
         diaryMomentsBuildable: DiaryMomentsBuildable,
-        diaryWritingBuildable: DiaryWritingBuildable
+        diaryWritingBuildable: DiaryWritingBuildable,
+        diaryDetailBuildable: DiaryDetailBuildable
     ) {
         self.profileHomeBuildable = profileHomeBuildable
         self.diarySearchBuildable = diarySearchBuildable
         self.diaryMomentsBuildable = diaryMomentsBuildable
         self.diaryWritingBuildable = diaryWritingBuildable
+        self.diaryDetailBuildable = diaryDetailBuildable
         
         super.init(
             interactor: interactor,
@@ -147,7 +152,8 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         }
         
         let router = diaryWritingBuildable.build(withListener: interactor)
-        viewController.pushViewController(router.viewControllable, animated: true)
+        // Bottom Up 되도록 수정
+        viewController.present(router.viewControllable, animated: true, completion: nil)
         
         diaryWritingRouting = router
         attachChild(router)

@@ -80,6 +80,10 @@
 		989AE04627F0900800177573 /* DiarySearchInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AE04227F0900800177573 /* DiarySearchInteractor.swift */; };
 		98A2BD912802B43E00C1FB92 /* MyMenualCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD902802B43E00C1FB92 /* MyMenualCell.swift */; };
 		98A2BD942802BCE000C1FB92 /* DiaryRepositoryMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD932802BCE000C1FB92 /* DiaryRepositoryMock.swift */; };
+		98A2BD9C280A833000C1FB92 /* DiaryDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD98280A833000C1FB92 /* DiaryDetailRouter.swift */; };
+		98A2BD9D280A833000C1FB92 /* DiaryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD99280A833000C1FB92 /* DiaryDetailViewController.swift */; };
+		98A2BD9E280A833000C1FB92 /* DiaryDetailBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD9A280A833000C1FB92 /* DiaryDetailBuilder.swift */; };
+		98A2BD9F280A833000C1FB92 /* DiaryDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD9B280A833000C1FB92 /* DiaryDetailInteractor.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -193,6 +197,10 @@
 		989AE04227F0900800177573 /* DiarySearchInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchInteractor.swift; sourceTree = "<group>"; };
 		98A2BD902802B43E00C1FB92 /* MyMenualCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMenualCell.swift; sourceTree = "<group>"; };
 		98A2BD932802BCE000C1FB92 /* DiaryRepositoryMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryRepositoryMock.swift; sourceTree = "<group>"; };
+		98A2BD98280A833000C1FB92 /* DiaryDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailRouter.swift; sourceTree = "<group>"; };
+		98A2BD99280A833000C1FB92 /* DiaryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailViewController.swift; sourceTree = "<group>"; };
+		98A2BD9A280A833000C1FB92 /* DiaryDetailBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailBuilder.swift; sourceTree = "<group>"; };
+		98A2BD9B280A833000C1FB92 /* DiaryDetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailInteractor.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -437,6 +445,7 @@
 			isa = PBXGroup;
 			children = (
 				988A2D66280166A00046C43A /* Model */,
+				98A2BD97280A831E00C1FB92 /* DiaryDetail */,
 				988A2D69280167B80046C43A /* DiaryRepository */,
 				988A2D5327F979ED0046C43A /* DiaryMoments */,
 				989AE03E27F08FF000177573 /* DiarySearch */,
@@ -594,6 +603,17 @@
 				98A2BD932802BCE000C1FB92 /* DiaryRepositoryMock.swift */,
 			);
 			path = DiaryRepository;
+			sourceTree = "<group>";
+		};
+		98A2BD97280A831E00C1FB92 /* DiaryDetail */ = {
+			isa = PBXGroup;
+			children = (
+				98A2BD98280A833000C1FB92 /* DiaryDetailRouter.swift */,
+				98A2BD99280A833000C1FB92 /* DiaryDetailViewController.swift */,
+				98A2BD9A280A833000C1FB92 /* DiaryDetailBuilder.swift */,
+				98A2BD9B280A833000C1FB92 /* DiaryDetailInteractor.swift */,
+			);
+			path = DiaryDetail;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -937,12 +957,14 @@
 			files = (
 				988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */,
 				980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */,
+				98A2BD9D280A833000C1FB92 /* DiaryDetailViewController.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
 				9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */,
 				98C24F5427F0264700E6768C /* I18N.swift in Sources */,
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
 				988A2D5827F97A000046C43A /* DiaryMomentsRouter.swift in Sources */,
+				98A2BD9F280A833000C1FB92 /* DiaryDetailInteractor.swift in Sources */,
 				988A2D5927F97A000046C43A /* DiaryMomentsViewController.swift in Sources */,
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
 				989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */,
@@ -978,11 +1000,13 @@
 				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
 				98934A9C27E6F13700178A8E /* ProfileHomeInteractor.swift in Sources */,
 				988A2D6B280167D20046C43A /* DiaryRepository.swift in Sources */,
+				98A2BD9C280A833000C1FB92 /* DiaryDetailRouter.swift in Sources */,
 				9888DE162764825F0091918F /* AppRootInteractor.swift in Sources */,
 				985E0EF827C21DEC00057951 /* RegisterIDInteractor.swift in Sources */,
 				980924B6279BCD670034D0CC /* DiaryHomeRouter.swift in Sources */,
 				98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */,
 				985E0F0427C232E300057951 /* RegisterPWRouter.swift in Sources */,
+				98A2BD9E280A833000C1FB92 /* DiaryDetailBuilder.swift in Sources */,
 				988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */,
 				985E0F0D27C2690500057951 /* LoginHomeRouter.swift in Sources */,
 				9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */,
