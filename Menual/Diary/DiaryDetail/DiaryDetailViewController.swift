@@ -53,7 +53,11 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.text = "오늘의 메뉴얼을 입력해주세요.\n날짜가 적힌 곳을 탭하여 제목을 입력할 수 있습니다."
         $0.backgroundColor = .red
         $0.numberOfLines = 0
-
+    }
+    
+    let imageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
+        $0.layer.masksToBounds = true
     }
     
     init() {
@@ -85,6 +89,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.scrollView.addSubview(titleLabel)
         self.scrollView.addSubview(testLabel)
         self.scrollView.addSubview(descriptionTextLabel)
+        self.scrollView.addSubview(imageView)
         
         scrollView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -110,6 +115,13 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(testLabel.snp.bottom).offset(40)
         }
+
+        imageView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(descriptionTextLabel.snp.bottom).offset(20)
+            make.height.equalTo(200)
+        }
     }
     
     func loadDiaryDetail(model: DiaryModel) {
@@ -119,6 +131,12 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.descriptionTextLabel.text = model.description
         self.descriptionTextLabel.setLineHeight()
         descriptionTextLabel.sizeToFit()
+    }
+    
+    func testLoadDiaryImage(imageName: UIImage?) {
+        if let imageName = imageName {
+            self.imageView.image = imageName
+        }
     }
     
     @objc

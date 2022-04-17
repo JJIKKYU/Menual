@@ -161,8 +161,12 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     // MARK: - Diary detaill 관련 함수
     
     func pressedDiaryCell(index: Int) {
+        let testImage = dependency.diaryRepository.loadImageFromDocumentDirectory(imageName: "test")
+        print("testImage = \(testImage)")
+
         if let model = dependency.diaryRepository
             .diaryString.value[safe: index] {
+            
             router?.attachDiaryDetail(model: model)
         }
     }

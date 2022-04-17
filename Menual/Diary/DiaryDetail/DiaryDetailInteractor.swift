@@ -17,6 +17,10 @@ protocol DiaryDetailPresentable: Presentable {
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     func pressedBackBtn()
     func loadDiaryDetail(model: DiaryModel)
+    func testLoadDiaryImage(imageName: UIImage?)
+}
+protocol DiaryDetailInteractorDependency {
+    var diaryRepository: DiaryRepository { get }
 }
 
 protocol DiaryDetailListener: AnyObject {
@@ -30,19 +34,26 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 
     weak var router: DiaryDetailRouting?
     weak var listener: DiaryDetailListener?
+    private let dependency: DiaryDetailInteractorDependency
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
     init(
         presenter: DiaryDetailPresentable,
-        diaryModel: DiaryModel
+        diaryModel: DiaryModel,
+        dependency: DiaryDetailInteractorDependency
     ) {
         self.diaryModel = diaryModel
+        self.dependency = dependency
         super.init(presenter: presenter)
         presenter.listener = self
         
         print("interactor = \(diaryModel)")
         presenter.loadDiaryDetail(model: diaryModel)
+
+        let image = dependency.diaryRepository
+            .loadImageFromDocumentDirectory(imageName: "test")
+        presenter.testLoadDiaryImage(imageName: image)
     }
 
     override func didBecomeActive() {

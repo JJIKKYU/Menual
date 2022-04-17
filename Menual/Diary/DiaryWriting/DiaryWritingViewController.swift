@@ -17,6 +17,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
     // interactor class.
     func pressedBackBtn()
     func writeDiary(info: DiaryModel)
+    func testSaveImage(imageName: String, image: UIImage)
 }
 
 final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable  {
@@ -148,11 +149,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         else { return }
         
         let diaryModel = DiaryModel(title: title,
-                                    weather: "웨덩아",
-                                    location: description,
+                                    weather: nil,
+                                    location: nil,
                                     description: description,
                                     image: "이미징"
         )
+         listener?.testSaveImage(imageName: "test", image: self.imageView.image ?? UIImage())
         listener?.writeDiary(info: diaryModel)
     }
     

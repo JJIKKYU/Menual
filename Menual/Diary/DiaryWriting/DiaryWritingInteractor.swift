@@ -62,10 +62,17 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     }
     
     func writeDiary(info: DiaryModel) {
-        print("DiaryWritingInteractor :: writeDiary! info = \(info)")
+        // print("DiaryWritingInteractor :: writeDiary! info = \(info)")
         
         dependency.diaryRepository
             .addDiary(info: info)
+        
         listener?.diaryWritingPressedBackBtn()
+    }
+    
+    func testSaveImage(imageName: String, image: UIImage) {
+        print("testSaveImage")
+        dependency.diaryRepository
+            .saveImageToDocumentDirectory(imageName: imageName, image: image)
     }
 }

@@ -8,14 +8,13 @@
 import UIKit
 import RIBs
 import Firebase
+import FirebaseAnalytics
 import RealmSwift
-import IceCream
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    var syncEnigne: SyncEngine? // IceCream
     
     private var launchRouter: LaunchRouting?
     private var urlHandler: URLHandler?
@@ -42,6 +41,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UINavigationBar.appearance(whenContainedInInstancesOf: [UINavigationController.self]).scrollEdgeAppearance = navBarAppearance
         }
         
+        Analytics.logEvent("AppStart", parameters: nil)
+        
         // Realm
         
         /*
@@ -53,7 +54,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
          */
         
-        // print("Realm Location = \(String(describing: try! Realm().configuration.fileURL))")
+        let realm = Realm.safeInit()
+         print("Realm Location = \(String(describing: realm?.configuration.fileURL))")
         
         return true
     }
@@ -62,5 +64,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 protocol URLHandler: AnyObject {
   func handle(_ url: URL)
 }
-
-
