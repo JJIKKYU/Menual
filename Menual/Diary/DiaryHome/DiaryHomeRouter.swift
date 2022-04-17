@@ -154,7 +154,8 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         
         let router = diaryWritingBuildable.build(withListener: interactor)
         // Bottom Up 되도록 수정
-        viewController.present(router.viewControllable, animated: true, completion: nil)
+        viewController.pushViewController(router.viewControllable, animated: true)
+//        viewController.present(router.viewControllable, animated: true, completion: nil)
         
         diaryWritingRouting = router
         attachChild(router)
@@ -173,12 +174,15 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     
     // MARK: - Diary detaill 관련 함수
     
-    func attachDiaryDetail() {
+    func attachDiaryDetail(model: DiaryModel) {
         if diaryDetailRouting != nil {
             return
         }
         
-        let router = diaryDetailBuildable.build(withListener: interactor)
+        let router = diaryDetailBuildable.build(
+            withListener: interactor,
+            diaryModel: model
+        )
         viewController.pushViewController(router.viewControllable, animated: true)
         
         diaryDetailRouting = router

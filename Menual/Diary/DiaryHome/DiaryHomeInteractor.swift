@@ -7,6 +7,7 @@
 
 import RIBs
 import RxSwift
+import RealmSwift
 
 protocol DiaryHomeRouting: ViewableRouting {
     func attachMyPage()
@@ -17,7 +18,7 @@ protocol DiaryHomeRouting: ViewableRouting {
     func detachDiaryMoments()
     func attachDiaryWriting()
     func detachDiaryWriting()
-    func attachDiaryDetail()
+    func attachDiaryDetail(model: DiaryModel)
     func detachDiaryDetail()
 }
 
@@ -79,9 +80,21 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             .subscribe(onNext: { [weak self] diaryArr in
                 guard let self = self else { return }
                 print("diaryString 구독 중!, diary = \(diaryArr)")
+                print("<- reloadTableView")
                 self.presenter.reloadTableView()
             })
             .disposed(by: disposebag)
+
+        /*
+        dependency.diaryRepository
+            .realmDiaryOb
+            .subscribe(onNext: { [weak self] data in
+                guard let self = self else { return }
+                print("아이클라우드에서 받아온 정보 : \(data)")
+                // self.presenter.reloadTableView()
+            })
+            .disposed(by: disposebag)
+         */
     }
     
     func getMyMenualCount() -> Int {
@@ -146,8 +159,12 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     }
     
     // MARK: - Diary detaill 관련 함수
-    func pressedDiaryCell() {
-        router?.attachDiaryDetail()
+    
+    func pressedDiaryCell(index: Int) {
+        if let model = dependency.diaryRepository
+            .diaryString.value[safe: index] {
+            router?.attachDiaryDetail(model: model)
+        }
     }
     
     func diaryDetailPressedBackBtn() {

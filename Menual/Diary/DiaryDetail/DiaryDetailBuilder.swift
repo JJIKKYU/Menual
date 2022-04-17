@@ -20,7 +20,10 @@ final class DiaryDetailComponent: Component<DiaryDetailDependency> {
 // MARK: - Builder
 
 protocol DiaryDetailBuildable: Buildable {
-    func build(withListener listener: DiaryDetailListener) -> DiaryDetailRouting
+    func build(
+        withListener listener: DiaryDetailListener,
+        diaryModel: DiaryModel
+    ) -> DiaryDetailRouting
 }
 
 final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDetailBuildable {
@@ -28,11 +31,17 @@ final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDetailBuild
     override init(dependency: DiaryDetailDependency) {
         super.init(dependency: dependency)
     }
+    
+    func build(withListener listener: DiaryDetailListener, diaryModel: DiaryModel) -> DiaryDetailRouting {
+        let component = DiaryDetailComponent(
+            dependency: dependency
+        )
 
-    func build(withListener listener: DiaryDetailListener) -> DiaryDetailRouting {
-        let component = DiaryDetailComponent(dependency: dependency)
         let viewController = DiaryDetailViewController()
-        let interactor = DiaryDetailInteractor(presenter: viewController)
+        let interactor = DiaryDetailInteractor(
+            presenter: viewController,
+            diaryModel: diaryModel
+        )
         interactor.listener = listener
         return DiaryDetailRouter(interactor: interactor, viewController: viewController)
     }

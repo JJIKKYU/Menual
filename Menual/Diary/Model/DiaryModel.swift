@@ -7,6 +7,7 @@
 
 import Foundation
 import RealmSwift
+import IceCream
 
 // MARK: - 앱에서 사용하는 DiaryModel
 public struct DiaryModel {
@@ -37,12 +38,23 @@ public struct DiaryModel {
 
 // MARK: - Realm에 저장하기 위한 Class
 class DiaryModelRealm: Object {
-    @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var title = ""
-    @Persisted var weather: String
-    @Persisted var location: String
-    @Persisted var desc: String
-    @Persisted var image: String
+    // @objc dynamic var id: ObjectId
+    @objc dynamic var id = NSUUID().uuidString
+    @objc dynamic var title = ""
+    @objc dynamic var weather: String = ""
+    @objc dynamic var location: String = ""
+    @objc dynamic var desc: String = ""
+    @objc dynamic var image: String = ""
+    @objc dynamic var isDeleted = false
+    
+    // Return a list of indexed property names
+    override static func indexedProperties() -> [String] {
+        return ["title"]
+    }
+    
+    override class func primaryKey() -> String? {
+        return "id"
+    }
     
     convenience init(title: String, weather: String, location: String, desc: String, image: String) {
         self.init()
@@ -61,4 +73,7 @@ class DiaryModelRealm: Object {
         self.desc = diaryModel.description
         self.image = diaryModel.image
     }
+}
+
+extension DiaryModelRealm: CKRecordConvertible & CKRecordRecoverable {
 }

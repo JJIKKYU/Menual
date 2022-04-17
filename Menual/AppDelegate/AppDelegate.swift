@@ -9,11 +9,13 @@ import UIKit
 import RIBs
 import Firebase
 import RealmSwift
+import IceCream
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
+    var syncEnigne: SyncEngine? // IceCream
     
     private var launchRouter: LaunchRouting?
     private var urlHandler: URLHandler?
@@ -40,7 +42,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UINavigationBar.appearance(whenContainedInInstancesOf: [UINavigationController.self]).scrollEdgeAppearance = navBarAppearance
         }
         
-        print("Realm Location = \(String(describing: try! Realm().configuration.fileURL))")
+        // Realm
+        
+        syncEnigne = SyncEngine(objects: [
+            SyncObject(type: DiaryModelRealm.self)
+        ])
+        application.registerForRemoteNotifications()
+        
+        // print("Realm Location = \(String(describing: try! Realm().configuration.fileURL))")
         
         return true
     }

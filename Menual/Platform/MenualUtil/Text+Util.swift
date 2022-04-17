@@ -41,7 +41,10 @@ enum HeadType {
     case head_5
 }
 
+var systemLineHeight: CGFloat{ 1.44}
+
 extension UIFont {
+    
     // SpoqaHanSansNeo의 폰트 타입에 따라 폰트 이름 리턴
     class func SpoqaHanSansNeo(_ type: SpoqaHanSansNeoType) -> String {
         switch type {
@@ -113,7 +116,7 @@ extension UIFont {
         return [
             .font: font!,
             .paragraphStyle : NSMutableParagraphStyle().then {
-                $0.lineHeightMultiple = 1.44
+                $0.lineHeightMultiple = systemLineHeight
             },
             .foregroundColor : color
         ]
@@ -133,5 +136,24 @@ extension UIFont {
         case .head_5:
             return UIFont(name: UIFont.Montserrat(.ExtraBold), size: 18)
         }
+    }
+}
+
+extension UILabel {
+    func setLineHeight(lineHeight: CGFloat = systemLineHeight) {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 1.0
+        paragraphStyle.lineHeightMultiple = lineHeight
+        paragraphStyle.alignment = self.textAlignment
+
+        let attrString = NSMutableAttributedString()
+        if (self.attributedText != nil) {
+            attrString.append( self.attributedText!)
+        } else {
+            attrString.append( NSMutableAttributedString(string: self.text!))
+            attrString.addAttribute(NSAttributedString.Key.font, value: self.font!, range: NSMakeRange(0, attrString.length))
+        }
+        attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        self.attributedText = attrString
     }
 }

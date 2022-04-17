@@ -16,6 +16,7 @@ public protocol DiaryRepository {
     // ReadOnlyCurrentValuePublisher<[PaymentMethod]> { get }
     
     var diaryString: BehaviorRelay<[DiaryModel]> { get }
+    var realmDiaryOb: Observable<[DiaryModel]> { get }
     // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
     func fetch()
     func addDiary(info: DiaryModel)
@@ -23,11 +24,31 @@ public protocol DiaryRepository {
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
+    
+
+    public var realmDiaryOb: Observable<[DiaryModel]> {
+        let realm = try! Realm()
+
+        let result = realm.objects(DiaryModelRealm.self)
+        let ob = Observable.array(from: result)
+            .map { diaryArr -> [DiaryModel] in
+                var arr: [DiaryModel] = []
+                for diary in diaryArr {
+                    let diaryModel = DiaryModel(title: diary.title,
+                                                weather: diary.weather,
+                                                location: diary.location,
+                                                description: diary.desc,
+                                                image: diary.image
+                    )
+                    arr.append(diaryModel)
+                }
+                return arr
+            }
+        return ob
+    }
+
     public var diaryString: BehaviorRelay<[DiaryModel]> { diaryModelSubject }
-    public let diaryModelSubject = BehaviorRelay<[DiaryModel]>(value: [
-        DiaryModel(title: "타이틀마", weather: "웨덜마", location: "로케이션마", description: "디스크립션마", image: "이미징마")
-    ]
-    )
+    public let diaryModelSubject = BehaviorRelay<[DiaryModel]>(value: [])
     
     /*
     // public var cardOnFileString: ReadOnlyCurrentValuePublisher<[PaymentMethod]> { paymentMethodsSubject }
@@ -56,10 +77,15 @@ public final class DiaryRepositoryImp: DiaryRepository {
      */
     
     public func fetch() {
-        let realm = try! Realm()
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
         let result = realm.objects(DiaryModelRealm.self)
+        print("result = \(result)")
         
         diaryModelSubject.accept(result.map { DiaryModel($0) })
+
     }
     
     public func addDiary(info: DiaryModel) {
@@ -69,9 +95,11 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         print("addDiary!")
         // Realm에서 DiaryModelRealm Array를 받아온다.
-        let realm = try! Realm()
+        guard let realm = Realm.safeInit() else {
+            return
+        }
         
-        try! realm.write {
+        realm.safeWrite {
             realm.add(DiaryModelRealm(info))
         }
         

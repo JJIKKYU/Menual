@@ -13,9 +13,15 @@ protocol DiaryHomeDependency: Dependency {
 }
 
 final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency {
-
+    
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    
+    override init(
+        dependency: DiaryHomeDependency
+    ) {
+        super.init(dependency: dependency)
+    }
 }
 
 // MARK: - Builder

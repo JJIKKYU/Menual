@@ -16,6 +16,7 @@ protocol DiaryDetailPresentable: Presentable {
     var listener: DiaryDetailPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     func pressedBackBtn()
+    func loadDiaryDetail(model: DiaryModel)
 }
 
 protocol DiaryDetailListener: AnyObject {
@@ -24,15 +25,24 @@ protocol DiaryDetailListener: AnyObject {
 }
 
 final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>, DiaryDetailInteractable, DiaryDetailPresentableListener {
+    
+    let diaryModel: DiaryModel?
 
     weak var router: DiaryDetailRouting?
     weak var listener: DiaryDetailListener?
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
-    override init(presenter: DiaryDetailPresentable) {
+    init(
+        presenter: DiaryDetailPresentable,
+        diaryModel: DiaryModel
+    ) {
+        self.diaryModel = diaryModel
         super.init(presenter: presenter)
         presenter.listener = self
+        
+        print("interactor = \(diaryModel)")
+        presenter.loadDiaryDetail(model: diaryModel)
     }
 
     override func didBecomeActive() {
