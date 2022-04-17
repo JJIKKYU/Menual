@@ -9,6 +9,7 @@ import RIBs
 import RxSwift
 import SnapKit
 import UIKit
+import PhotosUI
 
 protocol DiaryWritingPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
@@ -52,6 +53,24 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.text = "오늘의 메뉴얼을 입력해주세요.\n날짜가 적힌 곳을 탭하여 제목을 입력할 수 있습니다."
     }
     
+    let imageView = UIImageView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.layer.masksToBounds = true
+        $0.backgroundColor = .brown
+        $0.contentMode = .scaleAspectFill
+    }
+    
+    lazy var imageViewBtn = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.addTarget(self, action: #selector(pressedImageview), for: .touchUpInside)
+        $0.setTitle("이미지 업로드하기", for: .normal)
+    }
+    
+    var phpickerConfiguration = PHPickerConfiguration()
+    lazy var imagePciker = PHPickerViewController(configuration: phpickerConfiguration).then {
+        $0.delegate = self
+    }
+    
     init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -84,6 +103,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         self.view.addSubview(titleTextField)
         self.view.addSubview(descriptionTextView)
+        self.view.addSubview(imageView)
+        self.view.addSubview(imageViewBtn)
         
         titleTextField.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -95,7 +116,21 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(titleTextField.snp.bottom).offset(20)
-            make.bottom.equalToSuperview()
+            make.height.equalTo(200)
+        }
+        
+        imageView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(descriptionTextView.snp.bottom).offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(100)
+        }
+        
+        imageViewBtn.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(imageView.snp.bottom).offset(10)
+            make.height.equalTo(50)
         }
     }
 
@@ -120,6 +155,14 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         )
         listener?.writeDiary(info: diaryModel)
     }
+    
+    @objc
+    func pressedImageview() {
+        print("PressedImageViewBtn!")
+        phpickerConfiguration.filter = .images
+        phpickerConfiguration.selectionLimit = 1
+        present(imagePciker, animated: true, completion: nil)
+    }
 }
 
 extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
@@ -134,6 +177,26 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             textView.text = "오늘의 메뉴얼을 입력해주세요.\n날짜가 적힌 곳을 탭하여 제목을 입력할 수 있습니다."
             textView.textColor = .lightGray
+        }
+    }
+}
+
+extension DiaryWritingViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+        
+        if let itemProvider = itemProvider {
+            if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                    DispatchQueue.main.async {
+                        self.imageView.image = image as? UIImage
+                    }
+                }
+            }
+        } else {
+            // TODO: Handle empty results or item provider not being able load UIImage
         }
     }
 }

@@ -44,10 +44,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Realm
         
+        /*
+         // iceCream 코드
+         
         syncEnigne = SyncEngine(objects: [
             SyncObject(type: DiaryModelRealm.self)
         ])
         application.registerForRemoteNotifications()
+         */
         
         // print("Realm Location = \(String(describing: try! Realm().configuration.fileURL))")
         
