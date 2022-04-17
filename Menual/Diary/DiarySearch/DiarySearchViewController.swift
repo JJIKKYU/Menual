@@ -22,6 +22,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     lazy var naviView = MenualNaviView(type: .moments).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+        $0.titleLabel.text = MenualString.title_search
     }
     
     lazy var tableView = UITableView().then {
@@ -56,8 +57,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         
         // 뒤로가기 제스쳐 가능하도록
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        
-        title = MenualString.title_search
     }
     
     override func viewDidDisappear(_ animated: Bool) {

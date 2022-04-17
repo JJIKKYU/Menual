@@ -24,18 +24,14 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
 
     weak var listener: DiaryWritingPresentableListener?
     
-    lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._24px.Arrow.back.image
-        $0.style = .done
-        $0.target = self
-        $0.action = #selector(pressedBackBtn)
-    }
-    
-    lazy var rightBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._24px.check.image
-        $0.style = .done
-        $0.target = self
-        $0.action = #selector(pressedCheckBtn)
+    lazy var naviView = MenualNaviView(type: .write).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+        $0.titleLabel.text = MenualString.title_menual
+        
+        $0.rightButton1.addTarget(self, action: #selector(pressedCheckBtn), for: .touchUpInside)
+        $0.rightButton1.tintColor = .white
+        $0.rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
     }
     
     lazy var titleTextField = UITextField().then {
@@ -97,20 +93,26 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     func setViews() {
         // 뒤로가기 제스쳐 가능하도록
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        title = MenualString.title_menual
-        navigationItem.leftBarButtonItem = leftBarButtonItem
-        navigationItem.rightBarButtonItem = rightBarButtonItem
         view.backgroundColor = .black
         
         self.view.addSubview(titleTextField)
         self.view.addSubview(descriptionTextView)
         self.view.addSubview(imageView)
         self.view.addSubview(imageViewBtn)
+        self.view.addSubview(naviView)
+        self.view.bringSubviewToFront(naviView)
+        
+        naviView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+        }
         
         titleTextField.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.top.equalToSuperview().offset(20)
+            make.top.equalToSuperview().offset(20 + 44 + UIApplication.topSafeAreaHeight)
         }
         
         descriptionTextView.snp.makeConstraints { make in

@@ -24,13 +24,7 @@ final class DiaryMomentsViewController: UIViewController, DiaryMomentsPresentabl
     lazy var naviView = MenualNaviView(type: .moments).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
-    }
-    
-    lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._24px.Arrow.back.image
-        $0.style = .done
-        $0.target = self
-        $0.action = #selector(pressedBackBtn)
+        $0.titleLabel.text = MenualString.title_moments
     }
     
     init() {
@@ -56,7 +50,6 @@ final class DiaryMomentsViewController: UIViewController, DiaryMomentsPresentabl
     func setViews() {
         // 뒤로가기 제스쳐 가능하도록
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        title = MenualString.title_moments
 //        navigationItem.leftBarButtonItem = leftBarButtonItem
         view.backgroundColor = .gray
         

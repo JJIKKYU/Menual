@@ -17,6 +17,7 @@ public protocol MenualNaviViewProtocol {
 enum NaviViewType {
     case main
     case moments
+    case write
 }
 
 class MenualNaviView: UIView {
@@ -32,10 +33,18 @@ class MenualNaviView: UIView {
     }
     
     var backButton = UIButton().then {
-        $0.setImage(Asset._24px.Arrow.back.image, for: .normal)
+        $0.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.tintColor = .white
         $0.contentMode = .scaleAspectFit
         $0.contentHorizontalAlignment = .fill
         $0.contentVerticalAlignment = .fill
+        $0.isHidden = true
+    }
+    
+    var titleLabel = UILabel().then {
+        $0.text = "title"
+        $0.font = UIFont.AppHead(.head_5)
+        $0.textColor = .white
         $0.isHidden = true
     }
     
@@ -61,6 +70,16 @@ class MenualNaviView: UIView {
         $0.isHidden = true
     }
     
+    var leftButton1 = UIButton().then {
+        $0.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.tintColor = .white
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.contentMode = .scaleAspectFit
+        $0.contentHorizontalAlignment = .fill
+        $0.contentVerticalAlignment = .fill
+        $0.isHidden = true
+    }
+    
     init(type: NaviViewType) {
         self.naviViewType = type
         super.init(frame: CGRect.zero)
@@ -78,6 +97,8 @@ class MenualNaviView: UIView {
         addSubview(backButton)
         addSubview(rightButton1)
         addSubview(rightButton2)
+        addSubview(titleLabel)
+        addSubview(leftButton1)
 
         menualTitleImage.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -104,6 +125,18 @@ class MenualNaviView: UIView {
             make.width.height.equalTo(24)
         }
         
+        titleLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().inset(8)
+        }
+        titleLabel.sizeToFit()
+        
+        leftButton1.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.bottom.equalToSuperview().inset(8)
+            make.width.height.equalTo(24)
+        }
+        
         setNaviViewType()
     }
     
@@ -115,7 +148,11 @@ class MenualNaviView: UIView {
             menualTitleImage.isHidden = false
         case .moments:
             backButton.isHidden = false
-            break
+            titleLabel.isHidden = false
+        case .write:
+            backButton.isHidden = false
+            rightButton1.isHidden = false
+            titleLabel.isHidden = false
         }
     }
 }
