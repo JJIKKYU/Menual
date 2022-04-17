@@ -40,6 +40,13 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.text = "텍스트입ㄴ다"
     }
     
+    let createdAtLabel = UILabel().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = UIFont.AppBodyOnlyFont(.body_3)
+        $0.textColor = .white
+        $0.text = "안녕하세요 만든 날짜입니다"
+    }
+    
     let testLabel = UILabel().then {
         $0.font = UIFont.AppTitle(.title_3)
         $0.textColor = Colors.tint.main.v200
@@ -101,6 +108,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.scrollView.addSubview(descriptionTextLabel)
         self.scrollView.addSubview(imageView)
         self.scrollView.addSubview(readCountLabel)
+        self.scrollView.addSubview(createdAtLabel)
         
         scrollView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -115,10 +123,15 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.top.equalToSuperview().offset(20)
         }
         
+        createdAtLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(titleLabel.snp.bottom).offset(20)
+        }
+        
         testLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.top.equalTo(titleLabel.snp.bottom).offset(15)
+            make.top.equalTo(createdAtLabel.snp.bottom).offset(15)
         }
         
         descriptionTextLabel.snp.makeConstraints { make in
@@ -148,8 +161,10 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.testLabel.text = "\(model.weather), \(model.location)"
         self.descriptionTextLabel.text = model.description
         self.descriptionTextLabel.setLineHeight()
-        self.readCountLabel.text = "\(model.readCount + 1)번 읽었습니다"
+        self.readCountLabel.text = "\(model.readCount)번 읽었습니다"
+        self.createdAtLabel.text = model.createdAt.description
         descriptionTextLabel.sizeToFit()
+        createdAtLabel.sizeToFit()
     }
     
     func testLoadDiaryImage(imageName: UIImage?) {

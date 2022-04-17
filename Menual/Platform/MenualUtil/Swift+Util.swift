@@ -39,3 +39,25 @@ extension Realm {
         }
     }
 }
+
+extension UIApplication {
+    static var topSafeAreaHeight: CGFloat {
+        var topSafeAreaHeight: CGFloat = 0
+         if #available(iOS 11.0, *) {
+               let window = UIApplication.shared.windows[0]
+               let safeFrame = window.safeAreaLayoutGuide.layoutFrame
+               topSafeAreaHeight = safeFrame.minY
+             }
+        return topSafeAreaHeight
+    }
+}
+
+extension UIView {
+    func applyBlurEffect() {
+        let blurEffect = UIBlurEffect(style: .dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(blurEffectView)
+    }
+}

@@ -95,6 +95,7 @@
 		98D0EBEE27CA0E190076136E /* SpoqaHanSansNeo Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBEC27CA0E190076136E /* SpoqaHanSansNeo Regular.otf */; };
 		98D0EBEF27CA0E190076136E /* SpoqaHanSansNeo Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBED27CA0E190076136E /* SpoqaHanSansNeo Bold.otf */; };
 		98F3A269280BEB75000851F0 /* DiarySubDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A268280BEB75000851F0 /* DiarySubDataModel.swift */; };
+		98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A26D280C536F000851F0 /* MenualNavigationController.swift */; };
 		9D65621A6BC58BDB19B31435 /* Pods_MenualTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B7AFEEEC2884EE3D9B20D25 /* Pods_MenualTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -216,6 +217,7 @@
 		98D0EBEC27CA0E190076136E /* SpoqaHanSansNeo Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo Regular.otf"; sourceTree = "<group>"; };
 		98D0EBED27CA0E190076136E /* SpoqaHanSansNeo Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo Bold.otf"; sourceTree = "<group>"; };
 		98F3A268280BEB75000851F0 /* DiarySubDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySubDataModel.swift; sourceTree = "<group>"; };
+		98F3A26D280C536F000851F0 /* MenualNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualNavigationController.swift; sourceTree = "<group>"; };
 		9D128C3C26B0CD2866B637F4 /* Pods_Menual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53C98DCB5D2180263C3A986 /* Pods-MenualTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenualTests.release.xcconfig"; path = "Target Support Files/Pods-MenualTests/Pods-MenualTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -273,6 +275,7 @@
 		98239BE127E3234F00E216F1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				98F3A26C280C534D000851F0 /* Navigation */,
 				98239BE227E3236100E216F1 /* Moments */,
 				98C24F5C27F05A0200E6768C /* TitleView.swift */,
 			);
@@ -659,6 +662,14 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		98F3A26C280C534D000851F0 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				98F3A26D280C536F000851F0 /* MenualNavigationController.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
 		C136E0769DBA6A801D667AFF /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -999,6 +1010,7 @@
 				988A2D68280166AA0046C43A /* DiaryModel.swift in Sources */,
 				988A2D5B27F97A000046C43A /* DiaryMomentsInteractor.swift in Sources */,
 				98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */,
+				98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
 				985E0F0627C232E300057951 /* RegisterPWBuilder.swift in Sources */,
 				989AE04427F0900800177573 /* DiarySearchViewController.swift in Sources */,
@@ -1223,7 +1235,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1256,7 +1268,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1287,7 +1299,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1313,7 +1325,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1338,7 +1350,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1362,7 +1374,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

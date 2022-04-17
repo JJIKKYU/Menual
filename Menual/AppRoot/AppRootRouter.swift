@@ -71,16 +71,16 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
         ]
          */
         
-         let navigation = NavigationControllerable(root: diaryHomeRouting.viewControllable)
-         navigation.navigationController.modalPresentationStyle = .fullScreen
-        navigation.navigationController.navigationBar.backgroundColor = .clear
-        navigation.navigationController.navigationBar.setBackgroundImage(UIImage(), for: .top, barMetrics: .default)
-        navigation.navigationController.navigationBar.shadowImage = UIImage()
-        navigation.navigationController.navigationBar.barTintColor = .red
-        navigation.navigationController.navigationBar.tintColor = .white
-        navigation.navigationController.navigationBar.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 25), .foregroundColor: UIColor.red]
-        navigation.navigationController.title = "xkdlxmffj"
-        diaryHomeRouting.viewControllable.uiviewController.title = "123123"
+        let navigation = NavigationControllerable(root: diaryHomeRouting.viewControllable)
+        navigation.navigationController.modalPresentationStyle = .fullScreen
+//        navigation.navigationController.navigationBar.backgroundColor = .clear
+//        navigation.navigationController.navigationBar.setBackgroundImage(UIImage(), for: .top, barMetrics: .default)
+//        navigation.navigationController.navigationBar.shadowImage = UIImage()
+//        navigation.navigationController.navigationBar.barTintColor = .red
+//        navigation.navigationController.navigationBar.tintColor = .white
+//        navigation.navigationController.navigationBar.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 25), .foregroundColor: UIColor.red]
+//        navigation.navigationController.title = "xkdlxmffj"
+//        diaryHomeRouting.viewControllable.uiviewController.title = "123123"
         
         //viewController.setViewController(diaryWritingRouting.viewControllable)
          viewController.setViewController(navigation)

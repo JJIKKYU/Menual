@@ -15,12 +15,13 @@ public struct DiaryModel {
     let weather: Weather?
     let location: Place? // TODO: 위치 타입 추가
     let description: String
-    let image: String // TODO: 이미지 타입 추가
+    let image: UIImage? // TODO: 이미지 타입 추가
     let readCount: Int
+    let createdAt: Date
     // let createdAt: Date
     
     // 각 Property를 넣어서 초기화
-    init(uuid: String, title: String, weather: Weather?, location: Place?, description: String, image: String, readCount: Int) {
+    init(uuid: String, title: String, weather: Weather?, location: Place?, description: String, image: UIImage?, readCount: Int, createdAt: Date) {
         self.uuid = uuid
         self.title = title
         self.weather = weather
@@ -28,7 +29,7 @@ public struct DiaryModel {
         self.description = description
         self.image = image
         self.readCount = readCount
-        // self.createdAt = createdAt
+        self.createdAt = createdAt
     }
     
     // Realm 객체를 넣어서 초기화
@@ -38,9 +39,24 @@ public struct DiaryModel {
         self.weather = realm.weather
         self.location = realm.location
         self.description = realm.desc
-        self.image = realm.image
+        // self.image = realm.image
+        
+        // 1. 도큐먼트 폴더 경로가져오기
+        let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+        let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+        let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+        
+        if let directoryPath = path.first {
+        // 2. 이미지 URL 찾기
+            let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(realm.uuid)
+            // 3. UIImage로 불러오기
+            self.image = UIImage(contentsOfFile: imageURL.path)
+        } else {
+            self.image = nil
+        }
+        
         self.readCount = realm.readCount
-        // self.createdAt = realm.createdAt
+        self.createdAt = realm.createdAt
     }
 }
 
@@ -53,12 +69,13 @@ class DiaryModelRealm: Object {
     @Persisted var weather: Weather?
     @Persisted var location: Place?
     @Persisted var desc: String = ""
-    @Persisted var image: String = ""
+    @Persisted var image: Bool = false
     @Persisted var readCount: Int
+    @Persisted var createdAt = Date()
     // @Persisted var createdAt: Date = Date()
     @Persisted var isDeleted = false
     
-    convenience init(uuid: String, title: String, weather: Weather?, location: Place?, desc: String, image: String, readCount: Int) {
+    convenience init(uuid: String, title: String, weather: Weather?, location: Place?, desc: String, image: Bool, readCount: Int) {
         self.init()
         self.uuid = uuid
         self.title = title
@@ -78,7 +95,13 @@ class DiaryModelRealm: Object {
         self.weather = diaryModel.weather
         self.location = diaryModel.location
         self.desc = diaryModel.description
-        self.image = diaryModel.image
+        
+        // 이미지 유무만 저장
+        self.image = false
+        if diaryModel.image != nil {
+            self.image = true
+        }
+        
         // self.createdAt = diaryModel.createdAt
         self.readCount = readCount
         self.isDeleted = false

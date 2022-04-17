@@ -19,11 +19,9 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
 
     weak var listener: DiarySearchPresentableListener?
     
-    lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._24px.Arrow.back.image
-        $0.style = .done
-        $0.target = self
-        $0.action = #selector(pressedBackBtn)
+    lazy var naviView = MenualNaviView(type: .moments).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
     }
     
     lazy var tableView = UITableView().then {
@@ -68,15 +66,23 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     }
     
     func setViews() {
-        navigationItem.leftBarButtonItem = leftBarButtonItem
         
         self.view.addSubview(tableView)
+        self.view.addSubview(naviView)
+        self.view.bringSubviewToFront(naviView)
         self.tableView.addSubview(searchView)
         tableView.tableHeaderView = searchView
         searchView.sizeToFit()
         
         tableView.snp.makeConstraints { make in
             make.leading.trailing.top.bottom.equalToSuperview()
+        }
+        
+        naviView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
         }
     }
     

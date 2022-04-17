@@ -35,6 +35,15 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         label.text = ""
         return label
     }()
+
+    lazy var naviView = MenualNaviView(type: .main).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.rightButton1.setImage(Asset._24px.profile.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.rightButton1.addTarget(self, action: #selector(pressedMyPageBtn), for: .touchUpInside)
+        
+        $0.rightButton2.setImage(Asset._24px.search.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.rightButton2.addTarget(self, action: #selector(pressedSearchBtn), for: .touchUpInside)
+    }
     
     lazy var scrollView = UIScrollView().then {
         $0.backgroundColor = Colors.background.black
@@ -132,12 +141,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     func setViews() {
-        title = MenualString.title_menual
-        navigationItem.leftBarButtonItem = leftBarButtonItem
-        navigationItem.rightBarButtonItem = rightBarButtonItem
+//        title = MenualString.title_menual
+//        navigationItem.leftBarButtonItem = leftBarButtonItem
+//        navigationItem.rightBarButtonItem = rightBarButtonItem
         
+        self.view.addSubview(naviView)
         self.view.addSubview(scrollView)
         self.view.addSubview(fabWriteBtn)
+        
 
         scrollView.addSubview(titleLabel)
 //        scrollView.addSubview(testView)
@@ -146,6 +157,15 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         scrollView.addSubview(myMenualTitleView)
         scrollView.addSubview(myMenualCollectionView)
         scrollView.addSubview(myMenualTableView)
+        
+        naviView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+        }
+        
+        self.view.bringSubviewToFront(naviView)
         
         // 임시
         fabWriteBtn.addSubview(wrtingBtnTest)
@@ -183,7 +203,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         momentsTitleView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.equalToSuperview().offset(20)
+            make.top.equalToSuperview().offset(64)
             make.height.equalTo(40)
         }
         

@@ -16,39 +16,40 @@ public protocol DiaryRepository {
     // ReadOnlyCurrentValuePublisher<[PaymentMethod]> { get }
     
     var diaryString: BehaviorRelay<[DiaryModel]> { get }
-    var realmDiaryOb: Observable<[DiaryModel]> { get }
+//    var realmDiaryOb: Observable<[DiaryModel]> { get }
     // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
     func fetch()
     func addDiary(info: DiaryModel)
+    func updateDiary(info: DiaryModel)
+    func deleteDiary(info: DiaryModel)
     func saveImageToDocumentDirectory(imageName: String, image: UIImage)
     func loadImageFromDocumentDirectory(imageName: String) -> UIImage?
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
-    
 
-    public var realmDiaryOb: Observable<[DiaryModel]> {
-        let realm = try! Realm()
-
-        let result = realm.objects(DiaryModelRealm.self)
-        let ob = Observable.array(from: result)
-            .map { diaryArr -> [DiaryModel] in
-                var arr: [DiaryModel] = []
-                for diary in diaryArr {
-                    let diaryModel = DiaryModel(uuid: diary.uuid,
-                                                title: diary.title,
-                                                weather: diary.weather ?? .none,
-                                                location: diary.location,
-                                                description: diary.desc,
-                                                image: diary.image,
-                                                readCount: diary.readCount
-                    )
-                    arr.append(diaryModel)
-                }
-                return arr
-            }
-        return ob
-    }
+//    public var realmDiaryOb: Observable<[DiaryModel]> {
+//        let realm = try! Realm()
+//
+//        let result = realm.objects(DiaryModelRealm.self)
+//        let ob = Observable.array(from: result)
+//            .map { diaryArr -> [DiaryModel] in
+//                var arr: [DiaryModel] = []
+//                for diary in diaryArr {
+//                    let diaryModel = DiaryModel(uuid: diary.uuid,
+//                                                title: diary.title,
+//                                                weather: diary.weather ?? .none,
+//                                                location: diary.location,
+//                                                description: diary.desc,
+//                                                image: diary.image,
+//                                                readCount: diary.readCount
+//                    )
+//                    arr.append(diaryModel)
+//                }
+//                return arr
+//            }
+//        return ob
+//    }
 
     public var diaryString: BehaviorRelay<[DiaryModel]> { diaryModelSubject }
     public let diaryModelSubject = BehaviorRelay<[DiaryModel]>(value: [])
@@ -119,20 +120,20 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     public func loadImageFromDocumentDirectory(imageName: String) -> UIImage? {
             
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-            
-            if let directoryPath = path.first {
-            // 2. 이미지 URL 찾기
-                let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(imageName)
-                // 3. UIImage로 불러오기
-                return UIImage(contentsOfFile: imageURL.path)
-            }
-            
-            return nil
+        // 1. 도큐먼트 폴더 경로가져오기
+        let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+        let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+        let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+        
+        if let directoryPath = path.first {
+        // 2. 이미지 URL 찾기
+            let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(imageName)
+            // 3. UIImage로 불러오기
+            return UIImage(contentsOfFile: imageURL.path)
         }
+        
+        return nil
+    }
     
     public func fetch() {
         guard let realm = Realm.safeInit() else {
@@ -164,5 +165,67 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
         
         diaryModelSubject.accept(diaryModelSubject.value + [info])
+    }
+    
+    public func updateDiary(info: DiaryModel) {
+        print("update Diary!")
+        // Realm에서 DiaryModelRealm Array를 받아온다.
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        guard let data = realm.objects(DiaryModelRealm.self).filter({ $0.uuid == info.uuid }).first
+        else { return }
+        
+        realm.safeWrite {
+            data.readCount = info.readCount
+            data.weather = info.weather
+            data.location = info.location
+        }
+        
+        var idx: Int = 0
+        for (index, value) in diaryModelSubject.value.enumerated() {
+            if value.uuid == info.uuid {
+                idx = index
+            }
+        }
+
+        var arr = diaryModelSubject.value
+        arr[idx] = DiaryModel(uuid: info.uuid,
+                              title: info.title,
+                              weather: info.weather,
+                              location: info.location,
+                              description: info.description,
+                              image: info.image,
+                              readCount: info.readCount,
+                              createdAt: info.createdAt
+        )
+
+        diaryModelSubject.accept(arr)
+    }
+    
+    public func deleteDiary(info: DiaryModel) {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        guard let data = realm.objects(DiaryModelRealm.self).filter({ $0.uuid == info.uuid }).first
+        else { return }
+        
+        realm.safeWrite {
+            realm.delete(data)
+        }
+        
+        var idx: Int = 0
+        for (index, value) in diaryModelSubject.value.enumerated() {
+            if value.uuid == info.uuid {
+                idx = index
+            }
+        }
+
+        var arr = diaryModelSubject.value
+        arr.remove(at: idx)
+
+        diaryModelSubject.accept(arr)
     }
 }

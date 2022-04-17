@@ -8,6 +8,7 @@
 import RIBs
 import RxSwift
 import UIKit
+import SnapKit
 
 protocol DiaryMomentsPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
@@ -19,6 +20,11 @@ protocol DiaryMomentsPresentableListener: AnyObject {
 final class DiaryMomentsViewController: UIViewController, DiaryMomentsPresentable, DiaryMomentsViewControllable {
     
     weak var listener: DiaryMomentsPresentableListener?
+    
+    lazy var naviView = MenualNaviView(type: .moments).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+    }
     
     lazy var leftBarButtonItem = UIBarButtonItem().then {
         $0.image = Asset._24px.Arrow.back.image
@@ -51,8 +57,17 @@ final class DiaryMomentsViewController: UIViewController, DiaryMomentsPresentabl
         // 뒤로가기 제스쳐 가능하도록
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         title = MenualString.title_moments
-        navigationItem.leftBarButtonItem = leftBarButtonItem
+//        navigationItem.leftBarButtonItem = leftBarButtonItem
         view.backgroundColor = .gray
+        
+        self.view.addSubview(naviView)
+        
+        naviView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+        }
     }
     
     @objc

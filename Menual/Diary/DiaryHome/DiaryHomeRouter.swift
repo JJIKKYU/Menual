@@ -169,6 +169,7 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         
         viewController.popViewController(animated: true)
         detachChild(router)
+        
         diaryWritingRouting = nil
     }
     

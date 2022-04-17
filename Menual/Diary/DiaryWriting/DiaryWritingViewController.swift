@@ -153,8 +153,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
                                     weather: nil,
                                     location: nil,
                                     description: description,
-                                    image: "이미징",
-                                    readCount: 0
+                                    image: self.imageView.image,
+                                    readCount: 0,
+                                    createdAt: Date()
         )
         print("diaryModel.id = \(diaryModel.uuid)")
         listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())
