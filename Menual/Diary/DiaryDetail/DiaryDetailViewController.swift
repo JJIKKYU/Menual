@@ -60,6 +60,16 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.layer.masksToBounds = true
     }
     
+    let readCountLabel = UILabel().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = UIFont.AppBodyOnlyFont(.body_3)
+        $0.textColor = .white
+        $0.backgroundColor = .gray
+        $0.numberOfLines = 1
+        $0.textAlignment = .right
+        $0.text = "0번 읽었슴다"
+    }
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
@@ -90,6 +100,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.scrollView.addSubview(testLabel)
         self.scrollView.addSubview(descriptionTextLabel)
         self.scrollView.addSubview(imageView)
+        self.scrollView.addSubview(readCountLabel)
         
         scrollView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -122,6 +133,13 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.top.equalTo(descriptionTextLabel.snp.bottom).offset(20)
             make.height.equalTo(200)
         }
+        
+        readCountLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(imageView.snp.bottom).offset(20)
+            make.height.equalTo(20)
+        }
     }
     
     func loadDiaryDetail(model: DiaryModel) {
@@ -130,12 +148,15 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.testLabel.text = "\(model.weather), \(model.location)"
         self.descriptionTextLabel.text = model.description
         self.descriptionTextLabel.setLineHeight()
+        self.readCountLabel.text = "\(model.readCount + 1)번 읽었습니다"
         descriptionTextLabel.sizeToFit()
     }
     
     func testLoadDiaryImage(imageName: UIImage?) {
         if let imageName = imageName {
-            self.imageView.image = imageName
+            DispatchQueue.main.async {
+                self.imageView.image = imageName
+            }
         }
     }
     

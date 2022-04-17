@@ -52,7 +52,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         presenter.loadDiaryDetail(model: diaryModel)
 
         let image = dependency.diaryRepository
-            .loadImageFromDocumentDirectory(imageName: "test")
+            .loadImageFromDocumentDirectory(imageName: diaryModel.uuid)
         presenter.testLoadDiaryImage(imageName: image)
     }
 

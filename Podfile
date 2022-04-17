@@ -17,7 +17,7 @@ target 'Menual' do
   pod 'RxRealm'
   pod 'Realm', '10.20.1'
   pod 'RealmSwift', '10.20.1'
-
+  
   # Google
   pod 'Firebase/Analytics'
   pod 'Firebase/Auth'

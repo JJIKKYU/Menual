@@ -35,11 +35,13 @@ public final class DiaryRepositoryImp: DiaryRepository {
             .map { diaryArr -> [DiaryModel] in
                 var arr: [DiaryModel] = []
                 for diary in diaryArr {
-                    let diaryModel = DiaryModel(title: diary.title,
+                    let diaryModel = DiaryModel(uuid: diary.uuid,
+                                                title: diary.title,
                                                 weather: diary.weather ?? .none,
                                                 location: diary.location,
                                                 description: diary.desc,
-                                                image: diary.image
+                                                image: diary.image,
+                                                readCount: diary.readCount
                     )
                     arr.append(diaryModel)
                 }

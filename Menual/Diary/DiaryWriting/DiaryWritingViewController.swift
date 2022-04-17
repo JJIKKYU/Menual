@@ -148,13 +148,16 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
               let description = self.descriptionTextView.text
         else { return }
         
-        let diaryModel = DiaryModel(title: title,
+        let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
+                                    title: title,
                                     weather: nil,
                                     location: nil,
                                     description: description,
-                                    image: "이미징"
+                                    image: "이미징",
+                                    readCount: 0
         )
-         listener?.testSaveImage(imageName: "test", image: self.imageView.image ?? UIImage())
+        print("diaryModel.id = \(diaryModel.uuid)")
+        listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())
         listener?.writeDiary(info: diaryModel)
     }
     
