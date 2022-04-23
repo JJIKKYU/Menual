@@ -35,6 +35,11 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
     }
     
+    lazy var bottomSheet = MenualBottomSheetViewController().then {
+        $0.title = ""
+        $0.bottomSheetHeight = 400
+    }
+    
     lazy var titleTextField = UITextField().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
@@ -62,6 +67,11 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.addTarget(self, action: #selector(pressedImageview), for: .touchUpInside)
         $0.setTitle("이미지 업로드하기", for: .normal)
+    }
+    
+    lazy var weatherAddBtn = UIButton().then {
+        $0.addTarget(self, action: #selector(pressedWeatherAddBtn), for: .touchUpInside)
+        $0.setTitle("날씨 추가", for: .normal)
     }
     
     var phpickerConfiguration = PHPickerConfiguration()
@@ -102,6 +112,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         self.view.addSubview(imageView)
         self.view.addSubview(imageViewBtn)
         self.view.addSubview(naviView)
+        self.view.addSubview(weatherAddBtn)
         self.view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
@@ -117,10 +128,17 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.top.equalToSuperview().offset(20 + 44 + UIApplication.topSafeAreaHeight)
         }
         
+        weatherAddBtn.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.top.equalTo(titleTextField.snp.bottom).offset(20)
+            make.height.equalTo(30)
+            make.width.equalTo(100)
+        }
+        
         descriptionTextView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.top.equalTo(titleTextField.snp.bottom).offset(20)
+            make.top.equalTo(weatherAddBtn.snp.bottom).offset(20)
             make.height.equalTo(200)
         }
         
@@ -173,6 +191,13 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         phpickerConfiguration.filter = .images
         phpickerConfiguration.selectionLimit = 1
         present(imagePciker, animated: true, completion: nil)
+    }
+    
+    @objc
+    func pressedWeatherAddBtn() {
+        print("pressedWeatherAddBtn")
+        bottomSheet.modalPresentationStyle = .overFullScreen
+        self.present(bottomSheet, animated: false)
     }
 }
 
