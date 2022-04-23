@@ -60,11 +60,11 @@ class MenualBottomSheetBaseViewController: UIViewController {
     }
     
     @objc
-    private func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
+    internal func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
         hideBottomSheetAndGoBack()
     }
     
-    private func hideBottomSheetAndGoBack() {
+    internal func hideBottomSheetAndGoBack() {
         originalBottomSheetHieght = 0
         bottomSheetView.snp.updateConstraints { make in
             make.height.equalTo(originalBottomSheetHieght)
@@ -81,7 +81,7 @@ class MenualBottomSheetBaseViewController: UIViewController {
         }
     }
     
-    private func showBottomSheet() {
+    internal func showBottomSheet() {
         let safeAreaHeight: CGFloat = view.safeAreaLayoutGuide.layoutFrame.height
         let bottomPadding: CGFloat = view.safeAreaInsets.bottom
         print("safeAreaHeight = \(safeAreaHeight), bottomPadding = \(bottomPadding)")

@@ -10,6 +10,13 @@ import SnapKit
 import Then
 
 class MenualBottomSheetViewController: MenualBottomSheetBaseViewController {
+    
+    lazy var closeBtn = UIButton().then {
+        $0.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.tintColor = .white
+        $0.addTarget(self, action: #selector(dimmedViewTapped), for: .touchUpInside)
+        $0.contentMode = .scaleAspectFit
+    }
         
     let segmentationView = MenualSegmentationBaseViewController(frame: CGRect.zero).then {
         $0.setButtonTitles(buttonTitles: ["날씨", "장소"])
@@ -54,6 +61,7 @@ class MenualBottomSheetViewController: MenualBottomSheetBaseViewController {
     func setViews() {
         self.view.addSubview(segmentationView)
         self.view.addSubview(scrollView)
+        self.view.addSubview(closeBtn)
         
         scrollView.addSubview(titleLabel)
         scrollView.addSubview(weatherCollectionView)
@@ -63,6 +71,12 @@ class MenualBottomSheetViewController: MenualBottomSheetBaseViewController {
             make.top.equalTo(bottomSheetView.snp.top).offset(20)
             make.width.equalTo(90)
             make.height.equalTo(32)
+        }
+        
+        closeBtn.snp.makeConstraints { make in
+            make.trailing.equalTo(bottomSheetView.snp.trailing).inset(20)
+            make.top.equalTo(bottomSheetView.snp.top).offset(20)
+            make.width.height.equalTo(24)
         }
         
         scrollView.snp.makeConstraints { make in
