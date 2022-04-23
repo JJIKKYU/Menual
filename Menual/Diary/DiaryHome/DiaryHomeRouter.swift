@@ -154,8 +154,7 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         
         let router = diaryWritingBuildable.build(withListener: interactor)
         // Bottom Up 되도록 수정
-        viewController.pushViewController(router.viewControllable, animated: true)
-//        viewController.present(router.viewControllable, animated: true, completion: nil)
+        viewController.present(router.viewControllable, animated: true, completion: nil)
         
         diaryWritingRouting = router
         attachChild(router)
@@ -167,7 +166,8 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
             return
         }
         
-        viewController.popViewController(animated: true)
+        // viewController.popViewController(animated: true)
+        // viewController.popToRoot(animated: true)
         detachChild(router)
         
         diaryWritingRouting = nil

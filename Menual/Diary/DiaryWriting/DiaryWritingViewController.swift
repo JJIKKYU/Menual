@@ -27,6 +27,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     lazy var naviView = MenualNaviView(type: .write).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+        $0.backButton.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.titleLabel.text = MenualString.title_menual
         
         $0.rightButton1.addTarget(self, action: #selector(pressedCheckBtn), for: .touchUpInside)
@@ -70,6 +71,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     
     init() {
         super.init(nibName: nil, bundle: nil)
+        modalPresentationStyle = .fullScreen
     }
     
     required init?(coder: NSCoder) {
@@ -140,6 +142,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     @objc
     func pressedBackBtn() {
         print("pressedBackBtn!")
+        dismiss(animated: true)
         listener?.pressedBackBtn()
     }
     
