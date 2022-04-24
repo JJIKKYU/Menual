@@ -9,35 +9,63 @@ import UIKit
 import Then
 import SnapKit
 
-class BottomSheetSelectView: UIView {
+enum BottomSheetSelectViewType {
+    case weather
+    case place
+}
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+protocol BottomSheetSelectDelegate {
+    func sendData(placeModel: PlaceModel)
+    func sendData(weatherModel: WeatherModel)
+}
+
+class BottomSheetSelectView: UIView {
     
+    var delegate: BottomSheetSelectDelegate?
+
     var title: String = "" {
         didSet {
             layoutSubviews()
         }
     }
     
-    let titleLabel = UILabel().then {
+    var placeholderText: String = "" {
+        didSet {
+            layoutSubviews()
+        }
+    }
+    
+    var selectedWeatherType: Weather? {
+        didSet {
+            layoutSubviews()
+        }
+    }
+    
+    var selectedPlaceType: Place? {
+        didSet {
+            layoutSubviews()
+        }
+    }
+    
+    var viewType: BottomSheetSelectViewType {
+        didSet {
+            layoutSubviews()
+        }
+    }
+    
+    private let titleLabel = UILabel().then {
         $0.text = "타이틀입니다."
         $0.font = UIFont.AppHead(.head_3)
         $0.textColor = .white
     }
     
-    let collectionViewLayout = UICollectionViewFlowLayout().then {
+    private let collectionViewLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .horizontal
         $0.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         $0.minimumLineSpacing = 12
     }
     
-    lazy var collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: collectionViewLayout).then {
+    private lazy var collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: collectionViewLayout).then {
         $0.backgroundColor = .clear
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.register(MenualBottomSheetCell.self, forCellWithReuseIdentifier: "MenualCell")
@@ -45,7 +73,7 @@ class BottomSheetSelectView: UIView {
         $0.dataSource = self
     }
     
-    lazy var textField = UITextField().then {
+    private lazy var textField = UITextField().then {
         // $0.delegate = self
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
@@ -55,7 +83,7 @@ class BottomSheetSelectView: UIView {
         $0.addLeftPadding()
     }
     
-    let recentLabel = UILabel().then {
+    private let recentLabel = UILabel().then {
         $0.text = "최근 목록"
         $0.font = UIFont.AppHead(.head_3)
         $0.textColor = .white
@@ -65,19 +93,22 @@ class BottomSheetSelectView: UIView {
         super.awakeFromNib()
     }
     
-    override init(frame: CGRect) {
+    init(frame: CGRect = CGRect.zero, _ type: BottomSheetSelectViewType) {
+        self.viewType = type
         super.init(frame: frame)
         setViews()
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
         self.titleLabel.text = title
+        self.textField.text = placeholderText
+        collectionView.reloadData()
     }
     
     func setViews() {
@@ -131,16 +162,30 @@ extension BottomSheetSelectView: UICollectionViewDelegate, UICollectionViewDeleg
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MenualCell", for: indexPath) as? MenualBottomSheetCell else {
             return UICollectionViewCell()
         }
+        
+        switch viewType {
+        case .place:
+            cell.placeIconType = Place().getVariation()[indexPath.row]
+            if let selectedCellPlaceType = selectedPlaceType {
+                for place in Place().getVariation() {
+                    if place.rawValue == selectedCellPlaceType.rawValue {
+                        cell.selected()
+                    }
+                }
+            }
+            
+        case .weather:
+            cell.weatherIconType = Weather().getVariation()[indexPath.row]
+            if let selectedCellWeatherType = selectedWeatherType {
+                for weather in Weather().getVariation() {
+                    if weather.rawValue == selectedCellWeatherType.rawValue {
+                        cell.selected()
+                    }
+                }
+            }
+            
+        }
 
-        cell.placeIconType = Place().getVariation()[indexPath.row]
-        
-        // 재진입하여 이미 선택된 셀을 만들어야 하는 경우
-//        if let selectedCellWeatherType = selectedCellWeatherType {
-//            if tempArr[indexPath.row] == selectedCellWeatherType {
-//                cell.selected()
-//            }
-//        }
-        
         return cell
     }
     
@@ -154,22 +199,45 @@ extension BottomSheetSelectView: UICollectionViewDelegate, UICollectionViewDeleg
             cell.unSelected()
         }
         selectedCell.selected()
-        let defaultText = Place().getPlaceText(place: selectedCell.placeIconType ?? .place)
-        
-        // self.listener?.updateWeather(weather: selectedCell.weatherIconType ?? .sun)
-        
-        if let text = self.textField.text {
-            for place in Place().getVariation() {
-                if text == place.rawValue {
+
+        // weather cell일 경우
+        if let selectedCellWeatherType = selectedCell.weatherIconType {
+            print("weatherType입니다")
+            let defaultText = Weather().getWeatherText(weather: selectedCellWeatherType)
+            delegate?.sendData(weatherModel: WeatherModel(uuid: "", weather: selectedCellWeatherType, detailText: ""))
+            
+            if let text = self.textField.text {
+                for weather in Weather().getVariation() {
+                    if text == weather.rawValue {
+                        self.textField.text = defaultText
+                    }
+                }
+                
+                if text.count == 0 {
                     self.textField.text = defaultText
                 }
             }
+        }
+        else if let selectedCellPlaceType = selectedCell.placeIconType {
+            print("placeType입니다")
+            let defaultText = Place().getPlaceText(place: selectedCell.placeIconType ?? .place)
             
-            if text.count == 0 {
-                self.textField.text = defaultText
+            // self.listener?.updateWeather(weather: selectedCell.weatherIconType ?? .sun)
+            delegate?.sendData(placeModel: PlaceModel(uuid: "", place: selectedCellPlaceType, detailText: ""))
+            
+            if let text = self.textField.text {
+                for place in Place().getVariation() {
+                    if text == place.rawValue {
+                        self.textField.text = defaultText
+                    }
+                }
+                
+                if text.count == 0 {
+                    self.textField.text = defaultText
+                }
+                
+                // self.listener?.updateWeatherDetailText(text: defaultText)
             }
-            
-            // self.listener?.updateWeatherDetailText(text: defaultText)
         }
     }
 }

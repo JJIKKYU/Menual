@@ -11,11 +11,11 @@ import RealmSwift
 // MARK: - Weather
 
 enum Weather: String, PersistableEnum {
-    case sun = "sun"
-    case rain = "rain"
-    case cloud = "cloud"
-    case thunder = "thunder"
-    case snow = "snow"
+    case sun = "썬"
+    case rain = "레인"
+    case cloud = "클라우드"
+    case thunder = "썬더"
+    case snow = "스노우"
     
     func getWeatherText(weather: Weather) -> String {
         var text = ""

@@ -59,9 +59,12 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
             return
         }
         print("detachBottomSheet")
-        diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
-        detachChild(router)
-        diaryBottomSheetRouting = nil
         
+        // CustomUI Transition 보장
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.26) {
+            diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
+            self.detachChild(router)
+            self.diaryBottomSheetRouting = nil
+        }
     }
 }

@@ -70,7 +70,6 @@ class MenualBottomSheetBaseViewController: UIViewController {
             // make.height.equalTo(originalBottomSheetHieght)
             make.bottom.equalToSuperview().offset(originalBottomSheetHieght)
         }
-        print("original = \(originalBottomSheetHieght), bottom = \(bottomSheetHeight)")
         
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
             self.dimmedView.alpha = 0
@@ -96,7 +95,7 @@ class MenualBottomSheetBaseViewController: UIViewController {
         }
         
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
-            self.dimmedView.alpha = 1
+            self.dimmedView.alpha = 0.1
             self.view.layoutIfNeeded()
         } completion: { isShow in
             print("bottomSheet isShow!")
