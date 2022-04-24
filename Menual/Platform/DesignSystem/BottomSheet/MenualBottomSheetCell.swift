@@ -50,13 +50,15 @@ class MenualBottomSheetCell: UICollectionViewCell {
         bringSubviewToFront(iconView)
         
         selectedView.snp.makeConstraints { make in
-            make.leading.width.top.bottom.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.top.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
         
         iconView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.bottom.equalToSuperview()
+            make.width.height.equalTo(24)
+            make.centerX.centerY.equalToSuperview()
         }
         
     }
@@ -65,9 +67,6 @@ class MenualBottomSheetCell: UICollectionViewCell {
         super.layoutSubviews()
         print("suvViews!")
         setIconView()
-        
-        
-        
         print("weatherIconType = \(weatherIconType)")
     }
     

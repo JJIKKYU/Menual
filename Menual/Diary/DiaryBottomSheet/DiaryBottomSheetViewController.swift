@@ -1,17 +1,32 @@
 //
-//  MenualBottomSheetViewController.swift
+//  DiaryBottomSheetViewController.swift
 //  Menual
 //
-//  Created by 정진균 on 2022/04/23.
+//  Created by 정진균 on 2022/04/24.
 //
 
+import RIBs
+import RxSwift
+import RxRelay
 import UIKit
-import SnapKit
-import Then
 
-class MenualBottomSheetViewController: MenualBottomSheetBaseViewController {
+protocol DiaryBottomSheetPresentableListener: AnyObject {
+    // TODO: Declare properties and methods that the view controller can invoke to perform
+    // business logic, such as signIn(). This protocol is implemented by the corresponding
+    // interactor class.
+    func pressedCloseBtn()
+    func updateWeatherDetailText(text: String)
+    func updateWeather(weather: Weather)
+    func pressedWriteBtn()
+}
+
+final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController, DiaryBottomSheetPresentable, DiaryBottomSheetViewControllable {
     
+    weak var listener: DiaryBottomSheetPresentableListener?
+    var disposeBag = DisposeBag()
     var keyHeight: CGFloat?
+    var selectedCellWeatherType: Weather?
+    
     lazy var closeBtn = UIButton().then {
         $0.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = .white
@@ -19,9 +34,20 @@ class MenualBottomSheetViewController: MenualBottomSheetBaseViewController {
         $0.contentMode = .scaleAspectFit
     }
         
-    let segmentationView = MenualSegmentationBaseViewController(frame: CGRect.zero).then {
+    lazy var segmentationView = MenualSegmentationBaseViewController(frame: CGRect.zero).then {
         $0.setButtonTitles(buttonTitles: ["날씨", "장소"])
         $0.backgroundColor = .clear
+        $0.delegate = self
+    }
+    
+    let weatherView = UIView().then {
+        $0.backgroundColor = .clear
+        $0.isHidden = false
+    }
+    
+    let placeView = UIView().then {
+        $0.backgroundColor = .brown
+        $0.isHidden = true
     }
     
     let scrollView = UIScrollView().then {
@@ -74,25 +100,32 @@ class MenualBottomSheetViewController: MenualBottomSheetBaseViewController {
         $0.font = UIFont.AppHead(.head_3)
         $0.textColor = .white
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setViews()
-        bottomSheetView.backgroundColor = Colors.background.black
+         setViews()
+         bind()
+         bottomSheetView.backgroundColor = Colors.background.black
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        segmentationView.delegate = nil
     }
     
     func setViews() {
         self.view.addSubview(segmentationView)
-        self.view.addSubview(scrollView)
         self.view.addSubview(closeBtn)
         self.view.addSubview(addBtn)
+        self.view.addSubview(weatherView)
+        self.view.addSubview(placeView)
+        self.view.bringSubviewToFront(addBtn)
         
+        weatherView.addSubview(scrollView)
         scrollView.addSubview(titleLabel)
         scrollView.addSubview(weatherCollectionView)
         scrollView.addSubview(weatherTextField)
@@ -111,6 +144,21 @@ class MenualBottomSheetViewController: MenualBottomSheetBaseViewController {
             make.width.height.equalTo(24)
         }
         
+        weatherView.snp.makeConstraints { make in
+            make.leading.equalTo(bottomSheetView.snp.leading)
+            make.top.equalTo(segmentationView.snp.bottom).offset(20)
+            make.width.equalTo(bottomSheetView.snp.width)
+            make.bottom.equalTo(bottomSheetView.snp.bottom)
+        }
+        
+        placeView.snp.makeConstraints { make in
+            make.leading.equalTo(bottomSheetView.snp.leading)
+            make.top.equalTo(segmentationView.snp.bottom).offset(20)
+            make.width.equalTo(bottomSheetView.snp.width)
+            make.bottom.equalTo(bottomSheetView.snp.bottom)
+        }
+        
+        // Weahter View Setting
         scrollView.snp.makeConstraints { make in
             make.leading.equalTo(bottomSheetView.snp.leading)
             make.width.equalTo(bottomSheetView.snp.width)
@@ -152,6 +200,26 @@ class MenualBottomSheetViewController: MenualBottomSheetBaseViewController {
         }
     }
     
+    func bind() {
+        weatherTextField.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .subscribe(onNext : { [weak self] changedText in
+                guard let self = self else { return }
+                if changedText.count == 0 { return }
+                self.listener?.updateWeatherDetailText(text: changedText)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func setViewsWithWeatherModel(model: WeatherModel) {
+        // 재진입 할 경우 이전에 선택했던 정보 세팅
+        self.weatherTextField.text = model.detailText
+        self.selectedCellWeatherType = model.weather
+        weatherCollectionView.reloadData()
+    }
+    
+    /*
     @objc func keyboardWillShow(_ sender: Notification) {
         let userInfo:NSDictionary = sender.userInfo! as NSDictionary
         let keyboardFrame:NSValue = userInfo.value(forKey: UIResponder.keyboardFrameEndUserInfoKey) as! NSValue
@@ -169,11 +237,15 @@ class MenualBottomSheetViewController: MenualBottomSheetBaseViewController {
 
         self.view.frame.size.height += keyHeight
     }
+     */
     
     @objc
     override func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
-        hideBottomSheetAndGoBack()
-        weatherTextField.resignFirstResponder()
+        // hideBottomSheetAndGoBack()
+        // weatherTextField.resignFirstResponder()
+        print("dimmedViewTapped")
+         listener?.pressedCloseBtn()
+        
     }
     
     @objc
@@ -181,22 +253,12 @@ class MenualBottomSheetViewController: MenualBottomSheetBaseViewController {
         print("TODO :: pressedAddBtn!!")
         hideBottomSheetAndGoBack()
         weatherTextField.resignFirstResponder()
+        listener?.pressedWriteBtn()
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
 }
 
-
-extension MenualBottomSheetViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension DiaryBottomSheetViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 32, height: 32)
     }
@@ -217,7 +279,14 @@ extension MenualBottomSheetViewController: UICollectionViewDelegate, UICollectio
             .snow
         ]
         cell.weatherIconType = tempArr[indexPath.row]
-
+        
+        // 재진입하여 이미 선택된 셀을 만들어야 하는 경우
+        if let selectedCellWeatherType = selectedCellWeatherType {
+            if tempArr[indexPath.row] == selectedCellWeatherType {
+                cell.selected()
+            }
+        }
+        
         return cell
     }
     
@@ -231,10 +300,41 @@ extension MenualBottomSheetViewController: UICollectionViewDelegate, UICollectio
             cell.unSelected()
         }
         selectedCell.selected()
-        self.weatherTextField.text = Weather().getWeatherText(weather: selectedCell.weatherIconType)
+        let defaultText = Weather().getWeatherText(weather: selectedCell.weatherIconType)
+        
+        self.listener?.updateWeather(weather: selectedCell.weatherIconType)
+        
+        if let text = self.weatherTextField.text,
+           text.count == 0 {
+            // TODO: - defaultText일 경우에도 변경 되도록
+            self.weatherTextField.text = defaultText
+            self.listener?.updateWeatherDetailText(text: defaultText)
+        }
     }
 }
 
-extension MenualBottomSheetViewController: UITextFieldDelegate {
+extension DiaryBottomSheetViewController: UITextFieldDelegate {
     
+}
+
+extension DiaryBottomSheetViewController: MenualSegmentationDelegate {
+    func changeToIdx(index: Int) {
+        print("index! \(index)")
+        switch index {
+        // 날씨
+        case 0:
+            placeView.isHidden = true
+            weatherView.isHidden = false
+            self.addBtn.setTitle("날씨 추가하기", for: .normal)
+            
+        // 장소
+        case 1:
+            placeView.isHidden = false
+            weatherView.isHidden = true
+            self.addBtn.setTitle("장소 추가하기", for: .normal)
+            
+        default:
+            break
+        }
+    }
 }

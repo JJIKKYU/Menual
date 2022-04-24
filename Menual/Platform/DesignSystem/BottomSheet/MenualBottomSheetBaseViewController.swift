@@ -54,8 +54,8 @@ class MenualBottomSheetBaseViewController: UIViewController {
         bottomSheetView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.height.equalTo(originalBottomSheetHieght)
+            make.bottom.equalToSuperview().offset(bottomSheetHeight)
+            make.height.equalTo(bottomSheetHeight)
         }
     }
     
@@ -65,19 +65,18 @@ class MenualBottomSheetBaseViewController: UIViewController {
     }
     
     internal func hideBottomSheetAndGoBack() {
-        originalBottomSheetHieght = 0
+        // originalBottomSheetHieght = 0
         bottomSheetView.snp.updateConstraints { make in
-            make.height.equalTo(originalBottomSheetHieght)
+            // make.height.equalTo(originalBottomSheetHieght)
+            make.bottom.equalToSuperview().offset(originalBottomSheetHieght)
         }
+        print("original = \(originalBottomSheetHieght), bottom = \(bottomSheetHeight)")
         
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
             self.dimmedView.alpha = 0
             self.view.layoutIfNeeded()
         } completion: { isShow in
-            print("bottomSheet isShow!")
-            if self.presentationController != nil {
-                self.dismiss(animated: false)
-            }
+            print("bottomSheet isHide!")
         }
     }
     
@@ -89,6 +88,11 @@ class MenualBottomSheetBaseViewController: UIViewController {
         originalBottomSheetHieght = bottomSheetHeight
         bottomSheetView.snp.updateConstraints { make in
             make.height.equalTo(originalBottomSheetHieght)
+        }
+        self.view.layoutIfNeeded()
+        
+        bottomSheetView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview()
         }
         
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {

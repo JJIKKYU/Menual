@@ -18,6 +18,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
     func pressedBackBtn()
     func writeDiary(info: DiaryModel)
     func testSaveImage(imageName: String, image: UIImage)
+    func pressedWeatherAddBtn()
 }
 
 final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable  {
@@ -156,6 +157,14 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.height.equalTo(50)
         }
     }
+    
+    func setWeatherView(model: WeatherModel) {
+        // 날씨를 선택하지 않았으면 뷰를 변경할 필요 없음
+        guard let weather = model.weather else {
+            return
+        }
+        self.weatherAddBtn.setTitle(Weather().getWeatherText(weather: weather), for: .normal)
+    }
 
     @objc
     func pressedBackBtn() {
@@ -183,6 +192,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         print("diaryModel.id = \(diaryModel.uuid)")
         listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())
         listener?.writeDiary(info: diaryModel)
+        dismiss(animated: true)
     }
     
     @objc
@@ -196,8 +206,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     @objc
     func pressedWeatherAddBtn() {
         print("pressedWeatherAddBtn")
-        bottomSheet.modalPresentationStyle = .overFullScreen
-        self.present(bottomSheet, animated: false)
+        listener?.pressedWeatherAddBtn()
+        // bottomSheet.modalPresentationStyle = .overFullScreen
+        // self.present(bottomSheet, animated: false)
     }
 }
 

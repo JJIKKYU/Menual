@@ -66,7 +66,9 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     private func presentInsideNavigation(_ viewControllable: ViewControllable) {
         let navigation = NavigationControllerable(root: viewControllable)
         navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
+        navigation.navigationController.isNavigationBarHidden = true
         self.navigationControllable = navigation
+        
         viewController.present(navigation, animated: true, completion:  nil)
     }
 

@@ -11,12 +11,15 @@ import RealmSwift
 
 protocol DiaryWritingRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
+    func attachBottomSheet(model: WeatherModel)
+    func detachBottomSheet()
 }
 
 protocol DiaryWritingPresentable: Presentable {
     var listener: DiaryWritingPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     func pressedBackBtn()
+    func setWeatherView(model: WeatherModel)
 }
 
 protocol DiaryWritingListener: AnyObject {
@@ -29,11 +32,17 @@ protocol DiaryWritingInteractorDependency {
 }
 
 final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentable>, DiaryWritingInteractable, DiaryWritingPresentableListener {
+
+    var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
+    
     
     weak var router: DiaryWritingRouting?
     weak var listener: DiaryWritingListener?
+    
     private let dependency: DiaryWritingInteractorDependency
     private var disposebag: DisposeBag
+    
+    var weatherModel = WeatherModel(uuid: "", weather: nil, detailText: "")
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -43,6 +52,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     ) {
         self.dependency = dependency
         self.disposebag = DisposeBag()
+        presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
         super.init(presenter: presenter)
         presenter.listener = self
     }
@@ -74,5 +84,23 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         print("testSaveImage")
         dependency.diaryRepository
             .saveImageToDocumentDirectory(imageName: imageName, image: image)
+    }
+    
+    // MARK: - DiaryBottomSheet
+    
+    func pressedWeatherAddBtn() {
+        // 이미 선택한 경우에 다시 선택했다면 뷰를 세팅해주어야 하기 때문
+        router?.attachBottomSheet(model: weatherModel)
+    }
+    
+    func diaryBottomSheetPressedCloseBtn() {
+        print("diaryBottomSheetPressedCloseBtn")
+        router?.detachBottomSheet()
+    }
+    
+    func sendWeatherModel(model: WeatherModel) {
+        weatherModel = model
+        print("weatherModel을 받아왔습니다! model = \(model)")
+        presenter.setWeatherView(model: model)
     }
 }
