@@ -231,7 +231,7 @@ extension MenualBottomSheetViewController: UICollectionViewDelegate, UICollectio
             cell.unSelected()
         }
         selectedCell.selected()
-        self.weatherTextField.text = Weather().getWeatherText(weather: selectedCell.weatherIconType)
+        self.weatherTextField.text = Weather().getWeatherText(weather: selectedCell.weatherIconType ?? .sun)
     }
 }
 

@@ -104,6 +104,7 @@
 		98F3A27F28150052000851F0 /* DiaryBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A27B28150052000851F0 /* DiaryBottomSheetViewController.swift */; };
 		98F3A28028150052000851F0 /* DiaryBottomSheetBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A27C28150052000851F0 /* DiaryBottomSheetBuilder.swift */; };
 		98F3A28128150052000851F0 /* DiaryBottomSheetInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */; };
+		98F3A28328152C04000851F0 /* BottomSheetSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A28228152C04000851F0 /* BottomSheetSelectView.swift */; };
 		9D65621A6BC58BDB19B31435 /* Pods_MenualTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B7AFEEEC2884EE3D9B20D25 /* Pods_MenualTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -234,6 +235,7 @@
 		98F3A27B28150052000851F0 /* DiaryBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryBottomSheetViewController.swift; sourceTree = "<group>"; };
 		98F3A27C28150052000851F0 /* DiaryBottomSheetBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryBottomSheetBuilder.swift; sourceTree = "<group>"; };
 		98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryBottomSheetInteractor.swift; sourceTree = "<group>"; };
+		98F3A28228152C04000851F0 /* BottomSheetSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetSelectView.swift; sourceTree = "<group>"; };
 		9D128C3C26B0CD2866B637F4 /* Pods_Menual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53C98DCB5D2180263C3A986 /* Pods-MenualTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenualTests.release.xcconfig"; path = "Target Support Files/Pods-MenualTests/Pods-MenualTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -695,6 +697,7 @@
 				98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */,
 				98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */,
 				98F3A2772813E561000851F0 /* MenualBottomSheetCell.swift */,
+				98F3A28228152C04000851F0 /* BottomSheetSelectView.swift */,
 			);
 			path = BottomSheet;
 			sourceTree = "<group>";
@@ -1036,6 +1039,7 @@
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
 				988A2D5827F97A000046C43A /* DiaryMomentsRouter.swift in Sources */,
 				98A2BD9F280A833000C1FB92 /* DiaryDetailInteractor.swift in Sources */,
+				98F3A28328152C04000851F0 /* BottomSheetSelectView.swift in Sources */,
 				988A2D5927F97A000046C43A /* DiaryMomentsViewController.swift in Sources */,
 				98F3A269280BEB75000851F0 /* DiarySubDataModel.swift in Sources */,
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,

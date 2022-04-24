@@ -45,9 +45,9 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         $0.isHidden = false
     }
     
-    let placeView = UIView().then {
-        $0.backgroundColor = .brown
+    let placeView = BottomSheetSelectView().then {
         $0.isHidden = true
+        $0.title = "장소에 대해 기록해주세요"
     }
     
     let scrollView = UIScrollView().then {
@@ -219,7 +219,6 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         weatherCollectionView.reloadData()
     }
     
-    /*
     @objc func keyboardWillShow(_ sender: Notification) {
         let userInfo:NSDictionary = sender.userInfo! as NSDictionary
         let keyboardFrame:NSValue = userInfo.value(forKey: UIResponder.keyboardFrameEndUserInfoKey) as! NSValue
@@ -237,7 +236,6 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
 
         self.view.frame.size.height += keyHeight
     }
-     */
     
     @objc
     override func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
@@ -300,9 +298,9 @@ extension DiaryBottomSheetViewController: UICollectionViewDelegate, UICollection
             cell.unSelected()
         }
         selectedCell.selected()
-        let defaultText = Weather().getWeatherText(weather: selectedCell.weatherIconType)
+        let defaultText = Weather().getWeatherText(weather: selectedCell.weatherIconType ?? .sun)
         
-        self.listener?.updateWeather(weather: selectedCell.weatherIconType)
+        self.listener?.updateWeather(weather: selectedCell.weatherIconType ?? .sun)
         
         if let text = self.weatherTextField.text,
            text.count == 0 {

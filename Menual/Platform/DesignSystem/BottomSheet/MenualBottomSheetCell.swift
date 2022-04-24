@@ -10,7 +10,13 @@ import SnapKit
 import Then
 
 class MenualBottomSheetCell: UICollectionViewCell {
-    var weatherIconType: Weather {
+    var weatherIconType: Weather? {
+        didSet {
+            layoutSubviews()
+        }
+    }
+    
+    var placeIconType: Place? {
         didSet {
             layoutSubviews()
         }
@@ -37,7 +43,6 @@ class MenualBottomSheetCell: UICollectionViewCell {
     }
     
     override init(frame: CGRect) {
-        weatherIconType = .sun
         super.init(frame: frame)
         setViews()
     }
@@ -71,18 +76,41 @@ class MenualBottomSheetCell: UICollectionViewCell {
     }
     
     func setIconView() {
-        switch weatherIconType {
-        case .cloud:
-            iconView.image = Asset._24px.Weather.cloud.image.withRenderingMode(.alwaysTemplate)
-        case .rain:
-            iconView.image = Asset._24px.Weather.rain.image.withRenderingMode(.alwaysTemplate)
-        case .snow:
-            iconView.image = Asset._24px.Weather.snow.image.withRenderingMode(.alwaysTemplate)
-        case .thunder:
-            iconView.image = Asset._24px.Weather.thunder.image.withRenderingMode(.alwaysTemplate)
-        case .sun:
-            iconView.image = Asset._24px.Weather.sun.image.withRenderingMode(.alwaysTemplate)
+        if let weatherIconType = weatherIconType {
+            switch weatherIconType {
+            case .cloud:
+                iconView.image = Asset._24px.Weather.cloud.image.withRenderingMode(.alwaysTemplate)
+            case .rain:
+                iconView.image = Asset._24px.Weather.rain.image.withRenderingMode(.alwaysTemplate)
+            case .snow:
+                iconView.image = Asset._24px.Weather.snow.image.withRenderingMode(.alwaysTemplate)
+            case .thunder:
+                iconView.image = Asset._24px.Weather.thunder.image.withRenderingMode(.alwaysTemplate)
+            case .sun:
+                iconView.image = Asset._24px.Weather.sun.image.withRenderingMode(.alwaysTemplate)
+            }
         }
+        
+        
+        if let placeIconType = placeIconType {
+            switch placeIconType {
+            case .car:
+                iconView.image = Asset._24px.Place.car.image.withRenderingMode(.alwaysTemplate)
+                
+            case .company:
+                iconView.image = Asset._24px.Place.company.image.withRenderingMode(.alwaysTemplate)
+                
+            case .home:
+                iconView.image = Asset._24px.Place.home.image.withRenderingMode(.alwaysTemplate)
+                
+            case .place:
+                iconView.image = Asset._24px.place.image.withRenderingMode(.alwaysTemplate)
+                
+            case .school:
+                iconView.image = Asset._24px.Place.school.image.withRenderingMode(.alwaysTemplate)
+            }
+        }
+        
     }
     
     func selected() {
