@@ -11,7 +11,7 @@ import RealmSwift
 
 protocol DiaryWritingRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
-    func attachBottomSheet(model: WeatherModel)
+    func attachBottomSheet(weatherModel: WeatherModel, placeModel: PlaceModel)
     func detachBottomSheet()
 }
 
@@ -20,6 +20,7 @@ protocol DiaryWritingPresentable: Presentable {
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     func pressedBackBtn()
     func setWeatherView(model: WeatherModel)
+    func setPlaceView(model: PlaceModel)
 }
 
 protocol DiaryWritingListener: AnyObject {
@@ -43,6 +44,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     private var disposebag: DisposeBag
     
     var weatherModel = WeatherModel(uuid: "", weather: nil, detailText: "")
+    var placeModel = PlaceModel(uuid: "", place: nil, detailText: "")
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -74,8 +76,18 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     func writeDiary(info: DiaryModel) {
         // print("DiaryWritingInteractor :: writeDiary! info = \(info)")
         
+        let newDiaryModel = DiaryModel(uuid: info.uuid,
+                                       title: info.title,
+                                       weather: weatherModel,
+                                       place: placeModel,
+                                       description: info.description,
+                                       image: info.image,
+                                       readCount: info.readCount,
+                                       createdAt: info.createdAt
+        )
+        
         dependency.diaryRepository
-            .addDiary(info: info)
+            .addDiary(info: newDiaryModel)
         
         listener?.diaryWritingPressedBackBtn()
     }
@@ -88,9 +100,15 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     
     // MARK: - DiaryBottomSheet
     
-    func pressedWeatherAddBtn() {
+    func pressedWeatherPlaceAddBtn(type: BottomSheetSelectViewType) {
         // 이미 선택한 경우에 다시 선택했다면 뷰를 세팅해주어야 하기 때문
-        router?.attachBottomSheet(model: weatherModel)
+        // switch로 진행한 이유는 첫 뷰 세팅을 위해서
+        switch type {
+        case .place:
+            router?.attachBottomSheet(weatherModel: weatherModel, placeModel: placeModel)
+        case .weather:
+            router?.attachBottomSheet(weatherModel: weatherModel, placeModel: placeModel)
+        }
     }
     
     func diaryBottomSheetPressedCloseBtn() {
@@ -102,5 +120,11 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         weatherModel = model
         print("weatherModel을 받아왔습니다! model = \(model)")
         presenter.setWeatherView(model: model)
+    }
+    
+    func sendPlaceModel(model: PlaceModel) {
+        placeModel = model
+        print("placeModel을 받아왔답니다! model = \(model)")
+        presenter.setPlaceView(model: model)
     }
 }

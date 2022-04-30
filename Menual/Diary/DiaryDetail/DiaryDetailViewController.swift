@@ -158,7 +158,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     func loadDiaryDetail(model: DiaryModel) {
         print("viewcontroller : \(model)")
         self.titleLabel.text = model.title
-        self.testLabel.text = "\(model.weather), \(model.location)"
+        self.testLabel.text = "\(model.weather?.weather?.rawValue), \(model.place?.place?.rawValue)"
         self.descriptionTextLabel.text = model.description
         self.descriptionTextLabel.setLineHeight()
         self.readCountLabel.text = "\(model.readCount)번 읽었습니다"

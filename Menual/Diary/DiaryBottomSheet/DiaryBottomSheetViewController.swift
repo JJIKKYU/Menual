@@ -15,8 +15,15 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     // business logic, such as signIn(). This protocol is implemented by the corresponding
     // interactor class.
     func pressedCloseBtn()
+
+    // weather
     func updateWeatherDetailText(text: String)
     func updateWeather(weather: Weather)
+    
+    // place
+    func updatePlaceDetailText(text: String)
+    func updatePlace(place: Place)
+
     func pressedWriteBtn()
 }
 
@@ -64,9 +71,9 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         setViews()
-         bind()
-         bottomSheetView.backgroundColor = Colors.background.black
+        setViews()
+        bind()
+        bottomSheetView.backgroundColor = Colors.background.black
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -124,23 +131,38 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
     }
     
     func bind() {
-        /*
-        weatherTextField.rx.text
-            .orEmpty
+        weatherView.textFieldOb
             .distinctUntilChanged()
-            .subscribe(onNext : { [weak self] changedText in
-                guard let self = self else { return }
+            .subscribe(onNext: { [weak self] changedText in
+                guard let self = self,
+                      let changedText = changedText else { return }
                 if changedText.count == 0 { return }
+                print("weatherView = \(changedText)")
                 self.listener?.updateWeatherDetailText(text: changedText)
             })
             .disposed(by: disposeBag)
-         */
+        
+        placeView.textFieldOb
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] changedText in
+                guard let self = self,
+                      let changedText = changedText else { return }
+                if changedText.count == 0 { return }
+                self.listener?.updatePlaceDetailText(text: changedText)
+                print("placeView = \(changedText)")
+            })
+            .disposed(by: disposeBag)
     }
     
     func setViewsWithWeatherModel(model: WeatherModel) {
         // 재진입 할 경우 이전에 선택했던 정보 세팅
         weatherView.placeholderText = model.detailText
         weatherView.selectedWeatherType = model.weather
+    }
+    
+    func setViewsWithPlaceMOdel(model: PlaceModel) {
+        placeView.placeholderText = model.detailText
+        placeView.selectedPlaceType = model.place
     }
     
     @objc func keyboardWillShow(_ sender: Notification) {
@@ -176,7 +198,6 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         resignFirstResponder()
         listener?.pressedWriteBtn()
     }
-    
 }
 
 extension DiaryBottomSheetViewController: UITextFieldDelegate {
@@ -208,9 +229,17 @@ extension DiaryBottomSheetViewController: MenualSegmentationDelegate {
 extension DiaryBottomSheetViewController: BottomSheetSelectDelegate {
     func sendData(weatherModel: WeatherModel) {
         print("받았답니다! \(weatherModel)")
+        guard let weather = weatherModel.weather else {
+            return
+        }
+        listener?.updateWeather(weather: weather)
     }
     
     func sendData(placeModel: PlaceModel) {
         print("받았답니다! \(placeModel)")
+        guard let place = placeModel.place else {
+            return
+        }
+        listener?.updatePlace(place: place)
     }
 }

@@ -8,6 +8,7 @@
 import UIKit
 import Then
 import SnapKit
+import RxSwift
 
 enum BottomSheetSelectViewType {
     case weather
@@ -46,6 +47,8 @@ class BottomSheetSelectView: UIView {
             layoutSubviews()
         }
     }
+    
+    lazy var textFieldOb = textField.rx.text.asObservable()
     
     var viewType: BottomSheetSelectViewType {
         didSet {
@@ -167,20 +170,16 @@ extension BottomSheetSelectView: UICollectionViewDelegate, UICollectionViewDeleg
         case .place:
             cell.placeIconType = Place().getVariation()[indexPath.row]
             if let selectedCellPlaceType = selectedPlaceType {
-                for place in Place().getVariation() {
-                    if place.rawValue == selectedCellPlaceType.rawValue {
-                        cell.selected()
-                    }
+                if selectedCellPlaceType == cell.placeIconType {
+                    cell.selected()
                 }
             }
-            
+
         case .weather:
             cell.weatherIconType = Weather().getVariation()[indexPath.row]
             if let selectedCellWeatherType = selectedWeatherType {
-                for weather in Weather().getVariation() {
-                    if weather.rawValue == selectedCellWeatherType.rawValue {
-                        cell.selected()
-                    }
+                if selectedCellWeatherType == cell.weatherIconType {
+                    cell.selected()
                 }
             }
             
@@ -204,9 +203,9 @@ extension BottomSheetSelectView: UICollectionViewDelegate, UICollectionViewDeleg
         if let selectedCellWeatherType = selectedCell.weatherIconType {
             print("weatherType입니다")
             let defaultText = Weather().getWeatherText(weather: selectedCellWeatherType)
-            delegate?.sendData(weatherModel: WeatherModel(uuid: "", weather: selectedCellWeatherType, detailText: ""))
             
             if let text = self.textField.text {
+                delegate?.sendData(weatherModel: WeatherModel(uuid: "", weather: selectedCellWeatherType, detailText: text))
                 for weather in Weather().getVariation() {
                     if text == weather.rawValue {
                         self.textField.text = defaultText
@@ -223,9 +222,9 @@ extension BottomSheetSelectView: UICollectionViewDelegate, UICollectionViewDeleg
             let defaultText = Place().getPlaceText(place: selectedCell.placeIconType ?? .place)
             
             // self.listener?.updateWeather(weather: selectedCell.weatherIconType ?? .sun)
-            delegate?.sendData(placeModel: PlaceModel(uuid: "", place: selectedCellPlaceType, detailText: ""))
             
             if let text = self.textField.text {
+                delegate?.sendData(placeModel: PlaceModel(uuid: "", place: selectedCellPlaceType, detailText: text))
                 for place in Place().getVariation() {
                     if text == place.rawValue {
                         self.textField.text = defaultText

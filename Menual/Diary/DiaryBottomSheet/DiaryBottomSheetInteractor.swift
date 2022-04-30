@@ -18,12 +18,14 @@ protocol DiaryBottomSheetPresentable: Presentable {
     var listener: DiaryBottomSheetPresentableListener? { get set }
     
     func setViewsWithWeatherModel(model: WeatherModel)
+    func setViewsWithPlaceMOdel(model: PlaceModel)
 }
 
 protocol DiaryBottomSheetListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func diaryBottomSheetPressedCloseBtn()
     func sendWeatherModel(model: WeatherModel)
+    func sendPlaceModel(model: PlaceModel)
     // func diaryBottomSheetPressedWriteBtn(weather: Weather, place: Place)
 }
 
@@ -33,6 +35,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     weak var listener: DiaryBottomSheetListener?
     
     var weatherModel: WeatherModel?
+    var placeModel: PlaceModel?
     
     let weatherOb = BehaviorRelay<WeatherModel>(value: WeatherModel(uuid: "", weather: .sun, detailText: ""))
 
@@ -40,9 +43,11 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     // in constructor.
     init(
         presenter: DiaryBottomSheetPresentable,
-        weatherModel: WeatherModel
+        weatherModel: WeatherModel,
+        placeModel: PlaceModel
     ) {
         self.weatherModel = weatherModel
+        self.placeModel = placeModel
         print("인터랙터에서도 받았을까요? \(weatherModel)")
         super.init(presenter: presenter)
         presenter.listener = self
@@ -51,11 +56,13 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     override func didBecomeActive() {
         super.didBecomeActive()
         // TODO: Implement business logic here.
-        guard let weatherModel = weatherModel else {
+        guard let weatherModel = weatherModel,
+              let placeModel = placeModel else {
             return
         }
         print("weatherModel = \(weatherModel)")
         presenter.setViewsWithWeatherModel(model: weatherModel)
+        presenter.setViewsWithPlaceMOdel(model: placeModel)
     }
 
     override func willResignActive() {
@@ -69,13 +76,12 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     }
     
     func pressedWriteBtn() {
-        guard let weatherModel = weatherModel else {
-            return
-        }
         listener?.diaryBottomSheetPressedCloseBtn()
-        listener?.sendWeatherModel(model: weatherModel)
+        listener?.sendWeatherModel(model: weatherModel ?? WeatherModel(uuid: "", weather: nil, detailText: ""))
+        listener?.sendPlaceModel(model: placeModel ?? PlaceModel(uuid: "", place: nil, detailText: ""))
     }
     
+    // MARK: - Weather(날씨)
     func updateWeather(weather: Weather) {
         guard let weatherModel = weatherModel else {
             return
@@ -98,5 +104,30 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         )
         self.weatherModel = newWeatherModel
         print("update된 weatherModel = \(weatherModel)")
+    }
+    
+    // MARK: - Place(장소)
+    func updatePlaceDetailText(text: String) {
+        guard let placeModel = placeModel else {
+            return
+        }
+        let newPlaceModel = PlaceModel(uuid: placeModel.uuid,
+                                       place: placeModel.place,
+                                       detailText: text
+        )
+        self.placeModel = newPlaceModel
+        print("update된 placeModel = \(placeModel)")
+    }
+    
+    func updatePlace(place: Place) {
+        guard let placeModel = placeModel else {
+            return
+        }
+        let newPlaceModel = PlaceModel(uuid: placeModel.uuid,
+                                       place: place,
+                                       detailText: placeModel.detailText
+        )
+        self.placeModel = newPlaceModel
+        print("update된 placeModel = \(placeModel)")
     }
 }

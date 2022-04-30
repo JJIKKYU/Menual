@@ -160,8 +160,11 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         let _ = realm.objects(DiaryModelRealm.self)
         
+        
+        
         realm.safeWrite {
-            realm.add(DiaryModelRealm(info))
+             realm.add(DiaryModelRealm(info))
+            // realm.create(DiaryModelRealm.self, value: DiaryModelRealm(info))
         }
         
         diaryModelSubject.accept(diaryModelSubject.value + [info])
@@ -179,8 +182,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         realm.safeWrite {
             data.readCount = info.readCount
-            data.weather = info.weather
-            data.location = info.location
+            data.weather = WeatherModelRealm(info.weather ?? WeatherModel(uuid: "", weather: nil, detailText: ""))
+            data.place = PlaceModelRealm(info.place ?? PlaceModel(uuid: "", place: nil, detailText: ""))
         }
         
         var idx: Int = 0
@@ -194,7 +197,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         arr[idx] = DiaryModel(uuid: info.uuid,
                               title: info.title,
                               weather: info.weather,
-                              location: info.location,
+                              place: info.place,
                               description: info.description,
                               image: info.image,
                               readCount: info.readCount,

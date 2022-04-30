@@ -12,8 +12,8 @@ import RealmSwift
 public struct DiaryModel {
     let uuid: String
     let title: String
-    let weather: Weather?
-    let location: Place? // TODO: 위치 타입 추가
+    let weather: WeatherModel?
+    let place: PlaceModel? // TODO: 위치 타입 추가
     let description: String
     let image: UIImage? // TODO: 이미지 타입 추가
     let readCount: Int
@@ -21,11 +21,11 @@ public struct DiaryModel {
     // let createdAt: Date
     
     // 각 Property를 넣어서 초기화
-    init(uuid: String, title: String, weather: Weather?, location: Place?, description: String, image: UIImage?, readCount: Int, createdAt: Date) {
+    init(uuid: String, title: String, weather: WeatherModel?, place: PlaceModel?, description: String, image: UIImage?, readCount: Int, createdAt: Date) {
         self.uuid = uuid
         self.title = title
         self.weather = weather
-        self.location = location
+        self.place = place
         self.description = description
         self.image = image
         self.readCount = readCount
@@ -36,10 +36,9 @@ public struct DiaryModel {
     init(_ realm: DiaryModelRealm) {
         self.uuid = realm.uuid
         self.title = realm.title
-        self.weather = realm.weather
-        self.location = realm.location
+        self.weather = WeatherModel(realm.weather ?? WeatherModelRealm())
+        self.place = PlaceModel(realm.place ?? PlaceModelRealm())
         self.description = realm.desc
-        // self.image = realm.image
         
         // 1. 도큐먼트 폴더 경로가져오기
         let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
@@ -66,8 +65,8 @@ class DiaryModelRealm: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
     @Persisted var uuid = ""
     @Persisted var title = ""
-    @Persisted var weather: Weather?
-    @Persisted var location: Place?
+    @Persisted var weather: WeatherModelRealm?
+    @Persisted var place: PlaceModelRealm?
     @Persisted var desc: String = ""
     @Persisted var image: Bool = false
     @Persisted var readCount: Int
@@ -75,12 +74,12 @@ class DiaryModelRealm: Object {
     // @Persisted var createdAt: Date = Date()
     @Persisted var isDeleted = false
     
-    convenience init(uuid: String, title: String, weather: Weather?, location: Place?, desc: String, image: Bool, readCount: Int) {
+    convenience init(uuid: String, title: String, weather: WeatherModelRealm?, place: PlaceModelRealm?, desc: String, image: Bool, readCount: Int) {
         self.init()
         self.uuid = uuid
         self.title = title
         self.weather = weather
-        self.location = location
+        self.place = place
         self.desc = desc
         self.image = image
         self.readCount = readCount
@@ -92,8 +91,8 @@ class DiaryModelRealm: Object {
         self.init()
         self.uuid = diaryModel.uuid
         self.title = diaryModel.title
-        self.weather = diaryModel.weather
-        self.location = diaryModel.location
+        self.weather = WeatherModelRealm(diaryModel.weather ?? WeatherModel(uuid: "", weather: nil, detailText: ""))
+        self.place = PlaceModelRealm(diaryModel.place ?? PlaceModel(uuid: "", place: nil, detailText: ""))
         self.desc = diaryModel.description
         
         // 이미지 유무만 저장

@@ -167,7 +167,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         let updateModel = DiaryModel(uuid: model.uuid,
                                      title: model.title,
                                      weather: model.weather,
-                                     location: model.location,
+                                     place: model.place,
                                      description: model.description,
                                      image: model.image,
                                      readCount: model.readCount + 1,

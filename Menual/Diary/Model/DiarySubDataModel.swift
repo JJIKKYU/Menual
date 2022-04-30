@@ -58,8 +58,8 @@ public struct WeatherModel {
     }
 }
 
-class WeatherModelRealm: Object {
-    @Persisted(primaryKey: true) var _id: ObjectId
+class WeatherModelRealm: EmbeddedObject {
+    // @Persisted(primaryKey: true) var _id: ObjectId
     @Persisted var uuid: String = ""
     @Persisted var weather: Weather?
     @Persisted var detailText: String = ""
@@ -129,8 +129,8 @@ public struct PlaceModel {
     }
 }
 
-class PlaceModelRealm: Object {
-    @Persisted(primaryKey: true) var _id: ObjectId
+class PlaceModelRealm: EmbeddedObject {
+    // @Persisted(primaryKey: true) var _id: ObjectId
     @Persisted var uuid: String = ""
     @Persisted var place: Place?
     @Persisted var detailText: String = ""

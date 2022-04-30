@@ -18,7 +18,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
     func pressedBackBtn()
     func writeDiary(info: DiaryModel)
     func testSaveImage(imageName: String, image: UIImage)
-    func pressedWeatherAddBtn()
+    func pressedWeatherPlaceAddBtn(type: BottomSheetSelectViewType)
 }
 
 final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable  {
@@ -34,11 +34,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.rightButton1.addTarget(self, action: #selector(pressedCheckBtn), for: .touchUpInside)
         $0.rightButton1.tintColor = .white
         $0.rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
-    }
-    
-    lazy var bottomSheet = MenualBottomSheetViewController().then {
-        $0.title = ""
-        $0.bottomSheetHeight = 400
     }
     
     lazy var titleTextField = UITextField().then {
@@ -73,6 +68,11 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     lazy var weatherAddBtn = UIButton().then {
         $0.addTarget(self, action: #selector(pressedWeatherAddBtn), for: .touchUpInside)
         $0.setTitle("날씨 추가", for: .normal)
+    }
+    
+    lazy var placeAddBtn = UIButton().then {
+        $0.addTarget(self, action: #selector(pressedPlaceAddBtn), for: .touchUpInside)
+        $0.setTitle("장소 추가", for: .normal)
     }
     
     var phpickerConfiguration = PHPickerConfiguration()
@@ -114,6 +114,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         self.view.addSubview(imageViewBtn)
         self.view.addSubview(naviView)
         self.view.addSubview(weatherAddBtn)
+        self.view.addSubview(placeAddBtn)
         self.view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
@@ -131,6 +132,13 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         weatherAddBtn.snp.makeConstraints { make in
             make.leading.equalToSuperview()
+            make.top.equalTo(titleTextField.snp.bottom).offset(20)
+            make.height.equalTo(30)
+            make.width.equalTo(100)
+        }
+        
+        placeAddBtn.snp.makeConstraints { make in
+            make.leading.equalTo(weatherAddBtn.snp.trailing).offset(20)
             make.top.equalTo(titleTextField.snp.bottom).offset(20)
             make.height.equalTo(30)
             make.width.equalTo(100)
@@ -165,6 +173,14 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         }
         self.weatherAddBtn.setTitle(Weather().getWeatherText(weather: weather), for: .normal)
     }
+    
+    func setPlaceView(model: PlaceModel) {
+        guard let place = model.place else {
+            return
+        }
+        print("setPlaceView = \(model)")
+        self.placeAddBtn.setTitle(Place().getPlaceText(place: place), for: .normal)
+    }
 
     @objc
     func pressedBackBtn() {
@@ -182,8 +198,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
                                     title: title,
-                                    weather: nil,
-                                    location: nil,
+                                    weather: WeatherModel(uuid: NSUUID().uuidString, weather: .sun, detailText: "123"),
+                                    place: PlaceModel(uuid: NSUUID().uuidString, place: .place, detailText: "123"),
                                     description: description,
                                     image: self.imageView.image,
                                     readCount: 0,
@@ -206,9 +222,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     @objc
     func pressedWeatherAddBtn() {
         print("pressedWeatherAddBtn")
-        listener?.pressedWeatherAddBtn()
-        // bottomSheet.modalPresentationStyle = .overFullScreen
-        // self.present(bottomSheet, animated: false)
+        listener?.pressedWeatherPlaceAddBtn(type: .weather)
+    }
+    
+    @objc
+    func pressedPlaceAddBtn() {
+        listener?.pressedWeatherPlaceAddBtn(type: .place)
     }
 }
 

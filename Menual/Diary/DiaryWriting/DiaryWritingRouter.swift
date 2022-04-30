@@ -37,14 +37,15 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
     
     // MARK: - DiaryBottomSheet
     
-    func attachBottomSheet(model: WeatherModel) {
+    func attachBottomSheet(weatherModel: WeatherModel, placeModel: PlaceModel) {
         if diaryBottomSheetRouting != nil {
             return
         }
         
         let router = diaryBottomSheetBuildable.build(
             withListener: interactor,
-            weatherModel: model
+            weatherModel: weatherModel,
+            placeModel: placeModel
         )
          viewController.present(router.viewControllable, animated: false, completion: nil)
         // presentInsideNavigation(router.viewControllable)
