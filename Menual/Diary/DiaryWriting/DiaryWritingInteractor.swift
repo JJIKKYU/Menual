@@ -8,10 +8,11 @@
 import RIBs
 import RxSwift
 import RealmSwift
+import RxRelay
 
 protocol DiaryWritingRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
-    func attachBottomSheet(weatherModel: WeatherModel, placeModel: PlaceModel)
+    func attachBottomSheet(weatherModelOb: BehaviorRelay<WeatherModel?>, placeModelOb: BehaviorRelay<PlaceModel?>)
     func detachBottomSheet()
 }
 
@@ -43,8 +44,16 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     private let dependency: DiaryWritingInteractorDependency
     private var disposebag: DisposeBag
     
-    var weatherModel = WeatherModel(uuid: "", weather: nil, detailText: "")
-    var placeModel = PlaceModel(uuid: "", place: nil, detailText: "")
+    var weatherModelValue: WeatherModel {
+        weatherModelRelay.value ?? WeatherModel(uuid: "", weather: nil, detailText: "")
+    }
+    
+    var placeModelValue: PlaceModel {
+        placeModelRelay.value ?? PlaceModel(uuid: "", place: nil, detailText: "")
+    }
+    
+    private let weatherModelRelay = BehaviorRelay<WeatherModel?>(value: nil)
+    private let placeModelRelay = BehaviorRelay<PlaceModel?>(value: nil)
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -61,12 +70,36 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
 
     override func didBecomeActive() {
         super.didBecomeActive()
-        // TODO: Implement business logic here.
+
+        bind()
     }
 
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+    
+    func bind() {
+        weatherModelRelay
+            .subscribe(onNext: { [weak self] model in
+                guard let self = self,
+                      let model = model
+                else { return }
+                print("weatherModelRealy: model = \(model)")
+                self.presenter.setWeatherView(model: model)
+            })
+            .disposed(by: disposebag)
+        
+        placeModelRelay
+            .subscribe(onNext: { [weak self] model in
+                guard let self = self,
+                      let model = model
+                else { return }
+                print("placeModelRelay: model = \(model)")
+                self.presenter.setPlaceView(model: model)
+            })
+            .disposed(by: disposebag)
+        
     }
     
     func pressedBackBtn() {
@@ -78,8 +111,8 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         
         let newDiaryModel = DiaryModel(uuid: info.uuid,
                                        title: info.title,
-                                       weather: weatherModel,
-                                       place: placeModel,
+                                       weather: weatherModelValue,
+                                       place: placeModelValue,
                                        description: info.description,
                                        image: info.image,
                                        readCount: info.readCount,
@@ -105,26 +138,14 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         // switch로 진행한 이유는 첫 뷰 세팅을 위해서
         switch type {
         case .place:
-            router?.attachBottomSheet(weatherModel: weatherModel, placeModel: placeModel)
+            router?.attachBottomSheet(weatherModelOb: weatherModelRelay, placeModelOb: placeModelRelay)
         case .weather:
-            router?.attachBottomSheet(weatherModel: weatherModel, placeModel: placeModel)
+            router?.attachBottomSheet(weatherModelOb: weatherModelRelay, placeModelOb: placeModelRelay)
         }
     }
     
     func diaryBottomSheetPressedCloseBtn() {
         print("diaryBottomSheetPressedCloseBtn")
         router?.detachBottomSheet()
-    }
-    
-    func sendWeatherModel(model: WeatherModel) {
-        weatherModel = model
-        print("weatherModel을 받아왔습니다! model = \(model)")
-        presenter.setWeatherView(model: model)
-    }
-    
-    func sendPlaceModel(model: PlaceModel) {
-        placeModel = model
-        print("placeModel을 받아왔답니다! model = \(model)")
-        presenter.setPlaceView(model: model)
     }
 }

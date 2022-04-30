@@ -24,8 +24,6 @@ protocol DiaryBottomSheetPresentable: Presentable {
 protocol DiaryBottomSheetListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func diaryBottomSheetPressedCloseBtn()
-    func sendWeatherModel(model: WeatherModel)
-    func sendPlaceModel(model: PlaceModel)
     // func diaryBottomSheetPressedWriteBtn(weather: Weather, place: Place)
 }
 
@@ -34,8 +32,12 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     weak var router: DiaryBottomSheetRouting?
     weak var listener: DiaryBottomSheetListener?
     
-    var weatherModel: WeatherModel?
-    var placeModel: PlaceModel?
+    var weatherModel: WeatherModel = WeatherModel(uuid: "", weather: nil, detailText: "")
+    var placeModel: PlaceModel = PlaceModel(uuid: "", place: nil, detailText: "")
+    
+    // DiaryInteractor에서 받은 Relay
+    var weatherModelOb: BehaviorRelay<WeatherModel?>
+    var placeModelOb: BehaviorRelay<PlaceModel?>
     
     let weatherOb = BehaviorRelay<WeatherModel>(value: WeatherModel(uuid: "", weather: .sun, detailText: ""))
 
@@ -43,12 +45,11 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     // in constructor.
     init(
         presenter: DiaryBottomSheetPresentable,
-        weatherModel: WeatherModel,
-        placeModel: PlaceModel
+        weatherModelOb: BehaviorRelay<WeatherModel?>,
+        placeModelOb: BehaviorRelay<PlaceModel?>
     ) {
-        self.weatherModel = weatherModel
-        self.placeModel = placeModel
-        print("인터랙터에서도 받았을까요? \(weatherModel)")
+        self.weatherModelOb = weatherModelOb
+        self.placeModelOb = placeModelOb
         super.init(presenter: presenter)
         presenter.listener = self
     }
@@ -56,8 +57,8 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     override func didBecomeActive() {
         super.didBecomeActive()
         // TODO: Implement business logic here.
-        guard let weatherModel = weatherModel,
-              let placeModel = placeModel else {
+        guard let weatherModel = weatherModelOb.value,
+              let placeModel = placeModelOb.value else {
             return
         }
         print("weatherModel = \(weatherModel)")
@@ -77,57 +78,44 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     
     func pressedWriteBtn() {
         listener?.diaryBottomSheetPressedCloseBtn()
-        listener?.sendWeatherModel(model: weatherModel ?? WeatherModel(uuid: "", weather: nil, detailText: ""))
-        listener?.sendPlaceModel(model: placeModel ?? PlaceModel(uuid: "", place: nil, detailText: ""))
+        self.weatherModelOb
+            .accept(weatherModel)
+        
+        self.placeModelOb
+            .accept(placeModel)
     }
     
     // MARK: - Weather(날씨)
     func updateWeather(weather: Weather) {
-        guard let weatherModel = weatherModel else {
-            return
-        }
         let newWeatherModel = WeatherModel(uuid: weatherModel.uuid,
                                            weather: weather,
                                            detailText: weatherModel.detailText
         )
         self.weatherModel = newWeatherModel
-        print("update된 weatherModel = \(weatherModel)")
     }
     
     func updateWeatherDetailText(text: String) {
-        guard let weatherModel = weatherModel else {
-            return
-        }
         let newWeatherModel = WeatherModel(uuid: weatherModel.uuid,
                                            weather: weatherModel.weather,
                                            detailText: text
         )
         self.weatherModel = newWeatherModel
-        print("update된 weatherModel = \(weatherModel)")
     }
     
     // MARK: - Place(장소)
     func updatePlaceDetailText(text: String) {
-        guard let placeModel = placeModel else {
-            return
-        }
         let newPlaceModel = PlaceModel(uuid: placeModel.uuid,
                                        place: placeModel.place,
                                        detailText: text
         )
         self.placeModel = newPlaceModel
-        print("update된 placeModel = \(placeModel)")
     }
     
     func updatePlace(place: Place) {
-        guard let placeModel = placeModel else {
-            return
-        }
         let newPlaceModel = PlaceModel(uuid: placeModel.uuid,
                                        place: place,
                                        detailText: placeModel.detailText
         )
         self.placeModel = newPlaceModel
-        print("update된 placeModel = \(placeModel)")
     }
 }

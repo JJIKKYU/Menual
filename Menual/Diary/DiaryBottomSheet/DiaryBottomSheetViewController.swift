@@ -233,6 +233,7 @@ extension DiaryBottomSheetViewController: BottomSheetSelectDelegate {
             return
         }
         listener?.updateWeather(weather: weather)
+        listener?.updateWeatherDetailText(text: weatherModel.detailText)
     }
     
     func sendData(placeModel: PlaceModel) {
@@ -241,5 +242,6 @@ extension DiaryBottomSheetViewController: BottomSheetSelectDelegate {
             return
         }
         listener?.updatePlace(place: place)
+        listener?.updatePlaceDetailText(text: placeModel.detailText)
     }
 }

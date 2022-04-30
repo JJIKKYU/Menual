@@ -22,6 +22,8 @@ class MenualBottomSheetCell: UICollectionViewCell {
         }
     }
     
+    var cellIsSelected: Bool = false
+    
     var iconView = UIImageView().then {
         $0.tintColor = Colors.tint.sub.n400
         $0.contentMode = .scaleAspectFit
@@ -115,9 +117,11 @@ class MenualBottomSheetCell: UICollectionViewCell {
     
     func selected() {
         selectedView.isHidden = false
+        cellIsSelected = true
     }
     
     func unSelected() {
         selectedView.isHidden = true
+        cellIsSelected = false
     }
 }

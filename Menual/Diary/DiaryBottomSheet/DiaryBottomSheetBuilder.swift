@@ -6,6 +6,8 @@
 //
 
 import RIBs
+import RxSwift
+import RxRelay
 
 protocol DiaryBottomSheetDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
@@ -23,8 +25,8 @@ final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency> {
 protocol DiaryBottomSheetBuildable: Buildable {
     func build(
         withListener listener: DiaryBottomSheetListener,
-        weatherModel: WeatherModel,
-        placeModel: PlaceModel
+        weatherModelOb: BehaviorRelay<WeatherModel?>,
+        placeModelOb: BehaviorRelay<PlaceModel?>
     ) -> DiaryBottomSheetRouting
 }
 
@@ -36,16 +38,16 @@ final class DiaryBottomSheetBuilder: Builder<DiaryBottomSheetDependency>, DiaryB
 
     func build(
         withListener listener: DiaryBottomSheetListener,
-        weatherModel: WeatherModel,
-        placeModel: PlaceModel
+        weatherModelOb: BehaviorRelay<WeatherModel?>,
+        placeModelOb: BehaviorRelay<PlaceModel?>
     ) -> DiaryBottomSheetRouting {
         let component = DiaryBottomSheetComponent(dependency: dependency)
         
         let viewController = DiaryBottomSheetViewController()
         let interactor = DiaryBottomSheetInteractor(
             presenter: viewController,
-            weatherModel: weatherModel,
-            placeModel: placeModel
+            weatherModelOb: weatherModelOb,
+            placeModelOb: placeModelOb
         )
         interactor.listener = listener
         return DiaryBottomSheetRouter(interactor: interactor, viewController: viewController)

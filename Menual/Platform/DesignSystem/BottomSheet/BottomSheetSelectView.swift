@@ -193,11 +193,19 @@ extension BottomSheetSelectView: UICollectionViewDelegate, UICollectionViewDeleg
             return
         }
         
-        for cell in collectionView.visibleCells {
-            guard let cell = cell as? MenualBottomSheetCell else { continue }
-            cell.unSelected()
+        // 유저가 선택한 Cell이 이미 선택된 Cell일 경우에는 다시 비활성화
+        if selectedCell.cellIsSelected == true {
+            selectedCell.unSelected()
         }
-        selectedCell.selected()
+        // 유저가 처음 선택한 Cell인 경우
+        // 전체 Cell을 UnSelected로 변경하고, 선택한 Cell을 Selected로 변경
+        else {
+            for cell in collectionView.visibleCells {
+                guard let cell = cell as? MenualBottomSheetCell else { continue }
+                cell.unSelected()
+            }
+            selectedCell.selected()
+        }
 
         // weather cell일 경우
         if let selectedCellWeatherType = selectedCell.weatherIconType {
@@ -205,37 +213,46 @@ extension BottomSheetSelectView: UICollectionViewDelegate, UICollectionViewDeleg
             let defaultText = Weather().getWeatherText(weather: selectedCellWeatherType)
             
             if let text = self.textField.text {
-                delegate?.sendData(weatherModel: WeatherModel(uuid: "", weather: selectedCellWeatherType, detailText: text))
+                // 기본 Text일 경우 아이콘 기본 Text로 변경
                 for weather in Weather().getVariation() {
                     if text == weather.rawValue {
                         self.textField.text = defaultText
                     }
                 }
                 
+                // Text가 하나도 입력되어 있지 않을 경우 기본 Text로 변경
                 if text.count == 0 {
                     self.textField.text = defaultText
                 }
+            }
+            
+            // 중간에 text를 변경했으므로 최신 text로 정보를 담아주기 위해서 다시 옵셔널 바인딩
+            if let text = self.textField.text {
+                print("text = \(text)")
+                delegate?.sendData(weatherModel: WeatherModel(uuid: "", weather: selectedCellWeatherType, detailText: text))
             }
         }
         else if let selectedCellPlaceType = selectedCell.placeIconType {
             print("placeType입니다")
             let defaultText = Place().getPlaceText(place: selectedCell.placeIconType ?? .place)
             
-            // self.listener?.updateWeather(weather: selectedCell.weatherIconType ?? .sun)
-            
             if let text = self.textField.text {
-                delegate?.sendData(placeModel: PlaceModel(uuid: "", place: selectedCellPlaceType, detailText: text))
+                // 기본 Text일 경우 아이콘 기본 Text로 변경
                 for place in Place().getVariation() {
                     if text == place.rawValue {
                         self.textField.text = defaultText
                     }
                 }
                 
+                // Text가 하나도 입력되어 있지 않을 경우 기본 Text로 변경
                 if text.count == 0 {
                     self.textField.text = defaultText
                 }
-                
-                // self.listener?.updateWeatherDetailText(text: defaultText)
+            }
+            
+            // 중간에 text를 변경했으므로 최신 text로 정보를 담아주기 위해서 다시 옵셔널 바인딩
+            if let text = self.textField.text {
+                delegate?.sendData(placeModel: PlaceModel(uuid: "", place: selectedCellPlaceType, detailText: text))
             }
         }
     }

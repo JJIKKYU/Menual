@@ -6,6 +6,8 @@
 //
 
 import RIBs
+import RxSwift
+import RxRelay
 
 protocol DiaryWritingInteractable: Interactable, DiaryBottomSheetListener {
     var router: DiaryWritingRouting? { get set }
@@ -37,15 +39,15 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
     
     // MARK: - DiaryBottomSheet
     
-    func attachBottomSheet(weatherModel: WeatherModel, placeModel: PlaceModel) {
+    func attachBottomSheet(weatherModelOb: BehaviorRelay<WeatherModel?>, placeModelOb: BehaviorRelay<PlaceModel?>) {
         if diaryBottomSheetRouting != nil {
             return
         }
         
         let router = diaryBottomSheetBuildable.build(
             withListener: interactor,
-            weatherModel: weatherModel,
-            placeModel: placeModel
+            weatherModelOb: weatherModelOb,
+            placeModelOb: placeModelOb
         )
          viewController.present(router.viewControllable, animated: false, completion: nil)
         // presentInsideNavigation(router.viewControllable)
