@@ -7,6 +7,8 @@
 
 import RIBs
 import RxSwift
+import RxRealm
+import RealmSwift
 
 protocol DiarySearchRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
@@ -14,7 +16,8 @@ protocol DiarySearchRouting: ViewableRouting {
 
 protocol DiarySearchPresentable: Presentable {
     var listener: DiarySearchPresentableListener? { get set }
-    // TODO: Declare methods the interactor can invoke the presenter to present data.
+    
+    func reloadSearchTableView()
 }
 
 protocol DiarySearchListener: AnyObject {
@@ -26,6 +29,8 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
 
     weak var router: DiarySearchRouting?
     weak var listener: DiarySearchListener?
+    
+    var searchResultList: [DiaryModel] = []
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -46,5 +51,24 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     
     func pressedBackBtn() {
         listener?.diarySearchPressedBackBtn()
+    }
+    
+    func searchTest(keyword: String) {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        let results = realm.objects(DiaryModelRealm.self)
+            .filter("title CONTAINS %@", "\(keyword)")
+        
+        print("reuslt = \(results)")
+        
+        searchResultList = []
+        for result in results {
+            let diary = DiaryModel(result)
+            searchResultList.append(diary)
+        }
+        
+        presenter.reloadSearchTableView()
     }
 }
