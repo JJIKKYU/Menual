@@ -11,6 +11,8 @@ import Then
 
 class DiarySearchCell: UITableViewCell {
     
+    var keyword: String?
+    
     var title: String = "" {
         didSet {
             layoutSubviews()
@@ -87,6 +89,21 @@ class DiarySearchCell: UITableViewCell {
         descriptionLabel.text = desc
         pageLabel.text = page
         createdAtLabel.text = createdAt
+        highlightText()
+    }
+    
+    func highlightText() {
+        guard let text = keyword else { return }
+        
+        // 타이틀
+        let titleAtrString = NSMutableAttributedString(string: title)
+        titleAtrString.addAttribute(.foregroundColor, value: UIColor.red, range: (title as NSString).range(of: text))
+        titleLabel.attributedText = titleAtrString
+        
+        // 내용
+        let descAtrString = NSMutableAttributedString(string: desc)
+        descAtrString.addAttribute(.foregroundColor, value: UIColor.blue, range: (desc as NSString).range(of: text))
+        descriptionLabel.attributedText = descAtrString
     }
     
     func setViews() {

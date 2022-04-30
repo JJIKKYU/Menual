@@ -26,11 +26,12 @@ protocol DiarySearchListener: AnyObject {
 }
 
 final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>, DiarySearchInteractable, DiarySearchPresentableListener {
-
+    
     weak var router: DiarySearchRouting?
     weak var listener: DiarySearchListener?
     
     var searchResultList: [DiaryModel] = []
+    var recentSearchResultList: [SearchModel] = []
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -42,6 +43,7 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     override func didBecomeActive() {
         super.didBecomeActive()
         // TODO: Implement business logic here.
+        fetchRecentSearchList()
     }
 
     override func willResignActive() {
@@ -58,8 +60,11 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
             return
         }
         
+        // let results = realm.objects(DiaryModelRealm.self)
+           //  .filter("title CONTAINS %@", "\(keyword)")
+        
         let results = realm.objects(DiaryModelRealm.self)
-            .filter("title CONTAINS %@", "\(keyword)")
+            .filter("title CONTAINS %@ OR desc CONTAINS %@", "\(keyword)", "\(keyword)")
         
         print("reuslt = \(results)")
         
@@ -69,6 +74,35 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
             searchResultList.append(diary)
         }
         
+        presenter.reloadSearchTableView()
+    }
+    
+    func searchDataTest(keyword: String) {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        let model = SearchModel(uuid: NSUUID().uuidString,
+                                keyword: keyword,
+                                createdAt: Date(),
+                                isDeleted: false
+        )
+        
+        realm.safeWrite {
+            realm.add(SearchModelRealm(model))
+        }
+    }
+    
+    func fetchRecentSearchList() {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        let results = realm.objects(SearchModelRealm.self)
+        for result in results {
+            let model = SearchModel(result)
+            recentSearchResultList.append(model)
+        }
         presenter.reloadSearchTableView()
     }
 }

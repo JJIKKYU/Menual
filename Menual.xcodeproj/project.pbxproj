@@ -87,6 +87,8 @@
 		98A2BDA1280A87E300C1FB92 /* Swift+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BDA0280A87E300C1FB92 /* Swift+Util.swift */; };
 		98A2BDA3280AD96200C1FB92 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98A2BDA2280AD96200C1FB92 /* CloudKit.framework */; };
 		98B55743281CFF5B00F8CA3E /* DiarySearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55742281CFF5B00F8CA3E /* DiarySearchCell.swift */; };
+		98B55745281D0FEE00F8CA3E /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55744281D0FEE00F8CA3E /* SearchModel.swift */; };
+		98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55746281D157200F8CA3E /* RecentSearchCell.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -219,6 +221,8 @@
 		98A2BDA2280AD96200C1FB92 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		98A2BDAA280BD52D00C1FB92 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ko; path = ko.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		98B55742281CFF5B00F8CA3E /* DiarySearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchCell.swift; sourceTree = "<group>"; };
+		98B55744281D0FEE00F8CA3E /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
+		98B55746281D157200F8CA3E /* RecentSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCell.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -590,6 +594,7 @@
 			children = (
 				988A2D67280166AA0046C43A /* DiaryModel.swift */,
 				98F3A268280BEB75000851F0 /* DiarySubDataModel.swift */,
+				98B55744281D0FEE00F8CA3E /* SearchModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -629,6 +634,7 @@
 				989AE04127F0900800177573 /* DiarySearchBuilder.swift */,
 				989AE04227F0900800177573 /* DiarySearchInteractor.swift */,
 				98B55742281CFF5B00F8CA3E /* DiarySearchCell.swift */,
+				98B55746281D157200F8CA3E /* RecentSearchCell.swift */,
 			);
 			path = DiarySearch;
 			sourceTree = "<group>";
@@ -1033,6 +1039,7 @@
 				988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */,
 				98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */,
 				980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */,
+				98B55745281D0FEE00F8CA3E /* SearchModel.swift in Sources */,
 				98A2BD9D280A833000C1FB92 /* DiaryDetailViewController.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
 				9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */,
@@ -1049,6 +1056,7 @@
 				989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */,
 				98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */,
 				98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */,
+				98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */,
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				988A2D5A27F97A000046C43A /* DiaryMomentsBuilder.swift in Sources */,
@@ -1299,7 +1307,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1332,7 +1340,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1363,7 +1371,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1389,7 +1397,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1414,7 +1422,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1438,7 +1446,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

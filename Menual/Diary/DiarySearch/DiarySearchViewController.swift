@@ -13,9 +13,11 @@ import UIKit
 
 protocol DiarySearchPresentableListener: AnyObject {
     var searchResultList: [DiaryModel] { get }
+    var recentSearchResultList: [SearchModel] { get }
     
     func pressedBackBtn()
     func searchTest(keyword: String)
+    func searchDataTest(keyword: String)
 }
 
 final class DiarySearchViewController: UIViewController, DiarySearchPresentable, DiarySearchViewControllable {
@@ -29,6 +31,28 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.titleLabel.text = MenualString.title_search
     }
     
+    var recentSearchListView = UIView().then {
+        $0.backgroundColor = .gray
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    lazy var searchBtn = UIButton().then {
+        $0.setImage(Asset._24px.search.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.addTarget(self, action: #selector(pressedSearchBtn), for: .touchUpInside)
+        $0.contentMode = .scaleAspectFit
+        $0.contentHorizontalAlignment = .fill
+        $0.contentVerticalAlignment = .fill
+    }
+    
+    lazy var recentSearchTableView = UITableView().then {
+        $0.isHidden = false
+        $0.delegate = self
+        $0.dataSource = self
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .brown
+        $0.register(RecentSearchCell.self, forCellReuseIdentifier: "RecentSearchCell")
+    }
+    
     lazy var tableView = UITableView().then {
         $0.delegate = self
         $0.dataSource = self
@@ -38,6 +62,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.register(DiarySearchCell.self, forCellReuseIdentifier: "SearchCell")
         $0.estimatedRowHeight = 87
         $0.rowHeight = 87
+        $0.isHidden = true
     }
     
     lazy var searchTextField = UITextField().then {
@@ -83,6 +108,16 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] keyword in
                 guard let self = self else { return }
+                if keyword.count == 0 {
+                    self.tableView.isHidden = true
+                    self.recentSearchListView.isHidden = false
+                    self.recentSearchTableView.isHidden = false
+                } else {
+                    self.tableView.isHidden = false
+                    self.recentSearchListView.isHidden = true
+                    self.recentSearchTableView.isHidden = true
+                }
+                
                 self.listener?.searchTest(keyword: keyword)
             })
             .disposed(by: disposeBag)
@@ -93,16 +128,31 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         self.view.addSubview(tableView)
         self.view.addSubview(naviView)
         self.view.addSubview(searchTextField)
+        self.view.addSubview(searchBtn)
         self.view.bringSubviewToFront(naviView)
+        self.view.addSubview(recentSearchTableView)
         self.tableView.addSubview(searchView)
         tableView.tableHeaderView = searchView
         searchView.sizeToFit()
         
+        recentSearchTableView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.top.equalTo(searchTextField.snp.bottom).offset(20)
+            make.bottom.equalToSuperview()
+        }
+        
         searchTextField.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
+            make.trailing.equalToSuperview().inset(200)
             make.top.equalToSuperview().offset(100)
             make.height.equalTo(50)
+        }
+        
+        searchBtn.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(20)
+            make.top.equalToSuperview().offset(100)
+            make.width.height.equalTo(24)
         }
         
         tableView.snp.makeConstraints { make in
@@ -124,31 +174,62 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         listener?.pressedBackBtn()
     }
     
+    @objc
+    func pressedSearchBtn() {
+        print("pressedSearchBtn")
+        guard let text = searchTextField.text else { return }
+        listener?.searchDataTest(keyword: text)
+    }
+    
     func reloadSearchTableView() {
         tableView.reloadData()
+        recentSearchTableView.reloadData()
     }
 }
 
 
 extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listener?.searchResultList.count ?? 0
+        
+        if tableView == self.tableView {
+            return listener?.searchResultList.count ?? 0
+        } else if tableView == self.recentSearchTableView {
+            return listener?.recentSearchResultList.count ?? 0
+        }
+        
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell") as? DiarySearchCell else { return UITableViewCell() }
-        
         let index = indexPath.row
-        guard let model = listener?.searchResultList[safe: index] else {
-            return UITableViewCell()
-        }
+        if tableView == self.tableView {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell") as? DiarySearchCell else { return UITableViewCell() }
+            
+            guard let model = listener?.searchResultList[safe: index] else {
+                return UITableViewCell()
+            }
 
-        cell.title = model.title
-        cell.desc = model.description
-        cell.page = "0"
-        cell.createdAt = model.createdAt.description(with: .autoupdatingCurrent)
+            cell.keyword = searchTextField.text
+            cell.title = model.title
+            cell.desc = model.description
+            cell.page = "0"
+            cell.createdAt = model.createdAt.description(with: .autoupdatingCurrent)
+            
+            return cell
+        } else if tableView == self.recentSearchTableView {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchCell") as? RecentSearchCell else { return UITableViewCell() }
+            
+            guard let model = listener?.recentSearchResultList[safe: index] else {
+                return UITableViewCell()
+            }
+            
+            cell.keyword = model.keyword
+            cell.createdAt = model.createdAt.description
+            
+            return cell
+        }
         
-        return cell
+        return UITableViewCell()
     }
 }
 
