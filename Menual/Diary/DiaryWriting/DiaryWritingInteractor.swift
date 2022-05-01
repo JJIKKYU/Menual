@@ -34,6 +34,14 @@ protocol DiaryWritingInteractorDependency {
 }
 
 final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentable>, DiaryWritingInteractable, DiaryWritingPresentableListener {
+    
+    var weatherHistoryModel: [WeatherHistoryModel] {
+        dependency.diaryRepository.weatherHistory.value
+    }
+    var plcaeHistoryModel: [PlaceHistoryModel] {
+        dependency.diaryRepository.placeHistory.value
+    }
+    
 
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
     

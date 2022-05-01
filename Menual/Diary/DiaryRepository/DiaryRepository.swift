@@ -163,6 +163,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         placeHistorySubject.accept(placeHistoryResults.map { PlaceHistoryModel($0) })
     }
     
+    // MARK: - Diary CRUD
     public func addDiary(info: DiaryModel) {
         // 1. 추가할 Diary를 info로 받는다
         // 2. Realm에다가 새로운 Diary를 add 한다.

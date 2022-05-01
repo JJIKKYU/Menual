@@ -91,6 +91,7 @@
 		98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55746281D157200F8CA3E /* RecentSearchCell.swift */; };
 		98B55749281E426300F8CA3E /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55748281E426300F8CA3E /* WeatherModel.swift */; };
 		98B5574B281E426900F8CA3E /* PlaceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5574A281E426900F8CA3E /* PlaceModel.swift */; };
+		98B5574D281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5574C281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -226,6 +227,7 @@
 		98B55746281D157200F8CA3E /* RecentSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCell.swift; sourceTree = "<group>"; };
 		98B55748281E426300F8CA3E /* WeatherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherModel.swift; sourceTree = "<group>"; };
 		98B5574A281E426900F8CA3E /* PlaceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceModel.swift; sourceTree = "<group>"; };
+		98B5574C281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherPlaceHistoryCell.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -729,6 +731,7 @@
 				98F3A27B28150052000851F0 /* DiaryBottomSheetViewController.swift */,
 				98F3A27C28150052000851F0 /* DiaryBottomSheetBuilder.swift */,
 				98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */,
+				98B5574C281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift */,
 			);
 			path = DiaryBottomSheet;
 			sourceTree = "<group>";
@@ -1062,6 +1065,7 @@
 				98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */,
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
+				98B5574D281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift in Sources */,
 				988A2D5A27F97A000046C43A /* DiaryMomentsBuilder.swift in Sources */,
 				98A2BD912802B43E00C1FB92 /* MyMenualCell.swift in Sources */,
 				985E0F0F27C2690500057951 /* LoginHomeBuilder.swift in Sources */,

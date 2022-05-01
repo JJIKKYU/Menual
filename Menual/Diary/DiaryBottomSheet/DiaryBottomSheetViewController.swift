@@ -7,13 +7,14 @@
 
 import RIBs
 import RxSwift
+import SnapKit
 import RxRelay
 import UIKit
 
 protocol DiaryBottomSheetPresentableListener: AnyObject {
-    // TODO: Declare properties and methods that the view controller can invoke to perform
-    // business logic, such as signIn(). This protocol is implemented by the corresponding
-    // interactor class.
+    var weatherHistoryModel: [WeatherHistoryModel] { get }
+    var plcaeHistoryModel: [PlaceHistoryModel] { get }
+    
     func pressedCloseBtn()
 
     // weather
@@ -48,12 +49,14 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
     }
     
     lazy var weatherView = BottomSheetSelectView(.weather).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isHidden = false
         $0.title = "날씨에 대해 기록해주세요"
         $0.delegate = self
     }
     
     lazy var placeView = BottomSheetSelectView(.place).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isHidden = true
         $0.title = "장소에 대해 기록해주세요"
         $0.delegate = self
@@ -91,8 +94,11 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         self.view.addSubview(segmentationView)
         self.view.addSubview(closeBtn)
         self.view.addSubview(addBtn)
+        
+        // self.view.addSubview(weatherScrollView)
         self.view.addSubview(weatherView)
-        self.view.addSubview(placeView)
+//        self.view.addSubview(placeScrollView)
+//        self.placeScrollView.addSubview(placeView)
         self.view.bringSubviewToFront(addBtn)
         
         segmentationView.snp.makeConstraints { make in
@@ -114,7 +120,7 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
             make.width.equalTo(bottomSheetView.snp.width)
             make.bottom.equalTo(bottomSheetView.snp.bottom)
         }
-        
+
         placeView.snp.makeConstraints { make in
             make.leading.equalTo(bottomSheetView.snp.leading)
             make.top.equalTo(segmentationView.snp.bottom).offset(20)
@@ -227,6 +233,15 @@ extension DiaryBottomSheetViewController: MenualSegmentationDelegate {
 }
 
 extension DiaryBottomSheetViewController: BottomSheetSelectDelegate {
+    
+    var weatherHistoryModel: [WeatherHistoryModel] {
+        listener?.weatherHistoryModel ?? []
+    }
+    
+    var placeHistoryModel: [PlaceHistoryModel] {
+        listener?.plcaeHistoryModel ?? []
+    }
+    
     func sendData(weatherModel: WeatherModel) {
         print("받았답니다! \(weatherModel)")
         guard let weather = weatherModel.weather else {

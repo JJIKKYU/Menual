@@ -16,6 +16,8 @@ enum BottomSheetSelectViewType {
 }
 
 protocol BottomSheetSelectDelegate {
+    var weatherHistoryModel: [WeatherHistoryModel] { get }
+    var placeHistoryModel: [PlaceHistoryModel] { get }
     func sendData(placeModel: PlaceModel)
     func sendData(weatherModel: WeatherModel)
 }
@@ -56,6 +58,12 @@ class BottomSheetSelectView: UIView {
         }
     }
     
+    private lazy var scrollView = UIScrollView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .red
+        
+    }
+    
     private let titleLabel = UILabel().then {
         $0.text = "타이틀입니다."
         $0.font = UIFont.AppHead(.head_3)
@@ -92,6 +100,19 @@ class BottomSheetSelectView: UIView {
         $0.textColor = .white
     }
     
+    private lazy var historyTableView = UITableView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.delegate = self
+        $0.dataSource = self
+        $0.backgroundColor = .blue
+        $0.isScrollEnabled = false
+        $0.estimatedRowHeight = 40
+        $0.rowHeight = 40
+        $0.register(WeatherPlaceHistoryCell.self, forCellReuseIdentifier: "WeatherPlaceHistoryCell")
+        
+        print("!!!!! \($0.contentSize.height)")
+    }
+    
     override class func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -112,14 +133,22 @@ class BottomSheetSelectView: UIView {
         self.titleLabel.text = title
         self.textField.text = placeholderText
         collectionView.reloadData()
+        historyTableView.reloadData()
     }
     
     func setViews() {
         backgroundColor = .clear
-        addSubview(titleLabel)
-        addSubview(collectionView)
-        addSubview(textField)
-        addSubview(recentLabel)
+        addSubview(scrollView)
+        scrollView.addSubview(titleLabel)
+        scrollView.addSubview(collectionView)
+        scrollView.addSubview(textField)
+        scrollView.addSubview(recentLabel)
+        scrollView.addSubview(historyTableView)
+        
+        scrollView.snp.makeConstraints { make in
+            make.leading.top.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -146,6 +175,17 @@ class BottomSheetSelectView: UIView {
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(textField.snp.bottom).offset(16)
         }
+        
+        historyTableView.layoutIfNeeded()
+        historyTableView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalTo(recentLabel.snp.bottom).offset(10)
+            make.height.equalTo(historyTableView.contentSize.height)
+            make.bottom.greaterThanOrEqualToSuperview()
+        }
+        
+        print("???? \(historyTableView.contentSize)")
     }
 
 }
@@ -255,5 +295,48 @@ extension BottomSheetSelectView: UICollectionViewDelegate, UICollectionViewDeleg
                 delegate?.sendData(placeModel: PlaceModel(uuid: "", place: selectedCellPlaceType, detailText: text))
             }
         }
+    }
+}
+
+extension BottomSheetSelectView: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch viewType {
+        case .weather:
+            guard let model = delegate?.weatherHistoryModel else {
+                return 0
+            }
+            return model.count
+        case .place:
+            guard let model = delegate?.placeHistoryModel else {
+                return 0
+            }
+            return model.count
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherPlaceHistoryCell", for: indexPath) as? WeatherPlaceHistoryCell else {
+            return UITableViewCell()
+        }
+        
+        let index = indexPath.row
+        switch viewType {
+        case .place:
+            guard let model = delegate?.placeHistoryModel else {
+                return UITableViewCell()
+            }
+            cell.placeType = model[safe: index]?.selectedPlace
+            cell.title = model[safe: index]?.info ?? ""
+            
+        case .weather:
+            guard let model = delegate?.weatherHistoryModel else {
+                return UITableViewCell()
+            }
+            
+            cell.weatherType = model[safe: index]?.selectedWeather
+            cell.title = model[safe: index]?.info ?? ""
+        }
+        return cell
     }
 }
