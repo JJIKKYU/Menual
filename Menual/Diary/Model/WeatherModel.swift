@@ -1,15 +1,14 @@
 //
-//  DiarySubDataModel.swift
+//  WeatherModel.swift
 //  Menual
 //
-//  Created by 정진균 on 2022/04/17.
+//  Created by 정진균 on 2022/05/01.
 //
 
 import Foundation
 import RealmSwift
 
-// MARK: - Weather
-
+// MARK: - Enum
 enum Weather: String, PersistableEnum {
     case sun = "썬"
     case rain = "레인"
@@ -40,6 +39,7 @@ enum Weather: String, PersistableEnum {
     }
 }
 
+// MARK: - WeatherModel
 public struct WeatherModel {
     let uuid: String
     let weather: Weather?
@@ -79,73 +79,54 @@ class WeatherModelRealm: EmbeddedObject {
     }
 }
 
-// MARK: - Place
-
-enum Place: String, PersistableEnum {
-    case home = "홈"
-    case school = "스쿨"
-    case company = "컴퍼니"
-    case car = "카"
-    case place = "플레이스"
-    
-    func getPlaceText(place: Place) -> String {
-        var text = ""
-        switch place {
-        case .place:
-            text = "플레이스"
-        case .school:
-            text = "스쿨"
-        case .company:
-            text = "컴퍼니"
-        case .home:
-            text = "홈"
-        case .car:
-            text = "카"
-        }
-        
-       return text
-    }
-    
-    func getVariation() -> [Place] {
-        return [.home, .car, .company, .school, .place]
-    }
-}
-
-public struct PlaceModel {
+// MARK: - History WeatherModel
+public struct WeatherHistoryModel {
     let uuid: String
-    let place: Place?
-    let detailText: String
+    let selectedWeather: Weather
+    let info: String
+    let createdAt: Date
+    let isDeleted: Bool
     
-    init(uuid: String, place: Place?, detailText: String) {
+    init(uuid: String, selectedWeather: Weather, info: String, createdAt: Date, isDeleted: Bool) {
         self.uuid = uuid
-        self.place = place
-        self.detailText = detailText
+        self.selectedWeather = selectedWeather
+        self.info = info
+        self.createdAt = createdAt
+        self.isDeleted = isDeleted
     }
     
-    init(_ realm: PlaceModelRealm) {
-        self.uuid = realm.uuid
-        self.place = realm.place
-        self.detailText = realm.detailText
+    init(_ model: WeatherHistoryModelRealm) {
+        self.uuid = model.uuid
+        self.selectedWeather = model.selectedWeather
+        self.info = model.info
+        self.createdAt = model.createdAt
+        self.isDeleted = model.isDeleted
     }
 }
 
-class PlaceModelRealm: EmbeddedObject {
-    // @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var uuid: String = ""
-    @Persisted var place: Place?
-    @Persisted var detailText: String = ""
+class WeatherHistoryModelRealm: Object {
+    @Persisted(primaryKey: true) var _id: ObjectId
+    @Persisted var uuid: String
+    @Persisted var selectedWeather: Weather
+    @Persisted var info: String
+    @Persisted var createdAt: Date
+    @Persisted var isDeleted: Bool
     
-    convenience init(uuid: String, place: Place?, detailText: String) {
+    convenience init(uuid: String, selectedWeather: Weather, info: String, createdAt: Date, isDeleted: Bool) {
         self.init()
         self.uuid = uuid
-        self.place = place
-        self.detailText = detailText
+        self.selectedWeather = selectedWeather
+        self.info = info
+        self.createdAt = createdAt
+        self.isDeleted = isDeleted
     }
     
-    convenience init(_ placeModel: PlaceModel) {
+    convenience init(_ model: WeatherHistoryModel) {
         self.init()
-        self.uuid = placeModel.uuid
-        self.place = placeModel.place
-        self.detailText = placeModel.detailText
+        self.uuid = model.uuid
+        self.selectedWeather = model.selectedWeather
+        self.info = model.info
+        self.createdAt = model.createdAt
+        self.isDeleted = model.isDeleted
     }
 }

@@ -37,10 +37,9 @@ class RecentSearchCell: UITableViewCell {
         $0.textColor = .white
     }
     
-    private lazy var deleteBtn = UIButton().then {
+    lazy var deleteBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._20px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.addTarget(self, action: #selector(pressedDeleteBtn), for: .touchUpInside)
         $0.contentMode = .scaleAspectFit
         $0.contentHorizontalAlignment = .fill
         $0.contentVerticalAlignment = .fill
@@ -97,11 +96,6 @@ class RecentSearchCell: UITableViewCell {
             make.height.equalTo(20)
         }
         createdAtLabel.sizeToFit()
-    }
-    
-    @objc
-    func pressedDeleteBtn() {
-        print("pressedDeleteBtn!")
     }
 
 }

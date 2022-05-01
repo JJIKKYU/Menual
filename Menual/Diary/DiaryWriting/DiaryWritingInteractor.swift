@@ -100,6 +100,21 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             })
             .disposed(by: disposebag)
         
+        dependency.diaryRepository
+            .weatherHistory
+            .subscribe(onNext: { [weak self] model in
+                guard let self = self else { return }
+                print("DiaryWritingInteractor :: weatherHistory = \(model)")
+            })
+            .disposed(by: disposebag)
+        
+        dependency.diaryRepository
+            .placeHistory
+            .subscribe(onNext: { [weak self] model in
+                guard let self = self else { return }
+                print("DiaryWritingInteractor :: placeHistory = \(model)")
+            })
+            .disposed(by: disposebag)
     }
     
     func pressedBackBtn() {
@@ -121,6 +136,29 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         
         dependency.diaryRepository
             .addDiary(info: newDiaryModel)
+        
+        // weather, place가 Optional이므로, 존재할 경우에만 History 저장
+        if let place = placeModelValue.place {
+            let placeHistoryModel = PlaceHistoryModel(uuid: NSUUID().uuidString,
+                                                      selectedPlace: place,
+                                                      info: weatherModelValue.detailText,
+                                                      createdAt: info.createdAt,
+                                                      isDeleted: false
+            )
+            dependency.diaryRepository
+                .addPlaceHistory(info: placeHistoryModel)
+        }
+        
+        if let weather = weatherModelValue.weather {
+            let weatherHistoryModel = WeatherHistoryModel(uuid: NSUUID().uuidString,
+                                                          selectedWeather: weather,
+                                                          info: weatherModelValue.detailText,
+                                                          createdAt: info.createdAt,
+                                                          isDeleted: false
+            )
+            dependency.diaryRepository
+                .addWeatherHistory(info: weatherHistoryModel)
+        }
         
         listener?.diaryWritingPressedBackBtn()
     }

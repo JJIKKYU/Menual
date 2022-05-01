@@ -89,6 +89,8 @@
 		98B55743281CFF5B00F8CA3E /* DiarySearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55742281CFF5B00F8CA3E /* DiarySearchCell.swift */; };
 		98B55745281D0FEE00F8CA3E /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55744281D0FEE00F8CA3E /* SearchModel.swift */; };
 		98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55746281D157200F8CA3E /* RecentSearchCell.swift */; };
+		98B55749281E426300F8CA3E /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55748281E426300F8CA3E /* WeatherModel.swift */; };
+		98B5574B281E426900F8CA3E /* PlaceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5574A281E426900F8CA3E /* PlaceModel.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -97,7 +99,6 @@
 		98D0EBEB27CA0AFF0076136E /* Montserrat ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBEA27CA0AFF0076136E /* Montserrat ExtraBold.ttf */; };
 		98D0EBEE27CA0E190076136E /* SpoqaHanSansNeo Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBEC27CA0E190076136E /* SpoqaHanSansNeo Regular.otf */; };
 		98D0EBEF27CA0E190076136E /* SpoqaHanSansNeo Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBED27CA0E190076136E /* SpoqaHanSansNeo Bold.otf */; };
-		98F3A269280BEB75000851F0 /* DiarySubDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A268280BEB75000851F0 /* DiarySubDataModel.swift */; };
 		98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A26D280C536F000851F0 /* MenualNavigationController.swift */; };
 		98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */; };
 		98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */; };
@@ -223,6 +224,8 @@
 		98B55742281CFF5B00F8CA3E /* DiarySearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchCell.swift; sourceTree = "<group>"; };
 		98B55744281D0FEE00F8CA3E /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		98B55746281D157200F8CA3E /* RecentSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCell.swift; sourceTree = "<group>"; };
+		98B55748281E426300F8CA3E /* WeatherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherModel.swift; sourceTree = "<group>"; };
+		98B5574A281E426900F8CA3E /* PlaceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceModel.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -231,7 +234,6 @@
 		98D0EBEA27CA0AFF0076136E /* Montserrat ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat ExtraBold.ttf"; sourceTree = "<group>"; };
 		98D0EBEC27CA0E190076136E /* SpoqaHanSansNeo Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo Regular.otf"; sourceTree = "<group>"; };
 		98D0EBED27CA0E190076136E /* SpoqaHanSansNeo Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo Bold.otf"; sourceTree = "<group>"; };
-		98F3A268280BEB75000851F0 /* DiarySubDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySubDataModel.swift; sourceTree = "<group>"; };
 		98F3A26D280C536F000851F0 /* MenualNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualNavigationController.swift; sourceTree = "<group>"; };
 		98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetBaseViewController.swift; sourceTree = "<group>"; };
 		98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetViewController.swift; sourceTree = "<group>"; };
@@ -593,8 +595,9 @@
 			isa = PBXGroup;
 			children = (
 				988A2D67280166AA0046C43A /* DiaryModel.swift */,
-				98F3A268280BEB75000851F0 /* DiarySubDataModel.swift */,
 				98B55744281D0FEE00F8CA3E /* SearchModel.swift */,
+				98B55748281E426300F8CA3E /* WeatherModel.swift */,
+				98B5574A281E426900F8CA3E /* PlaceModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1046,12 +1049,12 @@
 				98C24F5427F0264700E6768C /* I18N.swift in Sources */,
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				98A2BDA1280A87E300C1FB92 /* Swift+Util.swift in Sources */,
+				98B55749281E426300F8CA3E /* WeatherModel.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
 				988A2D5827F97A000046C43A /* DiaryMomentsRouter.swift in Sources */,
 				98A2BD9F280A833000C1FB92 /* DiaryDetailInteractor.swift in Sources */,
 				98F3A28328152C04000851F0 /* BottomSheetSelectView.swift in Sources */,
 				988A2D5927F97A000046C43A /* DiaryMomentsViewController.swift in Sources */,
-				98F3A269280BEB75000851F0 /* DiarySubDataModel.swift in Sources */,
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
 				989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */,
 				98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */,
@@ -1090,6 +1093,7 @@
 				985E0F0727C232E300057951 /* RegisterPWInteractor.swift in Sources */,
 				985E0EFC27C21E9900057951 /* RegisterHomeRouter.swift in Sources */,
 				98F3A2782813E561000851F0 /* MenualBottomSheetCell.swift in Sources */,
+				98B5574B281E426900F8CA3E /* PlaceModel.swift in Sources */,
 				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,
 				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
 				98934A9C27E6F13700178A8E /* ProfileHomeInteractor.swift in Sources */,

@@ -18,6 +18,7 @@ protocol DiarySearchPresentableListener: AnyObject {
     func pressedBackBtn()
     func searchTest(keyword: String)
     func searchDataTest(keyword: String)
+    func fetchRecentSearchList()
 }
 
 final class DiarySearchViewController: UIViewController, DiarySearchPresentable, DiarySearchViewControllable {
@@ -113,12 +114,10 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
                     self.recentSearchListView.isHidden = false
                     self.recentSearchTableView.isHidden = false
                 } else {
-                    self.tableView.isHidden = false
-                    self.recentSearchListView.isHidden = true
-                    self.recentSearchTableView.isHidden = true
+//                    self.tableView.isHidden = false
+//                    self.recentSearchListView.isHidden = true
+//                    self.recentSearchTableView.isHidden = true
                 }
-                
-                self.listener?.searchTest(keyword: keyword)
             })
             .disposed(by: disposeBag)
     }
@@ -177,8 +176,25 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     @objc
     func pressedSearchBtn() {
         print("pressedSearchBtn")
+        // 검색 버튼 누를때 조건 추가 할 것
         guard let text = searchTextField.text else { return }
+        if text.count == 0 {
+            print("검색 키워드를 입력해주세요")
+            return
+        }
         listener?.searchDataTest(keyword: text)
+        listener?.searchTest(keyword: text)
+        listener?.fetchRecentSearchList()
+        
+        self.tableView.isHidden = false
+        self.recentSearchListView.isHidden = true
+        self.recentSearchTableView.isHidden = true
+    }
+    
+    // RecentSearchCell의 Delete Btn이 클릭되었을때
+    @objc
+    func pressedRecentSearchCellDeleteBtn() {
+        print("pressedDeleteBtn!")
     }
     
     func reloadSearchTableView() {
@@ -191,9 +207,12 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
 extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
+        // 검색 결과 TableView
         if tableView == self.tableView {
             return listener?.searchResultList.count ?? 0
-        } else if tableView == self.recentSearchTableView {
+        }
+        // 최근 검색 키워드 TableView
+        else if tableView == self.recentSearchTableView {
             return listener?.recentSearchResultList.count ?? 0
         }
         
@@ -202,6 +221,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let index = indexPath.row
+        // 검색 결과 TableView
         if tableView == self.tableView {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell") as? DiarySearchCell else { return UITableViewCell() }
             
@@ -216,7 +236,9 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             cell.createdAt = model.createdAt.description(with: .autoupdatingCurrent)
             
             return cell
-        } else if tableView == self.recentSearchTableView {
+        }
+        // 최근 검색 키워드 TableView
+        else if tableView == self.recentSearchTableView {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchCell") as? RecentSearchCell else { return UITableViewCell() }
             
             guard let model = listener?.recentSearchResultList[safe: index] else {
@@ -225,6 +247,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             
             cell.keyword = model.keyword
             cell.createdAt = model.createdAt.description
+            cell.deleteBtn.addTarget(self, action: #selector(pressedRecentSearchCellDeleteBtn), for: .touchUpInside)
             
             return cell
         }

@@ -16,10 +16,15 @@ public protocol DiaryRepository {
     // ReadOnlyCurrentValuePublisher<[PaymentMethod]> { get }
     
     var diaryString: BehaviorRelay<[DiaryModel]> { get }
+    var weatherHistory: BehaviorRelay<[WeatherHistoryModel]> { get }
+    var placeHistory: BehaviorRelay<[PlaceHistoryModel]> { get }
+    
 //    var realmDiaryOb: Observable<[DiaryModel]> { get }
     // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
     func fetch()
     func addDiary(info: DiaryModel)
+    func addWeatherHistory(info: WeatherHistoryModel)
+    func addPlaceHistory(info: PlaceHistoryModel)
     func updateDiary(info: DiaryModel)
     func deleteDiary(info: DiaryModel)
     func saveImageToDocumentDirectory(imageName: String, image: UIImage)
@@ -27,6 +32,7 @@ public protocol DiaryRepository {
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
+
 
 //    public var realmDiaryOb: Observable<[DiaryModel]> {
 //        let realm = try! Realm()
@@ -53,6 +59,12 @@ public final class DiaryRepositoryImp: DiaryRepository {
 
     public var diaryString: BehaviorRelay<[DiaryModel]> { diaryModelSubject }
     public let diaryModelSubject = BehaviorRelay<[DiaryModel]>(value: [])
+    
+    public var weatherHistory: BehaviorRelay<[WeatherHistoryModel]> { weatherHistorySubject }
+    public let weatherHistorySubject = BehaviorRelay<[WeatherHistoryModel]>(value: [])
+    
+    public var placeHistory: BehaviorRelay<[PlaceHistoryModel]> { placeHistorySubject }
+    public let placeHistorySubject = BehaviorRelay<[PlaceHistoryModel]>(value: [])
     
     /*
     // public var cardOnFileString: ReadOnlyCurrentValuePublisher<[PaymentMethod]> { paymentMethodsSubject }
@@ -136,15 +148,19 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
     
     public func fetch() {
+        print("DiaryRepository :: fetch")
         guard let realm = Realm.safeInit() else {
             return
         }
         
-        let result = realm.objects(DiaryModelRealm.self)
-        print("result = \(result)")
+        let diaryModelResults = realm.objects(DiaryModelRealm.self)
+        diaryModelSubject.accept(diaryModelResults.map { DiaryModel($0) })
         
-        diaryModelSubject.accept(result.map { DiaryModel($0) })
-
+        let weatherHistoryResults = realm.objects(WeatherHistoryModelRealm.self)
+        weatherHistorySubject.accept(weatherHistoryResults.map { WeatherHistoryModel($0) })
+        
+        let placeHistoryResults = realm.objects(PlaceHistoryModelRealm.self)
+        placeHistorySubject.accept(placeHistoryResults.map { PlaceHistoryModel($0) })
     }
     
     public func addDiary(info: DiaryModel) {
@@ -230,5 +246,32 @@ public final class DiaryRepositoryImp: DiaryRepository {
         arr.remove(at: idx)
 
         diaryModelSubject.accept(arr)
+    }
+    
+    // MARK: - History CRUD
+    public func addWeatherHistory(info: WeatherHistoryModel) {
+        print("DiaryRepository :: addWeatherHistory")
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        realm.safeWrite {
+             realm.add(WeatherHistoryModelRealm(info))
+        }
+        
+        weatherHistorySubject.accept(weatherHistorySubject.value + [info])
+    }
+    
+    public func addPlaceHistory(info: PlaceHistoryModel) {
+        print("DiaryRepository :: addPlaceHistory")
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        realm.safeWrite {
+             realm.add(PlaceHistoryModelRealm(info))
+        }
+        
+        placeHistorySubject.accept(placeHistorySubject.value + [info])
     }
 }

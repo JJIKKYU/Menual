@@ -97,7 +97,7 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
         guard let realm = Realm.safeInit() else {
             return
         }
-        
+        recentSearchResultList.removeAll()
         let results = realm.objects(SearchModelRealm.self)
         for result in results {
             let model = SearchModel(result)
