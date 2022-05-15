@@ -65,11 +65,21 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     // Bottom Up 으로 스크린을 띄울때
     private func presentInsideNavigation(_ viewControllable: ViewControllable) {
         let navigation = NavigationControllerable(root: viewControllable)
-        navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
+        // navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
         navigation.navigationController.isNavigationBarHidden = true
+        navigation.navigationController.modalPresentationStyle = .fullScreen
         self.navigationControllable = navigation
         
         viewController.present(navigation, animated: true, completion:  nil)
+    }
+    
+    private func dismissPresentedNavigation(completion: (() -> Void)?) {
+        if self.navigationControllable == nil {
+            return
+        }
+        
+        viewController.dismiss(completion: nil)
+        self.navigationControllable = nil
     }
 
     // MARK: - MyPage (ProfileHome) 관련 함수
@@ -156,7 +166,9 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         
         let router = diaryWritingBuildable.build(withListener: interactor)
         // Bottom Up 되도록 수정
-        viewController.present(router.viewControllable, animated: true, completion: nil)
+        presentInsideNavigation(router.viewControllable)
+        // viewController.present(router.viewControllable, animated: true, completion: nil)
+
         
         diaryWritingRouting = router
         attachChild(router)
@@ -170,6 +182,7 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         
         // viewController.popViewController(animated: true)
         // viewController.popToRoot(animated: true)
+        dismissPresentedNavigation(completion: nil)
         detachChild(router)
         
         diaryWritingRouting = nil

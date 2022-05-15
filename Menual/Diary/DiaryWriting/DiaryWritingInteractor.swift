@@ -14,6 +14,9 @@ protocol DiaryWritingRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
     func attachBottomSheet(weatherModelOb: BehaviorRelay<WeatherModel?>, placeModelOb: BehaviorRelay<PlaceModel?>)
     func detachBottomSheet()
+    
+    func attachDiaryTempSave()
+    func detachDiaryTempSave()
 }
 
 protocol DiaryWritingPresentable: Presentable {
@@ -193,5 +196,15 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     func diaryBottomSheetPressedCloseBtn() {
         print("diaryBottomSheetPressedCloseBtn")
         router?.detachBottomSheet()
+    }
+    
+    // MARK: - diaryTempSave
+    
+    func pressedTempSaveBtn() {
+        router?.attachDiaryTempSave()
+    }
+    
+    func diaryTempSavePressentBackBtn() {
+        router?.detachDiaryTempSave()
     }
 }

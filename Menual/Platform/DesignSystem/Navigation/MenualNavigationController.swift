@@ -14,10 +14,20 @@ public protocol MenualNaviViewProtocol {
     
 }
 
+/// 뷰마다 NavigationType 정의
 enum NaviViewType {
     case main
+    /// moments, search, myPage는 동일한 case로 취금
     case moments
+    /// moments, search, myPage는 동일한 case로 취금
+    case search
+    /// moments, search, myPage는 동일한 case로 취금
+    case myPage
+    
     case write
+    case menualDetail
+    case edit
+    case temporarySave
 }
 
 class MenualNaviView: UIView {
@@ -43,7 +53,7 @@ class MenualNaviView: UIView {
     
     var titleLabel = UILabel().then {
         $0.text = "title"
-        $0.font = UIFont.AppHead(.head_5)
+        $0.font = UIFont.AppTitle(.title_3)
         $0.textColor = .white
         $0.isHidden = true
     }
@@ -104,36 +114,36 @@ class MenualNaviView: UIView {
             make.leading.equalToSuperview().offset(20)
             make.width.equalTo(139)
             make.height.equalTo(24)
-            make.bottom.equalToSuperview().inset(8)
+            make.bottom.equalToSuperview().inset(14)
         }
         
         backButton.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.bottom.equalToSuperview().inset(8)
+            make.bottom.equalToSuperview().inset(10)
             make.width.height.equalTo(24)
         }
         
         rightButton1.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
-            make.bottom.equalToSuperview().inset(8)
+            make.bottom.equalToSuperview().inset(10)
             make.width.height.equalTo(24)
         }
         
         rightButton2.snp.makeConstraints { make in
             make.trailing.equalTo(rightButton1.snp.leading).offset(-11)
-            make.bottom.equalToSuperview().inset(8)
+            make.bottom.equalToSuperview().inset(10)
             make.width.height.equalTo(24)
         }
         
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().inset(8)
+            make.bottom.equalToSuperview().inset(12)
         }
         titleLabel.sizeToFit()
         
         leftButton1.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.bottom.equalToSuperview().inset(8)
+            make.bottom.equalToSuperview().inset(10)
             make.width.height.equalTo(24)
         }
         
@@ -146,13 +156,25 @@ class MenualNaviView: UIView {
             rightButton1.isHidden = false
             rightButton2.isHidden = false
             menualTitleImage.isHidden = false
-        case .moments:
+        case .moments, .search, .myPage:
             backButton.isHidden = false
             titleLabel.isHidden = false
         case .write:
+            titleLabel.text = "메뉴얼 작성"
+            backButton.isHidden = false
+            rightButton2.isHidden = false
+            rightButton1.isHidden = false
+            titleLabel.isHidden = false
+        case .menualDetail:
+            break
+        case .edit:
+            break
+        case .temporarySave:
+            titleLabel.text = "임시저장"
             backButton.isHidden = false
             rightButton1.isHidden = false
             titleLabel.isHidden = false
+            break
         }
     }
 }

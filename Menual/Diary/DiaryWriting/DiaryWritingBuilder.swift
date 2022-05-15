@@ -11,7 +11,7 @@ protocol DiaryWritingDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
 }
 
-final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWritingInteractorDependency, DiaryBottomSheetDependency {
+final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWritingInteractorDependency, DiaryBottomSheetDependency, DiaryTempSaveDependency {
 
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
@@ -33,16 +33,19 @@ final class DiaryWritingBuilder: Builder<DiaryWritingDependency>, DiaryWritingBu
         
         let diaryBottomSheetBuildable = DiaryBottomSheetBuilder(dependency: component)
         
+        let diaryTempSaveBuildable = DiaryTempSaveBuilder(dependency: component)
+        
         let viewController = DiaryWritingViewController()
         let interactor = DiaryWritingInteractor(
             presenter: viewController,
-        dependency: component
+            dependency: component
         )
         interactor.listener = listener
         return DiaryWritingRouter(
             interactor: interactor,
             viewController: viewController,
-            diaryBottomSheetBuildable: diaryBottomSheetBuildable
+            diaryBottomSheetBuildable: diaryBottomSheetBuildable,
+            diaryTempSaveBuildable: diaryTempSaveBuildable
         )
     }
 }

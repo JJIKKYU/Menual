@@ -19,6 +19,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
     func writeDiary(info: DiaryModel)
     func testSaveImage(imageName: String, image: UIImage)
     func pressedWeatherPlaceAddBtn(type: BottomSheetSelectViewType)
+    func pressedTempSaveBtn()
 }
 
 final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable  {
@@ -29,11 +30,16 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
         $0.backButton.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.titleLabel.text = MenualString.title_menual
         
+        // 글 작성 완료 버튼
         $0.rightButton1.addTarget(self, action: #selector(pressedCheckBtn), for: .touchUpInside)
         $0.rightButton1.tintColor = .white
         $0.rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        
+        // 임시 저장 버튼
+        $0.rightButton2.addTarget(self, action: #selector(pressedTempSaveBtn), for: .touchUpInside)
+        $0.rightButton2.tintColor = .white
+        $0.rightButton2.setImage(Asset._24px.storage.image.withRenderingMode(.alwaysTemplate), for: .normal)
     }
     
     lazy var titleTextField = UITextField().then {
@@ -100,7 +106,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        listener?.pressedBackBtn()
     }
     
     func setViews() {
@@ -185,7 +190,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     @objc
     func pressedBackBtn() {
         print("pressedBackBtn!")
-        dismiss(animated: true)
         listener?.pressedBackBtn()
     }
     
@@ -228,6 +232,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     @objc
     func pressedPlaceAddBtn() {
         listener?.pressedWeatherPlaceAddBtn(type: .place)
+    }
+    
+    @objc
+    func pressedTempSaveBtn() {
+        print("pressedTempSaveBtn")
+        listener?.pressedTempSaveBtn()
     }
 }
 
