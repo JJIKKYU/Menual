@@ -10,6 +10,7 @@ import RxSwift
 import SnapKit
 import UIKit
 import PhotosUI
+import ImageCropper
 
 protocol DiaryWritingPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
@@ -82,8 +83,14 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     }
     
     var phpickerConfiguration = PHPickerConfiguration()
-    lazy var imagePciker = PHPickerViewController(configuration: phpickerConfiguration).then {
+    lazy var imagePicker = PHPickerViewController(configuration: phpickerConfiguration).then {
         $0.delegate = self
+    }
+    
+    lazy var testImagePicker = UIImagePickerController().then {
+        $0.delegate = self
+        $0.sourceType = .photoLibrary
+        $0.allowsEditing = false
     }
     
     init() {
@@ -220,7 +227,10 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         print("PressedImageViewBtn!")
         phpickerConfiguration.filter = .images
         phpickerConfiguration.selectionLimit = 1
-        present(imagePciker, animated: true, completion: nil)
+        imagePicker.isEditing = true
+        imagePicker.modalPresentationStyle = .fullScreen
+        // present(imagePicker, animated: true, completion: nil)
+        present(testImagePicker, animated: true, completion: nil)
     }
     
     @objc
@@ -274,5 +284,44 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
         } else {
             // TODO: Handle empty results or item provider not being able load UIImage
         }
+    }
+}
+
+extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        var newImage: UIImage?
+        
+        if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+            newImage = image
+        } else if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            newImage = image
+        }
+        
+        picker.dismiss(animated: true)
+        
+        var config = ImageCropperConfiguration(with: newImage!, and: .customRect)
+        config.maskFillColor = UIColor.black.withAlphaComponent(0.5)
+        config.borderColor = UIColor.white
+
+        config.showGrid = true
+        config.gridColor = UIColor.white
+        config.doneTitle = "CROP"
+        config.cancelTitle = "Back"
+        config.customRatio = CGSize(width: 335, height: 70)
+        let cropper = ImageCropperViewController.initialize(with: config, completionHandler: { croppedImage in
+          /*
+          Code to perform after finishing cropping process
+          */
+            print("after finishing")
+            self.imageView.image = croppedImage
+        }) {
+          /*
+          Code to perform after dismissing controller
+          */
+            print("after dismissing")
+            self.dismiss(animated: true)
+        }
+        
+        self.present(cropper, animated: true, completion: nil)
     }
 }

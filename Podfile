@@ -26,6 +26,9 @@ target 'Menual' do
   # then 문법 사용
   pod 'Then'
   
+  # 이미지 크롭 // https://github.com/JJIKKYU/ImageCropper
+  pod 'ImageCropper', :git=> 'https://github.com/JJIKKYU/ImageCropper', :branch => 'master'
+  
 
   target 'MenualTests' do
     inherit! :search_paths

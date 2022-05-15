@@ -9,6 +9,7 @@ import RIBs
 import RxSwift
 import UIKit
 import SnapKit
+import Then
 
 protocol DiaryTempSavePresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
@@ -25,6 +26,14 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
         super.init(nibName: nil, bundle: nil)
     }
     
+    lazy var tableView = UITableView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.dataSource = self
+        $0.delegate = self
+        $0.register(TempSaveCell.self, forCellReuseIdentifier: "TempSaveCell")
+        $0.rowHeight = 80
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         fatalError("init(coder:) has not been implemented")
@@ -33,7 +42,7 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        view.backgroundColor = .gray
+        view.backgroundColor = Colors.background.black
         setViews()
     }
     
@@ -49,11 +58,19 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
     
     func setViews() {
         view.addSubview(naviView)
+        view.addSubview(tableView)
         view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
             make.leading.top.width.equalToSuperview()
             make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+        }
+        
+        tableView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalToSuperview().offset(44 + UIApplication.topSafeAreaHeight)
+            make.bottom.equalToSuperview()
         }
     }
     
@@ -67,5 +84,27 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
     func pressedDeleteBtn() {
         print("pressedDeleteBtn")
     }
+    
+}
+
+
+extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 12
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "TempSaveCell") as? TempSaveCell else {
+            return UITableViewCell()
+        }
+        
+        cell.title = "테스트입니다. \(indexPath.row)"
+        cell.date = "2022.12.0\(indexPath.row)"
+        print("여기!")
+        
+        return cell
+    }
+    
     
 }
