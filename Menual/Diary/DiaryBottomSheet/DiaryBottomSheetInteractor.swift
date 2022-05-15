@@ -25,14 +25,18 @@ protocol DiaryBottomSheetListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func diaryBottomSheetPressedCloseBtn()
     
-    var weatherHistoryModel: [WeatherHistoryModel] { get }
-    var plcaeHistoryModel: [PlaceHistoryModel] { get }
+    var weatherHistoryModel: BehaviorRelay<[WeatherHistoryModel]> { get }
+    var plcaeHistoryModel: BehaviorRelay<[PlaceHistoryModel]> { get }
 }
 
 final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPresentable>, DiaryBottomSheetInteractable, DiaryBottomSheetPresentableListener {
+    var weatherHistoryModel: BehaviorRelay<[WeatherHistoryModel]> {
+        return listener!.weatherHistoryModel
+    }
     
-    var weatherHistoryModel: [WeatherHistoryModel] { listener?.weatherHistoryModel ?? [] }
-    var plcaeHistoryModel: [PlaceHistoryModel] { listener?.plcaeHistoryModel ?? [] }
+    var plcaeHistoryModel: BehaviorRelay<[PlaceHistoryModel]> {
+        listener!.plcaeHistoryModel
+    }
     
 
     weak var router: DiaryBottomSheetRouting?

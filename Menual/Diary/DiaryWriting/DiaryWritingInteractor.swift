@@ -35,11 +35,11 @@ protocol DiaryWritingInteractorDependency {
 
 final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentable>, DiaryWritingInteractable, DiaryWritingPresentableListener {
     
-    var weatherHistoryModel: [WeatherHistoryModel] {
-        dependency.diaryRepository.weatherHistory.value
+    var weatherHistoryModel: BehaviorRelay<[WeatherHistoryModel]> {
+        dependency.diaryRepository.weatherHistory
     }
-    var plcaeHistoryModel: [PlaceHistoryModel] {
-        dependency.diaryRepository.placeHistory.value
+    var plcaeHistoryModel: BehaviorRelay<[PlaceHistoryModel]> {
+        dependency.diaryRepository.placeHistory
     }
     
 
@@ -149,7 +149,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         if let place = placeModelValue.place {
             let placeHistoryModel = PlaceHistoryModel(uuid: NSUUID().uuidString,
                                                       selectedPlace: place,
-                                                      info: weatherModelValue.detailText,
+                                                      info: placeModelValue.detailText,
                                                       createdAt: info.createdAt,
                                                       isDeleted: false
             )

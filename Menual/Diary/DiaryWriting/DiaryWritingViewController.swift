@@ -39,7 +39,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     lazy var titleTextField = UITextField().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
-        $0.placeholder = "2022.02.02"
+        $0.placeholder = "제목을 입력해주세요."
         $0.font = UIFont.AppTitle(.title_5)
     }
     

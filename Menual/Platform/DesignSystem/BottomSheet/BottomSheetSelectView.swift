@@ -8,6 +8,7 @@
 import UIKit
 import Then
 import SnapKit
+import RxRelay
 import RxSwift
 
 enum BottomSheetSelectViewType {
@@ -16,8 +17,6 @@ enum BottomSheetSelectViewType {
 }
 
 protocol BottomSheetSelectDelegate {
-    var weatherHistoryModel: [WeatherHistoryModel] { get }
-    var placeHistoryModel: [PlaceHistoryModel] { get }
     func sendData(placeModel: PlaceModel)
     func sendData(weatherModel: WeatherModel)
 }
@@ -25,6 +24,20 @@ protocol BottomSheetSelectDelegate {
 class BottomSheetSelectView: UIView {
     
     var delegate: BottomSheetSelectDelegate?
+    var disposeBag = DisposeBag()
+    
+    var weatherHistoryModel: [WeatherHistoryModel] = [] {
+        didSet {
+            self.layoutSubviews()
+        }
+    }
+    
+    var placeHistoryModel: [PlaceHistoryModel] = [] {
+        didSet {
+            self.layoutSubviews()
+        }
+    }
+
 
     var title: String = "" {
         didSet {
@@ -109,8 +122,6 @@ class BottomSheetSelectView: UIView {
         $0.estimatedRowHeight = 40
         $0.rowHeight = 40
         $0.register(WeatherPlaceHistoryCell.self, forCellReuseIdentifier: "WeatherPlaceHistoryCell")
-        
-        print("!!!!! \($0.contentSize.height)")
     }
     
     override class func awakeFromNib() {
@@ -121,6 +132,7 @@ class BottomSheetSelectView: UIView {
         self.viewType = type
         super.init(frame: frame)
         setViews()
+
     }
     
     required init?(coder: NSCoder) {
@@ -134,8 +146,19 @@ class BottomSheetSelectView: UIView {
         self.textField.text = placeholderText
         collectionView.reloadData()
         historyTableView.reloadData()
+        
+        historyTableView.snp.updateConstraints { make in
+            make.height.equalTo(historyTableView.contentSize.height + 44)
+        }
+        print("??? \(historyTableView.contentSize.height)")
     }
     
+    func reloadDate() {
+        collectionView.reloadData()
+        historyTableView.layoutIfNeeded()
+        historyTableView.reloadData()
+    }
+
     func setViews() {
         backgroundColor = .clear
         addSubview(scrollView)
@@ -302,40 +325,30 @@ extension BottomSheetSelectView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch viewType {
         case .weather:
-            guard let model = delegate?.weatherHistoryModel else {
-                return 0
-            }
-            return model.count
+            return weatherHistoryModel.count
         case .place:
-            guard let model = delegate?.placeHistoryModel else {
-                return 0
-            }
-            return model.count
+            return placeHistoryModel.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        print("!?")
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherPlaceHistoryCell", for: indexPath) as? WeatherPlaceHistoryCell else {
             return UITableViewCell()
         }
         
         let index = indexPath.row
+        print("tableView ViewType = \(self.viewType)")
         switch viewType {
         case .place:
-            guard let model = delegate?.placeHistoryModel else {
-                return UITableViewCell()
-            }
-            cell.placeType = model[safe: index]?.selectedPlace
-            cell.title = model[safe: index]?.info ?? ""
+            let model = placeHistoryModel[safe: index]
+            cell.placeType = model?.selectedPlace
+            cell.title = model?.info ?? ""
             
         case .weather:
-            guard let model = delegate?.weatherHistoryModel else {
-                return UITableViewCell()
-            }
-            
-            cell.weatherType = model[safe: index]?.selectedWeather
-            cell.title = model[safe: index]?.info ?? ""
+            let model = weatherHistoryModel[safe: index]
+            cell.weatherType = model?.selectedWeather
+            cell.title = model?.info ?? ""
         }
         return cell
     }

@@ -12,8 +12,8 @@ import RxRelay
 import UIKit
 
 protocol DiaryBottomSheetPresentableListener: AnyObject {
-    var weatherHistoryModel: [WeatherHistoryModel] { get }
-    var plcaeHistoryModel: [PlaceHistoryModel] { get }
+    var weatherHistoryModel: BehaviorRelay<[WeatherHistoryModel]> { get }
+    var plcaeHistoryModel: BehaviorRelay<[PlaceHistoryModel]> { get }
     
     func pressedCloseBtn()
 
@@ -53,6 +53,7 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         $0.isHidden = false
         $0.title = "날씨에 대해 기록해주세요"
         $0.delegate = self
+        $0.weatherHistoryModel = listener?.weatherHistoryModel.value ?? []
     }
     
     lazy var placeView = BottomSheetSelectView(.place).then {
@@ -60,6 +61,7 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         $0.isHidden = true
         $0.title = "장소에 대해 기록해주세요"
         $0.delegate = self
+        $0.placeHistoryModel = listener?.plcaeHistoryModel.value ?? []
     }
     
     lazy var addBtn = UIButton().then {
@@ -95,10 +97,8 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         self.view.addSubview(closeBtn)
         self.view.addSubview(addBtn)
         
-        // self.view.addSubview(weatherScrollView)
         self.view.addSubview(weatherView)
-//        self.view.addSubview(placeScrollView)
-//        self.placeScrollView.addSubview(placeView)
+        self.view.addSubview(placeView)
         self.view.bringSubviewToFront(addBtn)
         
         segmentationView.snp.makeConstraints { make in
@@ -233,15 +233,6 @@ extension DiaryBottomSheetViewController: MenualSegmentationDelegate {
 }
 
 extension DiaryBottomSheetViewController: BottomSheetSelectDelegate {
-    
-    var weatherHistoryModel: [WeatherHistoryModel] {
-        listener?.weatherHistoryModel ?? []
-    }
-    
-    var placeHistoryModel: [PlaceHistoryModel] {
-        listener?.plcaeHistoryModel ?? []
-    }
-    
     func sendData(weatherModel: WeatherModel) {
         print("받았답니다! \(weatherModel)")
         guard let weather = weatherModel.weather else {
