@@ -18,26 +18,75 @@ enum MontserratType {
 }
 
 enum TitleType {
+    /// - Spoqa Han Sans Pro
+    /// - Bold
+    /// - 12pt
     case title_1
+    /// - Spoqa Han Sans Pro
+    /// - Bold
+    /// - 14pt
     case title_2
+    /// - Spoqa Han Sans Pro
+    /// - Bold
+    /// - 16pt
     case title_3
+    /// - Spoqa Han Sans Pro
+    /// - Bold
+    /// - 18pt
     case title_4
+    /// - Spoqa Han Sans Pro
+    /// - Bold
+    /// - 21pt
     case title_5
+    /// - Spoqa Han Sans Pro
+    /// - Bold
+    /// - 24pt
     case title_6
 }
 
 enum BodyType {
+    /// - Spoqa Han Sans Pro
+    /// - Regular
+    /// - 16pt
+    /// - 180%
     case body_4
+    /// - Spoqa Han Sans Pro
+    /// - Regular
+    /// - 14pt
+    /// - 180%
     case body_3
+    /// - Spoqa Han Sans Pro
+    /// - Regular
+    /// - 12pt
+    /// - 180%
     case body_2
+    /// - Spoqa Han Sans Pro
+    /// - Regular
+    /// - 10pt
+    /// - 180%
     case body_1
 }
 
 enum HeadType {
+    /// - Montserrat
+    /// - ExtraBold
+    /// - 10pt
     case head_1
+    /// - Montserrat
+    /// - ExtraBold
+    /// - 12pt
     case head_2
+    /// - Montserrat
+    /// - ExtraBold
+    /// - 14pt
     case head_3
+    /// - Montserrat
+    /// - ExtraBold
+    /// - 16pt
     case head_4
+    /// - Montserrat
+    /// - ExtraBold
+    /// - 18pt
     case head_5
 }
 

@@ -69,6 +69,9 @@ internal enum Asset {
   internal enum _16px {
     internal static let add = ImageAsset(name: "16px/add")
     internal static let album = ImageAsset(name: "16px/album")
+    internal enum Alert {
+      internal static let active = ImageAsset(name: "16px/alert/active")
+    }
     internal static let alert = ImageAsset(name: "16px/alert")
     internal enum Arrow {
       internal static let back = ImageAsset(name: "16px/arrow/back")
@@ -155,7 +158,10 @@ internal enum Asset {
   internal enum _20px {
     internal static let add = ImageAsset(name: "20px/add")
     internal static let album = ImageAsset(name: "20px/album")
-    internal static let alert = ImageAsset(name: "20px/alert")
+    internal enum Alert {
+      internal static let active = ImageAsset(name: "20px/alert/active")
+      internal static let unactive = ImageAsset(name: "20px/alert/unactive")
+    }
     internal enum Arrow {
       internal static let back = ImageAsset(name: "20px/arrow/back")
       internal enum Down {
@@ -241,7 +247,10 @@ internal enum Asset {
   internal enum _24px {
     internal static let add = ImageAsset(name: "24px/add")
     internal static let album = ImageAsset(name: "24px/album")
-    internal static let alert = ImageAsset(name: "24px/alert")
+    internal enum Alert {
+      internal static let active = ImageAsset(name: "24px/alert/active")
+      internal static let unactive = ImageAsset(name: "24px/alert/unactive")
+    }
     internal enum Arrow {
       internal static let back = ImageAsset(name: "24px/arrow/back")
       internal enum Down {

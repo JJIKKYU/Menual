@@ -159,21 +159,28 @@ class MenualNaviView: UIView {
         case .moments, .search, .myPage:
             backButton.isHidden = false
             titleLabel.isHidden = false
+            titleLabel.font = UIFont.AppHead(.head_4)
         case .write:
+            titleLabel.font = UIFont.AppTitle(.title_3)
             titleLabel.text = "메뉴얼 작성"
             backButton.isHidden = false
             rightButton2.isHidden = false
             rightButton1.isHidden = false
             titleLabel.isHidden = false
         case .menualDetail:
+            titleLabel.text = "메뉴얼 상세"
+            titleLabel.font = UIFont.AppTitle(.title_3)
             break
         case .edit:
+            titleLabel.text = "메뉴얼 수정"
+            titleLabel.font = UIFont.AppTitle(.title_3)
             break
         case .temporarySave:
             titleLabel.text = "임시저장"
             backButton.isHidden = false
             rightButton1.isHidden = false
             titleLabel.isHidden = false
+            titleLabel.font = UIFont.AppTitle(.title_3)
             break
         }
     }
