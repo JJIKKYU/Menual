@@ -97,6 +97,11 @@
 		98B557552830C7B200F8CA3E /* DiaryTempSaveBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557512830C7B200F8CA3E /* DiaryTempSaveBuilder.swift */; };
 		98B557562830C7B200F8CA3E /* DiaryTempSaveInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557522830C7B200F8CA3E /* DiaryTempSaveInteractor.swift */; };
 		98B5575E2830F0FF00F8CA3E /* TempSaveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5575D2830F0FF00F8CA3E /* TempSaveCell.swift */; };
+		98B55761283895B900F8CA3E /* BoxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55760283895B900F8CA3E /* BoxButton.swift */; };
+		98B55767283896AA00F8CA3E /* DesignSystemRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55763283896AA00F8CA3E /* DesignSystemRouter.swift */; };
+		98B55768283896AA00F8CA3E /* DesignSystemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55764283896AA00F8CA3E /* DesignSystemViewController.swift */; };
+		98B55769283896AA00F8CA3E /* DesignSystemBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55765283896AA00F8CA3E /* DesignSystemBuilder.swift */; };
+		98B5576A283896AA00F8CA3E /* DesignSystemInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55766283896AA00F8CA3E /* DesignSystemInteractor.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -238,6 +243,11 @@
 		98B557512830C7B200F8CA3E /* DiaryTempSaveBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryTempSaveBuilder.swift; sourceTree = "<group>"; };
 		98B557522830C7B200F8CA3E /* DiaryTempSaveInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryTempSaveInteractor.swift; sourceTree = "<group>"; };
 		98B5575D2830F0FF00F8CA3E /* TempSaveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempSaveCell.swift; sourceTree = "<group>"; };
+		98B55760283895B900F8CA3E /* BoxButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxButton.swift; sourceTree = "<group>"; };
+		98B55763283896AA00F8CA3E /* DesignSystemRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemRouter.swift; sourceTree = "<group>"; };
+		98B55764283896AA00F8CA3E /* DesignSystemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemViewController.swift; sourceTree = "<group>"; };
+		98B55765283896AA00F8CA3E /* DesignSystemBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemBuilder.swift; sourceTree = "<group>"; };
+		98B55766283896AA00F8CA3E /* DesignSystemInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemInteractor.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -313,6 +323,7 @@
 		98239BE127E3234F00E216F1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				98B5575F2838959900F8CA3E /* BoxButton */,
 				98F3A2742813C9C0000851F0 /* Segmentation */,
 				98F3A26F2813BD8F000851F0 /* BottomSheet */,
 				98F3A26C280C534D000851F0 /* Navigation */,
@@ -341,8 +352,9 @@
 		98281EBF278AC14700736D59 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
-				988A2D3927F82F220046C43A /* RIBs+TestSupport */,
+				98B557622838968D00F8CA3E /* DesignSystemRIB */,
 				98239BE127E3234F00E216F1 /* DesignSystem */,
+				988A2D3927F82F220046C43A /* RIBs+TestSupport */,
 				98BEF34527C9FD6E0037CF6D /* MenualUtil */,
 				980924AE279BC83D0034D0CC /* RIBsUtil */,
 			);
@@ -684,6 +696,25 @@
 				98B5575D2830F0FF00F8CA3E /* TempSaveCell.swift */,
 			);
 			path = DiaryTempSave;
+			sourceTree = "<group>";
+		};
+		98B5575F2838959900F8CA3E /* BoxButton */ = {
+			isa = PBXGroup;
+			children = (
+				98B55760283895B900F8CA3E /* BoxButton.swift */,
+			);
+			path = BoxButton;
+			sourceTree = "<group>";
+		};
+		98B557622838968D00F8CA3E /* DesignSystemRIB */ = {
+			isa = PBXGroup;
+			children = (
+				98B55763283896AA00F8CA3E /* DesignSystemRouter.swift */,
+				98B55764283896AA00F8CA3E /* DesignSystemViewController.swift */,
+				98B55765283896AA00F8CA3E /* DesignSystemBuilder.swift */,
+				98B55766283896AA00F8CA3E /* DesignSystemInteractor.swift */,
+			);
+			path = DesignSystemRIB;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -1082,6 +1113,7 @@
 				988A2D5827F97A000046C43A /* DiaryMomentsRouter.swift in Sources */,
 				98A2BD9F280A833000C1FB92 /* DiaryDetailInteractor.swift in Sources */,
 				98F3A28328152C04000851F0 /* BottomSheetSelectView.swift in Sources */,
+				98B5576A283896AA00F8CA3E /* DesignSystemInteractor.swift in Sources */,
 				988A2D5927F97A000046C43A /* DiaryMomentsViewController.swift in Sources */,
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
 				989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */,
@@ -1092,6 +1124,7 @@
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				98B5574D281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift in Sources */,
 				988A2D5A27F97A000046C43A /* DiaryMomentsBuilder.swift in Sources */,
+				98B55769283896AA00F8CA3E /* DesignSystemBuilder.swift in Sources */,
 				98A2BD912802B43E00C1FB92 /* MyMenualCell.swift in Sources */,
 				985E0F0F27C2690500057951 /* LoginHomeBuilder.swift in Sources */,
 				988A2D3B27F82F3B0046C43A /* ViewControllableMock.swift in Sources */,
@@ -1112,6 +1145,7 @@
 				98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
 				985E0F0627C232E300057951 /* RegisterPWBuilder.swift in Sources */,
+				98B55761283895B900F8CA3E /* BoxButton.swift in Sources */,
 				98B55743281CFF5B00F8CA3E /* DiarySearchCell.swift in Sources */,
 				98F3A28028150052000851F0 /* DiaryBottomSheetBuilder.swift in Sources */,
 				98F3A2762813C9D8000851F0 /* MenualSegmentationBaseViewController.swift in Sources */,
@@ -1127,6 +1161,7 @@
 				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,
 				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
 				98B557532830C7B200F8CA3E /* DiaryTempSaveRouter.swift in Sources */,
+				98B55767283896AA00F8CA3E /* DesignSystemRouter.swift in Sources */,
 				98934A9C27E6F13700178A8E /* ProfileHomeInteractor.swift in Sources */,
 				988A2D6B280167D20046C43A /* DiaryRepository.swift in Sources */,
 				98A2BD9C280A833000C1FB92 /* DiaryDetailRouter.swift in Sources */,
@@ -1143,6 +1178,7 @@
 				9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */,
 				989AE04627F0900800177573 /* DiarySearchInteractor.swift in Sources */,
 				98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */,
+				98B55768283896AA00F8CA3E /* DesignSystemViewController.swift in Sources */,
 				980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */,
 				989AE04327F0900800177573 /* DiarySearchRouter.swift in Sources */,
 				98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */,
