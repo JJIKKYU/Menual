@@ -49,13 +49,6 @@ class Divider: UIView {
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
         }
-        /*
-        self.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.height.equalTo(1)
-        }
-        */
     }
     
     override func layoutSubviews() {

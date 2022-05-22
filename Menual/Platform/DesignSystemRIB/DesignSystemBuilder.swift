@@ -12,7 +12,7 @@ protocol DesignSystemDependency: Dependency {
     // created by this RIB.
 }
 
-final class DesignSystemComponent: Component<DesignSystemDependency>, BoxButtonDependency, GNBHeaderDependency, ListHeaderDependency, MomentsDependency, DividerDependency {
+final class DesignSystemComponent: Component<DesignSystemDependency>, BoxButtonDependency, GNBHeaderDependency, ListHeaderDependency, MomentsDependency, DividerDependency, CapsuleButtonDependency {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
@@ -37,6 +37,7 @@ final class DesignSystemBuilder: Builder<DesignSystemDependency>, DesignSystemBu
         let listHeaderBuildable = ListHeaderBuilder(dependency: component)
         let momentsBuildable = MomentsBuilder(dependency: component)
         let dividerBuildable = DividerBuilder(dependency: component)
+        let capsuleButtonBuildable = CapsuleButtonBuilder(dependency: component)
         
         let viewController = DesignSystemViewController()
         let interactor = DesignSystemInteractor(presenter: viewController)
@@ -48,7 +49,8 @@ final class DesignSystemBuilder: Builder<DesignSystemDependency>, DesignSystemBu
             gnbHeaderBuildable: gnbHeaderBuildable,
             listHeaderBuildable: listHeaderBuildable,
             momentsBuildable: momentsBuildable,
-            dividerBuildable: dividerBuildable
+            dividerBuildable: dividerBuildable,
+            capsuleButtonBuildable: capsuleButtonBuildable
         )
     }
 }

@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener {
+protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener {
     var router: DesignSystemRouting? { get set }
     var listener: DesignSystemListener? { get set }
 }
@@ -33,6 +33,9 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
     private let dividerBuildable: DividerBuildable
     private var dividerRouting: Routing?
     
+    private let capsuleButtonBuildable: CapsuleButtonBuildable
+    private var capsuleButtonRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DesignSystemInteractable,
@@ -41,13 +44,15 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         gnbHeaderBuildable: GNBHeaderBuildable,
         listHeaderBuildable: ListHeaderBuildable,
         momentsBuildable: MomentsBuildable,
-        dividerBuildable: DividerBuildable
+        dividerBuildable: DividerBuildable,
+        capsuleButtonBuildable: CapsuleButtonBuildable
     ) {
         self.boxButtonBuildable = boxButtonBuildable
         self.gnbHeaderBuildable = gnbHeaderBuildable
         self.listHeaderBuildable = listHeaderBuildable
         self.momentsBuildable = momentsBuildable
         self.dividerBuildable = dividerBuildable
+        self.capsuleButtonBuildable = capsuleButtonBuildable
         super.init(interactor: interactor,
                    viewController: viewController
         )
@@ -182,5 +187,31 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         
         detachChild(router)
         dividerRouting = nil
+    }
+    
+    // MARK: - Capsule Button DesignSystem RIBs
+    func attachCapsuleButtonVC() {
+        if capsuleButtonRouting != nil {
+            return
+        }
+        
+        let router = capsuleButtonBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        capsuleButtonRouting = router
+        attachChild(router)
+    }
+    
+    func detachCapsuleButtonVC(isOnlyDetach: Bool) {
+        guard let router = capsuleButtonRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        capsuleButtonRouting = nil
     }
 }

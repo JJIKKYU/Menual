@@ -129,6 +129,11 @@
 		98B557A7283A3E7900F8CA3E /* DividerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557A3283A3E7900F8CA3E /* DividerBuilder.swift */; };
 		98B557A8283A3E7900F8CA3E /* DividerInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557A4283A3E7900F8CA3E /* DividerInteractor.swift */; };
 		98B557AB283A413F00F8CA3E /* Divider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557AA283A413F00F8CA3E /* Divider.swift */; };
+		98B557B1283A4A8300F8CA3E /* CapsuleButtonRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557AD283A4A8300F8CA3E /* CapsuleButtonRouter.swift */; };
+		98B557B2283A4A8300F8CA3E /* CapsuleButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557AE283A4A8300F8CA3E /* CapsuleButtonViewController.swift */; };
+		98B557B3283A4A8300F8CA3E /* CapsuleButtonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557AF283A4A8300F8CA3E /* CapsuleButtonBuilder.swift */; };
+		98B557B4283A4A8300F8CA3E /* CapsuleButtonInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557B0283A4A8300F8CA3E /* CapsuleButtonInteractor.swift */; };
+		98B557B7283A4C6300F8CA3E /* CapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557B6283A4C6300F8CA3E /* CapsuleButton.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -302,6 +307,11 @@
 		98B557A3283A3E7900F8CA3E /* DividerBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerBuilder.swift; sourceTree = "<group>"; };
 		98B557A4283A3E7900F8CA3E /* DividerInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerInteractor.swift; sourceTree = "<group>"; };
 		98B557AA283A413F00F8CA3E /* Divider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Divider.swift; sourceTree = "<group>"; };
+		98B557AD283A4A8300F8CA3E /* CapsuleButtonRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonRouter.swift; sourceTree = "<group>"; };
+		98B557AE283A4A8300F8CA3E /* CapsuleButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonViewController.swift; sourceTree = "<group>"; };
+		98B557AF283A4A8300F8CA3E /* CapsuleButtonBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonBuilder.swift; sourceTree = "<group>"; };
+		98B557B0283A4A8300F8CA3E /* CapsuleButtonInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonInteractor.swift; sourceTree = "<group>"; };
+		98B557B6283A4C6300F8CA3E /* CapsuleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButton.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -377,6 +387,7 @@
 		98239BE127E3234F00E216F1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				98B557B5283A4C4E00F8CA3E /* CapsuleButton */,
 				98B557A9283A412500F8CA3E /* Divider */,
 				98B5579B283A198200F8CA3E /* UILabelExtension */,
 				98B5578A283A115B00F8CA3E /* ListHeader */,
@@ -769,6 +780,7 @@
 		98B557622838968D00F8CA3E /* DesignSystemRIB */ = {
 			isa = PBXGroup;
 			children = (
+				98B557AC283A4A6F00F8CA3E /* CapsuleButton */,
 				98B557A0283A3E6400F8CA3E /* Divider */,
 				98B5578D283A150B00F8CA3E /* Moments */,
 				98B55781283A0F2600F8CA3E /* ListHeader */,
@@ -860,6 +872,25 @@
 				98B557AA283A413F00F8CA3E /* Divider.swift */,
 			);
 			path = Divider;
+			sourceTree = "<group>";
+		};
+		98B557AC283A4A6F00F8CA3E /* CapsuleButton */ = {
+			isa = PBXGroup;
+			children = (
+				98B557AD283A4A8300F8CA3E /* CapsuleButtonRouter.swift */,
+				98B557AE283A4A8300F8CA3E /* CapsuleButtonViewController.swift */,
+				98B557AF283A4A8300F8CA3E /* CapsuleButtonBuilder.swift */,
+				98B557B0283A4A8300F8CA3E /* CapsuleButtonInteractor.swift */,
+			);
+			path = CapsuleButton;
+			sourceTree = "<group>";
+		};
+		98B557B5283A4C4E00F8CA3E /* CapsuleButton */ = {
+			isa = PBXGroup;
+			children = (
+				98B557B6283A4C6300F8CA3E /* CapsuleButton.swift */,
+			);
+			path = CapsuleButton;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -1276,6 +1307,8 @@
 				98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */,
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
 				98B5579D283A198F00F8CA3E /* UILabelExtension.swift in Sources */,
+				98B557B4283A4A8300F8CA3E /* CapsuleButtonInteractor.swift in Sources */,
+				98B557B2283A4A8300F8CA3E /* CapsuleButtonViewController.swift in Sources */,
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				98B5574D281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift in Sources */,
 				988A2D5A27F97A000046C43A /* DiaryMomentsBuilder.swift in Sources */,
@@ -1299,6 +1332,7 @@
 				988A2D68280166AA0046C43A /* DiaryModel.swift in Sources */,
 				98F3A27E28150052000851F0 /* DiaryBottomSheetRouter.swift in Sources */,
 				988A2D5B27F97A000046C43A /* DiaryMomentsInteractor.swift in Sources */,
+				98B557B1283A4A8300F8CA3E /* CapsuleButtonRouter.swift in Sources */,
 				98B5579F283A1AF600F8CA3E /* MomentsText.swift in Sources */,
 				98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */,
 				98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */,
@@ -1332,6 +1366,7 @@
 				988A2D6B280167D20046C43A /* DiaryRepository.swift in Sources */,
 				98A2BD9C280A833000C1FB92 /* DiaryDetailRouter.swift in Sources */,
 				98B557552830C7B200F8CA3E /* DiaryTempSaveBuilder.swift in Sources */,
+				98B557B3283A4A8300F8CA3E /* CapsuleButtonBuilder.swift in Sources */,
 				9888DE162764825F0091918F /* AppRootInteractor.swift in Sources */,
 				985E0EF827C21DEC00057951 /* RegisterIDInteractor.swift in Sources */,
 				980924B6279BCD670034D0CC /* DiaryHomeRouter.swift in Sources */,
@@ -1340,6 +1375,7 @@
 				985E0F0427C232E300057951 /* RegisterPWRouter.swift in Sources */,
 				98B55798283A177700F8CA3E /* Moments.swift in Sources */,
 				98A2BD9E280A833000C1FB92 /* DiaryDetailBuilder.swift in Sources */,
+				98B557B7283A4C6300F8CA3E /* CapsuleButton.swift in Sources */,
 				988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */,
 				985E0F0D27C2690500057951 /* LoginHomeRouter.swift in Sources */,
 				9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */,
