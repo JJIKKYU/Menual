@@ -102,6 +102,11 @@
 		98B55768283896AA00F8CA3E /* DesignSystemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55764283896AA00F8CA3E /* DesignSystemViewController.swift */; };
 		98B55769283896AA00F8CA3E /* DesignSystemBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55765283896AA00F8CA3E /* DesignSystemBuilder.swift */; };
 		98B5576A283896AA00F8CA3E /* DesignSystemInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55766283896AA00F8CA3E /* DesignSystemInteractor.swift */; };
+		98B5576C28389E6300F8CA3E /* DesignSystemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5576B28389E6200F8CA3E /* DesignSystemCell.swift */; };
+		98B557742838A4ED00F8CA3E /* BoxButtonRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557702838A4ED00F8CA3E /* BoxButtonRouter.swift */; };
+		98B557752838A4ED00F8CA3E /* BoxButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557712838A4ED00F8CA3E /* BoxButtonViewController.swift */; };
+		98B557762838A4ED00F8CA3E /* BoxButtonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557722838A4ED00F8CA3E /* BoxButtonBuilder.swift */; };
+		98B557772838A4ED00F8CA3E /* BoxButtonInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557732838A4ED00F8CA3E /* BoxButtonInteractor.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -248,6 +253,11 @@
 		98B55764283896AA00F8CA3E /* DesignSystemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemViewController.swift; sourceTree = "<group>"; };
 		98B55765283896AA00F8CA3E /* DesignSystemBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemBuilder.swift; sourceTree = "<group>"; };
 		98B55766283896AA00F8CA3E /* DesignSystemInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemInteractor.swift; sourceTree = "<group>"; };
+		98B5576B28389E6200F8CA3E /* DesignSystemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystemCell.swift; sourceTree = "<group>"; };
+		98B557702838A4ED00F8CA3E /* BoxButtonRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxButtonRouter.swift; sourceTree = "<group>"; };
+		98B557712838A4ED00F8CA3E /* BoxButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxButtonViewController.swift; sourceTree = "<group>"; };
+		98B557722838A4ED00F8CA3E /* BoxButtonBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxButtonBuilder.swift; sourceTree = "<group>"; };
+		98B557732838A4ED00F8CA3E /* BoxButtonInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxButtonInteractor.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -709,12 +719,25 @@
 		98B557622838968D00F8CA3E /* DesignSystemRIB */ = {
 			isa = PBXGroup;
 			children = (
+				98B5576F2838A4E200F8CA3E /* BoxButton */,
 				98B55763283896AA00F8CA3E /* DesignSystemRouter.swift */,
 				98B55764283896AA00F8CA3E /* DesignSystemViewController.swift */,
 				98B55765283896AA00F8CA3E /* DesignSystemBuilder.swift */,
 				98B55766283896AA00F8CA3E /* DesignSystemInteractor.swift */,
+				98B5576B28389E6200F8CA3E /* DesignSystemCell.swift */,
 			);
 			path = DesignSystemRIB;
+			sourceTree = "<group>";
+		};
+		98B5576F2838A4E200F8CA3E /* BoxButton */ = {
+			isa = PBXGroup;
+			children = (
+				98B557702838A4ED00F8CA3E /* BoxButtonRouter.swift */,
+				98B557712838A4ED00F8CA3E /* BoxButtonViewController.swift */,
+				98B557722838A4ED00F8CA3E /* BoxButtonBuilder.swift */,
+				98B557732838A4ED00F8CA3E /* BoxButtonInteractor.swift */,
+			);
+			path = BoxButton;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -1099,6 +1122,7 @@
 				988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */,
 				98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */,
 				980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */,
+				98B557772838A4ED00F8CA3E /* BoxButtonInteractor.swift in Sources */,
 				98B55745281D0FEE00F8CA3E /* SearchModel.swift in Sources */,
 				98A2BD9D280A833000C1FB92 /* DiaryDetailViewController.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
@@ -1110,6 +1134,7 @@
 				98B557562830C7B200F8CA3E /* DiaryTempSaveInteractor.swift in Sources */,
 				98B557542830C7B200F8CA3E /* DiaryTempSaveViewController.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
+				98B557742838A4ED00F8CA3E /* BoxButtonRouter.swift in Sources */,
 				988A2D5827F97A000046C43A /* DiaryMomentsRouter.swift in Sources */,
 				98A2BD9F280A833000C1FB92 /* DiaryDetailInteractor.swift in Sources */,
 				98F3A28328152C04000851F0 /* BottomSheetSelectView.swift in Sources */,
@@ -1124,6 +1149,7 @@
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				98B5574D281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift in Sources */,
 				988A2D5A27F97A000046C43A /* DiaryMomentsBuilder.swift in Sources */,
+				98B557762838A4ED00F8CA3E /* BoxButtonBuilder.swift in Sources */,
 				98B55769283896AA00F8CA3E /* DesignSystemBuilder.swift in Sources */,
 				98A2BD912802B43E00C1FB92 /* MyMenualCell.swift in Sources */,
 				985E0F0F27C2690500057951 /* LoginHomeBuilder.swift in Sources */,
@@ -1176,11 +1202,13 @@
 				988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */,
 				985E0F0D27C2690500057951 /* LoginHomeRouter.swift in Sources */,
 				9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */,
+				98B557752838A4ED00F8CA3E /* BoxButtonViewController.swift in Sources */,
 				989AE04627F0900800177573 /* DiarySearchInteractor.swift in Sources */,
 				98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */,
 				98B55768283896AA00F8CA3E /* DesignSystemViewController.swift in Sources */,
 				980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */,
 				989AE04327F0900800177573 /* DiarySearchRouter.swift in Sources */,
+				98B5576C28389E6300F8CA3E /* DesignSystemCell.swift in Sources */,
 				98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */,
 				9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */,
 				980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */,

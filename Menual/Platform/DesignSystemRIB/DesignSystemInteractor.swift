@@ -10,6 +10,8 @@ import RxSwift
 
 protocol DesignSystemRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
+    func attachBoxButtonVC()
+    func detachBoxButtonVC()
 }
 
 protocol DesignSystemPresentable: Presentable {
@@ -19,12 +21,27 @@ protocol DesignSystemPresentable: Presentable {
 
 protocol DesignSystemListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
+    func designSystemPressedBackBtn()
 }
 
 final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentable>, DesignSystemInteractable, DesignSystemPresentableListener {
 
     weak var router: DesignSystemRouting?
     weak var listener: DesignSystemListener?
+    
+    let designSystemVariation = [
+        "GNB Header",
+        "Badges",
+        "Capsule Button",
+        "Box Button",
+        "Tabs",
+        "FAB",
+        "List Header",
+        "Pagination",
+        "Divider",
+        "Moments",
+        "List"
+    ]
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -41,5 +58,17 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+    
+    func pressedBackBtn() {
+        listener?.designSystemPressedBackBtn()
+    }
+    
+    func pressedBoxButtonCell() {
+        router?.attachBoxButtonVC()
+    }
+    
+    func boxButtonPressedBackBtn() {
+        router?.detachBoxButtonVC()
     }
 }

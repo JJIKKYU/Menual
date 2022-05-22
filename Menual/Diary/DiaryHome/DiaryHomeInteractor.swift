@@ -20,6 +20,8 @@ protocol DiaryHomeRouting: ViewableRouting {
     func detachDiaryWriting()
     func attachDiaryDetail(model: DiaryModel)
     func detachDiaryDetail()
+    func attachDesignSystem()
+    func detachDesignSystem()
 }
 
 protocol DiaryHomePresentable: Presentable {
@@ -181,5 +183,14 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func diaryDetailPressedBackBtn() {
         router?.detachDiaryDetail()
+    }
+
+    // MARK: - Menual Title Btn을 눌렀을때 Action
+    func pressedMenualTitleBtn() {
+        router?.attachDesignSystem()
+    }
+    
+    func designSystemPressedBackBtn() {
+        router?.detachDesignSystem()
     }
 }

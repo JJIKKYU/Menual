@@ -12,7 +12,7 @@ protocol DesignSystemDependency: Dependency {
     // created by this RIB.
 }
 
-final class DesignSystemComponent: Component<DesignSystemDependency> {
+final class DesignSystemComponent: Component<DesignSystemDependency>, BoxButtonDependency {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
@@ -31,9 +31,16 @@ final class DesignSystemBuilder: Builder<DesignSystemDependency>, DesignSystemBu
 
     func build(withListener listener: DesignSystemListener) -> DesignSystemRouting {
         let component = DesignSystemComponent(dependency: dependency)
+        
+        let boxButtonBuildable = BoxButtonBuilder(dependency: component)
+        
         let viewController = DesignSystemViewController()
         let interactor = DesignSystemInteractor(presenter: viewController)
         interactor.listener = listener
-        return DesignSystemRouter(interactor: interactor, viewController: viewController)
+        return DesignSystemRouter(
+            interactor: interactor,
+            viewController: viewController,
+            boxButtonBuildable: boxButtonBuildable
+        )
     }
 }

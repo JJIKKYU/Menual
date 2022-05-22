@@ -22,6 +22,8 @@ protocol DiaryHomePresentableListener: AnyObject {
     func getMyMenualArr() -> [DiaryModel]
     
     func pressedDiaryCell(index: Int)
+    
+    func pressedMenualTitleBtn()
 }
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
@@ -43,6 +45,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         
         $0.rightButton2.setImage(Asset._24px.search.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.rightButton2.addTarget(self, action: #selector(pressedSearchBtn), for: .touchUpInside)
+        
+        #if DEBUG
+        $0.menualTitleImage.isUserInteractionEnabled = true
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(pressedMenualBtn))
+        $0.menualTitleImage.addGestureRecognizer(gesture)
+        #endif
     }
     
     lazy var scrollView = UIScrollView().then {
@@ -267,6 +275,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     func pressedFABWritingBtn() {
         print("FABWritingBtn Pressed!")
         listener?.pressedWritingBtn()
+    }
+    
+    @objc
+    func pressedMenualBtn() {
+        print("메뉴얼 버튼 눌렀니?")
+        listener?.pressedMenualTitleBtn()
     }
 }
 

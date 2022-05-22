@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryMomentsListener, DiaryWritingListener, DiaryDetailListener {
+protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryMomentsListener, DiaryWritingListener, DiaryDetailListener, DesignSystemListener {
     var router: DiaryHomeRouting? { get set }
     var listener: DiaryHomeListener? { get set }
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
@@ -38,6 +38,9 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     private let diaryDetailBuildable: DiaryDetailBuildable
     private var diaryDetailRouting: Routing?
     
+    private let designSystemBuildable: DesignSystemBuildable
+    private var designSystemRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DiaryHomeInteractable,
@@ -46,13 +49,15 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         diarySearchBuildable: DiarySearchBuildable,
         diaryMomentsBuildable: DiaryMomentsBuildable,
         diaryWritingBuildable: DiaryWritingBuildable,
-        diaryDetailBuildable: DiaryDetailBuildable
+        diaryDetailBuildable: DiaryDetailBuildable,
+        designSystemBuildable: DesignSystemBuildable
     ) {
         self.profileHomeBuildable = profileHomeBuildable
         self.diarySearchBuildable = diarySearchBuildable
         self.diaryMomentsBuildable = diaryMomentsBuildable
         self.diaryWritingBuildable = diaryWritingBuildable
         self.diaryDetailBuildable = diaryDetailBuildable
+        self.designSystemBuildable = designSystemBuildable
         
         super.init(
             interactor: interactor,
@@ -213,5 +218,27 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         viewController.popViewController(animated: true)
         detachChild(router)
         diaryDetailRouting = nil
+    }
+    
+    func attachDesignSystem() {
+        if designSystemRouting != nil {
+            return
+        }
+        
+        let router = designSystemBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        designSystemRouting = router
+        attachChild(router)
+    }
+    
+    func detachDesignSystem() {
+        guard let router = designSystemRouting else {
+            return
+        }
+        
+        viewController.popViewController(animated: true)
+        detachChild(router)
+        designSystemRouting = nil
     }
 }

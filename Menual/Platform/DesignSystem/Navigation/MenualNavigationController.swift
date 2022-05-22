@@ -34,7 +34,7 @@ class MenualNaviView: UIView {
     
     var naviViewType: NaviViewType
 
-    let menualTitleImage = UIImageView().then {
+    lazy var menualTitleImage = UIImageView().then {
         let image = Asset._24px.full.image.withRenderingMode(.alwaysTemplate)
         $0.tintColor = Colors.tint.main.v700
         $0.image = image
