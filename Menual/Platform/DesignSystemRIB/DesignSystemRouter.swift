@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener {
+protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener {
     var router: DesignSystemRouting? { get set }
     var listener: DesignSystemListener? { get set }
 }
@@ -18,7 +18,6 @@ protocol DesignSystemViewControllable: ViewControllable {
 
 final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignSystemViewControllable>, DesignSystemRouting {
 
-
     private let boxButtonBuildable: BoxButtonBuildable
     private var boxButtonRouting: Routing?
     
@@ -28,17 +27,22 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
     private let listHeaderBuildable: ListHeaderBuildable
     private var listHeaderRouting: Routing?
     
+    private let momentsBuildable: MomentsBuildable
+    private var momentsRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DesignSystemInteractable,
         viewController: DesignSystemViewControllable,
         boxButtonBuildable: BoxButtonBuildable,
         gnbHeaderBuildable: GNBHeaderBuildable,
-        listHeaderBuildable: ListHeaderBuildable
+        listHeaderBuildable: ListHeaderBuildable,
+        momentsBuildable: MomentsBuildable
     ) {
         self.boxButtonBuildable = boxButtonBuildable
         self.gnbHeaderBuildable = gnbHeaderBuildable
         self.listHeaderBuildable = listHeaderBuildable
+        self.momentsBuildable = momentsBuildable
         super.init(interactor: interactor,
                    viewController: viewController
         )
@@ -121,5 +125,31 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         
         detachChild(router)
         listHeaderRouting = nil
+    }
+    
+    // MARK: - Moments DesignSystem RIBs
+    func attachMomentsVC() {
+        if momentsRouting != nil {
+            return
+        }
+        
+        let router = momentsBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        momentsRouting = router
+        attachChild(router)
+    }
+    
+    func detachMomentsVC(isOnlyDetach: Bool) {
+        guard let router = momentsRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        momentsRouting = nil
     }
 }

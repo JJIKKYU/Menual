@@ -194,6 +194,7 @@ extension UILabel {
         paragraphStyle.lineSpacing = 1.0
         paragraphStyle.lineHeightMultiple = lineHeight
         paragraphStyle.alignment = self.textAlignment
+        paragraphStyle.lineBreakMode = .byTruncatingTail
 
         let attrString = NSMutableAttributedString()
         if (self.attributedText != nil) {
@@ -204,5 +205,20 @@ extension UILabel {
         }
         attrString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
         self.attributedText = attrString
+    }
+    
+    func setLineHeight2(lineHeight: CGFloat) {
+        guard let text = self.text else { return }
+        
+        let attributeString = NSMutableAttributedString(string: text)
+        let style = NSMutableParagraphStyle()
+        
+        style.lineSpacing = lineHeight
+        attributeString.addAttribute(
+            NSAttributedString.Key.paragraphStyle,
+            value: style,
+            range: NSMakeRange(0, attributeString.length))
+        
+        self.attributedText = attributeString
     }
 }

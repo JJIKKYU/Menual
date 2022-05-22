@@ -116,6 +116,14 @@
 		98B55788283A0F3300F8CA3E /* ListHeaderBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55784283A0F3300F8CA3E /* ListHeaderBuilder.swift */; };
 		98B55789283A0F3300F8CA3E /* ListHeaderInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55785283A0F3300F8CA3E /* ListHeaderInteractor.swift */; };
 		98B5578C283A116D00F8CA3E /* ListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5578B283A116D00F8CA3E /* ListHeader.swift */; };
+		98B55792283A151D00F8CA3E /* MomentsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5578E283A151D00F8CA3E /* MomentsRouter.swift */; };
+		98B55793283A151D00F8CA3E /* MomentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5578F283A151D00F8CA3E /* MomentsViewController.swift */; };
+		98B55794283A151D00F8CA3E /* MomentsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55790283A151D00F8CA3E /* MomentsBuilder.swift */; };
+		98B55795283A151D00F8CA3E /* MomentsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55791283A151D00F8CA3E /* MomentsInteractor.swift */; };
+		98B55798283A177700F8CA3E /* Moments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55797283A177700F8CA3E /* Moments.swift */; };
+		98B5579A283A179900F8CA3E /* MomentsTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55799283A179900F8CA3E /* MomentsTag.swift */; };
+		98B5579D283A198F00F8CA3E /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5579C283A198E00F8CA3E /* UILabelExtension.swift */; };
+		98B5579F283A1AF600F8CA3E /* MomentsText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5579E283A1AF600F8CA3E /* MomentsText.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -276,6 +284,14 @@
 		98B55784283A0F3300F8CA3E /* ListHeaderBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeaderBuilder.swift; sourceTree = "<group>"; };
 		98B55785283A0F3300F8CA3E /* ListHeaderInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeaderInteractor.swift; sourceTree = "<group>"; };
 		98B5578B283A116D00F8CA3E /* ListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeader.swift; sourceTree = "<group>"; };
+		98B5578E283A151D00F8CA3E /* MomentsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MomentsRouter.swift; path = Menual/Platform/DesignSystemRIB/Moments/MomentsRouter.swift; sourceTree = SOURCE_ROOT; };
+		98B5578F283A151D00F8CA3E /* MomentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MomentsViewController.swift; path = Menual/Platform/DesignSystemRIB/Moments/MomentsViewController.swift; sourceTree = SOURCE_ROOT; };
+		98B55790283A151D00F8CA3E /* MomentsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MomentsBuilder.swift; path = Menual/Platform/DesignSystemRIB/Moments/MomentsBuilder.swift; sourceTree = SOURCE_ROOT; };
+		98B55791283A151D00F8CA3E /* MomentsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MomentsInteractor.swift; path = Menual/Platform/DesignSystemRIB/Moments/MomentsInteractor.swift; sourceTree = SOURCE_ROOT; };
+		98B55797283A177700F8CA3E /* Moments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Moments.swift; sourceTree = "<group>"; };
+		98B55799283A179900F8CA3E /* MomentsTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsTag.swift; sourceTree = "<group>"; };
+		98B5579C283A198E00F8CA3E /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
+		98B5579E283A1AF600F8CA3E /* MomentsText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsText.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -351,6 +367,7 @@
 		98239BE127E3234F00E216F1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				98B5579B283A198200F8CA3E /* UILabelExtension */,
 				98B5578A283A115B00F8CA3E /* ListHeader */,
 				98B5575F2838959900F8CA3E /* BoxButton */,
 				98F3A2742813C9C0000851F0 /* Segmentation */,
@@ -366,6 +383,9 @@
 			isa = PBXGroup;
 			children = (
 				98239BE527E323CB00E216F1 /* MomentsRoundView.swift */,
+				98B55797283A177700F8CA3E /* Moments.swift */,
+				98B55799283A179900F8CA3E /* MomentsTag.swift */,
+				98B5579E283A1AF600F8CA3E /* MomentsText.swift */,
 			);
 			path = Moments;
 			sourceTree = "<group>";
@@ -738,6 +758,7 @@
 		98B557622838968D00F8CA3E /* DesignSystemRIB */ = {
 			isa = PBXGroup;
 			children = (
+				98B5578D283A150B00F8CA3E /* Moments */,
 				98B55781283A0F2600F8CA3E /* ListHeader */,
 				98B55778283A030300F8CA3E /* GNBHeader */,
 				98B5576F2838A4E200F8CA3E /* BoxButton */,
@@ -789,6 +810,25 @@
 				98B5578B283A116D00F8CA3E /* ListHeader.swift */,
 			);
 			path = ListHeader;
+			sourceTree = "<group>";
+		};
+		98B5578D283A150B00F8CA3E /* Moments */ = {
+			isa = PBXGroup;
+			children = (
+				98B5578E283A151D00F8CA3E /* MomentsRouter.swift */,
+				98B5578F283A151D00F8CA3E /* MomentsViewController.swift */,
+				98B55790283A151D00F8CA3E /* MomentsBuilder.swift */,
+				98B55791283A151D00F8CA3E /* MomentsInteractor.swift */,
+			);
+			path = Moments;
+			sourceTree = "<group>";
+		};
+		98B5579B283A198200F8CA3E /* UILabelExtension */ = {
+			isa = PBXGroup;
+			children = (
+				98B5579C283A198E00F8CA3E /* UILabelExtension.swift */,
+			);
+			path = UILabelExtension;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -1179,6 +1219,7 @@
 				98A2BD9D280A833000C1FB92 /* DiaryDetailViewController.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
 				9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */,
+				98B55794283A151D00F8CA3E /* MomentsBuilder.swift in Sources */,
 				98C24F5427F0264700E6768C /* I18N.swift in Sources */,
 				98B55788283A0F3300F8CA3E /* ListHeaderBuilder.swift in Sources */,
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
@@ -1200,6 +1241,7 @@
 				98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */,
 				98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */,
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
+				98B5579D283A198F00F8CA3E /* UILabelExtension.swift in Sources */,
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				98B5574D281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift in Sources */,
 				988A2D5A27F97A000046C43A /* DiaryMomentsBuilder.swift in Sources */,
@@ -1222,11 +1264,13 @@
 				988A2D68280166AA0046C43A /* DiaryModel.swift in Sources */,
 				98F3A27E28150052000851F0 /* DiaryBottomSheetRouter.swift in Sources */,
 				988A2D5B27F97A000046C43A /* DiaryMomentsInteractor.swift in Sources */,
+				98B5579F283A1AF600F8CA3E /* MomentsText.swift in Sources */,
 				98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */,
 				98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
 				985E0F0627C232E300057951 /* RegisterPWBuilder.swift in Sources */,
 				98B55761283895B900F8CA3E /* BoxButton.swift in Sources */,
+				98B55795283A151D00F8CA3E /* MomentsInteractor.swift in Sources */,
 				98B55743281CFF5B00F8CA3E /* DiarySearchCell.swift in Sources */,
 				98F3A28028150052000851F0 /* DiaryBottomSheetBuilder.swift in Sources */,
 				98F3A2762813C9D8000851F0 /* MenualSegmentationBaseViewController.swift in Sources */,
@@ -1242,6 +1286,8 @@
 				98F3A2782813E561000851F0 /* MenualBottomSheetCell.swift in Sources */,
 				98B5578C283A116D00F8CA3E /* ListHeader.swift in Sources */,
 				98B5574B281E426900F8CA3E /* PlaceModel.swift in Sources */,
+				98B5579A283A179900F8CA3E /* MomentsTag.swift in Sources */,
+				98B55793283A151D00F8CA3E /* MomentsViewController.swift in Sources */,
 				98B5577D283A031400F8CA3E /* GNBHeaderRouter.swift in Sources */,
 				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,
 				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
@@ -1257,6 +1303,7 @@
 				98F3A28128150052000851F0 /* DiaryBottomSheetInteractor.swift in Sources */,
 				98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */,
 				985E0F0427C232E300057951 /* RegisterPWRouter.swift in Sources */,
+				98B55798283A177700F8CA3E /* Moments.swift in Sources */,
 				98A2BD9E280A833000C1FB92 /* DiaryDetailBuilder.swift in Sources */,
 				988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */,
 				985E0F0D27C2690500057951 /* LoginHomeRouter.swift in Sources */,
@@ -1272,6 +1319,7 @@
 				98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */,
 				9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */,
 				980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */,
+				98B55792283A151D00F8CA3E /* MomentsRouter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1467,7 +1515,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1500,7 +1548,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1531,7 +1579,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1557,7 +1605,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1582,7 +1630,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1606,7 +1654,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

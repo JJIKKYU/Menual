@@ -19,6 +19,9 @@ protocol DesignSystemRouting: ViewableRouting {
     
     func attachListHeaderVC()
     func detachListHeaderVC(isOnlyDetach: Bool)
+    
+    func attachMomentsVC()
+    func detachMomentsVC(isOnlyDetach: Bool)
 }
 
 protocol DesignSystemPresentable: Presentable {
@@ -94,5 +97,13 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     
     func listHeaderPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachListHeaderVC(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedMomentsCell() {
+        router?.attachMomentsVC()
+    }
+    
+    func momentsPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachMomentsVC(isOnlyDetach: isOnlyDetach)
     }
 }

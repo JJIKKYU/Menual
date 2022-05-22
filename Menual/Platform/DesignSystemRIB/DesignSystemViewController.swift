@@ -21,6 +21,7 @@ protocol DesignSystemPresentableListener: AnyObject {
     func pressedBoxButtonCell()
     func pressedGnbHeaderCell()
     func pressedListHeaderCell()
+    func pressedMomentsCell()
 }
 
 final class DesignSystemViewController: UIViewController, DesignSystemPresentable, DesignSystemViewControllable {
@@ -104,6 +105,38 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         
         guard let data = listener?.designSystemVariation else { return UITableViewCell() }
         cell.title = data[safe: indexPath.row] ?? ""
+        
+        switch data[indexPath.row] {
+        case "GNB Header":
+            cell.backgroundColor = Colors.tint.main.v400
+            break
+        case "Badges":
+            break
+        case "Capsule Button":
+            break
+        case "Box Button":
+            cell.backgroundColor = Colors.tint.main.v400
+            break
+        case "Tabs":
+            break
+        case "FAB":
+            break
+        case "List Header":
+            cell.backgroundColor = Colors.tint.main.v400
+            break
+        case "Pagination":
+            break
+        case "Divider":
+            break
+        case "Moments":
+            cell.backgroundColor = Colors.tint.main.v400
+            break
+        case "List":
+            break
+        default:
+            break
+        }
+        
         return cell
     }
     
@@ -135,6 +168,7 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         case "Divider":
             break
         case "Moments":
+            listener?.pressedMomentsCell()
             break
         case "List":
             break

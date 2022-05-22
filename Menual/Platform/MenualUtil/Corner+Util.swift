@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 enum CornerType {
+    case _2pt
     case _4pt
     case tiny
     case small
@@ -23,6 +24,8 @@ extension UIView {
      */
     func AppCorner(_ type: CornerType) {
         switch type {
+        case ._2pt:
+            layer.cornerRadius = 2
         case ._4pt:
             layer.cornerRadius = 4
         case .tiny:
