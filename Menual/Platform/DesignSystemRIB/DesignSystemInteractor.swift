@@ -22,6 +22,9 @@ protocol DesignSystemRouting: ViewableRouting {
     
     func attachMomentsVC()
     func detachMomentsVC(isOnlyDetach: Bool)
+    
+    func attachDividerVC()
+    func detachDividerVC(isOnlyDetach: Bool)
 }
 
 protocol DesignSystemPresentable: Presentable {
@@ -105,5 +108,13 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     
     func momentsPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachMomentsVC(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedDividerCell() {
+        router?.attachDividerVC()
+    }
+    
+    func dividerPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachDividerVC(isOnlyDetach: isOnlyDetach)
     }
 }

@@ -46,11 +46,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.rightButton2.setImage(Asset._24px.search.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.rightButton2.addTarget(self, action: #selector(pressedSearchBtn), for: .touchUpInside)
         
-        #if DEBUG
+        // #if DEBUG
         $0.menualTitleImage.isUserInteractionEnabled = true
         let gesture = UITapGestureRecognizer(target: self, action: #selector(pressedMenualBtn))
         $0.menualTitleImage.addGestureRecognizer(gesture)
-        #endif
+        // #endif
     }
     
     lazy var scrollView = UIScrollView().then {

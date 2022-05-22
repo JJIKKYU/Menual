@@ -124,6 +124,11 @@
 		98B5579A283A179900F8CA3E /* MomentsTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55799283A179900F8CA3E /* MomentsTag.swift */; };
 		98B5579D283A198F00F8CA3E /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5579C283A198E00F8CA3E /* UILabelExtension.swift */; };
 		98B5579F283A1AF600F8CA3E /* MomentsText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5579E283A1AF600F8CA3E /* MomentsText.swift */; };
+		98B557A5283A3E7900F8CA3E /* DividerRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557A1283A3E7900F8CA3E /* DividerRouter.swift */; };
+		98B557A6283A3E7900F8CA3E /* DividerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557A2283A3E7900F8CA3E /* DividerViewController.swift */; };
+		98B557A7283A3E7900F8CA3E /* DividerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557A3283A3E7900F8CA3E /* DividerBuilder.swift */; };
+		98B557A8283A3E7900F8CA3E /* DividerInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557A4283A3E7900F8CA3E /* DividerInteractor.swift */; };
+		98B557AB283A413F00F8CA3E /* Divider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557AA283A413F00F8CA3E /* Divider.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -292,6 +297,11 @@
 		98B55799283A179900F8CA3E /* MomentsTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsTag.swift; sourceTree = "<group>"; };
 		98B5579C283A198E00F8CA3E /* UILabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
 		98B5579E283A1AF600F8CA3E /* MomentsText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsText.swift; sourceTree = "<group>"; };
+		98B557A1283A3E7900F8CA3E /* DividerRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerRouter.swift; sourceTree = "<group>"; };
+		98B557A2283A3E7900F8CA3E /* DividerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerViewController.swift; sourceTree = "<group>"; };
+		98B557A3283A3E7900F8CA3E /* DividerBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerBuilder.swift; sourceTree = "<group>"; };
+		98B557A4283A3E7900F8CA3E /* DividerInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerInteractor.swift; sourceTree = "<group>"; };
+		98B557AA283A413F00F8CA3E /* Divider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Divider.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -367,6 +377,7 @@
 		98239BE127E3234F00E216F1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				98B557A9283A412500F8CA3E /* Divider */,
 				98B5579B283A198200F8CA3E /* UILabelExtension */,
 				98B5578A283A115B00F8CA3E /* ListHeader */,
 				98B5575F2838959900F8CA3E /* BoxButton */,
@@ -758,6 +769,7 @@
 		98B557622838968D00F8CA3E /* DesignSystemRIB */ = {
 			isa = PBXGroup;
 			children = (
+				98B557A0283A3E6400F8CA3E /* Divider */,
 				98B5578D283A150B00F8CA3E /* Moments */,
 				98B55781283A0F2600F8CA3E /* ListHeader */,
 				98B55778283A030300F8CA3E /* GNBHeader */,
@@ -829,6 +841,25 @@
 				98B5579C283A198E00F8CA3E /* UILabelExtension.swift */,
 			);
 			path = UILabelExtension;
+			sourceTree = "<group>";
+		};
+		98B557A0283A3E6400F8CA3E /* Divider */ = {
+			isa = PBXGroup;
+			children = (
+				98B557A1283A3E7900F8CA3E /* DividerRouter.swift */,
+				98B557A2283A3E7900F8CA3E /* DividerViewController.swift */,
+				98B557A3283A3E7900F8CA3E /* DividerBuilder.swift */,
+				98B557A4283A3E7900F8CA3E /* DividerInteractor.swift */,
+			);
+			path = Divider;
+			sourceTree = "<group>";
+		};
+		98B557A9283A412500F8CA3E /* Divider */ = {
+			isa = PBXGroup;
+			children = (
+				98B557AA283A413F00F8CA3E /* Divider.swift */,
+			);
+			path = Divider;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -1222,6 +1253,7 @@
 				98B55794283A151D00F8CA3E /* MomentsBuilder.swift in Sources */,
 				98C24F5427F0264700E6768C /* I18N.swift in Sources */,
 				98B55788283A0F3300F8CA3E /* ListHeaderBuilder.swift in Sources */,
+				98B557A6283A3E7900F8CA3E /* DividerViewController.swift in Sources */,
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				98A2BDA1280A87E300C1FB92 /* Swift+Util.swift in Sources */,
 				98B55749281E426300F8CA3E /* WeatherModel.swift in Sources */,
@@ -1231,6 +1263,7 @@
 				98B557742838A4ED00F8CA3E /* BoxButtonRouter.swift in Sources */,
 				988A2D5827F97A000046C43A /* DiaryMomentsRouter.swift in Sources */,
 				98A2BD9F280A833000C1FB92 /* DiaryDetailInteractor.swift in Sources */,
+				98B557AB283A413F00F8CA3E /* Divider.swift in Sources */,
 				98F3A28328152C04000851F0 /* BottomSheetSelectView.swift in Sources */,
 				98B5576A283896AA00F8CA3E /* DesignSystemInteractor.swift in Sources */,
 				988A2D5927F97A000046C43A /* DiaryMomentsViewController.swift in Sources */,
@@ -1238,6 +1271,7 @@
 				989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */,
 				98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */,
 				98B55789283A0F3300F8CA3E /* ListHeaderInteractor.swift in Sources */,
+				98B557A5283A3E7900F8CA3E /* DividerRouter.swift in Sources */,
 				98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */,
 				98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */,
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
@@ -1252,6 +1286,7 @@
 				988A2D3B27F82F3B0046C43A /* ViewControllableMock.swift in Sources */,
 				98C24F5D27F05A0200E6768C /* TitleView.swift in Sources */,
 				985E0F1327C2750D00057951 /* AdaptivePresentationControllerDelegate.swift in Sources */,
+				98B557A8283A3E7900F8CA3E /* DividerInteractor.swift in Sources */,
 				9888DE1B276483DD0091918F /* AppRootComponent.swift in Sources */,
 				988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */,
 				985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */,
@@ -1311,6 +1346,7 @@
 				98B557752838A4ED00F8CA3E /* BoxButtonViewController.swift in Sources */,
 				989AE04627F0900800177573 /* DiarySearchInteractor.swift in Sources */,
 				98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */,
+				98B557A7283A3E7900F8CA3E /* DividerBuilder.swift in Sources */,
 				98B55768283896AA00F8CA3E /* DesignSystemViewController.swift in Sources */,
 				980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */,
 				989AE04327F0900800177573 /* DiarySearchRouter.swift in Sources */,
@@ -1515,7 +1551,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1548,7 +1584,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1579,7 +1615,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1605,7 +1641,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1630,7 +1666,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1654,7 +1690,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

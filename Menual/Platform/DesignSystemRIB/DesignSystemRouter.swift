@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener {
+protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener {
     var router: DesignSystemRouting? { get set }
     var listener: DesignSystemListener? { get set }
 }
@@ -30,6 +30,9 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
     private let momentsBuildable: MomentsBuildable
     private var momentsRouting: Routing?
     
+    private let dividerBuildable: DividerBuildable
+    private var dividerRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DesignSystemInteractable,
@@ -37,12 +40,14 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         boxButtonBuildable: BoxButtonBuildable,
         gnbHeaderBuildable: GNBHeaderBuildable,
         listHeaderBuildable: ListHeaderBuildable,
-        momentsBuildable: MomentsBuildable
+        momentsBuildable: MomentsBuildable,
+        dividerBuildable: DividerBuildable
     ) {
         self.boxButtonBuildable = boxButtonBuildable
         self.gnbHeaderBuildable = gnbHeaderBuildable
         self.listHeaderBuildable = listHeaderBuildable
         self.momentsBuildable = momentsBuildable
+        self.dividerBuildable = dividerBuildable
         super.init(interactor: interactor,
                    viewController: viewController
         )
@@ -151,5 +156,31 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         
         detachChild(router)
         momentsRouting = nil
+    }
+    
+    // MARK: - Divider DesignSystem RIBs
+    func attachDividerVC() {
+        if dividerRouting != nil {
+            return
+        }
+        
+        let router = dividerBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        dividerRouting = router
+        attachChild(router)
+    }
+    
+    func detachDividerVC(isOnlyDetach: Bool) {
+        guard let router = dividerRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        dividerRouting = nil
     }
 }

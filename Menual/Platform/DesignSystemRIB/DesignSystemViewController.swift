@@ -22,6 +22,7 @@ protocol DesignSystemPresentableListener: AnyObject {
     func pressedGnbHeaderCell()
     func pressedListHeaderCell()
     func pressedMomentsCell()
+    func pressedDividerCell()
 }
 
 final class DesignSystemViewController: UIViewController, DesignSystemPresentable, DesignSystemViewControllable {
@@ -127,6 +128,7 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         case "Pagination":
             break
         case "Divider":
+            cell.backgroundColor = Colors.tint.main.v400
             break
         case "Moments":
             cell.backgroundColor = Colors.tint.main.v400
@@ -166,6 +168,7 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         case "Pagination":
             break
         case "Divider":
+            listener?.pressedDividerCell()
             break
         case "Moments":
             listener?.pressedMomentsCell()
