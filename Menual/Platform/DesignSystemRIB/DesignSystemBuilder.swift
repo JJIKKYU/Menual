@@ -12,7 +12,7 @@ protocol DesignSystemDependency: Dependency {
     // created by this RIB.
 }
 
-final class DesignSystemComponent: Component<DesignSystemDependency>, BoxButtonDependency {
+final class DesignSystemComponent: Component<DesignSystemDependency>, BoxButtonDependency, GNBHeaderDependency {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
@@ -33,6 +33,7 @@ final class DesignSystemBuilder: Builder<DesignSystemDependency>, DesignSystemBu
         let component = DesignSystemComponent(dependency: dependency)
         
         let boxButtonBuildable = BoxButtonBuilder(dependency: component)
+        let gnbHeaderBuildable = GNBHeaderBuilder(dependency: component)
         
         let viewController = DesignSystemViewController()
         let interactor = DesignSystemInteractor(presenter: viewController)
@@ -40,7 +41,8 @@ final class DesignSystemBuilder: Builder<DesignSystemDependency>, DesignSystemBu
         return DesignSystemRouter(
             interactor: interactor,
             viewController: viewController,
-            boxButtonBuildable: boxButtonBuildable
+            boxButtonBuildable: boxButtonBuildable,
+            gnbHeaderBuildable: gnbHeaderBuildable
         )
     }
 }

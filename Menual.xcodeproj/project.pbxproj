@@ -107,6 +107,10 @@
 		98B557752838A4ED00F8CA3E /* BoxButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557712838A4ED00F8CA3E /* BoxButtonViewController.swift */; };
 		98B557762838A4ED00F8CA3E /* BoxButtonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557722838A4ED00F8CA3E /* BoxButtonBuilder.swift */; };
 		98B557772838A4ED00F8CA3E /* BoxButtonInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557732838A4ED00F8CA3E /* BoxButtonInteractor.swift */; };
+		98B5577D283A031400F8CA3E /* GNBHeaderRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55779283A031300F8CA3E /* GNBHeaderRouter.swift */; };
+		98B5577E283A031400F8CA3E /* GNBHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5577A283A031300F8CA3E /* GNBHeaderViewController.swift */; };
+		98B5577F283A031400F8CA3E /* GNBHeaderBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5577B283A031300F8CA3E /* GNBHeaderBuilder.swift */; };
+		98B55780283A031400F8CA3E /* GNBHeaderInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5577C283A031300F8CA3E /* GNBHeaderInteractor.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -258,6 +262,10 @@
 		98B557712838A4ED00F8CA3E /* BoxButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxButtonViewController.swift; sourceTree = "<group>"; };
 		98B557722838A4ED00F8CA3E /* BoxButtonBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxButtonBuilder.swift; sourceTree = "<group>"; };
 		98B557732838A4ED00F8CA3E /* BoxButtonInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxButtonInteractor.swift; sourceTree = "<group>"; };
+		98B55779283A031300F8CA3E /* GNBHeaderRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBHeaderRouter.swift; sourceTree = "<group>"; };
+		98B5577A283A031300F8CA3E /* GNBHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBHeaderViewController.swift; sourceTree = "<group>"; };
+		98B5577B283A031300F8CA3E /* GNBHeaderBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBHeaderBuilder.swift; sourceTree = "<group>"; };
+		98B5577C283A031300F8CA3E /* GNBHeaderInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBHeaderInteractor.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -719,6 +727,7 @@
 		98B557622838968D00F8CA3E /* DesignSystemRIB */ = {
 			isa = PBXGroup;
 			children = (
+				98B55778283A030300F8CA3E /* GNBHeader */,
 				98B5576F2838A4E200F8CA3E /* BoxButton */,
 				98B55763283896AA00F8CA3E /* DesignSystemRouter.swift */,
 				98B55764283896AA00F8CA3E /* DesignSystemViewController.swift */,
@@ -738,6 +747,17 @@
 				98B557732838A4ED00F8CA3E /* BoxButtonInteractor.swift */,
 			);
 			path = BoxButton;
+			sourceTree = "<group>";
+		};
+		98B55778283A030300F8CA3E /* GNBHeader */ = {
+			isa = PBXGroup;
+			children = (
+				98B55779283A031300F8CA3E /* GNBHeaderRouter.swift */,
+				98B5577A283A031300F8CA3E /* GNBHeaderViewController.swift */,
+				98B5577B283A031300F8CA3E /* GNBHeaderBuilder.swift */,
+				98B5577C283A031300F8CA3E /* GNBHeaderInteractor.swift */,
+			);
+			path = GNBHeader;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -1175,7 +1195,9 @@
 				98B55743281CFF5B00F8CA3E /* DiarySearchCell.swift in Sources */,
 				98F3A28028150052000851F0 /* DiaryBottomSheetBuilder.swift in Sources */,
 				98F3A2762813C9D8000851F0 /* MenualSegmentationBaseViewController.swift in Sources */,
+				98B5577F283A031400F8CA3E /* GNBHeaderBuilder.swift in Sources */,
 				989AE04427F0900800177573 /* DiarySearchViewController.swift in Sources */,
+				98B55780283A031400F8CA3E /* GNBHeaderInteractor.swift in Sources */,
 				985E0F0E27C2690500057951 /* LoginHomeViewController.swift in Sources */,
 				985E0F1027C2690500057951 /* LoginHomeInteractor.swift in Sources */,
 				988A2D5027F96BEF0046C43A /* Icons+Generated.swift in Sources */,
@@ -1184,6 +1206,7 @@
 				985E0EFC27C21E9900057951 /* RegisterHomeRouter.swift in Sources */,
 				98F3A2782813E561000851F0 /* MenualBottomSheetCell.swift in Sources */,
 				98B5574B281E426900F8CA3E /* PlaceModel.swift in Sources */,
+				98B5577D283A031400F8CA3E /* GNBHeaderRouter.swift in Sources */,
 				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,
 				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
 				98B557532830C7B200F8CA3E /* DiaryTempSaveRouter.swift in Sources */,
@@ -1208,6 +1231,7 @@
 				98B55768283896AA00F8CA3E /* DesignSystemViewController.swift in Sources */,
 				980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */,
 				989AE04327F0900800177573 /* DiarySearchRouter.swift in Sources */,
+				98B5577E283A031400F8CA3E /* GNBHeaderViewController.swift in Sources */,
 				98B5576C28389E6300F8CA3E /* DesignSystemCell.swift in Sources */,
 				98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */,
 				9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */,

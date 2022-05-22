@@ -19,6 +19,7 @@ protocol DesignSystemPresentableListener: AnyObject {
     var designSystemVariation: [String] { get }
     
     func pressedBoxButtonCell()
+    func pressedGnbHeaderCell()
 }
 
 final class DesignSystemViewController: UIViewController, DesignSystemPresentable, DesignSystemViewControllable {
@@ -112,6 +113,7 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         
         switch selectedData {
         case "GNB Header":
+            listener?.pressedGnbHeaderCell()
             break
         case "Badges":
             break

@@ -17,11 +17,8 @@ public protocol MenualNaviViewProtocol {
 /// 뷰마다 NavigationType 정의
 enum NaviViewType {
     case main
-    /// moments, search, myPage는 동일한 case로 취금
     case moments
-    /// moments, search, myPage는 동일한 case로 취금
     case search
-    /// moments, search, myPage는 동일한 case로 취금
     case myPage
     
     case write
@@ -67,6 +64,10 @@ class MenualNaviView: UIView {
         $0.contentHorizontalAlignment = .fill
         $0.contentVerticalAlignment = .fill
         $0.isHidden = true
+    }
+    
+    var rightButton1IsActive: Bool = false {
+        didSet { setNeedsLayout() }
     }
     
     // 오른쪽에서 2번째
@@ -156,31 +157,121 @@ class MenualNaviView: UIView {
             rightButton1.isHidden = false
             rightButton2.isHidden = false
             menualTitleImage.isHidden = false
-        case .moments, .search, .myPage:
-            backButton.isHidden = false
-            titleLabel.isHidden = false
+        case .moments:
+            titleLabel.text = "MOMENTS"
             titleLabel.font = UIFont.AppHead(.head_4)
+            backButton.isHidden = false
+            backButton.isHidden = false
+            backButton.tintColor = Colors.grey.g100
+            backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            titleLabel.isHidden = false
+        case .myPage:
+            titleLabel.text = "MY PAGE"
+            titleLabel.font = UIFont.AppHead(.head_4)
+            backButton.isHidden = false
+            backButton.isHidden = false
+            backButton.tintColor = Colors.grey.g100
+            backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            titleLabel.isHidden = false
+        case .search:
+            titleLabel.text = "SEARCH"
+            titleLabel.font = UIFont.AppHead(.head_4)
+            backButton.isHidden = false
+            backButton.isHidden = false
+            backButton.tintColor = Colors.grey.g100
+            backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            titleLabel.isHidden = false
         case .write:
+            titleLabel.isHidden = false
             titleLabel.font = UIFont.AppTitle(.title_3)
             titleLabel.text = "메뉴얼 작성"
             backButton.isHidden = false
             rightButton2.isHidden = false
+            rightButton2.setImage(Asset._24px.storage.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton2.tintColor = Colors.grey.g100
             rightButton1.isHidden = false
-            titleLabel.isHidden = false
+            rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton1.tintColor = Colors.grey.g600
         case .menualDetail:
+            titleLabel.isHidden = false
             titleLabel.text = "메뉴얼 상세"
             titleLabel.font = UIFont.AppTitle(.title_3)
+            backButton.isHidden = false
+            backButton.tintColor = Colors.grey.g100
+            backButton.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton1.isHidden = false
+            rightButton1.tintColor = Colors.grey.g100
+            rightButton1.setImage(Asset._24px.Alert.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton2.isHidden = true
             break
         case .edit:
+            titleLabel.isHidden = false
             titleLabel.text = "메뉴얼 수정"
             titleLabel.font = UIFont.AppTitle(.title_3)
+            backButton.isHidden = false
+            backButton.tintColor = Colors.grey.g100
+            backButton.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton1.isHidden = false
+            rightButton1.tintColor = Colors.grey.g600
+            rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton1.isUserInteractionEnabled = false
             break
         case .temporarySave:
-            titleLabel.text = "임시저장"
-            backButton.isHidden = false
-            rightButton1.isHidden = false
             titleLabel.isHidden = false
+            titleLabel.text = "임시저장"
             titleLabel.font = UIFont.AppTitle(.title_3)
+            backButton.isHidden = false
+            backButton.tintColor = Colors.grey.g100
+            backButton.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton1.isHidden = false
+            rightButton1.setImage(Asset._24px.delete.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton1.tintColor = Colors.grey.g100
+            break
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        switch naviViewType {
+        case .main:
+            break
+        case .moments:
+            break
+        case .search:
+            break
+        case .myPage:
+            break
+        case .write:
+            if rightButton1IsActive {
+                rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
+                rightButton1.tintColor = Colors.grey.g100
+                rightButton1.isUserInteractionEnabled = true
+            } else {
+                rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
+                rightButton1.tintColor = Colors.grey.g600
+                rightButton1.isUserInteractionEnabled = false
+            }
+            break
+        case .menualDetail:
+            if rightButton1IsActive {
+                rightButton1.setImage(Asset._24px.Alert.active.image.withRenderingMode(.alwaysTemplate), for: .normal)
+                rightButton1.tintColor = Colors.tint.sub.n400
+            } else {
+                rightButton1.tintColor = Colors.grey.g100
+                rightButton1.setImage(Asset._24px.Alert.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            }
+            break
+        case .edit:
+            if rightButton1IsActive {
+                rightButton1.tintColor = Colors.grey.g100
+                rightButton1.isUserInteractionEnabled = true
+            } else {
+                rightButton1.tintColor = Colors.grey.g600
+                rightButton1.isUserInteractionEnabled = false
+            }
+            break
+        case .temporarySave:
             break
         }
     }

@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DesignSystemInteractable: Interactable, BoxButtonListener {
+protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener {
     var router: DesignSystemRouting? { get set }
     var listener: DesignSystemListener? { get set }
 }
@@ -21,13 +21,18 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
     private let boxButtonBuildable: BoxButtonBuildable
     private var boxButtonRouting: Routing?
     
+    private let gnbHeaderBuildable: GNBHeaderBuildable
+    private var gnbHeaderRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DesignSystemInteractable,
         viewController: DesignSystemViewControllable,
-        boxButtonBuildable: BoxButtonBuildable
+        boxButtonBuildable: BoxButtonBuildable,
+        gnbHeaderBuildable: GNBHeaderBuildable
     ) {
         self.boxButtonBuildable = boxButtonBuildable
+        self.gnbHeaderBuildable = gnbHeaderBuildable
         super.init(interactor: interactor,
                    viewController: viewController
         )
@@ -51,7 +56,6 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         guard let router = boxButtonRouting else {
             return
         }
-        print("detachBoxButtonVC, isOnlyDetach = \(isOnlyDetach)")
 
         if !isOnlyDetach {
             viewController.popViewController(animated: true)
@@ -59,5 +63,31 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
 
         detachChild(router)
         boxButtonRouting = nil
+    }
+    
+    // MARK: - GNB Header DesignSystem RIBs
+    func attachGnbHeaderVC() {
+        if gnbHeaderRouting != nil {
+            return
+        }
+        
+        let router = gnbHeaderBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        gnbHeaderRouting = router
+        attachChild(router)
+    }
+    
+    func detachGnbHeaderVC(isOnlyDetach: Bool) {
+        guard let router = gnbHeaderRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        gnbHeaderRouting = nil
     }
 }

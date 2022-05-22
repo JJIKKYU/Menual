@@ -13,6 +13,9 @@ protocol DesignSystemRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
     func attachBoxButtonVC()
     func detachBoxButtonVC(isOnlyDetach: Bool)
+    
+    func attachGnbHeaderVC()
+    func detachGnbHeaderVC(isOnlyDetach: Bool)
 }
 
 protocol DesignSystemPresentable: Presentable {
@@ -72,5 +75,13 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     
     func boxButtonPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachBoxButtonVC(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedGnbHeaderCell() {
+        router?.attachGnbHeaderVC()
+    }
+    
+    func gnbHeaderPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachGnbHeaderVC(isOnlyDetach: isOnlyDetach)
     }
 }
