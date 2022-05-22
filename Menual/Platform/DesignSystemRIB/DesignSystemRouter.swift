@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener {
+protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener {
     var router: DesignSystemRouting? { get set }
     var listener: DesignSystemListener? { get set }
 }
@@ -18,21 +18,27 @@ protocol DesignSystemViewControllable: ViewControllable {
 
 final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignSystemViewControllable>, DesignSystemRouting {
 
+
     private let boxButtonBuildable: BoxButtonBuildable
     private var boxButtonRouting: Routing?
     
     private let gnbHeaderBuildable: GNBHeaderBuildable
     private var gnbHeaderRouting: Routing?
     
+    private let listHeaderBuildable: ListHeaderBuildable
+    private var listHeaderRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DesignSystemInteractable,
         viewController: DesignSystemViewControllable,
         boxButtonBuildable: BoxButtonBuildable,
-        gnbHeaderBuildable: GNBHeaderBuildable
+        gnbHeaderBuildable: GNBHeaderBuildable,
+        listHeaderBuildable: ListHeaderBuildable
     ) {
         self.boxButtonBuildable = boxButtonBuildable
         self.gnbHeaderBuildable = gnbHeaderBuildable
+        self.listHeaderBuildable = listHeaderBuildable
         super.init(interactor: interactor,
                    viewController: viewController
         )
@@ -89,5 +95,31 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         
         detachChild(router)
         gnbHeaderRouting = nil
+    }
+    
+    // MARK: - List Header DesignSystem RIBs
+    func attachListHeaderVC() {
+        if listHeaderRouting != nil {
+            return
+        }
+        
+        let router = listHeaderBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        listHeaderRouting = router
+        attachChild(router)
+    }
+    
+    func detachListHeaderVC(isOnlyDetach: Bool) {
+        guard let router = listHeaderRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        listHeaderRouting = nil
     }
 }

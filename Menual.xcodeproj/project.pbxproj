@@ -111,6 +111,11 @@
 		98B5577E283A031400F8CA3E /* GNBHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5577A283A031300F8CA3E /* GNBHeaderViewController.swift */; };
 		98B5577F283A031400F8CA3E /* GNBHeaderBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5577B283A031300F8CA3E /* GNBHeaderBuilder.swift */; };
 		98B55780283A031400F8CA3E /* GNBHeaderInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5577C283A031300F8CA3E /* GNBHeaderInteractor.swift */; };
+		98B55786283A0F3300F8CA3E /* ListHeaderRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55782283A0F3300F8CA3E /* ListHeaderRouter.swift */; };
+		98B55787283A0F3300F8CA3E /* ListHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55783283A0F3300F8CA3E /* ListHeaderViewController.swift */; };
+		98B55788283A0F3300F8CA3E /* ListHeaderBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55784283A0F3300F8CA3E /* ListHeaderBuilder.swift */; };
+		98B55789283A0F3300F8CA3E /* ListHeaderInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55785283A0F3300F8CA3E /* ListHeaderInteractor.swift */; };
+		98B5578C283A116D00F8CA3E /* ListHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B5578B283A116D00F8CA3E /* ListHeader.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -266,6 +271,11 @@
 		98B5577A283A031300F8CA3E /* GNBHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBHeaderViewController.swift; sourceTree = "<group>"; };
 		98B5577B283A031300F8CA3E /* GNBHeaderBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBHeaderBuilder.swift; sourceTree = "<group>"; };
 		98B5577C283A031300F8CA3E /* GNBHeaderInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GNBHeaderInteractor.swift; sourceTree = "<group>"; };
+		98B55782283A0F3300F8CA3E /* ListHeaderRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeaderRouter.swift; sourceTree = "<group>"; };
+		98B55783283A0F3300F8CA3E /* ListHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeaderViewController.swift; sourceTree = "<group>"; };
+		98B55784283A0F3300F8CA3E /* ListHeaderBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeaderBuilder.swift; sourceTree = "<group>"; };
+		98B55785283A0F3300F8CA3E /* ListHeaderInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeaderInteractor.swift; sourceTree = "<group>"; };
+		98B5578B283A116D00F8CA3E /* ListHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeader.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -341,6 +351,7 @@
 		98239BE127E3234F00E216F1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				98B5578A283A115B00F8CA3E /* ListHeader */,
 				98B5575F2838959900F8CA3E /* BoxButton */,
 				98F3A2742813C9C0000851F0 /* Segmentation */,
 				98F3A26F2813BD8F000851F0 /* BottomSheet */,
@@ -727,6 +738,7 @@
 		98B557622838968D00F8CA3E /* DesignSystemRIB */ = {
 			isa = PBXGroup;
 			children = (
+				98B55781283A0F2600F8CA3E /* ListHeader */,
 				98B55778283A030300F8CA3E /* GNBHeader */,
 				98B5576F2838A4E200F8CA3E /* BoxButton */,
 				98B55763283896AA00F8CA3E /* DesignSystemRouter.swift */,
@@ -758,6 +770,25 @@
 				98B5577C283A031300F8CA3E /* GNBHeaderInteractor.swift */,
 			);
 			path = GNBHeader;
+			sourceTree = "<group>";
+		};
+		98B55781283A0F2600F8CA3E /* ListHeader */ = {
+			isa = PBXGroup;
+			children = (
+				98B55782283A0F3300F8CA3E /* ListHeaderRouter.swift */,
+				98B55783283A0F3300F8CA3E /* ListHeaderViewController.swift */,
+				98B55784283A0F3300F8CA3E /* ListHeaderBuilder.swift */,
+				98B55785283A0F3300F8CA3E /* ListHeaderInteractor.swift */,
+			);
+			path = ListHeader;
+			sourceTree = "<group>";
+		};
+		98B5578A283A115B00F8CA3E /* ListHeader */ = {
+			isa = PBXGroup;
+			children = (
+				98B5578B283A116D00F8CA3E /* ListHeader.swift */,
+			);
+			path = ListHeader;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -1140,6 +1171,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */,
+				98B55786283A0F3300F8CA3E /* ListHeaderRouter.swift in Sources */,
 				98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */,
 				980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */,
 				98B557772838A4ED00F8CA3E /* BoxButtonInteractor.swift in Sources */,
@@ -1148,6 +1180,7 @@
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
 				9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */,
 				98C24F5427F0264700E6768C /* I18N.swift in Sources */,
+				98B55788283A0F3300F8CA3E /* ListHeaderBuilder.swift in Sources */,
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				98A2BDA1280A87E300C1FB92 /* Swift+Util.swift in Sources */,
 				98B55749281E426300F8CA3E /* WeatherModel.swift in Sources */,
@@ -1163,6 +1196,7 @@
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
 				989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */,
 				98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */,
+				98B55789283A0F3300F8CA3E /* ListHeaderInteractor.swift in Sources */,
 				98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */,
 				98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */,
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
@@ -1183,6 +1217,7 @@
 				9888DE142764825F0091918F /* AppRootRouter.swift in Sources */,
 				98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */,
 				985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */,
+				98B55787283A0F3300F8CA3E /* ListHeaderViewController.swift in Sources */,
 				98B5575E2830F0FF00F8CA3E /* TempSaveCell.swift in Sources */,
 				988A2D68280166AA0046C43A /* DiaryModel.swift in Sources */,
 				98F3A27E28150052000851F0 /* DiaryBottomSheetRouter.swift in Sources */,
@@ -1205,6 +1240,7 @@
 				985E0F0727C232E300057951 /* RegisterPWInteractor.swift in Sources */,
 				985E0EFC27C21E9900057951 /* RegisterHomeRouter.swift in Sources */,
 				98F3A2782813E561000851F0 /* MenualBottomSheetCell.swift in Sources */,
+				98B5578C283A116D00F8CA3E /* ListHeader.swift in Sources */,
 				98B5574B281E426900F8CA3E /* PlaceModel.swift in Sources */,
 				98B5577D283A031400F8CA3E /* GNBHeaderRouter.swift in Sources */,
 				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,

@@ -20,6 +20,7 @@ protocol DesignSystemPresentableListener: AnyObject {
     
     func pressedBoxButtonCell()
     func pressedGnbHeaderCell()
+    func pressedListHeaderCell()
 }
 
 final class DesignSystemViewController: UIViewController, DesignSystemPresentable, DesignSystemViewControllable {
@@ -127,6 +128,7 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         case "FAB":
             break
         case "List Header":
+            listener?.pressedListHeaderCell()
             break
         case "Pagination":
             break
