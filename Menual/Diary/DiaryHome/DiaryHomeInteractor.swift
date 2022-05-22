@@ -21,7 +21,7 @@ protocol DiaryHomeRouting: ViewableRouting {
     func attachDiaryDetail(model: DiaryModel)
     func detachDiaryDetail()
     func attachDesignSystem()
-    func detachDesignSystem()
+    func detachDesignSystem(isOnlyDetach: Bool)
 }
 
 protocol DiaryHomePresentable: Presentable {
@@ -190,7 +190,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         router?.attachDesignSystem()
     }
     
-    func designSystemPressedBackBtn() {
-        router?.detachDesignSystem()
+    func designSystemPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachDesignSystem(isOnlyDetach: isOnlyDetach)
     }
 }

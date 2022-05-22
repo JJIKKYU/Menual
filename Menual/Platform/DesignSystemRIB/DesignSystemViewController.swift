@@ -8,19 +8,21 @@
 import RIBs
 import RxSwift
 import SnapKit
+import RxRelay
 import UIKit
 
 protocol DesignSystemPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
     // business logic, such as signIn(). This protocol is implemented by the corresponding
     // interactor class.
-    func pressedBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool)
     var designSystemVariation: [String] { get }
     
     func pressedBoxButtonCell()
 }
 
 final class DesignSystemViewController: UIViewController, DesignSystemPresentable, DesignSystemViewControllable {
+    var detachRelay: BehaviorRelay<Bool>?
     weak var listener: DesignSystemPresentableListener?
     
     lazy var naviView = MenualNaviView(type: .moments).then {
@@ -52,6 +54,7 @@ final class DesignSystemViewController: UIViewController, DesignSystemPresentabl
         super.viewDidLoad()
         setViews()
         print("이거 됨? \(listener?.designSystemVariation)")
+        detachRelay?.accept(true)
     }
     
     func setViews() {
@@ -63,7 +66,7 @@ final class DesignSystemViewController: UIViewController, DesignSystemPresentabl
         naviView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalToSuperview()
-            make.centerWithinMargins.equalToSuperview()
+            make.width.equalToSuperview()
             make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
         }
         
@@ -75,9 +78,16 @@ final class DesignSystemViewController: UIViewController, DesignSystemPresentabl
         }
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if isMovingFromParent || isBeingDismissed {
+            listener?.pressedBackBtn(isOnlyDetach: true)
+        }
+    }
+    
     @objc
     func pressedBackBtn() {
-        listener?.pressedBackBtn()
+        listener?.pressedBackBtn(isOnlyDetach: false)
     }
 }
 

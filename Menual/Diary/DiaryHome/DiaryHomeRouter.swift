@@ -232,12 +232,15 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         attachChild(router)
     }
     
-    func detachDesignSystem() {
+    func detachDesignSystem(isOnlyDetach: Bool) {
         guard let router = designSystemRouting else {
             return
         }
         
-        viewController.popViewController(animated: true)
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
         detachChild(router)
         designSystemRouting = nil
     }

@@ -47,12 +47,16 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         attachChild(router)
     }
     
-    func detachBoxButtonVC() {
+    func detachBoxButtonVC(isOnlyDetach: Bool) {
         guard let router = boxButtonRouting else {
             return
         }
+        print("detachBoxButtonVC, isOnlyDetach = \(isOnlyDetach)")
 
-        viewController.popViewController(animated: true)
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+
         detachChild(router)
         boxButtonRouting = nil
     }

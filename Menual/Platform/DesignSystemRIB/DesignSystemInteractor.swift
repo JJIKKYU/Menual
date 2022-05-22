@@ -7,11 +7,12 @@
 
 import RIBs
 import RxSwift
+import RxRelay
 
 protocol DesignSystemRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
     func attachBoxButtonVC()
-    func detachBoxButtonVC()
+    func detachBoxButtonVC(isOnlyDetach: Bool)
 }
 
 protocol DesignSystemPresentable: Presentable {
@@ -21,13 +22,14 @@ protocol DesignSystemPresentable: Presentable {
 
 protocol DesignSystemListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
-    func designSystemPressedBackBtn()
+    func designSystemPressedBackBtn(isOnlyDetach: Bool)
 }
 
 final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentable>, DesignSystemInteractable, DesignSystemPresentableListener {
 
     weak var router: DesignSystemRouting?
     weak var listener: DesignSystemListener?
+    private var disposeBag = DisposeBag()
     
     let designSystemVariation = [
         "GNB Header",
@@ -60,15 +62,15 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
         // TODO: Pause any business logic.
     }
     
-    func pressedBackBtn() {
-        listener?.designSystemPressedBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool) {
+        listener?.designSystemPressedBackBtn(isOnlyDetach: isOnlyDetach)
     }
     
     func pressedBoxButtonCell() {
         router?.attachBoxButtonVC()
     }
     
-    func boxButtonPressedBackBtn() {
-        router?.detachBoxButtonVC()
+    func boxButtonPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachBoxButtonVC(isOnlyDetach: isOnlyDetach)
     }
 }

@@ -19,7 +19,7 @@ protocol BoxButtonPresentable: Presentable {
 
 protocol BoxButtonListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
-    func boxButtonPressedBackBtn()
+    func boxButtonPressedBackBtn(isOnlyDetach: Bool)
 }
 
 final class BoxButtonInteractor: PresentableInteractor<BoxButtonPresentable>, BoxButtonInteractable, BoxButtonPresentableListener {
@@ -44,7 +44,7 @@ final class BoxButtonInteractor: PresentableInteractor<BoxButtonPresentable>, Bo
         // TODO: Pause any business logic.
     }
     
-    func pressedBackBtn() {
-        listener?.boxButtonPressedBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool) {
+        listener?.boxButtonPressedBackBtn(isOnlyDetach: isOnlyDetach)
     }
 }
