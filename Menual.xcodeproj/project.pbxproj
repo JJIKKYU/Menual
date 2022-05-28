@@ -134,6 +134,10 @@
 		98B557B3283A4A8300F8CA3E /* CapsuleButtonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557AF283A4A8300F8CA3E /* CapsuleButtonBuilder.swift */; };
 		98B557B4283A4A8300F8CA3E /* CapsuleButtonInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557B0283A4A8300F8CA3E /* CapsuleButtonInteractor.swift */; };
 		98B557B7283A4C6300F8CA3E /* CapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557B6283A4C6300F8CA3E /* CapsuleButton.swift */; };
+		98B557BD2841D11900F8CA3E /* ListRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557B92841D11800F8CA3E /* ListRouter.swift */; };
+		98B557BE2841D11900F8CA3E /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557BA2841D11800F8CA3E /* ListViewController.swift */; };
+		98B557BF2841D11900F8CA3E /* ListBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557BB2841D11800F8CA3E /* ListBuilder.swift */; };
+		98B557C02841D11900F8CA3E /* ListInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557BC2841D11800F8CA3E /* ListInteractor.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -312,6 +316,10 @@
 		98B557AF283A4A8300F8CA3E /* CapsuleButtonBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonBuilder.swift; sourceTree = "<group>"; };
 		98B557B0283A4A8300F8CA3E /* CapsuleButtonInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonInteractor.swift; sourceTree = "<group>"; };
 		98B557B6283A4C6300F8CA3E /* CapsuleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButton.swift; sourceTree = "<group>"; };
+		98B557B92841D11800F8CA3E /* ListRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRouter.swift; sourceTree = "<group>"; };
+		98B557BA2841D11800F8CA3E /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		98B557BB2841D11800F8CA3E /* ListBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBuilder.swift; sourceTree = "<group>"; };
+		98B557BC2841D11800F8CA3E /* ListInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInteractor.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -780,6 +788,7 @@
 		98B557622838968D00F8CA3E /* DesignSystemRIB */ = {
 			isa = PBXGroup;
 			children = (
+				98B557B82841D10600F8CA3E /* List */,
 				98B557AC283A4A6F00F8CA3E /* CapsuleButton */,
 				98B557A0283A3E6400F8CA3E /* Divider */,
 				98B5578D283A150B00F8CA3E /* Moments */,
@@ -891,6 +900,17 @@
 				98B557B6283A4C6300F8CA3E /* CapsuleButton.swift */,
 			);
 			path = CapsuleButton;
+			sourceTree = "<group>";
+		};
+		98B557B82841D10600F8CA3E /* List */ = {
+			isa = PBXGroup;
+			children = (
+				98B557B92841D11800F8CA3E /* ListRouter.swift */,
+				98B557BA2841D11800F8CA3E /* ListViewController.swift */,
+				98B557BB2841D11800F8CA3E /* ListBuilder.swift */,
+				98B557BC2841D11800F8CA3E /* ListInteractor.swift */,
+			);
+			path = List;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -1273,6 +1293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */,
+				98B557BF2841D11900F8CA3E /* ListBuilder.swift in Sources */,
 				98B55786283A0F3300F8CA3E /* ListHeaderRouter.swift in Sources */,
 				98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */,
 				980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */,
@@ -1310,6 +1331,7 @@
 				98B557B4283A4A8300F8CA3E /* CapsuleButtonInteractor.swift in Sources */,
 				98B557B2283A4A8300F8CA3E /* CapsuleButtonViewController.swift in Sources */,
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
+				98B557BE2841D11900F8CA3E /* ListViewController.swift in Sources */,
 				98B5574D281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift in Sources */,
 				988A2D5A27F97A000046C43A /* DiaryMomentsBuilder.swift in Sources */,
 				98B557762838A4ED00F8CA3E /* BoxButtonBuilder.swift in Sources */,
@@ -1352,6 +1374,7 @@
 				980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */,
 				985E0F0727C232E300057951 /* RegisterPWInteractor.swift in Sources */,
 				985E0EFC27C21E9900057951 /* RegisterHomeRouter.swift in Sources */,
+				98B557C02841D11900F8CA3E /* ListInteractor.swift in Sources */,
 				98F3A2782813E561000851F0 /* MenualBottomSheetCell.swift in Sources */,
 				98B5578C283A116D00F8CA3E /* ListHeader.swift in Sources */,
 				98B5574B281E426900F8CA3E /* PlaceModel.swift in Sources */,
@@ -1364,6 +1387,7 @@
 				98B55767283896AA00F8CA3E /* DesignSystemRouter.swift in Sources */,
 				98934A9C27E6F13700178A8E /* ProfileHomeInteractor.swift in Sources */,
 				988A2D6B280167D20046C43A /* DiaryRepository.swift in Sources */,
+				98B557BD2841D11900F8CA3E /* ListRouter.swift in Sources */,
 				98A2BD9C280A833000C1FB92 /* DiaryDetailRouter.swift in Sources */,
 				98B557552830C7B200F8CA3E /* DiaryTempSaveBuilder.swift in Sources */,
 				98B557B3283A4A8300F8CA3E /* CapsuleButtonBuilder.swift in Sources */,

@@ -28,6 +28,9 @@ protocol DesignSystemRouting: ViewableRouting {
     
     func attachCapsuleButtonVC()
     func detachCapsuleButtonVC(isOnlyDetach: Bool)
+    
+    func attachListVC()
+    func detachListVC(isOnlyDetach: Bool)
 }
 
 protocol DesignSystemPresentable: Presentable {
@@ -127,5 +130,13 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     
     func capsuleButtonPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachCapsuleButtonVC(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedListButtonCell() {
+        router?.attachListVC()
+    }
+    
+    func listPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachListVC(isOnlyDetach: isOnlyDetach)
     }
 }

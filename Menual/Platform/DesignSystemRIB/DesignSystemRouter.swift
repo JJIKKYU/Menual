@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener {
+protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener {
     var router: DesignSystemRouting? { get set }
     var listener: DesignSystemListener? { get set }
 }
@@ -36,6 +36,9 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
     private let capsuleButtonBuildable: CapsuleButtonBuildable
     private var capsuleButtonRouting: Routing?
     
+    private let listBuildable: ListBuildable
+    private var listRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DesignSystemInteractable,
@@ -45,7 +48,8 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         listHeaderBuildable: ListHeaderBuildable,
         momentsBuildable: MomentsBuildable,
         dividerBuildable: DividerBuildable,
-        capsuleButtonBuildable: CapsuleButtonBuildable
+        capsuleButtonBuildable: CapsuleButtonBuildable,
+        listBuildable: ListBuildable
     ) {
         self.boxButtonBuildable = boxButtonBuildable
         self.gnbHeaderBuildable = gnbHeaderBuildable
@@ -53,6 +57,7 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         self.momentsBuildable = momentsBuildable
         self.dividerBuildable = dividerBuildable
         self.capsuleButtonBuildable = capsuleButtonBuildable
+        self.listBuildable = listBuildable
         super.init(interactor: interactor,
                    viewController: viewController
         )
@@ -213,5 +218,31 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         
         detachChild(router)
         capsuleButtonRouting = nil
+    }
+    
+    // MARK: - List DesignSystem RIBs
+    func attachListVC() {
+        if listRouting != nil {
+            return
+        }
+        
+        let router = listBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        listRouting = router
+        attachChild(router)
+    }
+    
+    func detachListVC(isOnlyDetach: Bool) {
+        guard let router = listRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        listRouting = nil
     }
 }

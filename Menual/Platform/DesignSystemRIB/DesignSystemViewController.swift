@@ -24,6 +24,7 @@ protocol DesignSystemPresentableListener: AnyObject {
     func pressedMomentsCell()
     func pressedDividerCell()
     func pressedCapsuleButtonCell()
+    func pressedListButtonCell()
 }
 
 final class DesignSystemViewController: UIViewController, DesignSystemPresentable, DesignSystemViewControllable {
@@ -136,6 +137,7 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
             cell.backgroundColor = Colors.tint.main.v400
             break
         case "List":
+            cell.backgroundColor = Colors.tint.main.v400
             break
         default:
             break
@@ -177,6 +179,7 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
             listener?.pressedMomentsCell()
             break
         case "List":
+            listener?.pressedListButtonCell()
             break
         default:
             break
