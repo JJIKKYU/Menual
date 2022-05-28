@@ -139,6 +139,12 @@
 		98B557BF2841D11900F8CA3E /* ListBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557BB2841D11800F8CA3E /* ListBuilder.swift */; };
 		98B557C02841D11900F8CA3E /* ListInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557BC2841D11800F8CA3E /* ListInteractor.swift */; };
 		98B557C32841D4D600F8CA3E /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557C22841D4D600F8CA3E /* ListCell.swift */; };
+		98B557C92841EEAC00F8CA3E /* FABRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557C52841EEAC00F8CA3E /* FABRouter.swift */; };
+		98B557CA2841EEAC00F8CA3E /* FABViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557C62841EEAC00F8CA3E /* FABViewController.swift */; };
+		98B557CB2841EEAC00F8CA3E /* FABBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557C72841EEAC00F8CA3E /* FABBuilder.swift */; };
+		98B557CC2841EEAC00F8CA3E /* FABInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557C82841EEAC00F8CA3E /* FABInteractor.swift */; };
+		98B557CF2841F05900F8CA3E /* FAB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557CE2841F05900F8CA3E /* FAB.swift */; };
+		98B557D12841F9B600F8CA3E /* UIButton+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557D02841F9B600F8CA3E /* UIButton+Util.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -322,6 +328,12 @@
 		98B557BB2841D11800F8CA3E /* ListBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBuilder.swift; sourceTree = "<group>"; };
 		98B557BC2841D11800F8CA3E /* ListInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInteractor.swift; sourceTree = "<group>"; };
 		98B557C22841D4D600F8CA3E /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
+		98B557C52841EEAC00F8CA3E /* FABRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FABRouter.swift; sourceTree = "<group>"; };
+		98B557C62841EEAC00F8CA3E /* FABViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FABViewController.swift; sourceTree = "<group>"; };
+		98B557C72841EEAC00F8CA3E /* FABBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FABBuilder.swift; sourceTree = "<group>"; };
+		98B557C82841EEAC00F8CA3E /* FABInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FABInteractor.swift; sourceTree = "<group>"; };
+		98B557CE2841F05900F8CA3E /* FAB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAB.swift; sourceTree = "<group>"; };
+		98B557D02841F9B600F8CA3E /* UIButton+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Util.swift"; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -397,6 +409,7 @@
 		98239BE127E3234F00E216F1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				98B557CD2841F03700F8CA3E /* FAB */,
 				98B557C12841D4B000F8CA3E /* List */,
 				98B557B5283A4C4E00F8CA3E /* CapsuleButton */,
 				98B557A9283A412500F8CA3E /* Divider */,
@@ -639,6 +652,7 @@
 			isa = PBXGroup;
 			children = (
 				988A2D3A27F82F3B0046C43A /* ViewControllableMock.swift */,
+				98B557D02841F9B600F8CA3E /* UIButton+Util.swift */,
 			);
 			path = "RIBs+TestSupport";
 			sourceTree = "<group>";
@@ -791,6 +805,7 @@
 		98B557622838968D00F8CA3E /* DesignSystemRIB */ = {
 			isa = PBXGroup;
 			children = (
+				98B557C42841EEA100F8CA3E /* FAB */,
 				98B557B82841D10600F8CA3E /* List */,
 				98B557AC283A4A6F00F8CA3E /* CapsuleButton */,
 				98B557A0283A3E6400F8CA3E /* Divider */,
@@ -922,6 +937,25 @@
 				98B557C22841D4D600F8CA3E /* ListCell.swift */,
 			);
 			path = List;
+			sourceTree = "<group>";
+		};
+		98B557C42841EEA100F8CA3E /* FAB */ = {
+			isa = PBXGroup;
+			children = (
+				98B557C52841EEAC00F8CA3E /* FABRouter.swift */,
+				98B557C62841EEAC00F8CA3E /* FABViewController.swift */,
+				98B557C72841EEAC00F8CA3E /* FABBuilder.swift */,
+				98B557C82841EEAC00F8CA3E /* FABInteractor.swift */,
+			);
+			path = FAB;
+			sourceTree = "<group>";
+		};
+		98B557CD2841F03700F8CA3E /* FAB */ = {
+			isa = PBXGroup;
+			children = (
+				98B557CE2841F05900F8CA3E /* FAB.swift */,
+			);
+			path = FAB;
 			sourceTree = "<group>";
 		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
@@ -1330,10 +1364,14 @@
 				98F3A28328152C04000851F0 /* BottomSheetSelectView.swift in Sources */,
 				98B5576A283896AA00F8CA3E /* DesignSystemInteractor.swift in Sources */,
 				988A2D5927F97A000046C43A /* DiaryMomentsViewController.swift in Sources */,
+				98B557D12841F9B600F8CA3E /* UIButton+Util.swift in Sources */,
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
 				989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */,
 				98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */,
+				98B557CA2841EEAC00F8CA3E /* FABViewController.swift in Sources */,
+				98B557C92841EEAC00F8CA3E /* FABRouter.swift in Sources */,
 				98B55789283A0F3300F8CA3E /* ListHeaderInteractor.swift in Sources */,
+				98B557CF2841F05900F8CA3E /* FAB.swift in Sources */,
 				98B557A5283A3E7900F8CA3E /* DividerRouter.swift in Sources */,
 				98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */,
 				98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */,
@@ -1384,6 +1422,7 @@
 				988A2D5027F96BEF0046C43A /* Icons+Generated.swift in Sources */,
 				980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */,
 				985E0F0727C232E300057951 /* RegisterPWInteractor.swift in Sources */,
+				98B557CC2841EEAC00F8CA3E /* FABInteractor.swift in Sources */,
 				985E0EFC27C21E9900057951 /* RegisterHomeRouter.swift in Sources */,
 				98B557C02841D11900F8CA3E /* ListInteractor.swift in Sources */,
 				98F3A2782813E561000851F0 /* MenualBottomSheetCell.swift in Sources */,
@@ -1424,6 +1463,7 @@
 				989AE04327F0900800177573 /* DiarySearchRouter.swift in Sources */,
 				98B5577E283A031400F8CA3E /* GNBHeaderViewController.swift in Sources */,
 				98B5576C28389E6300F8CA3E /* DesignSystemCell.swift in Sources */,
+				98B557CB2841EEAC00F8CA3E /* FABBuilder.swift in Sources */,
 				98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */,
 				9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */,
 				980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */,
@@ -1623,7 +1663,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1656,7 +1696,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1687,7 +1727,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1713,7 +1753,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1738,7 +1778,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1762,7 +1802,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

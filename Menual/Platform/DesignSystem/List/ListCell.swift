@@ -17,11 +17,31 @@ enum ListType {
     case hide
 }
 
+enum ListStatus {
+    case default_
+    case highlighed
+    case pressed
+}
+
 class ListCell: UITableViewCell {
     
     var listType: ListType = .text {
         didSet { setNeedsLayout() }
     }
+    
+    var listStatus: ListStatus = .default_ {
+        didSet { setNeedsLayout() }
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+       super.setSelected(selected, animated: animated)
+        listStatus = selected ? .pressed : .default_
+   }
+       
+   override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+       super.setHighlighted(highlighted, animated: animated)
+       listStatus = highlighted ? .highlighed : .default_
+   }
     
     var title: String = "" {
         didSet { setNeedsLayout() }
@@ -86,12 +106,6 @@ class ListCell: UITableViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
     }
     
     func setViews() {
@@ -186,6 +200,15 @@ class ListCell: UITableViewCell {
                 make.top.equalToSuperview().offset(12)
                 make.width.height.equalTo(24)
             }
+        }
+        
+        switch listStatus {
+        case .default_:
+            backgroundColor = Colors.background.black
+        case .pressed:
+            backgroundColor = Colors.grey.g700
+        case .highlighed:
+            backgroundColor = Colors.grey.g800
         }
     }
 }

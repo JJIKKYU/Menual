@@ -53,6 +53,13 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
         setViews()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if isMovingFromParent || isBeingDismissed {
+            listener?.pressedBackBtn(isOnlyDetach: true)
+        }
+    }
+    
     func setViews() {
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         self.view.addSubview(naviView)

@@ -55,12 +55,12 @@ internal enum Asset {
     internal static let stand = ImageAsset(name: "120px/stand")
     internal enum Stationery {
       internal enum Pen {
-        internal static let type1 = ImageAsset(name: "120px/stationery/type1")
-        internal static let type2 = ImageAsset(name: "120px/stationery/type2")
+        internal static let type1 = ImageAsset(name: "120px/stationery/pen/type1")
+        internal static let type2 = ImageAsset(name: "120px/stationery/pen/type2")
       }
       internal enum Pin {
-        internal static let type1 = ImageAsset(name: "120px/stationery/type1")
-        internal static let type2 = ImageAsset(name: "120px/stationery/type2")
+        internal static let type1 = ImageAsset(name: "120px/stationery/pin/type1")
+        internal static let type2 = ImageAsset(name: "120px/stationery/pin/type2")
       }
     }
     internal static let stopwatch = ImageAsset(name: "120px/stopwatch")
@@ -76,15 +76,15 @@ internal enum Asset {
     internal enum Arrow {
       internal static let back = ImageAsset(name: "16px/arrow/back")
       internal enum Down {
-        internal static let big = ImageAsset(name: "16px/arrow/big")
-        internal static let small = ImageAsset(name: "16px/arrow/small")
+        internal static let big = ImageAsset(name: "16px/arrow/down/big")
+        internal static let small = ImageAsset(name: "16px/arrow/down/small")
       }
       internal static let front = ImageAsset(name: "16px/arrow/front")
       internal static let `left` = ImageAsset(name: "16px/arrow/left")
       internal static let `right` = ImageAsset(name: "16px/arrow/right")
       internal enum Up {
-        internal static let big = ImageAsset(name: "16px/arrow/big")
-        internal static let small = ImageAsset(name: "16px/arrow/small")
+        internal static let big = ImageAsset(name: "16px/arrow/up/big")
+        internal static let small = ImageAsset(name: "16px/arrow/up/small")
       }
     }
     internal static let bookmark = ImageAsset(name: "16px/bookmark")
@@ -94,8 +94,8 @@ internal enum Asset {
     internal enum Circle {
       internal static let back = ImageAsset(name: "16px/circle/back")
       internal enum Check {
-        internal static let active = ImageAsset(name: "16px/circle/active")
-        internal static let unactive = ImageAsset(name: "16px/circle/unactive")
+        internal static let active = ImageAsset(name: "16px/circle/check/active")
+        internal static let unactive = ImageAsset(name: "16px/circle/check/unactive")
       }
       internal static let close = ImageAsset(name: "16px/circle/close")
       internal static let front = ImageAsset(name: "16px/circle/front")
@@ -165,15 +165,15 @@ internal enum Asset {
     internal enum Arrow {
       internal static let back = ImageAsset(name: "20px/arrow/back")
       internal enum Down {
-        internal static let big = ImageAsset(name: "20px/arrow/big")
-        internal static let small = ImageAsset(name: "20px/arrow/small")
+        internal static let big = ImageAsset(name: "20px/arrow/down/big")
+        internal static let small = ImageAsset(name: "20px/arrow/down/small")
       }
       internal static let front = ImageAsset(name: "20px/arrow/front")
       internal static let `left` = ImageAsset(name: "20px/arrow/left")
       internal static let `right` = ImageAsset(name: "20px/arrow/right")
       internal enum Up {
-        internal static let big = ImageAsset(name: "20px/arrow/big")
-        internal static let small = ImageAsset(name: "20px/arrow/small")
+        internal static let big = ImageAsset(name: "20px/arrow/up/big")
+        internal static let small = ImageAsset(name: "20px/arrow/up/small")
       }
     }
     internal static let bookmark = ImageAsset(name: "20px/bookmark")
@@ -254,15 +254,15 @@ internal enum Asset {
     internal enum Arrow {
       internal static let back = ImageAsset(name: "24px/arrow/back")
       internal enum Down {
-        internal static let big = ImageAsset(name: "24px/arrow/big")
-        internal static let small = ImageAsset(name: "24px/arrow/small")
+        internal static let big = ImageAsset(name: "24px/arrow/down/big")
+        internal static let small = ImageAsset(name: "24px/arrow/down/small")
       }
       internal static let front = ImageAsset(name: "24px/arrow/front")
       internal static let `left` = ImageAsset(name: "24px/arrow/left")
       internal static let `right` = ImageAsset(name: "24px/arrow/right")
       internal enum Up {
-        internal static let big = ImageAsset(name: "24px/arrow/big")
-        internal static let small = ImageAsset(name: "24px/arrow/small")
+        internal static let big = ImageAsset(name: "24px/arrow/up/big")
+        internal static let small = ImageAsset(name: "24px/arrow/up/small")
       }
     }
     internal static let bookmark = ImageAsset(name: "24px/bookmark")
@@ -272,8 +272,8 @@ internal enum Asset {
     internal enum Circle {
       internal static let back = ImageAsset(name: "24px/circle/back")
       internal enum Check {
-        internal static let active = ImageAsset(name: "24px/circle/active")
-        internal static let unactive = ImageAsset(name: "24px/circle/unactive")
+        internal static let active = ImageAsset(name: "24px/circle/check/active")
+        internal static let unactive = ImageAsset(name: "24px/circle/check/unactive")
       }
       internal static let close = ImageAsset(name: "24px/circle/close")
       internal static let front = ImageAsset(name: "24px/circle/front")
@@ -369,12 +369,12 @@ internal enum Asset {
     internal static let stand = ImageAsset(name: "40px/stand")
     internal enum Stationery {
       internal enum Pen {
-        internal static let type1 = ImageAsset(name: "40px/stationery/type1")
-        internal static let type2 = ImageAsset(name: "40px/stationery/type2")
+        internal static let type1 = ImageAsset(name: "40px/stationery/pen/type1")
+        internal static let type2 = ImageAsset(name: "40px/stationery/pen/type2")
       }
       internal enum Pin {
-        internal static let type1 = ImageAsset(name: "40px/stationery/type1")
-        internal static let type2 = ImageAsset(name: "40px/stationery/type2")
+        internal static let type1 = ImageAsset(name: "40px/stationery/pin/type1")
+        internal static let type2 = ImageAsset(name: "40px/stationery/pin/type2")
       }
     }
     internal static let stopwatch = ImageAsset(name: "40px/stopwatch")
@@ -416,12 +416,12 @@ internal enum Asset {
     internal static let stand = ImageAsset(name: "80px/stand")
     internal enum Stationery {
       internal enum Pen {
-        internal static let type1 = ImageAsset(name: "80px/stationery/type1")
-        internal static let type2 = ImageAsset(name: "80px/stationery/type2")
+        internal static let type1 = ImageAsset(name: "80px/stationery/pen/type1")
+        internal static let type2 = ImageAsset(name: "80px/stationery/pen/type2")
       }
       internal enum Pin {
-        internal static let type1 = ImageAsset(name: "80px/stationery/type1")
-        internal static let type2 = ImageAsset(name: "80px/stationery/type2")
+        internal static let type1 = ImageAsset(name: "80px/stationery/pin/type1")
+        internal static let type2 = ImageAsset(name: "80px/stationery/pin/type2")
       }
     }
     internal static let stopwatch = ImageAsset(name: "80px/stopwatch")

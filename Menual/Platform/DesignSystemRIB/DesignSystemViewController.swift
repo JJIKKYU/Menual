@@ -25,6 +25,7 @@ protocol DesignSystemPresentableListener: AnyObject {
     func pressedDividerCell()
     func pressedCapsuleButtonCell()
     func pressedListButtonCell()
+    func pressedFABButtonCell()
 }
 
 final class DesignSystemViewController: UIViewController, DesignSystemPresentable, DesignSystemViewControllable {
@@ -124,6 +125,7 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         case "Tabs":
             break
         case "FAB":
+            cell.backgroundColor = Colors.tint.main.v400
             break
         case "List Header":
             cell.backgroundColor = Colors.tint.main.v400
@@ -166,6 +168,7 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         case "Tabs":
             break
         case "FAB":
+            listener?.pressedFABButtonCell()
             break
         case "List Header":
             listener?.pressedListHeaderCell()
