@@ -34,6 +34,7 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
         $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
         $0.estimatedRowHeight = 72
         $0.rowHeight = 72
+        $0.contentInset.top = 44
     }
     
     init() {
@@ -82,14 +83,50 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
 // MARK: - UITableView Delegate
 extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return 6
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
-        cell.title = "타이틀 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사..."
-        cell.dateAndTime = "2099.99.99"
-        cell.pageAndReview = "P.999 - 999"
+        
+        let index = indexPath.row
+        
+        
+        switch index {
+        case 0:
+            cell.listType = .text
+            cell.title = "타이틀 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사..."
+            cell.dateAndTime = "2099.99.99"
+            cell.pageAndReview = "P.999"
+        case 1:
+            cell.listType = .text
+            cell.title = "타이틀 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사..."
+            cell.dateAndTime = "2099.99.99"
+            cell.pageAndReview = "P.999 - 999"
+        case 2:
+            cell.listType = .textAndImage
+            cell.title = "타이틀 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사..."
+            cell.dateAndTime = "2099.99.99"
+            cell.pageAndReview = "P.999"
+        case 3:
+            cell.listType = .textAndImage
+            cell.title = "타이틀 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사..."
+            cell.dateAndTime = "2099.99.99"
+            cell.pageAndReview = "P.999 - 999"
+        case 4:
+            cell.listType = .hide
+            cell.title = "타이틀 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사..."
+            cell.dateAndTime = "2099.99.99"
+            cell.pageAndReview = "P.999"
+        case 5:
+            cell.listType = .hide
+            cell.title = "타이틀 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사..."
+            cell.dateAndTime = "2099.99.99"
+            cell.pageAndReview = "P.999 - 999"
+        default:
+            break
+        }
+        
         return cell
     }
     

@@ -151,22 +151,40 @@ class ListCell: UITableViewCell {
         switch listType {
         case .text:
             menualImageView.isHidden = true
+            lockImageView.isHidden = true
+            lockImageView.snp.removeConstraints()
+            titleLabel.textColor = Colors.grey.g200
             titleLabel.snp.remakeConstraints { make in
-                make.leading.equalTo(lockImageView.snp.trailing).offset(2)
+                make.leading.equalToSuperview().offset(20)
                 make.top.equalToSuperview().offset(16)
                 make.trailing.equalToSuperview().inset(19)
             }
+            lockImageView.snp.removeConstraints()
         case .textAndImage:
             menualImageView.isHidden = false
+            lockImageView.isHidden = true
+            titleLabel.textColor = Colors.grey.g200
             titleLabel.snp.remakeConstraints { make in
-                make.leading.equalTo(lockImageView.snp.trailing).offset(2)
+                make.leading.equalToSuperview().offset(20)
                 make.top.equalToSuperview().offset(16)
                 make.trailing.equalToSuperview().inset(80)
             }
+            lockImageView.snp.removeConstraints()
         case .hide:
-            menualImageView.isHidden = false
+            menualImageView.isHidden = true
+            lockImageView.isHidden = false
+            titleLabel.text = "숨긴 메뉴얼이에요."
+            titleLabel.textColor = Colors.grey.g500
+            menualImageView.snp.removeConstraints()
             titleLabel.snp.remakeConstraints { make in
+                make.leading.equalTo(lockImageView.snp.trailing).offset(2)
+                make.top.equalToSuperview().offset(16)
                 make.trailing.equalToSuperview().inset(19)
+            }
+            lockImageView.snp.makeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.top.equalToSuperview().offset(12)
+                make.width.height.equalTo(24)
             }
         }
     }
