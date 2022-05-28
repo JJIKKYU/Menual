@@ -34,6 +34,10 @@ class BoxButton: UIButton {
         didSet { setNeedsLayout() }
     }
     
+    var btnSelected: Bool = false {
+        didSet { setNeedsLayout() }
+    }
+    
     private let btnLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = Colors.grey.g800
@@ -91,6 +95,15 @@ class BoxButton: UIButton {
             backgroundColor = Colors.tint.sub.n600
             btnLabel.textColor = Colors.grey.g800
             break
+        }
+        
+        if btnStatus == .inactive { return }
+        switch btnSelected {
+        case true:
+            btnStatus = .pressed
+            
+        case false:
+            btnStatus = .active
         }
     }
 }

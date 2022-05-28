@@ -36,11 +36,13 @@ final class BoxButtonViewController: UIViewController, BoxButtonPresentable, Box
     private let activeBoxBtnXLarge = BoxButton(frame: CGRect.zero, btnStatus: .active, btnSize: .xLarge).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "텍스트를 입력해주세요"
+        $0.btnSelected = false
     }
     
     private let activeBoxBtnlarge = BoxButton(frame: CGRect.zero, btnStatus: .active, btnSize: .large).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "텍스트를 입력해주세요"
+        $0.btnSelected = false
     }
     
     private let inactiveBoxBtnXLarge = BoxButton(frame: CGRect.zero, btnStatus: .inactive, btnSize: .xLarge).then {
@@ -56,11 +58,13 @@ final class BoxButtonViewController: UIViewController, BoxButtonPresentable, Box
     private let pressedBoxBtnXLarge = BoxButton(frame: CGRect.zero, btnStatus: .pressed, btnSize: .xLarge).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "텍스트를 입력해주세요"
+        $0.btnSelected = true
     }
     
     private let pressedBoxBtnLarge = BoxButton(frame: CGRect.zero, btnStatus: .pressed, btnSize: .large).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "텍스트를 입력해주세요"
+        $0.btnSelected = true
     }
     
     init() {
