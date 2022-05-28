@@ -43,7 +43,6 @@ class FAB: UIButton {
     
     init() {
         super.init(frame: CGRect.zero)
-        print("FAB!")
         setViews()
     }
     

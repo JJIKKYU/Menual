@@ -78,10 +78,9 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     // TODO: CustomView로 만들기
-    var fabWriteBtn = UIView().then {
-        $0.backgroundColor = Colors.tint.sub.n300
-        $0.layer.cornerRadius = 4
-        $0.AppShadow(.shadow_6)
+    lazy var fabWriteBtn = BoxButton(frame: CGRect.zero, btnStatus: .active, btnSize: .xLarge).then {
+        $0.title = "N번째 메뉴얼 작성하기"
+        $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
     }
     
     // 임시로 뷰 넘어가게 하려고 만든 버튼
@@ -89,13 +88,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
         $0.setImage(Asset._24px.write.image, for: .normal)
     }
-   
-    lazy var momentsTitleView = TitleView().then {
+    
+    lazy var momentsTitleView = ListHeader(type: .textandicon, rightIconType: .arrow).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = MenualString.title_moments
-        $0.rightTitle = "전체보기 >"
-        $0.titleButton.addTarget(self, action: #selector(pressedMomentsTitleBtn), for: .touchUpInside)
-        $0.rightButton.addTarget(self, action: #selector(pressedMomentsMoreBtn), for: .touchUpInside)
+        $0.title = "MY MOMENTS"
+        $0.rightArrowBtn.addTarget(self, action: #selector(pressedMomentsMoreBtn), for: .touchUpInside)
     }
     
     lazy var momentsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout()).then {
@@ -105,11 +102,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.backgroundColor = Colors.tint.main.v100
     }
     
-    lazy var myMenualTitleView = TitleView().then {
+    lazy var myMenualTitleView = ListHeader(type: .textandicon, rightIconType: .none).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = MenualString.title_menualList
-        $0.rightTitle = ""
-        $0.titleButton.addTarget(self, action: #selector(pressedMyMenualBtn), for: .touchUpInside)
+        $0.title = "MY MENUAL"
+    }
+    
+    lazy var myMenualPageTitleView = ListHeader(type: .datepageandicon, rightIconType: .filter).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.title = "PAGE.999"
     }
     
     lazy var myMenualTableView = UITableView().then {
@@ -117,9 +117,9 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.delegate = self
         $0.dataSource = self
         $0.backgroundColor = .gray
-        $0.register(MyMenualCell.self, forCellReuseIdentifier: "MyMenualCell")
-        $0.estimatedRowHeight = 70.5
-        $0.rowHeight = 70.5
+        $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
+        $0.estimatedRowHeight = 72
+        $0.rowHeight = 72
     }
     
     var isStickyMyMenualCollectionView: Bool = false
@@ -165,6 +165,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         scrollView.addSubview(myMenualTitleView)
         scrollView.addSubview(myMenualCollectionView)
         scrollView.addSubview(myMenualTableView)
+        scrollView.addSubview(myMenualPageTitleView)
         
         naviView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -176,10 +177,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.bringSubviewToFront(naviView)
         
         // 임시
-        fabWriteBtn.addSubview(wrtingBtnTest)
-        wrtingBtnTest.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
-        }
+//        fabWriteBtn.addSubview(wrtingBtnTest)
+//        wrtingBtnTest.snp.makeConstraints { make in
+//            make.centerX.centerY.equalToSuperview()
+//        }
         
         scrollView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -212,7 +213,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.top.equalToSuperview().offset(64)
-            make.height.equalTo(40)
+            make.height.equalTo(24)
         }
         
         momentsCollectionView.snp.makeConstraints { make in
@@ -226,7 +227,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.top.equalTo(momentsCollectionView.snp.bottom).offset(20)
-            make.height.equalTo(40)
+            make.height.equalTo(24)
         }
         
         myMenualCollectionView.snp.makeConstraints { make in
@@ -236,11 +237,18 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.height.equalTo(100)
         }
         
+        myMenualPageTitleView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalTo(myMenualCollectionView.snp.bottom).offset(20)
+            make.height.equalTo(24)
+        }
+        
         myMenualTableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.bottom.equalToSuperview()
-            make.top.equalTo(myMenualCollectionView.snp.bottom).offset(20)
+            make.top.equalTo(myMenualPageTitleView.snp.bottom).offset(20)
         }
     }
     
@@ -356,23 +364,24 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MyMenualCell") as? MyMenualCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
         
         cell.backgroundColor = .clear
         
         if let myMenualArr = listener?.getMyMenualArr() {
-            cell.title.text = myMenualArr[indexPath.row].title
-            cell.subTitle.text = myMenualArr[indexPath.row].description
+            cell.title = myMenualArr[indexPath.row].title
+            cell.dateAndTime = myMenualArr[indexPath.row].createdAt.toString()
+            cell.pageAndReview = "P.999 - 999"
         } else {
-            cell.title.text = "타이틀마"
-            cell.subTitle.text = "서브 타이틀마"
+            cell.dateAndTime = "2099.99.99"
+            cell.pageAndReview = "P.999 - 999"
         }
 
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as? MyMenualCell
+        // let cell = tableView.cellForRow(at: indexPath) as? MyMenualCell
         listener?.pressedDiaryCell(index: indexPath.row)
     }
     

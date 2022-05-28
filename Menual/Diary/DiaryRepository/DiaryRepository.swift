@@ -153,7 +153,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         
-        let diaryModelResults = realm.objects(DiaryModelRealm.self)
+        let diaryModelResults = realm.objects(DiaryModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
         diaryModelSubject.accept(diaryModelResults.map { DiaryModel($0) })
         
         let weatherHistoryResults = realm.objects(WeatherHistoryModelRealm.self)

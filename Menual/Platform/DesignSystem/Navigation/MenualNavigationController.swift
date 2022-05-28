@@ -102,8 +102,9 @@ class MenualNaviView: UIView {
     }
     
     func setViews() {
-        backgroundColor = UIColor.gray.withAlphaComponent(0.1)
-        applyBlurEffect()
+        // backgroundColor = UIColor.gray.withAlphaComponent(0.1)
+        // applyBlurEffect()
+        backgroundColor = Colors.background.black
         addSubview(menualTitleImage)
         addSubview(backButton)
         addSubview(rightButton1)

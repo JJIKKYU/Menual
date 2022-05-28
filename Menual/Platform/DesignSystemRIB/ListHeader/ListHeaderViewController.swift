@@ -29,16 +29,19 @@ final class ListHeaderViewController: UIViewController, ListHeaderPresentable, L
         $0.titleLabel.text = "List Header"
     }
     
-    lazy var listHeaderTextandicon = ListHeader(type: .textandicon).then {
+    lazy var listHeaderTextandicon = ListHeader(type: .textandicon, rightIconType: .arrow).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.title = "LIST HEADER"
     }
     
-    lazy var listHeaderText = ListHeader(type: .text).then {
+    lazy var listHeaderText = ListHeader(type: .text, rightIconType: .none).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.title = "LIST HEADER"
     }
     
-    lazy var listHeaderDatepageandicon = ListHeader(type: .datepageandicon).then {
+    lazy var listHeaderDatepageandicon = ListHeader(type: .datepageandicon, rightIconType: .filter).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.title = "PAGE.999"
     }
     
     lazy var scrollView = UIScrollView().then {

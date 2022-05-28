@@ -15,9 +15,23 @@ enum ListHeaderType {
     case datepageandicon
 }
 
+enum RightIconType {
+    case none
+    case filter
+    case arrow
+}
+
 class ListHeader: UIView {
     
     private var type: ListHeaderType = .datepageandicon {
+        didSet { setNeedsLayout() }
+    }
+    
+    private var rightIconType: RightIconType = .none {
+        didSet { setNeedsLayout() }
+    }
+    
+    var title: String = "" {
         didSet { setNeedsLayout() }
     }
     
@@ -25,7 +39,7 @@ class ListHeader: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    private let rightArrowBtn = UIButton().then {
+    let rightArrowBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.right.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g400
@@ -34,7 +48,7 @@ class ListHeader: UIView {
         $0.contentVerticalAlignment = .fill
     }
     
-    private let rightFilterBtn = UIButton().then {
+    let rightFilterBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.filter.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g600
@@ -43,8 +57,9 @@ class ListHeader: UIView {
         $0.contentVerticalAlignment = .fill
     }
 
-    init(type: ListHeaderType) {
+    init(type: ListHeaderType, rightIconType: RightIconType) {
         self.type = type
+        self.rightIconType = rightIconType
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -80,34 +95,44 @@ class ListHeader: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+        titleLabel.text = title
+
         switch type {
-        case .datepageandicon:
-            titleLabel.isHidden = false
-            titleLabel.text = "LIST HEADER"
-            titleLabel.font = UIFont.AppHead(.head_5)
-            titleLabel.textColor = Colors.grey.g400
-            rightFilterBtn.isHidden = true
-            rightArrowBtn.isHidden = false
-            break
             
         case .text:
             titleLabel.isHidden = false
-            titleLabel.text = "LIST HEADER"
             titleLabel.font = UIFont.AppHead(.head_5)
             titleLabel.textColor = Colors.grey.g400
-            rightFilterBtn.isHidden = true
-            rightArrowBtn.isHidden = true
             break
             
         case .textandicon:
             titleLabel.isHidden = false
-            titleLabel.text = "PAGE.999"
+            titleLabel.font = UIFont.AppHead(.head_5)
+            titleLabel.textColor = Colors.grey.g400
+            break
+            
+        case .datepageandicon:
+            titleLabel.isHidden = false
+            
             titleLabel.font = UIFont.AppHead(.head_4)
             titleLabel.textColor = Colors.grey.g600
-            rightFilterBtn.isHidden = false
-            rightArrowBtn.isHidden = true
             break
+        }
+        
+        if type != .text {
+            switch rightIconType {
+            case .none:
+                rightFilterBtn.isHidden = true
+                rightArrowBtn.isHidden = true
+
+            case .arrow:
+                rightFilterBtn.isHidden = true
+                rightArrowBtn.isHidden = false
+                
+            case .filter:
+                rightFilterBtn.isHidden = false
+                rightArrowBtn.isHidden = true
+            }
         }
     }
 }
