@@ -138,6 +138,7 @@
 		98B557BE2841D11900F8CA3E /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557BA2841D11800F8CA3E /* ListViewController.swift */; };
 		98B557BF2841D11900F8CA3E /* ListBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557BB2841D11800F8CA3E /* ListBuilder.swift */; };
 		98B557C02841D11900F8CA3E /* ListInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557BC2841D11800F8CA3E /* ListInteractor.swift */; };
+		98B557C32841D4D600F8CA3E /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557C22841D4D600F8CA3E /* ListCell.swift */; };
 		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
 		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
@@ -320,6 +321,7 @@
 		98B557BA2841D11800F8CA3E /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		98B557BB2841D11800F8CA3E /* ListBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBuilder.swift; sourceTree = "<group>"; };
 		98B557BC2841D11800F8CA3E /* ListInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInteractor.swift; sourceTree = "<group>"; };
+		98B557C22841D4D600F8CA3E /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
 		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
 		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
@@ -395,6 +397,7 @@
 		98239BE127E3234F00E216F1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				98B557C12841D4B000F8CA3E /* List */,
 				98B557B5283A4C4E00F8CA3E /* CapsuleButton */,
 				98B557A9283A412500F8CA3E /* Divider */,
 				98B5579B283A198200F8CA3E /* UILabelExtension */,
@@ -913,6 +916,14 @@
 			path = List;
 			sourceTree = "<group>";
 		};
+		98B557C12841D4B000F8CA3E /* List */ = {
+			isa = PBXGroup;
+			children = (
+				98B557C22841D4D600F8CA3E /* ListCell.swift */,
+			);
+			path = List;
+			sourceTree = "<group>";
+		};
 		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
 			isa = PBXGroup;
 			children = (
@@ -1385,6 +1396,7 @@
 				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
 				98B557532830C7B200F8CA3E /* DiaryTempSaveRouter.swift in Sources */,
 				98B55767283896AA00F8CA3E /* DesignSystemRouter.swift in Sources */,
+				98B557C32841D4D600F8CA3E /* ListCell.swift in Sources */,
 				98934A9C27E6F13700178A8E /* ProfileHomeInteractor.swift in Sources */,
 				988A2D6B280167D20046C43A /* DiaryRepository.swift in Sources */,
 				98B557BD2841D11900F8CA3E /* ListRouter.swift in Sources */,

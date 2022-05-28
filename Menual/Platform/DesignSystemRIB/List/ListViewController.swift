@@ -8,11 +8,11 @@
 import RIBs
 import RxSwift
 import UIKit
+import Then
+import SnapKit
 
 protocol ListPresentableListener: AnyObject {
-    // TODO: Declare properties and methods that the view controller can invoke to perform
-    // business logic, such as signIn(). This protocol is implemented by the corresponding
-    // interactor class.
+
     func pressedBackBtn(isOnlyDetach: Bool)
 }
 
@@ -27,8 +27,13 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
         $0.titleLabel.text = "List"
     }
     
-    lazy var scrollView = UIScrollView().then {
+    lazy var tableView = UITableView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.delegate = self
+        $0.dataSource = self
+        $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
+        $0.estimatedRowHeight = 72
+        $0.rowHeight = 72
     }
     
     init() {
@@ -50,7 +55,7 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
     func setViews() {
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         self.view.addSubview(naviView)
-        self.view.addSubview(scrollView)
+        self.view.addSubview(tableView)
         self.view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
@@ -60,7 +65,7 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
             make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
         }
         
-        scrollView.snp.makeConstraints { make in
+        tableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalToSuperview()
             make.width.equalToSuperview()
@@ -72,4 +77,21 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
     func pressedBackBtn() {
         listener?.pressedBackBtn(isOnlyDetach: false)
     }
+}
+
+// MARK: - UITableView Delegate
+extension ListViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 5
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
+        cell.title = "타이틀 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사..."
+        cell.dateAndTime = "2099.99.99"
+        cell.pageAndReview = "P.999 - 999"
+        return cell
+    }
+    
+    
 }
