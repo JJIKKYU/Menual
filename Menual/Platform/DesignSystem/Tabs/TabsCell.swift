@@ -32,6 +32,28 @@ class TabsCell: UICollectionViewCell {
         $0.title = "TXT"
     }
     
+    var cellIsSelected: Bool = false
+    var prevTabsCellStatus: TabsCellStatus = .active
+    
+    open override var isHighlighted: Bool {
+        didSet {
+            if tabsCellStatus == .inactive {
+                if isHighlighted {
+                    prevTabsCellStatus = tabsCellStatus
+                    tabsCellStatus = .pressed
+                }
+                
+            } else if tabsCellStatus == .active {
+                if isHighlighted {
+                    prevTabsCellStatus = tabsCellStatus
+                    tabsCellStatus = .pressed
+                }
+            } else if tabsCellStatus == .pressed {
+                tabsCellStatus = prevTabsCellStatus
+            }
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.isUserInteractionEnabled = true

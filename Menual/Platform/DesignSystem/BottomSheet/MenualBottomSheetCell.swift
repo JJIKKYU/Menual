@@ -25,13 +25,36 @@ class MenualBottomSheetCell: UICollectionViewCell {
     var cellIsSelected: Bool = false
     
     var iconView = UIImageView().then {
-        $0.tintColor = Colors.tint.sub.n400
         $0.contentMode = .scaleAspectFit
     }
     
+    open override var isHighlighted: Bool {
+        didSet {
+            if cellIsSelected {
+                if isHighlighted {
+                    selectedView.backgroundColor = Colors.grey.g700
+                    iconView.tintColor = Colors.grey.g400
+                    selectedView.layer.borderWidth = 1
+                } else {
+                    selected()
+                }
+            } else {
+                if isHighlighted {
+                    selectedView.backgroundColor = Colors.grey.g700
+                    iconView.tintColor = Colors.grey.g400
+                    selectedView.layer.borderWidth = 1
+                } else {
+                    unSelected()
+                }
+            }
+            
+            
+        }
+    }
+    
     let selectedView = UIView().then {
-        $0.backgroundColor = Colors.grey.g800
-        $0.layer.cornerRadius = 8
+        $0.layer.borderColor = Colors.grey.g600.cgColor
+        $0.AppCorner(._4pt)
         $0.isHidden = true
     }
     
@@ -116,12 +139,18 @@ class MenualBottomSheetCell: UICollectionViewCell {
     }
     
     func selected() {
+        iconView.tintColor = Colors.tint.sub.n400
         selectedView.isHidden = false
+        selectedView.layer.borderWidth = 0
+        selectedView.backgroundColor = Colors.grey.g700
         cellIsSelected = true
     }
     
     func unSelected() {
-        selectedView.isHidden = true
+        iconView.tintColor = Colors.grey.g400
+        selectedView.isHidden = false
+        selectedView.layer.borderWidth = 1
+        selectedView.backgroundColor = .clear
         cellIsSelected = false
     }
 }
