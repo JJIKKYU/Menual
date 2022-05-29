@@ -154,6 +154,10 @@
 		98D0EBEE27CA0E190076136E /* SpoqaHanSansNeo Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBEC27CA0E190076136E /* SpoqaHanSansNeo Regular.otf */; };
 		98D0EBEF27CA0E190076136E /* SpoqaHanSansNeo Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBED27CA0E190076136E /* SpoqaHanSansNeo Bold.otf */; };
 		98EADB842841FEAA007C298C /* Date+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB832841FEAA007C298C /* Date+Util.swift */; };
+		98EADB8A28432850007C298C /* TabsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8628432850007C298C /* TabsRouter.swift */; };
+		98EADB8B28432850007C298C /* TabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8728432850007C298C /* TabsViewController.swift */; };
+		98EADB8C28432850007C298C /* TabsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8828432850007C298C /* TabsBuilder.swift */; };
+		98EADB8D28432850007C298C /* TabsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8928432850007C298C /* TabsInteractor.swift */; };
 		98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A26D280C536F000851F0 /* MenualNavigationController.swift */; };
 		98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */; };
 		98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */; };
@@ -344,6 +348,10 @@
 		98D0EBEC27CA0E190076136E /* SpoqaHanSansNeo Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo Regular.otf"; sourceTree = "<group>"; };
 		98D0EBED27CA0E190076136E /* SpoqaHanSansNeo Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo Bold.otf"; sourceTree = "<group>"; };
 		98EADB832841FEAA007C298C /* Date+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Util.swift"; sourceTree = "<group>"; };
+		98EADB8628432850007C298C /* TabsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsRouter.swift; sourceTree = "<group>"; };
+		98EADB8728432850007C298C /* TabsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsViewController.swift; sourceTree = "<group>"; };
+		98EADB8828432850007C298C /* TabsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsBuilder.swift; sourceTree = "<group>"; };
+		98EADB8928432850007C298C /* TabsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsInteractor.swift; sourceTree = "<group>"; };
 		98F3A26D280C536F000851F0 /* MenualNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualNavigationController.swift; sourceTree = "<group>"; };
 		98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetBaseViewController.swift; sourceTree = "<group>"; };
 		98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetViewController.swift; sourceTree = "<group>"; };
@@ -411,6 +419,7 @@
 		98239BE127E3234F00E216F1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				98EADB8E28432855007C298C /* Tabs */,
 				98B557CD2841F03700F8CA3E /* FAB */,
 				98B557C12841D4B000F8CA3E /* List */,
 				98B557B5283A4C4E00F8CA3E /* CapsuleButton */,
@@ -807,6 +816,7 @@
 		98B557622838968D00F8CA3E /* DesignSystemRIB */ = {
 			isa = PBXGroup;
 			children = (
+				98EADB8528432843007C298C /* Tabs */,
 				98B557C42841EEA100F8CA3E /* FAB */,
 				98B557B82841D10600F8CA3E /* List */,
 				98B557AC283A4A6F00F8CA3E /* CapsuleButton */,
@@ -993,6 +1003,24 @@
 				98D0EBEA27CA0AFF0076136E /* Montserrat ExtraBold.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		98EADB8528432843007C298C /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				98EADB8628432850007C298C /* TabsRouter.swift */,
+				98EADB8728432850007C298C /* TabsViewController.swift */,
+				98EADB8828432850007C298C /* TabsBuilder.swift */,
+				98EADB8928432850007C298C /* TabsInteractor.swift */,
+			);
+			path = Tabs;
+			sourceTree = "<group>";
+		};
+		98EADB8E28432855007C298C /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Tabs;
 			sourceTree = "<group>";
 		};
 		98F3A26C280C534D000851F0 /* Navigation */ = {
@@ -1360,6 +1388,7 @@
 				98B557562830C7B200F8CA3E /* DiaryTempSaveInteractor.swift in Sources */,
 				98B557542830C7B200F8CA3E /* DiaryTempSaveViewController.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
+				98EADB8D28432850007C298C /* TabsInteractor.swift in Sources */,
 				98B557742838A4ED00F8CA3E /* BoxButtonRouter.swift in Sources */,
 				988A2D5827F97A000046C43A /* DiaryMomentsRouter.swift in Sources */,
 				98A2BD9F280A833000C1FB92 /* DiaryDetailInteractor.swift in Sources */,
@@ -1426,8 +1455,10 @@
 				988A2D5027F96BEF0046C43A /* Icons+Generated.swift in Sources */,
 				980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */,
 				985E0F0727C232E300057951 /* RegisterPWInteractor.swift in Sources */,
+				98EADB8C28432850007C298C /* TabsBuilder.swift in Sources */,
 				98B557CC2841EEAC00F8CA3E /* FABInteractor.swift in Sources */,
 				985E0EFC27C21E9900057951 /* RegisterHomeRouter.swift in Sources */,
+				98EADB8A28432850007C298C /* TabsRouter.swift in Sources */,
 				98B557C02841D11900F8CA3E /* ListInteractor.swift in Sources */,
 				98F3A2782813E561000851F0 /* MenualBottomSheetCell.swift in Sources */,
 				98B5578C283A116D00F8CA3E /* ListHeader.swift in Sources */,
@@ -1435,6 +1466,7 @@
 				98B5579A283A179900F8CA3E /* MomentsTag.swift in Sources */,
 				98B55793283A151D00F8CA3E /* MomentsViewController.swift in Sources */,
 				98B5577D283A031400F8CA3E /* GNBHeaderRouter.swift in Sources */,
+				98EADB8B28432850007C298C /* TabsViewController.swift in Sources */,
 				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,
 				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
 				98B557532830C7B200F8CA3E /* DiaryTempSaveRouter.swift in Sources */,

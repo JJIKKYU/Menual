@@ -34,6 +34,9 @@ protocol DesignSystemRouting: ViewableRouting {
     
     func attachFABVC()
     func detachFABVC(isOnlyDetach: Bool)
+    
+    func attachTabsVC()
+    func detachTabsVC(isOnlyDetach: Bool)
 }
 
 protocol DesignSystemPresentable: Presentable {
@@ -149,5 +152,13 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     
     func FABPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachFABVC(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedTabsCell() {
+        router?.attachTabsVC()
+    }
+    
+    func tabsPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachTabsVC(isOnlyDetach: isOnlyDetach)
     }
 }

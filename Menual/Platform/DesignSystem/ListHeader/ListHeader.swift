@@ -98,7 +98,6 @@ class ListHeader: UIView {
         titleLabel.text = title
 
         switch type {
-            
         case .text:
             titleLabel.isHidden = false
             titleLabel.font = UIFont.AppHead(.head_5)
@@ -119,20 +118,18 @@ class ListHeader: UIView {
             break
         }
         
-        if type != .text {
-            switch rightIconType {
-            case .none:
-                rightFilterBtn.isHidden = true
-                rightArrowBtn.isHidden = true
+        switch rightIconType {
+        case .none:
+            rightFilterBtn.isHidden = true
+            rightArrowBtn.isHidden = true
 
-            case .arrow:
-                rightFilterBtn.isHidden = true
-                rightArrowBtn.isHidden = false
-                
-            case .filter:
-                rightFilterBtn.isHidden = false
-                rightArrowBtn.isHidden = true
-            }
+        case .arrow:
+            rightFilterBtn.isHidden = true
+            rightArrowBtn.isHidden = false
+            
+        case .filter:
+            rightFilterBtn.isHidden = false
+            rightArrowBtn.isHidden = true
         }
     }
 }

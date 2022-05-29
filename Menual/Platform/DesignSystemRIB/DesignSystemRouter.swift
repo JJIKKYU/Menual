@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener, FABListener {
+protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener, FABListener, TabsListener {
     var router: DesignSystemRouting? { get set }
     var listener: DesignSystemListener? { get set }
 }
@@ -42,6 +42,9 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
     private let fabBuildable: FABBuildable
     private var fabRouting: Routing?
     
+    private let tabsBuildable: TabsBuildable
+    private var tabsRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DesignSystemInteractable,
@@ -53,7 +56,8 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         dividerBuildable: DividerBuildable,
         capsuleButtonBuildable: CapsuleButtonBuildable,
         listBuildable: ListBuildable,
-        fabBuildable: FABBuildable
+        fabBuildable: FABBuildable,
+        tabsBuildable: TabsBuildable
     ) {
         self.boxButtonBuildable = boxButtonBuildable
         self.gnbHeaderBuildable = gnbHeaderBuildable
@@ -63,6 +67,7 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         self.capsuleButtonBuildable = capsuleButtonBuildable
         self.listBuildable = listBuildable
         self.fabBuildable = fabBuildable
+        self.tabsBuildable = tabsBuildable
         super.init(interactor: interactor,
                    viewController: viewController
         )
@@ -275,5 +280,31 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         
         detachChild(router)
         fabRouting = nil
+    }
+    
+    // MARK: - Tabs DesignSystem RIBs
+    func attachTabsVC() {
+        if tabsRouting != nil {
+            return
+        }
+        
+        let router = tabsBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        tabsRouting = router
+        attachChild(router)
+    }
+    
+    func detachTabsVC(isOnlyDetach: Bool) {
+        guard let router = tabsRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        tabsRouting = nil
     }
 }
