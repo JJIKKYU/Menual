@@ -158,6 +158,8 @@
 		98EADB8B28432850007C298C /* TabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8728432850007C298C /* TabsViewController.swift */; };
 		98EADB8C28432850007C298C /* TabsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8828432850007C298C /* TabsBuilder.swift */; };
 		98EADB8D28432850007C298C /* TabsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8928432850007C298C /* TabsInteractor.swift */; };
+		98EADB9028432A3F007C298C /* TabsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8F28432A3F007C298C /* TabsCell.swift */; };
+		98EADB9228432FA5007C298C /* TabsIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9128432FA4007C298C /* TabsIconView.swift */; };
 		98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A26D280C536F000851F0 /* MenualNavigationController.swift */; };
 		98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */; };
 		98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */; };
@@ -352,6 +354,8 @@
 		98EADB8728432850007C298C /* TabsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsViewController.swift; sourceTree = "<group>"; };
 		98EADB8828432850007C298C /* TabsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsBuilder.swift; sourceTree = "<group>"; };
 		98EADB8928432850007C298C /* TabsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsInteractor.swift; sourceTree = "<group>"; };
+		98EADB8F28432A3F007C298C /* TabsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsCell.swift; sourceTree = "<group>"; };
+		98EADB9128432FA4007C298C /* TabsIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsIconView.swift; sourceTree = "<group>"; };
 		98F3A26D280C536F000851F0 /* MenualNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualNavigationController.swift; sourceTree = "<group>"; };
 		98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetBaseViewController.swift; sourceTree = "<group>"; };
 		98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetViewController.swift; sourceTree = "<group>"; };
@@ -1019,6 +1023,8 @@
 		98EADB8E28432855007C298C /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
+				98EADB8F28432A3F007C298C /* TabsCell.swift */,
+				98EADB9128432FA4007C298C /* TabsIconView.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -1376,6 +1382,7 @@
 				98B557772838A4ED00F8CA3E /* BoxButtonInteractor.swift in Sources */,
 				98B55745281D0FEE00F8CA3E /* SearchModel.swift in Sources */,
 				98A2BD9D280A833000C1FB92 /* DiaryDetailViewController.swift in Sources */,
+				98EADB9028432A3F007C298C /* TabsCell.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
 				9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */,
 				98B55794283A151D00F8CA3E /* MomentsBuilder.swift in Sources */,
@@ -1488,6 +1495,7 @@
 				98A2BD9E280A833000C1FB92 /* DiaryDetailBuilder.swift in Sources */,
 				98B557B7283A4C6300F8CA3E /* CapsuleButton.swift in Sources */,
 				988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */,
+				98EADB9228432FA5007C298C /* TabsIconView.swift in Sources */,
 				985E0F0D27C2690500057951 /* LoginHomeRouter.swift in Sources */,
 				9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */,
 				98B557752838A4ED00F8CA3E /* BoxButtonViewController.swift in Sources */,
