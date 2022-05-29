@@ -60,7 +60,7 @@ class TabsIconView: UIView {
         path.lineWidth = 1
         
         switch tabsIconStatus {
-        case .active:
+        case .inactive:
             switch tabsIconStep {
             case .step1:
                 Colors.tint.main.v400.withAlphaComponent(0.2).setFill()
@@ -75,7 +75,7 @@ class TabsIconView: UIView {
                 Colors.tint.main.v400.withAlphaComponent(0.8).setFill()
                 Colors.tint.main.v400.setStroke()
             }
-        case .inactive:
+        case .active:
             switch tabsIconStep {
             case .step1:
                 Colors.grey.g800.withAlphaComponent(0.2).setFill()

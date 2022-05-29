@@ -160,6 +160,7 @@
 		98EADB8D28432850007C298C /* TabsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8928432850007C298C /* TabsInteractor.swift */; };
 		98EADB9028432A3F007C298C /* TabsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8F28432A3F007C298C /* TabsCell.swift */; };
 		98EADB9228432FA5007C298C /* TabsIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9128432FA4007C298C /* TabsIconView.swift */; };
+		98EADB9428433BC2007C298C /* TabsText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9328433BC2007C298C /* TabsText.swift */; };
 		98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A26D280C536F000851F0 /* MenualNavigationController.swift */; };
 		98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */; };
 		98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */; };
@@ -356,6 +357,7 @@
 		98EADB8928432850007C298C /* TabsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsInteractor.swift; sourceTree = "<group>"; };
 		98EADB8F28432A3F007C298C /* TabsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsCell.swift; sourceTree = "<group>"; };
 		98EADB9128432FA4007C298C /* TabsIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsIconView.swift; sourceTree = "<group>"; };
+		98EADB9328433BC2007C298C /* TabsText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsText.swift; sourceTree = "<group>"; };
 		98F3A26D280C536F000851F0 /* MenualNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualNavigationController.swift; sourceTree = "<group>"; };
 		98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetBaseViewController.swift; sourceTree = "<group>"; };
 		98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetViewController.swift; sourceTree = "<group>"; };
@@ -1025,6 +1027,7 @@
 			children = (
 				98EADB8F28432A3F007C298C /* TabsCell.swift */,
 				98EADB9128432FA4007C298C /* TabsIconView.swift */,
+				98EADB9328433BC2007C298C /* TabsText.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -1500,6 +1503,7 @@
 				9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */,
 				98B557752838A4ED00F8CA3E /* BoxButtonViewController.swift in Sources */,
 				989AE04627F0900800177573 /* DiarySearchInteractor.swift in Sources */,
+				98EADB9428433BC2007C298C /* TabsText.swift in Sources */,
 				98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */,
 				98B557A7283A3E7900F8CA3E /* DividerBuilder.swift in Sources */,
 				98B55768283896AA00F8CA3E /* DesignSystemViewController.swift in Sources */,
