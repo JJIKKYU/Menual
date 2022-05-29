@@ -161,6 +161,12 @@
 		98EADB9028432A3F007C298C /* TabsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8F28432A3F007C298C /* TabsCell.swift */; };
 		98EADB9228432FA5007C298C /* TabsIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9128432FA4007C298C /* TabsIconView.swift */; };
 		98EADB9428433BC2007C298C /* TabsText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9328433BC2007C298C /* TabsText.swift */; };
+		98EADB9628437828007C298C /* MomentsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9528437828007C298C /* MomentsCell.swift */; };
+		98EADB9828437D13007C298C /* CollectionView+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9728437D13007C298C /* CollectionView+Util.swift */; };
+		98EADB9E28438039007C298C /* PaginationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9A28438038007C298C /* PaginationRouter.swift */; };
+		98EADB9F28438039007C298C /* PaginationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9B28438038007C298C /* PaginationViewController.swift */; };
+		98EADBA028438039007C298C /* PaginationBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9C28438038007C298C /* PaginationBuilder.swift */; };
+		98EADBA128438039007C298C /* PaginationInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9D28438038007C298C /* PaginationInteractor.swift */; };
 		98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A26D280C536F000851F0 /* MenualNavigationController.swift */; };
 		98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */; };
 		98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */; };
@@ -358,6 +364,12 @@
 		98EADB8F28432A3F007C298C /* TabsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsCell.swift; sourceTree = "<group>"; };
 		98EADB9128432FA4007C298C /* TabsIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsIconView.swift; sourceTree = "<group>"; };
 		98EADB9328433BC2007C298C /* TabsText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsText.swift; sourceTree = "<group>"; };
+		98EADB9528437828007C298C /* MomentsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsCell.swift; sourceTree = "<group>"; };
+		98EADB9728437D13007C298C /* CollectionView+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionView+Util.swift"; sourceTree = "<group>"; };
+		98EADB9A28438038007C298C /* PaginationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationRouter.swift; sourceTree = "<group>"; };
+		98EADB9B28438038007C298C /* PaginationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationViewController.swift; sourceTree = "<group>"; };
+		98EADB9C28438038007C298C /* PaginationBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationBuilder.swift; sourceTree = "<group>"; };
+		98EADB9D28438038007C298C /* PaginationInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationInteractor.swift; sourceTree = "<group>"; };
 		98F3A26D280C536F000851F0 /* MenualNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualNavigationController.swift; sourceTree = "<group>"; };
 		98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetBaseViewController.swift; sourceTree = "<group>"; };
 		98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetViewController.swift; sourceTree = "<group>"; };
@@ -449,6 +461,7 @@
 				98B55797283A177700F8CA3E /* Moments.swift */,
 				98B55799283A179900F8CA3E /* MomentsTag.swift */,
 				98B5579E283A1AF600F8CA3E /* MomentsText.swift */,
+				98EADB9528437828007C298C /* MomentsCell.swift */,
 			);
 			path = Moments;
 			sourceTree = "<group>";
@@ -822,6 +835,7 @@
 		98B557622838968D00F8CA3E /* DesignSystemRIB */ = {
 			isa = PBXGroup;
 			children = (
+				98EADB9928438028007C298C /* Pagination */,
 				98EADB8528432843007C298C /* Tabs */,
 				98B557C42841EEA100F8CA3E /* FAB */,
 				98B557B82841D10600F8CA3E /* List */,
@@ -985,6 +999,7 @@
 				9805D4D727E1BB010035FB49 /* Corner+Util.swift */,
 				98A2BDA0280A87E300C1FB92 /* Swift+Util.swift */,
 				98EADB832841FEAA007C298C /* Date+Util.swift */,
+				98EADB9728437D13007C298C /* CollectionView+Util.swift */,
 			);
 			path = MenualUtil;
 			sourceTree = "<group>";
@@ -1030,6 +1045,17 @@
 				98EADB9328433BC2007C298C /* TabsText.swift */,
 			);
 			path = Tabs;
+			sourceTree = "<group>";
+		};
+		98EADB9928438028007C298C /* Pagination */ = {
+			isa = PBXGroup;
+			children = (
+				98EADB9A28438038007C298C /* PaginationRouter.swift */,
+				98EADB9B28438038007C298C /* PaginationViewController.swift */,
+				98EADB9C28438038007C298C /* PaginationBuilder.swift */,
+				98EADB9D28438038007C298C /* PaginationInteractor.swift */,
+			);
+			path = Pagination;
 			sourceTree = "<group>";
 		};
 		98F3A26C280C534D000851F0 /* Navigation */ = {
@@ -1387,6 +1413,7 @@
 				98A2BD9D280A833000C1FB92 /* DiaryDetailViewController.swift in Sources */,
 				98EADB9028432A3F007C298C /* TabsCell.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
+				98EADBA128438039007C298C /* PaginationInteractor.swift in Sources */,
 				9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */,
 				98B55794283A151D00F8CA3E /* MomentsBuilder.swift in Sources */,
 				98C24F5427F0264700E6768C /* I18N.swift in Sources */,
@@ -1399,6 +1426,7 @@
 				98B557542830C7B200F8CA3E /* DiaryTempSaveViewController.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
 				98EADB8D28432850007C298C /* TabsInteractor.swift in Sources */,
+				98EADB9E28438039007C298C /* PaginationRouter.swift in Sources */,
 				98B557742838A4ED00F8CA3E /* BoxButtonRouter.swift in Sources */,
 				988A2D5827F97A000046C43A /* DiaryMomentsRouter.swift in Sources */,
 				98A2BD9F280A833000C1FB92 /* DiaryDetailInteractor.swift in Sources */,
@@ -1476,6 +1504,7 @@
 				98B5579A283A179900F8CA3E /* MomentsTag.swift in Sources */,
 				98B55793283A151D00F8CA3E /* MomentsViewController.swift in Sources */,
 				98B5577D283A031400F8CA3E /* GNBHeaderRouter.swift in Sources */,
+				98EADB9628437828007C298C /* MomentsCell.swift in Sources */,
 				98EADB8B28432850007C298C /* TabsViewController.swift in Sources */,
 				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,
 				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
@@ -1504,12 +1533,15 @@
 				98B557752838A4ED00F8CA3E /* BoxButtonViewController.swift in Sources */,
 				989AE04627F0900800177573 /* DiarySearchInteractor.swift in Sources */,
 				98EADB9428433BC2007C298C /* TabsText.swift in Sources */,
+				98EADB9828437D13007C298C /* CollectionView+Util.swift in Sources */,
 				98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */,
+				98EADBA028438039007C298C /* PaginationBuilder.swift in Sources */,
 				98B557A7283A3E7900F8CA3E /* DividerBuilder.swift in Sources */,
 				98B55768283896AA00F8CA3E /* DesignSystemViewController.swift in Sources */,
 				980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */,
 				989AE04327F0900800177573 /* DiarySearchRouter.swift in Sources */,
 				98B5577E283A031400F8CA3E /* GNBHeaderViewController.swift in Sources */,
+				98EADB9F28438039007C298C /* PaginationViewController.swift in Sources */,
 				98B5576C28389E6300F8CA3E /* DesignSystemCell.swift in Sources */,
 				98B557CB2841EEAC00F8CA3E /* FABBuilder.swift in Sources */,
 				98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */,
@@ -1711,7 +1743,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 54;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1744,7 +1776,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 54;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1775,7 +1807,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 54;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1801,7 +1833,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 54;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1826,7 +1858,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 54;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1850,7 +1882,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 54;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

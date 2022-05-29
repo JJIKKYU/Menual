@@ -27,6 +27,7 @@ protocol DesignSystemPresentableListener: AnyObject {
     func pressedListButtonCell()
     func pressedFABButtonCell()
     func pressedTabsCell()
+    func pressedPaginationCell()
 }
 
 final class DesignSystemViewController: UIViewController, DesignSystemPresentable, DesignSystemViewControllable {
@@ -114,35 +115,26 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         switch data[indexPath.row] {
         case "GNB Header":
             cell.backgroundColor = Colors.tint.main.v400
-            break
         case "Badges":
             break
         case "Capsule Button":
             cell.backgroundColor = Colors.tint.main.v400
-            break
         case "Box Button":
             cell.backgroundColor = Colors.tint.main.v400
-            break
         case "Tabs":
             cell.backgroundColor = Colors.tint.main.v400
-            break
         case "FAB":
             cell.backgroundColor = Colors.tint.main.v400
-            break
         case "List Header":
             cell.backgroundColor = Colors.tint.main.v400
-            break
         case "Pagination":
-            break
+            cell.backgroundColor = Colors.tint.main.v400
         case "Divider":
             cell.backgroundColor = Colors.tint.main.v400
-            break
         case "Moments":
             cell.backgroundColor = Colors.tint.main.v400
-            break
         case "List":
             cell.backgroundColor = Colors.tint.main.v400
-            break
         default:
             break
         }
@@ -163,30 +155,22 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
             break
         case "Capsule Button":
             listener?.pressedCapsuleButtonCell()
-            break
         case "Box Button":
             listener?.pressedBoxButtonCell()
-            break
         case "Tabs":
             listener?.pressedTabsCell()
-            break
         case "FAB":
             listener?.pressedFABButtonCell()
-            break
         case "List Header":
             listener?.pressedListHeaderCell()
-            break
         case "Pagination":
-            break
+            listener?.pressedPaginationCell()
         case "Divider":
             listener?.pressedDividerCell()
-            break
         case "Moments":
             listener?.pressedMomentsCell()
-            break
         case "List":
             listener?.pressedListButtonCell()
-            break
         default:
             break
         }

@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener, FABListener, TabsListener {
+protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener, FABListener, TabsListener, PaginationListener {
     var router: DesignSystemRouting? { get set }
     var listener: DesignSystemListener? { get set }
 }
@@ -45,6 +45,9 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
     private let tabsBuildable: TabsBuildable
     private var tabsRouting: Routing?
     
+    private let paginationBuildable: PaginationBuildable
+    private var paginationRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DesignSystemInteractable,
@@ -57,7 +60,8 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         capsuleButtonBuildable: CapsuleButtonBuildable,
         listBuildable: ListBuildable,
         fabBuildable: FABBuildable,
-        tabsBuildable: TabsBuildable
+        tabsBuildable: TabsBuildable,
+        paginationBuildable: PaginationBuildable
     ) {
         self.boxButtonBuildable = boxButtonBuildable
         self.gnbHeaderBuildable = gnbHeaderBuildable
@@ -68,6 +72,7 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         self.listBuildable = listBuildable
         self.fabBuildable = fabBuildable
         self.tabsBuildable = tabsBuildable
+        self.paginationBuildable = paginationBuildable
         super.init(interactor: interactor,
                    viewController: viewController
         )
@@ -306,5 +311,31 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         
         detachChild(router)
         tabsRouting = nil
+    }
+    
+    // MARK: - Pagination DesignSystem RIBs
+    func attachPaginationVC() {
+        if paginationRouting != nil {
+            return
+        }
+        
+        let router = paginationBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        paginationRouting = router
+        attachChild(router)
+    }
+    
+    func detachPaginationVC(isOnlyDetach: Bool) {
+        guard let router = paginationRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        paginationRouting = nil
     }
 }

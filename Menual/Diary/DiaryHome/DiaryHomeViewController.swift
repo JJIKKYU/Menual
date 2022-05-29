@@ -94,12 +94,21 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.title = "MY MOMENTS"
         $0.rightArrowBtn.addTarget(self, action: #selector(pressedMomentsMoreBtn), for: .touchUpInside)
     }
-    
+
     lazy var momentsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout()).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        let flowlayout = UICollectionViewFlowLayout.init()
+        let flowlayout = CustomCollectionViewFlowLayout.init()
+        flowlayout.itemSize = CGSize(width: self.view.bounds.width - 40, height: 120)
+        flowlayout.scrollDirection = .horizontal
+        flowlayout.minimumLineSpacing = 10
+        flowlayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         $0.setCollectionViewLayout(flowlayout, animated: true)
-        $0.backgroundColor = Colors.tint.main.v100
+        $0.delegate = self
+        $0.dataSource = self
+        $0.register(MomentsCell.self, forCellWithReuseIdentifier: "MomentsCell")
+        $0.backgroundColor = .clear
+        $0.decelerationRate = .fast
+        $0.isPagingEnabled = false
     }
     
     lazy var myMenualTitleView = ListHeader(type: .textandicon, rightIconType: .none).then {
@@ -389,5 +398,22 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         print("reloadTableView!")
         myMenualTableView.reloadData()
     }
+}
+
+// MARK: - UICollectionView Delegate, Datasource
+extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MomentsCell", for: indexPath) as? MomentsCell else { return UICollectionViewCell() }
+        
+        cell.tagTitle = "TEXT AREA"
+        cell.momentsTitle = "타이틀은 최대 20자를 작성할 수 있습니다. 그 이상일 경우 우오아우아"
+
+        return cell
+    }
+    
     
 }
