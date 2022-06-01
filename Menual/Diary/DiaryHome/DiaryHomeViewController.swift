@@ -109,6 +109,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.backgroundColor = .clear
         $0.decelerationRate = .fast
         $0.isPagingEnabled = false
+        $0.tag = 0
+        $0.showsHorizontalScrollIndicator = false
+    }
+    
+    private let momentsCollectionViewPagination = Pagination().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.numberOfPages = 5
     }
     
     lazy var myMenualTitleView = ListHeader(type: .textandicon, rightIconType: .none).then {
@@ -171,6 +178,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
 //        scrollView.addSubview(testView)
         scrollView.addSubview(momentsTitleView)
         scrollView.addSubview(momentsCollectionView)
+        scrollView.addSubview(momentsCollectionViewPagination)
         scrollView.addSubview(myMenualTitleView)
         scrollView.addSubview(myMenualCollectionView)
         scrollView.addSubview(myMenualTableView)
@@ -228,14 +236,21 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         momentsCollectionView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.equalTo(momentsTitleView.snp.bottom).offset(20)
-            make.height.equalTo(200)
+            make.top.equalTo(momentsTitleView.snp.bottom).offset(12)
+            make.height.equalTo(120)
+        }
+        
+        momentsCollectionViewPagination.snp.makeConstraints { make in
+            make.top.equalTo(momentsCollectionView.snp.bottom).offset(10)
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(4)
         }
         
         myMenualTitleView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.equalTo(momentsCollectionView.snp.bottom).offset(20)
+            make.top.equalTo(momentsCollectionViewPagination.snp.bottom).offset(12)
             make.height.equalTo(24)
         }
         
@@ -305,6 +320,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
 extension DiaryHomeViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // stickyMyMenualCollectionView(scrollView)
+        momentsPagination(scrollView)
     }
     
     // MyMenualCollectionView보다 아래로 스크롤 했을 경우 상단에 고정되도록
@@ -362,6 +378,22 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
             isStickyMyMenualCollectionView = false
         }
     }
+    
+    func momentsPagination(_ scrollView: UIScrollView) {
+        // MomentCollectionView 일때만 작동 되도록
+        if scrollView.tag == 0 {
+            let width = scrollView.bounds.size.width
+            // Init할 때 width가 모두 그려지지 않을때 오류 발생
+            if width == 0 { return }
+            // 좌표보정을 위해 절반의 너비를 더해줌
+            let x = scrollView.contentOffset.x + (width/2)
+           
+            let newPage = Int(x / width)
+            if momentsCollectionViewPagination.currentPage != newPage {
+                momentsCollectionViewPagination.currentPage = newPage
+            }
+        }
+    }
 }
 
 // MARK: - UITableView Deleagte, Datasource
@@ -414,6 +446,4 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
 
         return cell
     }
-    
-    
 }
