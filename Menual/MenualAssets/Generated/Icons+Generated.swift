@@ -427,6 +427,10 @@ internal enum Asset {
     internal static let stopwatch = ImageAsset(name: "80px/stopwatch")
     internal static let tea = ImageAsset(name: "80px/tea")
   }
+  internal enum Pagination {
+    internal static let paginationSelected = ImageAsset(name: "Pagination/paginationSelected")
+    internal static let paginationUnselected = ImageAsset(name: "Pagination/paginationUnselected")
+  }
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 

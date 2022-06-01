@@ -167,6 +167,7 @@
 		98EADB9F28438039007C298C /* PaginationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9B28438038007C298C /* PaginationViewController.swift */; };
 		98EADBA028438039007C298C /* PaginationBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9C28438038007C298C /* PaginationBuilder.swift */; };
 		98EADBA128438039007C298C /* PaginationInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9D28438038007C298C /* PaginationInteractor.swift */; };
+		98EADBA4284734E4007C298C /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADBA3284734E4007C298C /* Pagination.swift */; };
 		98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A26D280C536F000851F0 /* MenualNavigationController.swift */; };
 		98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */; };
 		98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */; };
@@ -370,6 +371,7 @@
 		98EADB9B28438038007C298C /* PaginationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationViewController.swift; sourceTree = "<group>"; };
 		98EADB9C28438038007C298C /* PaginationBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationBuilder.swift; sourceTree = "<group>"; };
 		98EADB9D28438038007C298C /* PaginationInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationInteractor.swift; sourceTree = "<group>"; };
+		98EADBA3284734E4007C298C /* Pagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pagination.swift; sourceTree = "<group>"; };
 		98F3A26D280C536F000851F0 /* MenualNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualNavigationController.swift; sourceTree = "<group>"; };
 		98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetBaseViewController.swift; sourceTree = "<group>"; };
 		98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetViewController.swift; sourceTree = "<group>"; };
@@ -437,6 +439,7 @@
 		98239BE127E3234F00E216F1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				98EADBA22847258C007C298C /* Pagination */,
 				98EADB8E28432855007C298C /* Tabs */,
 				98B557CD2841F03700F8CA3E /* FAB */,
 				98B557C12841D4B000F8CA3E /* List */,
@@ -1058,6 +1061,14 @@
 			path = Pagination;
 			sourceTree = "<group>";
 		};
+		98EADBA22847258C007C298C /* Pagination */ = {
+			isa = PBXGroup;
+			children = (
+				98EADBA3284734E4007C298C /* Pagination.swift */,
+			);
+			path = Pagination;
+			sourceTree = "<group>";
+		};
 		98F3A26C280C534D000851F0 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
@@ -1422,6 +1433,7 @@
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				98A2BDA1280A87E300C1FB92 /* Swift+Util.swift in Sources */,
 				98B55749281E426300F8CA3E /* WeatherModel.swift in Sources */,
+				98EADBA4284734E4007C298C /* Pagination.swift in Sources */,
 				98B557562830C7B200F8CA3E /* DiaryTempSaveInteractor.swift in Sources */,
 				98B557542830C7B200F8CA3E /* DiaryTempSaveViewController.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
