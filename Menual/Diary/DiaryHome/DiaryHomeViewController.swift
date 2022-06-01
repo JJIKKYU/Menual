@@ -31,12 +31,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     weak var listener: DiaryHomePresentableListener?
     
     // MARK: - UI 코드
-    // 이 친구는 스크롤되게 임시로 넣은 놈입니다.
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        return label
-    }()
+    private let tableViewHeaderView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .clear
+    }
 
     lazy var naviView = MenualNaviView(type: .main).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -51,12 +49,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         let gesture = UITapGestureRecognizer(target: self, action: #selector(pressedMenualBtn))
         $0.menualTitleImage.addGestureRecognizer(gesture)
         // #endif
-    }
-    
-    lazy var scrollView = UIScrollView().then {
-        $0.backgroundColor = Colors.background.black
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.delegate = self
     }
     
     lazy var leftBarButtonItem = UIBarButtonItem().then {
@@ -132,10 +124,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
         $0.dataSource = self
-        $0.backgroundColor = .gray
+        $0.backgroundColor = .clear
         $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
         $0.estimatedRowHeight = 72
         $0.rowHeight = 72
+        $0.showsVerticalScrollIndicator = false
+        $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 72, right: 0)
     }
     
     var isStickyMyMenualCollectionView: Bool = false
@@ -143,8 +137,20 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     lazy var myMenualCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout()).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         let flowlayout = UICollectionViewFlowLayout.init()
+        flowlayout.scrollDirection = .horizontal
+        flowlayout.minimumLineSpacing = 10
+        flowlayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         $0.setCollectionViewLayout(flowlayout, animated: true)
-        $0.backgroundColor = Colors.tint.main.v100
+        $0.backgroundColor = .clear
+        $0.delegate = self
+        $0.dataSource = self
+        $0.register(TabsCell.self, forCellWithReuseIdentifier: "TabsCell")
+        $0.tag = 1
+        $0.showsHorizontalScrollIndicator = false
+    }
+    
+    private let divider = Divider(type: ._2px).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
     // MARK: - VC 코드
@@ -168,21 +174,21 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
 //        title = MenualString.title_menual
 //        navigationItem.leftBarButtonItem = leftBarButtonItem
 //        navigationItem.rightBarButtonItem = rightBarButtonItem
+        self.view.backgroundColor = Colors.background.black
         
         self.view.addSubview(naviView)
-        self.view.addSubview(scrollView)
-        self.view.addSubview(fabWriteBtn)
+        // self.view.addSubview(scrollView)
+         self.view.addSubview(fabWriteBtn)
         
-
-        scrollView.addSubview(titleLabel)
-//        scrollView.addSubview(testView)
-        scrollView.addSubview(momentsTitleView)
-        scrollView.addSubview(momentsCollectionView)
-        scrollView.addSubview(momentsCollectionViewPagination)
-        scrollView.addSubview(myMenualTitleView)
-        scrollView.addSubview(myMenualCollectionView)
-        scrollView.addSubview(myMenualTableView)
-        scrollView.addSubview(myMenualPageTitleView)
+        self.view.addSubview(myMenualTableView)
+        myMenualTableView.tableHeaderView = tableViewHeaderView
+        tableViewHeaderView.addSubview(momentsTitleView)
+        tableViewHeaderView.addSubview(momentsCollectionView)
+        tableViewHeaderView.addSubview(momentsCollectionViewPagination)
+        tableViewHeaderView.addSubview(myMenualTitleView)
+        tableViewHeaderView.addSubview(myMenualCollectionView)
+        tableViewHeaderView.addSubview(divider)
+        tableViewHeaderView.addSubview(myMenualPageTitleView)
         
         naviView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -192,44 +198,29 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         }
         
         self.view.bringSubviewToFront(naviView)
+        self.view.bringSubviewToFront(fabWriteBtn)
         
-        // 임시
-//        fabWriteBtn.addSubview(wrtingBtnTest)
-//        wrtingBtnTest.snp.makeConstraints { make in
-//            make.centerX.centerY.equalToSuperview()
-//        }
-        
-        scrollView.snp.makeConstraints { make in
+        myMenualTableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
             make.top.equalToSuperview()
-            make.bottom.equalToSuperview().offset(20)
         }
         
-        fabWriteBtn.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.height.equalTo(50)
-            make.bottom.equalToSuperview().inset(34)
+        tableViewHeaderView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(390)
         }
+        self.view.layoutIfNeeded()
         
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(1500)
-            make.leading.equalToSuperview().offset(20)
-            make.bottom.equalToSuperview().offset(-40)
-        }
-        
-//        testView.snp.makeConstraints { make in
-//            make.leading.equalToSuperview()
-//            make.width.equalTo(300)
-//            make.top.equalToSuperview().offset(100)
-//            make.height.equalTo(200)
-//        }
+        print("UIApplication.topSafeAreaHeight = \(UIApplication.topSafeAreaHeight)")
         
         momentsTitleView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.equalToSuperview().offset(64)
+            make.top.equalToSuperview().offset(44 + 16)
             make.height.equalTo(24)
         }
         
@@ -237,7 +228,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.top.equalTo(momentsTitleView.snp.bottom).offset(12)
-            make.height.equalTo(120)
+            make.height.equalTo(130)
         }
         
         momentsCollectionViewPagination.snp.makeConstraints { make in
@@ -251,29 +242,53 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.top.equalTo(momentsCollectionViewPagination.snp.bottom).offset(12)
-            make.height.equalTo(24)
+            make.height.equalTo(22)
         }
         
         myMenualCollectionView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.equalTo(myMenualTitleView.snp.bottom).offset(20)
-            make.height.equalTo(100)
+            make.top.equalTo(myMenualTitleView.snp.bottom).offset(12)
+            make.height.equalTo(56)
         }
         
         myMenualPageTitleView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.equalTo(myMenualCollectionView.snp.bottom).offset(20)
+            make.top.equalTo(myMenualCollectionView.snp.bottom).offset(16)
             make.height.equalTo(24)
         }
         
-        myMenualTableView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.top.equalTo(myMenualPageTitleView.snp.bottom).offset(20)
+        divider.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(myMenualPageTitleView.snp.bottom).offset(8)
+            make.height.equalTo(2)
         }
+        
+        fabWriteBtn.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.height.equalTo(56)
+            make.bottom.equalToSuperview().inset(34)
+        }
+        
+        // 임시
+//        fabWriteBtn.addSubview(wrtingBtnTest)
+//        wrtingBtnTest.snp.makeConstraints { make in
+//            make.centerX.centerY.equalToSuperview()
+//        }
+        /*
+        
+        
+        
+        
+        
+        
+        
+        
+        
+         */
     }
     
     @objc
@@ -430,20 +445,69 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         print("reloadTableView!")
         myMenualTableView.reloadData()
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        print("tableView ContentSize = \(self.myMenualTableView.contentSize.height)")
+        
+//        myMenualTableView.snp.removeConstraints()
+//        myMenualTableView.snp.makeConstraints { make in
+//            make.leading.equalToSuperview()
+//            make.width.equalToSuperview()
+//            make.bottom.equalToSuperview().inset(myMenualTableView.contentSize.height)
+//            make.top.equalTo(divider.snp.bottom).offset(0)
+//        }
+    }
 }
 
 // MARK: - UICollectionView Delegate, Datasource
 extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        switch collectionView.tag {
+        // MomentsCollectionView
+        case 0:
+            return 5
+        // MyMenualCollectionView
+        case 1:
+            return 5
+            
+        default:
+            return 5
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MomentsCell", for: indexPath) as? MomentsCell else { return UICollectionViewCell() }
         
-        cell.tagTitle = "TEXT AREA"
-        cell.momentsTitle = "타이틀은 최대 20자를 작성할 수 있습니다. 그 이상일 경우 우오아우아"
-
-        return cell
+        switch collectionView.tag {
+        // MomentsCollectionView
+        case 0:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MomentsCell", for: indexPath) as? MomentsCell else { return UICollectionViewCell() }
+            
+            cell.tagTitle = "TEXT AREA"
+            cell.momentsTitle = "타이틀은 최대 20자를 작성할 수 있습니다. 그 이상일 경우 우오아우아"
+            
+            return cell
+        // MyMenualCollectionView
+        case 1:
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TabsCell", for: indexPath) as? TabsCell else { return UICollectionViewCell() }
+            return cell
+        default:
+            return UICollectionViewCell()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        switch collectionView.tag {
+        // MomentsCollectionView
+        case 0:
+            let width = UIScreen.main.bounds.width - 40
+            return CGSize(width: width, height: 120)
+        // MyMenualCollectionView
+        case 1:
+            return CGSize(width: 72, height: 56)
+            
+        default:
+            return CGSize(width: 32, height: 32)
+        }
     }
 }
