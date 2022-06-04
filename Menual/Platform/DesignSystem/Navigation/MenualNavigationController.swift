@@ -104,7 +104,7 @@ class MenualNaviView: UIView {
     func setViews() {
         // backgroundColor = UIColor.gray.withAlphaComponent(0.1)
         // applyBlurEffect()
-        backgroundColor = Colors.background.black
+        backgroundColor = Colors.background
         addSubview(menualTitleImage)
         addSubview(backButton)
         addSubview(rightButton1)
@@ -199,7 +199,7 @@ class MenualNaviView: UIView {
             titleLabel.font = UIFont.AppTitle(.title_3)
             backButton.isHidden = false
             backButton.tintColor = Colors.grey.g100
-            backButton.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
             rightButton1.isHidden = false
             rightButton1.tintColor = Colors.grey.g100
             rightButton1.setImage(Asset._24px.Alert.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)

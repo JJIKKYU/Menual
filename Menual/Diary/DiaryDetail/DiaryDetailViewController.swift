@@ -22,6 +22,13 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
 
     weak var listener: DiaryDetailPresentableListener?
     
+    lazy var naviView = MenualNaviView(type: .menualDetail).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.rightButton1.setImage(Asset._24px.profile.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        // $0.rightButton1.addTarget(self, action: #selector(pressedMyPageBtn), for: .touchUpInside)
+        $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+    }
+    
     lazy var leftBarButtonItem = UIBarButtonItem().then {
         $0.image = Asset._24px.Arrow.back.image
         $0.style = .done
@@ -31,7 +38,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     lazy var scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.background.black
+        $0.backgroundColor = Colors.background
+        $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 0)
     }
     
     let titleLabel = UILabel().then {
@@ -103,12 +111,21 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         navigationItem.leftBarButtonItem = leftBarButtonItem
         
         self.view.addSubview(scrollView)
+        self.view.addSubview(naviView)
         self.scrollView.addSubview(titleLabel)
         self.scrollView.addSubview(testLabel)
         self.scrollView.addSubview(descriptionTextLabel)
         self.scrollView.addSubview(imageView)
         self.scrollView.addSubview(readCountLabel)
         self.scrollView.addSubview(createdAtLabel)
+        self.view.bringSubviewToFront(naviView)
+        
+        naviView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+        }
         
         scrollView.snp.makeConstraints { make in
             make.leading.equalToSuperview()

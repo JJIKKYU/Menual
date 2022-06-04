@@ -15,7 +15,7 @@ class MomentsTag: UIView {
         didSet { setNeedsLayout() }
     }
     
-    var titleLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8)).then {
+    var titleLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 3, left: 10, bottom: 3, right: 10)).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppHead(.head_2)
         $0.textColor = Colors.tint.main.v100

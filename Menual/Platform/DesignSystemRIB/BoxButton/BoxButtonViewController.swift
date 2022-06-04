@@ -78,7 +78,7 @@ final class BoxButtonViewController: UIViewController, BoxButtonPresentable, Box
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Colors.background.black
+        view.backgroundColor = Colors.background
         setViews()
     }
     

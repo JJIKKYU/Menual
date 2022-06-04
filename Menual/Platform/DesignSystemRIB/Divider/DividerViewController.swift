@@ -58,7 +58,7 @@ final class DividerViewController: UIViewController, DividerPresentable, Divider
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Colors.background.black
+        view.backgroundColor = Colors.background
         setViews()
     }
     

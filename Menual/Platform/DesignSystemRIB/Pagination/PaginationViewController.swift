@@ -67,7 +67,7 @@ final class PaginationViewController: UIViewController, PaginationPresentable, P
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Colors.background.black
+        view.backgroundColor = Colors.background
         setViews()
     }
     

@@ -78,7 +78,7 @@ class MenualBottomSheetViewController: MenualBottomSheetBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setViews()
-        bottomSheetView.backgroundColor = Colors.background.black
+        bottomSheetView.backgroundColor = Colors.background
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }

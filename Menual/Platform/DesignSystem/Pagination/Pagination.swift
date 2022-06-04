@@ -21,6 +21,8 @@ class Pagination: UIPageControl {
     init() {
         super.init(frame: CGRect.zero)
         isUserInteractionEnabled = false
+        currentPageIndicatorTintColor = Colors.grey.g600
+        pageIndicatorTintColor = Colors.grey.g600
     }
     
     required init?(coder: NSCoder) {
@@ -28,14 +30,12 @@ class Pagination: UIPageControl {
     }
     
     func updateDots() {
-        print("updateDots!")
-        
         for index in 0..<numberOfPages {
             print("index = \(index)")
-            setIndicatorImage(Asset.Pagination.paginationUnselected.image, forPage: index)
+            setIndicatorImage(Asset.Pagination.paginationUnselected.image.withRenderingMode(.alwaysTemplate), forPage: index)
             if index == currentPage {
                 print("currentPage! = \(index)")
-                setIndicatorImage(Asset.Pagination.paginationSelected.image, forPage: index)
+                setIndicatorImage(Asset.Pagination.paginationSelected.image.withRenderingMode(.alwaysTemplate), forPage: index)
             }
         }
     }

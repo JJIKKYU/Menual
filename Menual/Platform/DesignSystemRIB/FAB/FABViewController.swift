@@ -61,7 +61,7 @@ final class FABViewController: UIViewController, FABPresentable, FABViewControll
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Colors.background.black
+        view.backgroundColor = Colors.background
         setViews()
     }
     

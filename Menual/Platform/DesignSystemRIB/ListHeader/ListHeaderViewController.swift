@@ -60,7 +60,7 @@ final class ListHeaderViewController: UIViewController, ListHeaderPresentable, L
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Colors.background.black
+        view.backgroundColor = Colors.background
         setViews()
     }
     

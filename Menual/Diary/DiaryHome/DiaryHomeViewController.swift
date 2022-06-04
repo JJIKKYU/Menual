@@ -99,6 +99,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.dataSource = self
         $0.register(MomentsCell.self, forCellWithReuseIdentifier: "MomentsCell")
         $0.backgroundColor = .clear
+        $0.backgroundColor = .red
         $0.decelerationRate = .fast
         $0.isPagingEnabled = false
         $0.tag = 0
@@ -130,6 +131,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.rowHeight = 72
         $0.showsVerticalScrollIndicator = false
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 72, right: 0)
+        $0.tag = -1
     }
     
     var isStickyMyMenualCollectionView: Bool = false
@@ -142,6 +144,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         flowlayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         $0.setCollectionViewLayout(flowlayout, animated: true)
         $0.backgroundColor = .clear
+        $0.backgroundColor = .red
         $0.delegate = self
         $0.dataSource = self
         $0.register(TabsCell.self, forCellWithReuseIdentifier: "TabsCell")
@@ -174,7 +177,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
 //        title = MenualString.title_menual
 //        navigationItem.leftBarButtonItem = leftBarButtonItem
 //        navigationItem.rightBarButtonItem = rightBarButtonItem
-        self.view.backgroundColor = Colors.background.black
+        self.view.backgroundColor = Colors.background
         
         self.view.addSubview(naviView)
         // self.view.addSubview(scrollView)
@@ -228,7 +231,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.top.equalTo(momentsTitleView.snp.bottom).offset(12)
-            make.height.equalTo(130)
+            make.height.equalTo(125)
         }
         
         momentsCollectionViewPagination.snp.makeConstraints { make in
@@ -396,6 +399,7 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
     
     func momentsPagination(_ scrollView: UIScrollView) {
         // MomentCollectionView 일때만 작동 되도록
+        print("scrollView tag = \(scrollView.tag)")
         if scrollView.tag == 0 {
             let width = scrollView.bounds.size.width
             // Init할 때 width가 모두 그려지지 않을때 오류 발생
@@ -501,7 +505,7 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         // MomentsCollectionView
         case 0:
             let width = UIScreen.main.bounds.width - 40
-            return CGSize(width: width, height: 120)
+            return CGSize(width: width, height: 125)
         // MyMenualCollectionView
         case 1:
             return CGSize(width: 72, height: 56)

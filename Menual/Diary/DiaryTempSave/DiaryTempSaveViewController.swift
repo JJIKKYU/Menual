@@ -42,7 +42,7 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        view.backgroundColor = Colors.background.black
+        view.backgroundColor = Colors.background
         setViews()
     }
     

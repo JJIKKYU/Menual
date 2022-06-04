@@ -109,7 +109,7 @@ class ListCell: UITableViewCell {
     }
     
     func setViews() {
-        backgroundColor = Colors.background.black
+        backgroundColor = Colors.background
         addSubview(lockImageView)
         addSubview(titleLabel)
         addSubview(menualImageView)
@@ -204,7 +204,7 @@ class ListCell: UITableViewCell {
         
         switch listStatus {
         case .default_:
-            backgroundColor = Colors.background.black
+            backgroundColor = Colors.background
         case .pressed:
             backgroundColor = Colors.grey.g700
         case .highlighed:

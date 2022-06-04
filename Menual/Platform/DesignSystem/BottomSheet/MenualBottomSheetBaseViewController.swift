@@ -12,7 +12,7 @@ import SnapKit
 class MenualBottomSheetBaseViewController: UIViewController {
     lazy private var dimmedView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.background.black.withAlphaComponent(0.7)
+        $0.backgroundColor = Colors.background.withAlphaComponent(0.7)
         $0.alpha = 0
         
         let dimmedTap = UITapGestureRecognizer(target: self, action: #selector(dimmedViewTapped))

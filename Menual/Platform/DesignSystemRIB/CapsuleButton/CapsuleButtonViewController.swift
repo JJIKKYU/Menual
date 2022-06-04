@@ -71,7 +71,7 @@ final class CapsuleButtonViewController: UIViewController, CapsuleButtonPresenta
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Colors.background.black
+        view.backgroundColor = Colors.background
         setViews()
         
     }

@@ -95,7 +95,7 @@ final class GNBHeaderViewController: UIViewController, GNBHeaderPresentable, GNB
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Colors.background.black
+        view.backgroundColor = Colors.background
         setViews()
     }
     

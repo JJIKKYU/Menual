@@ -46,7 +46,7 @@ final class DesignSystemViewController: UIViewController, DesignSystemPresentabl
         $0.register(DesignSystemCell.self, forCellReuseIdentifier: "DesignSystemCell")
         $0.delegate = self
         $0.dataSource = self
-        $0.backgroundColor = Colors.background.black
+        $0.backgroundColor = Colors.background
     }
     
     init() {

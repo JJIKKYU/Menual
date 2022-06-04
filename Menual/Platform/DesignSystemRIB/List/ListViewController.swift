@@ -49,7 +49,7 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Colors.background.black
+        view.backgroundColor = Colors.background
         setViews()
     }
     
