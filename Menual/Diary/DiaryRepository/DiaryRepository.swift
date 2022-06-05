@@ -29,10 +29,12 @@ public protocol DiaryRepository {
     func deleteDiary(info: DiaryModel)
     func saveImageToDocumentDirectory(imageName: String, image: UIImage)
     func loadImageFromDocumentDirectory(imageName: String) -> UIImage?
+    
+    // 겹쓰기 로직
+    func addReplay(info: DiaryReplyModel)
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
-
 
 //    public var realmDiaryOb: Observable<[DiaryModel]> {
 //        let realm = try! Realm()
@@ -177,7 +179,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         let _ = realm.objects(DiaryModelRealm.self)
         
-        
+        print("addDiary! - 2")
         
         realm.safeWrite {
              realm.add(DiaryModelRealm(info))
@@ -185,6 +187,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
         
         diaryModelSubject.accept(diaryModelSubject.value + [info])
+        print("addDiary! - 3")
     }
     
     public func updateDiary(info: DiaryModel) {
@@ -212,13 +215,15 @@ public final class DiaryRepositoryImp: DiaryRepository {
 
         var arr = diaryModelSubject.value
         arr[idx] = DiaryModel(uuid: info.uuid,
+                              pageNum: info.pageNum,
                               title: info.title,
                               weather: info.weather,
                               place: info.place,
                               description: info.description,
                               image: info.image,
                               readCount: info.readCount,
-                              createdAt: info.createdAt
+                              createdAt: info.createdAt,
+                              replies: info.replies
         )
 
         diaryModelSubject.accept(arr)
@@ -274,5 +279,31 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
         
         placeHistorySubject.accept(placeHistorySubject.value + [info])
+    }
+    
+    // MARK: - 겹쓰기 로직
+    public func addReplay(info: DiaryReplyModel) {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        print("info! = \(info)")
+        
+        guard let diary = realm.objects(DiaryModelRealm.self).filter("uuid == %@", info.diaryUuid).first else { return }
+        
+        
+        print("!? = \(diary)")
+        
+        realm.safeWrite {
+            diary.replies.append(DiaryReplyModelRealm(info))
+        }
+        
+        print("!@#")
+//        realm.safeWrite {
+//            realm.add(DiaryReplyModelRealm(info))
+//        }
+        
+        let models = realm.objects(DiaryModelRealm.self)
+        diaryModelSubject.accept(models.map { DiaryModel($0) })
     }
 }

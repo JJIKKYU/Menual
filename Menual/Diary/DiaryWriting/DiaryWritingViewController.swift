@@ -26,6 +26,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
 final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable  {
 
     weak var listener: DiaryWritingPresentableListener?
+    private var disposeBag = DisposeBag()
     
     lazy var naviView = MenualNaviView(type: .write).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -108,6 +109,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
       
         view.backgroundColor = .white
         setViews()
+        bind()
         print("DiaryWriting!")
     }
     
@@ -178,6 +180,22 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         }
     }
     
+    func bind() {
+        descriptionTextView.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else { return }
+                print("text = \(text)")
+                if text.count > 0 {
+                    self.naviView.rightButton1IsActive = true
+                } else {
+                    self.naviView.rightButton1IsActive = false
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+    
     func setWeatherView(model: WeatherModel) {
         // 날씨를 선택하지 않았으면 뷰를 변경할 필요 없음
         guard let weather = model.weather else {
@@ -208,13 +226,15 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         else { return }
         
         let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
+                                    pageNum: 0,
                                     title: title,
                                     weather: WeatherModel(uuid: NSUUID().uuidString, weather: .sun, detailText: "123"),
                                     place: PlaceModel(uuid: NSUUID().uuidString, place: .place, detailText: "123"),
                                     description: description,
                                     image: self.imageView.image,
                                     readCount: 0,
-                                    createdAt: Date()
+                                    createdAt: Date(),
+                                    replies: []
         )
         print("diaryModel.id = \(diaryModel.uuid)")
         listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())

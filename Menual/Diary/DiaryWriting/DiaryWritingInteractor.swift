@@ -136,13 +136,15 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         // print("DiaryWritingInteractor :: writeDiary! info = \(info)")
         
         let newDiaryModel = DiaryModel(uuid: info.uuid,
+                                       pageNum: info.pageNum,
                                        title: info.title,
                                        weather: weatherModelValue,
                                        place: placeModelValue,
                                        description: info.description,
                                        image: info.image,
                                        readCount: info.readCount,
-                                       createdAt: info.createdAt
+                                       createdAt: info.createdAt,
+                                       replies: info.replies
         )
         
         dependency.diaryRepository

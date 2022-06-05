@@ -16,11 +16,36 @@ protocol DiaryDetailPresentableListener: AnyObject {
     // business logic, such as signIn(). This protocol is implemented by the corresponding
     // interactor class.
     func pressedBackBtn()
+    func pressedReplySubmitBtn(desc: String)
+    
+    var diaryReplies: [DiaryReplyModel] { get }
 }
 
 final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable, DiaryDetailViewControllable {
 
     weak var listener: DiaryDetailPresentableListener?
+    
+    private let tableViewHeaderView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .clear
+    }
+    
+    lazy var tableViewFooterView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .blue
+        $0.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 100)
+    }
+    
+    private let tempTextField = UITextField().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .red
+    }
+    
+    lazy var tempSubmitBtn = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.addTarget(self, action: #selector(tempPressedSubmitReplyBtn), for: .touchUpInside)
+        $0.setTitle("올리기", for: .normal)
+    }
     
     lazy var naviView = MenualNaviView(type: .menualDetail).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -66,13 +91,14 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.font = UIFont.AppBodyOnlyFont(.body_3)
         $0.textColor = .white
         $0.text = "오늘의 메뉴얼을 입력해주세요.\n날짜가 적힌 곳을 탭하여 제목을 입력할 수 있습니다."
-        $0.backgroundColor = .red
+        $0.backgroundColor = .gray
         $0.numberOfLines = 0
     }
     
     let imageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
+        $0.backgroundColor = .gray
     }
     
     let readCountLabel = UILabel().then {
@@ -83,6 +109,17 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.numberOfLines = 1
         $0.textAlignment = .right
         $0.text = "0번 읽었슴다"
+    }
+    
+    lazy var replyTableView = UITableView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.delegate = self
+        $0.dataSource = self
+        $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 72, right: 0)
+        $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
+        $0.estimatedRowHeight = 72
+        $0.rowHeight = 72
+        $0.showsVerticalScrollIndicator = false
     }
     
     init() {
@@ -108,16 +145,21 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     func setViews() {
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        navigationItem.leftBarButtonItem = leftBarButtonItem
         
-        self.view.addSubview(scrollView)
+        self.view.addSubview(replyTableView)
+        replyTableView.tableHeaderView = tableViewHeaderView
+        replyTableView.tableFooterView = tableViewFooterView
+        self.view.addSubview(tempTextField)
+        self.view.addSubview(tempSubmitBtn)
+        
+//        self.view.addSubview(scrollView)
         self.view.addSubview(naviView)
-        self.scrollView.addSubview(titleLabel)
-        self.scrollView.addSubview(testLabel)
-        self.scrollView.addSubview(descriptionTextLabel)
-        self.scrollView.addSubview(imageView)
-        self.scrollView.addSubview(readCountLabel)
-        self.scrollView.addSubview(createdAtLabel)
+        replyTableView.addSubview(titleLabel)
+        replyTableView.addSubview(testLabel)
+        replyTableView.addSubview(descriptionTextLabel)
+        replyTableView.addSubview(createdAtLabel)
+        replyTableView.addSubview(imageView)
+        replyTableView.addSubview(readCountLabel)
         self.view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
@@ -127,22 +169,27 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.width.equalToSuperview()
         }
         
-        scrollView.snp.makeConstraints { make in
+        replyTableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.equalToSuperview()
             make.bottom.equalToSuperview()
+            make.top.equalToSuperview()
         }
+        
+        tableViewHeaderView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(390)
+        }
+        
+        self.view.layoutIfNeeded()
+        tableViewHeaderView.backgroundColor = .black
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.top.equalToSuperview().offset(20)
-        }
-        
-        createdAtLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
         }
         
         testLabel.snp.makeConstraints { make in
@@ -156,12 +203,10 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(testLabel.snp.bottom).offset(40)
         }
-
-        imageView.snp.makeConstraints { make in
+        
+        createdAtLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(descriptionTextLabel.snp.bottom).offset(20)
-            make.height.equalTo(200)
+            make.top.equalTo(titleLabel.snp.bottom).offset(20)
         }
         
         readCountLabel.snp.makeConstraints { make in
@@ -169,6 +214,27 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(imageView.snp.bottom).offset(20)
             make.height.equalTo(20)
+        }
+        
+        imageView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(descriptionTextLabel.snp.bottom).offset(20)
+            make.height.equalTo(70)
+        }
+        
+        tempTextField.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(20)
+            make.height.equalTo(50)
+        }
+        
+        tempSubmitBtn.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(20)
+            make.width.equalTo(100)
+            make.height.equalTo(50)
+            make.bottom.equalToSuperview().inset(20)
         }
     }
     
@@ -179,7 +245,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.descriptionTextLabel.text = model.description
         self.descriptionTextLabel.setLineHeight()
         self.readCountLabel.text = "\(model.readCount)번 읽었습니다"
-        self.createdAtLabel.text = model.createdAt.description
+        self.createdAtLabel.text = model.createdAt.toStringWithHourMin()
         descriptionTextLabel.sizeToFit()
         createdAtLabel.sizeToFit()
     }
@@ -192,9 +258,48 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         }
     }
     
+    func reloadTableView() {
+        print("diaryDetailViewController reloadTableView!")
+        self.replyTableView.reloadData()
+    }
+    
     @objc
     func pressedBackBtn() {
         print("pressedBackBtn!")
         listener?.pressedBackBtn()
     }
+    
+    @objc
+    func tempPressedSubmitReplyBtn() {
+        print("pressedSubmitReplyBtn")
+        guard let text = tempTextField.text else { return }
+        listener?.pressedReplySubmitBtn(desc: text)
+    }
+}
+
+// MARK: - ReplayTableView
+extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return listener?.diaryReplies.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
+        
+        let index = indexPath.row
+        
+        guard let replies = listener?.diaryReplies,
+              let desc = replies[safe: index]?.desc,
+              let createdAt = replies[safe: index]?.createdAt,
+              let replyNum = replies[safe: index]?.replyNum else { return UITableViewCell() }
+
+        cell.backgroundColor = .clear
+        cell.title = desc
+        cell.pageAndReview = String(replyNum)
+        cell.dateAndTime = createdAt.toStringWithHourMin()
+
+        return cell
+    }
+    
+    
 }

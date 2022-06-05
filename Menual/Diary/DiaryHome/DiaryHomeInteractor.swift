@@ -167,13 +167,15 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             .diaryString.value[safe: index] else { return }
         
         let updateModel = DiaryModel(uuid: model.uuid,
+                                     pageNum: model.pageNum,
                                      title: model.title,
                                      weather: model.weather,
                                      place: model.place,
                                      description: model.description,
                                      image: model.image,
                                      readCount: model.readCount + 1,
-                                     createdAt: model.createdAt
+                                     createdAt: model.createdAt,
+                                     replies: model.replies
         )
         
         dependency.diaryRepository

@@ -14,4 +14,11 @@ extension Date {
         dateFormatter.timeZone = TimeZone(identifier: "KST")
         return dateFormatter.string(from: self)
     }
+    
+    func toStringWithHourMin() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy.MM.dd HH:mm"
+        dateFormatter.timeZone = TimeZone(identifier: "KST")
+        return dateFormatter.string(from: self)
+    }
 }

@@ -246,7 +246,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             }
             
             cell.keyword = model.keyword
-            cell.createdAt = model.createdAt.description
+            cell.createdAt = model.createdAt.toStringWithHourMin()
             cell.deleteBtn.addTarget(self, action: #selector(pressedRecentSearchCellDeleteBtn), for: .touchUpInside)
             
             return cell

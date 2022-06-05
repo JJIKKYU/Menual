@@ -16,6 +16,7 @@ protocol DiaryDetailPresentable: Presentable {
     var listener: DiaryDetailPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     func pressedBackBtn()
+    func reloadTableView()
     func loadDiaryDetail(model: DiaryModel)
     func testLoadDiaryImage(imageName: UIImage?)
 }
@@ -29,8 +30,11 @@ protocol DiaryDetailListener: AnyObject {
 }
 
 final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>, DiaryDetailInteractable, DiaryDetailPresentableListener {
-    
+
+    var diaryReplies: [DiaryReplyModel]
     let diaryModel: DiaryModel?
+    
+    private var disposebag = DisposeBag()
 
     weak var router: DiaryDetailRouting?
     weak var listener: DiaryDetailListener?
@@ -45,6 +49,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     ) {
         self.diaryModel = diaryModel
         self.dependency = dependency
+        self.diaryReplies = diaryModel.replies
         super.init(presenter: presenter)
         presenter.listener = self
         
@@ -54,6 +59,19 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         let image = dependency.diaryRepository
             .loadImageFromDocumentDirectory(imageName: diaryModel.uuid)
         presenter.testLoadDiaryImage(imageName: image)
+        
+        dependency.diaryRepository
+            .diaryString
+            .subscribe(onNext: { [weak self] diaryArr in
+                guard let self = self else { return }
+                print("diaryString 구독 중!, diary = \(diaryArr)")
+                guard let currentDiaryModel = diaryArr.filter { diaryModel.uuid == $0.uuid }.first else { return }
+                print("<- reloadTableView")
+                self.diaryReplies = currentDiaryModel.replies
+                presenter.loadDiaryDetail(model: currentDiaryModel)
+                self.presenter.reloadTableView()
+            })
+            .disposed(by: self.disposebag)
     }
 
     override func didBecomeActive() {
@@ -68,5 +86,22 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     func pressedBackBtn() {
         listener?.diaryDetailPressedBackBtn()
+    }
+    
+    func pressedReplySubmitBtn(desc: String) {
+        guard let diaryModel = diaryModel else {
+            return
+        }
+
+        let newDiaryReplyModel = DiaryReplyModel(uuid: UUID().uuidString,
+                                                 replyNum: 0,
+                                                 diaryUuid: diaryModel.uuid,
+                                                 desc: desc,
+                                                 createdAt: Date(),
+                                                 isDeleted: false
+        )
+        
+        dependency.diaryRepository
+            .addReplay(info: newDiaryReplyModel)
     }
 }
