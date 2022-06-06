@@ -32,11 +32,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     var diaryReplies: [DiaryReplyModel]
     var currentDiaryPage: Int
-    var diaryModel: DiaryModel? {
-        didSet {
-            print("변경되었습니다! \(oldValue)")
-        }
-    }
+    var diaryModel: DiaryModel?
     
     private var disposebag = DisposeBag()
     private let changeCurrentDiarySubject = BehaviorSubject<Bool>(value: false)
@@ -69,12 +65,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         Observable.combineLatest(
             dependency.diaryRepository.diaryString,
             self.changeCurrentDiarySubject
-                .filter { $0 == true }
         )
-        /*
-        dependency.diaryRepository
-            .diaryString
-         */
             .subscribe(onNext: { [weak self] diaryArr, isChanged in
                 guard let self = self,
                       let diaryModel = self.diaryModel else { return }
