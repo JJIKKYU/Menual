@@ -15,8 +15,9 @@ protocol DiaryDetailPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
     // business logic, such as signIn(). This protocol is implemented by the corresponding
     // interactor class.
-    func pressedBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool)
     func pressedReplySubmitBtn(desc: String)
+    func pressedIndicatorButton(offset: Int)
     
     var diaryReplies: [DiaryReplyModel] { get }
     var currentDiaryPage: Int { get }
@@ -48,8 +49,20 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.setTitle("올리기", for: .normal)
     }
     
-    private let diaryIndicator = UIView().then {
-        
+    lazy var tempLeftButton = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setTitle("<", for: .normal)
+        $0.tag = -1
+        $0.addTarget(self, action: #selector(tempPressedIndicatorButton(sender:)), for: .touchUpInside)
+        $0.backgroundColor = .blue
+    }
+    
+    lazy var tempRightButton = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setTitle(">", for: .normal)
+        $0.tag = 1
+        $0.addTarget(self, action: #selector(tempPressedIndicatorButton(sender:)), for: .touchUpInside)
+        $0.backgroundColor = .blue
     }
     
     lazy var naviView = MenualNaviView(type: .menualDetail).then {
@@ -145,7 +158,9 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        listener?.pressedBackBtn()
+        if isMovingFromParent || isBeingDismissed {
+            listener?.pressedBackBtn(isOnlyDetach: true)
+        }
     }
     
     func setViews() {
@@ -154,8 +169,12 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.view.addSubview(replyTableView)
         replyTableView.tableHeaderView = tableViewHeaderView
         replyTableView.tableFooterView = tableViewFooterView
+        
+        // temp
         self.view.addSubview(tempTextField)
         self.view.addSubview(tempSubmitBtn)
+        self.view.addSubview(tempLeftButton)
+        self.view.addSubview(tempRightButton)
         
 //        self.view.addSubview(scrollView)
         self.view.addSubview(naviView)
@@ -228,6 +247,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.height.equalTo(70)
         }
         
+        //temp
         tempTextField.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
@@ -241,6 +261,20 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.height.equalTo(50)
             make.bottom.equalToSuperview().inset(20)
         }
+        
+        tempLeftButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalTo(50)
+            make.height.equalTo(30)
+            make.bottom.equalTo(tempSubmitBtn.snp.top).inset(20)
+        }
+        
+        tempRightButton.snp.makeConstraints { make in
+            make.leading.equalTo(tempLeftButton.snp.trailing).offset(20)
+            make.width.equalTo(50)
+            make.height.equalTo(30)
+            make.bottom.equalTo(tempSubmitBtn.snp.top).inset(20)
+        }
     }
     
     func loadDiaryDetail(model: DiaryModel) {
@@ -250,7 +284,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.descriptionTextLabel.text = model.description
         self.descriptionTextLabel.setLineHeight()
         self.readCountLabel.text = "\(model.readCount)번 읽었습니다"
-        self.createdAtLabel.text = model.createdAt.toStringWithHourMin()
+        self.createdAtLabel.text = model.createdAt.toStringWithHourMin() + " | " + "p.\(model.pageNum)"
         descriptionTextLabel.sizeToFit()
         createdAtLabel.sizeToFit()
     }
@@ -270,8 +304,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     @objc
     func pressedBackBtn() {
-        print("pressedBackBtn!")
-        listener?.pressedBackBtn()
+        listener?.pressedBackBtn(isOnlyDetach: false)
     }
     
     @objc
@@ -279,6 +312,12 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         print("pressedSubmitReplyBtn")
         guard let text = tempTextField.text else { return }
         listener?.pressedReplySubmitBtn(desc: text)
+    }
+    
+    @objc
+    func tempPressedIndicatorButton(sender: UIButton) {
+        print("sender.s tag = \(sender.tag)")
+        listener?.pressedIndicatorButton(offset: sender.tag)
     }
 }
 

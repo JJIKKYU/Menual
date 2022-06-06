@@ -232,7 +232,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
                               image: info.image,
                               readCount: info.readCount,
                               createdAt: info.createdAt,
-                              replies: info.replies
+                              replies: info.replies,
+                              isDeleted: info.isDeleted
         )
 
         diaryModelSubject.accept(arr)

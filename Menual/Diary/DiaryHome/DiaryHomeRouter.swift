@@ -210,16 +210,20 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         attachChild(router)
     }
     
-    func detachDiaryDetail() {
+    func detachDiaryDetail(isOnlyDetach: Bool) {
         guard let router = diaryDetailRouting else {
             return
         }
         
-        viewController.popViewController(animated: true)
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+
         detachChild(router)
         diaryDetailRouting = nil
     }
     
+    // MARK: - DesignSystem RIBs 관련 함수
     func attachDesignSystem() {
         if designSystemRouting != nil {
             return

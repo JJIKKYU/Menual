@@ -20,7 +20,7 @@ protocol DiaryHomeRouting: ViewableRouting {
     func attachDiaryWriting()
     func detachDiaryWriting()
     func attachDiaryDetail(model: DiaryModel)
-    func detachDiaryDetail()
+    func detachDiaryDetail(isOnlyDetach: Bool)
     func attachDesignSystem()
     func detachDesignSystem(isOnlyDetach: Bool)
 }
@@ -182,7 +182,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                                      image: model.image,
                                      readCount: model.readCount + 1,
                                      createdAt: model.createdAt,
-                                     replies: model.replies
+                                     replies: model.replies,
+                                     isDeleted: model.isDeleted
         )
         
         dependency.diaryRepository
@@ -190,8 +191,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         router?.attachDiaryDetail(model: updateModel)
     }
     
-    func diaryDetailPressedBackBtn() {
-        router?.detachDiaryDetail()
+    func diaryDetailPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachDiaryDetail(isOnlyDetach: isOnlyDetach)
     }
 
     // MARK: - Menual Title Btn을 눌렀을때 Action

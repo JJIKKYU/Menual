@@ -15,7 +15,6 @@ protocol DiaryDetailRouting: ViewableRouting {
 protocol DiaryDetailPresentable: Presentable {
     var listener: DiaryDetailPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
-    func pressedBackBtn()
     func reloadTableView()
     func loadDiaryDetail(model: DiaryModel)
     func testLoadDiaryImage(imageName: UIImage?)
@@ -26,16 +25,21 @@ protocol DiaryDetailInteractorDependency {
 
 protocol DiaryDetailListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
-    func diaryDetailPressedBackBtn()
+    func diaryDetailPressedBackBtn(isOnlyDetach: Bool)
 }
 
 final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>, DiaryDetailInteractable, DiaryDetailPresentableListener {
     
     var diaryReplies: [DiaryReplyModel]
     var currentDiaryPage: Int
-    let diaryModel: DiaryModel?
+    var diaryModel: DiaryModel? {
+        didSet {
+            print("변경되었습니다! \(oldValue)")
+        }
+    }
     
     private var disposebag = DisposeBag()
+    private let changeCurrentDiarySubject = BehaviorSubject<Bool>(value: false)
 
     weak var router: DiaryDetailRouting?
     weak var listener: DiaryDetailListener?
@@ -62,14 +66,24 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             .loadImageFromDocumentDirectory(imageName: diaryModel.uuid)
         presenter.testLoadDiaryImage(imageName: image)
         
+        Observable.combineLatest(
+            dependency.diaryRepository.diaryString,
+            self.changeCurrentDiarySubject
+                .filter { $0 == true }
+        )
+        /*
         dependency.diaryRepository
             .diaryString
-            .subscribe(onNext: { [weak self] diaryArr in
-                guard let self = self else { return }
-                print("diaryString 구독 중!, diary = \(diaryArr)")
+         */
+            .subscribe(onNext: { [weak self] diaryArr, isChanged in
+                guard let self = self,
+                      let diaryModel = self.diaryModel else { return }
+                
+                print("diaryString 구독 중!, isChanged = \(isChanged), diaryModel.uuid = \(diaryModel.pageNum)")
                 guard let currentDiaryModel = diaryArr.filter({ diaryModel.uuid == $0.uuid }).first else { return }
                 print("<- reloadTableView")
                 self.diaryReplies = currentDiaryModel.replies
+                self.currentDiaryPage = currentDiaryModel.pageNum
                 presenter.loadDiaryDetail(model: currentDiaryModel)
                 self.presenter.reloadTableView()
             })
@@ -86,8 +100,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         // TODO: Pause any business logic.
     }
     
-    func pressedBackBtn() {
-        listener?.diaryDetailPressedBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool) {
+        listener?.diaryDetailPressedBackBtn(isOnlyDetach: isOnlyDetach)
     }
     
     func pressedReplySubmitBtn(desc: String) {
@@ -105,5 +119,25 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         
         dependency.diaryRepository
             .addReplay(info: newDiaryReplyModel)
+    }
+    
+    // Diary 이동
+    func pressedIndicatorButton(offset: Int) {
+        // 1. 현재 diaryNum을 기준으로
+        // 2. 왼쪽 or 오른쪽으로 이동 (pageNum이 현재 diaryNum기준 -1, +1)
+        // 3. 삭제된 놈이면 건너뛰고 (isDeleted가 true일 경우)
+        let diaries = dependency.diaryRepository.diaryString.value
+            .filter { $0.isDeleted != true }
+            .sorted { $0.createdAt < $1.createdAt }
+
+        let willChangedIdx = (currentDiaryPage - 1) + offset
+        print("willChangedIdx = \(willChangedIdx)")
+        let willChangedDiaryModel = diaries[safe: willChangedIdx]
+
+        self.diaryModel = willChangedDiaryModel
+        print("willChangedDiaryModel = \(willChangedDiaryModel?.pageNum)")
+        
+        self.changeCurrentDiarySubject.onNext(true)
+        print("pass true!")
     }
 }
