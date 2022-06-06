@@ -27,6 +27,7 @@ protocol DiaryHomePresentableListener: AnyObject {
     func pressedMenualTitleBtn()
     
     var lastPageNumRelay: BehaviorRelay<Int> { get }
+    var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> { get }
 }
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
@@ -102,8 +103,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.delegate = self
         $0.dataSource = self
         $0.register(MomentsCell.self, forCellWithReuseIdentifier: "MomentsCell")
+        $0.register(DividerView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "DividerView")
         $0.backgroundColor = .clear
-        $0.backgroundColor = .red
         $0.decelerationRate = .fast
         $0.isPagingEnabled = false
         $0.tag = 0
@@ -145,15 +146,16 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         let flowlayout = UICollectionViewFlowLayout.init()
         flowlayout.scrollDirection = .horizontal
         flowlayout.minimumLineSpacing = 10
-        flowlayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        flowlayout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         $0.setCollectionViewLayout(flowlayout, animated: true)
         $0.backgroundColor = .clear
-        $0.backgroundColor = .red
         $0.delegate = self
         $0.dataSource = self
         $0.register(TabsCell.self, forCellWithReuseIdentifier: "TabsCell")
+        $0.register(DividerView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "DividerView")
         $0.tag = 1
         $0.showsHorizontalScrollIndicator = false
+        $0.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 20)
     }
     
     private let divider = Divider(type: ._2px).then {
@@ -257,7 +259,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.top.equalTo(myMenualTitleView.snp.bottom).offset(12)
-            make.height.equalTo(56)
+            make.height.equalTo(60)
         }
         
         myMenualPageTitleView.snp.makeConstraints { make in
@@ -280,23 +282,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.height.equalTo(56)
             make.bottom.equalToSuperview().inset(34)
         }
-        
-        // 임시
-//        fabWriteBtn.addSubview(wrtingBtnTest)
-//        wrtingBtnTest.snp.makeConstraints { make in
-//            make.centerX.centerY.equalToSuperview()
-//        }
-        /*
-        
-        
-        
-        
-        
-        
-        
-        
-        
-         */
     }
     
     func bind() {
@@ -414,7 +399,6 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
     
     func momentsPagination(_ scrollView: UIScrollView) {
         // MomentCollectionView 일때만 작동 되도록
-        print("scrollView tag = \(scrollView.tag)")
         if scrollView.tag == 0 {
             let width = scrollView.bounds.size.width
             // Init할 때 width가 모두 그려지지 않을때 오류 발생
@@ -448,7 +432,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.title = data.title
             cell.dateAndTime = data.createdAt.toString()
             
-            var page = "P.\(data.pageNum)"
+            let page = "P.\(data.pageNum)"
             var replies = ""
             if data.replies.count != 0 {
                 replies = "- \(data.replies.count)"
@@ -474,7 +458,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        print("tableView ContentSize = \(self.myMenualTableView.contentSize.height)")
+        // print("tableView ContentSize = \(self.myMenualTableView.contentSize.height)")
         
 //        myMenualTableView.snp.removeConstraints()
 //        myMenualTableView.snp.makeConstraints { make in
@@ -488,6 +472,68 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: - UICollectionView Delegate, Datasource
 extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        
+        switch collectionView.tag {
+        // MomentsCollectionView
+        case 0:
+            print("kind = \(kind)")
+            let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "DividerView", for: indexPath) as! DividerView
+            print("sectionHeader = \(sectionHeader)")
+            return sectionHeader
+        // MyMenualCollectionView
+        case 1:
+            if kind == UICollectionView.elementKindSectionFooter {
+                let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "DividerView", for: indexPath) as! DividerView
+                
+                guard let diaryYearModel = listener?.diaryMonthSetRelay.value[safe: indexPath.section] else { return UICollectionReusableView() }
+                
+                let date = diaryYearModel.year.description
+                sectionHeader.divider.dateTitle = date
+                return sectionHeader
+            } else { //No footer in this case but can add option for that
+                 return UICollectionReusableView()
+            }
+
+        default:
+            return UICollectionReusableView()
+        }
+
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        switch collectionView.tag {
+        // MomentsCollectionView
+        case 0:
+            return CGSize.zero
+
+        // MyMenualCollectionView
+        case 1:
+            return CGSize(width: 24, height: 56)
+            
+        default:
+            return CGSize.zero
+        }
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        switch collectionView.tag {
+        // MomentsCollectionView
+        case 0:
+            return 1
+
+        // MyMenualCollectionView
+        case 1:
+            guard let count = listener?.diaryMonthSetRelay.value.count else { return 1 }
+            return count
+            
+        default:
+            return 5
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView.tag {
         // MomentsCollectionView
@@ -495,7 +541,8 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
             return 5
         // MyMenualCollectionView
         case 1:
-            return 5
+            guard let diaryYearModel = listener?.diaryMonthSetRelay.value[safe: section] else { return 0 }
+            return diaryYearModel.months?.monthCount ?? 0
             
         default:
             return 5
@@ -516,6 +563,26 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         // MyMenualCollectionView
         case 1:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TabsCell", for: indexPath) as? TabsCell else { return UICollectionViewCell() }
+            
+            guard let diaryYearModel = listener?.diaryMonthSetRelay.value[safe: indexPath.section] else { return UICollectionViewCell() }
+            
+            print("!!!!!!! \(indexPath)")
+            guard let countData = diaryYearModel.months?.getArr()[safe: indexPath.row],
+                  let monthData = diaryYearModel.months?.getMonthArr()[safe: indexPath.row] else { return UICollectionViewCell() }
+            
+            // 달 이름
+            let month = monthData
+            let count = countData
+            
+            cell.title = month
+            cell.number = count.description
+            
+            // 첫번째 cell일 경우 active 상태
+            cell.tabsCellStatus = .inactive
+            if indexPath.section == 0 && indexPath.row == 0 {
+                cell.tabsCellStatus = .active
+            }
+            
             return cell
         default:
             return UICollectionViewCell()
@@ -531,7 +598,7 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
             return CGSize(width: width, height: 125)
         // MyMenualCollectionView
         case 1:
-            return CGSize(width: 72, height: 56)
+            return CGSize(width: 75, height: 58)
             
         default:
             return CGSize(width: 32, height: 32)

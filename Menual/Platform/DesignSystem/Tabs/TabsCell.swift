@@ -20,6 +20,14 @@ class TabsCell: UICollectionViewCell {
         didSet { setNeedsLayout() }
     }
     
+    var number: String = "" {
+        didSet { setNeedsLayout() }
+    }
+    
+    var title: String = "" {
+        didSet { setNeedsLayout() }
+    }
+    
     private let tabsIconView = TabsIconView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.tabsIconStep = .step1
@@ -87,12 +95,15 @@ class TabsCell: UICollectionViewCell {
             make.leading.equalTo(tabsIconView.snp.trailing).offset(9)
             make.centerY.equalToSuperview()
             make.height.equalTo(29)
-            make.trailing.equalToSuperview().inset(14)
+            make.trailing.equalToSuperview().inset(10)
         }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        self.tabsText.title = title
+        self.tabsText.number = number
         
         switch tabsCellStatus {
         case .active:

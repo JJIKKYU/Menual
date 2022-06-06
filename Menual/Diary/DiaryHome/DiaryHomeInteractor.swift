@@ -49,6 +49,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     private var disposebag: DisposeBag
 
     var lastPageNumRelay = BehaviorRelay<Int>(value: 0)
+    var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -59,6 +60,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         self.dependency = dependency
         self.disposebag = DisposeBag()
         self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
+        self.diaryMonthSetRelay = dependency.diaryRepository.diaryMonthDic
         
         super.init(presenter: presenter)
         presenter.listener = self
@@ -91,6 +93,14 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 self.lastPageNumRelay.accept(lastPageNum)
 
                 self.presenter.reloadTableView()
+            })
+            .disposed(by: disposebag)
+        
+        dependency.diaryRepository
+            .diaryMonthDic
+            .subscribe(onNext: { [weak self] monthSet in
+                guard let self = self else { return }
+                print("monthSet 구독중! \(monthSet)")
             })
             .disposed(by: disposebag)
 
