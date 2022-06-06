@@ -177,16 +177,25 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         
-        let _ = realm.objects(DiaryModelRealm.self)
+        let diariesCount = realm.objects(DiaryModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false).first?.pageNum ?? 0
+        
+        print("diariesCount = \(diariesCount + 1)")
         
         print("addDiary! - 2")
         
+        var newInfo = info
+        newInfo.updatePageNum(pageNum: diariesCount)
+        print("newInfo's pageNum = \(newInfo.pageNum)")
+        
+        
         realm.safeWrite {
-             realm.add(DiaryModelRealm(info))
+             realm.add(DiaryModelRealm(newInfo))
             // realm.create(DiaryModelRealm.self, value: DiaryModelRealm(info))
         }
         
-        diaryModelSubject.accept(diaryModelSubject.value + [info])
+        let result: [DiaryModel] = (diaryModelSubject.value + [newInfo]).sorted { $0.createdAt > $1.createdAt }
+        
+        diaryModelSubject.accept(result)
         print("addDiary! - 3")
     }
     

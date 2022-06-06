@@ -7,6 +7,7 @@
 
 import RIBs
 import RxSwift
+import RxRelay
 import UIKit
 import SnapKit
 import Then
@@ -24,11 +25,14 @@ protocol DiaryHomePresentableListener: AnyObject {
     func pressedDiaryCell(index: Int)
     
     func pressedMenualTitleBtn()
+    
+    var lastPageNumRelay: BehaviorRelay<Int> { get }
 }
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
     
     weak var listener: DiaryHomePresentableListener?
+    var disposeBag = DisposeBag()
     
     // MARK: - UI 코드
     private let tableViewHeaderView = UIView().then {
@@ -171,6 +175,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
       super.viewDidLoad()
         print("DiaryHome!")
         setViews()
+        bind()
     }
     
     func setViews() {
@@ -292,6 +297,16 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         
         
          */
+    }
+    
+    func bind() {
+        listener?.lastPageNumRelay
+            .subscribe(onNext: { [weak self] num in
+                guard let self = self else { return }
+                print("num!! = \(num)")
+                self.myMenualPageTitleView.title = "PAGE." + String(num)
+            })
+            .disposed(by: self.disposeBag)
     }
     
     @objc
@@ -431,7 +446,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         if let myMenualArr = listener?.getMyMenualArr() {
             cell.title = myMenualArr[indexPath.row].title
             cell.dateAndTime = myMenualArr[indexPath.row].createdAt.toString()
-            cell.pageAndReview = "P.999 - 999"
+            cell.pageAndReview = "P.\(myMenualArr[indexPath.row].pageNum) - 999"
         } else {
             cell.dateAndTime = "2099.99.99"
             cell.pageAndReview = "P.999 - 999"

@@ -11,7 +11,7 @@ import RealmSwift
 // MARK: - 앱에서 사용하는 DiaryModel
 public struct DiaryModel {
     let uuid: String
-    let pageNum: Int
+    var pageNum: Int
     let title: String
     let weather: WeatherModel?
     let place: PlaceModel? // TODO: 위치 타입 추가
@@ -64,6 +64,10 @@ public struct DiaryModel {
         
         let diaryReplyModelArr = Array(realm.replies).map { DiaryReplyModel($0) }
         self.replies = diaryReplyModelArr
+    }
+    
+    mutating func updatePageNum(pageNum: Int) {
+        self.pageNum = pageNum + 1
     }
 }
 
