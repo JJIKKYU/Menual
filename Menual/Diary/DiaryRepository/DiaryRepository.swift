@@ -296,23 +296,20 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         
-        print("info! = \(info)")
-        
         guard let diary = realm.objects(DiaryModelRealm.self).filter("uuid == %@", info.diaryUuid).first else { return }
         
+        let repliesCount = diary.replies.count
         
-        print("!? = \(diary)")
+        var newInfo = info
+        newInfo.updateReplyNum(replyNum: repliesCount)
         
         realm.safeWrite {
-            diary.replies.append(DiaryReplyModelRealm(info))
+            diary.replies.append(DiaryReplyModelRealm(newInfo))
         }
         
-        print("!@#")
-//        realm.safeWrite {
-//            realm.add(DiaryReplyModelRealm(info))
-//        }
+        let models = realm.objects(DiaryModelRealm.self).map { DiaryModel($0) }
+        let result: [DiaryModel] = models.sorted { $0.createdAt > $1.createdAt }
         
-        let models = realm.objects(DiaryModelRealm.self)
-        diaryModelSubject.accept(models.map { DiaryModel($0) })
+        diaryModelSubject.accept(result)
     }
 }

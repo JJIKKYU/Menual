@@ -444,9 +444,17 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         cell.backgroundColor = .clear
         
         if let myMenualArr = listener?.getMyMenualArr() {
-            cell.title = myMenualArr[indexPath.row].title
-            cell.dateAndTime = myMenualArr[indexPath.row].createdAt.toString()
-            cell.pageAndReview = "P.\(myMenualArr[indexPath.row].pageNum) - 999"
+            let data = myMenualArr[indexPath.row]
+            cell.title = data.title
+            cell.dateAndTime = data.createdAt.toString()
+            
+            var page = "P.\(data.pageNum)"
+            var replies = ""
+            if data.replies.count != 0 {
+                replies = "- \(data.replies.count)"
+            }
+
+            cell.pageAndReview = page + replies
         } else {
             cell.dateAndTime = "2099.99.99"
             cell.pageAndReview = "P.999 - 999"

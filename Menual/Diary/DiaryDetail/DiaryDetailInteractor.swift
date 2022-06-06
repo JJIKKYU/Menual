@@ -30,8 +30,9 @@ protocol DiaryDetailListener: AnyObject {
 }
 
 final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>, DiaryDetailInteractable, DiaryDetailPresentableListener {
-
+    
     var diaryReplies: [DiaryReplyModel]
+    var currentDiaryPage: Int
     let diaryModel: DiaryModel?
     
     private var disposebag = DisposeBag()
@@ -50,6 +51,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         self.diaryModel = diaryModel
         self.dependency = dependency
         self.diaryReplies = diaryModel.replies
+        self.currentDiaryPage = diaryModel.pageNum
         super.init(presenter: presenter)
         presenter.listener = self
         
@@ -65,7 +67,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             .subscribe(onNext: { [weak self] diaryArr in
                 guard let self = self else { return }
                 print("diaryString 구독 중!, diary = \(diaryArr)")
-                guard let currentDiaryModel = diaryArr.filter { diaryModel.uuid == $0.uuid }.first else { return }
+                guard let currentDiaryModel = diaryArr.filter({ diaryModel.uuid == $0.uuid }).first else { return }
                 print("<- reloadTableView")
                 self.diaryReplies = currentDiaryModel.replies
                 presenter.loadDiaryDetail(model: currentDiaryModel)

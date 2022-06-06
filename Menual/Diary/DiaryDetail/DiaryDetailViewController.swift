@@ -19,6 +19,7 @@ protocol DiaryDetailPresentableListener: AnyObject {
     func pressedReplySubmitBtn(desc: String)
     
     var diaryReplies: [DiaryReplyModel] { get }
+    var currentDiaryPage: Int { get }
 }
 
 final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable, DiaryDetailViewControllable {
@@ -45,6 +46,10 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.addTarget(self, action: #selector(tempPressedSubmitReplyBtn), for: .touchUpInside)
         $0.setTitle("올리기", for: .normal)
+    }
+    
+    private let diaryIndicator = UIView().then {
+        
     }
     
     lazy var naviView = MenualNaviView(type: .menualDetail).then {
@@ -295,11 +300,13 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
 
         cell.backgroundColor = .clear
         cell.title = desc
-        cell.pageAndReview = String(replyNum)
+        
+        if let currentDiaryPage = listener?.currentDiaryPage {
+            cell.pageAndReview = "p.\(currentDiaryPage)-" + String(replyNum)
+        }
+        
         cell.dateAndTime = createdAt.toStringWithHourMin()
 
         return cell
     }
-    
-    
 }

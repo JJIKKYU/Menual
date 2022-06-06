@@ -40,14 +40,14 @@ protocol DiaryHomeInteractorDependency {
 }
 
 final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, DiaryHomeInteractable, DiaryHomePresentableListener, AdaptivePresentationControllerDelegate {
- 
-
+    
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
 
     weak var router: DiaryHomeRouting?
     weak var listener: DiaryHomeListener?
     private let dependency: DiaryHomeInteractorDependency
     private var disposebag: DisposeBag
+
     var lastPageNumRelay = BehaviorRelay<Int>(value: 0)
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
@@ -89,10 +89,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 // 전체 PageNum 추려내기
                 let lastPageNum = diaryArr.sorted { $0.createdAt > $1.createdAt }.first?.pageNum ?? 0
                 self.lastPageNumRelay.accept(lastPageNum)
-                
-//                let diaryModelResults = realm.objects(DiaryModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
-//                diaryModelSubject.accept(diaryModelResults.map { DiaryModel($0) })
-                
+
                 self.presenter.reloadTableView()
             })
             .disposed(by: disposebag)

@@ -11,7 +11,7 @@ import RealmSwift
 // MARK: - 앱에서 사용하는 DiaryReply
 public struct DiaryReplyModel {
     let uuid: String
-    let replyNum: Int
+    var replyNum: Int
     let diaryUuid: String
     let desc: String
     let createdAt: Date
@@ -33,6 +33,10 @@ public struct DiaryReplyModel {
         self.desc = realm.desc
         self.createdAt = realm.createdAt
         self.isDeleted = realm.isDeleted
+    }
+    
+    mutating func updateReplyNum(replyNum: Int) {
+        self.replyNum = replyNum + 1
     }
 }
 
