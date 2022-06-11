@@ -14,7 +14,7 @@ protocol DiaryHomeRouting: ViewableRouting {
     func attachMyPage()
     func detachMyPage()
     func attachDiarySearch()
-    func detachDiarySearch()
+    func detachDiarySearch(isOnlyDetach: Bool)
     func attachDiaryMoments()
     func detachDiaryMoments()
     func attachDiaryWriting()
@@ -147,9 +147,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         router?.attachDiarySearch()
     }
     
-    func diarySearchPressedBackBtn() {
+    func diarySearchPressedBackBtn(isOnlyDetach: Bool) {
         print("DiaryHomeInteractor :: diarySearchPressedBackBtn!")
-        router?.detachDiarySearch()
+        router?.detachDiarySearch(isOnlyDetach: isOnlyDetach)
     }
     
     // MARK: - Moments 관련 함수

@@ -12,6 +12,8 @@ import RealmSwift
 
 protocol DiarySearchRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
+    func attachDiaryDetailVC(diaryModel: DiaryModel)
+    func detachDiaryDetailVC(isOnlyDetach: Bool)
 }
 
 protocol DiarySearchPresentable: Presentable {
@@ -22,7 +24,7 @@ protocol DiarySearchPresentable: Presentable {
 
 protocol DiarySearchListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
-    func diarySearchPressedBackBtn()
+    func diarySearchPressedBackBtn(isOnlyDetach: Bool)
 }
 
 final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>, DiarySearchInteractable, DiarySearchPresentableListener {
@@ -51,8 +53,8 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
         // TODO: Pause any business logic.
     }
     
-    func pressedBackBtn() {
-        listener?.diarySearchPressedBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool) {
+        listener?.diarySearchPressedBackBtn(isOnlyDetach: isOnlyDetach)
     }
     
     func searchTest(keyword: String) {
@@ -104,5 +106,14 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
             recentSearchResultList.append(model)
         }
         presenter.reloadSearchTableView()
+    }
+    
+    // 검색해서 나온 Cell을 터치했을 경우 -> DiaryDetailVC로 보내줘야함
+    func pressedSearchCell(diaryModel: DiaryModel) {
+        router?.attachDiaryDetailVC(diaryModel: diaryModel)
+    }
+    
+    func diaryDetailPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachDiaryDetailVC(isOnlyDetach: isOnlyDetach)
     }
 }

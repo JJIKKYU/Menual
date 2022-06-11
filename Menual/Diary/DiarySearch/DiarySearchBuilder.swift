@@ -10,9 +10,12 @@ import RIBs
 protocol DiarySearchDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
+    var diaryRepository: DiaryRepository { get }
 }
 
-final class DiarySearchComponent: Component<DiarySearchDependency> {
+final class DiarySearchComponent: Component<DiarySearchDependency>, DiaryDetailDependency
+{
+    var diaryRepository: DiaryRepository { dependency.diaryRepository }
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
@@ -33,7 +36,13 @@ final class DiarySearchBuilder: Builder<DiarySearchDependency>, DiarySearchBuild
         let component = DiarySearchComponent(dependency: dependency)
         let viewController = DiarySearchViewController()
         let interactor = DiarySearchInteractor(presenter: viewController)
+        
+        let diaryDetailBuildable = DiaryDetailBuilder(dependency: component)
+        
         interactor.listener = listener
-        return DiarySearchRouter(interactor: interactor, viewController: viewController)
+        return DiarySearchRouter(
+            interactor: interactor,
+            viewController: viewController,
+            diaryDetailBuildable: diaryDetailBuildable)
     }
 }

@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DiarySearchInteractable: Interactable {
+protocol DiarySearchInteractable: Interactable, DiaryDetailListener {
     var router: DiarySearchRouting? { get set }
     var listener: DiarySearchListener? { get set }
 }
@@ -17,10 +17,43 @@ protocol DiarySearchViewControllable: ViewControllable {
 }
 
 final class DiarySearchRouter: ViewableRouter<DiarySearchInteractable, DiarySearchViewControllable>, DiarySearchRouting {
+    
+    private let diaryDetailBuildable: DiaryDetailBuildable
+    private var diaryDetailRouting: Routing?
 
     // TODO: Constructor inject child builder protocols to allow building children.
-    override init(interactor: DiarySearchInteractable, viewController: DiarySearchViewControllable) {
+    init(
+        interactor: DiarySearchInteractable,
+        viewController: DiarySearchViewControllable,
+        diaryDetailBuildable: DiaryDetailBuildable
+    ) {
+        self.diaryDetailBuildable = diaryDetailBuildable
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
+    }
+    
+    func attachDiaryDetailVC(diaryModel: DiaryModel) {
+        if diaryDetailRouting != nil {
+            return
+        }
+        
+        let router = diaryDetailBuildable.build(withListener: interactor, diaryModel: diaryModel)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        diaryDetailRouting = router
+        attachChild(router)
+    }
+    
+    func detachDiaryDetailVC(isOnlyDetach: Bool) {
+        guard let router = diaryDetailRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        diaryDetailRouting = nil
     }
 }

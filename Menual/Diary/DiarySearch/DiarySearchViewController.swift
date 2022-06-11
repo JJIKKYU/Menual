@@ -15,10 +15,11 @@ protocol DiarySearchPresentableListener: AnyObject {
     var searchResultList: [DiaryModel] { get }
     var recentSearchResultList: [SearchModel] { get }
     
-    func pressedBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool)
     func searchTest(keyword: String)
     func searchDataTest(keyword: String)
     func fetchRecentSearchList()
+    func pressedSearchCell(diaryModel: DiaryModel)
 }
 
 final class DiarySearchViewController: UIViewController, DiarySearchPresentable, DiarySearchViewControllable {
@@ -116,7 +117,9 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        listener?.pressedBackBtn()
+        if isMovingFromParent || isBeingDismissed {
+            listener?.pressedBackBtn(isOnlyDetach: true)
+        }
     }
     
     func bind() {
@@ -156,6 +159,13 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         searchView.addSubview(searchMenualCountLabel)
         searchView.sizeToFit()
         
+        searchView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalToSuperview()
+            make.height.equalTo(100)
+        }
+        
         recentSearchTableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
@@ -172,7 +182,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         
         searchMenualCountLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.centerY.equalToSuperview()
+            make.height.equalTo(40)
             make.width.equalToSuperview().inset(20)
         }
         
@@ -198,7 +208,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     @objc
     func pressedBackBtn() {
         print("ProfileHomeVC :: pressedBackBtn!")
-        listener?.pressedBackBtn()
+        listener?.pressedBackBtn(isOnlyDetach: false)
     }
     
     @objc
@@ -258,6 +268,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
                 return UITableViewCell()
             }
             
+            cell.uuid = model.uuid
             if model.isHide {
                 cell.listType = .hide
             } else {
@@ -299,7 +310,17 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // 검색 결과 TableView
         if tableView == self.tableView {
-            print("선택했습니다!")
+            guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
+            print("선택했습니다! - \(cell.uuid)")
+            
+            let index = indexPath.row
+            guard let model = listener?.searchResultList[safe: index] else {
+                return
+            }
+            
+            print("이거 = \(model.uuid), \(cell.uuid)")
+            
+            listener?.pressedSearchCell(diaryModel: model)
         }
     }
 }
