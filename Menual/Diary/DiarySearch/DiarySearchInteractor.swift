@@ -7,6 +7,7 @@
 
 import RIBs
 import RxSwift
+import RxRelay
 import RxRealm
 import RealmSwift
 
@@ -32,7 +33,7 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     weak var router: DiarySearchRouting?
     weak var listener: DiarySearchListener?
     
-    var searchResultList: [DiaryModel] = []
+    var searchResultsRelay = BehaviorRelay<[DiaryModel]>(value: [])
     var recentSearchResultList: [SearchModel] = []
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
@@ -57,6 +58,7 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
         listener?.diarySearchPressedBackBtn(isOnlyDetach: isOnlyDetach)
     }
     
+    // Realm에서 검색해서 결과값 뿌려주는 함수
     func searchTest(keyword: String) {
         guard let realm = Realm.safeInit() else {
             return
@@ -70,13 +72,15 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
         
         print("reuslt = \(results)")
         
-        searchResultList = []
+        var searchResultList = [DiaryModel]()
         for result in results {
             let diary = DiaryModel(result)
             searchResultList.append(diary)
         }
         
-        presenter.reloadSearchTableView()
+        self.searchResultsRelay.accept(searchResultList)
+        
+        // presenter.reloadSearchTableView()
     }
     
     func searchDataTest(keyword: String) {

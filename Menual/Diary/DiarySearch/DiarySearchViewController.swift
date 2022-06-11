@@ -10,10 +10,11 @@ import RxSwift
 import Then
 import SnapKit
 import UIKit
+import RxRelay
 
 protocol DiarySearchPresentableListener: AnyObject {
-    var searchResultList: [DiaryModel] { get }
     var recentSearchResultList: [SearchModel] { get }
+    var searchResultsRelay: BehaviorRelay<[DiaryModel]> { get }
     
     func pressedBackBtn(isOnlyDetach: Bool)
     func searchTest(keyword: String)
@@ -144,6 +145,22 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
                 }
             })
             .disposed(by: disposeBag)
+        
+        listener?.searchResultsRelay
+            .subscribe(onNext: { [weak self] results in
+                guard let self = self else { return }
+                
+                if results.count == 0 {
+                    self.searchMenualCountLabel.text = "empty페이지 띄워라"
+                } else {
+                    let count = results.count
+                    self.searchMenualCountLabel.text = "총 \(count)개의 메뉴얼"
+                }
+                
+                self.tableView.reloadData()
+                // recentSearchTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
     
     func setViews() {
@@ -247,7 +264,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
         
         // 검색 결과 TableView
         if tableView == self.tableView {
-            return listener?.searchResultList.count ?? 0
+            return listener?.searchResultsRelay.value.count ?? 0
         }
         // 최근 검색 키워드 TableView
         else if tableView == self.recentSearchTableView {
@@ -263,7 +280,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
         if tableView == self.tableView {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
             
-            guard let model = listener?.searchResultList[safe: index],
+            guard let model = listener?.searchResultsRelay.value[safe: index],
                   let searchKeyword = self.searchTextField.text else {
                 return UITableViewCell()
             }
@@ -314,7 +331,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             print("선택했습니다! - \(cell.uuid)")
             
             let index = indexPath.row
-            guard let model = listener?.searchResultList[safe: index] else {
+            guard let model = listener?.searchResultsRelay.value[safe: index] else {
                 return
             }
             
