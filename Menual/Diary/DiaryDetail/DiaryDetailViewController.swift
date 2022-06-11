@@ -154,6 +154,11 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         super.viewDidLoad()
         view.backgroundColor = .gray
         setViews()
+
+        // keyboard observer등록
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+                
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -161,6 +166,11 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         if isMovingFromParent || isBeingDismissed {
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
+        
+        // Keyboard observer해제
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+                
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     func setViews() {
@@ -251,7 +261,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         tempTextField.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.bottom.equalToSuperview().inset(20)
+            make.bottom.equalTo(replyTableView.snp.bottom).inset(20)
             make.height.equalTo(50)
         }
         
@@ -259,7 +269,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.trailing.equalToSuperview().inset(20)
             make.width.equalTo(100)
             make.height.equalTo(50)
-            make.bottom.equalToSuperview().inset(20)
+            make.bottom.equalTo(replyTableView.snp.bottom).inset(20)
         }
         
         tempLeftButton.snp.makeConstraints { make in
@@ -347,5 +357,25 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
         cell.dateAndTime = createdAt.toStringWithHourMin()
 
         return cell
+    }
+}
+
+// MARK: - Keyboard Extension
+extension DiaryDetailViewController {
+    @objc
+    func keyboardWillShow(_ notification: NSNotification) {
+        guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
+        print("keyboardWillShow! - \(keyboardHeight)")
+        replyTableView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview().inset(keyboardHeight)
+        }
+    }
+    
+    @objc
+    func keyboardWillHide(_ notification: NSNotification) {
+        print("keyboardWillHide!")
+        replyTableView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview()
+        }
     }
 }
