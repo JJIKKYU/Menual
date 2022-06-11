@@ -21,10 +21,11 @@ public struct DiaryModel {
     let createdAt: Date
     let replies: [DiaryReplyModel]
     let isDeleted: Bool
+    let isHide: Bool
     // let createdAt: Date
     
     // 각 Property를 넣어서 초기화
-    init(uuid: String, pageNum: Int, title: String, weather: WeatherModel?, place: PlaceModel?, description: String, image: UIImage?, readCount: Int, createdAt: Date, replies: [DiaryReplyModel], isDeleted: Bool) {
+    init(uuid: String, pageNum: Int, title: String, weather: WeatherModel?, place: PlaceModel?, description: String, image: UIImage?, readCount: Int, createdAt: Date, replies: [DiaryReplyModel], isDeleted: Bool, isHide: Bool) {
         self.uuid = uuid
         self.pageNum = pageNum
         self.title = title
@@ -36,6 +37,7 @@ public struct DiaryModel {
         self.createdAt = createdAt
         self.replies = replies
         self.isDeleted = isDeleted
+        self.isHide = isHide
     }
     
     // Realm 객체를 넣어서 초기화
@@ -67,6 +69,7 @@ public struct DiaryModel {
         let diaryReplyModelArr = Array(realm.replies).map { DiaryReplyModel($0) }
         self.replies = diaryReplyModelArr
         self.isDeleted = realm.isDeleted
+        self.isHide = realm.isHide
     }
     
     mutating func updatePageNum(pageNum: Int) {
@@ -90,8 +93,9 @@ class DiaryModelRealm: Object {
     // @Persisted var createdAt: Date = Date()
     @Persisted var isDeleted: Bool
     @Persisted var replies: List<DiaryReplyModelRealm>
+    @Persisted var isHide: Bool
     
-    convenience init(uuid: String, pageNum: Int, title: String, weather: WeatherModelRealm?, place: PlaceModelRealm?, desc: String, image: Bool, readCount: Int, replies: [DiaryReplyModelRealm], isDeleted: Bool) {
+    convenience init(uuid: String, pageNum: Int, title: String, weather: WeatherModelRealm?, place: PlaceModelRealm?, desc: String, image: Bool, readCount: Int, replies: [DiaryReplyModelRealm], isDeleted: Bool, isHide: Bool) {
         self.init()
         self.uuid = uuid
         self.pageNum = pageNum
@@ -104,6 +108,7 @@ class DiaryModelRealm: Object {
         // self.createdAt = createdAt
         self.isDeleted = isDeleted
         self.replies.append(objectsIn: replies)
+        self.isHide = isHide
     }
     
     convenience init(_ diaryModel: DiaryModel) {
@@ -127,5 +132,6 @@ class DiaryModelRealm: Object {
 
         let diaryReplyModelRealmArr = diaryModel.replies.map { DiaryReplyModelRealm($0) }
         self.replies.append(objectsIn: diaryReplyModelRealmArr)
+        self.isHide = isHide
     }
 }

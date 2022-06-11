@@ -235,7 +235,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
                                     readCount: 0,
                                     createdAt: Date(),
                                     replies: [],
-                                    isDeleted: false
+                                    isDeleted: false,
+                                    isHide: false
         )
         print("diaryModel.id = \(diaryModel.uuid)")
         listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())

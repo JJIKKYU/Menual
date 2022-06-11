@@ -101,6 +101,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             .subscribe(onNext: { [weak self] monthSet in
                 guard let self = self else { return }
                 print("monthSet 구독중! \(monthSet)")
+                // self.presenter.reloadTableView()
             })
             .disposed(by: disposebag)
 
@@ -193,7 +194,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                                      readCount: model.readCount + 1,
                                      createdAt: model.createdAt,
                                      replies: model.replies,
-                                     isDeleted: model.isDeleted
+                                     isDeleted: model.isDeleted,
+                                     isHide: model.isHide
         )
         
         dependency.diaryRepository

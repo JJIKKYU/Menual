@@ -33,6 +33,8 @@ protocol DiaryHomePresentableListener: AnyObject {
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
     
     weak var listener: DiaryHomePresentableListener?
+    // 스크롤 위치 저장하는 Dictionary
+    var myMenualCellIndexPathDic: [String: [String: IndexPath]]?
     var disposeBag = DisposeBag()
     
     // MARK: - UI 코드
@@ -56,34 +58,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         // #endif
     }
     
-    lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._24px.search.image
-        $0.style = .done
-        $0.target = self
-        $0.action = #selector(pressedSearchBtn)
-    }
-    
-    lazy var rightBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._24px.profile.image
-        $0.target = self
-        $0.action = #selector(pressedMyPageBtn)
-        $0.style = .done
-    }
-    
-    let testView = MomentsRoundView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
     // TODO: CustomView로 만들기
     lazy var fabWriteBtn = BoxButton(frame: CGRect.zero, btnStatus: .active, btnSize: .xLarge).then {
         $0.title = "N번째 메뉴얼 작성하기"
         $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
-    }
-    
-    // 임시로 뷰 넘어가게 하려고 만든 버튼
-    lazy var wrtingBtnTest = UIButton().then {
-        $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
-        $0.setImage(Asset._24px.write.image, for: .normal)
     }
     
     lazy var momentsTitleView = ListHeader(type: .textandicon, rightIconType: .arrow).then {
@@ -290,6 +268,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 guard let self = self else { return }
                 print("num!! = \(num)")
                 self.myMenualPageTitleView.title = "PAGE." + String(num)
+                self.fabWriteBtn.title = String(num + 1) + "번째 메뉴얼 작성하기"
             })
             .disposed(by: self.disposeBag)
     }
@@ -427,22 +406,26 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.backgroundColor = .clear
         
-        if let myMenualArr = listener?.getMyMenualArr() {
-            let data = myMenualArr[indexPath.row]
-            cell.title = data.title
-            cell.dateAndTime = data.createdAt.toString()
-            
-            let page = "P.\(data.pageNum)"
-            var replies = ""
-            if data.replies.count != 0 {
-                replies = "- \(data.replies.count)"
-            }
-
-            cell.pageAndReview = page + replies
+        guard let myMenualArr = listener?.getMyMenualArr() else { return UITableViewCell() }
+        
+        let data = myMenualArr[indexPath.row]
+        if data.isHide {
+            cell.listType = .hide
         } else {
-            cell.dateAndTime = "2099.99.99"
-            cell.pageAndReview = "P.999 - 999"
+            // TODO: - 이미지가 있을 경우 이미지까지
+            cell.listType = .text
         }
+        
+        cell.title = data.title
+        cell.dateAndTime = data.createdAt.toString()
+        
+        let page = "P.\(data.pageNum)"
+        var replies = ""
+        if data.replies.count != 0 {
+            replies = "- \(data.replies.count)"
+        }
+
+        cell.pageAndReview = page + replies
 
         return cell
     }
@@ -455,6 +438,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func reloadTableView() {
         print("reloadTableView!")
         myMenualTableView.reloadData()
+        myMenualCollectionView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -527,6 +511,8 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         // MyMenualCollectionView
         case 1:
             guard let count = listener?.diaryMonthSetRelay.value.count else { return 1 }
+            // 데이터가 하나도 없어도 해당 월 Cell은 표시
+            print("count: \(count)")
             return count
             
         default:
@@ -538,7 +524,9 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         switch collectionView.tag {
         // MomentsCollectionView
         case 0:
-            return 5
+            let momentsCollectionViewCount: Int = 5
+            self.momentsCollectionViewPagination.numberOfPages = momentsCollectionViewCount
+            return momentsCollectionViewCount
         // MyMenualCollectionView
         case 1:
             guard let diaryYearModel = listener?.diaryMonthSetRelay.value[safe: section] else { return 0 }
@@ -602,6 +590,31 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
             
         default:
             return CGSize(width: 32, height: 32)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch collectionView.tag {
+        // MomentsCollectionView
+        case 0:
+            print("MomentsCollectionView Selected!")
+        // MyMenualCollectionView
+        case 1:
+            for cell in collectionView.visibleCells {
+                guard let cell = cell as? TabsCell else { return }
+                cell.tabsCellStatus = .inactive
+            }
+            
+            guard let selectedCell = collectionView.cellForItem(at: indexPath) as? TabsCell else { return }
+            selectedCell.tabsCellStatus = .active
+            
+//             self.myMenualTableView.scrollToRow(at: [0, 5], at: .top, animated: true)
+            
+            
+            print("MyMenualCollectionView Selected!")
+            
+        default:
+            return
         }
     }
 }

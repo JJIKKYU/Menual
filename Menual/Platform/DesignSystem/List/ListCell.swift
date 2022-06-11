@@ -33,6 +33,10 @@ class ListCell: UITableViewCell {
         didSet { setNeedsLayout() }
     }
     
+    var searchKeyword: String = "" {
+        didSet { setNeedsLayout() }
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
        super.setSelected(selected, animated: animated)
         listStatus = selected ? .pressed : .default_
@@ -210,5 +214,22 @@ class ListCell: UITableViewCell {
         case .highlighed:
             backgroundColor = Colors.grey.g800
         }
+        
+        highlightText(keyword: searchKeyword)
+    }
+    
+    func highlightText(keyword: String) {
+        print("keyword = \(keyword)")
+        // 타이틀
+        let titleAtrString = NSMutableAttributedString(string: title)
+        titleAtrString.addAttribute(.foregroundColor, value: Colors.tint.main.v400, range: (title as NSString).range(of: keyword))
+        titleLabel.attributedText = titleAtrString
+        
+        // TODO: - 내용도 하이라이트 될 수 있도록 추가할 것
+        /*
+        let descAtrString = NSMutableAttributedString(string: desc)
+        descAtrString.addAttribute(.foregroundColor, value: UIColor.blue, range: (desc as NSString).range(of: text))
+        descriptionLabel.attributedText = descAtrString
+        */
     }
 }

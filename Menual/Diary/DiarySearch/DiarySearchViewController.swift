@@ -33,7 +33,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     }
     
     var recentSearchListView = UIView().then {
-        $0.backgroundColor = .gray
+        $0.backgroundColor = Colors.background
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
@@ -50,7 +50,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.delegate = self
         $0.dataSource = self
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .brown
+        $0.backgroundColor = Colors.background
         $0.register(RecentSearchCell.self, forCellReuseIdentifier: "RecentSearchCell")
     }
     
@@ -59,23 +59,33 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.dataSource = self
         
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .blue
-        $0.register(DiarySearchCell.self, forCellReuseIdentifier: "SearchCell")
+        $0.backgroundColor = Colors.background
+        $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
         $0.estimatedRowHeight = 87
         $0.rowHeight = 87
         $0.isHidden = true
+        $0.estimatedRowHeight = 72
+        $0.rowHeight = 72
+        $0.showsVerticalScrollIndicator = false
     }
     
     lazy var searchTextField = UITextField().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
-        $0.backgroundColor = .gray
+        $0.backgroundColor = Colors.background
+    }
+    
+    private let searchMenualCountLabel = UILabel().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = UIFont.AppHead(.head_4)
+        $0.textColor = .white
+        $0.text = "총 N개의 메뉴얼"
     }
     
     var searchView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .red
-        $0.frame = CGRect(x: 0, y: 0, width: 200, height: 40)
+        $0.frame = CGRect(x: 0, y: 0, width: 200, height: 80)
     }
     
     init() {
@@ -98,6 +108,12 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        searchTextField.becomeFirstResponder()
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         listener?.pressedBackBtn()
@@ -109,14 +125,19 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] keyword in
                 guard let self = self else { return }
+                
+                 // self.listener?.searchDataTest(keyword: keyword)
+                 self.listener?.searchTest(keyword: keyword)
+//                self.listener?.fetchRecentSearchList()
+                
                 if keyword.count == 0 {
                     self.tableView.isHidden = true
                     self.recentSearchListView.isHidden = false
                     self.recentSearchTableView.isHidden = false
                 } else {
-//                    self.tableView.isHidden = false
-//                    self.recentSearchListView.isHidden = true
-//                    self.recentSearchTableView.isHidden = true
+                    self.tableView.isHidden = false
+                    self.recentSearchListView.isHidden = true
+                    self.recentSearchTableView.isHidden = true
                 }
             })
             .disposed(by: disposeBag)
@@ -132,6 +153,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         self.view.addSubview(recentSearchTableView)
         self.tableView.addSubview(searchView)
         tableView.tableHeaderView = searchView
+        searchView.addSubview(searchMenualCountLabel)
         searchView.sizeToFit()
         
         recentSearchTableView.snp.makeConstraints { make in
@@ -146,6 +168,12 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             make.trailing.equalToSuperview().inset(200)
             make.top.equalToSuperview().offset(100)
             make.height.equalTo(50)
+        }
+        
+        searchMenualCountLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.centerY.equalToSuperview()
+            make.width.equalToSuperview().inset(20)
         }
         
         searchBtn.snp.makeConstraints { make in
@@ -223,17 +251,30 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
         let index = indexPath.row
         // 검색 결과 TableView
         if tableView == self.tableView {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell") as? DiarySearchCell else { return UITableViewCell() }
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
             
-            guard let model = listener?.searchResultList[safe: index] else {
+            guard let model = listener?.searchResultList[safe: index],
+                  let searchKeyword = self.searchTextField.text else {
                 return UITableViewCell()
             }
-
-            cell.keyword = searchTextField.text
+            
+            if model.isHide {
+                cell.listType = .hide
+            } else {
+                // TODO: - 이미지가 있을 경우 이미지까지
+                cell.listType = .text
+            }
             cell.title = model.title
-            cell.desc = model.description
-            cell.page = "0"
-            cell.createdAt = model.createdAt.description(with: .autoupdatingCurrent)
+            cell.dateAndTime = model.createdAt.toString()
+
+            let page = "P.\(model.pageNum)"
+            var replies = ""
+            if model.replies.count != 0 {
+                replies = "- \(model.replies.count)"
+            }
+
+            cell.searchKeyword = searchKeyword
+            cell.pageAndReview = page + replies
             
             return cell
         }
@@ -253,6 +294,13 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
         }
         
         return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // 검색 결과 TableView
+        if tableView == self.tableView {
+            print("선택했습니다!")
+        }
     }
 }
 

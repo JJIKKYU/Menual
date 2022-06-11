@@ -145,7 +145,8 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                                        readCount: info.readCount,
                                        createdAt: info.createdAt,
                                        replies: info.replies,
-                                       isDeleted: info.isDeleted
+                                       isDeleted: info.isDeleted,
+                                       isHide: info.isHide
         )
         
         dependency.diaryRepository
