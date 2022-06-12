@@ -66,7 +66,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     lazy var searchTextField = UITextField().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
-        $0.backgroundColor = Colors.background
+        $0.backgroundColor = UIColor.gray
     }
     
     private let searchMenualCountLabel = UILabel().then {
@@ -76,10 +76,14 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.text = "총 N개의 메뉴얼"
     }
     
-    var searchView = UIView().then {
+    private let searchView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .red
+        $0.backgroundColor = .clear
         $0.frame = CGRect(x: 0, y: 0, width: 200, height: 80)
+    }
+    
+    private let searchViewDivider = Divider(type: ._1px).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
     init() {
@@ -174,21 +178,8 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         self.tableView.addSubview(searchView)
         tableView.tableHeaderView = searchView
         searchView.addSubview(searchMenualCountLabel)
+        searchView.addSubview(searchViewDivider)
         searchView.sizeToFit()
-        
-        searchView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalToSuperview()
-            make.height.equalTo(100)
-        }
-        
-        recentSearchTableView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.top.equalTo(searchTextField.snp.bottom).offset(20)
-            make.bottom.equalToSuperview()
-        }
         
         searchTextField.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -197,10 +188,32 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             make.height.equalTo(50)
         }
         
+        // SearchView
+        searchView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalToSuperview()
+            make.height.equalTo(26)
+        }
+        
         searchMenualCountLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.height.equalTo(40)
+            make.height.equalTo(18)
             make.width.equalToSuperview().inset(20)
+        }
+        
+        searchViewDivider.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(searchMenualCountLabel.snp.bottom).offset(8)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(1)
+        }
+        
+        recentSearchTableView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.top.equalTo(searchTextField.snp.bottom).offset(20)
+            make.bottom.equalToSuperview()
         }
         
         tableView.snp.makeConstraints { make in
@@ -214,6 +227,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             make.top.equalToSuperview()
             make.width.equalToSuperview()
         }
+        
     }
     
     @objc
@@ -236,18 +250,39 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
 
 
 extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        switch section {
+        case 0:
+            let view = UIView()
+            view.backgroundColor = .blue
+            return view
+            
+        case 1:
+            let view = UIView()
+            view.backgroundColor = .red
+            return view
+            
+        default:
+            return UIView()
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        // 검색 결과 TableView
-        if tableView == self.tableView {
+        switch section {
+        case 0:
             return listener?.searchResultsRelay.value.count ?? 0
+            
+        case 1:
+            return listener?.searchResultsRelay.value.count ?? 0
+            
+        default:
+            return 0
         }
-        // 최근 검색 키워드 TableView
-        else if tableView == self.recentSearchTableView {
-            return listener?.recentSearchResultList.count ?? 0
-        }
-        
-        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

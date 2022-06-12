@@ -120,4 +120,5 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     func diaryDetailPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachDiaryDetailVC(isOnlyDetach: isOnlyDetach)
     }
+    
 }
