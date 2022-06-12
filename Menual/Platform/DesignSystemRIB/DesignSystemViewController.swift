@@ -114,27 +114,27 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         
         switch data[indexPath.row] {
         case "GNB Header":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "Badges":
-            break
+            cell.backgroundColor = Colors.tint.main.v400
         case "Capsule Button":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "Box Button":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "Tabs":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "FAB":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "List Header":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "Pagination":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "Divider":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "Moments":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "List":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         default:
             break
         }
