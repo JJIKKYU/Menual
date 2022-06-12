@@ -340,6 +340,19 @@ public final class DiaryRepositoryImp: DiaryRepository {
             beforeYear = curYear
             diaryYearModels.append(DiaryYearModel(year: Int(curYear) ?? 0, months: DiaryMonthModel()))
         }
+        
+        // 하나도 작성한 메뉴얼이 없을 경우에는 이번달 Cell을 하나 넣어 줍니다.
+        if diaryYearModels.count == 0 {
+            let currentMM = Date().toStringWithMM()
+            let currentYear = Date().toStringWithYYYY()
+            var diaryMonthModel = DiaryMonthModel()
+            diaryMonthModel.updateCount(MM: currentMM)
+            diaryYearModels.append(DiaryYearModel(year: Int(currentYear) ?? 0, months: diaryMonthModel))
+            
+            self.diaryMonthDicSubject.accept(diaryYearModels)
+            
+            return
+        }
     
         print("diaryYearModels = \(diaryYearModels)")
         

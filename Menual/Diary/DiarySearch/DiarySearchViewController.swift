@@ -39,14 +39,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    lazy var searchBtn = UIButton().then {
-        $0.setImage(Asset._24px.search.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.addTarget(self, action: #selector(pressedSearchBtn), for: .touchUpInside)
-        $0.contentMode = .scaleAspectFit
-        $0.contentHorizontalAlignment = .fill
-        $0.contentVerticalAlignment = .fill
-    }
-    
     lazy var recentSearchTableView = UITableView().then {
         $0.isHidden = false
         $0.delegate = self
@@ -102,17 +94,21 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     
     override func viewDidLoad() {
       super.viewDidLoad()
-        view.backgroundColor = .black
-        print("DiarySearch!!")
+        view.backgroundColor = Colors.background
         setViews()
         bind()
+
         // 뒤로가기 제스쳐 가능하도록
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
+
+        // keyboard observer등록
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+                
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         searchTextField.becomeFirstResponder()
     }
     
@@ -121,6 +117,11 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         if isMovingFromParent || isBeingDismissed {
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
+        
+        // Keyboard observer해제
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+                
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     func bind() {
@@ -168,7 +169,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         self.view.addSubview(tableView)
         self.view.addSubview(naviView)
         self.view.addSubview(searchTextField)
-        self.view.addSubview(searchBtn)
         self.view.bringSubviewToFront(naviView)
         self.view.addSubview(recentSearchTableView)
         self.tableView.addSubview(searchView)
@@ -203,12 +203,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             make.width.equalToSuperview().inset(20)
         }
         
-        searchBtn.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(20)
-            make.top.equalToSuperview().offset(100)
-            make.width.height.equalTo(24)
-        }
-        
         tableView.snp.makeConstraints { make in
             make.top.equalTo(searchTextField.snp.bottom).offset(30)
             make.leading.trailing.bottom.equalToSuperview()
@@ -226,24 +220,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     func pressedBackBtn() {
         print("ProfileHomeVC :: pressedBackBtn!")
         listener?.pressedBackBtn(isOnlyDetach: false)
-    }
-    
-    @objc
-    func pressedSearchBtn() {
-        print("pressedSearchBtn")
-        // 검색 버튼 누를때 조건 추가 할 것
-        guard let text = searchTextField.text else { return }
-        if text.count == 0 {
-            print("검색 키워드를 입력해주세요")
-            return
-        }
-        listener?.searchDataTest(keyword: text)
-        listener?.searchTest(keyword: text)
-        listener?.fetchRecentSearchList()
-        
-        self.tableView.isHidden = false
-        self.recentSearchListView.isHidden = true
-        self.recentSearchTableView.isHidden = true
     }
     
     // RecentSearchCell의 Delete Btn이 클릭되었을때
@@ -348,4 +324,24 @@ extension DiarySearchViewController: UISearchBarDelegate {
 
 extension DiarySearchViewController: UITextFieldDelegate {
     
+}
+
+// MARK: - Keyboard Extension
+extension DiarySearchViewController {
+    @objc
+    func keyboardWillShow(_ notification: NSNotification) {
+        guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
+        print("keyboardWillShow! - \(keyboardHeight)")
+        tableView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview().inset(keyboardHeight)
+        }
+    }
+    
+    @objc
+    func keyboardWillHide(_ notification: NSNotification) {
+        print("keyboardWillHide!")
+        tableView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview()
+        }
+    }
 }

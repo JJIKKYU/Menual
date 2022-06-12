@@ -120,7 +120,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     func setViews() {
         // 뒤로가기 제스쳐 가능하도록
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        view.backgroundColor = .black
+        view.backgroundColor = Colors.background
         
         self.view.addSubview(titleTextField)
         self.view.addSubview(descriptionTextView)

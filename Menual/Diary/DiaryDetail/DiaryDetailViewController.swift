@@ -29,7 +29,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .clear
+        $0.backgroundColor = Colors.background
     }
     
     lazy var tableViewFooterView = UIView().then {
@@ -77,12 +77,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.style = .done
         $0.target = self
         $0.action = #selector(pressedBackBtn)
-    }
-    
-    lazy var scrollView = UIScrollView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.background
-        $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 0)
     }
     
     let titleLabel = UILabel().then {
@@ -138,6 +132,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.estimatedRowHeight = 72
         $0.rowHeight = 72
         $0.showsVerticalScrollIndicator = false
+        $0.backgroundColor = Colors.background
     }
     
     init() {
@@ -152,7 +147,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .gray
+        view.backgroundColor = Colors.background
         setViews()
 
         // keyboard observer등록
@@ -186,7 +181,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.view.addSubview(tempLeftButton)
         self.view.addSubview(tempRightButton)
         
-//        self.view.addSubview(scrollView)
         self.view.addSubview(naviView)
         replyTableView.addSubview(titleLabel)
         replyTableView.addSubview(testLabel)
@@ -218,7 +212,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         }
         
         self.view.layoutIfNeeded()
-        tableViewHeaderView.backgroundColor = .black
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)

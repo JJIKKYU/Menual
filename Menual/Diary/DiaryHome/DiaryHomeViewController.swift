@@ -431,7 +431,8 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // let cell = tableView.cellForRow(at: indexPath) as? MyMenualCell
+        // guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
+        
         listener?.pressedDiaryCell(index: indexPath.row)
     }
     
