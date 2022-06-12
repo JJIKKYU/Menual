@@ -19,6 +19,7 @@ public protocol DiaryRepository {
     var weatherHistory: BehaviorRelay<[WeatherHistoryModel]> { get }
     var placeHistory: BehaviorRelay<[PlaceHistoryModel]> { get }
     var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
+    var diarySearch: BehaviorRelay<[DiarySearchModel]> { get }
     
 //    var realmDiaryOb: Observable<[DiaryModel]> { get }
     // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
@@ -33,10 +34,12 @@ public protocol DiaryRepository {
     
     // 겹쓰기 로직
     func addReplay(info: DiaryReplyModel)
+    
+    // 최근검색목록 로직
+    func addDiarySearch(info: DiaryModel)
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
-    
 
 //    public var realmDiaryOb: Observable<[DiaryModel]> {
 //        let realm = try! Realm()
@@ -72,6 +75,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     public var placeHistory: BehaviorRelay<[PlaceHistoryModel]> { placeHistorySubject }
     public let placeHistorySubject = BehaviorRelay<[PlaceHistoryModel]>(value: [])
+    
+    public var diarySearch: BehaviorRelay<[DiarySearchModel]> { diarySearchSubject }
+    public let diarySearchSubject = BehaviorRelay<[DiarySearchModel]>(value: [])
     
     /*
     // public var cardOnFileString: ReadOnlyCurrentValuePublisher<[PaymentMethod]> { paymentMethodsSubject }
@@ -170,6 +176,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         placeHistorySubject.accept(placeHistoryResults.map { PlaceHistoryModel($0) })
         
         self.fetchMonthDictionary()
+        self.fetchDiarySearch()
     }
     
     // MARK: - Diary CRUD
@@ -371,6 +378,41 @@ public final class DiaryRepositoryImp: DiaryRepository {
         print("diaryMonthModels = \(diaryYearModels)")
         
         self.diaryMonthDicSubject.accept(diaryYearSortedModels)
+    }
+    
+    // MARK: - 최근검색목록 로직 (SearchModel)
+    func fetchDiarySearch() {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        print("fetchDiarySearch!")
+        let results = realm.objects(DiarySearchModelRealm.self)
+        let sortedResults = results.sorted { $0.createdAt < $1.createdAt }
+        diarySearchSubject.accept(results.map { DiarySearchModel($0) })
+    }
+    
+    public func addDiarySearch(info: DiaryModel) {
+        print("addDiarySearch!")
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        let searchRealmData: DiarySearchModelRealm = DiarySearchModelRealm(
+            uuid: UUID().uuidString,
+            diaryUuid: info.uuid,
+            diary: DiaryModelRealm(info),
+            createdAt: Date(),
+            isDeleted: false
+        )
+        
+        let searchData: DiarySearchModel = DiarySearchModel(searchRealmData)
+        
+        realm.safeWrite {
+            realm.add(searchRealmData)
+        }
+        
+        self.diarySearchSubject.accept(self.diarySearchSubject.value + [searchData])
     }
 }
 

@@ -13,7 +13,7 @@ protocol DiarySearchDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
 }
 
-final class DiarySearchComponent: Component<DiarySearchDependency>, DiaryDetailDependency
+final class DiarySearchComponent: Component<DiarySearchDependency>, DiaryDetailDependency, DiarySearchInteractorDependency
 {
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
 
@@ -35,7 +35,10 @@ final class DiarySearchBuilder: Builder<DiarySearchDependency>, DiarySearchBuild
     func build(withListener listener: DiarySearchListener) -> DiarySearchRouting {
         let component = DiarySearchComponent(dependency: dependency)
         let viewController = DiarySearchViewController()
-        let interactor = DiarySearchInteractor(presenter: viewController)
+        let interactor = DiarySearchInteractor(
+            presenter: viewController,
+            dependency: component
+        )
         
         let diaryDetailBuildable = DiaryDetailBuilder(dependency: component)
         
