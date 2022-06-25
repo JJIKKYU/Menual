@@ -205,6 +205,7 @@ extension DiarySearchViewController {
     @objc
     func pressedTextFieldDeleteBtn() {
         self.searchTextField.textField.text = ""
+        self.listener?.searchTest(keyword: "")
     }
 }
 
@@ -216,9 +217,9 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             if menualCount == 0 {
                 return .leastNormalMagnitude
             }
-            return 32
+            return 34
         case 1:
-            return 32
+            return 34
         default:
             return 0
         }
@@ -237,18 +238,19 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = ListHeader(type: .datepageandicon, rightIconType: .none)
-        let divider = Divider(type: ._2px)
-        headerView.addSubview(divider)
-        divider.snp.makeConstraints { make in
-            make.top.equalTo(headerView.snp.top).offset(32)
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.height.equalTo(2)
-        }
         
         switch section {
         case 0:
+            let headerView = ListHeader(type: .search, rightIconType: .none)
+            let divider = Divider(type: ._2px)
+            headerView.addSubview(divider)
+            divider.snp.makeConstraints { make in
+                make.top.equalTo(headerView.snp.top).offset(32)
+                make.leading.equalToSuperview().offset(20)
+                make.width.equalToSuperview().inset(20)
+                make.height.equalTo(2)
+            }
+            
             if menualCount == 0 {
                 let view = UIView()
                 view.backgroundColor = .blue
@@ -256,9 +258,20 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             }
             headerView.title = "TOTAL \(menualCount)"
             
+            
             return headerView
             
         case 1:
+            let headerView = ListHeader(type: .search, rightIconType: .searchDelete)
+            let divider = Divider(type: ._2px)
+            headerView.addSubview(divider)
+            divider.snp.makeConstraints { make in
+                make.top.equalTo(headerView.snp.top).offset(32)
+                make.leading.equalToSuperview().offset(20)
+                make.width.equalToSuperview().inset(20)
+                make.height.equalTo(2)
+            }
+            
             headerView.title = "RECENT"
             return headerView
             

@@ -31,11 +31,6 @@ class DiarySearchView: UIView {
         $0.contentMode = .scaleAspectFit
     }
     
-    private let divider = UIView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.tint.main.v200
-    }
-    
     lazy var deleteBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._20px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -55,7 +50,6 @@ class DiarySearchView: UIView {
     
     func setViews() {
         addSubview(searchImageView)
-        addSubview(divider)
         addSubview(textField)
         addSubview(deleteBtn)
         
@@ -71,15 +65,8 @@ class DiarySearchView: UIView {
             make.width.height.equalTo(24)
         }
         
-        divider.snp.makeConstraints { make in
-            make.leading.equalTo(searchImageView.snp.trailing).offset(4)
-            make.width.equalTo(1)
-            make.height.equalTo(18)
-            make.centerY.equalToSuperview()
-        }
-        
         textField.snp.makeConstraints { make in
-            make.leading.equalTo(divider.snp.trailing).offset(4)
+            make.leading.equalTo(searchImageView.snp.trailing).offset(4)
             make.centerY.equalToSuperview()
             make.height.equalTo(15)
             make.width.equalToSuperview().inset(20)
