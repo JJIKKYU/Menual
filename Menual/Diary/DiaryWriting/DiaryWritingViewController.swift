@@ -28,7 +28,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     weak var listener: DiaryWritingPresentableListener?
     private var disposeBag = DisposeBag()
     
-    lazy var naviView = MenualNaviView(type: .write).then {
+    private lazy var naviView = MenualNaviView(type: .write).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
         $0.backButton.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -44,20 +44,64 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.rightButton2.setImage(Asset._24px.storage.image.withRenderingMode(.alwaysTemplate), for: .normal)
     }
     
-    lazy var titleTextField = UITextField().then {
+    private lazy var scrollView = UIScrollView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .clear
+    }
+    
+    private lazy var titleTextField = UITextField().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
-        $0.placeholder = "제목을 입력해주세요."
+        $0.attributedPlaceholder = NSAttributedString(string: "제목을 입력해 보세요",
+                                                      attributes: [NSAttributedString.Key.foregroundColor : Colors.grey.g600])
         $0.font = UIFont.AppTitle(.title_5)
+        $0.textColor = Colors.grey.g200
+    }
+    
+    private let divider1 = Divider(type: ._1px).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = Colors.grey.g800
+    }
+    
+    private let weatherSelectView = WeatherLocationSelectView(type: .weather).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private let divider2 = Divider(type: ._1px).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = Colors.grey.g800
+    }
+    
+    private let locationSelectView = WeatherLocationSelectView(type: .location).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private let divider3 = Divider(type: ._1px).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = Colors.grey.g800
     }
     
     lazy var descriptionTextView = UITextView().then {
         $0.delegate = self
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = .white
-        $0.typingAttributes = UIFont.AppBody(.body_4, .lightGray)
-        $0.backgroundColor = .gray
-        $0.text = "오늘의 메뉴얼을 입력해주세요.\n날짜가 적힌 곳을 탭하여 제목을 입력할 수 있습니다."
+        // $0.typingAttributes = UIFont.AppBody(.body_4, .lightGray)
+        $0.backgroundColor = .gray.withAlphaComponent(0.1)
+        $0.text = "오늘은 어떤 일이 있으셨나요?"
+        $0.isScrollEnabled = false
+    }
+    
+    private let datePageTextCountView = DatePageTextCountView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private let divider4 = Divider(type: ._1px).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = Colors.grey.g800
+    }
+    
+    private let imageUploadView = ImageUploadView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
     let imageView = UIImageView().then {
@@ -110,6 +154,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         view.backgroundColor = .white
         setViews()
         bind()
+        self.datePageTextCountView.date = Date().toString()
         print("DiaryWriting!")
     }
     
@@ -122,13 +167,18 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         view.backgroundColor = Colors.background
         
-        self.view.addSubview(titleTextField)
-        self.view.addSubview(descriptionTextView)
-        self.view.addSubview(imageView)
-        self.view.addSubview(imageViewBtn)
         self.view.addSubview(naviView)
-        self.view.addSubview(weatherAddBtn)
-        self.view.addSubview(placeAddBtn)
+        self.view.addSubview(scrollView)
+        scrollView.addSubview(titleTextField)
+        scrollView.addSubview(divider1)
+        scrollView.addSubview(weatherSelectView)
+        scrollView.addSubview(divider2)
+        scrollView.addSubview(locationSelectView)
+        scrollView.addSubview(divider3)
+        scrollView.addSubview(descriptionTextView)
+        scrollView.addSubview(datePageTextCountView)
+        scrollView.addSubview(divider4)
+        scrollView.addSubview(imageUploadView)
         self.view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
@@ -138,11 +188,91 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
         }
         
+        scrollView.snp.makeConstraints { make in
+            make.leading.width.equalToSuperview()
+            make.top.equalTo(naviView.snp.bottom)
+            make.bottom.equalToSuperview()
+        }
+        
         titleTextField.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.top.equalToSuperview().offset(20 + 44 + UIApplication.topSafeAreaHeight)
+            make.height.equalTo(26)
+            make.top.equalToSuperview().offset(24)
         }
+        
+        divider1.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(titleTextField.snp.bottom).offset(20)
+            make.height.equalTo(1)
+        }
+        
+        weatherSelectView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(24)
+            make.top.equalTo(divider1.snp.bottom).offset(13)
+        }
+        
+        divider2.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(weatherSelectView.snp.bottom).offset(12)
+            make.height.equalTo(1)
+        }
+        
+        locationSelectView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(24)
+            make.top.equalTo(divider2.snp.bottom).offset(12)
+        }
+        
+        divider3.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(locationSelectView.snp.bottom).offset(12)
+            make.height.equalTo(1)
+        }
+        
+        descriptionTextView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(divider3.snp.bottom).offset(16)
+            make.height.equalTo(185)
+        }
+        
+        datePageTextCountView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalTo(descriptionTextView.snp.bottom)
+            make.height.equalTo(15)
+        }
+        
+        divider4.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(datePageTextCountView.snp.bottom).offset(16)
+            make.height.equalTo(1)
+        }
+        
+        imageUploadView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(divider4.snp.bottom).offset(16)
+            make.height.equalTo(80)
+            make.bottom.equalToSuperview()
+        }
+        
+        /*
+        self.view.addSubview(titleTextField)
+        self.view.addSubview(descriptionTextView)
+        self.view.addSubview(imageView)
+        self.view.addSubview(imageViewBtn)
+        
+        self.view.addSubview(weatherAddBtn)
+        self.view.addSubview(placeAddBtn)
         
         weatherAddBtn.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -158,12 +288,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.width.equalTo(100)
         }
         
-        descriptionTextView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(weatherAddBtn.snp.bottom).offset(20)
-            make.height.equalTo(200)
-        }
+        
         
         imageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -178,6 +303,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.top.equalTo(imageView.snp.bottom).offset(10)
             make.height.equalTo(50)
         }
+         */
     }
     
     func bind() {
@@ -187,6 +313,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }
                 print("text = \(text)")
+                self.datePageTextCountView.textCount = String(text.count)
                 if text.count > 0 {
                     self.naviView.rightButton1IsActive = true
                 } else {
@@ -273,9 +400,10 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     }
 }
 
+// MARK: - UITextField
 extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text == "오늘의 메뉴얼을 입력해주세요.\n날짜가 적힌 곳을 탭하여 제목을 입력할 수 있습니다." {
+        if textView.text == "오늘은 어떤 일이 있으셨나요?" {
             textView.text = nil
             textView.textColor = UIColor.white
         }
@@ -283,12 +411,31 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
 
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            textView.text = "오늘의 메뉴얼을 입력해주세요.\n날짜가 적힌 곳을 탭하여 제목을 입력할 수 있습니다."
+            textView.text = "오늘은 어떤 일이 있으셨나요?"
             textView.textColor = .lightGray
+        }
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        let size = CGSize(width: view.frame.width, height: .infinity)
+        let estimatedSize = textView.sizeThatFits(size)
+        
+        textView.constraints.forEach { (constraint) in
+        
+          /// 180 이하일때는 더 이상 줄어들지 않게하기
+            if estimatedSize.height <= 185 {
+            
+            }
+            else {
+                if constraint.firstAttribute == .height {
+                    constraint.constant = estimatedSize.height
+                }
+            }
         }
     }
 }
 
+// MARK: - PHPicker & ImagePicker
 extension DiaryWritingViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)

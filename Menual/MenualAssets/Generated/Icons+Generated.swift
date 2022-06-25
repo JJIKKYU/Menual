@@ -133,6 +133,7 @@ internal enum Asset {
     }
     internal static let read = ImageAsset(name: "16px/read")
     internal static let recomment = ImageAsset(name: "16px/recomment")
+    internal static let rewrite = ImageAsset(name: "16px/rewrite")
     internal static let search = ImageAsset(name: "16px/search")
     internal static let setting = ImageAsset(name: "16px/setting")
     internal static let share = ImageAsset(name: "16px/share")
@@ -152,6 +153,7 @@ internal enum Asset {
       internal static let thunder = ImageAsset(name: "16px/weather/thunder")
       internal static let wind = ImageAsset(name: "16px/weather/wind")
     }
+    internal static let weather = ImageAsset(name: "16px/weather")
     internal static let word = ImageAsset(name: "16px/word")
     internal static let write = ImageAsset(name: "16px/write")
   }
@@ -222,6 +224,7 @@ internal enum Asset {
     }
     internal static let read = ImageAsset(name: "20px/read")
     internal static let recomment = ImageAsset(name: "20px/recomment")
+    internal static let rewrite = ImageAsset(name: "20px/rewrite")
     internal static let search = ImageAsset(name: "20px/search")
     internal static let setting = ImageAsset(name: "20px/setting")
     internal static let share = ImageAsset(name: "20px/share")
@@ -241,6 +244,7 @@ internal enum Asset {
       internal static let thunder = ImageAsset(name: "20px/weather/thunder")
       internal static let wind = ImageAsset(name: "20px/weather/wind")
     }
+    internal static let weather = ImageAsset(name: "20px/weather")
     internal static let word = ImageAsset(name: "20px/word")
     internal static let write = ImageAsset(name: "20px/write")
   }
@@ -311,6 +315,7 @@ internal enum Asset {
     }
     internal static let read = ImageAsset(name: "24px/read")
     internal static let recomment = ImageAsset(name: "24px/recomment")
+    internal static let rewrite = ImageAsset(name: "24px/rewrite")
     internal static let search = ImageAsset(name: "24px/search")
     internal static let setting = ImageAsset(name: "24px/setting")
     internal static let share = ImageAsset(name: "24px/share")
@@ -330,6 +335,7 @@ internal enum Asset {
       internal static let thunder = ImageAsset(name: "24px/weather/thunder")
       internal static let wind = ImageAsset(name: "24px/weather/wind")
     }
+    internal static let weather = ImageAsset(name: "24px/weather")
     internal static let word = ImageAsset(name: "24px/word")
     internal static let write = ImageAsset(name: "24px/write")
   }
