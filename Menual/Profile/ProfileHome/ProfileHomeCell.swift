@@ -37,9 +37,11 @@ class ProfileHomeCell: UITableViewCell {
         $0.contentMode = .scaleAspectFit
     }
     
-    private lazy var switchBtn = UISwitch().then {
+    lazy var switchBtn = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.addTarget(self, action: #selector(selectedSwitchBtn), for: .touchUpInside)
+        $0.onTintColor = Colors.tint.main.v400
+        $0.tintColor = Colors.grey.g700
     }
     
     override func awakeFromNib() {
@@ -104,7 +106,7 @@ class ProfileHomeCell: UITableViewCell {
 // MARK: - Toggle
 extension ProfileHomeCell {
     @objc
-    func selectedSwitchBtn(_ sender: UISwitch!) {
+    func selectedSwitchBtn(_ sender: UISwitch) {
         switch sender.isOn {
         case true:
             print("isOn!")

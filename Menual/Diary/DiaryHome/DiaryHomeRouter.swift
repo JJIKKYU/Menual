@@ -101,13 +101,16 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         attachChild(router)
     }
     
-    func detachMyPage() {
+    func detachMyPage(isOnlyDetach: Bool) {
         print("DiaryHomeRouter :: detachMyPage!")
         guard let router = profileHomeRouting else {
             return
         }
         
-        viewController.popViewController(animated: true)
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
         detachChild(router)
         profileHomeRouting = nil
     }

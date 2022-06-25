@@ -83,13 +83,15 @@ class ListHeader: UIView {
         rightArrowBtn.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.width.height.equalTo(24)
-            make.top.bottom.equalToSuperview()
+            make.centerY.equalToSuperview()
+            // make.top.bottom.equalToSuperview()
         }
         
         rightFilterBtn.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.width.height.equalTo(24)
-            make.top.bottom.equalToSuperview()
+            make.centerY.equalToSuperview()
+            // make.top.bottom.equalToSuperview()
         }
     }
     

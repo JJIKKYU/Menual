@@ -19,10 +19,33 @@ protocol ProfileHomePresentable: Presentable {
 
 protocol ProfileHomeListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
-    func profileHomePressedBackBtn()
+    func profileHomePressedBackBtn(isOnlyDetach: Bool)
 }
 
 final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>, ProfileHomeInteractable, ProfileHomePresentableListener {
+    
+    var profileHomeDataArr_Setting1: [ProfileHomeModel] {
+        let arr: [ProfileHomeModel] = [
+            ProfileHomeModel(section: .SETTING1, type: .arrow, title: "메뉴얼 가이드 보기"),
+            ProfileHomeModel(section: .SETTING1, type: .toggle, title: "생체인증 사용하기"),
+            ProfileHomeModel(section: .SETTING1, type: .toggle, title: "비밀번호 설정하기"),
+            ProfileHomeModel(section: .SETTING1, type: .arrow, title: "비밀번호 변경하기"),
+        ]
+
+        return arr
+    }
+    
+    var profileHomeDataArr_Setting2: [ProfileHomeModel] {
+        let arr: [ProfileHomeModel] = [
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "iCloud 동기화하기"),
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 백업하기"),
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 내보내기"),
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자에게 문의하기"),
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "오픈 소스 라이브러리 보기"),
+        ]
+
+        return arr
+    }
     
     weak var router: ProfileHomeRouting?
     weak var listener: ProfileHomeListener?
@@ -45,8 +68,8 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     }
     
     // VC에서 뒤로가기 버튼을 눌렀을경우
-    func pressedBackBtn() {
+    func pressedBackBtn(isOnlyDetach: Bool) {
         // detach 하기 위해서 부모에게 넘겨줌
-        listener?.profileHomePressedBackBtn()
+        listener?.profileHomePressedBackBtn(isOnlyDetach: isOnlyDetach)
     }
 }

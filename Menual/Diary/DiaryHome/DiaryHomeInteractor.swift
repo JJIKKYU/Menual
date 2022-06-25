@@ -12,7 +12,7 @@ import RxRelay
 
 protocol DiaryHomeRouting: ViewableRouting {
     func attachMyPage()
-    func detachMyPage()
+    func detachMyPage(isOnlyDetach: Bool)
     func attachDiarySearch()
     func detachDiarySearch(isOnlyDetach: Bool)
     func attachDiaryMoments()
@@ -136,9 +136,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         router?.attachMyPage()
     }
     
-    func profileHomePressedBackBtn() {
+    func profileHomePressedBackBtn(isOnlyDetach: Bool) {
         print("DiaryHomeInteractor :: profileHomePressedBackBtn!")
-        router?.detachMyPage()
+        router?.detachMyPage(isOnlyDetach: isOnlyDetach)
     }
     
     // MARK: - Diary Search (검색화면) 관련 함수

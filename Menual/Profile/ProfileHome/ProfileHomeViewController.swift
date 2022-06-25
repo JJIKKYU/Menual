@@ -11,7 +11,9 @@ import UIKit
 import SnapKit
 
 protocol ProfileHomePresentableListener: AnyObject {
-    func pressedBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool)
+    var profileHomeDataArr_Setting1: [ProfileHomeModel] { get }
+    var profileHomeDataArr_Setting2: [ProfileHomeModel] { get }
 }
 
 enum ProfileHomeSection: Int {
@@ -77,13 +79,29 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        listener?.pressedBackBtn()
+        if isMovingFromParent || isBeingDismissed {
+            listener?.pressedBackBtn(isOnlyDetach: true)
+        }
     }
     
     @objc
     func pressedBackBtn() {
         print("ProfileHomeVC :: pressedBackBtn!")
-        listener?.pressedBackBtn()
+        listener?.pressedBackBtn(isOnlyDetach: false)
+    }
+}
+
+// MARK: - IBaction
+extension ProfileHomeViewController {
+    @objc
+    func selectedSwitchBtn(_ sender: UISwitch) {
+        print("!!")
+        switch sender.isOn {
+        case true:
+            print("isOn!")
+        case false:
+            print("isOff!")
+        }
     }
 }
 
@@ -119,18 +137,59 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        switch section {
+        case ProfileHomeSection.SETTING1.rawValue:
+            return listener?.profileHomeDataArr_Setting1.count ?? 0
+        case ProfileHomeSection.SETTING2.rawValue:
+            return listener?.profileHomeDataArr_Setting2.count ?? 0
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileHomeCell", for: indexPath) as? ProfileHomeCell else { return UITableViewCell() }
+        let index = indexPath.row
         
-        if indexPath.row % 2 == 0 {
-            cell.profileHomeCellType = .toggle
+        let section = indexPath.section
+        switch section {
+        case ProfileHomeSection.SETTING1.rawValue:
+            guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return UITableViewCell() }
+            cell.title = data.title
+            cell.profileHomeCellType = data.type
+            if data.type == .toggle && index == 1 {
+                cell.switchBtn.isOn = true
+            }
+            return cell
+        case ProfileHomeSection.SETTING2.rawValue:
+            guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return UITableViewCell() }
+            cell.title = data.title
+            cell.profileHomeCellType = data.type
+            return cell
+            
+        default:
+            return UITableViewCell()
         }
-        
-        cell.title = "안녕하세요 \(indexPath.row)"
-        
-        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileHomeCell", for: indexPath) as? ProfileHomeCell else { return }
+        let section = indexPath.section
+        let index = indexPath.row
+        print("indexpath = \(indexPath)")
+
+        // TODO: - 실제 데이터 기반으로 변경
+        switch section {
+        case ProfileHomeSection.SETTING1.rawValue:
+            guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return }
+            if data.type == .toggle {
+                cell.switchBtn.isOn = !cell.switchBtn.isOn
+            }
+            break
+        case ProfileHomeSection.SETTING2.rawValue:
+            break
+        default:
+            break
+        }
     }
 }
