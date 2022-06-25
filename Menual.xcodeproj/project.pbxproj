@@ -173,6 +173,7 @@
 		98EADBAA284E45BF007C298C /* DividerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADBA9284E45BF007C298C /* DividerCell.swift */; };
 		98EADBAC284E475C007C298C /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADBAB284E475C007C298C /* DividerView.swift */; };
 		98EADBAE2855C1A5007C298C /* DiarySearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADBAD2855C1A4007C298C /* DiarySearchModel.swift */; };
+		98EADBB02866D3D4007C298C /* ProfileHomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADBAF2866D3D4007C298C /* ProfileHomeCell.swift */; };
 		98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A26D280C536F000851F0 /* MenualNavigationController.swift */; };
 		98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */; };
 		98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */; };
@@ -381,6 +382,7 @@
 		98EADBA9284E45BF007C298C /* DividerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerCell.swift; sourceTree = "<group>"; };
 		98EADBAB284E475C007C298C /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
 		98EADBAD2855C1A4007C298C /* DiarySearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchModel.swift; sourceTree = "<group>"; };
+		98EADBAF2866D3D4007C298C /* ProfileHomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeCell.swift; sourceTree = "<group>"; };
 		98F3A26D280C536F000851F0 /* MenualNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualNavigationController.swift; sourceTree = "<group>"; };
 		98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetBaseViewController.swift; sourceTree = "<group>"; };
 		98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetViewController.swift; sourceTree = "<group>"; };
@@ -791,6 +793,7 @@
 				98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */,
 				98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */,
 				98934A9827E6F13700178A8E /* ProfileHomeInteractor.swift */,
+				98EADBAF2866D3D4007C298C /* ProfileHomeCell.swift */,
 			);
 			path = ProfileHome;
 			sourceTree = "<group>";
@@ -1487,6 +1490,7 @@
 				98A2BD912802B43E00C1FB92 /* MyMenualCell.swift in Sources */,
 				985E0F0F27C2690500057951 /* LoginHomeBuilder.swift in Sources */,
 				988A2D3B27F82F3B0046C43A /* ViewControllableMock.swift in Sources */,
+				98EADBB02866D3D4007C298C /* ProfileHomeCell.swift in Sources */,
 				98C24F5D27F05A0200E6768C /* TitleView.swift in Sources */,
 				985E0F1327C2750D00057951 /* AdaptivePresentationControllerDelegate.swift in Sources */,
 				98B557A8283A3E7900F8CA3E /* DividerInteractor.swift in Sources */,
