@@ -397,22 +397,22 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-        
-        let searchRealmData: DiarySearchModelRealm = DiarySearchModelRealm(
-            uuid: UUID().uuidString,
-            diaryUuid: info.uuid,
-            diary: DiaryModelRealm(info),
-            createdAt: Date(),
-            isDeleted: false
-        )
-        
-        let searchData: DiarySearchModel = DiarySearchModel(searchRealmData)
-        
-        realm.safeWrite {
-            realm.add(searchRealmData)
-        }
-        
-        self.diarySearchSubject.accept(self.diarySearchSubject.value + [searchData])
+//
+//        let searchRealmData: DiarySearchModelRealm = DiarySearchModelRealm(
+//            uuid: UUID().uuidString,
+//            diaryUuid: info.uuid,
+//            diary: DiaryModelRealm(info),
+//            createdAt: Date(),
+//            isDeleted: false
+//        )
+//
+//        let searchData: DiarySearchModel = DiarySearchModel(searchRealmData)
+//
+//        realm.safeWrite {
+//            realm.add(searchRealmData)
+//        }
+//
+//        self.diarySearchSubject.accept(self.diarySearchSubject.value + [searchData])
     }
 }
 

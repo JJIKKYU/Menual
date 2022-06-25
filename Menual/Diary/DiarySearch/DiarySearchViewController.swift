@@ -28,15 +28,12 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     weak var listener: DiarySearchPresentableListener?
     var disposeBag = DisposeBag()
     
+    var menualCount: Int = 0
+    
     lazy var naviView = MenualNaviView(type: .moments).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
         $0.titleLabel.text = MenualString.title_search
-    }
-    
-    var recentSearchListView = UIView().then {
-        $0.backgroundColor = Colors.background
-        $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
     lazy var recentSearchTableView = UITableView().then {
@@ -44,47 +41,51 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.delegate = self
         $0.dataSource = self
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.background
+        $0.backgroundColor = .clear
         $0.register(RecentSearchCell.self, forCellReuseIdentifier: "RecentSearchCell")
     }
     
-    lazy var tableView = UITableView().then {
+    lazy var tableView = UITableView(frame: CGRect.zero, style: .grouped).then {
         $0.delegate = self
         $0.dataSource = self
         
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.background
+        $0.backgroundColor = .clear
         $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
-        $0.estimatedRowHeight = 87
-        $0.rowHeight = 87
-        $0.isHidden = true
+
         $0.estimatedRowHeight = 72
         $0.rowHeight = 72
         $0.showsVerticalScrollIndicator = false
+        $0.contentInset = .zero
+        $0.contentInsetAdjustmentBehavior = .never
+        $0.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     }
     
-    lazy var searchTextField = UITextField().then {
+    lazy var searchTextField = DiarySearchView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.delegate = self
-        $0.backgroundColor = UIColor.gray
+        $0.textField.delegate = self
+        $0.deleteBtn.addTarget(self, action: #selector(pressedTextFieldDeleteBtn), for: .touchUpInside)
     }
     
+    /*
     private let searchMenualCountLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppHead(.head_4)
         $0.textColor = .white
         $0.text = "총 N개의 메뉴얼"
     }
+     
     
     private let searchView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .clear
+        $0.backgroundColor = .red
         $0.frame = CGRect(x: 0, y: 0, width: 200, height: 80)
     }
     
     private let searchViewDivider = Divider(type: ._1px).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
+     */
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -129,7 +130,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     }
     
     func bind() {
-        searchTextField.rx.text
+        searchTextField.textField.rx.text
             .orEmpty
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] keyword in
@@ -138,30 +139,14 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
                  // self.listener?.searchDataTest(keyword: keyword)
                  self.listener?.searchTest(keyword: keyword)
 //                self.listener?.fetchRecentSearchList()
-                
-                if keyword.count == 0 {
-                    self.tableView.isHidden = true
-                    self.recentSearchListView.isHidden = false
-                    self.recentSearchTableView.isHidden = false
-                } else {
-                    self.tableView.isHidden = false
-                    self.recentSearchListView.isHidden = true
-                    self.recentSearchTableView.isHidden = true
-                }
             })
             .disposed(by: disposeBag)
         
         listener?.searchResultsRelay
             .subscribe(onNext: { [weak self] results in
                 guard let self = self else { return }
-                
-                if results.count == 0 {
-                    self.searchMenualCountLabel.text = "empty페이지 띄워라"
-                } else {
-                    let count = results.count
-                    self.searchMenualCountLabel.text = "총 \(count)개의 메뉴얼"
-                }
-                
+                let count = results.count
+                self.menualCount = count
                 self.tableView.reloadData()
                 // recentSearchTableView.reloadData()
             })
@@ -174,50 +159,16 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         self.view.addSubview(naviView)
         self.view.addSubview(searchTextField)
         self.view.bringSubviewToFront(naviView)
-        self.view.addSubview(recentSearchTableView)
-        self.tableView.addSubview(searchView)
-        tableView.tableHeaderView = searchView
-        searchView.addSubview(searchMenualCountLabel)
-        searchView.addSubview(searchViewDivider)
-        searchView.sizeToFit()
         
         searchTextField.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(200)
-            make.top.equalToSuperview().offset(100)
-            make.height.equalTo(50)
-        }
-        
-        // SearchView
-        searchView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalToSuperview()
-            make.height.equalTo(26)
-        }
-        
-        searchMenualCountLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.height.equalTo(18)
             make.width.equalToSuperview().inset(20)
-        }
-        
-        searchViewDivider.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.top.equalTo(searchMenualCountLabel.snp.bottom).offset(8)
-            make.width.equalToSuperview().inset(20)
-            make.height.equalTo(1)
-        }
-        
-        recentSearchTableView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.top.equalTo(searchTextField.snp.bottom).offset(20)
-            make.bottom.equalToSuperview()
+            make.top.equalToSuperview().offset(44 + UIApplication.topSafeAreaHeight)
+            make.height.equalTo(40)
         }
         
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(searchTextField.snp.bottom).offset(30)
+            make.top.equalTo(searchTextField.snp.bottom).offset(24)
             make.leading.trailing.bottom.equalToSuperview()
         }
         
@@ -229,7 +180,16 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         }
         
     }
+
     
+    func reloadSearchTableView() {
+        tableView.reloadData()
+        // recentSearchTableView.reloadData()
+    }
+}
+
+// MARK: - @IBACtion
+extension DiarySearchViewController {
     @objc
     func pressedBackBtn() {
         print("ProfileHomeVC :: pressedBackBtn!")
@@ -242,29 +202,65 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         print("pressedDeleteBtn!")
     }
     
-    func reloadSearchTableView() {
-        tableView.reloadData()
-        recentSearchTableView.reloadData()
+    @objc
+    func pressedTextFieldDeleteBtn() {
+        self.searchTextField.textField.text = ""
     }
 }
 
-
+// MARK: - UITableView
 extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        switch section {
+        case 0:
+            if menualCount == 0 {
+                return .leastNormalMagnitude
+            }
+            return 32
+        case 1:
+            return 32
+        default:
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = ListHeader(type: .datepageandicon, rightIconType: .none)
+        let divider = Divider(type: ._2px)
+        headerView.addSubview(divider)
+        divider.snp.makeConstraints { make in
+            make.top.equalTo(headerView.snp.top).offset(32)
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(2)
+        }
+        
         switch section {
         case 0:
-            let view = UIView()
-            view.backgroundColor = .blue
-            return view
+            if menualCount == 0 {
+                let view = UIView()
+                view.backgroundColor = .blue
+                return view
+            }
+            headerView.title = "TOTAL \(menualCount)"
+            
+            return headerView
             
         case 1:
-            let view = UIView()
-            view.backgroundColor = .red
-            return view
+            headerView.title = "RECENT"
+            return headerView
             
         default:
             return UIView()
@@ -292,7 +288,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
             
             guard let model = listener?.searchResultsRelay.value[safe: index],
-                  let searchKeyword = self.searchTextField.text else {
+                  let searchKeyword = self.searchTextField.textField.text else {
                 return UITableViewCell()
             }
             
@@ -317,20 +313,20 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             
             return cell
         }
-        // 최근 검색 키워드 TableView
-        else if tableView == self.recentSearchTableView {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchCell") as? RecentSearchCell else { return UITableViewCell() }
-            
-            guard let model = listener?.recentSearchResultList[safe: index] else {
-                return UITableViewCell()
-            }
-            
-            cell.keyword = model.keyword
-            cell.createdAt = model.createdAt.toStringWithHourMin()
-            cell.deleteBtn.addTarget(self, action: #selector(pressedRecentSearchCellDeleteBtn), for: .touchUpInside)
-            
-            return cell
-        }
+//        // 최근 검색 키워드 TableView
+//        else if tableView == self.recentSearchTableView {
+//            guard let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchCell") as? RecentSearchCell else { return UITableViewCell() }
+//
+//            guard let model = listener?.recentSearchResultList[safe: index] else {
+//                return UITableViewCell()
+//            }
+//
+//            cell.keyword = model.keyword
+//            cell.createdAt = model.createdAt.toStringWithHourMin()
+//            cell.deleteBtn.addTarget(self, action: #selector(pressedRecentSearchCellDeleteBtn), for: .touchUpInside)
+//
+//            return cell
+//        }
         
         return UITableViewCell()
     }

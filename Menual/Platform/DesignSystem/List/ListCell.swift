@@ -166,6 +166,7 @@ class ListCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        removeSectionSeparators()
         titleLabel.text = title
         dateAndTimeLabel.text = dateAndTime
         pageAndReviewLabel.text = pageAndReview
