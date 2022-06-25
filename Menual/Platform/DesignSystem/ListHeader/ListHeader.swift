@@ -13,12 +13,14 @@ enum ListHeaderType {
     case textandicon
     case text
     case datepageandicon
+    case search
 }
 
 enum RightIconType {
     case none
     case filter
     case arrow
+    case searchDelete
 }
 
 class ListHeader: UIView {
@@ -31,7 +33,7 @@ class ListHeader: UIView {
         didSet { setNeedsLayout() }
     }
     
-    var title: String = "" {
+    var title: String = "        " {
         didSet { setNeedsLayout() }
     }
     
@@ -56,6 +58,13 @@ class ListHeader: UIView {
         $0.contentHorizontalAlignment = .fill
         $0.contentVerticalAlignment = .fill
     }
+    
+    let rightTextBtn = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setTitle("기록 삭제", for: .normal)
+        $0.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
+        $0.setTitleColor(Colors.grey.g500, for: .normal)
+    }
 
     init(type: ListHeaderType, rightIconType: RightIconType) {
         self.type = type
@@ -72,6 +81,7 @@ class ListHeader: UIView {
         addSubview(titleLabel)
         addSubview(rightArrowBtn)
         addSubview(rightFilterBtn)
+        addSubview(rightTextBtn)
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -93,6 +103,14 @@ class ListHeader: UIView {
             make.centerY.equalToSuperview()
             // make.top.bottom.equalToSuperview()
         }
+        
+        rightTextBtn.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(20)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(47)
+            make.height.equalTo(15)
+        }
+        rightTextBtn.sizeToFit()
     }
     
     override func layoutSubviews() {
@@ -104,34 +122,54 @@ class ListHeader: UIView {
             titleLabel.isHidden = false
             titleLabel.font = UIFont.AppHead(.head_5)
             titleLabel.textColor = Colors.grey.g400
-            break
             
         case .textandicon:
             titleLabel.isHidden = false
             titleLabel.font = UIFont.AppHead(.head_5)
             titleLabel.textColor = Colors.grey.g400
-            break
             
         case .datepageandicon:
             titleLabel.isHidden = false
             
             titleLabel.font = UIFont.AppHead(.head_4)
             titleLabel.textColor = Colors.grey.g600
-            break
+
+        case .search:
+            titleLabel.isHidden = false
+            
+            titleLabel.font = UIFont.AppHead(.head_5)
+            titleLabel.textColor = Colors.grey.g500
+            
+            if title.count > 6 {
+                let attributedString = NSMutableAttributedString(string: title)
+                let number = (title as NSString).substring(with: NSMakeRange(6, 1))
+                
+                attributedString.addAttribute(.foregroundColor, value: Colors.tint.main.v600, range: (title as NSString).range(of: number))
+                titleLabel.attributedText = attributedString
+            }
         }
         
         switch rightIconType {
         case .none:
             rightFilterBtn.isHidden = true
             rightArrowBtn.isHidden = true
+            rightTextBtn.isHidden = true
 
         case .arrow:
             rightFilterBtn.isHidden = true
             rightArrowBtn.isHidden = false
+            rightTextBtn.isHidden = true
             
         case .filter:
             rightFilterBtn.isHidden = false
             rightArrowBtn.isHidden = true
+            rightTextBtn.isHidden = true
+            
+        case .searchDelete:
+            rightFilterBtn.isHidden = true
+            rightArrowBtn.isHidden = true
+            rightTextBtn.isHidden = false
+            
         }
     }
 }
