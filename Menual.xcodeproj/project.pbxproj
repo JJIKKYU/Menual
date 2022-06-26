@@ -90,6 +90,8 @@
 		98A56C632867734A000AC4FF /* DatePageTextCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C622867734A000AC4FF /* DatePageTextCountView.swift */; };
 		98A56C65286775CA000AC4FF /* ImageUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C64286775CA000AC4FF /* ImageUploadView.swift */; };
 		98A56C6728678F0F000AC4FF /* CreatedAtPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C6628678F0F000AC4FF /* CreatedAtPageView.swift */; };
+		98A56C692868224B000AC4FF /* WeatherPlaceSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C682868224B000AC4FF /* WeatherPlaceSelectView.swift */; };
+		98A56C6B28682506000AC4FF /* WeatherPlaceSelectViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C6A28682506000AC4FF /* WeatherPlaceSelectViewCell.swift */; };
 		98B55743281CFF5B00F8CA3E /* DiarySearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55742281CFF5B00F8CA3E /* DiarySearchCell.swift */; };
 		98B55745281D0FEE00F8CA3E /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55744281D0FEE00F8CA3E /* SearchModel.swift */; };
 		98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55746281D157200F8CA3E /* RecentSearchCell.swift */; };
@@ -306,6 +308,8 @@
 		98A56C622867734A000AC4FF /* DatePageTextCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePageTextCountView.swift; sourceTree = "<group>"; };
 		98A56C64286775CA000AC4FF /* ImageUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadView.swift; sourceTree = "<group>"; };
 		98A56C6628678F0F000AC4FF /* CreatedAtPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatedAtPageView.swift; sourceTree = "<group>"; };
+		98A56C682868224B000AC4FF /* WeatherPlaceSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherPlaceSelectView.swift; sourceTree = "<group>"; };
+		98A56C6A28682506000AC4FF /* WeatherPlaceSelectViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherPlaceSelectViewCell.swift; sourceTree = "<group>"; };
 		98B55742281CFF5B00F8CA3E /* DiarySearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchCell.swift; sourceTree = "<group>"; };
 		98B55744281D0FEE00F8CA3E /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		98B55746281D157200F8CA3E /* RecentSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCell.swift; sourceTree = "<group>"; };
@@ -1142,6 +1146,8 @@
 				98F3A27C28150052000851F0 /* DiaryBottomSheetBuilder.swift */,
 				98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */,
 				98B5574C281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift */,
+				98A56C682868224B000AC4FF /* WeatherPlaceSelectView.swift */,
+				98A56C6A28682506000AC4FF /* WeatherPlaceSelectViewCell.swift */,
 			);
 			path = DiaryBottomSheet;
 			sourceTree = "<group>";
@@ -1492,6 +1498,7 @@
 				98B557D12841F9B600F8CA3E /* UIButton+Util.swift in Sources */,
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
 				989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */,
+				98A56C692868224B000AC4FF /* WeatherPlaceSelectView.swift in Sources */,
 				98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */,
 				98B557CA2841EEAC00F8CA3E /* FABViewController.swift in Sources */,
 				98B557C92841EEAC00F8CA3E /* FABRouter.swift in Sources */,
@@ -1535,6 +1542,7 @@
 				98B5579F283A1AF600F8CA3E /* MomentsText.swift in Sources */,
 				98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */,
 				98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */,
+				98A56C6B28682506000AC4FF /* WeatherPlaceSelectViewCell.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
 				985E0F0627C232E300057951 /* RegisterPWBuilder.swift in Sources */,
 				98EADBB42866E91E007C298C /* DiarySearchView.swift in Sources */,

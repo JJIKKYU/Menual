@@ -12,8 +12,6 @@ import RxRelay
 import UIKit
 
 protocol DiaryBottomSheetPresentableListener: AnyObject {
-    var weatherHistoryModel: BehaviorRelay<[WeatherHistoryModel]> { get }
-    var plcaeHistoryModel: BehaviorRelay<[PlaceHistoryModel]> { get }
     
     func pressedCloseBtn()
 
@@ -29,27 +27,10 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
 }
 
 final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController, DiaryBottomSheetPresentable, DiaryBottomSheetViewControllable {
-
     
     weak var listener: DiaryBottomSheetPresentableListener?
     var disposeBag = DisposeBag()
     var keyHeight: CGFloat?
-    
-    lazy var weatherView = BottomSheetSelectView(.weather).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isHidden = false
-        $0.title = "날씨에 대해 기록해주세요"
-        $0.delegate = self
-        $0.weatherHistoryModel = listener?.weatherHistoryModel.value ?? []
-    }
-    
-    lazy var placeView = BottomSheetSelectView(.place).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isHidden = true
-        $0.title = "장소에 대해 기록해주세요"
-        $0.delegate = self
-        $0.placeHistoryModel = listener?.plcaeHistoryModel.value ?? []
-    }
     
     lazy var addBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -59,6 +40,11 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         $0.setTitleColor(Colors.grey.g800, for: .normal)
         $0.backgroundColor = Colors.tint.sub.n400
         $0.AppCorner(.tiny)
+    }
+    
+    private lazy var weatherPlaceSelectView = WeatherPlaceSelectView(type: .place).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.delegate = self
     }
     
     override func viewDidLoad() {
@@ -74,93 +60,35 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        weatherView.delegate = nil
-        placeView.delegate = nil
         super.delegate = nil
+        weatherPlaceSelectView.delegate = nil
         listener?.pressedCloseBtn()
     }
     
     func setViews() {
         super.delegate = self
         
-        /*
-        self.view.addSubview(segmentationView)
-        self.view.addSubview(closeBtn)
-        self.view.addSubview(addBtn)
+        view.addSubview(weatherPlaceSelectView)
         
-        self.view.addSubview(weatherView)
-        self.view.addSubview(placeView)
-        self.view.bringSubviewToFront(addBtn)
-        
-        segmentationView.snp.makeConstraints { make in
-            make.leading.equalTo(bottomSheetView.snp.leading).offset(20)
-            make.top.equalTo(bottomSheetView.snp.top).offset(20)
-            make.width.equalTo(90)
+        weatherPlaceSelectView.snp.makeConstraints { make in
+            make.leading.width.equalToSuperview()
             make.height.equalTo(32)
-        }
-        
-        closeBtn.snp.makeConstraints { make in
-            make.trailing.equalTo(bottomSheetView.snp.trailing).inset(20)
-            make.top.equalTo(bottomSheetView.snp.top).offset(20)
-            make.width.height.equalTo(24)
-        }
-        
-        weatherView.snp.makeConstraints { make in
-            make.leading.equalTo(bottomSheetView.snp.leading)
-            make.top.equalTo(segmentationView.snp.bottom).offset(20)
-            make.width.equalTo(bottomSheetView.snp.width)
-            make.bottom.equalTo(bottomSheetView.snp.bottom)
+            make.top.equalTo(super.divider.snp.bottom).offset(16)
         }
 
-        placeView.snp.makeConstraints { make in
-            make.leading.equalTo(bottomSheetView.snp.leading)
-            make.top.equalTo(segmentationView.snp.bottom).offset(20)
-            make.width.equalTo(bottomSheetView.snp.width)
-            make.bottom.equalTo(bottomSheetView.snp.bottom)
-        }
-        
-        addBtn.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.height.equalTo(50)
-            make.bottom.equalTo(bottomSheetView.snp.bottom).inset(20)
-        }
-         */
     }
     
     func bind() {
-        weatherView.textFieldOb
-            .distinctUntilChanged()
-            .subscribe(onNext: { [weak self] changedText in
-                guard let self = self,
-                      let changedText = changedText else { return }
-                if changedText.count == 0 { return }
-                print("weatherView = \(changedText)")
-                self.listener?.updateWeatherDetailText(text: changedText)
-            })
-            .disposed(by: disposeBag)
-        
-        placeView.textFieldOb
-            .distinctUntilChanged()
-            .subscribe(onNext: { [weak self] changedText in
-                guard let self = self,
-                      let changedText = changedText else { return }
-                if changedText.count == 0 { return }
-                self.listener?.updatePlaceDetailText(text: changedText)
-                print("placeView = \(changedText)")
-            })
-            .disposed(by: disposeBag)
+
     }
     
     func setViewsWithWeatherModel(model: WeatherModel) {
         // 재진입 할 경우 이전에 선택했던 정보 세팅
-        weatherView.placeholderText = model.detailText
-        weatherView.selectedWeatherType = model.weather
+
     }
     
     func setViewsWithPlaceMOdel(model: PlaceModel) {
-        placeView.placeholderText = model.detailText
-        placeView.selectedPlaceType = model.place
+        
     }
     
     @objc
@@ -172,15 +100,36 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
     func setViews(type: MenualBottomSheetType) {
         print("menualBottomSheetType = \(type)")
         menualBottomSheetType = type
+        
+        switch menualBottomSheetType {
+        case .weather:
+            break
+            
+        case .place:
+            break
+            
+        case .reminder:
+            break
+            
+        case .menu:
+            break
+            
+        case .filter:
+            break
+            
+        case .calender:
+            break
+        }
     }
 }
 
+// MARK: - MenualBottomSheetBaseDelegate
 extension DiaryBottomSheetViewController: MenualBottomSheetBaseDelegate {
-    
     // 부모 뷰가 애니메이션이 모두 끝났을 경우 Delegate 전달 받으면 그때 Router에서 RIB 해제
     func dismissedBottomSheet() {
         print("이때 라우터 호출할래?")
         super.delegate = nil
+        weatherPlaceSelectView.delegate = nil
         listener?.pressedCloseBtn()
     }
 }
@@ -214,6 +163,7 @@ extension DiaryBottomSheetViewController {
     }
 }
 
+// MARK: - UITextFieldDelegate
 extension DiaryBottomSheetViewController: UITextFieldDelegate {
     
 }
@@ -236,5 +186,19 @@ extension DiaryBottomSheetViewController: BottomSheetSelectDelegate {
         }
         listener?.updatePlace(place: place)
         listener?.updatePlaceDetailText(text: placeModel.detailText)
+    }
+}
+
+// MARK: - WeatherPlaceSelectViewDelegate
+extension DiaryBottomSheetViewController: WeatherPlaceSelectViewDelegate {
+    func isSelected(_ isSelected: Bool) {
+        // 선택 유무로 체크표시 변경
+        print("isSelected! = \(isSelected)")
+        switch isSelected {
+        case true:
+            super.menualBottomSheetRightBtnIsActivate = .activate
+        case false:
+            super.menualBottomSheetRightBtnIsActivate = .unActivate
+        }
     }
 }

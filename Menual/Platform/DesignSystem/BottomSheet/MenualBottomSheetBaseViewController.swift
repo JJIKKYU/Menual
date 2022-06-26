@@ -83,7 +83,7 @@ class MenualBottomSheetBaseViewController: UIViewController {
         $0.tintColor = Colors.grey.g600
     }
     
-    private let divider = Divider(type: ._1px).then {
+    internal let divider = Divider(type: ._1px).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = Colors.grey.g700
     }
@@ -203,12 +203,15 @@ class MenualBottomSheetBaseViewController: UIViewController {
         switch menualBottomSheetRightBtnIsActivate {
         case .unActivate:
             rightBtn.tintColor = Colors.grey.g600
+            rightBtn.isUserInteractionEnabled = false
             
         case .activate:
             rightBtn.tintColor = Colors.tint.sub.n400
+            rightBtn.isUserInteractionEnabled = true
             
         case ._default:
             rightBtn.tintColor = Colors.grey.g600
+            rightBtn.isUserInteractionEnabled = true
         }
     }
     
