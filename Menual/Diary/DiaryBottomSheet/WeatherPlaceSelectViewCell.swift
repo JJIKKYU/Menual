@@ -11,7 +11,7 @@ import SnapKit
 
 class WeatherPlaceSelectViewCell: UICollectionViewCell {
     
-    var weatherPlaceSelectView: WeatherPlaceSelectView.WeatherPlaceType = .place {
+    var weatherPlaceSelectViewCellType: WeatherPlaceSelectView.WeatherPlaceType = .place {
         didSet { setNeedsLayout() }
     }
     
@@ -77,7 +77,6 @@ class WeatherPlaceSelectViewCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
         buttonImageView.image = image
         
         switch isSelected {
@@ -90,6 +89,7 @@ class WeatherPlaceSelectViewCell: UICollectionViewCell {
         }
         
         if let placeIconType = placeIconType {
+            self.placeIconType = placeIconType
             switch placeIconType {
             case .place:
                 buttonImageView.image = Asset._24px.place.image.withRenderingMode(.alwaysTemplate)

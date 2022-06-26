@@ -20,6 +20,14 @@ class WeatherLocationSelectView: UIView {
         didSet { setNeedsLayout() }
     }
     
+    var selectedPlaceType: Place? {
+        didSet { setNeedsLayout() }
+    }
+    
+    var selectedWeatherType: Weather? {
+        didSet { setNeedsLayout() }
+    }
+    
     var selectedWeatherLocationType: SelectedWeatherLocationType = .weather {
         didSet { setNeedsLayout() }
     }
@@ -60,6 +68,7 @@ class WeatherLocationSelectView: UIView {
     convenience init(type: SelectedWeatherLocationType) {
         self.init()
         self.selectedWeatherLocationType = type
+        print("!! selectedWeatherLocationType \(selectedWeatherLocationType)")
     }
     
     func setViews() {
@@ -93,7 +102,7 @@ class WeatherLocationSelectView: UIView {
         case .weather:
             switch selected {
             case true:
-                selectImageView.image = selectImage
+                selectImageView.image = selectImage.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.tint.sub.n800
                 selectLabel.textColor = Colors.grey.g400
                 selectLabel.text = selectTitle
@@ -110,7 +119,7 @@ class WeatherLocationSelectView: UIView {
         case .location:
             switch selected {
             case true:
-                selectImageView.image = selectImage
+                selectImageView.image = selectImage.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.tint.sub.n800
                 selectLabel.textColor = Colors.grey.g400
                 selectLabel.text = selectTitle
@@ -122,6 +131,38 @@ class WeatherLocationSelectView: UIView {
                 selectLabel.textColor = Colors.grey.g600
                 selectLabel.text = "지금 장소는 어디신가요?"
                 deleteBtn.isHidden = true
+            }
+        }
+        
+        if let selectedPlaceType = selectedPlaceType {
+            selectLabel.text = Place().getPlaceText(place: selectedPlaceType)
+            switch selectedPlaceType {
+            case .place:
+                selectImageView.image = Asset._24px.place.image.withRenderingMode(.alwaysTemplate)
+            case .car:
+                selectImageView.image = Asset._24px.Place.car.image.withRenderingMode(.alwaysTemplate)
+            case .company:
+                selectImageView.image = Asset._24px.Place.company.image.withRenderingMode(.alwaysTemplate)
+            case .home:
+                selectImageView.image = Asset._24px.Place.home.image.withRenderingMode(.alwaysTemplate)
+            case .school:
+                selectImageView.image = Asset._24px.Place.school.image.withRenderingMode(.alwaysTemplate)
+            }
+        }
+        
+        if let selectedWeatherType = selectedWeatherType {
+            selectLabel.text = Weather().getWeatherText(weather: selectedWeatherType)
+            switch selectedWeatherType {
+            case .sun:
+                selectImageView.image = Asset._24px.Weather.sun.image.withRenderingMode(.alwaysTemplate)
+            case .rain:
+                selectImageView.image = Asset._24px.Weather.rain.image.withRenderingMode(.alwaysTemplate)
+            case .cloud:
+                selectImageView.image = Asset._24px.Weather.cloud.image.withRenderingMode(.alwaysTemplate)
+            case .snow:
+                selectImageView.image = Asset._24px.Weather.snow.image.withRenderingMode(.alwaysTemplate)
+            case .thunder:
+                selectImageView.image = Asset._24px.Weather.thunder.image.withRenderingMode(.alwaysTemplate)
             }
         }
     }

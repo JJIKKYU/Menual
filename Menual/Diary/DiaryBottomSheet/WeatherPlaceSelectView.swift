@@ -12,6 +12,8 @@ import SnapKit
 protocol WeatherPlaceSelectViewDelegate {
     // 체크표시 등 활성화
     func isSelected(_ isSelected: Bool)
+    func weatherSendData(weatherType: Weather)
+    func placeSendData(placeType: Place)
 }
 
 class WeatherPlaceSelectView: UIView {
@@ -71,9 +73,9 @@ class WeatherPlaceSelectView: UIView {
         
         switch weatherPlaceType {
         case .weather:
-            break
+            collectionView.reloadData()
         case .place:
-            break
+            collectionView.reloadData()
         }
     }
 }
@@ -99,12 +101,12 @@ extension WeatherPlaceSelectView: UICollectionViewDelegate, UICollectionViewData
         switch weatherPlaceType {
         case .place:
             guard let placeType = Place().getVariation()[safe: index] else { return UICollectionViewCell() }
-            cell.weatherPlaceSelectView = .place
             cell.placeIconType = placeType
+            cell.weatherPlaceSelectViewCellType = .place
         case .weather:
             guard let weatherType = Weather().getVariation()[safe: index] else { return UICollectionViewCell() }
-            cell.weatherPlaceSelectView = .weather
             cell.weatherIconType = weatherType
+            cell.weatherPlaceSelectViewCellType = .weather
         }
         
         return cell
@@ -112,6 +114,16 @@ extension WeatherPlaceSelectView: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WeatherPlaceSelectViewCell", for: indexPath) as? WeatherPlaceSelectViewCell else { return }
+        
+        let index = indexPath.row
+        switch weatherPlaceType {
+        case .place:
+            guard let placeType = Place().getVariation()[safe: index] else { return }
+            delegate?.placeSendData(placeType: placeType)
+        case .weather:
+            guard let weatherType = Weather().getVariation()[safe: index] else { return }
+            delegate?.weatherSendData(weatherType: weatherType)
+        }
         
         delegate?.isSelected(cell.isSelected)
         cell.isSelected = !cell.isSelected

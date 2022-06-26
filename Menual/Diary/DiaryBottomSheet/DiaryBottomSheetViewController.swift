@@ -79,7 +79,7 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
     }
     
     func bind() {
-
+        
     }
     
     func setViewsWithWeatherModel(model: WeatherModel) {
@@ -103,10 +103,12 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         
         switch menualBottomSheetType {
         case .weather:
-            break
+            weatherPlaceSelectView.weatherPlaceType = .weather
+            super.rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
             
         case .place:
-            break
+            weatherPlaceSelectView.weatherPlaceType = .place
+            super.rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
             
         case .reminder:
             break
@@ -157,6 +159,9 @@ extension DiaryBottomSheetViewController {
     @objc
     func pressedAddBtn() {
         print("TODO :: pressedAddBtn!!")
+        super.delegate = nil
+        weatherPlaceSelectView.delegate = nil
+
         hideBottomSheetAndGoBack()
         resignFirstResponder()
         listener?.pressedWriteBtn()
@@ -166,27 +171,6 @@ extension DiaryBottomSheetViewController {
 // MARK: - UITextFieldDelegate
 extension DiaryBottomSheetViewController: UITextFieldDelegate {
     
-}
-
-// MARK: - BottomSheetSelectDelegate
-extension DiaryBottomSheetViewController: BottomSheetSelectDelegate {
-    func sendData(weatherModel: WeatherModel) {
-        print("받았답니다! \(weatherModel)")
-        guard let weather = weatherModel.weather else {
-            return
-        }
-        listener?.updateWeather(weather: weather)
-        listener?.updateWeatherDetailText(text: weatherModel.detailText)
-    }
-    
-    func sendData(placeModel: PlaceModel) {
-        print("받았답니다! \(placeModel)")
-        guard let place = placeModel.place else {
-            return
-        }
-        listener?.updatePlace(place: place)
-        listener?.updatePlaceDetailText(text: placeModel.detailText)
-    }
 }
 
 // MARK: - WeatherPlaceSelectViewDelegate
@@ -200,5 +184,17 @@ extension DiaryBottomSheetViewController: WeatherPlaceSelectViewDelegate {
         case false:
             super.menualBottomSheetRightBtnIsActivate = .unActivate
         }
+    }
+    
+    // weather 선택시 넘어오는 정보
+    func weatherSendData(weatherType: Weather) {
+        listener?.updateWeather(weather: weatherType)
+    }
+    
+    // place 선택시 넘어는 정보
+    func placeSendData(placeType: Place) {
+        
+        print("placeSendData = \(placeType)")
+        listener?.updatePlace(place: placeType)
     }
 }

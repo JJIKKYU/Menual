@@ -336,15 +336,17 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         guard let weather = model.weather else {
             return
         }
-        self.weatherAddBtn.setTitle(Weather().getWeatherText(weather: weather), for: .normal)
+        weatherSelectView.selected = true
+        weatherSelectView.selectedWeatherType = weather
     }
-    
+        
     func setPlaceView(model: PlaceModel) {
         guard let place = model.place else {
             return
         }
         print("setPlaceView = \(model)")
-        self.placeAddBtn.setTitle(Place().getPlaceText(place: place), for: .normal)
+        locationSelectView.selected = true
+        locationSelectView.selectedPlaceType = place
     }
 }
 

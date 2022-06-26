@@ -85,15 +85,22 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     
     func pressedWriteBtn() {
         listener?.diaryBottomSheetPressedCloseBtn()
-        self.weatherModelOb
-            .accept(weatherModel)
         
-        self.placeModelOb
-            .accept(placeModel)
+        if let _ = weatherModel.weather {
+            self.weatherModelOb
+                .accept(weatherModel)
+        }
+        
+        if let _ = placeModel.place {
+            self.placeModelOb
+                .accept(placeModel)
+        }
     }
     
     // MARK: - Weather(날씨)
     func updateWeather(weather: Weather) {
+        print("updateWeather = \(weather)")
+
         let newWeatherModel = WeatherModel(uuid: weatherModel.uuid,
                                            weather: weather,
                                            detailText: weatherModel.detailText
@@ -119,6 +126,8 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     }
     
     func updatePlace(place: Place) {
+        print("updatePlace = \(place)")
+
         let newPlaceModel = PlaceModel(uuid: placeModel.uuid,
                                        place: place,
                                        detailText: placeModel.detailText
