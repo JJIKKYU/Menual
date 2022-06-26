@@ -74,6 +74,7 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
             placeModelOb: placeModelOb
         )
          viewController.present(router.viewControllable, animated: false, completion: nil)
+        router.viewControllable.uiviewController.modalPresentationStyle = .overFullScreen
         // presentInsideNavigation(router.viewControllable)
         
         diaryBottomSheetRouting = router

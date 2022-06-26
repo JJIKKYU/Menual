@@ -93,6 +93,7 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
     }
     
     func setViews() {
+        /*
         self.view.addSubview(segmentationView)
         self.view.addSubview(closeBtn)
         self.view.addSubview(addBtn)
@@ -134,6 +135,7 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
             make.height.equalTo(50)
             make.bottom.equalTo(bottomSheetView.snp.bottom).inset(20)
         }
+         */
     }
     
     func bind() {

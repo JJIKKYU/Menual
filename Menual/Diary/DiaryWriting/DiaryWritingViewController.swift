@@ -63,8 +63,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.backgroundColor = Colors.grey.g800
     }
     
-    private let weatherSelectView = WeatherLocationSelectView(type: .weather).then {
+    private lazy var weatherSelectView = WeatherLocationSelectView(type: .weather).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(pressedWeatherAddBtn))
+        $0.addGestureRecognizer(gesture)
+        $0.isUserInteractionEnabled = true
     }
     
     private let divider2 = Divider(type: ._1px).then {

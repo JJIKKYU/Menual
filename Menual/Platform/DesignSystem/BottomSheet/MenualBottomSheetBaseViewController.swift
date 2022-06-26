@@ -9,6 +9,11 @@ import Foundation
 import Then
 import SnapKit
 
+protocol MenualBottomSheetBaseDelegate {
+    // 애니메이션이 모두 끝나고 dismissed 될때 호출
+    func dismissedBottomSheet()
+}
+
 class MenualBottomSheetBaseViewController: UIViewController {
     lazy private var dimmedView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -30,9 +35,13 @@ class MenualBottomSheetBaseViewController: UIViewController {
     public var bottomSheetHeight: CGFloat = 400
     private var originalBottomSheetHieght: CGFloat = 0
     
+    var delegate: MenualBottomSheetBaseDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setViews()
+        
+        self.isModalInPresentation = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -51,12 +60,14 @@ class MenualBottomSheetBaseViewController: UIViewController {
             make.bottom.equalToSuperview()
         }
         
+        let topConstant = view.safeAreaInsets.bottom + view.safeAreaLayoutGuide.layoutFrame.height
         bottomSheetView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.bottom.equalToSuperview().offset(bottomSheetHeight)
-            make.height.equalTo(bottomSheetHeight)
+            make.bottom.equalToSuperview()
+            make.top.equalTo(view.snp.bottom)
         }
+        print("topConstatn = \(topConstant)")
     }
     
     @objc
@@ -65,17 +76,20 @@ class MenualBottomSheetBaseViewController: UIViewController {
     }
     
     internal func hideBottomSheetAndGoBack() {
-        // originalBottomSheetHieght = 0
-        bottomSheetView.snp.updateConstraints { make in
-            // make.height.equalTo(originalBottomSheetHieght)
-            make.bottom.equalToSuperview().offset(originalBottomSheetHieght)
+        bottomSheetView.snp.remakeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.top.equalTo(view.snp.bottom)
         }
         
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
             self.dimmedView.alpha = 0
             self.view.layoutIfNeeded()
-        } completion: { isShow in
+        } completion: { [weak self] isShow in
+            guard let self = self else { return }
             print("bottomSheet isHide!")
+            self.delegate?.dismissedBottomSheet()
         }
     }
     
@@ -84,17 +98,14 @@ class MenualBottomSheetBaseViewController: UIViewController {
         let bottomPadding: CGFloat = view.safeAreaInsets.bottom
         print("safeAreaHeight = \(safeAreaHeight), bottomPadding = \(bottomPadding)")
         
-        originalBottomSheetHieght = bottomSheetHeight
-        bottomSheetView.snp.updateConstraints { make in
-            make.height.equalTo(originalBottomSheetHieght)
-        }
-        self.view.layoutIfNeeded()
-        
-        bottomSheetView.snp.updateConstraints { make in
+        bottomSheetView.snp.remakeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
             make.bottom.equalToSuperview()
+            make.top.equalTo(view.snp.bottom).inset(350)
         }
         
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut) {
             self.dimmedView.alpha = 0.1
             self.view.layoutIfNeeded()
         } completion: { isShow in

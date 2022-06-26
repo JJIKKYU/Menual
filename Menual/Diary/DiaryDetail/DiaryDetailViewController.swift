@@ -72,24 +72,14 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
     }
     
-    lazy var leftBarButtonItem = UIBarButtonItem().then {
-        $0.image = Asset._24px.Arrow.back.image
-        $0.style = .done
-        $0.target = self
-        $0.action = #selector(pressedBackBtn)
-    }
-    
-    let titleLabel = UILabel().then {
+    private let titleLabel = UILabel().then {
         $0.font = UIFont.AppTitle(.title_5)
-        $0.textColor = Colors.tint.main.v200
+        $0.textColor = Colors.grey.g200
         $0.text = "텍스트입ㄴ다"
     }
     
-    let createdAtLabel = UILabel().then {
+    private let createdAtPageView = CreatedAtPageView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.font = UIFont.AppBodyOnlyFont(.body_3)
-        $0.textColor = .white
-        $0.text = "안녕하세요 만든 날짜입니다"
     }
     
     let testLabel = UILabel().then {
@@ -183,9 +173,10 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         self.view.addSubview(naviView)
         replyTableView.addSubview(titleLabel)
+        replyTableView.addSubview(createdAtPageView)
+
         replyTableView.addSubview(testLabel)
         replyTableView.addSubview(descriptionTextLabel)
-        replyTableView.addSubview(createdAtLabel)
         replyTableView.addSubview(imageView)
         replyTableView.addSubview(readCountLabel)
         self.view.bringSubviewToFront(naviView)
@@ -222,7 +213,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         testLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.top.equalTo(createdAtLabel.snp.bottom).offset(15)
+            make.top.equalTo(createdAtPageView.snp.bottom).offset(15)
         }
         
         descriptionTextLabel.snp.makeConstraints { make in
@@ -231,9 +222,11 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.top.equalTo(testLabel.snp.bottom).offset(40)
         }
         
-        createdAtLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
+        createdAtPageView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalTo(titleLabel.snp.bottom).offset(16)
+            make.height.equalTo(15)
         }
         
         readCountLabel.snp.makeConstraints { make in
@@ -287,9 +280,11 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.descriptionTextLabel.text = model.description
         self.descriptionTextLabel.setLineHeight()
         self.readCountLabel.text = "\(model.readCount)번 읽었습니다"
-        self.createdAtLabel.text = model.createdAt.toStringWithHourMin() + " | " + "p.\(model.pageNum)"
+        
+        createdAtPageView.createdAt = model.createdAt.toStringWithHourMin()
+        createdAtPageView.page = String(model.pageNum)
+
         descriptionTextLabel.sizeToFit()
-        createdAtLabel.sizeToFit()
     }
     
     func testLoadDiaryImage(imageName: UIImage?) {
