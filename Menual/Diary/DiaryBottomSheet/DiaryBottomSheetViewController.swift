@@ -29,24 +29,11 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
 }
 
 final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController, DiaryBottomSheetPresentable, DiaryBottomSheetViewControllable {
+
     
     weak var listener: DiaryBottomSheetPresentableListener?
     var disposeBag = DisposeBag()
     var keyHeight: CGFloat?
-    // var selectedCellWeatherType: Weather?
-    
-    lazy var closeBtn = UIButton().then {
-        $0.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = .white
-        $0.addTarget(self, action: #selector(dimmedViewTapped), for: .touchUpInside)
-        $0.contentMode = .scaleAspectFit
-    }
-        
-    lazy var segmentationView = MenualSegmentationBaseViewController(frame: CGRect.zero).then {
-        $0.setButtonTitles(buttonTitles: ["날씨", "장소"])
-        $0.backgroundColor = .clear
-        $0.delegate = self
-    }
     
     lazy var weatherView = BottomSheetSelectView(.weather).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -87,12 +74,15 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        segmentationView.delegate = nil
         weatherView.delegate = nil
         placeView.delegate = nil
+        super.delegate = nil
+        listener?.pressedCloseBtn()
     }
     
     func setViews() {
+        super.delegate = self
+        
         /*
         self.view.addSubview(segmentationView)
         self.view.addSubview(closeBtn)
@@ -173,6 +163,30 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         placeView.selectedPlaceType = model.place
     }
     
+    @objc
+    override func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
+         hideBottomSheetAndGoBack()
+         resignFirstResponder()
+    }
+    
+    func setViews(type: MenualBottomSheetType) {
+        print("menualBottomSheetType = \(type)")
+        menualBottomSheetType = type
+    }
+}
+
+extension DiaryBottomSheetViewController: MenualBottomSheetBaseDelegate {
+    
+    // 부모 뷰가 애니메이션이 모두 끝났을 경우 Delegate 전달 받으면 그때 Router에서 RIB 해제
+    func dismissedBottomSheet() {
+        print("이때 라우터 호출할래?")
+        super.delegate = nil
+        listener?.pressedCloseBtn()
+    }
+}
+
+// MARK: - IBAction
+extension DiaryBottomSheetViewController {
     @objc func keyboardWillShow(_ sender: Notification) {
         let userInfo:NSDictionary = sender.userInfo! as NSDictionary
         let keyboardFrame:NSValue = userInfo.value(forKey: UIResponder.keyboardFrameEndUserInfoKey) as! NSValue
@@ -192,14 +206,6 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
     }
     
     @objc
-    override func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
-        hideBottomSheetAndGoBack()
-        resignFirstResponder()
-        listener?.pressedCloseBtn()
-        
-    }
-    
-    @objc
     func pressedAddBtn() {
         print("TODO :: pressedAddBtn!!")
         hideBottomSheetAndGoBack()
@@ -212,28 +218,7 @@ extension DiaryBottomSheetViewController: UITextFieldDelegate {
     
 }
 
-extension DiaryBottomSheetViewController: MenualSegmentationDelegate {
-    func changeToIdx(index: Int) {
-        print("index! \(index)")
-        switch index {
-        // 날씨
-        case 0:
-            placeView.isHidden = true
-            weatherView.isHidden = false
-            self.addBtn.setTitle("날씨 추가하기", for: .normal)
-            
-        // 장소
-        case 1:
-            placeView.isHidden = false
-            weatherView.isHidden = true
-            self.addBtn.setTitle("장소 추가하기", for: .normal)
-            
-        default:
-            break
-        }
-    }
-}
-
+// MARK: - BottomSheetSelectDelegate
 extension DiaryBottomSheetViewController: BottomSheetSelectDelegate {
     func sendData(weatherModel: WeatherModel) {
         print("받았답니다! \(weatherModel)")

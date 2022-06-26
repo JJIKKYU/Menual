@@ -63,7 +63,7 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
     
     // MARK: - DiaryBottomSheet
     
-    func attachBottomSheet(weatherModelOb: BehaviorRelay<WeatherModel?>, placeModelOb: BehaviorRelay<PlaceModel?>) {
+    func attachBottomSheet(weatherModelOb: BehaviorRelay<WeatherModel?>, placeModelOb: BehaviorRelay<PlaceModel?>, bottomSheetType: MenualBottomSheetType) {
         if diaryBottomSheetRouting != nil {
             return
         }
@@ -71,7 +71,8 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
         let router = diaryBottomSheetBuildable.build(
             withListener: interactor,
             weatherModelOb: weatherModelOb,
-            placeModelOb: placeModelOb
+            placeModelOb: placeModelOb,
+            bottomSheetType: bottomSheetType
         )
          viewController.present(router.viewControllable, animated: false, completion: nil)
         router.viewControllable.uiviewController.modalPresentationStyle = .overFullScreen
@@ -89,11 +90,9 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
         print("detachBottomSheet")
         
         // CustomUI Transition 보장
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.26) {
-            diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
-            self.detachChild(router)
-            self.diaryBottomSheetRouting = nil
-        }
+        diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
+        self.detachChild(router)
+        self.diaryBottomSheetRouting = nil
     }
     
     // MARK: - DiaryTempSave

@@ -12,7 +12,7 @@ import RxRelay
 
 protocol DiaryWritingRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
-    func attachBottomSheet(weatherModelOb: BehaviorRelay<WeatherModel?>, placeModelOb: BehaviorRelay<PlaceModel?>)
+    func attachBottomSheet(weatherModelOb: BehaviorRelay<WeatherModel?>, placeModelOb: BehaviorRelay<PlaceModel?>, bottomSheetType: MenualBottomSheetType)
     func detachBottomSheet()
     
     func attachDiaryTempSave()
@@ -191,9 +191,9 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         // switch로 진행한 이유는 첫 뷰 세팅을 위해서
         switch type {
         case .place:
-            router?.attachBottomSheet(weatherModelOb: weatherModelRelay, placeModelOb: placeModelRelay)
+            router?.attachBottomSheet(weatherModelOb: weatherModelRelay, placeModelOb: placeModelRelay, bottomSheetType: .place)
         case .weather:
-            router?.attachBottomSheet(weatherModelOb: weatherModelRelay, placeModelOb: placeModelRelay)
+            router?.attachBottomSheet(weatherModelOb: weatherModelRelay, placeModelOb: placeModelRelay, bottomSheetType: .weather)
         }
     }
     

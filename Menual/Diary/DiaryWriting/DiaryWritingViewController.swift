@@ -76,8 +76,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.backgroundColor = Colors.grey.g800
     }
     
-    private let locationSelectView = WeatherLocationSelectView(type: .location).then {
+    private lazy var locationSelectView = WeatherLocationSelectView(type: .location).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(pressedPlaceAddBtn))
+        $0.addGestureRecognizer(gesture)
+        $0.isUserInteractionEnabled = true
     }
     
     private let divider3 = Divider(type: ._1px).then {
@@ -342,7 +346,10 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         print("setPlaceView = \(model)")
         self.placeAddBtn.setTitle(Place().getPlaceText(place: place), for: .normal)
     }
+}
 
+// MARK: - IBACtion
+extension DiaryWritingViewController {
     @objc
     func pressedBackBtn() {
         print("pressedBackBtn!")

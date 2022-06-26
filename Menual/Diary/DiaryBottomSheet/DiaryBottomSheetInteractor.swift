@@ -19,6 +19,8 @@ protocol DiaryBottomSheetPresentable: Presentable {
     
     func setViewsWithWeatherModel(model: WeatherModel)
     func setViewsWithPlaceMOdel(model: PlaceModel)
+    
+    func setViews(type: MenualBottomSheetType)
 }
 
 protocol DiaryBottomSheetListener: AnyObject {
@@ -44,6 +46,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     
     var weatherModel: WeatherModel = WeatherModel(uuid: "", weather: nil, detailText: "")
     var placeModel: PlaceModel = PlaceModel(uuid: "", place: nil, detailText: "")
+    var bottomSheetType: MenualBottomSheetType = .weather
     
     // DiaryInteractor에서 받은 Relay
     var weatherModelOb: BehaviorRelay<WeatherModel?>
@@ -56,12 +59,16 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     init(
         presenter: DiaryBottomSheetPresentable,
         weatherModelOb: BehaviorRelay<WeatherModel?>,
-        placeModelOb: BehaviorRelay<PlaceModel?>
+        placeModelOb: BehaviorRelay<PlaceModel?>,
+        bottomSheetType: MenualBottomSheetType
     ) {
         self.weatherModelOb = weatherModelOb
         self.placeModelOb = placeModelOb
+        self.bottomSheetType = bottomSheetType
+        print("menualBottomSheetType = \(bottomSheetType)")
         super.init(presenter: presenter)
         presenter.listener = self
+        presenter.setViews(type: bottomSheetType)
     }
 
     override func didBecomeActive() {
@@ -72,8 +79,9 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
             return
         }
         print("weatherModel = \(weatherModel)")
-        presenter.setViewsWithWeatherModel(model: weatherModel)
-        presenter.setViewsWithPlaceMOdel(model: placeModel)
+        
+//        presenter.setViewsWithWeatherModel(model: weatherModel)
+//        presenter.setViewsWithPlaceMOdel(model: placeModel)
     }
 
     override func willResignActive() {

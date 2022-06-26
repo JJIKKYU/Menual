@@ -26,7 +26,8 @@ protocol DiaryBottomSheetBuildable: Buildable {
     func build(
         withListener listener: DiaryBottomSheetListener,
         weatherModelOb: BehaviorRelay<WeatherModel?>,
-        placeModelOb: BehaviorRelay<PlaceModel?>
+        placeModelOb: BehaviorRelay<PlaceModel?>,
+        bottomSheetType: MenualBottomSheetType
     ) -> DiaryBottomSheetRouting
 }
 
@@ -39,7 +40,8 @@ final class DiaryBottomSheetBuilder: Builder<DiaryBottomSheetDependency>, DiaryB
     func build(
         withListener listener: DiaryBottomSheetListener,
         weatherModelOb: BehaviorRelay<WeatherModel?>,
-        placeModelOb: BehaviorRelay<PlaceModel?>
+        placeModelOb: BehaviorRelay<PlaceModel?>,
+        bottomSheetType: MenualBottomSheetType
     ) -> DiaryBottomSheetRouting {
         let component = DiaryBottomSheetComponent(dependency: dependency)
         
@@ -47,7 +49,8 @@ final class DiaryBottomSheetBuilder: Builder<DiaryBottomSheetDependency>, DiaryB
         let interactor = DiaryBottomSheetInteractor(
             presenter: viewController,
             weatherModelOb: weatherModelOb,
-            placeModelOb: placeModelOb
+            placeModelOb: placeModelOb,
+            bottomSheetType: bottomSheetType
         )
         interactor.listener = listener
         return DiaryBottomSheetRouter(interactor: interactor, viewController: viewController)
