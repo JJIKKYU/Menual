@@ -36,6 +36,7 @@ class WeatherPlaceSelectView: UIView {
         
         $0.register(WeatherPlaceSelectViewCell.self, forCellWithReuseIdentifier: "WeatherPlaceSelectViewCell")
         $0.showsHorizontalScrollIndicator = false
+        $0.backgroundColor = .clear
         
         let flowlayout = CustomCollectionViewFlowLayout.init()
         flowlayout.itemSize = CGSize(width: 56, height: 32)

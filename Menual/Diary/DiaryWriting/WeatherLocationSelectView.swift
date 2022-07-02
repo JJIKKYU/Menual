@@ -46,6 +46,13 @@ class WeatherLocationSelectView: UIView {
         $0.contentMode = .scaleAspectFit
     }
     
+    var selectTextView = UITextView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .clear
+        $0.textContainerInset = UIEdgeInsets.zero
+        $0.textContainer.maximumNumberOfLines = 1
+    }
+    
     private let selectLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
@@ -73,7 +80,8 @@ class WeatherLocationSelectView: UIView {
     
     func setViews() {
         addSubview(selectImageView)
-        addSubview(selectLabel)
+        // addSubview(selectLabel)
+        addSubview(selectTextView)
         addSubview(deleteBtn)
         
         selectImageView.snp.makeConstraints { make in
@@ -81,10 +89,18 @@ class WeatherLocationSelectView: UIView {
             make.width.height.equalTo(20)
             make.centerY.equalToSuperview()
         }
-        
+        /*
         selectLabel.snp.makeConstraints { make in
             make.leading.equalTo(selectImageView.snp.trailing).offset(8)
             make.width.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+         */
+        
+        selectTextView.snp.makeConstraints { make in
+            make.leading.equalTo(selectImageView.snp.trailing).offset(8)
+            make.height.equalTo(24)
+            make.trailing.equalToSuperview().inset(20)
             make.centerY.equalToSuperview()
         }
         
@@ -104,15 +120,16 @@ class WeatherLocationSelectView: UIView {
             case true:
                 selectImageView.image = selectImage.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.tint.sub.n800
-                selectLabel.textColor = Colors.grey.g400
-                selectLabel.text = selectTitle
+                // selectLabel.textColor = Colors.grey.g400
+                selectTextView.text = selectTitle
                 deleteBtn.isHidden = false
                 
             case false:
                 selectImageView.image = Asset._24px.weather.image.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.grey.g700
-                selectLabel.textColor = Colors.grey.g600
-                selectLabel.text = "오늘 날씨는 어땠나요?"
+                // selectLabel.textColor = Colors.grey.g600
+                selectTextView.text = "오늘 날씨는 어땠나요?"
+                selectTextView.centerVerticalText()
                 deleteBtn.isHidden = true
             }
             
@@ -121,15 +138,16 @@ class WeatherLocationSelectView: UIView {
             case true:
                 selectImageView.image = selectImage.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.tint.sub.n800
-                selectLabel.textColor = Colors.grey.g400
-                selectLabel.text = selectTitle
+                // selectLabel.textColor = Colors.grey.g400
+                selectTextView.text = selectTitle
                 deleteBtn.isHidden = false
                 
             case false:
                 selectImageView.image = Asset._24px.place.image.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.grey.g700
-                selectLabel.textColor = Colors.grey.g600
-                selectLabel.text = "지금 장소는 어디신가요?"
+                // selectLabel.textColor = Colors.grey.g600
+                selectTextView.text = "지금 장소는 어디신가요?"
+                selectTextView.centerVerticalText()
                 deleteBtn.isHidden = true
             }
         }

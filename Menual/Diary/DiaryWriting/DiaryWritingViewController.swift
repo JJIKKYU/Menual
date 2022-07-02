@@ -23,7 +23,14 @@ protocol DiaryWritingPresentableListener: AnyObject {
     func pressedTempSaveBtn()
 }
 
-final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable  {
+final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable {
+    
+    enum TextViewType: Int {
+        case title = 0
+        case weather = 1
+        case location = 2
+        case description = 3
+    }
 
     weak var listener: DiaryWritingPresentableListener?
     private var disposeBag = DisposeBag()
@@ -47,6 +54,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     private lazy var scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
+        $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
     }
     
     private lazy var titleTextField = UITextField().then {
@@ -56,6 +64,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
                                                       attributes: [NSAttributedString.Key.foregroundColor : Colors.grey.g600])
         $0.font = UIFont.AppTitle(.title_5)
         $0.textColor = Colors.grey.g200
+        $0.tag = TextViewType.title.rawValue
     }
     
     private let divider1 = Divider(type: ._1px).then {
@@ -66,9 +75,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     private lazy var weatherSelectView = WeatherLocationSelectView(type: .weather).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(pressedWeatherAddBtn))
-        $0.addGestureRecognizer(gesture)
-        $0.isUserInteractionEnabled = true
+        $0.selectTextView.delegate = self
+        $0.selectTextView.tag = TextViewType.weather.rawValue
     }
     
     private let divider2 = Divider(type: ._1px).then {
@@ -78,10 +86,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     
     private lazy var locationSelectView = WeatherLocationSelectView(type: .location).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(pressedPlaceAddBtn))
-        $0.addGestureRecognizer(gesture)
-        $0.isUserInteractionEnabled = true
+
+        $0.selectTextView.delegate = self
+        $0.selectTextView.tag = TextViewType.location.rawValue
     }
     
     private let divider3 = Divider(type: ._1px).then {
@@ -97,6 +104,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.backgroundColor = .gray.withAlphaComponent(0.1)
         $0.text = "오늘은 어떤 일이 있으셨나요?"
         $0.isScrollEnabled = false
+        $0.tag = TextViewType.description.rawValue
     }
     
     private let datePageTextCountView = DatePageTextCountView().then {
@@ -158,16 +166,39 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     
     override func viewDidLoad() {
       super.viewDidLoad()
-      
+        
         view.backgroundColor = .white
         setViews()
         bind()
         self.datePageTextCountView.date = Date().toString()
-        print("DiaryWriting!")
+        
+        let customView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 130))
+        let testView = WeatherPlcaeToolbarView()
+        testView.delegate = self
+        customView.addSubview(testView)
+        
+        testView.snp.makeConstraints { make in
+            make.leading.width.equalToSuperview()
+            make.top.equalToSuperview().inset(20)
+            make.height.equalTo(130)
+        }
+
+        locationSelectView.selectTextView.inputAccessoryView = customView
+        weatherSelectView.selectTextView.inputAccessoryView = customView
+        
+        // keyboard observer등록
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+                
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        
+        // Keyboard observer해제
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+                
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     func setViews() {
@@ -398,12 +429,21 @@ extension DiaryWritingViewController {
     @objc
     func pressedWeatherAddBtn() {
         print("pressedWeatherAddBtn")
-        listener?.pressedWeatherPlaceAddBtn(type: .weather)
+
+        titleTextField.inputAccessoryView?.isHidden = false
+        descriptionTextView.inputAccessoryView?.isHidden = false
+        view.layoutIfNeeded()
+
+        //listener?.pressedWeatherPlaceAddBtn(type: .weather)
     }
     
     @objc
     func pressedPlaceAddBtn() {
-        listener?.pressedWeatherPlaceAddBtn(type: .place)
+        titleTextField.inputAccessoryView?.isHidden = false
+        descriptionTextView.inputAccessoryView?.isHidden = false
+        view.layoutIfNeeded()
+
+        // listener?.pressedWeatherPlaceAddBtn(type: .place)
     }
     
     @objc
@@ -415,35 +455,123 @@ extension DiaryWritingViewController {
 
 // MARK: - UITextField
 extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        switch textView.tag {
+        case TextViewType.title.rawValue:
+            print("Title TextView")
+            
+        case TextViewType.weather.rawValue:
+            print("Weather TextView")
+            
+        case TextViewType.location.rawValue:
+            print("Location TextView")
+            
+        case TextViewType.description.rawValue:
+            print("Description TextView")
+            if textView.text == "오늘은 어떤 일이 있으셨나요?" {
+                textView.text = nil
+                textView.textColor = UIColor.white
+            }
+            
+        default:
+            break
+        }
+        
+        return true
+    }
+    
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text == "오늘은 어떤 일이 있으셨나요?" {
-            textView.text = nil
-            textView.textColor = UIColor.white
+        if textView == descriptionTextView {
+            titleTextField.inputAccessoryView?.isHidden = true
+            descriptionTextView.inputAccessoryView?.isHidden = true
+        }
+        
+        switch textView.tag {
+        case TextViewType.title.rawValue:
+            break
+            
+        case TextViewType.weather.rawValue:
+            if textView.text == "오늘 날씨는 어땠나요?" {
+                textView.text = nil
+                textView.textColor = UIColor.white
+            }
+            
+        case TextViewType.location.rawValue:
+            if textView.text == "지금 장소는 어디신가요?" {
+                textView.text = nil
+                textView.textColor = UIColor.white
+            }
+            
+        case TextViewType.description.rawValue:
+            if textView.text == "오늘은 어떤 일이 있으셨나요?" {
+                textView.text = nil
+                textView.textColor = UIColor.white
+            }
+            
+        default:
+            break
         }
     }
 
     func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            textView.text = "오늘은 어떤 일이 있으셨나요?"
-            textView.textColor = .lightGray
+        switch textView.tag {
+        case TextViewType.title.rawValue:
+            break
+            
+        case TextViewType.weather.rawValue:
+            if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                textView.text = "오늘 날씨는 어땠나요?"
+                textView.textColor = .lightGray
+            }
+            
+        case TextViewType.location.rawValue:
+            if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                textView.text = "지금 장소는 어디신가요?"
+                textView.textColor = .lightGray
+            }
+            
+        case TextViewType.description.rawValue:
+            if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                textView.text = "오늘은 어떤 일이 있으셨나요?"
+                textView.textColor = .lightGray
+            }
+            
+        default:
+            break
         }
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        let size = CGSize(width: view.frame.width, height: .infinity)
-        let estimatedSize = textView.sizeThatFits(size)
-        
-        textView.constraints.forEach { (constraint) in
-        
-          /// 180 이하일때는 더 이상 줄어들지 않게하기
-            if estimatedSize.height <= 185 {
+        switch textView.tag {
+        case TextViewType.title.rawValue:
+            textView.centerVerticalText()
             
-            }
-            else {
-                if constraint.firstAttribute == .height {
-                    constraint.constant = estimatedSize.height
+        case TextViewType.weather.rawValue:
+            textView.centerVerticalText()
+            
+        case TextViewType.location.rawValue:
+            textView.centerVerticalText()
+            
+        case TextViewType.description.rawValue:
+            
+            let size = CGSize(width: view.frame.width, height: .infinity)
+            let estimatedSize = textView.sizeThatFits(size)
+            
+            textView.constraints.forEach { (constraint) in
+            
+              /// 180 이하일때는 더 이상 줄어들지 않게하기
+                if estimatedSize.height <= 185 {
+                
+                }
+                else {
+                    if constraint.firstAttribute == .height {
+                        constraint.constant = estimatedSize.height
+                    }
                 }
             }
+            
+        default:
+            break
         }
     }
 }
@@ -505,5 +633,38 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
         }
         
         self.present(cropper, animated: true, completion: nil)
+    }
+}
+
+// MARK: - Keyboard Extension
+extension DiaryWritingViewController {
+    @objc
+    func keyboardWillShow(_ notification: NSNotification) {
+        guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
+        print("keyboardWillShow! - \(keyboardHeight)")
+        scrollView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview().inset(keyboardHeight)
+        }
+    }
+    
+    @objc
+    func keyboardWillHide(_ notification: NSNotification) {
+        print("keyboardWillHide!")
+        scrollView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview()
+        }
+    }
+}
+
+// MARK: - WeatherPlaceToolbarView Delegate
+extension DiaryWritingViewController: WeatherPlaceToolbarViewDelegate {
+    func weatherSendData(weatherType: Weather) {
+        print("DiaryWrting에서 전달 받았습니다 \(weatherType)")
+        weatherSelectView.selectedWeatherType = weatherType
+    }
+    
+    func placeSendData(placeType: Place) {
+        print("DiaryWrting에서 전달 받았습니다 \(placeType)")
+        locationSelectView.selectedPlaceType = placeType
     }
 }
