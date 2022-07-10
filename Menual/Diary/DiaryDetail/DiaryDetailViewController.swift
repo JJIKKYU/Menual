@@ -32,7 +32,12 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
 //        $0.backgroundColor = Colors.background
-        $0.backgroundColor = .red
+        $0.backgroundColor = .clear
+    }
+    
+    private lazy var replyBottomView = ReplyBottomView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.writeBtn.addTarget(self, action: #selector(tempPressedSubmitReplyBtn), for: .touchUpInside)
     }
     
     private let tempTextField = UITextField().then {
@@ -142,7 +147,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
         $0.dataSource = self
-        $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 120, right: 0)
+        $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 72, right: 0)
         $0.register(ReplyCell.self, forCellReuseIdentifier: "ReplyCell")
         
         $0.estimatedRowHeight = 30
@@ -153,6 +158,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         $0.showsVerticalScrollIndicator = false
         $0.backgroundColor = Colors.background
+        
+        $0.tableFooterView = nil
         
     }
     
@@ -175,6 +182,10 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
                 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // 바깥쪽 터치했을때 키보드 내려가게
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -217,10 +228,12 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         replyTableView.tableHeaderView = tableViewHeaderView
         
         // temp
-        self.view.addSubview(tempTextField)
-        self.view.addSubview(tempSubmitBtn)
-        self.view.addSubview(tempLeftButton)
-        self.view.addSubview(tempRightButton)
+//        self.view.addSubview(tempTextField)
+//        self.view.addSubview(tempSubmitBtn)
+//        self.view.addSubview(tempLeftButton)
+//        self.view.addSubview(tempRightButton)
+        
+        self.view.addSubview(replyBottomView)
         
         self.view.addSubview(naviView)
         tableViewHeaderView.addSubview(titleLabel)
@@ -237,6 +250,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         tableViewHeaderView.addSubview(imageView)
         // replyTableView.addSubview(readCountLabel)
         self.view.bringSubviewToFront(naviView)
+        self.view.bringSubviewToFront(replyBottomView)
         
         naviView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -257,6 +271,13 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.width.equalToSuperview()
             make.top.equalToSuperview()
             make.height.equalTo(350)
+        }
+        
+        replyBottomView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(103)
         }
         
         self.view.layoutIfNeeded()
@@ -348,33 +369,33 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
          */
         
         //temp
-        tempTextField.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.bottom.equalTo(replyTableView.snp.bottom).inset(20)
-            make.height.equalTo(50)
-        }
-        
-        tempSubmitBtn.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(20)
-            make.width.equalTo(100)
-            make.height.equalTo(50)
-            make.bottom.equalTo(replyTableView.snp.bottom).inset(20)
-        }
-        
-        tempLeftButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalTo(50)
-            make.height.equalTo(30)
-            make.bottom.equalTo(tempSubmitBtn.snp.top).inset(20)
-        }
-        
-        tempRightButton.snp.makeConstraints { make in
-            make.leading.equalTo(tempLeftButton.snp.trailing).offset(20)
-            make.width.equalTo(50)
-            make.height.equalTo(30)
-            make.bottom.equalTo(tempSubmitBtn.snp.top).inset(20)
-        }
+//        tempTextField.snp.makeConstraints { make in
+//            make.leading.equalToSuperview().offset(20)
+//            make.width.equalToSuperview().inset(20)
+//            make.bottom.equalTo(replyTableView.snp.bottom).inset(20)
+//            make.height.equalTo(50)
+//        }
+//
+//        tempSubmitBtn.snp.makeConstraints { make in
+//            make.trailing.equalToSuperview().inset(20)
+//            make.width.equalTo(100)
+//            make.height.equalTo(50)
+//            make.bottom.equalTo(replyTableView.snp.bottom).inset(20)
+//        }
+//
+//        tempLeftButton.snp.makeConstraints { make in
+//            make.leading.equalToSuperview().offset(20)
+//            make.width.equalTo(50)
+//            make.height.equalTo(30)
+//            make.bottom.equalTo(tempSubmitBtn.snp.top).inset(20)
+//        }
+//
+//        tempRightButton.snp.makeConstraints { make in
+//            make.leading.equalTo(tempLeftButton.snp.trailing).offset(20)
+//            make.width.equalTo(50)
+//            make.height.equalTo(30)
+//            make.bottom.equalTo(tempSubmitBtn.snp.top).inset(20)
+//        }
     }
     
     func loadDiaryDetail(model: DiaryModel) {
@@ -437,7 +458,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     @objc
     func tempPressedSubmitReplyBtn() {
         print("pressedSubmitReplyBtn")
-        guard let text = tempTextField.text else { return }
+        let text = replyBottomView.writedText
         listener?.pressedReplySubmitBtn(desc: text)
         DispatchQueue.main.async {
             self.replyTableView.reloadData()
@@ -507,6 +528,11 @@ extension DiaryDetailViewController {
         replyTableView.snp.updateConstraints { make in
             make.bottom.equalToSuperview().inset(keyboardHeight)
         }
+        
+        replyBottomView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview().inset(keyboardHeight)
+            make.height.equalTo(84)
+        }
     }
     
     @objc
@@ -515,5 +541,15 @@ extension DiaryDetailViewController {
         replyTableView.snp.updateConstraints { make in
             make.bottom.equalToSuperview()
         }
+        
+        replyBottomView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview()
+            make.height.equalTo(103)
+        }
+    }
+    
+    @objc func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
     }
 }

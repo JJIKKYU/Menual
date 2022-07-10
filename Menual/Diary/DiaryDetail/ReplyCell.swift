@@ -11,7 +11,7 @@ import Then
 
 class ReplyCell: UITableViewCell {
     
-    var replyText: String = "" {
+    var replyText: String = " " {
         didSet { setNeedsLayout() }
     }
     
@@ -63,6 +63,12 @@ class ReplyCell: UITableViewCell {
         $0.textColor = Colors.grey.g600
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
     }
+    
+    let moreBtn = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setImage(Asset._20px.more.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.tintColor = Colors.grey.g600
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -88,11 +94,13 @@ class ReplyCell: UITableViewCell {
         backgroundColor = .brown
         addSubview(replyTextView)
         addSubview(testLabel)
+        addSubview(moreBtn)
         
         
         replyTextView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
+            make.height.equalTo(10)
             make.top.equalToSuperview()
         }
         
@@ -101,6 +109,12 @@ class ReplyCell: UITableViewCell {
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.bottom.equalToSuperview().inset(16)
+        }
+        
+        moreBtn.snp.makeConstraints { make in
+            make.top.equalTo(testLabel)
+            make.trailing.equalToSuperview().inset(20)
+            make.width.height.equalTo(20)
         }
     }
     
@@ -113,6 +127,10 @@ class ReplyCell: UITableViewCell {
                                      y: 0,
                                      width: frame.size.width - 40,
                                      height: replyTextView.frame.height)
+        
+        replyTextView.snp.updateConstraints { make in
+            make.height.equalTo(replyTextView.frame.height)
+        }
         
         print("createdAT= \(createdAt.toString())")
         testLabel.text = createdAt.toString() + "  |  " + "P. \(pageNum)-\(String(replyNum))"
