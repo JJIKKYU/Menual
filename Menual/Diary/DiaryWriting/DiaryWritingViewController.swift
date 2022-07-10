@@ -25,6 +25,8 @@ protocol DiaryWritingPresentableListener: AnyObject {
 
 final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable {
     
+    private let TITLE_TEXT_MAX_COUNT: Int = 40
+    
     enum TextViewType: Int {
         case title = 0
         case weather = 1
@@ -51,20 +53,27 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.rightButton2.setImage(Asset._24px.storage.image.withRenderingMode(.alwaysTemplate), for: .normal)
     }
     
+    private lazy var weatherPlaceToolbarView = WeatherPlcaeToolbarView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.delegate = self
+        $0.isHidden = true
+    }
+    
     private lazy var scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
     }
     
-    private lazy var titleTextField = UITextField().then {
+    private lazy var titleTextField = UITextView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
-        $0.attributedPlaceholder = NSAttributedString(string: "제목을 입력해 보세요",
-                                                      attributes: [NSAttributedString.Key.foregroundColor : Colors.grey.g600])
+        $0.text = "제목을 입력해 보세요"
+        $0.textColor = Colors.grey.g600
         $0.font = UIFont.AppTitle(.title_5)
-        $0.textColor = Colors.grey.g200
         $0.tag = TextViewType.title.rawValue
+        $0.backgroundColor = .clear
+        $0.isScrollEnabled = false
     }
     
     private let divider1 = Divider(type: ._1px).then {
@@ -133,16 +142,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.setTitle("이미지 업로드하기", for: .normal)
     }
     
-    lazy var weatherAddBtn = UIButton().then {
-        $0.addTarget(self, action: #selector(pressedWeatherAddBtn), for: .touchUpInside)
-        $0.setTitle("날씨 추가", for: .normal)
-    }
-    
-    lazy var placeAddBtn = UIButton().then {
-        $0.addTarget(self, action: #selector(pressedPlaceAddBtn), for: .touchUpInside)
-        $0.setTitle("장소 추가", for: .normal)
-    }
-    
     var phpickerConfiguration = PHPickerConfiguration()
     lazy var imagePicker = PHPickerViewController(configuration: phpickerConfiguration).then {
         $0.delegate = self
@@ -171,20 +170,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         setViews()
         bind()
         self.datePageTextCountView.date = Date().toString()
-        
-        let customView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 130))
-        let testView = WeatherPlcaeToolbarView()
-        testView.delegate = self
-        customView.addSubview(testView)
-        
-        testView.snp.makeConstraints { make in
-            make.leading.width.equalToSuperview()
-            make.top.equalToSuperview().inset(20)
-            make.height.equalTo(130)
-        }
 
-        locationSelectView.selectTextView.inputAccessoryView = customView
-        weatherSelectView.selectTextView.inputAccessoryView = customView
+        locationSelectView.selectTextView.inputAccessoryView = weatherPlaceToolbarView
+        weatherSelectView.selectTextView.inputAccessoryView = weatherPlaceToolbarView
         
         // keyboard observer등록
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -197,8 +185,14 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         // Keyboard observer해제
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-                
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        // Delegate 해제
+        weatherPlaceToolbarView.delegate = nil
+        titleTextField.delegate = nil
+        descriptionTextView.delegate = nil
+        weatherSelectView.selectTextView.delegate = nil
+        locationSelectView.selectTextView.delegate = nil
     }
     
     func setViews() {
@@ -208,6 +202,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         self.view.addSubview(naviView)
         self.view.addSubview(scrollView)
+        self.view.addSubview(weatherPlaceToolbarView)
         scrollView.addSubview(titleTextField)
         scrollView.addSubview(divider1)
         scrollView.addSubview(weatherSelectView)
@@ -236,7 +231,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         titleTextField.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.height.equalTo(26)
             make.top.equalToSuperview().offset(24)
         }
         
@@ -304,45 +298,11 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.bottom.equalToSuperview()
         }
         
-        /*
-        self.view.addSubview(titleTextField)
-        self.view.addSubview(descriptionTextView)
-        self.view.addSubview(imageView)
-        self.view.addSubview(imageViewBtn)
-        
-        self.view.addSubview(weatherAddBtn)
-        self.view.addSubview(placeAddBtn)
-        
-        weatherAddBtn.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.top.equalTo(titleTextField.snp.bottom).offset(20)
-            make.height.equalTo(30)
-            make.width.equalTo(100)
+        weatherPlaceToolbarView.snp.makeConstraints { make in
+            make.leading.width.equalToSuperview()
+            make.top.equalToSuperview().inset(20)
+            make.height.equalTo(130)
         }
-        
-        placeAddBtn.snp.makeConstraints { make in
-            make.leading.equalTo(weatherAddBtn.snp.trailing).offset(20)
-            make.top.equalTo(titleTextField.snp.bottom).offset(20)
-            make.height.equalTo(30)
-            make.width.equalTo(100)
-        }
-        
-        
-        
-        imageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.top.equalTo(descriptionTextView.snp.bottom).offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.height.equalTo(100)
-        }
-        
-        imageViewBtn.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(imageView.snp.bottom).offset(10)
-            make.height.equalTo(50)
-        }
-         */
     }
     
     func bind() {
@@ -351,7 +311,11 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }
-                print("text = \(text)")
+                // placeholder일 때는 비활성화
+                if text == "오늘은 어떤 일이 있으셨나요?" {
+                    self.naviView.rightButton1IsActive = false
+                    return
+                }
                 self.datePageTextCountView.textCount = String(text.count)
                 if text.count > 0 {
                     self.naviView.rightButton1IsActive = true
@@ -370,7 +334,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         weatherSelectView.selected = true
         weatherSelectView.selectedWeatherType = weather
     }
-        
+
     func setPlaceView(model: PlaceModel) {
         guard let place = model.place else {
             return
@@ -396,11 +360,21 @@ extension DiaryWritingViewController {
               let description = self.descriptionTextView.text
         else { return }
         
+        let weatherModel = WeatherModel(uuid: NSUUID().uuidString,
+                                        weather: weatherSelectView.selectedWeatherType ?? nil,
+                                        detailText: weatherSelectView.selectTitle
+        )
+
+        let placeModel = PlaceModel(uuid: NSUUID().uuidString,
+                                    place: locationSelectView.selectedPlaceType ?? nil,
+                                    detailText: locationSelectView.selectTitle
+        )
+        
         let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
                                     pageNum: 0,
                                     title: title,
-                                    weather: WeatherModel(uuid: NSUUID().uuidString, weather: .sun, detailText: "123"),
-                                    place: PlaceModel(uuid: NSUUID().uuidString, place: .place, detailText: "123"),
+                                    weather: weatherModel,
+                                    place: placeModel,
                                     description: description,
                                     image: self.imageView.image,
                                     readCount: 0,
@@ -409,6 +383,7 @@ extension DiaryWritingViewController {
                                     isDeleted: false,
                                     isHide: false
         )
+
         print("diaryModel.id = \(diaryModel.uuid)")
         listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())
         listener?.writeDiary(info: diaryModel)
@@ -459,6 +434,10 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
         switch textView.tag {
         case TextViewType.title.rawValue:
             print("Title TextView")
+            if textView.text == "제목을 입력해 보세요" {
+                textView.text = nil
+                textView.textColor = Colors.grey.g200
+            }
             
         case TextViewType.weather.rawValue:
             print("Weather TextView")
@@ -491,12 +470,16 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             break
             
         case TextViewType.weather.rawValue:
+            weatherPlaceToolbarView.isHidden = false
+            weatherPlaceToolbarView.weatherPlaceType = .weather
             if textView.text == "오늘 날씨는 어땠나요?" {
                 textView.text = nil
                 textView.textColor = UIColor.white
             }
             
         case TextViewType.location.rawValue:
+            weatherPlaceToolbarView.isHidden = false
+            weatherPlaceToolbarView.weatherPlaceType = .place
             if textView.text == "지금 장소는 어디신가요?" {
                 textView.text = nil
                 textView.textColor = UIColor.white
@@ -516,9 +499,19 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         switch textView.tag {
         case TextViewType.title.rawValue:
-            break
+            if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                textView.text = "제목을 입력해 보세요"
+                textView.textColor = Colors.grey.g600
+            }
+            
+            if textView.text.count > TITLE_TEXT_MAX_COUNT {
+                textView.text.removeLast()
+            }
             
         case TextViewType.weather.rawValue:
+            if weatherSelectView.selected == true {
+                
+            }
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 textView.text = "오늘 날씨는 어땠나요?"
                 textView.textColor = .lightGray
@@ -540,11 +533,16 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             break
         }
     }
-    
+
     func textViewDidChange(_ textView: UITextView) {
+        let fixedWidth = textView.frame.size.width
+
         switch textView.tag {
         case TextViewType.title.rawValue:
-            textView.centerVerticalText()
+            let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+            textView.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
+            print("JJIKKYU :: newSizeHeight = \(newSize.height)")
+            // textView.centerVerticalText()
             
         case TextViewType.weather.rawValue:
             textView.centerVerticalText()
@@ -573,6 +571,45 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
         default:
             break
         }
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        switch textView.tag {
+        case TextViewType.title.rawValue:
+            //이전 글자 - 선택된 글자 + 새로운 글자(대체될 글자)
+            let newLength = textView.text.count - range.length + text.count
+            let koreanMaxCount = TITLE_TEXT_MAX_COUNT + 1
+            //글자수가 초과 된 경우 or 초과되지 않은 경우
+            if newLength > koreanMaxCount { //11글자
+                let overflow = newLength - koreanMaxCount //초과된 글자수
+                if text.count < overflow {
+                    return true
+                }
+                let index = text.index(text.endIndex, offsetBy: -overflow)
+                let newText = text[..<index]
+                guard let startPosition = textView.position(from: textView.beginningOfDocument, offset: range.location) else { return false }
+                guard let endPosition = textView.position(from: textView.beginningOfDocument, offset: NSMaxRange(range)) else { return false }
+                guard let textRange = textView.textRange(from: startPosition, to: endPosition) else { return false }
+                    
+                textView.replace(textRange, withText: String(newText))
+                
+                return false
+            }
+            
+        case TextViewType.weather.rawValue:
+            break
+            
+        case TextViewType.location.rawValue:
+            break
+            
+        case TextViewType.description.rawValue:
+            break
+            
+        default:
+            break
+        }
+        
+        return true
     }
 }
 
@@ -661,10 +698,12 @@ extension DiaryWritingViewController: WeatherPlaceToolbarViewDelegate {
     func weatherSendData(weatherType: Weather) {
         print("DiaryWrting에서 전달 받았습니다 \(weatherType)")
         weatherSelectView.selectedWeatherType = weatherType
+        weatherSelectView.selected = true
     }
     
     func placeSendData(placeType: Place) {
         print("DiaryWrting에서 전달 받았습니다 \(placeType)")
         locationSelectView.selectedPlaceType = placeType
+        locationSelectView.selected = true
     }
 }

@@ -121,6 +121,7 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.image = selectImage.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.tint.sub.n800
                 // selectLabel.textColor = Colors.grey.g400
+                selectTextView.textColor = Colors.grey.g400
                 selectTextView.text = selectTitle
                 deleteBtn.isHidden = false
                 
@@ -128,6 +129,7 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.image = Asset._24px.weather.image.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.grey.g700
                 // selectLabel.textColor = Colors.grey.g600
+                selectTextView.textColor = Colors.grey.g600
                 selectTextView.text = "오늘 날씨는 어땠나요?"
                 selectTextView.centerVerticalText()
                 deleteBtn.isHidden = true
@@ -139,6 +141,7 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.image = selectImage.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.tint.sub.n800
                 // selectLabel.textColor = Colors.grey.g400
+                selectTextView.textColor = Colors.grey.g400
                 selectTextView.text = selectTitle
                 deleteBtn.isHidden = false
                 
@@ -146,6 +149,7 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.image = Asset._24px.place.image.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.grey.g700
                 // selectLabel.textColor = Colors.grey.g600
+                selectTextView.textColor = Colors.grey.g600
                 selectTextView.text = "지금 장소는 어디신가요?"
                 selectTextView.centerVerticalText()
                 deleteBtn.isHidden = true

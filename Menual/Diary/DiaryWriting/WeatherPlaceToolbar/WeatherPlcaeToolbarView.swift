@@ -22,6 +22,10 @@ class WeatherPlcaeToolbarView: UIView {
         didSet { setNeedsLayout() }
     }
     
+    var weatherPlaceType: WeatherPlaceSelectView.WeatherPlaceType = .weather {
+        didSet { setNeedsLayout() }
+    }
+    
     private let titleLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppTitle(.title_3)
@@ -108,6 +112,15 @@ class WeatherPlcaeToolbarView: UIView {
         case ._default:
             rightBtn.tintColor = Colors.grey.g600
             rightBtn.isUserInteractionEnabled = true
+        }
+        
+        switch weatherPlaceType {
+        case .weather:
+            weatherPlaceSelectView.weatherPlaceType = .weather
+            titleLabel.text = "날씨는 어땠나요?"
+        case .place:
+            weatherPlaceSelectView.weatherPlaceType = .place
+            titleLabel.text = "지금 장소는 어디신가요?"
         }
     }
 
