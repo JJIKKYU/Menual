@@ -19,6 +19,7 @@
 		98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98239BE527E323CB00E216F1 /* MomentsRoundView.swift */; };
 		98239BE927E43AB700E216F1 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98239BE827E43AB700E216F1 /* Icons.xcassets */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
+		983783F4287A951400EAD78C /* ReplyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983783F3287A951400EAD78C /* ReplyCell.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -232,6 +233,7 @@
 		98239BE527E323CB00E216F1 /* MomentsRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsRoundView.swift; sourceTree = "<group>"; };
 		98239BE827E43AB700E216F1 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		983783F3287A951400EAD78C /* ReplyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyCell.swift; sourceTree = "<group>"; };
 		985A52A927F023DB00B10829 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
@@ -853,6 +855,7 @@
 				98A2BD9A280A833000C1FB92 /* DiaryDetailBuilder.swift */,
 				98A2BD9B280A833000C1FB92 /* DiaryDetailInteractor.swift */,
 				98A56C6628678F0F000AC4FF /* CreatedAtPageView.swift */,
+				983783F3287A951400EAD78C /* ReplyCell.swift */,
 			);
 			path = DiaryDetail;
 			sourceTree = "<group>";
@@ -1609,6 +1612,7 @@
 				98A2BD9E280A833000C1FB92 /* DiaryDetailBuilder.swift in Sources */,
 				98B557B7283A4C6300F8CA3E /* CapsuleButton.swift in Sources */,
 				988A1876278ACB4B00DF81DA /* DiaryWritingBuilder.swift in Sources */,
+				983783F4287A951400EAD78C /* ReplyCell.swift in Sources */,
 				98EADB9228432FA5007C298C /* TabsIconView.swift in Sources */,
 				985E0F0D27C2690500057951 /* LoginHomeRouter.swift in Sources */,
 				9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */,

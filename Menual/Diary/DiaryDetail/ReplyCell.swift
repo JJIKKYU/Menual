@@ -1,0 +1,120 @@
+//
+//  ReplyCell.swift
+//  Menual
+//
+//  Created by 정진균 on 2022/07/10.
+//
+
+import UIKit
+import SnapKit
+import Then
+
+class ReplyCell: UITableViewCell {
+    
+    var replyText: String = "" {
+        didSet { setNeedsLayout() }
+    }
+    
+    var createdAt: Date = Date() {
+        didSet { setNeedsLayout() }
+    }
+    
+    var replyNum: Int = 0 {
+        didSet { setNeedsLayout() }
+    }
+    
+    var pageNum: Int = 0 {
+        didSet { setNeedsLayout() }
+    }
+    
+    private let wrappedContentView = UIView().then {
+        $0.backgroundColor = Colors.grey.g800
+        $0.layer.cornerRadius = 10
+        $0.layer.maskedCorners = [
+            .layerMinXMinYCorner,
+            .layerMaxXMinYCorner,
+            .layerMinXMaxYCorner
+            
+        ]
+        $0.clipsToBounds = true
+    }
+    
+    private let replyTextView = UITextView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = true
+        $0.text = "testestestsetseestsetsetsetsetstsetse"
+        $0.backgroundColor = Colors.grey.g800
+        $0.isScrollEnabled = false
+        $0.textContainerInset = UIEdgeInsets(top: 14, left: 16, bottom: 16, right: 16)
+        $0.layer.cornerRadius = 10
+        $0.layer.maskedCorners = [
+            .layerMinXMinYCorner,
+            .layerMinXMaxYCorner,
+            .layerMaxXMaxYCorner,
+
+        ]
+        $0.clipsToBounds = true
+        $0.font = UIFont.AppBodyOnlyFont(.body_2)
+        $0.textColor = Colors.grey.g300
+    }
+    
+    let testLabel = UILabel().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.text = "test | test"
+        $0.textColor = Colors.grey.g600
+        $0.font = UIFont.AppBodyOnlyFont(.body_2)
+    }
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+        // Configure the view for the selected state
+    }
+    
+    func setViews() {
+        backgroundColor = .brown
+        addSubview(replyTextView)
+        addSubview(testLabel)
+        
+        
+        replyTextView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalToSuperview()
+        }
+        
+        testLabel.snp.makeConstraints { make in
+            make.top.equalTo(replyTextView.snp.bottom).offset(9)
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(16)
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        replyTextView.text = replyText
+        replyTextView.sizeToFit()
+        replyTextView.frame = CGRect(x: 20,
+                                     y: 0,
+                                     width: frame.size.width - 40,
+                                     height: replyTextView.frame.height)
+        
+        print("createdAT= \(createdAt.toString())")
+        testLabel.text = createdAt.toString() + "  |  " + "P. \(pageNum)-\(String(replyNum))"
+    }
+}

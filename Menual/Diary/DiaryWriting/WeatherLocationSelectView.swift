@@ -122,7 +122,12 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.tintColor = Colors.tint.sub.n800
                 // selectLabel.textColor = Colors.grey.g400
                 selectTextView.textColor = Colors.grey.g400
-                selectTextView.text = selectTitle
+                if selectTitle.isEmpty {
+                    selectTextView.text = selectedWeatherType?.rawValue
+                } else {
+                    selectTextView.text = selectTitle
+                }
+                selectTextView.centerVerticalText()
                 deleteBtn.isHidden = false
                 
             case false:
@@ -142,7 +147,12 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.tintColor = Colors.tint.sub.n800
                 // selectLabel.textColor = Colors.grey.g400
                 selectTextView.textColor = Colors.grey.g400
-                selectTextView.text = selectTitle
+                if selectTitle.isEmpty {
+                    selectTextView.text = selectedPlaceType?.rawValue
+                } else {
+                    selectTextView.text = selectTitle
+                }
+                selectTextView.centerVerticalText()
                 deleteBtn.isHidden = false
                 
             case false:
