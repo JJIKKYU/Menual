@@ -444,6 +444,13 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             
         case TextViewType.location.rawValue:
             print("Location TextView")
+            weatherPlaceToolbarView.isHidden = false
+            weatherPlaceToolbarView.weatherPlaceType = .place
+            if textView.text == "지금 장소는 어디신가요?" {
+                locationSelectView.selectTitle = ""
+                textView.text = nil
+                textView.textColor = UIColor.white
+            }
             
         case TextViewType.description.rawValue:
             print("Description TextView")
@@ -473,17 +480,13 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             weatherPlaceToolbarView.isHidden = false
             weatherPlaceToolbarView.weatherPlaceType = .weather
             if textView.text == "오늘 날씨는 어땠나요?" {
+                weatherSelectView.selectTitle = ""
                 textView.text = nil
                 textView.textColor = UIColor.white
             }
             
         case TextViewType.location.rawValue:
-            weatherPlaceToolbarView.isHidden = false
-            weatherPlaceToolbarView.weatherPlaceType = .place
-            if textView.text == "지금 장소는 어디신가요?" {
-                textView.text = nil
-                textView.textColor = UIColor.white
-            }
+            break
             
         case TextViewType.description.rawValue:
             if textView.text == "오늘은 어떤 일이 있으셨나요?" {

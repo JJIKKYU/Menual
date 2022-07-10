@@ -16,7 +16,7 @@ class ReplyBottomView: UIView {
     
     var writedText: String = ""
     
-    private let replyTextView = UITextView().then {
+    let replyTextView = UITextView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isScrollEnabled = false
         $0.backgroundColor = Colors.grey.g700
@@ -33,6 +33,7 @@ class ReplyBottomView: UIView {
         $0.textColor = Colors.grey.g500
         $0.textContainerInset = UIEdgeInsets(top: 16, left: 12, bottom: 12, right: 47)
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        $0.font = UIFont.AppBodyOnlyFont(.body_2)
     }
     
     let writeBtn = UIButton().then {

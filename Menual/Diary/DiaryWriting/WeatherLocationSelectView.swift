@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import Then
+import RxSwift
 
 enum SelectedWeatherLocationType {
     case weather
@@ -15,6 +16,8 @@ enum SelectedWeatherLocationType {
 }
 
 class WeatherLocationSelectView: UIView {
+    
+    private let disposeBag = DisposeBag()
     
     var selected: Bool = false {
         didSet { setNeedsLayout() }
@@ -66,6 +69,7 @@ class WeatherLocationSelectView: UIView {
     init() {
         super.init(frame: CGRect.zero)
         setViews()
+        bind()
     }
     
     required init?(coder: NSCoder) {
@@ -109,6 +113,17 @@ class WeatherLocationSelectView: UIView {
             make.width.height.equalTo(24)
             make.centerY.equalToSuperview()
         }
+    }
+    
+    func bind() {
+        selectTextView.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else { return }
+                self.selectTitle = text
+            })
+            .disposed(by: disposeBag)
     }
     
     override func layoutSubviews() {

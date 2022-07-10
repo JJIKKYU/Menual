@@ -28,6 +28,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     weak var listener: DiaryDetailPresentableListener?
     private var pageNum: Int = 0
     private var isEnableImageView: Bool = false
+    // 기본 크기 40에서 추가된 사이즈만큼 Height 조절
+    private var replyBottomViewPlusHeight: CGFloat = 0
     
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -38,6 +40,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     private lazy var replyBottomView = ReplyBottomView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.writeBtn.addTarget(self, action: #selector(tempPressedSubmitReplyBtn), for: .touchUpInside)
+        $0.replyTextView.delegate = self
     }
     
     private let tempTextField = UITextField().then {
@@ -531,7 +534,7 @@ extension DiaryDetailViewController {
         
         replyBottomView.snp.updateConstraints { make in
             make.bottom.equalToSuperview().inset(keyboardHeight)
-            make.height.equalTo(84)
+            make.height.equalTo(84 + replyBottomViewPlusHeight)
         }
     }
     
@@ -544,12 +547,47 @@ extension DiaryDetailViewController {
         
         replyBottomView.snp.updateConstraints { make in
             make.bottom.equalToSuperview()
-            make.height.equalTo(103)
+            make.height.equalTo(103 + replyBottomViewPlusHeight)
         }
     }
     
     @objc func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
+    }
+}
+
+// MARK: - textView Delegate
+extension DiaryDetailViewController: UITextViewDelegate {
+    // MARK: textview 높이 자동조절
+    func textViewDidChange(_ textView: UITextView) {
+        
+        switch textView {
+        case replyBottomView.replyTextView:
+            let size = CGSize(width: replyBottomView.replyTextView.frame.width, height: .infinity)
+            let estimatedSize = textView.sizeThatFits(size)
+            
+            print("estmatedSize Height = \(estimatedSize.height)")
+            
+            textView.constraints.forEach { (constraint) in
+            
+              /// 40 이하일때는 더 이상 줄어들지 않게하기
+                if estimatedSize.height <= 40 {
+                
+                }
+                else {
+                    replyBottomView.replyTextView.snp.updateConstraints { make in
+                        make.height.equalTo(estimatedSize.height)
+                    }
+                    
+                    replyBottomViewPlusHeight = estimatedSize.height - 40
+                    replyBottomView.snp.updateConstraints { make in
+                        make.height.equalTo(103 + replyBottomViewPlusHeight)
+                    }
+                }
+            }
+        default:
+            break
+        }
     }
 }
