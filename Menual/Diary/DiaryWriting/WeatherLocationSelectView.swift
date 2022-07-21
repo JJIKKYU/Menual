@@ -58,7 +58,7 @@ class WeatherLocationSelectView: UIView {
     
     private let selectLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.font = UIFont.AppBodyOnlyFont(.body_2)
+        $0.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
     }
     
     private lazy var deleteBtn = UIButton().then {
@@ -137,11 +137,15 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.tintColor = Colors.tint.sub.n800
                 // selectLabel.textColor = Colors.grey.g400
                 selectTextView.textColor = Colors.grey.g400
+                /*
                 if selectTitle.isEmpty {
                     selectTextView.text = selectedWeatherType?.rawValue
                 } else {
                     selectTextView.text = selectTitle
                 }
+                 */
+                
+                selectTextView.text = selectTitle
                 selectTextView.centerVerticalText()
                 deleteBtn.isHidden = false
                 
@@ -150,7 +154,7 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.tintColor = Colors.grey.g700
                 // selectLabel.textColor = Colors.grey.g600
                 selectTextView.textColor = Colors.grey.g600
-                selectTextView.text = "오늘 날씨는 어땠나요?"
+                // selectTextView.text = "오늘 날씨는 어땠나요?"
                 selectTextView.centerVerticalText()
                 deleteBtn.isHidden = true
             }
@@ -162,11 +166,15 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.tintColor = Colors.tint.sub.n800
                 // selectLabel.textColor = Colors.grey.g400
                 selectTextView.textColor = Colors.grey.g400
+                /*
                 if selectTitle.isEmpty {
                     selectTextView.text = selectedPlaceType?.rawValue
                 } else {
                     selectTextView.text = selectTitle
                 }
+                 */
+                selectTextView.text = selectTitle
+                
                 selectTextView.centerVerticalText()
                 deleteBtn.isHidden = false
                 
@@ -175,7 +183,7 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.tintColor = Colors.grey.g700
                 // selectLabel.textColor = Colors.grey.g600
                 selectTextView.textColor = Colors.grey.g600
-                selectTextView.text = "지금 장소는 어디신가요?"
+                // selectTextView.text = "지금 장소는 어디신가요?"
                 selectTextView.centerVerticalText()
                 deleteBtn.isHidden = true
             }

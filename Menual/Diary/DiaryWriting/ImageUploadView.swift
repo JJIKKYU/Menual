@@ -11,6 +11,12 @@ import SnapKit
 
 class ImageUploadView: UIView {
     
+    let uploadBtn = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setTitle("", for: .normal)
+        $0.backgroundColor = .clear
+    }
+    
     private let centerView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -40,6 +46,7 @@ class ImageUploadView: UIView {
     func setViews() {
         backgroundColor = Colors.grey.g800.withAlphaComponent(0.4)
         addSubview(centerView)
+        addSubview(uploadBtn)
         
         centerView.addSubview(placeHolderImageView)
         centerView.addSubview(placeHolderTextLabel)
@@ -61,6 +68,12 @@ class ImageUploadView: UIView {
             make.height.equalTo(24)
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
+        }
+        
+        uploadBtn.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.bottom.equalToSuperview()
         }
     }
     

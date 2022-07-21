@@ -86,6 +86,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         $0.selectTextView.delegate = self
         $0.selectTextView.tag = TextViewType.weather.rawValue
+        $0.selectTextView.text = "오늘 날씨는 어땠나요?"
     }
     
     private let divider2 = Divider(type: ._1px).then {
@@ -98,6 +99,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
 
         $0.selectTextView.delegate = self
         $0.selectTextView.tag = TextViewType.location.rawValue
+        $0.selectTextView.text = "지금 장소는 어디신가요?"
     }
     
     private let divider3 = Divider(type: ._1px).then {
@@ -108,10 +110,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     lazy var descriptionTextView = UITextView().then {
         $0.delegate = self
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.textColor = .white
         // $0.typingAttributes = UIFont.AppBody(.body_4, .lightGray)
-        $0.backgroundColor = .gray.withAlphaComponent(0.1)
+        // $0.backgroundColor = .gray.withAlphaComponent(0.1)
+        $0.backgroundColor = .clear
         $0.text = "오늘은 어떤 일이 있으셨나요?"
+        $0.textColor = Colors.grey.g600
+        $0.font = UIFont.AppBodyOnlyFont(.body_4).withSize(14)
         $0.isScrollEnabled = false
         $0.tag = TextViewType.description.rawValue
     }
@@ -125,8 +129,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.backgroundColor = Colors.grey.g800
     }
     
-    private let imageUploadView = ImageUploadView().then {
+    private lazy var imageUploadView = ImageUploadView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.uploadBtn.addTarget(self, action: #selector(pressedImageUploadView), for: .touchUpInside)
     }
     
     let imageView = UIImageView().then {
@@ -136,11 +141,13 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.contentMode = .scaleAspectFill
     }
     
+    /*
     lazy var imageViewBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.addTarget(self, action: #selector(pressedImageview), for: .touchUpInside)
         $0.setTitle("이미지 업로드하기", for: .normal)
     }
+     */
     
     var phpickerConfiguration = PHPickerConfiguration()
     lazy var imagePicker = PHPickerViewController(configuration: phpickerConfiguration).then {
@@ -391,8 +398,8 @@ extension DiaryWritingViewController {
     }
     
     @objc
-    func pressedImageview() {
-        print("PressedImageViewBtn!")
+    func pressedImageUploadView() {
+        print("pressedImageUploadView!")
         phpickerConfiguration.filter = .images
         phpickerConfiguration.selectionLimit = 1
         imagePicker.isEditing = true
@@ -431,6 +438,13 @@ extension DiaryWritingViewController {
 // MARK: - UITextField
 extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        print("textViewShouldBeginEditing")
+        
+        if textView == descriptionTextView {
+            titleTextField.inputAccessoryView?.isHidden = true
+            descriptionTextView.inputAccessoryView?.isHidden = true
+        }
+
         switch textView.tag {
         case TextViewType.title.rawValue:
             print("Title TextView")
@@ -441,13 +455,20 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             
         case TextViewType.weather.rawValue:
             print("Weather TextView")
+            weatherPlaceToolbarView.isHidden = false
+            weatherPlaceToolbarView.weatherPlaceType = .weather
+            if textView.text == "오늘 날씨는 어땠나요?" {
+                 weatherSelectView.selectTitle = ""
+                textView.text = nil
+                textView.textColor = UIColor.white
+            }
             
         case TextViewType.location.rawValue:
             print("Location TextView")
             weatherPlaceToolbarView.isHidden = false
             weatherPlaceToolbarView.weatherPlaceType = .place
             if textView.text == "지금 장소는 어디신가요?" {
-                locationSelectView.selectTitle = ""
+                 locationSelectView.selectTitle = ""
                 textView.text = nil
                 textView.textColor = UIColor.white
             }
@@ -465,41 +486,10 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
         
         return true
     }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView == descriptionTextView {
-            titleTextField.inputAccessoryView?.isHidden = true
-            descriptionTextView.inputAccessoryView?.isHidden = true
-        }
-        
-        switch textView.tag {
-        case TextViewType.title.rawValue:
-            break
-            
-        case TextViewType.weather.rawValue:
-            weatherPlaceToolbarView.isHidden = false
-            weatherPlaceToolbarView.weatherPlaceType = .weather
-            if textView.text == "오늘 날씨는 어땠나요?" {
-                weatherSelectView.selectTitle = ""
-                textView.text = nil
-                textView.textColor = UIColor.white
-            }
-            
-        case TextViewType.location.rawValue:
-            break
-            
-        case TextViewType.description.rawValue:
-            if textView.text == "오늘은 어떤 일이 있으셨나요?" {
-                textView.text = nil
-                textView.textColor = UIColor.white
-            }
-            
-        default:
-            break
-        }
-    }
 
     func textViewDidEndEditing(_ textView: UITextView) {
+        print("textViewDidEndEditing")
+
         switch textView.tag {
         case TextViewType.title.rawValue:
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -519,12 +509,14 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
                 textView.text = "오늘 날씨는 어땠나요?"
                 textView.textColor = .lightGray
             }
+            break
             
         case TextViewType.location.rawValue:
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 textView.text = "지금 장소는 어디신가요?"
                 textView.textColor = .lightGray
             }
+            break
             
         case TextViewType.description.rawValue:
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {

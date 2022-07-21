@@ -163,7 +163,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.backgroundColor = Colors.background
         
         $0.tableFooterView = nil
-        
+        $0.separatorEffect = .none
     }
     
     init() {

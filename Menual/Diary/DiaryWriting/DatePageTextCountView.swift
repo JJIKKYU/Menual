@@ -15,11 +15,11 @@ class DatePageTextCountView: UIView {
         didSet { setNeedsLayout() }
     }
     
-    var page: String = "P.999" {
+    var page: String = "999" {
         didSet { setNeedsLayout() }
     }
     
-    var textCount: String = "0자 작성" {
+    var textCount: String = "0" {
         didSet { setNeedsLayout() }
     }
     
