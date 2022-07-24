@@ -370,6 +370,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             for diary in sortedDiaryModelResults {
                 let diaryMM = diary.createdAt.toStringWithMM()
                 diaryYearModels[index].months?.updateCount(MM: diaryMM)
+                diaryYearModels[index].months?.updateAllCount()
             }
         }
         

@@ -14,6 +14,11 @@ public struct DiaryMonthModel {
             print("monthCount! = \(oldValue)")
         }
     }
+    var allCount: Int = 0 {
+        didSet {
+            print("allCount = \(oldValue)")
+        }
+    }
 
     var jan: Int = 0
     var fab: Int = 0
@@ -27,6 +32,10 @@ public struct DiaryMonthModel {
     var oct: Int = 0
     var nov: Int = 0
     var dec: Int = 0
+    
+    mutating func updateAllCount() {
+        allCount += 1
+    }
     
     mutating func updateCount(MM: String) {
         switch MM {
@@ -68,6 +77,38 @@ public struct DiaryMonthModel {
             dec += 1
         default:
             break
+        }
+    }
+    
+    func getMenualCountWithMonth(MM: String) -> Int {
+        let mm: String = MM.lowercased()
+        switch mm {
+        case "jan":
+            return jan
+        case "fab":
+            return fab
+        case "mar":
+            return mar
+        case "apr":
+            return apr
+        case "may":
+            return may
+        case "jun":
+            return jun
+        case "jul":
+            return jul
+        case "aug":
+            return aug
+        case "sep":
+            return sep
+        case "oct":
+            return oct
+        case "nov":
+            return nov
+        case "dec":
+            return dec
+        default:
+            return 0
         }
     }
     

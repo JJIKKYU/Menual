@@ -14,6 +14,7 @@ enum ListHeaderType {
     case text
     case datepageandicon
     case search
+    case home
 }
 
 enum RightIconType {
@@ -21,6 +22,7 @@ enum RightIconType {
     case filter
     case arrow
     case searchDelete
+    case filterAndCalender
 }
 
 class ListHeader: UIView {
@@ -34,6 +36,10 @@ class ListHeader: UIView {
     }
     
     var title: String = "        " {
+        didSet { setNeedsLayout() }
+    }
+    
+    var pageNumber: Int = 0 {
         didSet { setNeedsLayout() }
     }
     
@@ -65,6 +71,15 @@ class ListHeader: UIView {
         $0.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
         $0.setTitleColor(Colors.grey.g500, for: .normal)
     }
+    
+    let rightCalenderBtn = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setImage(Asset._24px.calendar.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.tintColor = Colors.grey.g600
+        $0.contentMode = .scaleAspectFit
+        $0.contentHorizontalAlignment = .fill
+        $0.contentVerticalAlignment = .fill
+    }
 
     init(type: ListHeaderType, rightIconType: RightIconType) {
         self.type = type
@@ -82,6 +97,7 @@ class ListHeader: UIView {
         addSubview(rightArrowBtn)
         addSubview(rightFilterBtn)
         addSubview(rightTextBtn)
+        addSubview(rightCalenderBtn)
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -111,6 +127,12 @@ class ListHeader: UIView {
             make.height.equalTo(15)
         }
         rightTextBtn.sizeToFit()
+        
+        rightCalenderBtn.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(52)
+            make.width.height.equalTo(24)
+            make.centerY.equalToSuperview()
+        }
     }
     
     override func layoutSubviews() {
@@ -147,6 +169,31 @@ class ListHeader: UIView {
                 attributedString.addAttribute(.foregroundColor, value: Colors.tint.main.v600, range: (title as NSString).range(of: number))
                 titleLabel.attributedText = attributedString
             }
+            
+        // 메인 홈
+        case .home:
+            titleLabel.isHidden = false
+            titleLabel.font = UIFont.AppHead(.head_5)
+            titleLabel.textColor = Colors.grey.g400
+
+            // pageNumber가 0, 즉 작성한 메뉴얼이 없을 경우
+            if pageNumber == 0 {
+                titleLabel.text = title
+            } else {
+                titleLabel.text = title + " P. \(pageNumber)"
+                guard let text = titleLabel.text else { return }
+                
+                let attributedString = NSMutableAttributedString(string: text)
+                // MY MENUAL의 타이틀의 카운트로 한 거니까, 다국어 지원 할 경우에는 코드 변경 필요
+                let range = text.count - 10
+                // MY MENUAL ''P.00]''
+                let number = (text as NSString).substring(with: NSMakeRange(10, range))
+                
+                attributedString.addAttribute(.foregroundColor,
+                                              value: Colors.tint.main.v600,
+                                              range: (text as NSString).range(of: number))
+                titleLabel.attributedText = attributedString
+            }
         }
         
         switch rightIconType {
@@ -154,22 +201,31 @@ class ListHeader: UIView {
             rightFilterBtn.isHidden = true
             rightArrowBtn.isHidden = true
             rightTextBtn.isHidden = true
+            rightCalenderBtn.isHidden = true
 
         case .arrow:
             rightFilterBtn.isHidden = true
             rightArrowBtn.isHidden = false
             rightTextBtn.isHidden = true
+            rightCalenderBtn.isHidden = true
             
         case .filter:
             rightFilterBtn.isHidden = false
             rightArrowBtn.isHidden = true
             rightTextBtn.isHidden = true
+            rightCalenderBtn.isHidden = true
             
         case .searchDelete:
             rightFilterBtn.isHidden = true
             rightArrowBtn.isHidden = true
             rightTextBtn.isHidden = false
+            rightCalenderBtn.isHidden = true
             
+        case .filterAndCalender:
+            rightFilterBtn.isHidden = false
+            rightArrowBtn.isHidden = true
+            rightTextBtn.isHidden = true
+            rightCalenderBtn.isHidden = false
         }
     }
 }

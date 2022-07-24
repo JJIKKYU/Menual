@@ -75,6 +75,15 @@ public struct DiaryModel {
     mutating func updatePageNum(pageNum: Int) {
         self.pageNum = pageNum + 1
     }
+    
+    func getSectionName() -> String {
+        print("getSectionName = \(createdAt)")
+        let year: String = createdAt.toStringWithYYYY()
+        let engMonth: String = createdAt.toStringWithMonthEngName()
+        let yearEngMonth: String = "\(year)\(engMonth)"
+        print("yearEngMonth = \(yearEngMonth)")
+        return yearEngMonth
+    }
 }
 
 // MARK: - Realm에 저장하기 위한 Class

@@ -37,6 +37,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     var myMenualCellIndexPathDic: [String: [String: IndexPath]]?
     var disposeBag = DisposeBag()
     
+    var sectionNameDic: [Int: String] = [:]
+    var sectionNameDic2: [Int: [String: Int]] = [:]
+    var cellsectionNumberDic: [String: Int] = [:]
+    var cellsectionNumberDic2: [Int: Int] = [:]
+    
     // MARK: - UI 코드
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -63,12 +68,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.title = "N번째 메뉴얼 작성하기"
         $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
     }
-    
-    lazy var momentsTitleView = ListHeader(type: .textandicon, rightIconType: .arrow).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = "MY MOMENTS"
-        $0.rightArrowBtn.addTarget(self, action: #selector(pressedMomentsMoreBtn), for: .touchUpInside)
-    }
 
     lazy var momentsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout()).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -94,17 +93,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.numberOfPages = 5
     }
     
-    lazy var myMenualTitleView = ListHeader(type: .textandicon, rightIconType: .none).then {
+    lazy var myMenualTitleView = ListHeader(type: .home, rightIconType: .filterAndCalender).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "MY MENUAL"
+        $0.rightCalenderBtn.addTarget(self, action: #selector(pressedLightCalenderBtn), for: .touchUpInside)
+        $0.rightFilterBtn.addTarget(self, action: #selector(pressedFilterBtn), for: .touchUpInside)
     }
     
-    lazy var myMenualPageTitleView = ListHeader(type: .datepageandicon, rightIconType: .filter).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = "PAGE.999"
-    }
-    
-    lazy var myMenualTableView = UITableView().then {
+    lazy var myMenualTableView = UITableView(frame: CGRect.zero, style: .grouped).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
         $0.dataSource = self
@@ -115,10 +111,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.showsVerticalScrollIndicator = false
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 72, right: 0)
         $0.tag = -1
-    }
-    
-    private let divider = Divider(type: ._2px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
     // MARK: - VC 코드
@@ -147,12 +139,9 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         
         self.view.addSubview(myMenualTableView)
         myMenualTableView.tableHeaderView = tableViewHeaderView
-        tableViewHeaderView.addSubview(momentsTitleView)
         tableViewHeaderView.addSubview(momentsCollectionView)
         tableViewHeaderView.addSubview(momentsCollectionViewPagination)
         tableViewHeaderView.addSubview(myMenualTitleView)
-        tableViewHeaderView.addSubview(divider)
-        tableViewHeaderView.addSubview(myMenualPageTitleView)
         
         naviView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -168,30 +157,23 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.bottom.equalToSuperview()
-            make.top.equalToSuperview()
+            make.top.equalTo(naviView.snp.bottom)
         }
         
         tableViewHeaderView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalToSuperview()
             make.width.equalToSuperview()
-            make.height.equalTo(320)
+            make.height.equalTo(206)
         }
         self.view.layoutIfNeeded()
         
         print("UIApplication.topSafeAreaHeight = \(UIApplication.topSafeAreaHeight)")
         
-        momentsTitleView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalToSuperview().offset(44 + 16)
-            make.height.equalTo(24)
-        }
-        
         momentsCollectionView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.equalTo(momentsTitleView.snp.bottom).offset(12)
+            make.top.equalToSuperview().offset(12)
             make.height.equalTo(125)
         }
         
@@ -205,22 +187,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         myMenualTitleView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.equalTo(momentsCollectionViewPagination.snp.bottom).offset(12)
+            make.top.equalTo(momentsCollectionViewPagination.snp.bottom).offset(24)
             make.height.equalTo(22)
-        }
-        
-        myMenualPageTitleView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalTo(myMenualTitleView.snp.bottom).offset(16)
-            make.height.equalTo(24)
-        }
-        
-        divider.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(myMenualPageTitleView.snp.bottom).offset(8)
-            make.height.equalTo(2)
         }
         
         fabWriteBtn.snp.makeConstraints { make in
@@ -236,12 +204,41 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             .subscribe(onNext: { [weak self] num in
                 guard let self = self else { return }
                 print("num!! = \(num)")
-                self.myMenualPageTitleView.title = "PAGE." + String(num)
                 self.fabWriteBtn.title = String(num + 1) + "번째 메뉴얼 작성하기"
+                self.myMenualTitleView.pageNumber = num
             })
             .disposed(by: self.disposeBag)
+        
+        listener?.diaryMonthSetRelay
+            .subscribe(onNext: { [weak self] diaryYearModelArr in
+                guard let self = self else { return }
+                
+                var sectionCount: Int = 0
+                for diaryYearModel in diaryYearModelArr {
+                    // ["2022JUL", "2022JUM"]
+                    guard let monthArr = diaryYearModel.months?.getMonthArr() else { return }
+                    
+                    for month in monthArr {
+                        let sectionName: String = "\(diaryYearModel.year)\(month)"
+                        print("sectionName = \(sectionName), sectionCount = \(sectionCount)")
+                        self.sectionNameDic[sectionCount] = sectionName
+                        self.cellsectionNumberDic[sectionName] = sectionCount
+                        self.cellsectionNumberDic2[sectionCount] =  diaryYearModel.months?.getMenualCountWithMonth(MM: month) ?? 0
+                        
+                        sectionCount += 1
+                    }
+                }
+                
+                print("for문 끝! sectionCount = \(sectionCount), sectionNameDic = \(self.sectionNameDic), cellSectionNumberDic = \(self.cellsectionNumberDic), cellsectionNumberDic2 = \(self.cellsectionNumberDic2)")
+
+                self.myMenualTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
-    
+}
+
+// MARK: - IBAction
+extension DiaryHomeViewController {
     @objc
     func pressedSearchBtn() {
         listener?.pressedSearchBtn()
@@ -280,6 +277,16 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         print("메뉴얼 버튼 눌렀니?")
         listener?.pressedMenualTitleBtn()
     }
+    
+    @objc
+    func pressedLightCalenderBtn() {
+        print("pressedLightCalenderBtn")
+    }
+    
+    @objc
+    func pressedFilterBtn() {
+        print("pressedFilterBtn")
+    }
 }
 
 // MARK: - Scroll View
@@ -308,19 +315,41 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
 // MARK: - UITableView Deleagte, Datasource
 extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return listener?.getMyMenualCount() ?? 0
+        guard let monthMenualCount = cellsectionNumberDic2[section] else { return 0 }
+
+        print("monthMenualCount = \(monthMenualCount)")
+
+        return monthMenualCount
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+
+        return sectionNameDic.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
-        
+
         cell.backgroundColor = .clear
-        
+
         guard let myMenualArr = listener?.getMyMenualArr() else { return UITableViewCell() }
         
-        let data = myMenualArr[indexPath.row]
+        let index: Int = indexPath.row
+        let section: Int = indexPath.section
+        print("section!! = \(section)")
+        let data = myMenualArr[index]
+
+        guard let sectionNumber: Int = cellsectionNumberDic[data.getSectionName()] else { return UITableViewCell() }
+
+        print("sectionNumber = \(sectionNumber), section = \(section)")
+        // TODO: - Index가 달라져서 생각해야할듯
+//        if sectionNumber != section {
+//            print("여기?")
+//            return UITableViewCell()
+//        }
+        
+        
         if data.isHide {
             cell.listType = .hide
         } else {
@@ -351,6 +380,13 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func reloadTableView() {
         print("reloadTableView!")
         myMenualTableView.reloadData()
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let sectionListHeader = ListHeader(type: .text, rightIconType: .none)
+        sectionListHeader.backgroundColor = .red
+        sectionListHeader.title = "2099.99.99"
+        return sectionListHeader
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
