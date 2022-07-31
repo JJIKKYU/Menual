@@ -93,7 +93,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.numberOfPages = 5
     }
     
-    lazy var myMenualTitleView = ListHeader(type: .home, rightIconType: .filterAndCalender).then {
+    lazy var myMenualTitleView = ListHeader(type: .main, rightIconType: .filterAndCalender).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "MY MENUAL"
         $0.rightCalenderBtn.addTarget(self, action: #selector(pressedLightCalenderBtn), for: .touchUpInside)

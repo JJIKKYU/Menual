@@ -163,9 +163,15 @@ class FAB: UIButton {
             layer.borderColor = Colors.tint.main.v700.cgColor
             layer.borderWidth = 1
             layer.cornerRadius = frame.height / 2
-            backgroundColor = Colors.background
             
             spaceRequiredCurrentPageLabel.text = "P." + spaceRequiredCurrentPage
+            
+            switch fabStatus {
+            case .default_:
+                backgroundColor = Colors.background
+            case .pressed:
+                backgroundColor = Colors.grey.g800
+            }
             
         }
     }

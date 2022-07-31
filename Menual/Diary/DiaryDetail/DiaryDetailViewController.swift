@@ -12,9 +12,6 @@ import Then
 import SnapKit
 
 protocol DiaryDetailPresentableListener: AnyObject {
-    // TODO: Declare properties and methods that the view controller can invoke to perform
-    // business logic, such as signIn(). This protocol is implemented by the corresponding
-    // interactor class.
     func pressedBackBtn(isOnlyDetach: Bool)
     func pressedReplySubmitBtn(desc: String)
     func pressedIndicatorButton(offset: Int)
@@ -56,8 +53,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
 
     lazy var naviView = MenualNaviView(type: .menualDetail).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.rightButton1.setImage(Asset._24px.profile.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        // $0.rightButton1.addTarget(self, action: #selector(pressedMyPageBtn), for: .touchUpInside)
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
     }
     

@@ -70,6 +70,10 @@ class MenualNaviView: UIView {
         didSet { setNeedsLayout() }
     }
     
+    var rightButton2IsActive: Bool = false {
+        didSet { setNeedsLayout() }
+    }
+    
     // 오른쪽에서 2번째
     var rightButton2 = UIButton().then {
         $0.setImage(Asset._24px.search.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -202,8 +206,10 @@ class MenualNaviView: UIView {
             backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
             rightButton1.isHidden = false
             rightButton1.tintColor = Colors.grey.g100
-            rightButton1.setImage(Asset._24px.Alert.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)
-            rightButton2.isHidden = true
+            rightButton1.setImage(Asset._24px.more.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton2.isHidden = false
+            rightButton2.tintColor = Colors.grey.g100
+            rightButton2.setImage(Asset._24px.Alert.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)
             break
         case .edit:
             titleLabel.isHidden = false
@@ -255,12 +261,12 @@ class MenualNaviView: UIView {
             }
             break
         case .menualDetail:
-            if rightButton1IsActive {
-                rightButton1.setImage(Asset._24px.Alert.active.image.withRenderingMode(.alwaysTemplate), for: .normal)
-                rightButton1.tintColor = Colors.tint.sub.n400
+            if rightButton2IsActive {
+                rightButton2.setImage(Asset._24px.Alert.active.image.withRenderingMode(.alwaysTemplate), for: .normal)
+                rightButton2.tintColor = Colors.tint.sub.n400
             } else {
-                rightButton1.tintColor = Colors.grey.g100
-                rightButton1.setImage(Asset._24px.Alert.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)
+                rightButton2.tintColor = Colors.grey.g100
+                rightButton2.setImage(Asset._24px.Alert.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)
             }
             break
         case .edit:

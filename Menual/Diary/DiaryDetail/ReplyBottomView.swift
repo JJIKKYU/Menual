@@ -34,6 +34,7 @@ class ReplyBottomView: UIView {
         $0.textContainerInset = UIEdgeInsets(top: 16, left: 12, bottom: 12, right: 47)
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
+        $0.tintColor = Colors.tint.sub.n400
     }
     
     let writeBtn = UIButton().then {

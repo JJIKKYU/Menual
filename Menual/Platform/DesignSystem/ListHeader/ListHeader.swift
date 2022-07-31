@@ -14,15 +14,20 @@ enum ListHeaderType {
     case text
     case datepageandicon
     case search
-    case home
+
+    case main
+    case myPage
 }
 
-enum RightIconType {
+enum DetailType {
     case none
     case filter
     case arrow
     case searchDelete
     case filterAndCalender
+    
+    // 공통
+    case empty
 }
 
 class ListHeader: UIView {
@@ -31,7 +36,7 @@ class ListHeader: UIView {
         didSet { setNeedsLayout() }
     }
     
-    private var rightIconType: RightIconType = .none {
+    private var detailType: DetailType = .none {
         didSet { setNeedsLayout() }
     }
     
@@ -81,9 +86,9 @@ class ListHeader: UIView {
         $0.contentVerticalAlignment = .fill
     }
 
-    init(type: ListHeaderType, rightIconType: RightIconType) {
+    init(type: ListHeaderType, rightIconType: DetailType) {
         self.type = type
-        self.rightIconType = rightIconType
+        self.detailType = rightIconType
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -171,7 +176,7 @@ class ListHeader: UIView {
             }
             
         // 메인 홈
-        case .home:
+        case .main:
             titleLabel.isHidden = false
             titleLabel.font = UIFont.AppHead(.head_5)
             titleLabel.textColor = Colors.grey.g400
@@ -194,9 +199,15 @@ class ListHeader: UIView {
                                               range: (text as NSString).range(of: number))
                 titleLabel.attributedText = attributedString
             }
+
+        case .myPage:
+            titleLabel.isHidden = false
+            titleLabel.font = UIFont.AppHead(.head_5)
+            titleLabel.textColor = Colors.grey.g500
+            
         }
         
-        switch rightIconType {
+        switch detailType {
         case .none:
             rightFilterBtn.isHidden = true
             rightArrowBtn.isHidden = true
@@ -226,6 +237,9 @@ class ListHeader: UIView {
             rightArrowBtn.isHidden = true
             rightTextBtn.isHidden = true
             rightCalenderBtn.isHidden = false
+
+        case .empty:
+            break
         }
     }
 }
