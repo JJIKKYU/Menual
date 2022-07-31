@@ -53,23 +53,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.addTarget(self, action: #selector(tempPressedSubmitReplyBtn), for: .touchUpInside)
         $0.setTitle("올리기", for: .normal)
     }
-    
-    lazy var tempLeftButton = UIButton().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setTitle("<", for: .normal)
-        $0.tag = -1
-        $0.addTarget(self, action: #selector(tempPressedIndicatorButton(sender:)), for: .touchUpInside)
-        $0.backgroundColor = .blue
-    }
-    
-    lazy var tempRightButton = UIButton().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setTitle(">", for: .normal)
-        $0.tag = 1
-        $0.addTarget(self, action: #selector(tempPressedIndicatorButton(sender:)), for: .touchUpInside)
-        $0.backgroundColor = .blue
-    }
-    
+
     lazy var naviView = MenualNaviView(type: .menualDetail).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.rightButton1.setImage(Asset._24px.profile.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -166,6 +150,12 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.separatorEffect = .none
     }
     
+    lazy var spaceRequiredFAB = FAB(fabType: .spacRequired, fabStatus: .default_).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.spaceRequiredRightArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
+        $0.spaceRequiredLeftArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
+    }
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
@@ -229,14 +219,9 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         self.view.addSubview(replyTableView)
         replyTableView.tableHeaderView = tableViewHeaderView
-        
-        // temp
-//        self.view.addSubview(tempTextField)
-//        self.view.addSubview(tempSubmitBtn)
-//        self.view.addSubview(tempLeftButton)
-//        self.view.addSubview(tempRightButton)
-        
+
         self.view.addSubview(replyBottomView)
+        self.view.addSubview(spaceRequiredFAB)
         
         self.view.addSubview(naviView)
         tableViewHeaderView.addSubview(titleLabel)
@@ -247,13 +232,12 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         tableViewHeaderView.addSubview(locationSelectView)
         tableViewHeaderView.addSubview(divider3)
 
-        // replyTableView.addSubview(testLabel)
         tableViewHeaderView.addSubview(descriptionTextLabel)
         tableViewHeaderView.addSubview(divider4)
         tableViewHeaderView.addSubview(imageView)
-        // replyTableView.addSubview(readCountLabel)
         self.view.bringSubviewToFront(naviView)
         self.view.bringSubviewToFront(replyBottomView)
+        self.view.bringSubviewToFront(spaceRequiredFAB)
         
         naviView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -281,6 +265,13 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.width.equalToSuperview()
             make.bottom.equalToSuperview()
             make.height.equalTo(103)
+        }
+        
+        spaceRequiredFAB.snp.makeConstraints { make in
+            make.bottom.equalTo(replyBottomView.snp.top).offset(-20)
+            make.width.equalTo(160)
+            make.height.equalTo(40)
+            make.centerX.equalToSuperview()
         }
         
         self.view.layoutIfNeeded()
@@ -352,53 +343,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.top.equalTo(divider4.snp.bottom).offset(12)
             make.height.equalTo(80)
         }
-        /*
-        testLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(createdAtPageView.snp.bottom).offset(16)
-        }
-        
-        readCountLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(imageView.snp.bottom).offset(20)
-            make.height.equalTo(20)
-        }
-        
-        
-        
-       
-         */
-        
-        //temp
-//        tempTextField.snp.makeConstraints { make in
-//            make.leading.equalToSuperview().offset(20)
-//            make.width.equalToSuperview().inset(20)
-//            make.bottom.equalTo(replyTableView.snp.bottom).inset(20)
-//            make.height.equalTo(50)
-//        }
-//
-//        tempSubmitBtn.snp.makeConstraints { make in
-//            make.trailing.equalToSuperview().inset(20)
-//            make.width.equalTo(100)
-//            make.height.equalTo(50)
-//            make.bottom.equalTo(replyTableView.snp.bottom).inset(20)
-//        }
-//
-//        tempLeftButton.snp.makeConstraints { make in
-//            make.leading.equalToSuperview().offset(20)
-//            make.width.equalTo(50)
-//            make.height.equalTo(30)
-//            make.bottom.equalTo(tempSubmitBtn.snp.top).inset(20)
-//        }
-//
-//        tempRightButton.snp.makeConstraints { make in
-//            make.leading.equalTo(tempLeftButton.snp.trailing).offset(20)
-//            make.width.equalTo(50)
-//            make.height.equalTo(30)
-//            make.bottom.equalTo(tempSubmitBtn.snp.top).inset(20)
-//        }
     }
     
     func loadDiaryDetail(model: DiaryModel) {
@@ -426,6 +370,10 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         createdAtPageView.createdAt = model.createdAt.toStringWithHourMin()
         createdAtPageView.page = String(model.pageNum)
+        
+        // FAB Button
+        spaceRequiredFAB.spaceRequiredCurrentPage = String(model.pageNum)
+        
         // cell 생성에 필요한 정보 임시 저장
         pageNum = model.pageNum
         print("pageNum = \(pageNum)")
@@ -469,7 +417,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     }
     
     @objc
-    func tempPressedIndicatorButton(sender: UIButton) {
+    func pressedIndicatorBtn(sender: UIButton) {
         print("sender.s tag = \(sender.tag)")
         listener?.pressedIndicatorButton(offset: sender.tag)
         DispatchQueue.main.async {
@@ -528,6 +476,9 @@ extension DiaryDetailViewController {
     func keyboardWillShow(_ notification: NSNotification) {
         guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
         print("keyboardWillShow! - \(keyboardHeight)")
+        
+        spaceRequiredFAB.isHidden = true
+        
         replyTableView.snp.updateConstraints { make in
             make.bottom.equalToSuperview().inset(keyboardHeight)
         }
@@ -541,6 +492,9 @@ extension DiaryDetailViewController {
     @objc
     func keyboardWillHide(_ notification: NSNotification) {
         print("keyboardWillHide!")
+        
+        spaceRequiredFAB.isHidden = false
+        
         replyTableView.snp.updateConstraints { make in
             make.bottom.equalToSuperview()
         }
