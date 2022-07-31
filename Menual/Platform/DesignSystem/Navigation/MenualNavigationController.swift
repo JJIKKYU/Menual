@@ -252,7 +252,7 @@ class MenualNaviView: UIView {
         case .write:
             if rightButton1IsActive {
                 rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
-                rightButton1.tintColor = Colors.grey.g100
+                rightButton1.tintColor = Colors.tint.sub.n400
                 rightButton1.isUserInteractionEnabled = true
             } else {
                 rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)

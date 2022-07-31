@@ -70,8 +70,6 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
         
         let router = diaryBottomSheetBuildable.build(
             withListener: interactor,
-            weatherModelOb: weatherModelOb,
-            placeModelOb: placeModelOb,
             bottomSheetType: bottomSheetType
         )
          viewController.present(router.viewControllable, animated: false, completion: nil)

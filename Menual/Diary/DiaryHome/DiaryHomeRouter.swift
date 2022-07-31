@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryMomentsListener, DiaryWritingListener, DiaryDetailListener, DesignSystemListener {
+protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryMomentsListener, DiaryWritingListener, DiaryDetailListener, DesignSystemListener, DiaryBottomSheetListener {
     var router: DiaryHomeRouting? { get set }
     var listener: DiaryHomeListener? { get set }
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
@@ -41,6 +41,9 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     private let designSystemBuildable: DesignSystemBuildable
     private var designSystemRouting: Routing?
     
+    private let diaryBottomSheetBuildable: DiaryBottomSheetBuildable
+    private var diaryBottomSheetRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DiaryHomeInteractable,
@@ -50,7 +53,8 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         diaryMomentsBuildable: DiaryMomentsBuildable,
         diaryWritingBuildable: DiaryWritingBuildable,
         diaryDetailBuildable: DiaryDetailBuildable,
-        designSystemBuildable: DesignSystemBuildable
+        designSystemBuildable: DesignSystemBuildable,
+        diarybottomSheetBuildable: DiaryBottomSheetBuildable
     ) {
         self.profileHomeBuildable = profileHomeBuildable
         self.diarySearchBuildable = diarySearchBuildable
@@ -58,6 +62,7 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         self.diaryWritingBuildable = diaryWritingBuildable
         self.diaryDetailBuildable = diaryDetailBuildable
         self.designSystemBuildable = designSystemBuildable
+        self.diaryBottomSheetBuildable = diarybottomSheetBuildable
         
         super.init(
             interactor: interactor,
@@ -253,5 +258,38 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         
         detachChild(router)
         designSystemRouting = nil
+    }
+    
+    // MARK: - DiaryBottomSheet
+    
+    func attachBottomSheet(type: MenualBottomSheetType) {
+        if diaryBottomSheetRouting != nil {
+            return
+        }
+        
+        let router = diaryBottomSheetBuildable.build(
+            withListener: interactor,
+            bottomSheetType: type
+        )
+        
+        viewController.present(router.viewControllable,
+                               animated: false,
+                               completion: nil
+        )
+        router.viewControllable.uiviewController.modalPresentationStyle = .overFullScreen
+        
+        diaryBottomSheetRouting = router
+        attachChild(router)
+    }
+    
+    func detachBottomSheet() {
+        guard let router = diaryBottomSheetRouting,
+        let diaryBottomSheetRouter = router as? DiaryBottomSheetRouting else {
+            return
+        }
+        
+        diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
+        detachChild(router)
+        diaryBottomSheetRouting = nil
     }
 }

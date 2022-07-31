@@ -45,6 +45,7 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
     private lazy var weatherPlaceSelectView = WeatherPlaceSelectView(type: .place).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
+        $0.isHidden = true
     }
     
     override func viewDidLoad() {
@@ -103,24 +104,26 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         
         switch menualBottomSheetType {
         case .weather:
+            weatherPlaceSelectView.isHidden = false
             weatherPlaceSelectView.weatherPlaceType = .weather
             super.rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
             
         case .place:
+            weatherPlaceSelectView.isHidden = false
             weatherPlaceSelectView.weatherPlaceType = .place
             super.rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
             
         case .reminder:
-            break
+            bottomSheetTitle = "리마인더 알림"
             
         case .menu:
-            break
+            bottomSheetTitle = "메뉴"
             
         case .filter:
-            break
+            bottomSheetTitle = "필터"
             
         case .calender:
-            break
+            bottomSheetTitle = "날짜"
         }
     }
 }

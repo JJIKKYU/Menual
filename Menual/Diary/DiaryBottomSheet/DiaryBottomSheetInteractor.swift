@@ -37,22 +37,14 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var placeModel: PlaceModel = PlaceModel(uuid: "", place: nil, detailText: "")
     var bottomSheetType: MenualBottomSheetType = .weather
     
-    // DiaryInteractor에서 받은 Relay
-    var weatherModelOb: BehaviorRelay<WeatherModel?>
-    var placeModelOb: BehaviorRelay<PlaceModel?>
-    
     let weatherOb = BehaviorRelay<WeatherModel>(value: WeatherModel(uuid: "", weather: .sun, detailText: ""))
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
     init(
         presenter: DiaryBottomSheetPresentable,
-        weatherModelOb: BehaviorRelay<WeatherModel?>,
-        placeModelOb: BehaviorRelay<PlaceModel?>,
         bottomSheetType: MenualBottomSheetType
     ) {
-        self.weatherModelOb = weatherModelOb
-        self.placeModelOb = placeModelOb
         self.bottomSheetType = bottomSheetType
         print("menualBottomSheetType = \(bottomSheetType)")
         super.init(presenter: presenter)
@@ -62,11 +54,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
 
     override func didBecomeActive() {
         super.didBecomeActive()
-        // TODO: Implement business logic here.
-        guard let weatherModel = weatherModelOb.value,
-              let placeModel = placeModelOb.value else {
-            return
-        }
+        
         print("weatherModel = \(weatherModel)")
         
 //        presenter.setViewsWithWeatherModel(model: weatherModel)
@@ -85,16 +73,6 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     
     func pressedWriteBtn() {
         listener?.diaryBottomSheetPressedCloseBtn()
-        
-        if let _ = weatherModel.weather {
-            self.weatherModelOb
-                .accept(weatherModel)
-        }
-        
-        if let _ = placeModel.place {
-            self.placeModelOb
-                .accept(placeModel)
-        }
     }
     
     // MARK: - Weather(날씨)

@@ -23,6 +23,8 @@ protocol DiaryHomeRouting: ViewableRouting {
     func detachDiaryDetail(isOnlyDetach: Bool)
     func attachDesignSystem()
     func detachDesignSystem(isOnlyDetach: Bool)
+    func attachBottomSheet(type: MenualBottomSheetType)
+    func detachBottomSheet()
 }
 
 protocol DiaryHomePresentable: Presentable {
@@ -214,5 +216,19 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func designSystemPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachDesignSystem(isOnlyDetach: isOnlyDetach)
+    }
+    
+    // MARK: - Diary Bottom Sheet
+    func diaryBottomSheetPressedCloseBtn() {
+        print("diaryBottomSheetPressedCloseBtn")
+        router?.detachBottomSheet()
+    }
+    
+    func pressedFilterBtn() {
+        router?.attachBottomSheet(type: .filter)
+    }
+    
+    func pressedCalenderBtn() {
+        router?.attachBottomSheet(type: .calender)
     }
 }

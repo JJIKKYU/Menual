@@ -12,7 +12,7 @@ protocol DiaryHomeDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
 }
 
-final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency {
+final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency, DiaryBottomSheetDependency {
     
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
@@ -45,6 +45,7 @@ final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
         let diaryWritingBuildable = DiaryWritingBuilder(dependency: component)
         let diaryDetailBuildable = DiaryDetailBuilder(dependency: component)
         let designSystemBuildable = DesignSystemBuilder(dependency: component)
+        let diaryBottomSheetBuildable = DiaryBottomSheetBuilder(dependency: component)
         
         let viewController = DiaryHomeViewController()
         let interactor = DiaryHomeInteractor(
@@ -61,7 +62,8 @@ final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
             diaryMomentsBuildable: diaryMomentsBuildable,
             diaryWritingBuildable: diaryWritingBuildable,
             diaryDetailBuildable: diaryDetailBuildable,
-            designSystemBuildable: designSystemBuildable
+            designSystemBuildable: designSystemBuildable,
+            diarybottomSheetBuildable: diaryBottomSheetBuildable
         )
     }
 }

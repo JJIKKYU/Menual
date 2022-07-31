@@ -15,6 +15,8 @@ protocol DiaryDetailPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
     func pressedReplySubmitBtn(desc: String)
     func pressedIndicatorButton(offset: Int)
+    func pressedMenuMoreBtn()
+    func pressedReminderBtn()
     
     var diaryReplies: [DiaryReplyModel] { get }
     var currentDiaryPage: Int { get }
@@ -54,6 +56,9 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     lazy var naviView = MenualNaviView(type: .menualDetail).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+        
+        $0.rightButton1.addTarget(self, action: #selector(pressedMenuMoreBtn), for: .touchUpInside)
+        $0.rightButton2.addTarget(self, action: #selector(pressedReminderBtn), for: .touchUpInside)
     }
     
     private let titleLabel = UILabel().then {
@@ -394,6 +399,19 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     func reloadTableView() {
         print("diaryDetailViewController reloadTableView!")
         self.replyTableView.reloadData()
+    }
+}
+
+// MARK: - IBAction
+extension DiaryDetailViewController {
+    @objc
+    func pressedMenuMoreBtn() {
+        listener?.pressedMenuMoreBtn()
+    }
+    
+    @objc
+    func pressedReminderBtn() {
+        listener?.pressedReminderBtn()
     }
     
     @objc

@@ -13,7 +13,7 @@ protocol DiaryDetailDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
 }
 
-final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency {
+final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency {
 
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
@@ -38,6 +38,8 @@ final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDetailBuild
         let component = DiaryDetailComponent(
             dependency: dependency
         )
+        
+        let diaryBottomSheetBuildable = DiaryBottomSheetBuilder(dependency: component)
 
         let viewController = DiaryDetailViewController()
         let interactor = DiaryDetailInteractor(
@@ -46,6 +48,10 @@ final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDetailBuild
             dependency: component
         )
         interactor.listener = listener
-        return DiaryDetailRouter(interactor: interactor, viewController: viewController)
+        return DiaryDetailRouter(
+            interactor: interactor,
+            viewController: viewController,
+            diarybottomSheetBuildable: diaryBottomSheetBuildable
+        )
     }
 }

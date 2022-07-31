@@ -9,7 +9,8 @@ import RIBs
 import RxSwift
 
 protocol DiaryDetailRouting: ViewableRouting {
-    // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
+    func attachBottomSheet(type: MenualBottomSheetType)
+    func detachBottomSheet()
 }
 
 protocol DiaryDetailPresentable: Presentable {
@@ -130,5 +131,17 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         
         self.changeCurrentDiarySubject.onNext(true)
         print("pass true!")
+    }
+    
+    func pressedMenuMoreBtn() {
+        router?.attachBottomSheet(type: .menu)
+    }
+    
+    func diaryBottomSheetPressedCloseBtn() {
+        router?.detachBottomSheet()
+    }
+    
+    func pressedReminderBtn() {
+        router?.attachBottomSheet(type: .reminder)
     }
 }

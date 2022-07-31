@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DiaryDetailInteractable: Interactable {
+protocol DiaryDetailInteractable: Interactable, DiaryBottomSheetListener {
     var router: DiaryDetailRouting? { get set }
     var listener: DiaryDetailListener? { get set }
 }
@@ -17,10 +17,55 @@ protocol DiaryDetailViewControllable: ViewControllable {
 }
 
 final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDetailViewControllable>, DiaryDetailRouting {
+    
+    private let diaryBottomSheetBuildable: DiaryBottomSheetBuildable
+    private var diaryBottomSheetRouting: Routing?
 
     // TODO: Constructor inject child builder protocols to allow building children.
-    override init(interactor: DiaryDetailInteractable, viewController: DiaryDetailViewControllable) {
-        super.init(interactor: interactor, viewController: viewController)
+    init(
+        interactor: DiaryDetailInteractable,
+        viewController: DiaryDetailViewControllable,
+        diarybottomSheetBuildable: DiaryBottomSheetBuildable
+    ) {
+        self.diaryBottomSheetBuildable = diarybottomSheetBuildable
+        
+        super.init(
+            interactor: interactor,
+            viewController: viewController
+        )
         interactor.router = self
+    }
+    
+    // MARK: - BottomSheet
+
+    func attachBottomSheet(type: MenualBottomSheetType) {
+        if diaryBottomSheetRouting != nil {
+            return
+        }
+        
+        let router = diaryBottomSheetBuildable.build(
+            withListener: interactor,
+            bottomSheetType: type
+        )
+        
+        viewController.present(router.viewControllable,
+                               animated: false,
+                               completion: nil
+        )
+        router.viewControllable.uiviewController.modalPresentationStyle = .overFullScreen
+        
+        diaryBottomSheetRouting = router
+        attachChild(router)
+    }
+    
+    func detachBottomSheet() {
+        guard let router = diaryBottomSheetRouting,
+        let diaryBottomSheetRouter = router as? DiaryBottomSheetRouting else {
+            return
+        }
+        
+        diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
+        detachChild(router)
+        diaryBottomSheetRouting = nil
     }
 }

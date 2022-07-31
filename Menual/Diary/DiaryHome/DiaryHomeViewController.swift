@@ -26,6 +26,9 @@ protocol DiaryHomePresentableListener: AnyObject {
     
     func pressedMenualTitleBtn()
     
+    func pressedFilterBtn()
+    func pressedCalenderBtn()
+    
     var lastPageNumRelay: BehaviorRelay<Int> { get }
     var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> { get }
 }
@@ -281,11 +284,13 @@ extension DiaryHomeViewController {
     @objc
     func pressedLightCalenderBtn() {
         print("pressedLightCalenderBtn")
+        listener?.pressedCalenderBtn()
     }
     
     @objc
     func pressedFilterBtn() {
         print("pressedFilterBtn")
+        listener?.pressedFilterBtn()
     }
 }
 

@@ -205,7 +205,8 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     // MARK: - diaryTempSave
     
     func pressedTempSaveBtn() {
-        router?.attachDiaryTempSave()
+        // router?.attachDiaryTempSave()
+        pressedWeatherPlaceAddBtn(type: .place)
     }
     
     func diaryTempSavePressentBackBtn() {
