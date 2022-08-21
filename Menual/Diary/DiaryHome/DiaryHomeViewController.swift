@@ -45,6 +45,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     var cellsectionNumberDic: [String: Int] = [:]
     var cellsectionNumberDic2: [Int: Int] = [:]
     
+    var testSectionCount: Int = 0
+    
     // MARK: - UI 코드
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -231,8 +233,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                         sectionCount += 1
                     }
                 }
-                
-                print("for문 끝! sectionCount = \(sectionCount), sectionNameDic = \(self.sectionNameDic), cellSectionNumberDic = \(self.cellsectionNumberDic), cellsectionNumberDic2 = \(self.cellsectionNumberDic2)")
+                print("sectionCount = \(sectionCount)")
+                print("cell, for문 끝! sectionCount = \(sectionCount), sectionNameDic = \(self.sectionNameDic), cellSectionNumberDic = \(self.cellsectionNumberDic), cellsectionNumberDic2 = \(self.cellsectionNumberDic2)")
 
                 self.myMenualTableView.reloadData()
             })
@@ -334,26 +336,47 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
+        let defaultCell = UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return defaultCell }
+        
 
         cell.backgroundColor = .clear
 
-        guard let myMenualArr = listener?.getMyMenualArr() else { return UITableViewCell() }
-        
+        print("cell, ------------------")
         let index: Int = indexPath.row
         let section: Int = indexPath.section
-        print("section!! = \(section)")
-        let data = myMenualArr[index]
-
-        guard let sectionNumber: Int = cellsectionNumberDic[data.getSectionName()] else { return UITableViewCell() }
-
-        print("sectionNumber = \(sectionNumber), section = \(section)")
-        // TODO: - Index가 달라져서 생각해야할듯
-//        if sectionNumber != section {
-//            print("여기?")
-//            return UITableViewCell()
-//        }
+        print("cell, section!! = \(section), indexPath = \(indexPath), index = \(index), !!? \(sectionNameDic[section])")
+        // guard let data = myMenualArr[safe: index] else { return UITableViewCell() }
+        var data: DiaryModel?
         
+        guard let sectionName = sectionNameDic[section] else { return defaultCell }
+        // 연도 찾기
+        // 2022, 2023 등 Year Parsing
+        let yearRange = NSRange(sectionName.startIndex..<sectionName.index(sectionName.startIndex, offsetBy: 4), in: sectionName)
+        let year = (sectionName as NSString).substring(with: yearRange)
+        
+        // 달 찾기
+        // AUG, SEP 등 Month Parsing
+        let monthRange = NSRange(sectionName.index(sectionName.startIndex, offsetBy: 4)..<sectionName.index(sectionName.startIndex, offsetBy: 7), in: sectionName)
+        let month = (sectionName as NSString).substring(with: monthRange)
+        print("cell, year = \(year), month = \(month)")
+        
+        let diaryYearModelArr: [DiaryYearModel] = listener?.diaryMonthSetRelay.value ?? []
+        for diaryYearModel in diaryYearModelArr {
+            if diaryYearModel.year.description != year { continue }
+            print("cell, diaryYearmodel과 같은 year을 찾았습니다! = \(year)")
+            guard let diaryModelData: [DiaryModel] = diaryYearModel.months?.getMenualArr(MM: month) else { return defaultCell }
+
+            print("cell, diaryModelData를 찾았습니다. = \(diaryModelData)")
+            data = diaryModelData[safe: index]
+            
+        }
+        
+        guard let data = data,
+              let sectionNumber: Int = cellsectionNumberDic[data.getSectionName()]
+        else { return defaultCell }
+
+        print("cell, sectionNumber = \(sectionNumber), section = \(section)")
         
         if data.isHide {
             cell.listType = .hide
@@ -389,8 +412,23 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let sectionListHeader = ListHeader(type: .text, rightIconType: .none)
-        sectionListHeader.backgroundColor = .red
-        sectionListHeader.title = "2099.99.99"
+        sectionListHeader.backgroundColor = .black
+        sectionListHeader.title = "2022.08"
+        
+        print("section, section = \(section)")
+
+        guard let sectionNameFormat = sectionNameDic[section] else { return sectionListHeader }
+        
+        // 연도 변경
+        let yearRange = NSRange(sectionNameFormat.startIndex..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4), in: sectionNameFormat)
+        let year = (sectionNameFormat as NSString).substring(with: yearRange)
+        
+        // 월로 변경
+        let monthRange = NSRange(sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4)..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 7), in: sectionNameFormat)
+        let month = (sectionNameFormat as NSString).substring(with: monthRange).convertMonthName()
+
+        sectionListHeader.title = year + "." + month
+        
         return sectionListHeader
     }
     

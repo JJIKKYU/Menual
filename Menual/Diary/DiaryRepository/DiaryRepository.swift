@@ -175,8 +175,56 @@ public final class DiaryRepositoryImp: DiaryRepository {
         let placeHistoryResults = realm.objects(PlaceHistoryModelRealm.self)
         placeHistorySubject.accept(placeHistoryResults.map { PlaceHistoryModel($0) })
         
+        self.fetchDiary()
         self.fetchMonthDictionary()
         self.fetchDiarySearch()
+    }
+    
+    // MARK: - Diary Fetch
+    public func fetchDiary() {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        let diaryModelResults = realm.objects(DiaryModelRealm.self)
+        
+        var diaryYearModels: [DiaryYearModel] = []
+        
+        // 연도별 Diary 세팅
+        var beforeYear: String = "0"
+        for diary in diaryModelResults {
+            let curYear = diary.createdAt.toStringWithYYYY() // 2021, 2022 등으로 변경
+            if beforeYear == curYear { continue }
+            beforeYear = curYear
+
+            diaryYearModels.append(DiaryYearModel(year: Int(curYear) ?? 0, months: DiaryMonthModel()))
+        }
+
+        print("diaryYearModels = \(diaryYearModels)")
+        
+        // 달별 Diary 세팅
+        for index in diaryYearModels.indices {
+            // 같은 연도인 Diary만 Filter
+            let sortedDiaryModelResults = diaryModelResults.filter { $0.createdAt.toStringWithYYYY() == diaryYearModels[index].year.description }
+            
+            for diary in sortedDiaryModelResults {
+                let diaryMM = diary.createdAt.toStringWithMM() // 01, 02 등으로 변경
+                let diaryModel = DiaryModel(diary)
+
+                diaryYearModels[index].months?.updateCount(MM: diaryMM, diary: diaryModel)
+                // diaryYearModels[index].months?.addDiary(diary: diary)
+                diaryYearModels[index].months?.updateAllCount()
+            }
+
+            diaryYearModels[index].months?.sortDiary()
+        }
+        
+
+        let diaryYearSortedModels = diaryYearModels.sorted { $0.year > $1.year }
+        
+        print("diaryMonthModels = \(diaryYearModels)")
+        
+        self.diaryMonthDicSubject.accept(diaryYearSortedModels)
     }
     
     // MARK: - Diary CRUD
@@ -211,6 +259,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         diaryModelSubject.accept(result)
         self.fetchMonthDictionary()
+        self.fetchDiary()
         print("addDiary! - 3")
     }
     
@@ -332,6 +381,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     func fetchMonthDictionary() {
         print("fetchMonthDictionary")
+        /*
         guard let realm = Realm.safeInit() else {
             return
         }
@@ -379,6 +429,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         print("diaryMonthModels = \(diaryYearModels)")
         
         self.diaryMonthDicSubject.accept(diaryYearSortedModels)
+         */
     }
     
     // MARK: - 최근검색목록 로직 (SearchModel)

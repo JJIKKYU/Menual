@@ -21,63 +21,114 @@ public struct DiaryMonthModel {
     }
 
     var jan: Int = 0
+    var janDiary: [DiaryModel] = []
+
     var fab: Int = 0
+    var fabDiary: [DiaryModel] = []
+    
     var mar: Int = 0
+    var marDiary: [DiaryModel] = []
+    
     var apr: Int = 0
+    var aprDiary: [DiaryModel] = []
+    
     var may: Int = 0
+    var mayDiary: [DiaryModel] = []
+    
     var jun: Int = 0
+    var junDiary: [DiaryModel] = []
+    
     var jul: Int = 0
+    var julDiary: [DiaryModel] = []
+    
     var aug: Int = 0
+    var augDiary: [DiaryModel] = []
+    
     var sep: Int = 0
+    var sepDiary: [DiaryModel] = []
+    
     var oct: Int = 0
+    var octDiary: [DiaryModel] = []
+    
     var nov: Int = 0
+    var novDiary: [DiaryModel] = []
+    
     var dec: Int = 0
+    var decDiary: [DiaryModel] = []
     
     mutating func updateAllCount() {
         allCount += 1
     }
     
-    mutating func updateCount(MM: String) {
+    mutating func updateCount(MM: String, diary: DiaryModel) {
+        print("updatecount :: diary = \(diary)")
         switch MM {
         case "01":
-            if jan == 0 { monthCount += 1 }
+            // if jan == 0 { monthCount += 1 }
             jan += 1
+            janDiary.append(diary)
         case "02":
-            if fab == 0 { monthCount += 1 }
+            // if fab == 0 { monthCount += 1 }
             fab += 1
+            fabDiary.append(diary)
         case "03":
-            if mar == 0 { monthCount += 1 }
+            // if mar == 0 { monthCount += 1 }
             mar += 1
+            marDiary.append(diary)
         case "04":
-            if apr == 0 { monthCount += 1 }
+            // if apr == 0 { monthCount += 1 }
             apr += 1
+            aprDiary.append(diary)
         case "05":
-            if may == 0 { monthCount += 1 }
+            // if may == 0 { monthCount += 1 }
             may += 1
+            mayDiary.append(diary)
         case "06":
-            if jun == 0 { monthCount += 1 }
+            // if jun == 0 { monthCount += 1 }
             jun += 1
+            junDiary.append(diary)
         case "07":
-            if jul == 0 { monthCount += 1 }
+            // if jul == 0 { monthCount += 1 }
             jul += 1
+            julDiary.append(diary)
         case "08":
-            if aug == 0 { monthCount += 1 }
+            // if aug == 0 { monthCount += 1 }
             aug += 1
+            augDiary.append(diary)
         case "09":
-            if sep == 0 { monthCount += 1 }
+            // if sep == 0 { monthCount += 1 }
             sep += 1
+            sepDiary.append(diary)
         case "10":
-            if oct == 0 { monthCount += 1 }
+            // if oct == 0 { monthCount += 1 }
             oct += 1
+            octDiary.append(diary)
         case "11":
-            if nov == 0 { monthCount += 1 }
+            // if nov == 0 { monthCount += 1 }
             nov += 1
+            novDiary.append(diary)
         case "12":
-            if dec == 0 { monthCount += 1 }
+            // if dec == 0 { monthCount += 1 }
             dec += 1
+            decDiary.append(diary)
         default:
             break
         }
+    }
+    
+    mutating func sortDiary() {
+        janDiary.sort { $0.createdAt > $1.createdAt }
+        fabDiary.sort { $0.createdAt > $1.createdAt }
+        marDiary.sort { $0.createdAt > $1.createdAt }
+        aprDiary.sort { $0.createdAt > $1.createdAt }
+        mayDiary.sort { $0.createdAt > $1.createdAt }
+        junDiary.sort { $0.createdAt > $1.createdAt }
+        julDiary.sort { $0.createdAt > $1.createdAt }
+        augDiary.sort { $0.createdAt > $1.createdAt }
+        sepDiary.sort { $0.createdAt > $1.createdAt }
+        octDiary.sort { $0.createdAt > $1.createdAt }
+        novDiary.sort { $0.createdAt > $1.createdAt }
+        decDiary.sort { $0.createdAt > $1.createdAt }
     }
     
     func getMenualCountWithMonth(MM: String) -> Int {
@@ -109,6 +160,38 @@ public struct DiaryMonthModel {
             return dec
         default:
             return 0
+        }
+    }
+    
+    func getMenualArr(MM: String) -> [DiaryModel] {
+        let mm: String = MM.lowercased()
+        switch mm {
+        case "jan":
+            return janDiary
+        case "fab":
+            return fabDiary
+        case "mar":
+            return marDiary
+        case "apr":
+            return aprDiary
+        case "may":
+            return mayDiary
+        case "jun":
+            return junDiary
+        case "jul":
+            return julDiary
+        case "aug":
+            return augDiary
+        case "sep":
+            return sepDiary
+        case "oct":
+            return octDiary
+        case "nov":
+            return novDiary
+        case "dec":
+            return decDiary
+        default:
+            return []
         }
     }
     

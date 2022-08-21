@@ -103,7 +103,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             .subscribe(onNext: { [weak self] monthSet in
                 guard let self = self else { return }
                 print("monthSet 구독중! \(monthSet)")
-                // self.presenter.reloadTableView()
+                self.presenter.reloadTableView()
             })
             .disposed(by: disposebag)
 
