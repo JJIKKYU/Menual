@@ -424,6 +424,7 @@ extension DiaryDetailViewController {
         print("pressedSubmitReplyBtn")
         let text = replyBottomView.writedText
         listener?.pressedReplySubmitBtn(desc: text)
+        replyBottomView.replyTextView.text = ""
         DispatchQueue.main.async {
             self.replyTableView.reloadData()
         }
@@ -467,6 +468,8 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
               let replyNum = replies[safe: index]?.replyNum else { return UITableViewCell() }
 
         cell.backgroundColor = .clear
+        // cell이 클릭되지 않도록
+        cell.selectionStyle = .none
 //        cell.title = desc
         cell.replyText = desc
         cell.replyNum = replyNum
@@ -553,6 +556,34 @@ extension DiaryDetailViewController: UITextViewDelegate {
                     }
                 }
             }
+        default:
+            break
+        }
+    }
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        switch textView {
+        case replyBottomView.replyTextView:
+            guard let text = textView.text else { return false }
+            if text == "겹쓸내용을 입력해 주세요" {
+                textView.text = nil
+            }
+
+            return true
+
+        default:
+            return true
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        switch textView {
+        case replyBottomView.replyTextView:
+            guard let text = textView.text else { return }
+            if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                textView.text = "겹쓸내용을 입력해 주세요"
+            }
+
         default:
             break
         }

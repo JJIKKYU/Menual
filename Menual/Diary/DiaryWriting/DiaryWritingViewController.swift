@@ -505,14 +505,14 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             if weatherSelectView.selected == true {
                 
             }
-            if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && weatherSelectView.selected == false {
                 textView.text = "오늘 날씨는 어땠나요?"
                 textView.textColor = .lightGray
             }
             break
             
         case TextViewType.location.rawValue:
-            if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && locationSelectView.selected == false {
                 textView.text = "지금 장소는 어디신가요?"
                 textView.textColor = .lightGray
             }

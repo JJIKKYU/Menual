@@ -16,7 +16,7 @@ class ReplyBottomView: UIView {
     
     var writedText: String = ""
     
-    let replyTextView = UITextView().then {
+    var replyTextView = UITextView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isScrollEnabled = false
         $0.backgroundColor = Colors.grey.g700
