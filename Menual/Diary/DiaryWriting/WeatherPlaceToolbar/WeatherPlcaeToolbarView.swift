@@ -116,9 +116,11 @@ class WeatherPlcaeToolbarView: UIView {
         
         switch weatherPlaceType {
         case .weather:
+            print("WeatherPlcaeToolbarView :: .weather")
             weatherPlaceSelectView.weatherPlaceType = .weather
             titleLabel.text = "날씨는 어땠나요?"
         case .place:
+            print("WeatherPlcaeToolbarView :: .place")
             weatherPlaceSelectView.weatherPlaceType = .place
             titleLabel.text = "지금 장소는 어디신가요?"
         }

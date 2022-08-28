@@ -78,6 +78,7 @@ class WeatherLocationSelectView: UIView {
     
     convenience init(type: SelectedWeatherLocationType) {
         self.init()
+        print("WeatherLocationSelectView :: init! type = \(type)")
         self.selectedWeatherLocationType = type
         print("!! selectedWeatherLocationType \(selectedWeatherLocationType)")
     }

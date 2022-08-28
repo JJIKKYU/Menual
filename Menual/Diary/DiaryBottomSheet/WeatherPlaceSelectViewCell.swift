@@ -88,7 +88,10 @@ class WeatherPlaceSelectViewCell: UICollectionViewCell {
             wrappedView.backgroundColor = Colors.grey.g700
         }
         
-        if let placeIconType = placeIconType {
+        if weatherPlaceSelectViewCellType == .place,
+           let placeIconType = placeIconType {
+
+            print("WeatherPlaceSelectViewCell :: placeIconType = \(placeIconType)")
             self.placeIconType = placeIconType
             switch placeIconType {
             case .place:
@@ -104,7 +107,10 @@ class WeatherPlaceSelectViewCell: UICollectionViewCell {
             }
         }
         
-        if let weatherIconType = weatherIconType {
+        if weatherPlaceSelectViewCellType == .weather,
+           let weatherIconType = weatherIconType {
+
+            print("WeatherPlaceSelectViewCell :: weatherIconType = \(weatherIconType)")
             switch weatherIconType {
             case .sun:
                 buttonImageView.image = Asset._24px.Weather.sun.image.withRenderingMode(.alwaysTemplate)
