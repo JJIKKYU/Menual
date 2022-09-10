@@ -27,7 +27,7 @@ protocol DiaryHomePresentableListener: AnyObject {
     func pressedMenualTitleBtn()
     
     func pressedFilterBtn()
-    func pressedCalenderBtn()
+    func pressedDateFilterBtn()
     
     var lastPageNumRelay: BehaviorRelay<Int> { get }
     var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> { get }
@@ -101,7 +101,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     lazy var myMenualTitleView = ListHeader(type: .main, rightIconType: .filterAndCalender).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "MY MENUAL"
-        $0.rightCalenderBtn.addTarget(self, action: #selector(pressedLightCalenderBtn), for: .touchUpInside)
+        $0.rightCalenderBtn.addTarget(self, action: #selector(pressedDateFilterBtn), for: .touchUpInside)
         $0.rightFilterBtn.addTarget(self, action: #selector(pressedFilterBtn), for: .touchUpInside)
     }
     
@@ -284,9 +284,9 @@ extension DiaryHomeViewController {
     }
     
     @objc
-    func pressedLightCalenderBtn() {
+    func pressedDateFilterBtn() {
         print("pressedLightCalenderBtn")
-        listener?.pressedCalenderBtn()
+        listener?.pressedDateFilterBtn()
     }
     
     @objc

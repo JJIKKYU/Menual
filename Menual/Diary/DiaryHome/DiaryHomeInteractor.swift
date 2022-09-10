@@ -228,7 +228,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         router?.attachBottomSheet(type: .filter)
     }
     
-    func pressedCalenderBtn() {
-        router?.attachBottomSheet(type: .calender)
+    func pressedDateFilterBtn() {
+        router?.attachBottomSheet(type: .dateFilter)
     }
 }

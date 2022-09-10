@@ -29,6 +29,7 @@ enum MenualBottomSheetType {
     case calender
     case reminder
     case filter
+    case dateFilter
 }
 
 protocol DiaryBottomSheetPresentableListener: AnyObject {
@@ -129,6 +130,18 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         $0.isHidden = true
     }
     
+    // 필터 컴포넌트
+    private lazy var filterComponentView = MenualBottomSheetFilterComponentView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isHidden = true
+    }
+    
+    // 날짜 필터 컴포넌트
+    private lazy var dateFilterComponentView = MenualDateFilterComponentView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isHidden = true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setViews()
@@ -205,6 +218,8 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         // 타입별 컴포넌트 SetViews
         bottomSheetView.addSubview(weatherPlaceSelectView)
         bottomSheetView.addSubview(menuComponentView)
+        bottomSheetView.addSubview(filterComponentView)
+        bottomSheetView.addSubview(dateFilterComponentView)
 
         weatherPlaceSelectView.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
@@ -216,6 +231,17 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(self.divider.snp.bottom).offset(20)
+        }
+        
+        filterComponentView.snp.makeConstraints { make in
+            make.leading.width.equalToSuperview()
+            make.top.equalTo(self.divider.snp.bottom).offset(27)
+        }
+        
+        dateFilterComponentView.snp.makeConstraints { make in
+            make.top.equalTo(self.divider.snp.bottom).offset(64)
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
         }
     }
     
@@ -266,10 +292,19 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .filter:
-            bottomSheetTitle = "필터"
+            filterComponentView.isHidden = false
+            menualBottomSheetRightBtnType = .close
+            rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
+            
+        case .dateFilter:
+            dateFilterComponentView.isHidden = false
+            menualBottomSheetRightBtnType = .close
+            rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .calender:
             bottomSheetTitle = "날짜"
+            
+        
         }
     }
     
@@ -447,7 +482,7 @@ extension DiaryBottomSheetViewController {
             bottomSheetTitle = "날짜"
             bottomSheetHeight = 375
             
-        case .filter:
+        case .filter, .dateFilter:
             bottomSheetTitle = "필터"
             bottomSheetHeight = 392
             
