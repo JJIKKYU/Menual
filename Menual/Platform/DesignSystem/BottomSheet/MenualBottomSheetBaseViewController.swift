@@ -5,29 +5,30 @@
 //  Created by 정진균 on 2022/04/23.
 //
 
+/*
 import Foundation
 import Then
 import SnapKit
 
-enum MenualBottomSheetRightBtnType {
-    case close
-    case check
-}
-
-enum MenualBottomSheetRightBtnIsActivate {
-    case activate
-    case unActivate
-    case _default
-}
-
-enum MenualBottomSheetType {
-    case weather
-    case place
-    case menu
-    case calender
-    case reminder
-    case filter
-}
+//enum MenualBottomSheetRightBtnType {
+//    case close
+//    case check
+//}
+//
+//enum MenualBottomSheetRightBtnIsActivate {
+//    case activate
+//    case unActivate
+//    case _default
+//}
+//
+//enum MenualBottomSheetType {
+//    case weather
+//    case place
+//    case menu
+//    case calender
+//    case reminder
+//    case filter
+//}
 
 protocol MenualBottomSheetBaseDelegate {
     // 애니메이션이 모두 끝나고 dismissed 될때 호출
@@ -35,21 +36,21 @@ protocol MenualBottomSheetBaseDelegate {
 }
 
 class MenualBottomSheetBaseViewController: UIViewController {
-    internal var bottomSheetTitle: String = "" {
-        didSet { layoutUpdate() }
-    }
+//    internal var bottomSheetTitle: String = "" {
+//        didSet { layoutUpdate() }
+//    }
+//
+//    internal var menualBottomSheetRightBtnType: MenualBottomSheetRightBtnType = .close {
+//        didSet { layoutUpdate() }
+//    }
+//
+//    internal var menualBottomSheetRightBtnIsActivate: MenualBottomSheetRightBtnIsActivate = .unActivate {
+//        didSet { layoutUpdate() }
+//    }
     
-    internal var menualBottomSheetRightBtnType: MenualBottomSheetRightBtnType = .close {
-        didSet { layoutUpdate() }
-    }
-    
-    internal var menualBottomSheetRightBtnIsActivate: MenualBottomSheetRightBtnIsActivate = .unActivate {
-        didSet { layoutUpdate() }
-    }
-    
-    internal var menualBottomSheetType: MenualBottomSheetType = .weather {
-        didSet { menualBottomSheetTypeLayoutUpdate() }
-    }
+//    internal var menualBottomSheetType: MenualBottomSheetType = .weather {
+//        didSet { menualBottomSheetTypeLayoutUpdate() }
+//    }
     
     lazy private var dimmedView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -146,74 +147,74 @@ class MenualBottomSheetBaseViewController: UIViewController {
         }
     }
     
-    @objc
-    internal func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
-        hideBottomSheetAndGoBack()
-    }
+//    @objc
+//    internal func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
+//        hideBottomSheetAndGoBack()
+//    }
     
-    internal func hideBottomSheetAndGoBack() {
-        bottomSheetView.snp.remakeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.top.equalTo(view.snp.bottom)
-        }
-        
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
-            self.dimmedView.alpha = 0
-            self.view.layoutIfNeeded()
-        } completion: { [weak self] isShow in
-            guard let self = self else { return }
-            print("bottomSheet isHide!")
-            self.delegate?.dismissedBottomSheet()
-        }
-    }
+//    internal func hideBottomSheetAndGoBack() {
+//        bottomSheetView.snp.remakeConstraints { make in
+//            make.leading.equalToSuperview()
+//            make.width.equalToSuperview()
+//            make.bottom.equalToSuperview().offset(bottomSheetHeight)
+//            make.top.equalTo(view.snp.bottom)
+//        }
+//
+//        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
+//            self.dimmedView.alpha = 0
+//            self.view.layoutIfNeeded()
+//        } completion: { [weak self] isShow in
+//            guard let self = self else { return }
+//            print("bottomSheet isHide!")
+//            self.delegate?.dismissedBottomSheet()
+//        }
+//    }
+//
+//    internal func showBottomSheet() {
+//        let safeAreaHeight: CGFloat = view.safeAreaLayoutGuide.layoutFrame.height
+//        let bottomPadding: CGFloat = view.safeAreaInsets.bottom
+//        print("safeAreaHeight = \(safeAreaHeight), bottomPadding = \(bottomPadding)")
+//        bottomSheetView.snp.remakeConstraints { make in
+//            make.leading.equalToSuperview()
+//            make.width.equalToSuperview()
+//            make.bottom.equalToSuperview()
+//            make.top.equalTo(view.snp.bottom).inset(bottomSheetHeight)
+//        }
+//
+//        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut) {
+//            self.view.alpha = 1
+//            self.dimmedView.alpha = 0.1
+//            self.view.layoutIfNeeded()
+//        } completion: { isShow in
+//            print("bottomSheet isShow!")
+//        }
+//    }
     
-    internal func showBottomSheet() {
-        let safeAreaHeight: CGFloat = view.safeAreaLayoutGuide.layoutFrame.height
-        let bottomPadding: CGFloat = view.safeAreaInsets.bottom
-        print("safeAreaHeight = \(safeAreaHeight), bottomPadding = \(bottomPadding)")
-        
-        bottomSheetView.snp.remakeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.top.equalTo(view.snp.bottom).inset(bottomSheetHeight)
-        }
-        
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut) {
-            self.dimmedView.alpha = 0.1
-            self.view.layoutIfNeeded()
-        } completion: { isShow in
-            print("bottomSheet isShow!")
-        }
-    }
-    
-    func layoutUpdate() {
-        titleLabel.text = bottomSheetTitle
-        
-        switch menualBottomSheetRightBtnType {
-        case .close:
-            rightBtn.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
-            
-        case .check:
-            rightBtn.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        }
-        
-        switch menualBottomSheetRightBtnIsActivate {
-        case .unActivate:
-            rightBtn.tintColor = Colors.grey.g600
-            rightBtn.isUserInteractionEnabled = false
-            
-        case .activate:
-            rightBtn.tintColor = Colors.tint.sub.n400
-            rightBtn.isUserInteractionEnabled = true
-            
-        case ._default:
-            rightBtn.tintColor = Colors.grey.g600
-            rightBtn.isUserInteractionEnabled = true
-        }
-    }
+//    func layoutUpdate() {
+//        titleLabel.text = bottomSheetTitle
+//
+//        switch menualBottomSheetRightBtnType {
+//        case .close:
+//            rightBtn.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
+//
+//        case .check:
+//            rightBtn.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+//        }
+//
+//        switch menualBottomSheetRightBtnIsActivate {
+//        case .unActivate:
+//            rightBtn.tintColor = Colors.grey.g600
+//            rightBtn.isUserInteractionEnabled = false
+//
+//        case .activate:
+//            rightBtn.tintColor = Colors.tint.sub.n400
+//            rightBtn.isUserInteractionEnabled = true
+//
+//        case ._default:
+//            rightBtn.tintColor = Colors.grey.g600
+//            rightBtn.isUserInteractionEnabled = true
+//        }
+//    }
     
     func menualBottomSheetTypeLayoutUpdate() {
         print("!!! \(menualBottomSheetType)")
@@ -244,3 +245,5 @@ class MenualBottomSheetBaseViewController: UIViewController {
         }
     }
 }
+
+*/

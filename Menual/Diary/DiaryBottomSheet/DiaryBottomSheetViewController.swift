@@ -11,6 +11,26 @@ import SnapKit
 import RxRelay
 import UIKit
 
+enum MenualBottomSheetRightBtnType {
+    case close
+    case check
+}
+
+enum MenualBottomSheetRightBtnIsActivate {
+    case activate
+    case unActivate
+    case _default
+}
+
+enum MenualBottomSheetType {
+    case weather
+    case place
+    case menu
+    case calender
+    case reminder
+    case filter
+}
+
 protocol DiaryBottomSheetPresentableListener: AnyObject {
     
     func pressedCloseBtn()
@@ -26,11 +46,45 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     func pressedWriteBtn()
 }
 
-final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController, DiaryBottomSheetPresentable, DiaryBottomSheetViewControllable {
+final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPresentable, DiaryBottomSheetViewControllable {
     
     weak var listener: DiaryBottomSheetPresentableListener?
     var disposeBag = DisposeBag()
     var keyHeight: CGFloat?
+    public var bottomSheetHeight: CGFloat = 400
+    
+    var bottomSheetTitle: String = "" {
+        didSet { layoutUpdate() }
+    }
+    
+    var menualBottomSheetRightBtnType: MenualBottomSheetRightBtnType = .close {
+        didSet { layoutUpdate() }
+    }
+    
+    var menualBottomSheetRightBtnIsActivate: MenualBottomSheetRightBtnIsActivate = .unActivate {
+        didSet { layoutUpdate() }
+    }
+    
+    var menualBottomSheetType: MenualBottomSheetType = .weather {
+        didSet { menualBottomSheetTypeLayoutUpdate() }
+    }
+    
+    lazy private var dimmedView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = Colors.background.withAlphaComponent(0.7)
+        $0.alpha = 0
+        
+        let dimmedTap = UITapGestureRecognizer(target: self, action: #selector(dimmedViewTapped))
+        $0.addGestureRecognizer(dimmedTap)
+        $0.isUserInteractionEnabled = true
+    }
+    
+    private let titleLabel = UILabel().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = UIFont.AppTitle(.title_3)
+        $0.textColor = Colors.grey.g100
+        $0.text = "날씨를 선택해 주세요"
+    }
     
     lazy var addBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -42,9 +96,36 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         $0.AppCorner(.tiny)
     }
     
+    var rightBtn = UIButton().then {
+        $0.contentMode = .scaleAspectFit
+        $0.contentHorizontalAlignment = .fill
+        $0.contentVerticalAlignment = .fill
+        $0.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.tintColor = Colors.grey.g600
+        $0.isHidden = true
+    }
+    
+    let divider = Divider(type: ._1px).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = Colors.grey.g700
+    }
+    
+    let bottomSheetView = UIView().then {
+        $0.backgroundColor = .white
+        $0.layer.cornerRadius = 10
+        $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        $0.clipsToBounds = true
+    }
+    
     private lazy var weatherPlaceSelectView = WeatherPlaceSelectView(type: .place).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
+        $0.isHidden = true
+    }
+    
+    // 메뉴 컴포넌트
+    private lazy var menuComponentView = MenualBottomSheetMenuComponentView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isHidden = true
     }
     
@@ -58,25 +139,84 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        // showBottomSheet()
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        super.delegate = nil
+        // super.delegate = nil
         weatherPlaceSelectView.delegate = nil
         listener?.pressedCloseBtn()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.view.layoutIfNeeded()
+        showBottomSheet()
+    }
+    
     func setViews() {
-        super.delegate = self
+        // super.delegate = self
         
-        view.addSubview(weatherPlaceSelectView)
+        // 기본 컴포넌트 SetViews
+        view.addSubview(dimmedView)
+        view.addSubview(bottomSheetView)
+        bottomSheetView.addSubview(titleLabel)
+        bottomSheetView.addSubview(rightBtn)
+        bottomSheetView.addSubview(divider)
         
+        dimmedView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+
+        bottomSheetView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.top.equalTo(view.snp.bottom)
+        }
+        
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(24)
+            make.top.equalToSuperview().inset(26)
+            make.height.equalTo(20)
+        }
+        
+        rightBtn.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(24)
+            make.top.equalToSuperview().offset(24)
+            make.width.height.equalTo(24)
+        }
+        
+        divider.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(titleLabel.snp.bottom).offset(16)
+            make.height.equalTo(2)
+        }
+        
+        // 타입별 컴포넌트 SetViews
+        bottomSheetView.addSubview(weatherPlaceSelectView)
+        bottomSheetView.addSubview(menuComponentView)
+
         weatherPlaceSelectView.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
             make.height.equalTo(32)
-            make.top.equalTo(super.divider.snp.bottom).offset(16)
+            make.top.equalTo(self.divider.snp.bottom).offset(16)
         }
 
+        menuComponentView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(self.divider.snp.bottom).offset(20)
+        }
     }
     
     func bind() {
@@ -93,7 +233,7 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
     }
     
     @objc
-    override func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
+    func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
          hideBottomSheetAndGoBack()
          resignFirstResponder()
     }
@@ -106,18 +246,24 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
         case .weather:
             weatherPlaceSelectView.isHidden = false
             weatherPlaceSelectView.weatherPlaceType = .weather
-            super.rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
+            rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
+            rightBtn.isHidden = false
             
         case .place:
             weatherPlaceSelectView.isHidden = false
             weatherPlaceSelectView.weatherPlaceType = .place
-            super.rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
+            rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
+            rightBtn.isHidden = false
             
         case .reminder:
             bottomSheetTitle = "리마인더 알림"
             
         case .menu:
             bottomSheetTitle = "메뉴"
+            print("bottomsheet :: 메뉴입니다.")
+            menuComponentView.isHidden = false
+            menualBottomSheetRightBtnType = .close
+            rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .filter:
             bottomSheetTitle = "필터"
@@ -126,14 +272,53 @@ final class DiaryBottomSheetViewController: MenualBottomSheetBaseViewController,
             bottomSheetTitle = "날짜"
         }
     }
+    
+    func layoutUpdate() {
+        titleLabel.text = bottomSheetTitle
+        
+        switch menualBottomSheetRightBtnType {
+        case .close:
+            rightBtn.tintColor = Colors.grey.g200
+            rightBtn.isHidden = false
+            rightBtn.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            
+            switch menualBottomSheetRightBtnIsActivate {
+            // Close 버튼은 항상 활성화 되어 있어야 하므로 항상 true
+            case .unActivate, ._default:
+                rightBtn.tintColor = Colors.grey.g200
+                rightBtn.isUserInteractionEnabled = true
+                
+            case .activate:
+                rightBtn.tintColor = Colors.tint.sub.n400
+                rightBtn.isUserInteractionEnabled = true
+            }
+            
+        case .check:
+            rightBtn.isHidden = false
+            rightBtn.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            
+            switch menualBottomSheetRightBtnIsActivate {
+            case .unActivate:
+                rightBtn.tintColor = Colors.grey.g600
+                rightBtn.isUserInteractionEnabled = false
+                
+            case .activate:
+                rightBtn.tintColor = Colors.tint.sub.n400
+                rightBtn.isUserInteractionEnabled = true
+                
+            case ._default:
+                rightBtn.tintColor = Colors.grey.g600
+                rightBtn.isUserInteractionEnabled = true
+            }
+        }
+    }
 }
 
 // MARK: - MenualBottomSheetBaseDelegate
-extension DiaryBottomSheetViewController: MenualBottomSheetBaseDelegate {
+extension DiaryBottomSheetViewController {
     // 부모 뷰가 애니메이션이 모두 끝났을 경우 Delegate 전달 받으면 그때 Router에서 RIB 해제
     func dismissedBottomSheet() {
         print("이때 라우터 호출할래?")
-        super.delegate = nil
         weatherPlaceSelectView.delegate = nil
         listener?.pressedCloseBtn()
     }
@@ -162,12 +347,17 @@ extension DiaryBottomSheetViewController {
     @objc
     func pressedAddBtn() {
         print("TODO :: pressedAddBtn!!")
-        super.delegate = nil
+        // super.delegate = nil
         weatherPlaceSelectView.delegate = nil
 
         hideBottomSheetAndGoBack()
         resignFirstResponder()
         listener?.pressedWriteBtn()
+    }
+    
+    @objc
+    func closeBottomSheet() {
+        hideBottomSheetAndGoBack()
     }
 }
 
@@ -183,9 +373,9 @@ extension DiaryBottomSheetViewController: WeatherPlaceSelectViewDelegate {
         print("isSelected! = \(isSelected)")
         switch isSelected {
         case true:
-            super.menualBottomSheetRightBtnIsActivate = .activate
+            menualBottomSheetRightBtnIsActivate = .activate
         case false:
-            super.menualBottomSheetRightBtnIsActivate = .unActivate
+            menualBottomSheetRightBtnIsActivate = .unActivate
         }
     }
     
@@ -200,4 +390,75 @@ extension DiaryBottomSheetViewController: WeatherPlaceSelectViewDelegate {
         print("placeSendData = \(placeType)")
         listener?.updatePlace(place: placeType)
     }
+}
+
+// MARK: - Bottom Sheet 기본 컴포넌트
+extension DiaryBottomSheetViewController {
+    func hideBottomSheetAndGoBack() {
+        bottomSheetView.snp.remakeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.top.equalTo(self.view.snp.bottom)
+        }
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
+            self.dimmedView.alpha = 0
+            self.view.layoutIfNeeded()
+        } completion: { [weak self] isShow in
+            guard let self = self else { return }
+            print("bottomSheet isHide!")
+            // self.delegate?.dismissedBottomSheet()
+            self.dismissedBottomSheet()
+        }
+    }
+    
+    func showBottomSheet() {
+        let safeAreaHeight: CGFloat = view.safeAreaLayoutGuide.layoutFrame.height
+        let bottomPadding: CGFloat = view.safeAreaInsets.bottom
+        print("safeAreaHeight = \(safeAreaHeight), bottomPadding = \(bottomPadding)")
+        bottomSheetView.snp.remakeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.top.equalTo(view.snp.bottom).inset(bottomSheetHeight)
+        }
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
+            self.dimmedView.alpha = 0.1
+            self.view.layoutIfNeeded()
+        } completion: { isShow in
+            print("bottomSheet isShow!")
+        }
+    }
+    
+    func menualBottomSheetTypeLayoutUpdate() {
+        print("!!! \(menualBottomSheetType)")
+        switch menualBottomSheetType {
+        case .weather:
+            bottomSheetTitle = "날씨를 선택해 주세요"
+            bottomSheetHeight = 130
+            
+        case .place:
+            bottomSheetTitle = "장소를 선택해 주세요"
+            bottomSheetHeight = 130
+
+        case .calender:
+            bottomSheetTitle = "날짜"
+            bottomSheetHeight = 375
+            
+        case .filter:
+            bottomSheetTitle = "필터"
+            bottomSheetHeight = 392
+            
+        case .menu:
+            bottomSheetTitle = "메뉴"
+            bottomSheetHeight = 328
+            
+        case .reminder:
+            bottomSheetTitle = "리마인더 알림"
+            bottomSheetHeight = 592
+        }
+    }
+
 }
