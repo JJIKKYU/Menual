@@ -11,7 +11,7 @@ import Then
 
 class MenualBottomSheetFilterComponentView: UIView {
     
-    private let weatherTitleBtn = UIButton().then {
+    public lazy var weatherTitleBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("날씨", for: .normal)
         $0.titleLabel?.font = UIFont.AppTitle(.title_2)
@@ -19,6 +19,7 @@ class MenualBottomSheetFilterComponentView: UIView {
         $0.setImage(Asset._24px.Circle.Check.active.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g600
         $0.marginImageWithText(margin: 4)
+//        $0.isUserInteractionEnabled = true
     }
     
     private let weatherSelectNumTitle = UILabel().then {
@@ -28,8 +29,10 @@ class MenualBottomSheetFilterComponentView: UIView {
         $0.text = "0개 선택"
     }
     
-    private let weatherSelectView = WeatherPlaceSelectView(type: .weather).then {
+    private lazy var weatherSelectView = WeatherPlaceSelectView(type: .weather).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+//        $0.isUserInteractionEnabled = true
+        $0.delegate = self
     }
     
     private let placeTitleBtn = UIButton().then {
@@ -51,6 +54,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     
     private let placeSelectView = WeatherPlaceSelectView(type: .place).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+//        $0.isUserInteractionEnabled = false
     }
     
     private let resetBtn = UIButton().then {
@@ -66,7 +70,7 @@ class MenualBottomSheetFilterComponentView: UIView {
         $0.marginImageWithText(margin: 4)
     }
     
-    private let filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
+    public lazy var filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
         $0.title = "텍스트"
     }
 
@@ -145,4 +149,21 @@ class MenualBottomSheetFilterComponentView: UIView {
         super.layoutSubviews()
     }
 
+}
+
+// MARK: - WeatherPlaceSelectViewDelegate
+extension MenualBottomSheetFilterComponentView: WeatherPlaceSelectViewDelegate{
+    func isSelected(_ isSelected: Bool) {
+        print("isSelected!")
+    }
+    
+    func weatherSendData(weatherType: Weather) {
+        print("weatherSendData! - \(weatherType)")
+    }
+    
+    func placeSendData(placeType: Place) {
+        print("placeSendData! - \(placeType)")
+    }
+    
+    
 }

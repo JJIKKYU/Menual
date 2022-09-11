@@ -75,8 +75,8 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         $0.backgroundColor = Colors.background.withAlphaComponent(0.7)
         $0.alpha = 0
         
-        let dimmedTap = UITapGestureRecognizer(target: self, action: #selector(dimmedViewTapped))
-        $0.addGestureRecognizer(dimmedTap)
+        // let dimmedTap = UITapGestureRecognizer(target: self, action: #selector(dimmedViewTapped))
+        // $0.addGestureRecognizer(dimmedTap)
         $0.isUserInteractionEnabled = true
     }
     
@@ -112,10 +112,12 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     }
     
     let bottomSheetView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .white
         $0.layer.cornerRadius = 10
         $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.clipsToBounds = true
+        $0.isUserInteractionEnabled = true
     }
     
     private lazy var weatherPlaceSelectView = WeatherPlaceSelectView(type: .place).then {
@@ -126,14 +128,17 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     
     // 메뉴 컴포넌트
     private lazy var menuComponentView = MenualBottomSheetMenuComponentView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.translatesAutoresizingMaskIntoConstraints = true
         $0.isHidden = true
     }
     
     // 필터 컴포넌트
     private lazy var filterComponentView = MenualBottomSheetFilterComponentView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+//        $0.isUserInteractionEnabled = false
         $0.isHidden = true
+        $0.weatherTitleBtn.addTarget(self, action: #selector(pressedWeatherTitleBtn), for: .touchUpInside)
+        $0.filterBtn.addTarget(self, action: #selector(pressedWeatherTitleBtn), for: .touchUpInside)
     }
     
     // 날짜 필터 컴포넌트
@@ -216,33 +221,34 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         }
         
         // 타입별 컴포넌트 SetViews
-        bottomSheetView.addSubview(weatherPlaceSelectView)
-        bottomSheetView.addSubview(menuComponentView)
+//        bottomSheetView.addSubview(weatherPlaceSelectView)
+//        bottomSheetView.addSubview(menuComponentView)
         bottomSheetView.addSubview(filterComponentView)
-        bottomSheetView.addSubview(dateFilterComponentView)
+//        bottomSheetView.addSubview(dateFilterComponentView)
 
-        weatherPlaceSelectView.snp.makeConstraints { make in
-            make.leading.width.equalToSuperview()
-            make.height.equalTo(32)
-            make.top.equalTo(self.divider.snp.bottom).offset(16)
-        }
+//        weatherPlaceSelectView.snp.makeConstraints { make in
+//            make.leading.width.equalToSuperview()
+//            make.height.equalTo(32)
+//            make.top.equalTo(self.divider.snp.bottom).offset(16)
+//        }
 
-        menuComponentView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(self.divider.snp.bottom).offset(20)
-        }
-        
+//        menuComponentView.snp.makeConstraints { make in
+//            make.leading.equalToSuperview().offset(20)
+//            make.width.equalToSuperview().inset(20)
+//            make.top.equalTo(self.divider.snp.bottom).offset(20)
+//        }
+//
         filterComponentView.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
             make.top.equalTo(self.divider.snp.bottom).offset(27)
+            make.height.equalTo(260)
         }
-        
-        dateFilterComponentView.snp.makeConstraints { make in
-            make.top.equalTo(self.divider.snp.bottom).offset(64)
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-        }
+//
+//        dateFilterComponentView.snp.makeConstraints { make in
+//            make.top.equalTo(self.divider.snp.bottom).offset(64)
+//            make.leading.equalToSuperview().offset(20)
+//            make.width.equalToSuperview().inset(20)
+//        }
     }
     
     func bind() {
@@ -496,4 +502,20 @@ extension DiaryBottomSheetViewController {
         }
     }
 
+}
+
+// MARK: - MenualBottomSheetFilterComponentView
+extension DiaryBottomSheetViewController {
+    @objc
+    func pressedWeatherTitleBtn() {
+        print("pressedWeatherTitleBtn")
+    }
+}
+
+
+// MARK: - Debugging
+extension DiaryBottomSheetViewController {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print(#function)
+    }
 }
