@@ -25,6 +25,8 @@ enum ListStatus {
 
 class ListCell: UITableViewCell {
     
+    var testModel: DiaryModel?
+    
     // 현재 정보를 담고 있는 게시글의 UUID
     // Search 후에 필요한 정보를 임시로 담고 있도록
     var uuid: String = ""

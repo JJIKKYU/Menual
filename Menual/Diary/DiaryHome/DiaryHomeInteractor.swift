@@ -106,6 +106,13 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 guard let self = self else { return }
                 print("filteredDiaryString 구독 중!, diary = \(diaryArr)")
                 print("<- reloadTableView")
+
+                var menualCount: Int = 0
+                for month in diaryArr {
+                    menualCount += month.months?.allCount ?? 0
+                }
+                
+                self.lastPageNumRelay.accept(menualCount)
                 self.presenter.reloadTableView(isFiltered: true)
             })
             .disposed(by: disposebag)
@@ -115,6 +122,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             .subscribe(onNext: { [weak self] monthSet in
                 guard let self = self else { return }
                 print("monthSet 구독중! \(monthSet)")
+                
                 self.presenter.reloadTableView(isFiltered: false)
             })
             .disposed(by: disposebag)
@@ -193,39 +201,41 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     }
     
     // MARK: - Diary detaill 관련 함수
-    
-    func pressedDiaryCell(index: Int, isFiltered: Bool) {
-        var updateModel: DiaryModel?
+    func pressedDiaryCell(diaryModel: DiaryModel) {
         
-        if isFiltered {
-            print("필터 클릭하면 작동되도록 하자")
-            
-        } else {
-            guard let model = dependency.diaryRepository
-                .diaryString.value[safe: index] else { return }
-            
-            updateModel = DiaryModel(uuid: model.uuid,
-                                         pageNum: model.pageNum,
-                                         title: model.title,
-                                         weather: model.weather,
-                                         place: model.place,
-                                         description: model.description,
-                                         image: model.image,
-                                         readCount: model.readCount + 1,
-                                         createdAt: model.createdAt,
-                                         replies: model.replies,
-                                         isDeleted: model.isDeleted,
-                                         isHide: model.isHide
-            )
-        }
-        
-        guard let updateModel = updateModel else {
-            return
-        }
+        router?.attachDiaryDetail(model: diaryModel)
 
-        dependency.diaryRepository
-            .updateDiary(info: updateModel)
-        router?.attachDiaryDetail(model: updateModel)
+//        var updateModel: DiaryModel?
+        
+//        if isFiltered {
+//            print("필터 클릭하면 작동되도록 하자")
+//
+//        } else {
+//            guard let model = dependency.diaryRepository
+//                .diaryString.value[safe: index] else { return }
+//
+//            updateModel = DiaryModel(uuid: model.uuid,
+//                                         pageNum: model.pageNum,
+//                                         title: model.title,
+//                                         weather: model.weather,
+//                                         place: model.place,
+//                                         description: model.description,
+//                                         image: model.image,
+//                                         readCount: model.readCount + 1,
+//                                         createdAt: model.createdAt,
+//                                         replies: model.replies,
+//                                         isDeleted: model.isDeleted,
+//                                         isHide: model.isHide
+//            )
+//        }
+//
+//        guard let updateModel = updateModel else {
+//            return
+//        }
+//
+//        dependency.diaryRepository
+//            .updateDiary(info: updateModel)
+//        router?.attachDiaryDetail(model: updateModel)
     }
     
     func diaryDetailPressedBackBtn(isOnlyDetach: Bool) {

@@ -22,7 +22,7 @@ protocol DiaryHomePresentableListener: AnyObject {
     func getMyMenualCount() -> Int
     func getMyMenualArr() -> [DiaryModel]
     
-    func pressedDiaryCell(index: Int, isFiltered: Bool)
+    func pressedDiaryCell(diaryModel: DiaryModel)
     
     func pressedMenualTitleBtn()
     
@@ -38,14 +38,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     weak var listener: DiaryHomePresentableListener?
     // 스크롤 위치 저장하는 Dictionary
-    var myMenualCellIndexPathDic: [String: [String: IndexPath]]?
     var disposeBag = DisposeBag()
     
     var sectionNameDic: [Int: String] = [:]
-    var sectionNameDic2: [Int: [String: Int]] = [:]
     
     var filteredSectionNameDic: [Int: String] = [:]
-    var filteredSectionNameDic2: [Int: [String: Int]] = [:]
     
     var cellsectionNumberDic: [String: Int] = [:]
     var cellsectionNumberDic2: [Int: Int] = [:]
@@ -53,7 +50,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     var filteredCellsectionNumberDic: [String: Int] = [:]
     var filteredCellsectionNumberDic2: [Int: Int] = [:]
     
-    var testSectionCount: Int = 0
     var isFiltered: Bool = false
     
     // MARK: - UI 코드
@@ -218,8 +214,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             .subscribe(onNext: { [weak self] num in
                 guard let self = self else { return }
                 print("num!! = \(num)")
-                self.fabWriteBtn.title = String(num + 1) + "번째 메뉴얼 작성하기"
-                self.myMenualTitleView.pageNumber = num
+                if self.isFiltered {
+                    self.myMenualTitleView.pageNumber = num
+                } else {
+                    self.fabWriteBtn.title = String(num + 1) + "번째 메뉴얼 작성하기"
+                    self.myMenualTitleView.pageNumber = num
+                }
             })
             .disposed(by: self.disposeBag)
         
@@ -253,6 +253,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             .subscribe(onNext: { [weak self] diaryYearModelArr in
                 guard let self = self else { return }
                 
+                // 필터는 계속 변형되므로 Relay가 업데이트 될때마다 담은 정보 초기화
+                self.filteredSectionNameDic = [:]
+                self.filteredCellsectionNumberDic = [:]
+                self.filteredCellsectionNumberDic2 = [:]
+                
                 var sectionCount: Int = 0
                 for diaryYearModel in diaryYearModelArr {
                     // ["2022JUL", "2022JUM"]
@@ -268,6 +273,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                         sectionCount += 1
                     }
                 }
+                
+                print("filter 후 sectionCount = \(sectionCount)")
                 self.myMenualTableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -370,6 +377,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         if isFiltered {
+            print("filteredSectionNameDic.count = \(filteredSectionNameDic.count), \(filteredSectionNameDic)")
             return filteredSectionNameDic.count
         } else {
             return sectionNameDic.count
@@ -460,14 +468,19 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
         cell.pageAndReview = page + replies
+        cell.testModel = data
 
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
+        guard let cell = tableView.cellForRow(at: indexPath) as? ListCell,
+              let data = cell.testModel
+        else { return }
+
+        print("select! model = \(cell.testModel)")
         
-        listener?.pressedDiaryCell(index: indexPath.row, isFiltered: isFiltered)
+        listener?.pressedDiaryCell(diaryModel: data)
     }
     
     func reloadTableView(isFiltered: Bool) {
@@ -479,7 +492,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let sectionListHeader = ListHeader(type: .text, rightIconType: .none)
         sectionListHeader.backgroundColor = .black
-        sectionListHeader.title = "2022.08"
+        sectionListHeader.title = "2022.999"
         
         print("section, section = \(section)")
 
