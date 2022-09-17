@@ -33,6 +33,8 @@ enum MenualBottomSheetType {
 }
 
 protocol DiaryBottomSheetPresentableListener: AnyObject {
+    var weatherFilterSelectedArrRelay: BehaviorRelay<[Weather]> { get set }
+    var placeFilterSelectedArrRelay: BehaviorRelay<[Place]> { get set }
     
     func pressedCloseBtn()
 
@@ -53,6 +55,9 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     var disposeBag = DisposeBag()
     var keyHeight: CGFloat?
     public var bottomSheetHeight: CGFloat = 400
+    
+    // Filter 선택시 필터링된 메뉴얼 개수 넘겨주는 Relay
+    var filteredMenaulCountsRelay = BehaviorRelay<Int>(value: 0)
     
     var bottomSheetTitle: String = "" {
         didSet { layoutUpdate() }
@@ -136,9 +141,12 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     private lazy var filterComponentView = MenualBottomSheetFilterComponentView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
 //        $0.isUserInteractionEnabled = false
+        $0.delegate = self
+        $0.bind()
         $0.isHidden = true
         $0.weatherTitleBtn.addTarget(self, action: #selector(pressedWeatherTitleBtn), for: .touchUpInside)
         $0.filterBtn.addTarget(self, action: #selector(pressedWeatherTitleBtn), for: .touchUpInside)
+        // $0.delegate = self
     }
     
     // 날짜 필터 컴포넌트
@@ -169,6 +177,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         // super.delegate = nil
         weatherPlaceSelectView.delegate = nil
         listener?.pressedCloseBtn()
+        filterComponentView.delegate = nil
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -222,7 +231,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         
         // 타입별 컴포넌트 SetViews
 //        bottomSheetView.addSubview(weatherPlaceSelectView)
-//        bottomSheetView.addSubview(menuComponentView)
+        bottomSheetView.addSubview(menuComponentView)
         bottomSheetView.addSubview(filterComponentView)
 //        bottomSheetView.addSubview(dateFilterComponentView)
 
@@ -232,11 +241,11 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
 //            make.top.equalTo(self.divider.snp.bottom).offset(16)
 //        }
 
-//        menuComponentView.snp.makeConstraints { make in
-//            make.leading.equalToSuperview().offset(20)
-//            make.width.equalToSuperview().inset(20)
-//            make.top.equalTo(self.divider.snp.bottom).offset(20)
-//        }
+        menuComponentView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(self.divider.snp.bottom).offset(20)
+        }
 //
         filterComponentView.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
@@ -421,12 +430,12 @@ extension DiaryBottomSheetViewController: WeatherPlaceSelectViewDelegate {
     }
     
     // weather 선택시 넘어오는 정보
-    func weatherSendData(weatherType: Weather) {
+    func weatherSendData(weatherType: Weather, isSelected: Bool) {
         listener?.updateWeather(weather: weatherType)
     }
     
     // place 선택시 넘어는 정보
-    func placeSendData(placeType: Place) {
+    func placeSendData(placeType: Place, isSelected: Bool) {
         
         print("placeSendData = \(placeType)")
         listener?.updatePlace(place: placeType)
@@ -505,10 +514,23 @@ extension DiaryBottomSheetViewController {
 }
 
 // MARK: - MenualBottomSheetFilterComponentView
-extension DiaryBottomSheetViewController {
+extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelegate {
+    var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]> {
+        listener?.weatherFilterSelectedArrRelay ?? BehaviorRelay<[Weather]>(value: [])
+    }
+    
+    var filterPlaceSelectedArrRelay: BehaviorRelay<[Place]> {
+        listener?.placeFilterSelectedArrRelay ?? BehaviorRelay<[Place]>(value: [])
+    }
+    
+    var filteredMenaulCountsObservable: Observable<Int> {
+        return filteredMenaulCountsRelay.asObservable()
+    }
+    
     @objc
     func pressedWeatherTitleBtn() {
         print("pressedWeatherTitleBtn")
+        filteredMenaulCountsRelay.accept(999)
     }
 }
 

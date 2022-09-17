@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 // MARK: - Enum
-enum Place: String, PersistableEnum {
+public enum Place: String, PersistableEnum {
     case home = "홈"
     case school = "스쿨"
     case company = "컴퍼니"

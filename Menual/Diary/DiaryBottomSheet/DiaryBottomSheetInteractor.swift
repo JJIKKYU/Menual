@@ -26,16 +26,23 @@ protocol DiaryBottomSheetPresentable: Presentable {
 protocol DiaryBottomSheetListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func diaryBottomSheetPressedCloseBtn()
+    
+    func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place])
 }
 
 final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPresentable>, DiaryBottomSheetInteractable, DiaryBottomSheetPresentableListener {
 
     weak var router: DiaryBottomSheetRouting?
     weak var listener: DiaryBottomSheetListener?
+    var disposeBag = DisposeBag()
     
     var weatherModel: WeatherModel = WeatherModel(uuid: "", weather: nil, detailText: "")
     var placeModel: PlaceModel = PlaceModel(uuid: "", place: nil, detailText: "")
     var bottomSheetType: MenualBottomSheetType = .weather
+    
+    // FilterComponentView에서 사용되는 Weather/Place Filter Selected Arr
+    var weatherFilterSelectedArrRelay = BehaviorRelay<[Weather]>(value: [])
+    var placeFilterSelectedArrRelay = BehaviorRelay<[Place]>(value: [])
     
     let weatherOb = BehaviorRelay<WeatherModel>(value: WeatherModel(uuid: "", weather: .sun, detailText: ""))
 
@@ -50,6 +57,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         super.init(presenter: presenter)
         presenter.listener = self
         presenter.setViews(type: bottomSheetType)
+        bind()
     }
 
     override func didBecomeActive() {
@@ -64,6 +72,20 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+    
+    func bind() {
+        Observable.combineLatest(
+            weatherFilterSelectedArrRelay,
+            placeFilterSelectedArrRelay
+        )
+        .subscribe(onNext: { [weak self] weatherArr, placeArr in
+            guard let self = self else { return }
+            
+            print("!!! \(weatherArr), \(placeArr)")
+            self.listener?.filterWithWeatherPlace(weatherArr: weatherArr, placeArr: placeArr)
+        })
+        .disposed(by: disposeBag)
     }
     
     func pressedCloseBtn() {

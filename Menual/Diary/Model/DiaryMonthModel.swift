@@ -131,6 +131,39 @@ public struct DiaryMonthModel {
         decDiary.sort { $0.createdAt > $1.createdAt }
     }
     
+    mutating func filterDiary(weatherTypes: [Weather], placeTypes: [Place]) {
+        print("filter 이전 = sepDiary = \(sepDiary)")
+        
+        // 각 monthsArr를 담아준다
+        var monthsArr = [janDiary, fabDiary, marDiary, aprDiary, mayDiary, junDiary, julDiary, augDiary, sepDiary, octDiary, novDiary, decDiary]
+        
+        for (index, _) in monthsArr.enumerated() {
+            var month = monthsArr[index]
+            if !weatherTypes.isEmpty {
+                month = month.filter {
+                    guard let weather = $0.weather?.weather else { return false }
+                    if weatherTypes.contains(weather) == true { return true }
+                    return false
+                }
+                monthsArr[index] = month
+            }
+            
+            if !placeTypes.isEmpty {
+                month = month.filter {
+                    guard let place = $0.place?.place else { return false }
+                    if placeTypes.contains(place) == true { return true }
+                    return false
+                }
+                monthsArr[index] = month
+            }
+        }
+        
+        setAllDiary(monthsArr: monthsArr)
+        
+        print("filter 후 = sepDiary = \(sepDiary)")
+        // return monthsArr
+    }
+    
     func getMenualCountWithMonth(MM: String) -> Int {
         let mm: String = MM.lowercased()
         switch mm {
@@ -231,6 +264,48 @@ public struct DiaryMonthModel {
         if jan != 0 { arr.append("JAN") }
         
         return arr
+    }
+    
+    mutating func setAllDiary(monthsArr: [[DiaryModel]]) {
+        print("setAllDiary!")
+        janDiary = monthsArr[0]
+        jan = monthsArr[0].count
+        
+        fabDiary = monthsArr[1]
+        fab = monthsArr[1].count
+        
+        marDiary = monthsArr[2]
+        mar = monthsArr[2].count
+        
+        aprDiary = monthsArr[3]
+        apr = monthsArr[3].count
+        
+        mayDiary = monthsArr[4]
+        may = monthsArr[4].count
+        
+        junDiary = monthsArr[5]
+        jun = monthsArr[5].count
+        
+        julDiary = monthsArr[6]
+        jul = monthsArr[6].count
+        
+        augDiary = monthsArr[7]
+        aug = monthsArr[7].count
+        
+        sepDiary = monthsArr[8]
+        sep = monthsArr[8].count
+        
+        octDiary = monthsArr[9]
+        oct = monthsArr[9].count
+        
+        novDiary = monthsArr[10]
+        nov = monthsArr[10].count
+        
+        decDiary = monthsArr[11]
+        dec = monthsArr[11].count
+        
+        allCount = jan + fab + mar + apr + may + jun + jul + aug + sep + oct + nov + dec
+        print("allCount = \(allCount)")
     }
 }
 

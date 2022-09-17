@@ -12,8 +12,8 @@ import SnapKit
 protocol WeatherPlaceSelectViewDelegate {
     // 체크표시 등 활성화
     func isSelected(_ isSelected: Bool)
-    func weatherSendData(weatherType: Weather)
-    func placeSendData(placeType: Place)
+    func weatherSendData(weatherType: Weather, isSelected: Bool)
+    func placeSendData(placeType: Place, isSelected: Bool)
 }
 
 class WeatherPlaceSelectView: UIView {
@@ -28,6 +28,10 @@ class WeatherPlaceSelectView: UIView {
     }
     
     var delegate: WeatherPlaceSelectViewDelegate?
+    
+    var selectionLimit: Int = 1 {
+        didSet { setNeedsLayout() }
+    }
     
     private lazy var collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout.init()).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -72,6 +76,13 @@ class WeatherPlaceSelectView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        // 다중 선택을 지원할 경우
+        if selectionLimit > 1 {
+            collectionView.allowsMultipleSelection = true
+        } else {
+            collectionView.allowsMultipleSelection = false
+        }
+        
         switch weatherPlaceType {
         case .weather:
             collectionView.reloadData()
@@ -113,17 +124,37 @@ extension WeatherPlaceSelectView: UICollectionViewDelegate, UICollectionViewData
         return cell
     }
     
+    // 선택할때
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WeatherPlaceSelectViewCell", for: indexPath) as? WeatherPlaceSelectViewCell else { return }
         
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WeatherPlaceSelectViewCell", for: indexPath) as? WeatherPlaceSelectViewCell else { return }
+
         let index = indexPath.row
         switch weatherPlaceType {
         case .place:
             guard let placeType = Place().getVariation()[safe: index] else { return }
-            delegate?.placeSendData(placeType: placeType)
+            delegate?.placeSendData(placeType: placeType, isSelected: cell.isSelected)
         case .weather:
             guard let weatherType = Weather().getVariation()[safe: index] else { return }
-            delegate?.weatherSendData(weatherType: weatherType)
+            delegate?.weatherSendData(weatherType: weatherType, isSelected: cell.isSelected)
+        }
+        
+        delegate?.isSelected(cell.isSelected)
+        cell.isSelected = !cell.isSelected
+    }
+    
+    // 선택을 해제할때
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WeatherPlaceSelectViewCell", for: indexPath) as? WeatherPlaceSelectViewCell else { return }
+
+        let index = indexPath.row
+        switch weatherPlaceType {
+        case .place:
+            guard let placeType = Place().getVariation()[safe: index] else { return }
+            delegate?.placeSendData(placeType: placeType, isSelected: cell.isSelected)
+        case .weather:
+            guard let weatherType = Weather().getVariation()[safe: index] else { return }
+            delegate?.weatherSendData(weatherType: weatherType, isSelected: cell.isSelected)
         }
         
         delegate?.isSelected(cell.isSelected)

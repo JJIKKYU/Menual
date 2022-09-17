@@ -212,4 +212,9 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     func diaryTempSavePressentBackBtn() {
         router?.detachDiaryTempSave()
     }
+    
+    // MARK: - 미사용
+    func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) {
+        
+    }
 }

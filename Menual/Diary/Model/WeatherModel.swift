@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 // MARK: - Enum
-enum Weather: String, PersistableEnum {
+public enum Weather: String, PersistableEnum {
     case sun = "썬"
     case rain = "레인"
     case cloud = "클라우드"

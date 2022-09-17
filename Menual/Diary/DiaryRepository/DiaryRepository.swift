@@ -16,6 +16,7 @@ public protocol DiaryRepository {
     // ReadOnlyCurrentValuePublisher<[PaymentMethod]> { get }
     
     var diaryString: BehaviorRelay<[DiaryModel]> { get }
+    var filteredMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
     var weatherHistory: BehaviorRelay<[WeatherHistoryModel]> { get }
     var placeHistory: BehaviorRelay<[PlaceHistoryModel]> { get }
     var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
@@ -37,6 +38,9 @@ public protocol DiaryRepository {
     
     // 최근검색목록 로직
     func addDiarySearch(info: DiaryModel)
+    
+    // Filter 로직
+    func filterDiary(weatherTypes: [Weather], placeTypes: [Place])
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
@@ -66,6 +70,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
 
     public var diaryString: BehaviorRelay<[DiaryModel]> { diaryModelSubject }
     public let diaryModelSubject = BehaviorRelay<[DiaryModel]>(value: [])
+    
+    public var filteredMonthDic: BehaviorRelay<[DiaryYearModel]> { filteredMonthDicSubject }
+    public let filteredMonthDicSubject = BehaviorRelay<[DiaryYearModel]>(value: [])
     
     public var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { diaryMonthDicSubject }
     public let diaryMonthDicSubject = BehaviorRelay<[DiaryYearModel]>(value: [])
@@ -176,7 +183,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         placeHistorySubject.accept(placeHistoryResults.map { PlaceHistoryModel($0) })
         
         self.fetchDiary()
-        self.fetchMonthDictionary()
         self.fetchDiarySearch()
     }
     
@@ -258,7 +264,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         let result: [DiaryModel] = (diaryModelSubject.value + [newInfo]).sorted { $0.createdAt > $1.createdAt }
         
         diaryModelSubject.accept(result)
-        self.fetchMonthDictionary()
         self.fetchDiary()
         print("addDiary! - 3")
     }
@@ -378,60 +383,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         diaryModelSubject.accept(result)
     }
-    
-    func fetchMonthDictionary() {
-        print("fetchMonthDictionary")
-        /*
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        let diaryModelResults = realm.objects(DiaryModelRealm.self)
-        
-        var diaryYearModels: [DiaryYearModel] = []
-        
-        // 연도별 Diary 세팅
-        var beforeYear: String = "0"
-        for diary in diaryModelResults {
-            let curYear = diary.createdAt.toStringWithYYYY()
-            if beforeYear == curYear { continue }
-            beforeYear = curYear
-            diaryYearModels.append(DiaryYearModel(year: Int(curYear) ?? 0, months: DiaryMonthModel()))
-        }
-        
-        // 하나도 작성한 메뉴얼이 없을 경우에는 이번달 Cell을 하나 넣어 줍니다.
-        if diaryYearModels.count == 0 {
-            let currentMM = Date().toStringWithMM()
-            let currentYear = Date().toStringWithYYYY()
-            var diaryMonthModel = DiaryMonthModel()
-            diaryMonthModel.updateCount(MM: currentMM)
-            diaryYearModels.append(DiaryYearModel(year: Int(currentYear) ?? 0, months: diaryMonthModel))
-            
-            self.diaryMonthDicSubject.accept(diaryYearModels)
-            
-            return
-        }
-    
-        print("diaryYearModels = \(diaryYearModels)")
-        
-        // 달별 Diary 세팅
-        for index in diaryYearModels.indices {
-            let sortedDiaryModelResults = diaryModelResults.filter { $0.createdAt.toStringWithYYYY() == diaryYearModels[index].year.description }
-            
-            for diary in sortedDiaryModelResults {
-                let diaryMM = diary.createdAt.toStringWithMM()
-                diaryYearModels[index].months?.updateCount(MM: diaryMM)
-                diaryYearModels[index].months?.updateAllCount()
-            }
-        }
-        
-        let diaryYearSortedModels = diaryYearModels.sorted { $0.year > $1.year }
-        
-        print("diaryMonthModels = \(diaryYearModels)")
-        
-        self.diaryMonthDicSubject.accept(diaryYearSortedModels)
-         */
-    }
-    
+
     // MARK: - 최근검색목록 로직 (SearchModel)
     func fetchDiarySearch() {
         guard let realm = Realm.safeInit() else {
@@ -449,22 +401,42 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-//
-//        let searchRealmData: DiarySearchModelRealm = DiarySearchModelRealm(
-//            uuid: UUID().uuidString,
-//            diaryUuid: info.uuid,
-//            diary: DiaryModelRealm(info),
-//            createdAt: Date(),
-//            isDeleted: false
-//        )
-//
-//        let searchData: DiarySearchModel = DiarySearchModel(searchRealmData)
-//
-//        realm.safeWrite {
-//            realm.add(searchRealmData)
-//        }
-//
-//        self.diarySearchSubject.accept(self.diarySearchSubject.value + [searchData])
+    }
+    
+    // MARK: - Filter 로직
+    public func filterDiary(weatherTypes: [Weather], placeTypes: [Place]) {
+        print("diaryRepo :: filterDiary")
+        // fetchDiary 후 얻은 결과 원본
+        var diaryMonthDic: [DiaryYearModel] = diaryMonthDicSubject.value
+
+        for (index, _) in diaryMonthDic.enumerated() {
+            diaryMonthDic[index].months?.filterDiary(weatherTypes: weatherTypes, placeTypes: placeTypes)
+        }
+        
+        // print("filterDiary! \(diaryMonthDic)")
+        var allCount: Int = 0
+        for model in diaryMonthDic {
+            print("= \(model.year) -> \(String(describing: model.months?.allCount))")
+            print("1월, \(model.months?.jan ?? 0)")
+            print("2월, \(model.months?.fab ?? 0)")
+            print("3월, \(model.months?.mar ?? 0)")
+            print("4월, \(model.months?.apr ?? 0)")
+            print("5월, \(model.months?.may ?? 0)")
+            print("6월, \(model.months?.jul ?? 0)")
+            print("7월, \(model.months?.jul ?? 0)")
+            print("8월, \(model.months?.aug ?? 0)")
+            print("9월, \(model.months?.sep ?? 0)")
+            print("10월, \(model.months?.oct ?? 0)")
+            print("11월, \(model.months?.nov ?? 0)")
+            print("12월, \(model.months?.dec ?? 0)")
+            
+            if let count = model.months?.allCount {
+                allCount += count
+            }
+        }
+        print("필터 결과 총 개수 = \(allCount)")
+        // filteredDiaryStringSubject.accept(diaryMonthDic)
+        filteredMonthDicSubject.accept(diaryMonthDic)
     }
 }
 

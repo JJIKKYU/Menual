@@ -133,12 +133,12 @@ extension WeatherPlcaeToolbarView: WeatherPlaceSelectViewDelegate {
         print("isSelected!")
     }
     
-    func weatherSendData(weatherType: Weather) {
+    func weatherSendData(weatherType: Weather, isSelected: Bool) {
         print("weatherSendData! - \(weatherType)")
         delegate?.weatherSendData(weatherType: weatherType)
     }
     
-    func placeSendData(placeType: Place) {
+    func placeSendData(placeType: Place, isSelected: Bool) {
         print("placeSendData! - \(placeType)")
         delegate?.placeSendData(placeType: placeType)
     }

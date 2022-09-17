@@ -30,7 +30,7 @@ protocol DiaryHomeRouting: ViewableRouting {
 protocol DiaryHomePresentable: Presentable {
     var listener: DiaryHomePresentableListener? { get set }
     
-    func reloadTableView()
+    func reloadTableView(isFiltered: Bool)
 }
 
 protocol DiaryHomeListener: AnyObject {
@@ -52,6 +52,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
     var lastPageNumRelay = BehaviorRelay<Int>(value: 0)
     var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
+    var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -63,7 +64,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         self.disposebag = DisposeBag()
         self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
         self.diaryMonthSetRelay = dependency.diaryRepository.diaryMonthDic
-        
+        self.filteredDiaryMonthSetRelay = dependency.diaryRepository.filteredMonthDic
         super.init(presenter: presenter)
         presenter.listener = self
         self.presentationDelegateProxy.delegate = self
@@ -93,8 +94,19 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 // 전체 PageNum 추려내기
                 let lastPageNum = diaryArr.sorted { $0.createdAt > $1.createdAt }.first?.pageNum ?? 0
                 self.lastPageNumRelay.accept(lastPageNum)
-
-                self.presenter.reloadTableView()
+                
+                self.presenter.reloadTableView(isFiltered: false)
+            })
+            .disposed(by: disposebag)
+        
+        dependency.diaryRepository
+            .filteredMonthDic
+            .filter { !$0.isEmpty }
+            .subscribe(onNext: { [weak self] diaryArr in
+                guard let self = self else { return }
+                print("filteredDiaryString 구독 중!, diary = \(diaryArr)")
+                print("<- reloadTableView")
+                self.presenter.reloadTableView(isFiltered: true)
             })
             .disposed(by: disposebag)
         
@@ -103,7 +115,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             .subscribe(onNext: { [weak self] monthSet in
                 guard let self = self else { return }
                 print("monthSet 구독중! \(monthSet)")
-                self.presenter.reloadTableView()
+                self.presenter.reloadTableView(isFiltered: false)
             })
             .disposed(by: disposebag)
 
@@ -182,24 +194,35 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     // MARK: - Diary detaill 관련 함수
     
-    func pressedDiaryCell(index: Int) {
-        guard let model = dependency.diaryRepository
-            .diaryString.value[safe: index] else { return }
+    func pressedDiaryCell(index: Int, isFiltered: Bool) {
+        var updateModel: DiaryModel?
         
-        let updateModel = DiaryModel(uuid: model.uuid,
-                                     pageNum: model.pageNum,
-                                     title: model.title,
-                                     weather: model.weather,
-                                     place: model.place,
-                                     description: model.description,
-                                     image: model.image,
-                                     readCount: model.readCount + 1,
-                                     createdAt: model.createdAt,
-                                     replies: model.replies,
-                                     isDeleted: model.isDeleted,
-                                     isHide: model.isHide
-        )
+        if isFiltered {
+            print("필터 클릭하면 작동되도록 하자")
+            
+        } else {
+            guard let model = dependency.diaryRepository
+                .diaryString.value[safe: index] else { return }
+            
+            updateModel = DiaryModel(uuid: model.uuid,
+                                         pageNum: model.pageNum,
+                                         title: model.title,
+                                         weather: model.weather,
+                                         place: model.place,
+                                         description: model.description,
+                                         image: model.image,
+                                         readCount: model.readCount + 1,
+                                         createdAt: model.createdAt,
+                                         replies: model.replies,
+                                         isDeleted: model.isDeleted,
+                                         isHide: model.isHide
+            )
+        }
         
+        guard let updateModel = updateModel else {
+            return
+        }
+
         dependency.diaryRepository
             .updateDiary(info: updateModel)
         router?.attachDiaryDetail(model: updateModel)
@@ -230,5 +253,13 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func pressedDateFilterBtn() {
         router?.attachBottomSheet(type: .dateFilter)
+    }
+    
+    // filterComponenetView
+    func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) {
+        print("diaryHome!! \(weatherArr), \(placeArr)")
+        
+        dependency.diaryRepository
+            .filterDiary(weatherTypes: weatherArr, placeTypes: placeArr)
     }
 }

@@ -144,4 +144,9 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     func pressedReminderBtn() {
         router?.attachBottomSheet(type: .reminder)
     }
+    
+    // MARK: - FilterComponentView
+    func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) {
+        print("filterWithWeatherPlace!, \(weatherArr), \(placeArr)")
+    }
 }
