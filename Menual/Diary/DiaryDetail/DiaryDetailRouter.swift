@@ -6,8 +6,9 @@
 //
 
 import RIBs
+import RxRelay
 
-protocol DiaryDetailInteractable: Interactable, DiaryBottomSheetListener {
+protocol DiaryDetailInteractable: Interactable, DiaryBottomSheetListener, DiaryWritingListener {
     var router: DiaryDetailRouting? { get set }
     var listener: DiaryDetailListener? { get set }
 }
@@ -20,15 +21,20 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
     
     private let diaryBottomSheetBuildable: DiaryBottomSheetBuildable
     private var diaryBottomSheetRouting: Routing?
+    
+    private let diaryWritingBuildable: DiaryWritingBuildable
+    private var diaryWritingRouting: Routing?
 
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DiaryDetailInteractable,
         viewController: DiaryDetailViewControllable,
-        diarybottomSheetBuildable: DiaryBottomSheetBuildable
+        diarybottomSheetBuildable: DiaryBottomSheetBuildable,
+        diaryWritingBuildable: DiaryWritingBuildable
     ) {
         self.diaryBottomSheetBuildable = diarybottomSheetBuildable
-        
+        self.diaryWritingBuildable = diaryWritingBuildable
+
         super.init(
             interactor: interactor,
             viewController: viewController
@@ -38,14 +44,15 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
     
     // MARK: - BottomSheet
 
-    func attachBottomSheet(type: MenualBottomSheetType) {
+    func attachBottomSheet(type: MenualBottomSheetType, menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?) {
         if diaryBottomSheetRouting != nil {
             return
         }
         
         let router = diaryBottomSheetBuildable.build(
             withListener: interactor,
-            bottomSheetType: type
+            bottomSheetType: type,
+            menuComponentRelay: menuComponentRelay
         )
         
         viewController.present(router.viewControllable,
@@ -67,5 +74,34 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
         diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
         detachChild(router)
         diaryBottomSheetRouting = nil
+    }
+    
+    // 바텀싯 수정하기
+    func attachDiaryWriting(diaryModel: DiaryModel) {
+        if diaryWritingRouting != nil {
+            return
+        }
+        print("바텀싯 수정하기! = \(diaryModel)")
+        let router = diaryWritingBuildable.build(
+            withListener: interactor,
+            diaryModel: diaryModel
+        )
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        diaryWritingRouting = router
+        attachChild(router)
+    }
+    
+    func detachDiaryWriting(isOnlyDetach: Bool) {
+        guard let router = diaryWritingRouting else {
+            return
+        }
+
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        diaryWritingRouting = nil
     }
 }

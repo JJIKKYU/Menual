@@ -47,6 +47,9 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     func updatePlace(place: Place)
 
     func pressedWriteBtn()
+    
+    // MenualBottomSheetMenuComponentView
+    var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>? { get set }
 }
 
 final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPresentable, DiaryBottomSheetViewControllable {
@@ -135,6 +138,9 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     private lazy var menuComponentView = MenualBottomSheetMenuComponentView().then {
         $0.translatesAutoresizingMaskIntoConstraints = true
         $0.isHidden = true
+        $0.editMenuBtn.addTarget(self, action: #selector(pressedEditBtn), for: .touchUpInside)
+        $0.deleteMenuBtn.addTarget(self, action: #selector(pressedDeleteBtn), for: .touchUpInside)
+        $0.hideMenuBtn.addTarget(self, action: #selector(pressedHideMenuBtn), for: .touchUpInside)
     }
     
     // 필터 컴포넌트
@@ -233,7 +239,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
 //        bottomSheetView.addSubview(weatherPlaceSelectView)
         bottomSheetView.addSubview(menuComponentView)
         bottomSheetView.addSubview(filterComponentView)
-//        bottomSheetView.addSubview(dateFilterComponentView)
+        bottomSheetView.addSubview(dateFilterComponentView)
 
 //        weatherPlaceSelectView.snp.makeConstraints { make in
 //            make.leading.width.equalToSuperview()
@@ -252,12 +258,12 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             make.top.equalTo(self.divider.snp.bottom).offset(27)
             make.height.equalTo(260)
         }
-//
-//        dateFilterComponentView.snp.makeConstraints { make in
-//            make.top.equalTo(self.divider.snp.bottom).offset(64)
-//            make.leading.equalToSuperview().offset(20)
-//            make.width.equalToSuperview().inset(20)
-//        }
+
+        dateFilterComponentView.snp.makeConstraints { make in
+            make.top.equalTo(self.divider.snp.bottom).offset(64)
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+        }
     }
     
     func bind() {
@@ -539,5 +545,26 @@ extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelega
 extension DiaryBottomSheetViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         print(#function)
+    }
+}
+
+// MARK: - MenualBottomSheetMenuComponentView
+extension DiaryBottomSheetViewController {
+    @objc
+    func pressedHideMenuBtn() {
+        print("pressedHideMenuBtn")
+        listener?.menuComponentRelay?.accept(.hide)
+    }
+    
+    @objc
+    func pressedEditBtn() {
+        print("pressedEditBtn")
+        listener?.menuComponentRelay?.accept(.edit)
+    }
+    
+    @objc
+    func pressedDeleteBtn() {
+        print("pressedDeleteBtn")
+        listener?.menuComponentRelay?.accept(.delete)
     }
 }

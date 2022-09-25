@@ -350,6 +350,27 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         locationSelectView.selected = true
         locationSelectView.selectedPlaceType = place
     }
+    
+    func setDiaryEditMode(diaryModel: DiaryModel) {
+        self.naviView.naviViewType = .edit
+        self.naviView.setNaviViewType()
+        
+        self.titleTextField.text = diaryModel.title
+        self.titleTextField.textColor = Colors.grey.g200
+        
+        self.weatherSelectView.selectTitle = diaryModel.weather?.detailText ?? ""
+        self.weatherSelectView.selectedWeatherType = diaryModel.weather?.weather ?? .snow
+        self.weatherSelectView.selected = true
+
+        self.locationSelectView.selectedPlaceType = diaryModel.place?.place ?? .company
+        self.locationSelectView.selectTitle = diaryModel.place?.detailText ?? ""
+        self.locationSelectView.selected = true
+        
+        self.descriptionTextView.text = diaryModel.description
+        self.descriptionTextView.textColor = UIColor.white
+        
+        self.view.layoutIfNeeded()
+    }
 }
 
 // MARK: - IBACtion

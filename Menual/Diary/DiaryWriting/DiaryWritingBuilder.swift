@@ -19,7 +19,10 @@ final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWriti
 // MARK: - Builder
 
 protocol DiaryWritingBuildable: Buildable {
-    func build(withListener listener: DiaryWritingListener) -> DiaryWritingRouting
+    func build(
+        withListener listener: DiaryWritingListener,
+        diaryModel: DiaryModel?
+    ) -> DiaryWritingRouting
 }
 
 final class DiaryWritingBuilder: Builder<DiaryWritingDependency>, DiaryWritingBuildable {
@@ -28,7 +31,10 @@ final class DiaryWritingBuilder: Builder<DiaryWritingDependency>, DiaryWritingBu
         super.init(dependency: dependency)
     }
 
-    func build(withListener listener: DiaryWritingListener) -> DiaryWritingRouting {
+    func build(
+        withListener listener: DiaryWritingListener,
+        diaryModel: DiaryModel?
+    ) -> DiaryWritingRouting {
         let component = DiaryWritingComponent(dependency: dependency)
         
         let diaryBottomSheetBuildable = DiaryBottomSheetBuilder(dependency: component)
@@ -38,7 +44,8 @@ final class DiaryWritingBuilder: Builder<DiaryWritingDependency>, DiaryWritingBu
         let viewController = DiaryWritingViewController()
         let interactor = DiaryWritingInteractor(
             presenter: viewController,
-            dependency: component
+            dependency: component,
+            diaryModel: diaryModel
         )
         interactor.listener = listener
         return DiaryWritingRouter(

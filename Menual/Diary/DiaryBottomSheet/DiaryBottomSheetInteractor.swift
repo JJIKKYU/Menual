@@ -43,6 +43,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     // FilterComponentView에서 사용되는 Weather/Place Filter Selected Arr
     var weatherFilterSelectedArrRelay = BehaviorRelay<[Weather]>(value: [])
     var placeFilterSelectedArrRelay = BehaviorRelay<[Place]>(value: [])
+    var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
     
     let weatherOb = BehaviorRelay<WeatherModel>(value: WeatherModel(uuid: "", weather: .sun, detailText: ""))
 
@@ -50,9 +51,13 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     // in constructor.
     init(
         presenter: DiaryBottomSheetPresentable,
-        bottomSheetType: MenualBottomSheetType
+        bottomSheetType: MenualBottomSheetType,
+        menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
     ) {
         self.bottomSheetType = bottomSheetType
+        if let menuComponentRelay = menuComponentRelay {
+            self.menuComponentRelay = menuComponentRelay
+        }
         print("menualBottomSheetType = \(bottomSheetType)")
         super.init(presenter: presenter)
         presenter.listener = self
@@ -133,5 +138,10 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
                                        detailText: placeModel.detailText
         )
         self.placeModel = newPlaceModel
+    }
+    
+    // MARK: - DiaryWritingVC
+    func diaryWritingPressedBackBtn() {
+        print("diaryWritingPressedBackBtn!")
     }
 }

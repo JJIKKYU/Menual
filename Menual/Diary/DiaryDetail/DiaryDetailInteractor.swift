@@ -7,10 +7,15 @@
 
 import RIBs
 import RxSwift
+import RxRelay
 
 protocol DiaryDetailRouting: ViewableRouting {
-    func attachBottomSheet(type: MenualBottomSheetType)
+    func attachBottomSheet(type: MenualBottomSheetType, menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?)
     func detachBottomSheet()
+    
+    // 수정하기
+    func attachDiaryWriting(diaryModel: DiaryModel)
+    func detachDiaryWriting(isOnlyDetach: Bool)
 }
 
 protocol DiaryDetailPresentable: Presentable {
@@ -41,6 +46,9 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     weak var router: DiaryDetailRouting?
     weak var listener: DiaryDetailListener?
     private let dependency: DiaryDetailInteractorDependency
+    
+    // BottomSheet에서 메뉴를 눌렀을때 사용하는 Relay
+    var menuComponentRelay = BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>(value: .none)
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -78,6 +86,29 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 self.currentDiaryPage = currentDiaryModel.pageNum
                 presenter.loadDiaryDetail(model: currentDiaryModel)
                 self.presenter.reloadTableView()
+            })
+            .disposed(by: self.disposebag)
+        
+        menuComponentRelay
+            .subscribe(onNext: { [weak self] comp in
+                guard let self = self else { return }
+                print("diaryDetail! -> menuComponentRelay!!!! = \(comp)")
+                switch comp {
+                case .hide:
+                    break
+                    
+                case .edit:
+                    self.router?.detachBottomSheet()
+                    guard let diaryModel = self.diaryModel else { return }
+                    self.router?.attachDiaryWriting(diaryModel: diaryModel)
+                    break
+                    
+                case .delete:
+                    break
+                    
+                case .none:
+                    break
+                }
             })
             .disposed(by: self.disposebag)
     }
@@ -133,20 +164,28 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         print("pass true!")
     }
     
-    func pressedMenuMoreBtn() {
-        router?.attachBottomSheet(type: .menu)
-    }
-    
     func diaryBottomSheetPressedCloseBtn() {
         router?.detachBottomSheet()
     }
     
     func pressedReminderBtn() {
-        router?.attachBottomSheet(type: .reminder)
+        router?.attachBottomSheet(type: .reminder, menuComponentRelay: nil)
     }
     
     // MARK: - FilterComponentView
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) {
         print("filterWithWeatherPlace!, \(weatherArr), \(placeArr)")
     }
+    
+    // MARK: - BottomSheet Menu
+    func pressedMenuMoreBtn() {
+        router?.attachBottomSheet(type: .menu, menuComponentRelay: menuComponentRelay)
+    }
+    
+    func diaryWritingPressedBackBtn() {
+        // TODO
+        print("diaryWritingPressedBackBtn")
+        router?.detachDiaryWriting(isOnlyDetach: false)
+    }
 }
+ 

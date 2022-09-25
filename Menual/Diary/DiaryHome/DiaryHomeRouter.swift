@@ -180,7 +180,7 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
             return
         }
         
-        let router = diaryWritingBuildable.build(withListener: interactor)
+        let router = diaryWritingBuildable.build(withListener: interactor, diaryModel: nil)
         // Bottom Up 되도록 수정
         presentInsideNavigation(router.viewControllable)
         // viewController.present(router.viewControllable, animated: true, completion: nil)
@@ -269,7 +269,8 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         
         let router = diaryBottomSheetBuildable.build(
             withListener: interactor,
-            bottomSheetType: type
+            bottomSheetType: type,
+            menuComponentRelay: nil
         )
         
         viewController.present(router.viewControllable,

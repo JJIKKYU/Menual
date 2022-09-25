@@ -25,6 +25,9 @@ protocol DiaryWritingPresentable: Presentable {
     func pressedBackBtn()
     func setWeatherView(model: WeatherModel)
     func setPlaceView(model: PlaceModel)
+    
+    // 다이어리 수정 모드로 변경
+    func setDiaryEditMode(diaryModel: DiaryModel)
 }
 
 protocol DiaryWritingListener: AnyObject {
@@ -44,10 +47,8 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     var plcaeHistoryModel: BehaviorRelay<[PlaceHistoryModel]> {
         dependency.diaryRepository.placeHistory
     }
-    
 
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
-    
     
     weak var router: DiaryWritingRouting?
     weak var listener: DiaryWritingListener?
@@ -65,16 +66,23 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     
     private let weatherModelRelay = BehaviorRelay<WeatherModel?>(value: nil)
     private let placeModelRelay = BehaviorRelay<PlaceModel?>(value: nil)
+    
+    // 수정하기일 경우에는 내용을 세팅해야하기 때문에 릴레이에 작접 accept 해줌
+    private let diaryModelRelay = BehaviorRelay<DiaryModel?>(value: nil)
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
     init(
         presenter: DiaryWritingPresentable,
-        dependency: DiaryWritingInteractorDependency
+        dependency: DiaryWritingInteractorDependency,
+        diaryModel: DiaryModel?
     ) {
         self.dependency = dependency
         self.disposebag = DisposeBag()
         presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
+        if let diaryModel = diaryModel {
+            self.diaryModelRelay.accept(diaryModel)
+        }
         super.init(presenter: presenter)
         presenter.listener = self
     }
@@ -124,6 +132,17 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             .subscribe(onNext: { [weak self] model in
                 guard let self = self else { return }
                 print("DiaryWritingInteractor :: placeHistory = \(model)")
+            })
+            .disposed(by: disposebag)
+        
+        diaryModelRelay
+            .subscribe(onNext: { [weak self] diaryModel in
+                guard let self = self,
+                      let diaryModel = diaryModel
+                else { return }
+                
+                print("수정하기 모드로 바꿔야 할걸? = \(diaryModel)")
+                self.presenter.setDiaryEditMode(diaryModel: diaryModel)
             })
             .disposed(by: disposebag)
     }

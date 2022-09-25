@@ -70,7 +70,8 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
         
         let router = diaryBottomSheetBuildable.build(
             withListener: interactor,
-            bottomSheetType: bottomSheetType
+            bottomSheetType: bottomSheetType,
+            menuComponentRelay: nil
         )
          viewController.present(router.viewControllable, animated: false, completion: nil)
         router.viewControllable.uiviewController.modalPresentationStyle = .overFullScreen

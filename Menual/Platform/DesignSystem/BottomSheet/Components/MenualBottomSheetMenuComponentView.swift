@@ -11,6 +11,13 @@ import Then
 
 class MenualBottomSheetMenuComponentView: UIView {
     
+    enum MenuComponent {
+        case none
+        case hide
+        case edit
+        case delete
+    }
+    
     private let stackView = UIStackView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.axis = .vertical
@@ -29,7 +36,7 @@ class MenualBottomSheetMenuComponentView: UIView {
         $0.backgroundColor = Colors.grey.g700
     }
     
-    private let hideMenuBtn = UIButton().then {
+    public var hideMenuBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("메뉴얼 숨기기", for: .normal)
         $0.setTitleColor(Colors.grey.g200, for: .normal)
@@ -44,7 +51,7 @@ class MenualBottomSheetMenuComponentView: UIView {
         $0.marginImageWithText(margin: 8)
     }
     
-    private let editMenuBtn = UIButton().then {
+    public var editMenuBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("수정하기", for: .normal)
         $0.setTitleColor(Colors.grey.g200, for: .normal)
@@ -60,7 +67,7 @@ class MenualBottomSheetMenuComponentView: UIView {
         
     }
     
-    private let deleteMenuBtn = UIButton().then {
+    public var deleteMenuBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("삭제하기", for: .normal)
         $0.setTitleColor(Colors.grey.g200, for: .normal)

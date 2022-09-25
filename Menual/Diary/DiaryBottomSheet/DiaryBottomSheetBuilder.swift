@@ -12,10 +12,11 @@ import RxRelay
 protocol DiaryBottomSheetDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
+    var diaryRepository: DiaryRepository { get }
 }
 
-final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency> {
-    
+final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency>, DiaryWritingDependency {
+    var diaryRepository: DiaryRepository { dependency.diaryRepository }
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
@@ -25,7 +26,8 @@ final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency> {
 protocol DiaryBottomSheetBuildable: Buildable {
     func build(
         withListener listener: DiaryBottomSheetListener,
-        bottomSheetType: MenualBottomSheetType
+        bottomSheetType: MenualBottomSheetType,
+        menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
     ) -> DiaryBottomSheetRouting
 }
 
@@ -37,16 +39,25 @@ final class DiaryBottomSheetBuilder: Builder<DiaryBottomSheetDependency>, DiaryB
 
     func build(
         withListener listener: DiaryBottomSheetListener,
-        bottomSheetType: MenualBottomSheetType
+        bottomSheetType: MenualBottomSheetType,
+        menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
     ) -> DiaryBottomSheetRouting {
         let component = DiaryBottomSheetComponent(dependency: dependency)
         
         let viewController = DiaryBottomSheetViewController()
+        let diaryWritingBuildable = DiaryWritingBuilder(dependency: component)
+        
         let interactor = DiaryBottomSheetInteractor(
             presenter: viewController,
-            bottomSheetType: bottomSheetType
+            bottomSheetType: bottomSheetType,
+            menuComponentRelay: menuComponentRelay
         )
         interactor.listener = listener
-        return DiaryBottomSheetRouter(interactor: interactor, viewController: viewController)
+
+        return DiaryBottomSheetRouter(
+            interactor: interactor,
+            viewController: viewController,
+            diaryWritingBuildable: diaryWritingBuildable
+        )
     }
 }
