@@ -290,7 +290,22 @@ extension DiaryHomeViewController {
     
     @objc
     func pressedMyPageBtn() {
-        listener?.pressedMyPageBtn()
+        // listener?.pressedMyPageBtn()
+        // let dialogViewController = DialogViewController()
+        // self.present(dialogViewController, animated: false)
+//        show(size: .small,
+//             buttonType: .oneBtn,
+//             titleText: "사랑하십니까",
+//             cancelButtonText: nil,
+//             confirmButtonText: "네"
+//        )
+        
+        show(size: .small,
+             buttonType: .twoBtn,
+             titleText: "사랑하십니까",
+             cancelButtonText: "아니오",
+             confirmButtonText: "네"
+        )
     }
     
     @objc
@@ -626,5 +641,16 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         default:
             return
         }
+    }
+}
+
+// MARK: - Test
+extension DiaryHomeViewController: DialogDelegate {
+    func action() {
+        print("액션마")
+    }
+    
+    func exit() {
+        print("나감마")
     }
 }

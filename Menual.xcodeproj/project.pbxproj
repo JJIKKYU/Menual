@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2D39C205FB069F46C2298721 /* Pods_Menual_MenualUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 906BFBDD86A4807682FB5575 /* Pods_Menual_MenualUITests.framework */; };
 		4EBC70F2CBEBE10BE9514170 /* Pods_Menual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D128C3C26B0CD2866B637F4 /* Pods_Menual.framework */; };
+		9803132C28F11ECA005CBD01 /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9803132B28F11ECA005CBD01 /* DialogViewController.swift */; };
 		9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9805D4D527E1B6C40035FB49 /* Elevation+Util.swift */; };
 		9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9805D4D727E1BB010035FB49 /* Corner+Util.swift */; };
 		980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924AF279BC84D0034D0CC /* RIBs+Util.swift */; };
@@ -227,6 +228,7 @@
 		611BE1DAFD06695449F2132F /* Pods-Menual-MenualUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual-MenualUITests.release.xcconfig"; path = "Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests.release.xcconfig"; sourceTree = "<group>"; };
 		8AB1EEBE6F2C30203EE560C0 /* Pods-Menual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.release.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.release.xcconfig"; sourceTree = "<group>"; };
 		906BFBDD86A4807682FB5575 /* Pods_Menual_MenualUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual_MenualUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9803132B28F11ECA005CBD01 /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
 		9805D4D527E1B6C40035FB49 /* Elevation+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Elevation+Util.swift"; sourceTree = "<group>"; };
 		9805D4D727E1BB010035FB49 /* Corner+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Corner+Util.swift"; sourceTree = "<group>"; };
 		980924AF279BC84D0034D0CC /* RIBs+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RIBs+Util.swift"; sourceTree = "<group>"; };
@@ -456,6 +458,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9803132A28EEA04A005CBD01 /* Dialog */ = {
+			isa = PBXGroup;
+			children = (
+				9803132B28F11ECA005CBD01 /* DialogViewController.swift */,
+			);
+			path = Dialog;
+			sourceTree = "<group>";
+		};
 		980924AE279BC83D0034D0CC /* RIBsUtil */ = {
 			isa = PBXGroup;
 			children = (
@@ -480,6 +490,7 @@
 		98239BE127E3234F00E216F1 /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				9803132A28EEA04A005CBD01 /* Dialog */,
 				98EADBA22847258C007C298C /* Pagination */,
 				98EADB8E28432855007C298C /* Tabs */,
 				98B557CD2841F03700F8CA3E /* FAB */,
@@ -1513,6 +1524,7 @@
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				98A2BDA1280A87E300C1FB92 /* Swift+Util.swift in Sources */,
 				98B55749281E426300F8CA3E /* WeatherModel.swift in Sources */,
+				9803132C28F11ECA005CBD01 /* DialogViewController.swift in Sources */,
 				98EADBA4284734E4007C298C /* Pagination.swift in Sources */,
 				98B557562830C7B200F8CA3E /* DiaryTempSaveInteractor.swift in Sources */,
 				98B557542830C7B200F8CA3E /* DiaryTempSaveViewController.swift in Sources */,
@@ -1854,7 +1866,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1887,7 +1899,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -1918,7 +1930,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1944,7 +1956,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1969,7 +1981,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1993,7 +2005,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
