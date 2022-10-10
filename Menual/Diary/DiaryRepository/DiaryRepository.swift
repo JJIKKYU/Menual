@@ -280,6 +280,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         realm.safeWrite {
             data.readCount = info.readCount
+            data.title = info.title
+            // data.image = info.image
+            data.desc = info.description
             data.weather = WeatherModelRealm(info.weather ?? WeatherModel(uuid: "", weather: nil, detailText: ""))
             data.place = PlaceModelRealm(info.place ?? PlaceModel(uuid: "", place: nil, detailText: ""))
         }
@@ -307,6 +310,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         )
 
         diaryModelSubject.accept(arr)
+        self.fetchDiary()
     }
     
     public func deleteDiary(info: DiaryModel) {

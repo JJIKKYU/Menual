@@ -151,6 +151,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         listener?.diaryWritingPressedBackBtn()
     }
     
+    // 글 작성할 때
     func writeDiary(info: DiaryModel) {
         // print("DiaryWritingInteractor :: writeDiary! info = \(info)")
         
@@ -195,6 +196,32 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         }
         
         listener?.diaryWritingPressedBackBtn()
+    }
+    
+    // 글 수정할 때
+    func updateDiary(info: DiaryModel) {
+        print("interactor! updateDiary!")
+
+        // 수정하기 당시에 들어왔던 오리지널 메뉴얼
+        guard let originalDiaryModel = diaryModelRelay.value else { return }
+
+        let newDiaryModel = DiaryModel(uuid: originalDiaryModel.uuid,
+                                       pageNum: originalDiaryModel.pageNum,
+                                       title: info.title,
+                                       weather: info.weather,
+                                       place: info.place,
+                                       description: info.description,
+                                       image: info.image,
+                                       readCount: originalDiaryModel.readCount,
+                                       createdAt: originalDiaryModel.createdAt,
+                                       replies: originalDiaryModel.replies,
+                                       isDeleted: originalDiaryModel.isDeleted,
+                                       isHide: originalDiaryModel.isHide
+        )
+        print("newDiaryModel = \(newDiaryModel)")
+        
+        dependency.diaryRepository
+            .updateDiary(info: newDiaryModel)
     }
     
     func testSaveImage(imageName: String, image: UIImage) {

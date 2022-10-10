@@ -18,6 +18,8 @@ protocol DiaryWritingPresentableListener: AnyObject {
     // interactor class.
     func pressedBackBtn()
     func writeDiary(info: DiaryModel)
+    func updateDiary(info: DiaryModel)
+    
     func testSaveImage(imageName: String, image: UIImage)
     func pressedWeatherPlaceAddBtn(type: BottomSheetSelectViewType)
     func pressedTempSaveBtn()
@@ -33,9 +35,16 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         case location = 2
         case description = 3
     }
+    
+    enum WritingType {
+        case writing
+        case edit
+    }
 
     weak var listener: DiaryWritingPresentableListener?
     private var disposeBag = DisposeBag()
+    
+    private var writingType: WritingType = .writing
     
     private lazy var naviView = MenualNaviView(type: .write).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -351,7 +360,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         locationSelectView.selectedPlaceType = place
     }
     
+    // 수정하기일때만 사용!
     func setDiaryEditMode(diaryModel: DiaryModel) {
+        self.writingType = .edit
         self.naviView.naviViewType = .edit
         self.naviView.setNaviViewType()
         
@@ -397,25 +408,53 @@ extension DiaryWritingViewController {
                                     place: locationSelectView.selectedPlaceType ?? nil,
                                     detailText: locationSelectView.selectTitle
         )
-        
-        let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
-                                    pageNum: 0,
-                                    title: title,
-                                    weather: weatherModel,
-                                    place: placeModel,
-                                    description: description,
-                                    image: self.imageView.image,
-                                    readCount: 0,
-                                    createdAt: Date(),
-                                    replies: [],
-                                    isDeleted: false,
-                                    isHide: false
-        )
 
-        print("diaryModel.id = \(diaryModel.uuid)")
-        listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())
-        listener?.writeDiary(info: diaryModel)
-        dismiss(animated: true)
+        switch writingType {
+        case .writing:
+            print("PressedCheckBtn! writing!")
+            
+            let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
+                                        pageNum: 0,
+                                        title: title,
+                                        weather: weatherModel,
+                                        place: placeModel,
+                                        description: description,
+                                        image: self.imageView.image,
+                                        readCount: 0,
+                                        createdAt: Date(),
+                                        replies: [],
+                                        isDeleted: false,
+                                        isHide: false
+            )
+
+            print("diaryModel.id = \(diaryModel.uuid)")
+            listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())
+            listener?.writeDiary(info: diaryModel)
+            dismiss(animated: true)
+
+        case .edit:
+            print("PressedCheckBtn! edit!")
+            let diaryModel = DiaryModel(uuid: "",
+                                        pageNum: 0,
+                                        title: title,
+                                        weather: weatherModel,
+                                        place: placeModel,
+                                        description: description,
+                                        image: self.imageView.image,
+                                        readCount: 0,
+                                        createdAt: Date(),
+                                        replies: [],
+                                        isDeleted: false,
+                                        isHide: false
+            )
+            listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())
+            listener?.updateDiary(info: diaryModel)
+            popViewController(animated: true)
+        }
+        
+        /*
+        
+         */
     }
     
     @objc
