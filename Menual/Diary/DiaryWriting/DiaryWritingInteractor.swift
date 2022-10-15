@@ -56,6 +56,10 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     private let dependency: DiaryWritingInteractorDependency
     private var disposebag: DisposeBag
     
+    // - 미사용 시작
+    
+    // - 미사용 끝
+    
     var weatherModelValue: WeatherModel {
         weatherModelRelay.value ?? WeatherModel(uuid: "", weather: nil, detailText: "")
     }
@@ -261,7 +265,6 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     }
     
     // MARK: - 미사용
-    func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) {
-        
-    }
+    func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) { }
+    func filterWithWeatherPlacePressedFilterBtn() { }
 }

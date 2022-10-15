@@ -52,6 +52,9 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     var isFiltered: Bool = false
     
+    let isFilteredRelay = BehaviorRelay<Bool>(value: false)
+    private let isDraggingRelay = BehaviorRelay<Bool>(value: false)
+    
     // MARK: - UI 코드
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -118,11 +121,18 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
         $0.estimatedRowHeight = 72
         $0.rowHeight = 72
-        $0.showsVerticalScrollIndicator = false
+        $0.showsVerticalScrollIndicator = true
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 72, right: 0)
         $0.tag = -1
         $0.separatorStyle = .singleLine
         $0.separatorColor = Colors.grey.g700
+    }
+    
+    private let indicatorView = IndicatorView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isHidden = true
+        $0.alpha = 1
+        $0.frame = CGRect(x: 0, y: 0, width: 58, height: 20)
     }
     
     // MARK: - VC 코드
@@ -148,9 +158,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         
         self.view.addSubview(naviView)
         self.view.addSubview(fabWriteBtn)
+        self.view.addSubview(indicatorView)
         
         self.view.addSubview(myMenualTableView)
         myMenualTableView.tableHeaderView = tableViewHeaderView
+        
         tableViewHeaderView.addSubview(momentsCollectionView)
         tableViewHeaderView.addSubview(momentsCollectionViewPagination)
         tableViewHeaderView.addSubview(myMenualTitleView)
@@ -164,6 +176,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         
         self.view.bringSubviewToFront(naviView)
         self.view.bringSubviewToFront(fabWriteBtn)
+        self.view.bringSubviewToFront(indicatorView)
         
         myMenualTableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -209,6 +222,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.height.equalTo(56)
             make.bottom.equalToSuperview().inset(34)
         }
+        
+        indicatorView.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(16)
+            make.width.equalTo(56)
+            make.height.equalTo(20)
+            make.centerY.equalTo(myMenualTableView)
+        }
+        
     }
     
     func bind() {
@@ -228,6 +249,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         listener?.diaryMonthSetRelay
             .subscribe(onNext: { [weak self] diaryYearModelArr in
                 guard let self = self else { return }
+                
+                print("DiaryHome :: diaryMonthSetRelay")
                 
                 var sectionCount: Int = 0
                 for diaryYearModel in diaryYearModelArr {
@@ -255,6 +278,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             .subscribe(onNext: { [weak self] diaryYearModelArr in
                 guard let self = self else { return }
                 
+                print("DiaryHome :: filteredDiaryMonthSetRelay")
+                
                 // 필터는 계속 변형되므로 Relay가 업데이트 될때마다 담은 정보 초기화
                 self.filteredSectionNameDic = [:]
                 self.filteredCellsectionNumberDic = [:]
@@ -278,6 +303,37 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 
                 print("filter 후 sectionCount = \(sectionCount)")
                 self.myMenualTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        isDraggingRelay
+            .subscribe(onNext: { [weak self] isDragging in
+                guard let self = self else { return }
+                print("JJIKKYU :: isDragging = \(isDragging)")
+                DispatchQueue.main.async {
+                    switch isDragging {
+                    case true:
+                        self.indicatorView.isHidden = false
+                    case false:
+                        self.indicatorView.isHidden = true
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        isFilteredRelay
+            .subscribe(onNext: { [weak self] isFiltered in
+                guard let self = self else { return }
+                switch isFiltered {
+                case true:
+                    print("isFiltered! = true")
+                    self.myMenualTitleView.title = "TOTAL PAGE"
+                    
+                case false:
+                    print("isFiltered! = false")
+                    self.myMenualTitleView.title = "MY MENUAL"
+                    self.myMenualTableView.reloadData()
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -356,6 +412,23 @@ extension DiaryHomeViewController {
 extension DiaryHomeViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         momentsPagination(scrollView)
+        
+        isDraggingRelay.accept(true)
+
+        DispatchQueue.main.async {
+            let scrollIndicator = scrollView.subviews.last!
+            scrollIndicator.backgroundColor = .red
+            
+            self.indicatorView.snp.remakeConstraints { make in
+                make.trailing.equalToSuperview().inset(16)
+                make.centerY.equalTo(scrollIndicator)
+            }
+        }
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("scrollViewDidEndDecelerating")
+        isDraggingRelay.accept(false)
     }
 
     func momentsPagination(_ scrollView: UIScrollView) {
@@ -507,6 +580,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func reloadTableView(isFiltered: Bool) {
         print("reloadTableView!")
         self.isFiltered = isFiltered
+        self.isFilteredRelay.accept(isFiltered)
         myMenualTableView.reloadData()
     }
     

@@ -190,7 +190,17 @@ class ListHeader: UIView {
                 
                 let attributedString = NSMutableAttributedString(string: text)
                 // MY MENUAL의 타이틀의 카운트로 한 거니까, 다국어 지원 할 경우에는 코드 변경 필요
-                let range = text.count - 10
+
+                var range = 0
+                switch title {
+                case "MY MENUAL":
+                    range = text.count - 10
+                case "TOTAL PAGE":
+                    range = text.count - 10
+                default:
+                    range = text.count
+                }
+
                 // MY MENUAL ''P.00]''
                 let number = (text as NSString).substring(with: NSMakeRange(10, range))
                 

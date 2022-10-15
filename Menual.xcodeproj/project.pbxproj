@@ -23,6 +23,7 @@
 		983783F4287A951400EAD78C /* ReplyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983783F3287A951400EAD78C /* ReplyCell.swift */; };
 		983783F6287AB0F300EAD78C /* ReplyBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983783F5287AB0F300EAD78C /* ReplyBottomView.swift */; };
 		9838574D28FA77FF007378EC /* SectionListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838574C28FA77FF007378EC /* SectionListHeaderView.swift */; };
+		9838574F28FA7AE9007378EC /* IndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838574E28FA7AE9007378EC /* IndicatorView.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -243,6 +244,7 @@
 		983783F3287A951400EAD78C /* ReplyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyCell.swift; sourceTree = "<group>"; };
 		983783F5287AB0F300EAD78C /* ReplyBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyBottomView.swift; sourceTree = "<group>"; };
 		9838574C28FA77FF007378EC /* SectionListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionListHeaderView.swift; sourceTree = "<group>"; };
+		9838574E28FA7AE9007378EC /* IndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorView.swift; sourceTree = "<group>"; };
 		985A52A927F023DB00B10829 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
@@ -486,6 +488,7 @@
 				980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */,
 				98A2BD902802B43E00C1FB92 /* MyMenualCell.swift */,
 				9838574C28FA77FF007378EC /* SectionListHeaderView.swift */,
+				9838574E28FA7AE9007378EC /* IndicatorView.swift */,
 			);
 			path = DiaryHome;
 			sourceTree = "<group>";
@@ -1671,6 +1674,7 @@
 				983783F6287AB0F300EAD78C /* ReplyBottomView.swift in Sources */,
 				98B5576C28389E6300F8CA3E /* DesignSystemCell.swift in Sources */,
 				98B557CB2841EEAC00F8CA3E /* FABBuilder.swift in Sources */,
+				9838574F28FA7AE9007378EC /* IndicatorView.swift in Sources */,
 				98A56C6E2868426B000AC4FF /* WeatherPlcaeToolbarView.swift in Sources */,
 				98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */,
 				9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */,

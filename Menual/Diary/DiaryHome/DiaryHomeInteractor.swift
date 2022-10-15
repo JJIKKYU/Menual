@@ -29,6 +29,7 @@ protocol DiaryHomeRouting: ViewableRouting {
 
 protocol DiaryHomePresentable: Presentable {
     var listener: DiaryHomePresentableListener? { get set }
+    var isFilteredRelay: BehaviorRelay<Bool> { get }
     
     func reloadTableView(isFiltered: Bool)
 }
@@ -53,6 +54,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     var lastPageNumRelay = BehaviorRelay<Int>(value: 0)
     var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
     var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
+    
+    var filteredWeatherArr: [Weather] = []
+    var filteredPlaceArr: [Place] = []
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -269,7 +273,33 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) {
         print("diaryHome!! \(weatherArr), \(placeArr)")
         
-        dependency.diaryRepository
-            .filterDiary(weatherTypes: weatherArr, placeTypes: placeArr)
+        var isFiltered: Bool = false
+        if weatherArr.count == 0 && placeArr.count == 0 {
+            print("diaryHomeInteractor :: isFiltered = false")
+            isFiltered = false
+            
+            filteredPlaceArr = []
+            filteredWeatherArr = []
+
+            dependency.diaryRepository
+                .fetch()
+
+        } else if weatherArr.count > 0 || placeArr.count > 0 {
+            print("diaryHomeInteractor :: isFiltered = true")
+            isFiltered = true
+
+            filteredWeatherArr = weatherArr
+            filteredPlaceArr = placeArr
+            
+        }
     }
+    
+    // 필터를 적용하고 확인 버튼을 눌렀을 경우 최종적으로 필터 적용
+    func filterWithWeatherPlacePressedFilterBtn() {
+        print("diaryHomeInteractor :: filterWithWeatherPlacePressedFilterBtn!")
+
+        dependency.diaryRepository
+            .filterDiary(weatherTypes: filteredWeatherArr, placeTypes: filteredPlaceArr)
+    }
+    
 }

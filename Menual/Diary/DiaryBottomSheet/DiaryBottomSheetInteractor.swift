@@ -28,6 +28,7 @@ protocol DiaryBottomSheetListener: AnyObject {
     func diaryBottomSheetPressedCloseBtn()
     
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place])
+    func filterWithWeatherPlacePressedFilterBtn()
 }
 
 final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPresentable>, DiaryBottomSheetInteractable, DiaryBottomSheetPresentableListener {
@@ -58,6 +59,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         if let menuComponentRelay = menuComponentRelay {
             self.menuComponentRelay = menuComponentRelay
         }
+
         print("menualBottomSheetType = \(bottomSheetType)")
         super.init(presenter: presenter)
         presenter.listener = self
@@ -140,8 +142,14 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         self.placeModel = newPlaceModel
     }
     
+    // MARK: - Place/Weahter Filter
+    func filterWithWeatherPlacePressedFilterBtn() {
+        listener?.filterWithWeatherPlacePressedFilterBtn()
+    }
+    
     // MARK: - DiaryWritingVC
     func diaryWritingPressedBackBtn() {
         print("diaryWritingPressedBackBtn!")
     }
+    
 }

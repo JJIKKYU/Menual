@@ -50,6 +50,9 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     
     // MenualBottomSheetMenuComponentView
     var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>? { get set }
+    
+    func filterWithWeatherPlacePressedFilterBtn()
+    // var filteredDiaryCountRelay: BehaviorRelay<Int>? { get set }
 }
 
 final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPresentable, DiaryBottomSheetViewControllable {
@@ -151,7 +154,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         $0.bind()
         $0.isHidden = true
         $0.weatherTitleBtn.addTarget(self, action: #selector(pressedWeatherTitleBtn), for: .touchUpInside)
-        $0.filterBtn.addTarget(self, action: #selector(pressedWeatherTitleBtn), for: .touchUpInside)
+        $0.filterBtn.addTarget(self, action: #selector(pressedFilterBtn), for: .touchUpInside)
         // $0.delegate = self
     }
     
@@ -267,7 +270,13 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     }
     
     func bind() {
-        
+//        guard let filteredDiaryCountRelay = listener?.filteredDiaryCountRelay else { return }
+//        filteredDiaryCountRelay
+//            .subscribe(onNext: { [weak self] count in
+//                guard let self = self else { return }
+//                print("diaryBottomSheetViewController :: count! \(count)")
+//        })
+//            .disposed(by: disposeBag)
     }
     
     func setViewsWithWeatherModel(model: WeatherModel) {
@@ -531,6 +540,11 @@ extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelega
     
     var filteredMenaulCountsObservable: Observable<Int> {
         return filteredMenaulCountsRelay.asObservable()
+    }
+    
+    @objc
+    func pressedFilterBtn() {
+        listener?.filterWithWeatherPlacePressedFilterBtn()
     }
     
     @objc

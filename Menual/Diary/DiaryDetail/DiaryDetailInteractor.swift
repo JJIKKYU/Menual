@@ -187,5 +187,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         print("diaryWritingPressedBackBtn")
         router?.detachDiaryWriting(isOnlyDetach: false)
     }
+
+    // 미사용
+    func filterWithWeatherPlacePressedFilterBtn() { }
 }
  
