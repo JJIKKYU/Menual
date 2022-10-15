@@ -222,6 +222,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         
         dependency.diaryRepository
             .updateDiary(info: newDiaryModel)
+        diaryModelRelay.accept(newDiaryModel)
     }
     
     func testSaveImage(imageName: String, image: UIImage) {

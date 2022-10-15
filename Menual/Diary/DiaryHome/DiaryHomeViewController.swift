@@ -121,6 +121,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.showsVerticalScrollIndicator = false
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 72, right: 0)
         $0.tag = -1
+        $0.separatorStyle = .singleLine
+        $0.separatorColor = Colors.grey.g700
     }
     
     // MARK: - VC 코드
@@ -375,6 +377,10 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
 
 // MARK: - UITableView Deleagte, Datasource
 extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 34
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isFiltered {
             guard let monthMenualCount = filteredCellsectionNumberDic2[section] else { return 0 }
@@ -505,8 +511,9 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let sectionListHeader = ListHeader(type: .text, rightIconType: .none)
-        sectionListHeader.backgroundColor = .black
+        let sectionListHeader = SectionListHeaderView()
+
+        sectionListHeader.backgroundColor = .clear
         sectionListHeader.title = "2022.999"
         
         print("section, section = \(section)")

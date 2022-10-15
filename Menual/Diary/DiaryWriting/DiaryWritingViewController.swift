@@ -449,7 +449,7 @@ extension DiaryWritingViewController {
             )
             listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())
             listener?.updateDiary(info: diaryModel)
-            popViewController(animated: true)
+            self.pressedBackBtn()
         }
         
         /*
