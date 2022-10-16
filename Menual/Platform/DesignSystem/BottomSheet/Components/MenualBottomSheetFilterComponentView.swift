@@ -81,11 +81,12 @@ class MenualBottomSheetFilterComponentView: UIView {
         $0.selectionLimit = Place().getVariation().count
     }
     
-    private let resetBtn = UIButton().then {
+    private lazy var resetBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("초기화", for: .normal)
         $0.titleLabel?.font = UIFont.AppTitle(.title_2)
         $0.setTitleColor(Colors.tint.main.v500, for: .normal)
+        $0.setTitleColor(Colors.tint.main.v800, for: .highlighted)
         $0.setTitleColor(Colors.grey.g600, for: .disabled)
         $0.setImage(Asset._24px.Circle.front.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.tint.main.v500
@@ -93,6 +94,7 @@ class MenualBottomSheetFilterComponentView: UIView {
         $0.layer.borderColor = Colors.tint.main.v600.cgColor
         $0.AppCorner(._4pt)
         $0.marginImageWithText(margin: 4)
+        $0.addTarget(self, action: #selector(pressedResetFilterBtn), for: .touchUpInside)
     }
     
     public lazy var filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
@@ -233,6 +235,7 @@ extension MenualBottomSheetFilterComponentView {
     @objc
     func pressedWeatherTitleBtn() {
         print("bottomSheet :: pressedWeatherTitleBtn!")
+        delegate?.filterWeatherSelectedArrRelay.accept([])
         weatherSelectView.selctAllCells()
         setNeedsLayout()
     }
@@ -240,7 +243,18 @@ extension MenualBottomSheetFilterComponentView {
     @objc
     func pressedPlaceTitleBtn() {
         print("bottomSheet :: pressedPlaceTitleBtn!")
+        delegate?.filterPlaceSelectedArrRelay.accept([])
         placeSelectView.selctAllCells()
+        setNeedsLayout()
+    }
+    
+    @objc
+    func pressedResetFilterBtn() {
+        print("bottomSheet :: pressedResetFilterBtn!")
+        delegate?.filterWeatherSelectedArrRelay.accept([])
+        delegate?.filterPlaceSelectedArrRelay.accept([])
+        weatherSelectView.resetCells()
+        placeSelectView.resetCells()
         setNeedsLayout()
     }
 }

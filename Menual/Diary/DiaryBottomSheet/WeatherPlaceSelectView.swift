@@ -93,6 +93,8 @@ class WeatherPlaceSelectView: UIView {
         }
     }
     
+    // 사용하는 뷰에서 selectAllCells를 호출할 경우
+    // true, false를 돌아가면서 전체선택, 전체선택풀기로 작동한다.
     public func selctAllCells() {
         print("WeatherPlaceSelectView :: selctAllCells!")
         for row in 0..<collectionView.numberOfItems(inSection: 0) {
@@ -107,6 +109,19 @@ class WeatherPlaceSelectView: UIView {
             }
         }
         allSelect = !allSelect
+    }
+    
+    // 사용하는 뷰에서 resetCells를 호출한 경우
+    // selectAllCells에서 사용하는 Bool값을 false로 초기화하고
+    // 선택을 모두 푼다.
+    public func resetCells() {
+        print("WeatherPlaceSelectView :: resetCells!")
+        for row in 0..<collectionView.numberOfItems(inSection: 0) {
+            let indexPath = IndexPath(row: row, section: 0)
+            self.collectionView.deselectItem(at: indexPath, animated: false)
+            self.collectionView(self.collectionView, didDeselectItemAt: indexPath)
+        }
+        allSelect = false
     }
 }
 

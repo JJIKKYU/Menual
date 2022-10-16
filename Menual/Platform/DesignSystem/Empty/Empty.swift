@@ -75,7 +75,8 @@ class Empty: UIView {
         addSubview(emptyImageTitleLabel)
         
         emptyImageView.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
+            make.top.equalToSuperview()
+            make.centerX.equalToSuperview()
             make.width.height.equalTo(160)
         }
         
