@@ -35,6 +35,14 @@ final class BoxButtonViewController: UIViewController, BoxButtonPresentable, Box
     
     private let activeBoxBtnXLarge = BoxButton(frame: CGRect.zero, btnStatus: .active, btnSize: .xLarge).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isFiltered = .disabled
+        $0.title = "텍스트를 입력해주세요"
+        $0.btnSelected = false
+    }
+    
+    private let activeBoxBtnXLargeIsFiltered = BoxButton(frame: CGRect.zero, btnStatus: .active, btnSize: .xLarge).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isFiltered = .enabled
         $0.title = "텍스트를 입력해주세요"
         $0.btnSelected = false
     }
@@ -94,6 +102,7 @@ final class BoxButtonViewController: UIViewController, BoxButtonPresentable, Box
         self.view.addSubview(naviView)
         self.view.addSubview(scrollView)
         self.scrollView.addSubview(activeBoxBtnXLarge)
+        self.scrollView.addSubview(activeBoxBtnXLargeIsFiltered)
         self.scrollView.addSubview(activeBoxBtnlarge)
         self.scrollView.addSubview(inactiveBoxBtnXLarge)
         self.scrollView.addSubview(inactiveBoxBtnLarge)
@@ -122,11 +131,18 @@ final class BoxButtonViewController: UIViewController, BoxButtonPresentable, Box
             make.top.equalToSuperview().offset(64)
         }
         
+        activeBoxBtnXLargeIsFiltered.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(56)
+            make.top.equalTo(activeBoxBtnXLarge.snp.bottom).offset(20)
+        }
+        
         activeBoxBtnlarge.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.height.equalTo(48)
-            make.top.equalTo(activeBoxBtnXLarge.snp.bottom).offset(20)
+            make.top.equalTo(activeBoxBtnXLargeIsFiltered.snp.bottom).offset(20)
         }
         
         inactiveBoxBtnXLarge.snp.makeConstraints { make in

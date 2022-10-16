@@ -433,6 +433,13 @@ internal enum Asset {
     internal static let stopwatch = ImageAsset(name: "80px/stopwatch")
     internal static let tea = ImageAsset(name: "80px/tea")
   }
+  internal enum Illurstration {
+    internal static let emtpySpace = ImageAsset(name: "Illurstration/emtpy_space")
+    internal static let networkError = ImageAsset(name: "Illurstration/network_error")
+    internal static let pageError = ImageAsset(name: "Illurstration/page_error")
+    internal static let serviceCheck = ImageAsset(name: "Illurstration/service_check")
+    internal static let viewLock = ImageAsset(name: "Illurstration/view_lock")
+  }
   internal enum Pagination {
     internal static let paginationSelected = ImageAsset(name: "Pagination/paginationSelected")
     internal static let paginationUnselected = ImageAsset(name: "Pagination/paginationUnselected")

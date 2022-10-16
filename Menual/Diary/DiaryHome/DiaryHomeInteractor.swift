@@ -276,24 +276,16 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) {
         print("diaryHome!! \(weatherArr), \(placeArr)")
         
-        var isFiltered: Bool = false
         if weatherArr.count == 0 && placeArr.count == 0 {
-            print("diaryHomeInteractor :: isFiltered = false")
-            isFiltered = false
-            
+            print("diaryHome :: Interactor -> isFiltered = false")
             filteredPlaceArr = []
             filteredWeatherArr = []
 
-            dependency.diaryRepository
-                .fetch()
-
         } else if weatherArr.count > 0 || placeArr.count > 0 {
-            print("diaryHomeInteractor :: isFiltered = true")
-            isFiltered = true
+            print("diaryHome :: Interactor -> isFiltered = true")
 
             filteredWeatherArr = weatherArr
             filteredPlaceArr = placeArr
-            
         }
     }
     
@@ -301,8 +293,16 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     func filterWithWeatherPlacePressedFilterBtn() {
         print("diaryHomeInteractor :: filterWithWeatherPlacePressedFilterBtn!")
 
-        dependency.diaryRepository
-            .filterDiary(weatherTypes: filteredWeatherArr, placeTypes: filteredPlaceArr)
+        if filteredWeatherArr.count == 0 && filteredPlaceArr.count == 0 {
+            presenter.isFilteredRelay.accept(false)
+            dependency.diaryRepository.fetch()
+        } else {
+            presenter.isFilteredRelay.accept(true)
+            dependency.diaryRepository
+                .filterDiary(weatherTypes: filteredWeatherArr,
+                             placeTypes: filteredPlaceArr
+                )
+        }
     }
     
     // interactor에 저장된 필터 목록을 제거하고, repository에서 새로 fetch

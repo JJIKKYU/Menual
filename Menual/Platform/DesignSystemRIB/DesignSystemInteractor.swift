@@ -40,6 +40,9 @@ protocol DesignSystemRouting: ViewableRouting {
     
     func attachPaginationVC()
     func detachPaginationVC(isOnlyDetach: Bool)
+    
+    func attachEmptyVC()
+    func detachEmptyVC(isOnlyDetach: Bool)
 }
 
 protocol DesignSystemPresentable: Presentable {
@@ -69,7 +72,8 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
         "Pagination",
         "Divider",
         "Moments",
-        "List"
+        "List",
+        "Empty"
     ]
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
@@ -171,5 +175,13 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     
     func paginationPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachPaginationVC(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedEmptyCell() {
+        router?.attachEmptyVC()
+    }
+    
+    func emptyPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachEmptyVC(isOnlyDetach: isOnlyDetach)
     }
 }

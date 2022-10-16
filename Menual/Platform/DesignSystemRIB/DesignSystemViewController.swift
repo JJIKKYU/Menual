@@ -28,6 +28,7 @@ protocol DesignSystemPresentableListener: AnyObject {
     func pressedFABButtonCell()
     func pressedTabsCell()
     func pressedPaginationCell()
+    func pressedEmptyCell()
 }
 
 final class DesignSystemViewController: UIViewController, DesignSystemPresentable, DesignSystemViewControllable {
@@ -103,7 +104,7 @@ final class DesignSystemViewController: UIViewController, DesignSystemPresentabl
 // MARK: - TableView
 extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 11
+        return 12
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -135,6 +136,8 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
             cell.backgroundColor = .clear
         case "List":
             cell.backgroundColor = .clear
+        case "Empty":
+            cell.backgroundColor = Colors.tint.main.v400
         default:
             break
         }
@@ -171,6 +174,8 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
             listener?.pressedMomentsCell()
         case "List":
             listener?.pressedListButtonCell()
+        case "Empty":
+            listener?.pressedEmptyCell()
         default:
             break
         }
