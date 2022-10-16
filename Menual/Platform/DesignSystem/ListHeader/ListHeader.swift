@@ -48,6 +48,10 @@ class ListHeader: UIView {
         didSet { setNeedsLayout() }
     }
     
+    var rightFilterBtnIsEnabled: Bool = false {
+        didSet { setFilterIcon() }
+    }
+    
     private let titleLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -61,6 +65,9 @@ class ListHeader: UIView {
         $0.contentVerticalAlignment = .fill
     }
     
+    let rightFilterBtnBadge = Badges().then {
+        $0.badgeType = .dot
+    }
     let rightFilterBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.filter.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -101,6 +108,7 @@ class ListHeader: UIView {
         addSubview(titleLabel)
         addSubview(rightArrowBtn)
         addSubview(rightFilterBtn)
+        rightFilterBtn.addSubview(rightFilterBtnBadge)
         addSubview(rightTextBtn)
         addSubview(rightCalenderBtn)
         
@@ -123,6 +131,11 @@ class ListHeader: UIView {
             make.width.height.equalTo(24)
             make.centerY.equalToSuperview()
             // make.top.bottom.equalToSuperview()
+        }
+        
+        rightFilterBtnBadge.snp.makeConstraints { make in
+            make.trailing.top.equalToSuperview()
+            make.width.height.equalTo(4)
         }
         
         rightTextBtn.snp.makeConstraints { make in
@@ -250,6 +263,18 @@ class ListHeader: UIView {
 
         case .empty:
             break
+        }
+    }
+    
+    // filter가 되었을 경우 우측 상단에 dot이 표시되도록
+    func setFilterIcon() {
+        print("ListHeader :: setFilterIcon -> \(rightFilterBtnIsEnabled)")
+        switch rightFilterBtnIsEnabled {
+        case true:
+            rightFilterBtnBadge.show()
+
+        case false:
+            rightFilterBtnBadge.hide()
         }
     }
 }

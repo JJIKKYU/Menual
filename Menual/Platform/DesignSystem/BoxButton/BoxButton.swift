@@ -21,12 +21,22 @@ enum BoxButtonSize {
     case xLarge
 }
 
+// 필터가 적용되면서 색상이 변경되는 경우가 있음
+enum BoxButtonIsFiltered {
+    case enabled
+    case disabled
+}
+
 class BoxButton: UIButton {
     var btnStatus: BoxButtonStatus = .inactive {
         didSet { setNeedsLayout() }
     }
     
     var btnSize: BoxButtonSize = .large {
+        didSet { setNeedsLayout() }
+    }
+    
+    var isFiltered: BoxButtonIsFiltered = .disabled {
         didSet { setNeedsLayout() }
     }
     
@@ -81,9 +91,18 @@ class BoxButton: UIButton {
         
         switch btnStatus {
         case .active:
-            backgroundColor = Colors.tint.sub.n400
             btnLabel.textColor = Colors.grey.g800
-            break
+
+            if btnSize == .xLarge {
+                switch isFiltered {
+                case .enabled:
+                    backgroundColor = Colors.tint.main.v400
+                case .disabled:
+                    backgroundColor = Colors.tint.sub.n400
+                }
+            } else {
+                backgroundColor = Colors.tint.sub.n400
+            }
 
         case .inactive:
             backgroundColor = Colors.grey.g700
@@ -92,9 +111,18 @@ class BoxButton: UIButton {
             break
             
         case .pressed:
-            backgroundColor = Colors.tint.sub.n600
             btnLabel.textColor = Colors.grey.g800
-            break
+            
+            if btnSize == .xLarge {
+                switch isFiltered {
+                case .enabled:
+                    backgroundColor = Colors.tint.main.v400
+                case .disabled:
+                    backgroundColor = Colors.tint.sub.n400
+                }
+            } else {
+                backgroundColor = Colors.tint.sub.n400
+            }
         }
         
         if btnStatus == .inactive { return }

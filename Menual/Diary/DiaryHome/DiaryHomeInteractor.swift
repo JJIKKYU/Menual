@@ -31,7 +31,7 @@ protocol DiaryHomePresentable: Presentable {
     var listener: DiaryHomePresentableListener? { get set }
     var isFilteredRelay: BehaviorRelay<Bool> { get }
     
-    func reloadTableView(isFiltered: Bool)
+    func reloadTableView()
 }
 
 protocol DiaryHomeListener: AnyObject {
@@ -99,7 +99,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 let lastPageNum = diaryArr.sorted { $0.createdAt > $1.createdAt }.first?.pageNum ?? 0
                 self.lastPageNumRelay.accept(lastPageNum)
                 
-                self.presenter.reloadTableView(isFiltered: false)
+                self.presenter.isFilteredRelay.accept(false)
+                self.presenter.reloadTableView()
             })
             .disposed(by: disposebag)
         
@@ -117,7 +118,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 }
                 
                 self.lastPageNumRelay.accept(menualCount)
-                self.presenter.reloadTableView(isFiltered: true)
+                self.presenter.isFilteredRelay.accept(true)
+                self.presenter.reloadTableView()
             })
             .disposed(by: disposebag)
         
@@ -127,7 +129,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 guard let self = self else { return }
                 print("monthSet 구독중! \(monthSet)")
                 
-                self.presenter.reloadTableView(isFiltered: false)
+                self.presenter.isFilteredRelay.accept(false)
+                self.presenter.reloadTableView()
             })
             .disposed(by: disposebag)
 
@@ -302,4 +305,14 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             .filterDiary(weatherTypes: filteredWeatherArr, placeTypes: filteredPlaceArr)
     }
     
+    // interactor에 저장된 필터 목록을 제거하고, repository에서 새로 fetch
+    func pressedFilterResetBtn() {
+        print("diaryHome :: Inetactor -> filterReset!")
+        self.filteredWeatherArr = []
+        self.filteredPlaceArr = []
+
+        presenter.isFilteredRelay.accept(false)
+        dependency.diaryRepository
+            .fetch()
+    }
 }

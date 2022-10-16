@@ -27,6 +27,7 @@ protocol DiaryHomePresentableListener: AnyObject {
     func pressedMenualTitleBtn()
     
     func pressedFilterBtn()
+    func pressedFilterResetBtn()
     func pressedDateFilterBtn()
     
     var lastPageNumRelay: BehaviorRelay<Int> { get }
@@ -49,8 +50,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     var filteredCellsectionNumberDic: [String: Int] = [:]
     var filteredCellsectionNumberDic2: [Int: Int] = [:]
-    
-    var isFiltered: Bool = false
     
     let isFilteredRelay = BehaviorRelay<Bool>(value: false)
     private let isDraggingRelay = BehaviorRelay<Bool>(value: false)
@@ -189,7 +188,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.top.equalToSuperview()
             make.width.equalToSuperview()
-            make.height.equalTo(206)
+            make.height.equalTo(220)
         }
         self.view.layoutIfNeeded()
         
@@ -236,8 +235,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         listener?.lastPageNumRelay
             .subscribe(onNext: { [weak self] num in
                 guard let self = self else { return }
-                print("num!! = \(num)")
-                if self.isFiltered {
+                print("diaryHome :: num!! = \(num)")
+                if self.isFilteredRelay.value {
                     self.myMenualTitleView.pageNumber = num
                 } else {
                     self.fabWriteBtn.title = String(num + 1) + "번째 메뉴얼 작성하기"
@@ -306,10 +305,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             })
             .disposed(by: disposeBag)
         
+        // 드래그를 하고 있을 경우 true
+        // 드래그를 멈추는 시점에 false
         isDraggingRelay
             .subscribe(onNext: { [weak self] isDragging in
                 guard let self = self else { return }
-                print("JJIKKYU :: isDragging = \(isDragging)")
                 DispatchQueue.main.async {
                     switch isDragging {
                     case true:
@@ -324,16 +324,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         isFilteredRelay
             .subscribe(onNext: { [weak self] isFiltered in
                 guard let self = self else { return }
-                switch isFiltered {
-                case true:
-                    print("isFiltered! = true")
-                    self.myMenualTitleView.title = "TOTAL PAGE"
-                    
-                case false:
-                    print("isFiltered! = false")
-                    self.myMenualTitleView.title = "MY MENUAL"
-                    self.myMenualTableView.reloadData()
-                }
+                self.setFilterStatus(isFiltered: isFiltered)
             })
             .disposed(by: disposeBag)
     }
@@ -406,6 +397,12 @@ extension DiaryHomeViewController {
         print("pressedFilterBtn")
         listener?.pressedFilterBtn()
     }
+    
+    @objc
+    func pressedFilterResetBtn() {
+        print("DiaryHome :: filterReset!!")
+        listener?.pressedFilterResetBtn()
+    }
 }
 
 // MARK: - Scroll View
@@ -455,7 +452,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isFiltered {
+        if self.isFilteredRelay.value {
             guard let monthMenualCount = filteredCellsectionNumberDic2[section] else { return 0 }
             print("monthMenualCount = \(monthMenualCount)")
 
@@ -470,7 +467,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if isFiltered {
+        if self.isFilteredRelay.value {
             print("filteredSectionNameDic.count = \(filteredSectionNameDic.count), \(filteredSectionNameDic)")
             return filteredSectionNameDic.count
         } else {
@@ -494,7 +491,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         var data: DiaryModel?
         
         var sectionName: String = ""
-        if isFiltered {
+        if self.isFilteredRelay.value {
             guard let _sectionName = filteredSectionNameDic[section] else { return defaultCell }
             sectionName = _sectionName
         } else {
@@ -515,7 +512,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         print("cell, year = \(year), month = \(month)")
         
         var diaryYearModelArr: [DiaryYearModel] = []
-        if isFiltered {
+        if self.isFilteredRelay.value {
             diaryYearModelArr = listener?.filteredDiaryMonthSetRelay.value ?? []
         } else {
             diaryYearModelArr = listener?.diaryMonthSetRelay.value ?? []
@@ -534,7 +531,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         guard let data = data else { return defaultCell }
         
         var sectionNumber: Int = 0
-        if isFiltered {
+        if self.isFilteredRelay.value {
             guard let _sectionNumber: Int = filteredCellsectionNumberDic[data.getSectionName()] else { return defaultCell }
             sectionNumber = _sectionNumber
         } else {
@@ -577,10 +574,10 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         listener?.pressedDiaryCell(diaryModel: data)
     }
     
-    func reloadTableView(isFiltered: Bool) {
+    func reloadTableView() {
         print("reloadTableView!")
-        self.isFiltered = isFiltered
-        self.isFilteredRelay.accept(isFiltered)
+        // self.isFiltered = isFiltered
+        // self.isFilteredRelay.accept(isFiltered)
         myMenualTableView.reloadData()
     }
     
@@ -593,7 +590,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         print("section, section = \(section)")
 
         var sectionNameFormat: String = ""
-        if isFiltered {
+        if self.isFilteredRelay.value {
             guard let _sectionNameFormat = filteredSectionNameDic[section] else { return sectionListHeader }
             sectionNameFormat = _sectionNameFormat
         } else {
@@ -733,5 +730,35 @@ extension DiaryHomeViewController: DialogDelegate {
     
     func exit() {
         print("나감마")
+    }
+}
+
+// MARK: - Filter
+extension DiaryHomeViewController {
+    func setFilterStatus(isFiltered: Bool) {
+        // 이미 적용된 target 제거
+        self.fabWriteBtn.removeTarget(nil, action: nil, for: .allEvents)
+
+        switch isFiltered {
+        case true:
+            print("diaryHome :: isFiltered! = true")
+            self.myMenualTitleView.title = "TOTAL PAGE"
+            self.myMenualTitleView.rightFilterBtnIsEnabled = true
+            
+            self.fabWriteBtn.title = "필터 초기화"
+            self.fabWriteBtn.isFiltered = .enabled
+
+            self.fabWriteBtn.addTarget(self, action: #selector(pressedFilterResetBtn), for: .touchUpInside)
+            
+        case false:
+            print("diaryHome :: isFiltered! = false")
+            self.myMenualTitleView.title = "MY MENUAL"
+            self.myMenualTitleView.rightFilterBtnIsEnabled = false
+            self.fabWriteBtn.isFiltered = .disabled
+            
+            self.fabWriteBtn.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
+
+            self.myMenualTableView.reloadData()
+        }
     }
 }
