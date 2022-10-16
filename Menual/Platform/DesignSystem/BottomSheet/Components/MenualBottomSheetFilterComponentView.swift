@@ -38,6 +38,7 @@ class MenualBottomSheetFilterComponentView: UIView {
         $0.setImage(Asset._24px.Circle.Check.active.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g600
         $0.marginImageWithText(margin: 4)
+        $0.addTarget(self, action: #selector(pressedWeatherTitleBtn), for: .touchUpInside)
 //        $0.isUserInteractionEnabled = true
     }
     
@@ -55,7 +56,7 @@ class MenualBottomSheetFilterComponentView: UIView {
         $0.selectionLimit = Weather().getVariation().count
     }
     
-    private let placeTitleBtn = UIButton().then {
+    private lazy var placeTitleBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("장소", for: .normal)
         $0.titleLabel?.font = UIFont.AppTitle(.title_2)
@@ -63,6 +64,7 @@ class MenualBottomSheetFilterComponentView: UIView {
         $0.setImage(Asset._24px.Circle.Check.active.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g600
         $0.marginImageWithText(margin: 4)
+        $0.addTarget(self, action: #selector(pressedPlaceTitleBtn), for: .touchUpInside)
     }
     
     private let placeSelectNumTitle = UILabel().then {
@@ -224,6 +226,23 @@ class MenualBottomSheetFilterComponentView: UIView {
         }
     }
 
+}
+
+// MARK: - IBAction
+extension MenualBottomSheetFilterComponentView {
+    @objc
+    func pressedWeatherTitleBtn() {
+        print("bottomSheet :: pressedWeatherTitleBtn!")
+        weatherSelectView.selctAllCells()
+        setNeedsLayout()
+    }
+    
+    @objc
+    func pressedPlaceTitleBtn() {
+        print("bottomSheet :: pressedPlaceTitleBtn!")
+        placeSelectView.selctAllCells()
+        setNeedsLayout()
+    }
 }
 
 // MARK: - WeatherPlaceSelectViewDelegate

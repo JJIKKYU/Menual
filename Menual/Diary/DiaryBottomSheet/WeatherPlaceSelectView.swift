@@ -33,6 +33,8 @@ class WeatherPlaceSelectView: UIView {
         didSet { setNeedsLayout() }
     }
     
+    private var allSelect: Bool = false
+    
     private lazy var collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout.init()).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
@@ -90,6 +92,22 @@ class WeatherPlaceSelectView: UIView {
             collectionView.reloadData()
         }
     }
+    
+    public func selctAllCells() {
+        print("WeatherPlaceSelectView :: selctAllCells!")
+        for row in 0..<collectionView.numberOfItems(inSection: 0) {
+            let indexPath = IndexPath(row: row, section: 0)
+            if allSelect == true {
+                self.collectionView.deselectItem(at: indexPath, animated: false)
+                self.collectionView(self.collectionView, didDeselectItemAt: indexPath)
+            } else {
+                self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .top)
+                self.collectionView(self.collectionView, didSelectItemAt: indexPath)
+
+            }
+        }
+        allSelect = !allSelect
+    }
 }
 
 // MARK: - UICollectionView
@@ -126,7 +144,7 @@ extension WeatherPlaceSelectView: UICollectionViewDelegate, UICollectionViewData
     
     // 선택할때
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        print("WeatherPlaceSelectView :: selectItem!")
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WeatherPlaceSelectViewCell", for: indexPath) as? WeatherPlaceSelectViewCell else { return }
 
         let index = indexPath.row
