@@ -11,7 +11,7 @@ import RxRelay
 
 protocol DiaryDetailRouting: ViewableRouting {
     func attachBottomSheet(type: MenualBottomSheetType, menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?)
-    func detachBottomSheet()
+    func detachBottomSheet(isWithDiaryDetatil: Bool)
     
     // 수정하기
     func attachDiaryWriting(diaryModel: DiaryModel)
@@ -98,12 +98,15 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                     self.hideDiary()
                     
                 case .edit:
-                    self.router?.detachBottomSheet()
+                    self.router?.detachBottomSheet(isWithDiaryDetatil: false)
                     guard let diaryModel = self.diaryModel else { return }
                     self.router?.attachDiaryWriting(diaryModel: diaryModel)
                     
                 case .delete:
-                    break
+                    guard let diaryModel = self.diaryModel else { return }
+                    dependency.diaryRepository
+                        .deleteDiary(info: diaryModel)
+                    self.router?.detachBottomSheet(isWithDiaryDetatil: true)
                     
                 case .none:
                     break
@@ -164,7 +167,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     }
     
     func diaryBottomSheetPressedCloseBtn() {
-        router?.detachBottomSheet()
+        router?.detachBottomSheet(isWithDiaryDetatil: false)
     }
     
     func pressedReminderBtn() {

@@ -185,8 +185,8 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         
         // super.delegate = nil
         weatherPlaceSelectView.delegate = nil
-        listener?.pressedCloseBtn()
         filterComponentView.delegate = nil
+        listener?.pressedCloseBtn()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -384,7 +384,6 @@ extension DiaryBottomSheetViewController {
     // 부모 뷰가 애니메이션이 모두 끝났을 경우 Delegate 전달 받으면 그때 Router에서 RIB 해제
     func dismissedBottomSheet() {
         print("DiaryBottomSheet :: 이때 라우터 호출할래?")
-        weatherPlaceSelectView.delegate = nil
         listener?.pressedCloseBtn()
     }
 }
@@ -584,7 +583,12 @@ extension DiaryBottomSheetViewController {
     @objc
     func pressedDeleteBtn() {
         print("DiaryBottomSheet :: pressedDeleteBtn")
-        listener?.menuComponentRelay?.accept(.delete)
+        show(size: .small,
+             buttonType: .twoBtn,
+             titleText: "해당 메뉴얼을 삭제하시겠어요?",
+             cancelButtonText: "취소",
+             confirmButtonText: "확인"
+        )
     }
 }
 
@@ -597,6 +601,10 @@ extension DiaryBottomSheetViewController: DialogDelegate {
             print("DiaryBottomSheet :: 숨기기 action!")
             listener?.menuComponentRelay?.accept(.hide)
             hideBottomSheetAndGoBack()
+            
+        case "해당 메뉴얼을 삭제하시겠어요?":
+            listener?.menuComponentRelay?.accept(.delete)
+            hideBottomSheetAndGoBack()
 
         default:
             break
@@ -608,6 +616,9 @@ extension DiaryBottomSheetViewController: DialogDelegate {
         switch titleText {
         case "이 메뉴얼을 숨기시겠어요?":
             print("DiaryBottomSheet :: 숨기기 exit!")
+            hideBottomSheetAndGoBack()
+            
+        case "해당 메뉴얼을 삭제하시겠어요?":
             hideBottomSheetAndGoBack()
 
         default:

@@ -126,6 +126,12 @@ class DialogViewController: UIViewController {
         // Do any additional setup after loading the view.
         setViews()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        
+    }
 
     func setViews() {
         view.backgroundColor = .clear
@@ -203,6 +209,7 @@ extension DialogViewController {
     func pressedConfirmBtn() {
         self.dismiss(animated: true) {
             self.delegate?.action(titleText: self.titleText)
+            self.delegate = nil
         }
     }
     
@@ -210,6 +217,7 @@ extension DialogViewController {
     func pressedCancelBtn() {
         self.dismiss(animated: true) {
             self.delegate?.exit(titleText: self.titleText)
+            self.delegate = nil
         }
     }
 }

@@ -184,8 +184,12 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if isMovingFromParent || isBeingDismissed {
+            print("!!?")
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
+        
+        replyTableView.delegate = nil
+        replyBottomView.replyTextView.delegate = nil
         
         // Keyboard observer해제
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)

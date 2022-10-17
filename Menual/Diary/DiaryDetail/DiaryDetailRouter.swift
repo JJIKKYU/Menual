@@ -11,6 +11,7 @@ import RxRelay
 protocol DiaryDetailInteractable: Interactable, DiaryBottomSheetListener, DiaryWritingListener {
     var router: DiaryDetailRouting? { get set }
     var listener: DiaryDetailListener? { get set }
+    func pressedBackBtn(isOnlyDetach: Bool)
 }
 
 protocol DiaryDetailViewControllable: ViewControllable {
@@ -87,13 +88,16 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
         attachChild(router)
     }
     
-    func detachBottomSheet() {
+    func detachBottomSheet(isWithDiaryDetatil: Bool) {
         guard let router = diaryBottomSheetRouting,
         let diaryBottomSheetRouter = router as? DiaryBottomSheetRouting else {
             return
         }
         
-        diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
+        diaryBottomSheetRouter.viewControllable.dismiss {
+            print("!!")
+            self.interactor.pressedBackBtn(isOnlyDetach: false)
+        }
         detachChild(router)
         diaryBottomSheetRouting = nil
     }

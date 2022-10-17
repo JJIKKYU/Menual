@@ -337,6 +337,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         arr.remove(at: idx)
 
         diaryModelSubject.accept(arr)
+        fetch()
     }
     
     public func hideDiary(info: DiaryModel) {
