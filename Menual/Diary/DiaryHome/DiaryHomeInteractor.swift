@@ -244,7 +244,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 //            .updateDiary(info: updateModel)
 //        router?.attachDiaryDetail(model: updateModel)
     }
-    
+    //ㅅㅏㄹㅏㅇㅎㅐ i luv u ㅅㅏㄹㅏㅇㅅㅏㄹㅏㅇㅎㅐ ㅅㅏㄹ6ㅎㅐ jjikkyu
     func diaryDetailPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachDiaryDetail(isOnlyDetach: isOnlyDetach)
     }
@@ -303,6 +303,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                              placeTypes: filteredPlaceArr
                 )
         }
+        
+        router?.detachBottomSheet()
     }
     
     // interactor에 저장된 필터 목록을 제거하고, repository에서 새로 fetch

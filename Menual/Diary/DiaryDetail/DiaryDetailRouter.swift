@@ -96,7 +96,9 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
         
         diaryBottomSheetRouter.viewControllable.dismiss {
             print("!!")
-            self.interactor.pressedBackBtn(isOnlyDetach: false)
+            if isWithDiaryDetatil {
+                self.interactor.pressedBackBtn(isOnlyDetach: false)
+            }
         }
         detachChild(router)
         diaryBottomSheetRouting = nil
