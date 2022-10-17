@@ -92,16 +92,15 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         menuComponentRelay
             .subscribe(onNext: { [weak self] comp in
                 guard let self = self else { return }
-                print("diaryDetail! -> menuComponentRelay!!!! = \(comp)")
+                print("DiaryDetail :: menuComponentRelay!!!! = \(comp)")
                 switch comp {
                 case .hide:
-                    break
+                    self.hideDiary()
                     
                 case .edit:
                     self.router?.detachBottomSheet()
                     guard let diaryModel = self.diaryModel else { return }
                     self.router?.attachDiaryWriting(diaryModel: diaryModel)
-                    break
                     
                 case .delete:
                     break
@@ -182,10 +181,19 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         router?.attachBottomSheet(type: .menu, menuComponentRelay: menuComponentRelay)
     }
     
-    func diaryWritingPressedBackBtn() {
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool) {
         // TODO
         print("diaryWritingPressedBackBtn")
-        router?.detachDiaryWriting(isOnlyDetach: false)
+        router?.detachDiaryWriting(isOnlyDetach: isOnlyDetach)
+    }
+    
+    // 유저가 바텀싯을 통해서 숨기기를 눌렀을 경우
+    func hideDiary() {
+        print("DiaryDetail :: hideDiary!")
+        guard let diaryModel = diaryModel else { return }
+        dependency.diaryRepository
+            .hideDiary(info: diaryModel)
+        // dependency.diaryRepository.updateDiary(info: <#T##DiaryModel#>)
     }
 
     // 미사용

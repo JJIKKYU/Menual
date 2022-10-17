@@ -217,7 +217,7 @@ class MenualNaviView: UIView {
             titleLabel.font = UIFont.AppTitle(.title_3)
             backButton.isHidden = false
             backButton.tintColor = Colors.grey.g100
-            backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            backButton.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
             rightButton1.isHidden = false
             rightButton1.tintColor = Colors.grey.g600
             rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)

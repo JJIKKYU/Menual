@@ -27,6 +27,7 @@ public protocol DiaryRepository {
     func fetch()
     func addDiary(info: DiaryModel)
     func updateDiary(info: DiaryModel)
+    func hideDiary(info: DiaryModel)
     func addWeatherHistory(info: WeatherHistoryModel)
     func addPlaceHistory(info: PlaceHistoryModel)
     func deleteDiary(info: DiaryModel)
@@ -336,6 +337,46 @@ public final class DiaryRepositoryImp: DiaryRepository {
         arr.remove(at: idx)
 
         diaryModelSubject.accept(arr)
+    }
+    
+    public func hideDiary(info: DiaryModel) {
+        print("DiaryRepository :: hideDiary")
+        // Realm에서 DiaryModelRealm Array를 받아온다.
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        guard let data = realm.objects(DiaryModelRealm.self).filter({ $0.uuid == info.uuid }).first
+        else { return }
+        
+        realm.safeWrite {
+            data.isHide = true
+        }
+        
+        var idx: Int = 0
+        for (index, value) in diaryModelSubject.value.enumerated() {
+            if value.uuid == info.uuid {
+                idx = index
+            }
+        }
+
+        var arr = diaryModelSubject.value
+        arr[idx] = DiaryModel(uuid: info.uuid,
+                              pageNum: info.pageNum,
+                              title: info.title,
+                              weather: info.weather,
+                              place: info.place,
+                              description: info.description,
+                              image: info.image,
+                              readCount: info.readCount,
+                              createdAt: info.createdAt,
+                              replies: info.replies,
+                              isDeleted: info.isDeleted,
+                              isHide: info.isHide
+        )
+
+        diaryModelSubject.accept(arr)
+        self.fetchDiary()
     }
     
     // MARK: - History CRUD

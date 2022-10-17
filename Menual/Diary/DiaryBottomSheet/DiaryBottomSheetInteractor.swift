@@ -148,7 +148,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     }
     
     // MARK: - DiaryWritingVC
-    func diaryWritingPressedBackBtn() {
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool) {
         print("diaryWritingPressedBackBtn!")
     }
     

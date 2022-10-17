@@ -724,11 +724,11 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
 
 // MARK: - Test
 extension DiaryHomeViewController: DialogDelegate {
-    func action() {
+    func action(titleText: String) {
         print("액션마")
     }
     
-    func exit() {
+    func exit(titleText: String) {
         print("나감마")
     }
 }

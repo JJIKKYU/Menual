@@ -32,7 +32,7 @@ protocol DiaryWritingPresentable: Presentable {
 
 protocol DiaryWritingListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
-    func diaryWritingPressedBackBtn()
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool)
 }
 
 protocol DiaryWritingInteractorDependency {
@@ -151,8 +151,8 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             .disposed(by: disposebag)
     }
     
-    func pressedBackBtn() {
-        listener?.diaryWritingPressedBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool) {
+        listener?.diaryWritingPressedBackBtn(isOnlyDetach: isOnlyDetach)
     }
     
     // 글 작성할 때
@@ -199,7 +199,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                 .addWeatherHistory(info: weatherHistoryModel)
         }
         
-        listener?.diaryWritingPressedBackBtn()
+        listener?.diaryWritingPressedBackBtn(isOnlyDetach: false)
     }
     
     // 글 수정할 때

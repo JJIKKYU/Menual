@@ -190,7 +190,7 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         attachChild(router)
     }
     
-    func detachDiaryWriting() {
+    func detachDiaryWriting(isOnlyDetach: Bool) {
         print("DiaryHomeRouter :: detachDiaryWriting")
         guard let router = diaryWritingRouting else {
             return
@@ -198,7 +198,10 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         
         // viewController.popViewController(animated: true)
         // viewController.popToRoot(animated: true)
-        dismissPresentedNavigation(completion: nil)
+        if !isOnlyDetach {
+            dismissPresentedNavigation(completion: nil)
+        }
+        // dismissPresentedNavigation(completion: nil)
         detachChild(router)
         
         diaryWritingRouting = nil

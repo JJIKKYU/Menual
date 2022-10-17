@@ -16,7 +16,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
     // business logic, such as signIn(). This protocol is implemented by the corresponding
     // interactor class.
-    func pressedBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool)
     func writeDiary(info: DiaryModel)
     func updateDiary(info: DiaryModel)
     
@@ -209,6 +209,10 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         descriptionTextView.delegate = nil
         weatherSelectView.selectTextView.delegate = nil
         locationSelectView.selectTextView.delegate = nil
+        
+        if isMovingFromParent || isBeingDismissed {
+            listener?.pressedBackBtn(isOnlyDetach: true)
+        }
     }
     
     func setViews() {
@@ -389,7 +393,7 @@ extension DiaryWritingViewController {
     @objc
     func pressedBackBtn() {
         print("pressedBackBtn!")
-        listener?.pressedBackBtn()
+        listener?.pressedBackBtn(isOnlyDetach: false)
     }
     
     @objc

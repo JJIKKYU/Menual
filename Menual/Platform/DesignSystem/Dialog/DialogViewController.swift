@@ -22,8 +22,8 @@ enum DialogButtonType {
 
 // Dialog의 버튼의 액션을 처리하는 Delegate입니다.
 protocol DialogDelegate {
-    func action()   // confirm button event
-    func exit()     // cancel button event
+    func action(titleText: String)   // confirm button event
+    func exit(titleText: String)     // cancel button event
 }
 
 
@@ -202,14 +202,14 @@ extension DialogViewController {
     @objc
     func pressedConfirmBtn() {
         self.dismiss(animated: true) {
-            self.delegate?.action()
+            self.delegate?.action(titleText: self.titleText)
         }
     }
     
     @objc
     func pressedCancelBtn() {
         self.dismiss(animated: true) {
-            self.delegate?.exit()
+            self.delegate?.exit(titleText: self.titleText)
         }
     }
 }

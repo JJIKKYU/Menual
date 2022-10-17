@@ -295,7 +295,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     }
     
     func setViews(type: MenualBottomSheetType) {
-        print("menualBottomSheetType = \(type)")
+        print("DiaryBottomSheet :: menualBottomSheetType = \(type)")
         menualBottomSheetType = type
         
         switch menualBottomSheetType {
@@ -316,7 +316,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             
         case .menu:
             bottomSheetTitle = "메뉴"
-            print("bottomsheet :: 메뉴입니다.")
+            print("DiaryBottomSheet :: 메뉴입니다.")
             menuComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
@@ -383,7 +383,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
 extension DiaryBottomSheetViewController {
     // 부모 뷰가 애니메이션이 모두 끝났을 경우 Delegate 전달 받으면 그때 Router에서 RIB 해제
     func dismissedBottomSheet() {
-        print("이때 라우터 호출할래?")
+        print("DiaryBottomSheet :: 이때 라우터 호출할래?")
         weatherPlaceSelectView.delegate = nil
         listener?.pressedCloseBtn()
     }
@@ -435,7 +435,7 @@ extension DiaryBottomSheetViewController: UITextFieldDelegate {
 extension DiaryBottomSheetViewController: WeatherPlaceSelectViewDelegate {
     func isSelected(_ isSelected: Bool) {
         // 선택 유무로 체크표시 변경
-        print("isSelected! = \(isSelected)")
+        print("DiaryBottomSheet :: isSelected! = \(isSelected)")
         switch isSelected {
         case true:
             menualBottomSheetRightBtnIsActivate = .activate
@@ -452,7 +452,7 @@ extension DiaryBottomSheetViewController: WeatherPlaceSelectViewDelegate {
     // place 선택시 넘어는 정보
     func placeSendData(placeType: Place, isSelected: Bool) {
         
-        print("placeSendData = \(placeType)")
+        print("DiaryBottomSheet :: placeSendData = \(placeType)")
         listener?.updatePlace(place: placeType)
     }
 }
@@ -472,7 +472,7 @@ extension DiaryBottomSheetViewController {
             self.view.layoutIfNeeded()
         } completion: { [weak self] isShow in
             guard let self = self else { return }
-            print("bottomSheet isHide!")
+            print("DiaryBottomSheet :: isHide!")
             // self.delegate?.dismissedBottomSheet()
             self.dismissedBottomSheet()
         }
@@ -481,7 +481,7 @@ extension DiaryBottomSheetViewController {
     func showBottomSheet() {
         let safeAreaHeight: CGFloat = view.safeAreaLayoutGuide.layoutFrame.height
         let bottomPadding: CGFloat = view.safeAreaInsets.bottom
-        print("safeAreaHeight = \(safeAreaHeight), bottomPadding = \(bottomPadding)")
+        print("DiaryBottomSheet :: safeAreaHeight = \(safeAreaHeight), bottomPadding = \(bottomPadding)")
         bottomSheetView.snp.remakeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
@@ -493,7 +493,7 @@ extension DiaryBottomSheetViewController {
             self.dimmedView.alpha = 0.1
             self.view.layoutIfNeeded()
         } completion: { isShow in
-            print("bottomSheet isShow!")
+            print("DiaryBottomSheet :: bottomSheet isShow!")
         }
     }
     
@@ -549,7 +549,7 @@ extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelega
     
     @objc
     func pressedWeatherTitleBtn() {
-        print("pressedWeatherTitleBtn")
+        print("DiaryBottomSheet :: pressedWeatherTitleBtn")
         filteredMenaulCountsRelay.accept(999)
     }
 }
@@ -566,19 +566,52 @@ extension DiaryBottomSheetViewController {
 extension DiaryBottomSheetViewController {
     @objc
     func pressedHideMenuBtn() {
-        print("pressedHideMenuBtn")
-        listener?.menuComponentRelay?.accept(.hide)
+        print("DiaryBottomSheet :: pressedHideMenuBtn")
+        show(size: .small,
+             buttonType: .twoBtn,
+             titleText: "이 메뉴얼을 숨기시겠어요?",
+             cancelButtonText: "취소",
+             confirmButtonText: "확인"
+        )
     }
     
     @objc
     func pressedEditBtn() {
-        print("pressedEditBtn")
+        print("DiaryBottomSheet :: pressedEditBtn")
         listener?.menuComponentRelay?.accept(.edit)
     }
     
     @objc
     func pressedDeleteBtn() {
-        print("pressedDeleteBtn")
+        print("DiaryBottomSheet :: pressedDeleteBtn")
         listener?.menuComponentRelay?.accept(.delete)
+    }
+}
+
+// MARK: - Dialog
+extension DiaryBottomSheetViewController: DialogDelegate {
+    func action(titleText: String) {
+        print("DiaryBottomSheet :: action! -> \(titleText)")
+        switch titleText {
+        case "이 메뉴얼을 숨기시겠어요?":
+            print("DiaryBottomSheet :: 숨기기 action!")
+            listener?.menuComponentRelay?.accept(.hide)
+            hideBottomSheetAndGoBack()
+
+        default:
+            break
+        }
+    }
+    
+    func exit(titleText: String) {
+        print("DiaryBottomSheet :: exit!")
+        switch titleText {
+        case "이 메뉴얼을 숨기시겠어요?":
+            print("DiaryBottomSheet :: 숨기기 exit!")
+            hideBottomSheetAndGoBack()
+
+        default:
+            break
+        }
     }
 }

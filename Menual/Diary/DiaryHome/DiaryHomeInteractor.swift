@@ -18,7 +18,7 @@ protocol DiaryHomeRouting: ViewableRouting {
     func attachDiaryMoments()
     func detachDiaryMoments()
     func attachDiaryWriting()
-    func detachDiaryWriting()
+    func detachDiaryWriting(isOnlyDetach: Bool)
     func attachDiaryDetail(model: DiaryModel)
     func detachDiaryDetail(isOnlyDetach: Bool)
     func attachDesignSystem()
@@ -203,8 +203,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         router?.attachDiaryWriting()
     }
     
-    func diaryWritingPressedBackBtn() {
-        router?.detachDiaryWriting()
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachDiaryWriting(isOnlyDetach: isOnlyDetach)
     }
     
     // MARK: - Diary detaill 관련 함수

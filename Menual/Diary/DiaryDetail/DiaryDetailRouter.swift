@@ -19,6 +19,8 @@ protocol DiaryDetailViewControllable: ViewControllable {
 
 final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDetailViewControllable>, DiaryDetailRouting {
     
+    private var navigationControllable: NavigationControllerable?
+    
     private let diaryBottomSheetBuildable: DiaryBottomSheetBuildable
     private var diaryBottomSheetRouting: Routing?
     
@@ -40,6 +42,26 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
             viewController: viewController
         )
         interactor.router = self
+    }
+    
+    // Bottom Up 으로 스크린을 띄울때
+    private func presentInsideNavigation(_ viewControllable: ViewControllable) {
+        let navigation = NavigationControllerable(root: viewControllable)
+        // navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
+        navigation.navigationController.isNavigationBarHidden = true
+        navigation.navigationController.modalPresentationStyle = .fullScreen
+        self.navigationControllable = navigation
+        
+        viewController.present(navigation, animated: true, completion:  nil)
+    }
+    
+    private func dismissPresentedNavigation(completion: (() -> Void)?) {
+        if self.navigationControllable == nil {
+            return
+        }
+        
+        viewController.dismiss(completion: nil)
+        self.navigationControllable = nil
     }
     
     // MARK: - BottomSheet
@@ -86,7 +108,11 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
             withListener: interactor,
             diaryModel: diaryModel
         )
-        viewController.pushViewController(router.viewControllable, animated: true)
+
+        router.viewControllable.uiviewController.modalPresentationStyle = .fullScreen
+        presentInsideNavigation(router.viewControllable)
+        // viewController.present(router.viewControllable, animated: true, completion: nil)
+        // viewController.pushViewController(router.viewControllable, animated: true)
         
         diaryWritingRouting = router
         attachChild(router)
@@ -98,7 +124,7 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
         }
 
         if !isOnlyDetach {
-            viewController.popViewController(animated: true)
+            dismissPresentedNavigation(completion: nil)
         }
         
         detachChild(router)
