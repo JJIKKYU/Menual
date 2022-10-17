@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import RxRelay
 
 protocol DiaryHomeDependency: Dependency {
     // AppRootComponent에서 생성해서, 부모(AppRoot RIBs)로부터 받아옴
@@ -14,6 +15,8 @@ protocol DiaryHomeDependency: Dependency {
 
 final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency, DiaryBottomSheetDependency {
     
+
+    var filteredDiaryCountRelay: BehaviorRelay<Int>?
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
     
@@ -53,6 +56,7 @@ final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
             dependency: component
         )
         interactor.listener = listener
+        component.filteredDiaryCountRelay = interactor.filteredDiaryCountRelay
         
         return DiaryHomeRouter(
             interactor: interactor,

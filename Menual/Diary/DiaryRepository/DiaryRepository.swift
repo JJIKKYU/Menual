@@ -41,7 +41,7 @@ public protocol DiaryRepository {
     func addDiarySearch(info: DiaryModel)
     
     // Filter 로직
-    func filterDiary(weatherTypes: [Weather], placeTypes: [Place])
+    func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
@@ -450,7 +450,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
     
     // MARK: - Filter 로직
-    public func filterDiary(weatherTypes: [Weather], placeTypes: [Place]) {
+    public func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int {
         print("diaryRepo :: filterDiary")
         // fetchDiary 후 얻은 결과 원본
         var diaryMonthDic: [DiaryYearModel] = diaryMonthDicSubject.value
@@ -480,9 +480,14 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 allCount += count
             }
         }
-        print("필터 결과 총 개수 = \(allCount)")
+        if isOnlyFilterCount == true {
+            print("필터 결과 총 개수 = \(allCount)")
+            return allCount
+        }
+        
         // filteredDiaryStringSubject.accept(diaryMonthDic)
         filteredMonthDicSubject.accept(diaryMonthDic)
+        return allCount
     }
 }
 

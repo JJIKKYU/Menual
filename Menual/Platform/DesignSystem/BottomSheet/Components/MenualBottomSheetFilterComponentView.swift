@@ -30,6 +30,10 @@ class MenualBottomSheetFilterComponentView: UIView {
     }
     var disposeBag = DisposeBag()
     
+    var filteredCount: Int = 0 {
+        didSet { setNeedsLayout() }
+    }
+    
     public lazy var weatherTitleBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("날씨", for: .normal)
@@ -98,7 +102,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     }
     
     public lazy var filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
-        $0.title = "N개의 메뉴얼 보기"
+        $0.title = "필터를 선택해 주세요."
     }
 
     init() {
@@ -225,6 +229,13 @@ class MenualBottomSheetFilterComponentView: UIView {
             placeTitleBtn.tintColor = Colors.tint.sub.n600
         } else {
             placeTitleBtn.tintColor = Colors.grey.g600
+        }
+        
+        // 필터버튼 카운트
+        if filteredCount == -1 {
+            filterBtn.title = "필터를 선택해 주세요."
+        } else {
+            filterBtn.title = "\(filteredCount)개의 메뉴얼 보기"
         }
     }
 

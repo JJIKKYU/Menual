@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import RxRelay
 
 protocol DiaryWritingDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
@@ -13,6 +14,7 @@ protocol DiaryWritingDependency: Dependency {
 
 final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWritingInteractorDependency, DiaryBottomSheetDependency, DiaryTempSaveDependency {
 
+    var filteredDiaryCountRelay: BehaviorRelay<Int>?
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
 

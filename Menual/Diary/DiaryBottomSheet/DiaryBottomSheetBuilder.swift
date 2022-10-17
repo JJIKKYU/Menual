@@ -13,12 +13,18 @@ protocol DiaryBottomSheetDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
     var diaryRepository: DiaryRepository { get }
+    var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
 }
 
 final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency>, DiaryWritingDependency {
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
+    override init(
+        dependency: DiaryBottomSheetDependency
+    ) {
+        super.init(dependency: dependency)
+    }
 }
 
 // MARK: - Builder
@@ -43,6 +49,7 @@ final class DiaryBottomSheetBuilder: Builder<DiaryBottomSheetDependency>, DiaryB
         menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
     ) -> DiaryBottomSheetRouting {
         let component = DiaryBottomSheetComponent(dependency: dependency)
+        print("ddddd!! =\(dependency.filteredDiaryCountRelay?.value)")
         
         let viewController = DiaryBottomSheetViewController()
         let diaryWritingBuildable = DiaryWritingBuilder(dependency: component)
@@ -52,6 +59,10 @@ final class DiaryBottomSheetBuilder: Builder<DiaryBottomSheetDependency>, DiaryB
             bottomSheetType: bottomSheetType,
             menuComponentRelay: menuComponentRelay
         )
+        print("ddddd!! = \(dependency.filteredDiaryCountRelay)")
+
+        interactor.setFilteredDiaryCountRelay(relay: dependency.filteredDiaryCountRelay)
+
         interactor.listener = listener
 
         return DiaryBottomSheetRouter(

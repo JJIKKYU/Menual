@@ -549,7 +549,10 @@ extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelega
     @objc
     func pressedWeatherTitleBtn() {
         print("DiaryBottomSheet :: pressedWeatherTitleBtn")
-        filteredMenaulCountsRelay.accept(999)
+    }
+    
+    func setFilterBtnCount(count: Int) {
+        filterComponentView.filteredCount = count
     }
 }
 

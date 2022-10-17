@@ -19,7 +19,7 @@ protocol DiaryBottomSheetPresentable: Presentable {
     
     func setViewsWithWeatherModel(model: WeatherModel)
     func setViewsWithPlaceMOdel(model: PlaceModel)
-    
+    func setFilterBtnCount(count: Int)
     func setViews(type: MenualBottomSheetType)
 }
 
@@ -45,6 +45,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var weatherFilterSelectedArrRelay = BehaviorRelay<[Weather]>(value: [])
     var placeFilterSelectedArrRelay = BehaviorRelay<[Place]>(value: [])
     var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
+    var filteredDiaryCountRelay: BehaviorRelay<Int>?
     
     let weatherOb = BehaviorRelay<WeatherModel>(value: WeatherModel(uuid: "", weather: .sun, detailText: ""))
 
@@ -93,6 +94,17 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
             self.listener?.filterWithWeatherPlace(weatherArr: weatherArr, placeArr: placeArr)
         })
         .disposed(by: disposeBag)
+    }
+    
+    func setFilteredDiaryCountRelay(relay: BehaviorRelay<Int>?) {
+        filteredDiaryCountRelay = relay
+        filteredDiaryCountRelay?
+            .subscribe(onNext: { [weak self] count in
+                guard let self = self else { return }
+                print("ddddd!! = count = \(count)")
+                self.presenter.setFilterBtnCount(count: count)
+            })
+            .disposed(by: disposeBag)
     }
     
     func pressedCloseBtn() {

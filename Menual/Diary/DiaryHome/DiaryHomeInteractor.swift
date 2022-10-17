@@ -54,6 +54,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     var lastPageNumRelay = BehaviorRelay<Int>(value: 0)
     var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
     var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
+    let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
     
     var filteredWeatherArr: [Weather] = []
     var filteredPlaceArr: [Place] = []
@@ -281,11 +282,20 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             filteredPlaceArr = []
             filteredWeatherArr = []
 
+            filteredDiaryCountRelay.accept(-1)
+
         } else if weatherArr.count > 0 || placeArr.count > 0 {
             print("diaryHome :: Interactor -> isFiltered = true")
 
             filteredWeatherArr = weatherArr
             filteredPlaceArr = placeArr
+            
+            let filterCount: Int = dependency.diaryRepository
+                .filterDiary(weatherTypes: filteredWeatherArr,
+                             placeTypes: filteredPlaceArr,
+                             isOnlyFilterCount: true
+                )
+            filteredDiaryCountRelay.accept(filterCount)
         }
     }
     
@@ -298,9 +308,10 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             dependency.diaryRepository.fetch()
         } else {
             presenter.isFilteredRelay.accept(true)
-            dependency.diaryRepository
+            let _ = dependency.diaryRepository
                 .filterDiary(weatherTypes: filteredWeatherArr,
-                             placeTypes: filteredPlaceArr
+                             placeTypes: filteredPlaceArr,
+                             isOnlyFilterCount: false
                 )
         }
         

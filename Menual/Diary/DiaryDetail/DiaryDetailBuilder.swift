@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import RxRelay
 
 protocol DiaryDetailDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
@@ -15,6 +16,7 @@ protocol DiaryDetailDependency: Dependency {
 
 final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency {
 
+    var filteredDiaryCountRelay: BehaviorRelay<Int>?
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
