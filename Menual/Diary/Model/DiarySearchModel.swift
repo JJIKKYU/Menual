@@ -12,11 +12,11 @@ import RealmSwift
 public struct DiarySearchModel {
     let uuid: String
     let diaryUuid: String
-    let diary: DiaryModel?
+    let diary: DiaryModelRealm?
     let createdAt: Date
     let isDeleted: Bool
     
-    init(uuid: String, diaryUuid: String, diary: DiaryModel?, createdAt: Date, isDeleted: Bool) {
+    init(uuid: String, diaryUuid: String, diary: DiaryModelRealm?, createdAt: Date, isDeleted: Bool) {
         self.uuid = uuid
         self.diaryUuid = diaryUuid
         self.diary = diary
@@ -27,11 +27,7 @@ public struct DiarySearchModel {
     init(_ realm: DiarySearchModelRealm) {
         self.uuid = realm.uuid
         self.diaryUuid = realm.diaryUuid
-        if let realmDiary = realm.diary {
-            self.diary = DiaryModel(realmDiary)
-        } else {
-            self.diary = nil
-        }
+        self.diary = realm.diary
         self.createdAt = realm.createdAt
         self.isDeleted = realm.isDeleted
     }
@@ -59,11 +55,7 @@ class DiarySearchModelRealm: Object {
         self.init()
         self.uuid = diarySearchModel.uuid
         self.diaryUuid = diarySearchModel.diaryUuid
-        if let diarySearchModelDiary = diarySearchModel.diary {
-            self.diary = DiaryModelRealm(diarySearchModelDiary)
-        } else {
-            self.diary = nil
-        }
+        self.diary = diarySearchModel.diary
         self.createdAt = diarySearchModel.createdAt
         self.isDeleted = diarySearchModel.isDeleted
     }

@@ -136,6 +136,12 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
             .addDiarySearch(info: diaryModel)
     }
     
+    func pressedRecentSearchCell(diaryModelRealm: DiaryModelRealm) {
+        print("Search :: pressedRecentSearchCell!")
+        let diaryModel: DiaryModel = DiaryModel(diaryModelRealm)
+        router?.attachDiaryDetailVC(diaryModel: diaryModel)
+    }
+    
     func diaryDetailPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachDiaryDetailVC(isOnlyDetach: isOnlyDetach)
     }

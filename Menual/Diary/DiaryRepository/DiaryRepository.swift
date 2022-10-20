@@ -453,9 +453,10 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         
+        guard let diary = realm.objects(DiaryModelRealm.self).filter("uuid == %@", info.uuid).first else { return }
         let diarySearchModel = DiarySearchModel(uuid: UUID().uuidString,
                                                 diaryUuid: info.uuid,
-                                                diary: info,
+                                                diary: diary,
                                                 createdAt: Date(),
                                                 isDeleted: false
         )

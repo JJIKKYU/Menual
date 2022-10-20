@@ -21,6 +21,7 @@ protocol DiarySearchPresentableListener: AnyObject {
     func searchDataTest(keyword: String)
     func fetchRecentSearchList()
     func pressedSearchCell(diaryModel: DiaryModel)
+    func pressedRecentSearchCell(diaryModelRealm: DiaryModelRealm)
 }
 
 final class DiarySearchViewController: UIViewController, DiarySearchPresentable, DiarySearchViewControllable {
@@ -348,7 +349,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
         // 최근 검색 키워드 TableView
         else if indexPath.section == 1 {
             print("Search :: cell!")
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchCell") as? RecentSearchCell else { return UITableViewCell() }
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
 
             guard let model = listener?.recentSearchResultsRelay.value[safe: index],
                   let diary = model.diary else {
@@ -357,11 +358,26 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             }
             
             print("Search :: cell! - 2")
+            
+            cell.uuid = model.uuid
+            if diary.isHide {
+                cell.listType = .hide
+            } else {
+                // TODO: - 이미지가 있을 경우 이미지까지
+                cell.listType = .text
+            }
+            cell.title = diary.title
+            cell.dateAndTime = diary.createdAt.toString()
 
-            cell.keyword = diary.title
-            cell.createdAt = model.createdAt.toStringWithHourMin()
-            cell.deleteBtn.addTarget(self, action: #selector(pressedRecentSearchCellDeleteBtn), for: .touchUpInside)
+            let page = "P.\(diary.pageNum)"
+            var replies = ""
+            if diary.replies.count != 0 {
+                replies = "- \(diary.replies.count)"
+            }
 
+            cell.searchKeyword = ""
+            cell.pageAndReview = page + replies
+            
             return cell
         }
         
@@ -369,19 +385,34 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("Search :: 선택! = \(indexPath)")
+        let index = indexPath.row
+        let section = indexPath.section
         // 검색 결과 TableView
-        if tableView == self.tableView {
+        if section == 0 {
             guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
-            print("선택했습니다! - \(cell.uuid)")
+            print("Search :: tag = 0 - \(cell.uuid)")
             
-            let index = indexPath.row
             guard let model = listener?.searchResultsRelay.value[safe: index] else {
                 return
             }
             
-            print("이거 = \(model.uuid), \(cell.uuid)")
+            print("Search :: 이거 = \(model.uuid), \(cell.uuid)")
             
             listener?.pressedSearchCell(diaryModel: model)
+        }
+        // 최근 검색 결과
+        else if section == 1 {
+            print("Search :: 최근검색결과 touch! = \(indexPath.row)")
+            guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
+            
+            guard let model = listener?.recentSearchResultsRelay.value[safe: index],
+                  let diaryModelRealm: DiaryModelRealm = model.diary
+            else { return }
+            
+            print("Search :: 이거 = \(model.uuid), \(cell.uuid)")
+            
+            listener?.pressedRecentSearchCell(diaryModelRealm: diaryModelRealm)
         }
     }
 }
