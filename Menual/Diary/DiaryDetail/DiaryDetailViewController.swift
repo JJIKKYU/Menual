@@ -29,6 +29,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     private var isEnableImageView: Bool = false
     // 기본 크기 40에서 추가된 사이즈만큼 Height 조절
     private var replyBottomViewPlusHeight: CGFloat = 0
+    // 숨김처리일 경우 사용되는 변수
+    private var isHide: Bool = false
     
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -147,13 +149,29 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.backgroundColor = Colors.background
         
         $0.tableFooterView = nil
-        $0.separatorEffect = .none
+        $0.separatorStyle = .none
     }
     
     lazy var spaceRequiredFAB = FAB(fabType: .spacRequired, fabStatus: .default_).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.spaceRequiredRightArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
         $0.spaceRequiredLeftArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
+    }
+    
+    lazy var hideView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        let lockEmptyView = Empty().then {
+            $0.screenType = .writing
+            $0.writingType = .lock
+        }
+        $0.addSubview(lockEmptyView)
+        lockEmptyView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(81)
+            make.width.equalTo(160)
+            make.height.equalTo(180)
+            make.centerX.equalToSuperview()
+        }
+        $0.isHidden = true
     }
     
     init() {
@@ -208,11 +226,15 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         }
         print("changedHeight = \(changedHeight)")
         
-        changedHeight += 24 + titleLabel.frame.height + 16 + createdAtPageView.frame.height + 8 + divider1.frame.height + 12 + weatherSelectView.frame.height + 12 + divider2.frame.height + 12 + locationSelectView.frame.height + 12 + divider3.frame.height + 16 + descriptionTextLabel.frame.height + enabledImageViewHeight
-        
-        tableViewHeaderView.snp.updateConstraints { make in
-            make.height.equalTo(changedHeight)
+        // 숨김처리가 아닐 경우에만
+        if isHide == false {
+            changedHeight += 24 + titleLabel.frame.height + 16 + createdAtPageView.frame.height + 8 + divider1.frame.height + 12 + weatherSelectView.frame.height + 12 + divider2.frame.height + 12 + locationSelectView.frame.height + 12 + divider3.frame.height + 16 + descriptionTextLabel.frame.height + enabledImageViewHeight
+            
+            tableViewHeaderView.snp.updateConstraints { make in
+                make.height.equalTo(changedHeight)
+            }
         }
+
         DispatchQueue.main.async {
             self.replyTableView.reloadData()
         }
@@ -239,6 +261,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         tableViewHeaderView.addSubview(descriptionTextLabel)
         tableViewHeaderView.addSubview(divider4)
         tableViewHeaderView.addSubview(imageView)
+        tableViewHeaderView.addSubview(hideView)
         self.view.bringSubviewToFront(naviView)
         self.view.bringSubviewToFront(replyBottomView)
         self.view.bringSubviewToFront(spaceRequiredFAB)
@@ -347,10 +370,15 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.top.equalTo(divider4.snp.bottom).offset(12)
             make.height.equalTo(80)
         }
+        
+        hideView.snp.makeConstraints { make in
+            make.top.bottom.width.height.equalToSuperview()
+        }
     }
     
     func loadDiaryDetail(model: DiaryModel) {
-        print("viewcontroller : \(model)")
+        print("DiaryDetail : \(model)")
+        
         titleLabel.text = model.title
         titleLabel.sizeToFit()
         
@@ -383,6 +411,33 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         print("pageNum = \(pageNum)")
         replyTableView.reloadData()
         descriptionTextLabel.sizeToFit()
+        
+        isHide = true
+        isHideMenual(isHide: model.isHide)
+    }
+    
+    func isHideMenual(isHide: Bool) {
+        switch isHide {
+        case true:
+            print("DiaryDetail :: isHide! = \(isHide)")
+            titleLabel.isHidden = true
+            divider1.isHidden = true
+            weatherSelectView.isHidden = true
+            divider2.isHidden = true
+            locationSelectView.isHidden = true
+            divider3.isHidden = true
+            descriptionTextLabel.isHidden = true
+            createdAtPageView.isHidden = true
+            
+            tableViewHeaderView.snp.updateConstraints { make in
+                make.height.equalTo(400)
+            }
+            hideView.isHidden = false
+            replyTableView.reloadData()
+
+        case false:
+            print("DiaryDetail :: isHide! = \(isHide)")
+        }
     }
     
     func testLoadDiaryImage(imageName: UIImage?) {
