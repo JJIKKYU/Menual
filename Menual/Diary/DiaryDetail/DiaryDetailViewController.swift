@@ -164,11 +164,24 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             $0.screenType = .writing
             $0.writingType = .lock
         }
+        lazy var btn = CapsuleButton(frame: .zero, includeType: .iconText).then {
+            $0.title = "숨김 해제하기"
+            $0.image = Asset._16px.Circle.front.image.withRenderingMode(.alwaysTemplate)
+        }
+        btn.addTarget(self, action: #selector(pressedLockBtn), for: .touchUpInside)
         $0.addSubview(lockEmptyView)
+        $0.addSubview(btn)
+
         lockEmptyView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(81)
             make.width.equalTo(160)
             make.height.equalTo(180)
+            make.centerX.equalToSuperview()
+        }
+        btn.snp.makeConstraints { make in
+            make.top.equalTo(lockEmptyView.snp.bottom).offset(12)
+            make.width.equalTo(113)
+            make.height.equalTo(28)
             make.centerX.equalToSuperview()
         }
         $0.isHidden = true
@@ -377,10 +390,14 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     }
     
     func loadDiaryDetail(model: DiaryModel) {
-        print("DiaryDetail : \(model)")
+        // print("DiaryDetail :: \(model)")
         
         titleLabel.text = model.title
         titleLabel.sizeToFit()
+        
+        print("DiaryDetail :: model.isHide = \(model.isHide)")
+        isHide = model.isHide
+        isHideMenual(isHide: model.isHide)
         
         // DiaryModel에서 WeatherModel을 UnWerapping해서 세팅
         if let weatherModel: WeatherModel = model.weather {
@@ -411,9 +428,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         print("pageNum = \(pageNum)")
         replyTableView.reloadData()
         descriptionTextLabel.sizeToFit()
-        
-        isHide = true
-        isHideMenual(isHide: model.isHide)
     }
     
     func isHideMenual(isHide: Bool) {
@@ -437,6 +451,17 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
 
         case false:
             print("DiaryDetail :: isHide! = \(isHide)")
+            titleLabel.isHidden = false
+            divider1.isHidden = false
+            weatherSelectView.isHidden = false
+            divider2.isHidden = false
+            locationSelectView.isHidden = false
+            divider3.isHidden = false
+            descriptionTextLabel.isHidden = false
+            createdAtPageView.isHidden = false
+            
+            hideView.isHidden = true
+            replyTableView.reloadData()
         }
     }
     
@@ -496,6 +521,12 @@ extension DiaryDetailViewController {
         DispatchQueue.main.async {
             self.replyTableView.reloadData()
         }
+    }
+    
+    // 숨김 해제하기 버튼
+    @objc
+    func pressedLockBtn() {
+        print("DiaryDetail :: 숨김 해제하기 버튼 클릭!")
     }
 }
 

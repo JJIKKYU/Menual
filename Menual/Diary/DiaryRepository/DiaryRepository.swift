@@ -27,7 +27,7 @@ public protocol DiaryRepository {
     func fetch()
     func addDiary(info: DiaryModel)
     func updateDiary(info: DiaryModel)
-    func hideDiary(info: DiaryModel)
+    func hideDiary(isHide: Bool, info: DiaryModel) -> DiaryModel?
     func addWeatherHistory(info: WeatherHistoryModel)
     func addPlaceHistory(info: PlaceHistoryModel)
     func deleteDiary(info: DiaryModel)
@@ -311,7 +311,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         )
 
         diaryModelSubject.accept(arr)
-        self.fetchDiary()
+        self.fetch()
     }
     
     public func deleteDiary(info: DiaryModel) {
@@ -340,18 +340,18 @@ public final class DiaryRepositoryImp: DiaryRepository {
         fetch()
     }
     
-    public func hideDiary(info: DiaryModel) {
+    public func hideDiary(isHide: Bool, info: DiaryModel) -> DiaryModel? {
         print("DiaryRepository :: hideDiary")
         // Realm에서 DiaryModelRealm Array를 받아온다.
         guard let realm = Realm.safeInit() else {
-            return
+            return nil
         }
         
         guard let data = realm.objects(DiaryModelRealm.self).filter({ $0.uuid == info.uuid }).first
-        else { return }
+        else { return nil }
         
         realm.safeWrite {
-            data.isHide = true
+            data.isHide = isHide
         }
         
         var idx: Int = 0
@@ -362,22 +362,24 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
 
         var arr = diaryModelSubject.value
-        arr[idx] = DiaryModel(uuid: info.uuid,
-                              pageNum: info.pageNum,
-                              title: info.title,
-                              weather: info.weather,
-                              place: info.place,
-                              description: info.description,
-                              image: info.image,
-                              readCount: info.readCount,
-                              createdAt: info.createdAt,
-                              replies: info.replies,
-                              isDeleted: info.isDeleted,
-                              isHide: info.isHide
-        )
+        let newDiary = DiaryModel(uuid: info.uuid,
+                                  pageNum: info.pageNum,
+                                  title: info.title,
+                                  weather: info.weather,
+                                  place: info.place,
+                                  description: info.description,
+                                  image: info.image,
+                                  readCount: info.readCount,
+                                  createdAt: info.createdAt,
+                                  replies: info.replies,
+                                  isDeleted: info.isDeleted,
+                                  isHide: info.isHide
+            )
+        arr[idx] = newDiary
 
         diaryModelSubject.accept(arr)
-        self.fetchDiary()
+        fetch()
+        return newDiary
     }
     
     // MARK: - History CRUD

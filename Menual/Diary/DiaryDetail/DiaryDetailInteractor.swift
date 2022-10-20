@@ -192,11 +192,25 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     // 유저가 바텀싯을 통해서 숨기기를 눌렀을 경우
     func hideDiary() {
-        print("DiaryDetail :: hideDiary!")
+        print("DiaryDetail :: hideDiary! 1")
         guard let diaryModel = diaryModel else { return }
-        dependency.diaryRepository
-            .hideDiary(info: diaryModel)
+        var isHide: Bool = false
+        if diaryModel.isHide == true {
+            isHide = false
+            print("DiaryDetail :: 이미 숨겨져 있으므로 잠금을 해제합니다.")
+        } else {
+            isHide = true
+            print("DiaryDetail :: 숨깁니다!")
+        }
+
+        guard let hideDiary = dependency.diaryRepository
+            .hideDiary(isHide: isHide, info: diaryModel) else { return }
         // dependency.diaryRepository.updateDiary(info: <#T##DiaryModel#>)
+
+        print("DiaryDetail :: hideDiary! 2 -> \(hideDiary.isHide)")
+        self.diaryModel = hideDiary
+        // presenter.loadDiaryDetail(model: hideDiary)
+        // self.presenter.reloadTableView()
     }
 
     // 미사용
