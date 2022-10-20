@@ -40,7 +40,8 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     var disposeBag = DisposeBag()
     
     var searchResultsRelay = BehaviorRelay<[DiaryModel]>(value: [])
-    var recentSearchResultList: [SearchModel] = []
+    var recentSearchResultsRelay = BehaviorRelay<[DiarySearchModel]>(value: [])
+    // var recentSearchResultList: [SearchModel] = []
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -70,8 +71,9 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
             .diarySearch
             .subscribe(onNext: { [weak self] diarySearch in
                 guard let self = self else { return }
-                print("diarySearch -> DiarySearch 구독중!!!")
-                print("diarySearch = \(diarySearch)")
+                print("Search :: -> DiarySearch 구독중!!!")
+                print("Search :: = \(diarySearch)")
+                self.recentSearchResultsRelay.accept(diarySearch)
             })
             .disposed(by: disposeBag)
     }
@@ -122,21 +124,13 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     }
     
     func fetchRecentSearchList() {
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        recentSearchResultList.removeAll()
-        let results = realm.objects(SearchModelRealm.self)
-        for result in results {
-            let model = SearchModel(result)
-            recentSearchResultList.append(model)
-        }
-        presenter.reloadSearchTableView()
+        dependency.diaryRepository
+            .fetchRecntDiarySearch()
     }
     
     // 검색해서 나온 Cell을 터치했을 경우 -> DiaryDetailVC로 보내줘야함
     func pressedSearchCell(diaryModel: DiaryModel) {
-        
+        print("Search :: pressedSearchCell!")
         router?.attachDiaryDetailVC(diaryModel: diaryModel)
         dependency.diaryRepository
             .addDiarySearch(info: diaryModel)

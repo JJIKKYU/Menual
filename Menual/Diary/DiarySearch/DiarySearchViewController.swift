@@ -13,7 +13,7 @@ import UIKit
 import RxRelay
 
 protocol DiarySearchPresentableListener: AnyObject {
-    var recentSearchResultList: [SearchModel] { get }
+    var recentSearchResultsRelay: BehaviorRelay<[DiarySearchModel]> { get }
     var searchResultsRelay: BehaviorRelay<[DiaryModel]> { get }
     
     func pressedBackBtn(isOnlyDetach: Bool)
@@ -36,13 +36,14 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.titleLabel.text = MenualString.title_search
     }
     
-    lazy var recentSearchTableView = UITableView().then {
+    lazy var recentSearchTableView = UITableView(frame: CGRect.zero, style: .grouped).then {
         $0.isHidden = false
         $0.delegate = self
         $0.dataSource = self
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
         $0.register(RecentSearchCell.self, forCellReuseIdentifier: "RecentSearchCell")
+        $0.tag = 1
     }
     
     lazy var tableView = UITableView(frame: CGRect.zero, style: .grouped).then {
@@ -52,6 +53,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
         $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
+        $0.register(RecentSearchCell.self, forCellReuseIdentifier: "RecentSearchCell")
 
         $0.estimatedRowHeight = 72
         $0.rowHeight = 72
@@ -148,7 +150,15 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
                 let count = results.count
                 self.menualCount = count
                 self.tableView.reloadData()
-                // recentSearchTableView.reloadData()
+                self.recentSearchTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        listener?.recentSearchResultsRelay
+            .subscribe(onNext: { [weak self] results in
+                guard let self = self else { return }
+                print("Search :: recentSearchResultsRelay! = \(results)")
+                self.recentSearchTableView.reloadData()
             })
             .disposed(by: disposeBag)
     }
@@ -158,6 +168,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         self.view.addSubview(tableView)
         self.view.addSubview(naviView)
         self.view.addSubview(searchTextField)
+        // self.view.addSubview(recentSearchTableView)
         self.view.bringSubviewToFront(naviView)
         
         searchTextField.snp.makeConstraints { make in
@@ -171,6 +182,11 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             make.top.equalTo(searchTextField.snp.bottom).offset(24)
             make.leading.trailing.bottom.equalToSuperview()
         }
+        
+//        recentSearchTableView.snp.makeConstraints { make in
+//            make.top.equalTo(searchTextField.snp.bottom).offset(24)
+//            make.leading.trailing.bottom.equalToSuperview()
+//        }
         
         naviView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -287,7 +303,8 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             return listener?.searchResultsRelay.value.count ?? 0
             
         case 1:
-            return listener?.searchResultsRelay.value.count ?? 0
+            print("Search :: cellCount = \(listener?.recentSearchResultsRelay.value.count ?? 0)")
+            return listener?.recentSearchResultsRelay.value.count ?? 0
             
         default:
             return 0
@@ -295,9 +312,11 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("Search :: cell IndexPath = \(indexPath)")
         let index = indexPath.row
+        print("Search :: \(tableView.tag)")
         // 검색 결과 TableView
-        if tableView == self.tableView {
+        if indexPath.section == 0 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
             
             guard let model = listener?.searchResultsRelay.value[safe: index],
@@ -326,20 +345,25 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             
             return cell
         }
-//        // 최근 검색 키워드 TableView
-//        else if tableView == self.recentSearchTableView {
-//            guard let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchCell") as? RecentSearchCell else { return UITableViewCell() }
-//
-//            guard let model = listener?.recentSearchResultList[safe: index] else {
-//                return UITableViewCell()
-//            }
-//
-//            cell.keyword = model.keyword
-//            cell.createdAt = model.createdAt.toStringWithHourMin()
-//            cell.deleteBtn.addTarget(self, action: #selector(pressedRecentSearchCellDeleteBtn), for: .touchUpInside)
-//
-//            return cell
-//        }
+        // 최근 검색 키워드 TableView
+        else if indexPath.section == 1 {
+            print("Search :: cell!")
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: "RecentSearchCell") as? RecentSearchCell else { return UITableViewCell() }
+
+            guard let model = listener?.recentSearchResultsRelay.value[safe: index],
+                  let diary = model.diary else {
+                print("Search :: 여기서 팅귀나?")
+                return UITableViewCell()
+            }
+            
+            print("Search :: cell! - 2")
+
+            cell.keyword = diary.title
+            cell.createdAt = model.createdAt.toStringWithHourMin()
+            cell.deleteBtn.addTarget(self, action: #selector(pressedRecentSearchCellDeleteBtn), for: .touchUpInside)
+
+            return cell
+        }
         
         return UITableViewCell()
     }

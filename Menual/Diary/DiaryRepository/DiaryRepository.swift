@@ -39,6 +39,7 @@ public protocol DiaryRepository {
     
     // 최근검색목록 로직
     func addDiarySearch(info: DiaryModel)
+    func fetchRecntDiarySearch() // 최근검색어
     
     // Filter 로직
     func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int
@@ -184,7 +185,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         placeHistorySubject.accept(placeHistoryResults.map { PlaceHistoryModel($0) })
         
         self.fetchDiary()
-        self.fetchDiarySearch()
+        self.fetchRecntDiarySearch()
     }
     
     // MARK: - Diary Fetch
@@ -433,22 +434,41 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
 
     // MARK: - 최근검색목록 로직 (SearchModel)
-    func fetchDiarySearch() {
+    public func fetchRecntDiarySearch() {
+        print("Search :: DiaryRepo :: fetchRecentDiarySearch!")
         guard let realm = Realm.safeInit() else {
             return
         }
         
-        print("fetchDiarySearch!")
-        let results = realm.objects(DiarySearchModelRealm.self)
-        let sortedResults = results.sorted { $0.createdAt < $1.createdAt }
-        diarySearchSubject.accept(results.map { DiarySearchModel($0) })
+//        let diaryModelResults = realm.objects(DiaryModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
+//        diaryModelSubject.accept(diaryModelResults.map { DiaryModel($0) })
+        
+        let diaryRecentSearchResults = realm.objects(DiarySearchModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
+        diarySearchSubject.accept(diaryRecentSearchResults.map { DiarySearchModel($0) })
     }
     
     public func addDiarySearch(info: DiaryModel) {
-        print("addDiarySearch!")
+        print("Search :: DiaryRepo :: addDiarySearch!")
         guard let realm = Realm.safeInit() else {
             return
         }
+        
+        let diarySearchModel = DiarySearchModel(uuid: UUID().uuidString,
+                                                diaryUuid: info.uuid,
+                                                diary: info,
+                                                createdAt: Date(),
+                                                isDeleted: false
+        )
+        
+        realm.safeWrite {
+             realm.add(DiarySearchModelRealm(diarySearchModel))
+        }
+
+        print("Search :: DiaryRepo :: diarySearchModel = \(diarySearchModel)")
+        
+        let result: [DiarySearchModel] = (diarySearchSubject.value + [diarySearchModel]).sorted { $0.createdAt > $1.createdAt }
+
+        diarySearchSubject.accept(result)
     }
     
     // MARK: - Filter 로직
