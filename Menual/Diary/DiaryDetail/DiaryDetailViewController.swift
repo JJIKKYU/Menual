@@ -18,6 +18,8 @@ protocol DiaryDetailPresentableListener: AnyObject {
     func pressedMenuMoreBtn()
     func pressedReminderBtn()
     
+    func hideDiary()
+    
     var diaryReplies: [DiaryReplyModel] { get }
     var currentDiaryPage: Int { get }
 }
@@ -527,6 +529,13 @@ extension DiaryDetailViewController {
     @objc
     func pressedLockBtn() {
         print("DiaryDetail :: 숨김 해제하기 버튼 클릭!")
+        show(size: .small,
+             buttonType: .twoBtn,
+             titleText: "정말 해제허싈?",
+             cancelButtonText: "노",
+             confirmButtonText: "숨김 해제하기"
+        )
+        
     }
 }
 
@@ -674,6 +683,30 @@ extension DiaryDetailViewController: UITextViewDelegate {
                 textView.text = "겹쓸내용을 입력해 주세요"
             }
 
+        default:
+            break
+        }
+    }
+}
+
+// MARK: - Dialog
+extension DiaryDetailViewController: DialogDelegate {
+    func action(titleText: String) {
+        print("DiaryDetail :: action!")
+        switch titleText {
+        case "정말 해제허싈?":
+            listener?.hideDiary()
+            break
+        default:
+            break
+        }
+    }
+    
+    func exit(titleText: String) {
+        print("DiaryDetail :: exit")
+        switch titleText {
+        case "정말 해제허싈?":
+            break
         default:
             break
         }

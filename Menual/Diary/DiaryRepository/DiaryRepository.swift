@@ -373,7 +373,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                                   createdAt: info.createdAt,
                                   replies: info.replies,
                                   isDeleted: info.isDeleted,
-                                  isHide: info.isHide
+                                  isHide: isHide
             )
         arr[idx] = newDiary
 
