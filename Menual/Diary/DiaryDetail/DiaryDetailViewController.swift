@@ -235,12 +235,15 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
+        print("DiaryDetail :: ViewWillLayoutSubviews!")
+        
         var changedHeight: CGFloat = 0
         var enabledImageViewHeight: CGFloat = 0
         
         if isEnableImageView == true {
             enabledImageViewHeight = 16 + divider4.frame.height + 12 + imageView.frame.height
         }
+        print("DiaryDetail :: isEnableImageView = \(isEnableImageView), enabledImageViewHeight = \(enabledImageViewHeight)")
         print("changedHeight = \(changedHeight)")
         
         // 숨김처리가 아닐 경우에만
@@ -427,6 +430,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         // FAB Button
         spaceRequiredFAB.spaceRequiredCurrentPage = String(model.pageNum)
         
+        setImageConstraint(image: model.image)
+        
         // cell 생성에 필요한 정보 임시 저장
         pageNum = model.pageNum
         print("pageNum = \(pageNum)")
@@ -449,6 +454,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             divider4.isHidden = true
             imageView.isHidden = true
             
+            
             tableViewHeaderView.snp.updateConstraints { make in
                 make.height.equalTo(400)
             }
@@ -465,27 +471,61 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             divider3.isHidden = false
             descriptionTextLabel.isHidden = false
             createdAtPageView.isHidden = false
-            divider4.isHidden = false
-            imageView.isHidden = false
+            
+            print("DiaryDetail :: isHide! -> isEnableImageView = \(isEnableImageView)")
+            if isEnableImageView == true {
+                divider4.isHidden = false
+                imageView.isHidden = false
+            } else {
+                divider4.isHidden = true
+                imageView.isHidden = true
+            }
+            
             
             hideView.isHidden = true
             replyTableView.reloadData()
         }
     }
     
-    func testLoadDiaryImage(imageName: UIImage?) {
-        if let imageName = imageName, isHide == false {
+    func setImageConstraint(image: UIImage?) {
+        let isImageEnabled: Bool = image != nil ? true : false
+
+        print("DiaryDetail :: isImageEnabled = \(isEnableImageView)")
+
+        switch isImageEnabled {
+        case true:
+            guard let image = image else {
+                return
+            }
+            
             isEnableImageView = true
             divider4.isHidden = false
             imageView.isHidden = false
+            
             DispatchQueue.main.async {
-                self.imageView.image = imageName
+                self.imageView.image = image
             }
-        } else {
+        case false:
             divider4.isHidden = true
             imageView.isHidden = true
             isEnableImageView = false
+            
+            DispatchQueue.main.async {
+                self.imageView.image = nil
+            }
         }
+    }
+    
+    func testLoadDiaryImage(imageName: UIImage?) {
+//        print("DiaryDetail :: Image! = \(imageName)")
+//        if let image = imageName {
+//            isEnableImageView = true
+//            divider4.isHidden = false
+//            imageView.isHidden = false
+//
+//        } else {
+//
+//        }
     }
     
     func reloadTableView() {

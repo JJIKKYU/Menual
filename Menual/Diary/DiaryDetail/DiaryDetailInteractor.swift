@@ -78,17 +78,13 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 print("DiaryDetail :: diaryString 구독 중!, isChanged = \(isChanged), diaryModel.uuid = \(diaryModel.pageNum)")
                 guard let currentDiaryModel = diaryArr.filter({ diaryModel.uuid == $0.uuid }).first else { return }
                 print("<- reloadTableView")
+//                dependency.diaryRepository
+//                    .loadImageFromDocumentDirectory(imageName: diaryModel.uuid, completionHandler: { image in
+//                        self.presenter.testLoadDiaryImage(imageName:image)
+//                    })
                 self.diaryReplies = currentDiaryModel.replies
                 self.currentDiaryPage = currentDiaryModel.pageNum
                 presenter.loadDiaryDetail(model: currentDiaryModel)
-                dependency.diaryRepository
-                    .loadImageFromDocumentDirectory(imageName: diaryModel.uuid, completionHandler: { iamge in
-                        guard let image = iamge else {
-                            return
-                        }
-                        self.presenter.testLoadDiaryImage(imageName:image)
-                    })
-                self.presenter.reloadTableView()
             })
             .disposed(by: self.disposebag)
         
