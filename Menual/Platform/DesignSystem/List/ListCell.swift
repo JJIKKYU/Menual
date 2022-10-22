@@ -65,11 +65,16 @@ class ListCell: UITableViewCell {
         didSet { setNeedsLayout() }
     }
     
+    var image: UIImage? {
+        didSet { setNeedsLayout() }
+    }
+    
     private let lockImageView = UIImageView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.image = Asset._24px.lock.image.withRenderingMode(.alwaysTemplate)
         $0.tintColor = Colors.grey.g500
         $0.contentMode = .scaleAspectFit
+        $0.layer.masksToBounds = true
     }
     
     private let titleLabel = UILabel().then {
@@ -83,7 +88,8 @@ class ListCell: UITableViewCell {
     private let menualImageView = UIImageView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .blue
-        $0.contentMode = .scaleAspectFit
+        $0.contentMode = .scaleAspectFill
+        $0.layer.masksToBounds = true
         $0.AppCorner(._2pt)
     }
     
@@ -187,6 +193,14 @@ class ListCell: UITableViewCell {
             lockImageView.snp.removeConstraints()
         case .textAndImage:
             menualImageView.isHidden = false
+            if let image = image {
+                menualImageView.image = image
+            }
+            menualImageView.snp.makeConstraints { make in
+                make.trailing.equalToSuperview().inset(20)
+                make.top.equalToSuperview().offset(12)
+                make.width.height.equalTo(48)
+            }
             lockImageView.isHidden = true
             titleLabel.textColor = Colors.grey.g200
             titleLabel.snp.remakeConstraints { make in

@@ -587,8 +587,12 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         if data.isHide {
             cell.listType = .hide
         } else {
-            // TODO: - 이미지가 있을 경우 이미지까지
-            cell.listType = .text
+            if let image = data.originalImage {
+                cell.listType = .textAndImage
+                cell.image = image
+            } else {
+                cell.listType = .text
+            }
         }
         
         cell.title = data.title

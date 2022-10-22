@@ -17,6 +17,7 @@ public struct DiaryModel {
     let place: PlaceModel? // TODO: 위치 타입 추가
     let description: String
     let image: UIImage? // TODO: 이미지 타입 추가
+    let originalImage: UIImage?
     let readCount: Int
     let createdAt: Date
     let replies: [DiaryReplyModel]
@@ -25,7 +26,7 @@ public struct DiaryModel {
     // let createdAt: Date
     
     // 각 Property를 넣어서 초기화
-    init(uuid: String, pageNum: Int, title: String, weather: WeatherModel?, place: PlaceModel?, description: String, image: UIImage?, readCount: Int, createdAt: Date, replies: [DiaryReplyModel], isDeleted: Bool, isHide: Bool) {
+    init(uuid: String, pageNum: Int, title: String, weather: WeatherModel?, place: PlaceModel?, description: String, image: UIImage?, originalImage: UIImage?, readCount: Int, createdAt: Date, replies: [DiaryReplyModel], isDeleted: Bool, isHide: Bool) {
         self.uuid = uuid
         self.pageNum = pageNum
         self.title = title
@@ -33,6 +34,7 @@ public struct DiaryModel {
         self.place = place
         self.description = description
         self.image = image
+        self.originalImage = originalImage
         self.readCount = readCount
         self.createdAt = createdAt
         self.replies = replies
@@ -57,11 +59,15 @@ public struct DiaryModel {
         if let directoryPath = path.first {
         // 2. 이미지 URL 찾기
             let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(realm.uuid)
+            let originalImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(realm.uuid + "Original")
             // 3. UIImage로 불러오기
             self.image = UIImage(contentsOfFile: imageURL.path)
+            self.originalImage = UIImage(contentsOfFile: originalImageURL.path)
         } else {
             self.image = nil
+            self.originalImage = nil
         }
+        
         
         self.readCount = realm.readCount
         self.createdAt = realm.createdAt

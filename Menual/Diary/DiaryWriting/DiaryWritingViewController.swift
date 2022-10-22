@@ -19,9 +19,11 @@ protocol DiaryWritingPresentableListener: AnyObject {
     // interactor class.
     func pressedBackBtn(isOnlyDetach: Bool)
     func writeDiary(info: DiaryModel)
-    func updateDiary(info: DiaryModel)
+    func updateDiary(info: DiaryModel, edittedImage: Bool)
     
     func testSaveImage(imageName: String, image: UIImage)
+    func saveCropImage(diaryUUID: String, imageData: Data)
+    func saveOriginalImage(diaryUUID: String, imageData: Data)
     func pressedWeatherPlaceAddBtn(type: BottomSheetSelectViewType)
     func pressedTempSaveBtn()
 }
@@ -46,6 +48,18 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     private var disposeBag = DisposeBag()
     
     private var writingType: WritingType = .writing
+    
+    private var diaryModelUUID: String?
+    
+    // 수정하기 상태에서 이미지를 수정했을때만 저장할 수 있도록 하는 플래그
+    private var isEdittedIamge: Bool = false
+    // 업로드할 크롭된 이미지
+    private var selectedImage: UIImage?
+    // 업로드할 오리지날 이미지
+    private var selectedOriginalImage: UIImage?
+    
+    // delegate 저장 후 VC 삭제시 해제 용도
+    private var cropVC: CustomCropViewController?
     
     private lazy var naviView = MenualNaviView(type: .write).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -210,6 +224,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         descriptionTextView.delegate = nil
         weatherSelectView.selectTextView.delegate = nil
         locationSelectView.selectTextView.delegate = nil
+        cropVC?.delegate = nil
         
         if isMovingFromParent || isBeingDismissed {
             listener?.pressedBackBtn(isOnlyDetach: true)
@@ -367,6 +382,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     
     // 수정하기일때만 사용!
     func setDiaryEditMode(diaryModel: DiaryModel) {
+        self.diaryModelUUID = diaryModel.uuid
         self.writingType = .edit
         self.naviView.naviViewType = .edit
         self.naviView.setNaviViewType()
@@ -385,6 +401,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         self.descriptionTextView.text = diaryModel.description
         self.descriptionTextView.textColor = UIColor.white
         
+        self.imageUploadView.image = nil
+        self.imageUploadView.image = diaryModel.image ?? UIImage()
+        
         self.view.layoutIfNeeded()
     }
 }
@@ -399,10 +418,11 @@ extension DiaryWritingViewController {
     
     @objc
     func pressedCheckBtn() {
-        print("PressedCheckBtn!")
+        print("DiaryWriting :: PressedCheckBtn! - 1")
         guard let title = self.titleTextField.text,
               let description = self.descriptionTextView.text
         else { return }
+        print("DiaryWriting :: PressedCheckBtn! - 2")
         
         let weatherModel = WeatherModel(uuid: NSUUID().uuidString,
                                         weather: weatherSelectView.selectedWeatherType ?? nil,
@@ -424,7 +444,8 @@ extension DiaryWritingViewController {
                                         weather: weatherModel,
                                         place: placeModel,
                                         description: description,
-                                        image: self.imageView.image,
+                                        image: self.selectedImage,
+                                        originalImage: self.selectedOriginalImage,
                                         readCount: 0,
                                         createdAt: Date(),
                                         replies: [],
@@ -432,8 +453,18 @@ extension DiaryWritingViewController {
                                         isHide: false
             )
 
+
             print("diaryModel.id = \(diaryModel.uuid)")
-            listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())
+            if isEdittedIamge == true,
+               let selectedImage = selectedImage,
+               let selectedImageData = selectedImage.pngData(),
+               let selectedOriginalImage = selectedOriginalImage,
+               let selectedOriginalImageData = selectedOriginalImage.pngData() {
+                print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
+                listener?.saveCropImage(diaryUUID: diaryModel.uuid, imageData: selectedImageData)
+                listener?.saveOriginalImage(diaryUUID: diaryModel.uuid, imageData: selectedOriginalImageData)
+            }
+            // listener?.testSaveImage(imageName: diaryModel.uuid, image: self.selectedImage ?? UIImage())
             listener?.writeDiary(info: diaryModel)
             dismiss(animated: true)
 
@@ -445,16 +476,30 @@ extension DiaryWritingViewController {
                                         weather: weatherModel,
                                         place: placeModel,
                                         description: description,
-                                        image: self.imageView.image,
+                                        image: self.selectedImage,
+                                        originalImage: self.selectedOriginalImage,
                                         readCount: 0,
                                         createdAt: Date(),
                                         replies: [],
                                         isDeleted: false,
                                         isHide: false
             )
-            listener?.testSaveImage(imageName: diaryModel.uuid, image: self.imageView.image ?? UIImage())
-            listener?.updateDiary(info: diaryModel)
-            self.pressedBackBtn()
+            
+            self.listener?.updateDiary(info: diaryModel, edittedImage: self.isEdittedIamge)
+
+            if isEdittedIamge == true,
+               let selectedImage = selectedImage,
+               let selectedImageData = selectedImage.pngData(),
+               let selectedOriginalImage = selectedOriginalImage,
+               let selectedOriginalImageData = selectedOriginalImage.pngData(),
+               let diaryModelUUID = diaryModelUUID {
+                print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
+                listener?.saveCropImage(diaryUUID: diaryModelUUID, imageData: selectedImageData)
+                listener?.saveOriginalImage(diaryUUID: diaryModelUUID, imageData: selectedOriginalImageData)
+            }
+            print("DiaryWriting :: diaryModel = \(diaryModel)")
+            
+            // self.pressedBackBtn()
         }
         
         /*
@@ -473,6 +518,7 @@ extension DiaryWritingViewController {
         let navigationController = UINavigationController(rootViewController: imagePicker)
         navigationController.modalPresentationStyle = .overFullScreen
         navigationController.navigationBar.isHidden = true
+        navigationController.isNavigationBarHidden = true
         present(navigationController, animated: true, completion: nil)
     }
     
@@ -691,17 +737,22 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                         // self.imageView.image = image as? UIImage
                         // self.imageUploadView.image = image as? UIImage
                         
-                        let cropVC = CustomCropViewController(image: image as? UIImage ?? UIImage())
-//                        let navigationController = UINavigationController(rootViewController: cropVC)
-                        cropVC.delegate = self
-                        picker.navigationController?.pushViewController(cropVC, animated: true)
-                        // self.present(cropVC, animated: true)
-                        // picker.navigationController?.pushViewController(cropVC, animated: true)
+                        if let image = image as? UIImage {
+                            let cropVC = CustomCropViewController(image: image)
+                            self.cropVC = cropVC
+                            cropVC.delegate = self
+                            print("DiaryWriting :: selectedOriginalImage = \(image)")
+                            self.selectedOriginalImage = image
+                            picker.navigationController?.pushViewController(cropVC, animated: true)
+                        }
                     }
                 }
             }
         } else {
             // TODO: Handle empty results or item provider not being able load UIImage
+            print("DiaryWriting :: 이미지가 없습니다!")
+            self.isEdittedIamge = false
+            dismiss(animated: true)
         }
     }
 }
@@ -718,7 +769,6 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
         }
         
         let cropVC = CropViewController(image: newImage!)
-        
         picker.pushViewController(cropVC, animated: true)
         
         
@@ -789,7 +839,9 @@ extension DiaryWritingViewController: WeatherPlaceToolbarViewDelegate {
 extension DiaryWritingViewController: CropViewControllerDelegate {
     func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
         print("image! = \(image)")
+        self.selectedImage = image
         self.imageUploadView.image = image
+        self.isEdittedIamge = true
         dismiss(animated: true)
     }
 }

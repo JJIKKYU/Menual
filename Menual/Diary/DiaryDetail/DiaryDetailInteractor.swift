@@ -66,10 +66,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         
         print("interactor = \(diaryModel)")
         presenter.loadDiaryDetail(model: diaryModel)
-
-        let image = dependency.diaryRepository
-            .loadImageFromDocumentDirectory(imageName: diaryModel.uuid)
-        presenter.testLoadDiaryImage(imageName: image)
         
         Observable.combineLatest(
             dependency.diaryRepository.diaryString,
@@ -79,12 +75,19 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 guard let self = self,
                       let diaryModel = self.diaryModel else { return }
                 
-                print("diaryString 구독 중!, isChanged = \(isChanged), diaryModel.uuid = \(diaryModel.pageNum)")
+                print("DiaryDetail :: diaryString 구독 중!, isChanged = \(isChanged), diaryModel.uuid = \(diaryModel.pageNum)")
                 guard let currentDiaryModel = diaryArr.filter({ diaryModel.uuid == $0.uuid }).first else { return }
                 print("<- reloadTableView")
                 self.diaryReplies = currentDiaryModel.replies
                 self.currentDiaryPage = currentDiaryModel.pageNum
                 presenter.loadDiaryDetail(model: currentDiaryModel)
+                dependency.diaryRepository
+                    .loadImageFromDocumentDirectory(imageName: diaryModel.uuid, completionHandler: { iamge in
+                        guard let image = iamge else {
+                            return
+                        }
+                        self.presenter.testLoadDiaryImage(imageName:image)
+                    })
                 self.presenter.reloadTableView()
             })
             .disposed(by: self.disposebag)

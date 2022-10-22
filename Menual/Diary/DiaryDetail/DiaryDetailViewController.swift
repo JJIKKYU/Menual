@@ -228,6 +228,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
                 
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        print("DiaryDetail :: presentingVC = \(presentingViewController?.classForCoder)")
     }
     
     override func viewWillLayoutSubviews() {
@@ -444,6 +446,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             divider3.isHidden = true
             descriptionTextLabel.isHidden = true
             createdAtPageView.isHidden = true
+            divider4.isHidden = true
+            imageView.isHidden = true
             
             tableViewHeaderView.snp.updateConstraints { make in
                 make.height.equalTo(400)
@@ -461,6 +465,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             divider3.isHidden = false
             descriptionTextLabel.isHidden = false
             createdAtPageView.isHidden = false
+            divider4.isHidden = false
+            imageView.isHidden = false
             
             hideView.isHidden = true
             replyTableView.reloadData()
@@ -468,7 +474,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     }
     
     func testLoadDiaryImage(imageName: UIImage?) {
-        if let imageName = imageName {
+        if let imageName = imageName, isHide == false {
             isEnableImageView = true
             divider4.isHidden = false
             imageView.isHidden = false

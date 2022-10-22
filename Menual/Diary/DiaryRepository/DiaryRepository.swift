@@ -31,8 +31,8 @@ public protocol DiaryRepository {
     func addWeatherHistory(info: WeatherHistoryModel)
     func addPlaceHistory(info: PlaceHistoryModel)
     func deleteDiary(info: DiaryModel)
-    func saveImageToDocumentDirectory(imageName: String, image: UIImage)
-    func loadImageFromDocumentDirectory(imageName: String) -> UIImage?
+    func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void)
+    func loadImageFromDocumentDirectory(imageName: String, completionHandler: @escaping (UIImage?) -> Void)
     
     // 겹쓰기 로직
     func addReplay(info: DiaryReplyModel)
@@ -115,7 +115,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
      */
     
-    public func saveImageToDocumentDirectory(imageName: String, image: UIImage) {
+    public func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void) {
         // 1. 이미지를 저장할 경로를 설정해줘야함 - 도큐먼트 폴더,File 관련된건 Filemanager가 관리함(싱글톤 패턴)
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {return}
         
@@ -126,10 +126,11 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         // 3. 이미지 압축(image.pngData())
         // 압축할거면 jpegData로~(0~1 사이 값)
-        guard let data = image.pngData() else {
-            print("압축이 실패했습니다.")
-            return
-        }
+//        guard let data = image.pngData() else {
+//            print("압축이 실패했습니다.")
+//            return
+//        }
+        let data = imageData
         
         // 4. 이미지 저장: 동일한 경로에 이미지를 저장하게 될 경우, 덮어쓰기하는 경우
         // 4-1. 이미지 경로 여부 확인
@@ -137,9 +138,10 @@ public final class DiaryRepositoryImp: DiaryRepository {
             // 4-2. 이미지가 존재한다면 기존 경로에 있는 이미지 삭제
             do {
                 try FileManager.default.removeItem(at: imageURL)
-                print("이미지 삭제 완료")
+                print("DiaryWriting :: DiaryRepository :: 이미지 삭제 완료")
             } catch {
-                print("이미지를 삭제하지 못했습니다.")
+                print("DiaryWriting :: DiaryRepository :: 이미지를 삭제하지 못했습니다.")
+                completionHandler(false)
             }
         }
         
@@ -147,13 +149,15 @@ public final class DiaryRepositoryImp: DiaryRepository {
         // 파일을 저장하는 등의 행위는 조심스러워야하기 때문에 do try catch 문을 사용하는 편임
         do {
             try data.write(to: imageURL)
-            print("이미지 저장완료")
+            print("DiaryWriting :: DiaryRepository :: 이미지 저장완료")
+            completionHandler(true)
         } catch {
-            print("이미지를 저장하지 못했습니다.")
+            print("DiaryWriting :: DiaryRepository :: 이미지를 저장하지 못했습니다.")
+            completionHandler(false)
         }
     }
     
-    public func loadImageFromDocumentDirectory(imageName: String) -> UIImage? {
+    public func loadImageFromDocumentDirectory(imageName: String, completionHandler: @escaping (UIImage?) -> Void) {
             
         // 1. 도큐먼트 폴더 경로가져오기
         let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
@@ -164,10 +168,11 @@ public final class DiaryRepositoryImp: DiaryRepository {
         // 2. 이미지 URL 찾기
             let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(imageName)
             // 3. UIImage로 불러오기
-            return UIImage(contentsOfFile: imageURL.path)
+            completionHandler(UIImage(contentsOfFile: imageURL.path))
+            // return UIImage(contentsOfFile: imageURL.path)
         }
         
-        return nil
+        completionHandler(nil)
     }
     
     public func fetch() {
@@ -282,7 +287,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         else { return }
         
         realm.safeWrite {
-            data.readCount = info.readCount
+            data.readCount = info.readCount + 1
             data.title = info.title
             // data.image = info.image
             data.desc = info.description
@@ -305,6 +310,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                               place: info.place,
                               description: info.description,
                               image: info.image,
+                              originalImage: info.originalImage,
                               readCount: info.readCount,
                               createdAt: info.createdAt,
                               replies: info.replies,
@@ -371,6 +377,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                                   place: info.place,
                                   description: info.description,
                                   image: info.image,
+                                  originalImage: info.originalImage,
                                   readCount: info.readCount,
                                   createdAt: info.createdAt,
                                   replies: info.replies,
@@ -436,7 +443,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
 
     // MARK: - 최근검색목록 로직 (SearchModel)
     public func fetchRecntDiarySearch() {
-        print("Search :: DiaryRepo :: fetchRecentDiarySearch!")
+        print("Search :: DiaryRepository :: fetchRecentDiarySearch!")
         guard let realm = Realm.safeInit() else {
             return
         }
@@ -449,7 +456,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
     
     public func deleteAllRecentDiarySearch() {
-        print("Search :: DiaryRepo :: deleteAllRecentDiarySearch!")
+        print("Search :: DiaryRepository :: deleteAllRecentDiarySearch!")
         guard let realm = Realm.safeInit() else {
             return
         }
@@ -462,7 +469,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
     
     public func addDiarySearch(info: DiaryModel) {
-        print("Search :: DiaryRepo :: addDiarySearch!")
+        print("Search :: DiaryRepository :: addDiarySearch!")
         guard let realm = Realm.safeInit() else {
             return
         }
@@ -479,7 +486,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
              realm.add(DiarySearchModelRealm(diarySearchModel))
         }
 
-        print("Search :: DiaryRepo :: diarySearchModel = \(diarySearchModel)")
+        print("Search :: DiaryRepository :: diarySearchModel = \(diarySearchModel)")
         
         let result: [DiarySearchModel] = (diarySearchSubject.value + [diarySearchModel]).sorted { $0.createdAt > $1.createdAt }
 
