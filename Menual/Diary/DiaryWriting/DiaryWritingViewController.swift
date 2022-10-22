@@ -24,6 +24,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
     func testSaveImage(imageName: String, image: UIImage)
     func saveCropImage(diaryUUID: String, imageData: Data)
     func saveOriginalImage(diaryUUID: String, imageData: Data)
+    func saveTempSave(diaryModel: DiaryModel)
     func pressedWeatherPlaceAddBtn(type: BottomSheetSelectViewType)
     func pressedTempSaveBtn()
 }
@@ -57,6 +58,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     private var selectedImage: UIImage?
     // 업로드할 오리지날 이미지
     private var selectedOriginalImage: UIImage?
+    
+    private let defaultTitleText: String = "제목을 입력할 수 있어요"
+    private let defaultDescriptionText: String = "오늘의 메뉴얼을 작성해주세요."
     
     // delegate 저장 후 VC 삭제시 해제 용도
     private var cropVC: CustomCropViewController?
@@ -92,7 +96,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     private lazy var titleTextField = UITextView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
-        $0.text = "제목을 입력해 보세요"
+        $0.text = defaultTitleText
         $0.textColor = Colors.grey.g600
         $0.font = UIFont.AppTitle(.title_5)
         $0.tag = TextViewType.title.rawValue
@@ -137,7 +141,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         // $0.typingAttributes = UIFont.AppBody(.body_4, .lightGray)
         // $0.backgroundColor = .gray.withAlphaComponent(0.1)
         $0.backgroundColor = .clear
-        $0.text = "오늘은 어떤 일이 있으셨나요?"
+        $0.text = defaultDescriptionText
         $0.textColor = Colors.grey.g600
         $0.font = UIFont.AppBodyOnlyFont(.body_4).withSize(14)
         $0.isScrollEnabled = false
@@ -348,7 +352,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             .subscribe(onNext: { [weak self] text in
                 guard let self = self else { return }
                 // placeholder일 때는 비활성화
-                if text == "오늘은 어떤 일이 있으셨나요?" {
+                if text == self.defaultDescriptionText {
                     self.naviView.rightButton1IsActive = false
                     return
                 }
@@ -378,6 +382,123 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         print("setPlaceView = \(model)")
         locationSelectView.selected = true
         locationSelectView.selectedPlaceType = place
+    }
+    
+    func addDiary() {
+        print("DiaryWriting :: addDiary! - 1")
+        guard let title = self.titleTextField.text,
+              let description = self.descriptionTextView.text
+        else { return }
+        print("DiaryWriting :: addDiary! - 2")
+        
+        let weatherModel = WeatherModel(uuid: NSUUID().uuidString,
+                                        weather: weatherSelectView.selectedWeatherType ?? nil,
+                                        detailText: weatherSelectView.selectTitle
+        )
+
+        let placeModel = PlaceModel(uuid: NSUUID().uuidString,
+                                    place: locationSelectView.selectedPlaceType ?? nil,
+                                    detailText: locationSelectView.selectTitle
+        )
+
+        switch writingType {
+        case .writing:
+            let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
+                                        pageNum: 0,
+                                        title: title == defaultTitleText ? Date().toString() : title,
+                                        weather: weatherModel,
+                                        place: placeModel,
+                                        description: description,
+                                        image: self.selectedImage,
+                                        originalImage: self.selectedOriginalImage,
+                                        readCount: 0,
+                                        createdAt: Date(),
+                                        replies: [],
+                                        isDeleted: false,
+                                        isHide: false
+            )
+
+
+            print("diaryModel.id = \(diaryModel.uuid)")
+            if isEdittedIamge == true,
+               let selectedImage = selectedImage,
+               let selectedImageData = selectedImage.pngData(),
+               let selectedOriginalImage = selectedOriginalImage,
+               let selectedOriginalImageData = selectedOriginalImage.pngData() {
+                print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
+                listener?.saveCropImage(diaryUUID: diaryModel.uuid, imageData: selectedImageData)
+                listener?.saveOriginalImage(diaryUUID: diaryModel.uuid, imageData: selectedOriginalImageData)
+            }
+            // listener?.testSaveImage(imageName: diaryModel.uuid, image: self.selectedImage ?? UIImage())
+            listener?.writeDiary(info: diaryModel)
+            dismiss(animated: true)
+
+        case .edit:
+            print("PressedCheckBtn! edit!")
+            let diaryModel = DiaryModel(uuid: "",
+                                        pageNum: 0,
+                                        title: title == defaultTitleText ? Date().toString() : title,
+                                        weather: weatherModel,
+                                        place: placeModel,
+                                        description: description,
+                                        image: self.selectedImage,
+                                        originalImage: self.selectedOriginalImage,
+                                        readCount: 0,
+                                        createdAt: Date(),
+                                        replies: [],
+                                        isDeleted: false,
+                                        isHide: false
+            )
+            
+            self.listener?.updateDiary(info: diaryModel, edittedImage: self.isEdittedIamge)
+
+            if isEdittedIamge == true,
+               let selectedImage = selectedImage,
+               let selectedImageData = selectedImage.pngData(),
+               let selectedOriginalImage = selectedOriginalImage,
+               let selectedOriginalImageData = selectedOriginalImage.pngData(),
+               let diaryModelUUID = diaryModelUUID {
+                print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
+                listener?.saveCropImage(diaryUUID: diaryModelUUID, imageData: selectedImageData)
+                listener?.saveOriginalImage(diaryUUID: diaryModelUUID, imageData: selectedOriginalImageData)
+            }
+            print("DiaryWriting :: diaryModel = \(diaryModel)")
+        }
+    }
+    
+    // tempSaveModel로 만들기 위해서 오물락조물락
+    func zipDiaryModelForTempSave() -> DiaryModel? {
+        guard let title = self.titleTextField.text,
+              let description = self.descriptionTextView.text
+        else { return nil }
+        print("DiaryWriting :: zipDiaryModelForTempSave!")
+        
+        let weatherModel = WeatherModel(uuid: NSUUID().uuidString,
+                                        weather: weatherSelectView.selectedWeatherType ?? nil,
+                                        detailText: weatherSelectView.selectTitle
+        )
+
+        let placeModel = PlaceModel(uuid: NSUUID().uuidString,
+                                    place: locationSelectView.selectedPlaceType ?? nil,
+                                    detailText: locationSelectView.selectTitle
+        )
+        
+        let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
+                                    pageNum: 0,
+                                    title: title == defaultTitleText ? Date().toString() : title,
+                                    weather: weatherModel,
+                                    place: placeModel,
+                                    description: description,
+                                    image: self.selectedImage,
+                                    originalImage: self.selectedOriginalImage,
+                                    readCount: 0,
+                                    createdAt: Date(),
+                                    replies: [],
+                                    isDeleted: false,
+                                    isHide: false
+        )
+        
+        return diaryModel
     }
     
     // 수정하기일때만 사용!
@@ -413,98 +534,39 @@ extension DiaryWritingViewController {
     @objc
     func pressedBackBtn() {
         print("pressedBackBtn!")
-        listener?.pressedBackBtn(isOnlyDetach: false)
+        var titleText: String = ""
+        switch writingType {
+        case .writing:
+            titleText = "메뉴얼 작성을 취소하시겠어요?"
+        case .edit:
+            titleText = "메뉴얼 수정을 취소하시겠어요?"
+        }
+
+        show(size: .medium,
+             buttonType: .twoBtn,
+             titleText: titleText,
+             subTitleText: "작성한 내용은 임시저장글에 저장됩니다.",
+             cancelButtonText: "취소",
+             confirmButtonText: "확인"
+        )
     }
     
     @objc
     func pressedCheckBtn() {
-        print("DiaryWriting :: PressedCheckBtn! - 1")
-        guard let title = self.titleTextField.text,
-              let description = self.descriptionTextView.text
-        else { return }
-        print("DiaryWriting :: PressedCheckBtn! - 2")
-        
-        let weatherModel = WeatherModel(uuid: NSUUID().uuidString,
-                                        weather: weatherSelectView.selectedWeatherType ?? nil,
-                                        detailText: weatherSelectView.selectTitle
-        )
-
-        let placeModel = PlaceModel(uuid: NSUUID().uuidString,
-                                    place: locationSelectView.selectedPlaceType ?? nil,
-                                    detailText: locationSelectView.selectTitle
-        )
-
+        var titleText: String = ""
         switch writingType {
         case .writing:
-            print("PressedCheckBtn! writing!")
-            
-            let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
-                                        pageNum: 0,
-                                        title: title,
-                                        weather: weatherModel,
-                                        place: placeModel,
-                                        description: description,
-                                        image: self.selectedImage,
-                                        originalImage: self.selectedOriginalImage,
-                                        readCount: 0,
-                                        createdAt: Date(),
-                                        replies: [],
-                                        isDeleted: false,
-                                        isHide: false
-            )
-
-
-            print("diaryModel.id = \(diaryModel.uuid)")
-            if isEdittedIamge == true,
-               let selectedImage = selectedImage,
-               let selectedImageData = selectedImage.pngData(),
-               let selectedOriginalImage = selectedOriginalImage,
-               let selectedOriginalImageData = selectedOriginalImage.pngData() {
-                print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
-                listener?.saveCropImage(diaryUUID: diaryModel.uuid, imageData: selectedImageData)
-                listener?.saveOriginalImage(diaryUUID: diaryModel.uuid, imageData: selectedOriginalImageData)
-            }
-            // listener?.testSaveImage(imageName: diaryModel.uuid, image: self.selectedImage ?? UIImage())
-            listener?.writeDiary(info: diaryModel)
-            dismiss(animated: true)
-
+            titleText = "메뉴얼을 등록하시겠어요?"
         case .edit:
-            print("PressedCheckBtn! edit!")
-            let diaryModel = DiaryModel(uuid: "",
-                                        pageNum: 0,
-                                        title: title,
-                                        weather: weatherModel,
-                                        place: placeModel,
-                                        description: description,
-                                        image: self.selectedImage,
-                                        originalImage: self.selectedOriginalImage,
-                                        readCount: 0,
-                                        createdAt: Date(),
-                                        replies: [],
-                                        isDeleted: false,
-                                        isHide: false
-            )
-            
-            self.listener?.updateDiary(info: diaryModel, edittedImage: self.isEdittedIamge)
-
-            if isEdittedIamge == true,
-               let selectedImage = selectedImage,
-               let selectedImageData = selectedImage.pngData(),
-               let selectedOriginalImage = selectedOriginalImage,
-               let selectedOriginalImageData = selectedOriginalImage.pngData(),
-               let diaryModelUUID = diaryModelUUID {
-                print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
-                listener?.saveCropImage(diaryUUID: diaryModelUUID, imageData: selectedImageData)
-                listener?.saveOriginalImage(diaryUUID: diaryModelUUID, imageData: selectedOriginalImageData)
-            }
-            print("DiaryWriting :: diaryModel = \(diaryModel)")
-            
-            // self.pressedBackBtn()
+            titleText = "메뉴얼을 수정하시겠어요?"
         }
-        
-        /*
-        
-         */
+
+        show(size: .small,
+             buttonType: .twoBtn,
+             titleText: titleText,
+             cancelButtonText: "취소",
+             confirmButtonText: "확인"
+        )
     }
     
     @objc
@@ -562,7 +624,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
         switch textView.tag {
         case TextViewType.title.rawValue:
             print("Title TextView")
-            if textView.text == "제목을 입력해 보세요" {
+            if textView.text == defaultTitleText {
                 textView.text = nil
                 textView.textColor = Colors.grey.g200
             }
@@ -589,7 +651,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             
         case TextViewType.description.rawValue:
             print("Description TextView")
-            if textView.text == "오늘은 어떤 일이 있으셨나요?" {
+            if textView.text == defaultDescriptionText {
                 textView.text = nil
                 textView.textColor = UIColor.white
             }
@@ -607,7 +669,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
         switch textView.tag {
         case TextViewType.title.rawValue:
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                textView.text = "제목을 입력해 보세요"
+                textView.text = defaultTitleText
                 textView.textColor = Colors.grey.g600
             }
             
@@ -634,7 +696,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             
         case TextViewType.description.rawValue:
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                textView.text = "오늘은 어떤 일이 있으셨나요?"
+                textView.text = defaultDescriptionText
                 textView.textColor = .lightGray
             }
             
@@ -843,5 +905,42 @@ extension DiaryWritingViewController: CropViewControllerDelegate {
         self.imageUploadView.image = image
         self.isEdittedIamge = true
         dismiss(animated: true)
+    }
+}
+
+extension DiaryWritingViewController: DialogDelegate {
+    func action(titleText: String) {
+        switch titleText {
+        case "메뉴얼 작성을 취소하시겠어요?",
+             "메뉴얼 수정을 취소하시겠어요?":
+            // TODO: - 임시저장 리스트에 저장하기
+            if let diaryModel = zipDiaryModelForTempSave() {
+                listener?.saveTempSave(diaryModel: diaryModel)
+            }
+            listener?.pressedBackBtn(isOnlyDetach: false)
+            
+        case "메뉴얼을 등록하시겠어요?",
+             "메뉴얼을 수정하시겠어요?":
+            addDiary()
+            
+        default:
+            break
+            
+        }
+    }
+    
+    func exit(titleText: String) {
+        switch titleText {
+        case "메뉴얼 작성을 취소하시겠어요?",
+             "메뉴얼 수정을 취소하시겠어요?":
+            break
+            
+        case "메뉴얼을 등록하시겠어요?",
+             "메뉴얼을 수정하시겠어요?":
+            break
+            
+        default:
+            break
+        }
     }
 }

@@ -329,12 +329,19 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     // MARK: - diaryTempSave
     
     func pressedTempSaveBtn() {
-        // router?.attachDiaryTempSave()
-        pressedWeatherPlaceAddBtn(type: .place)
+        router?.attachDiaryTempSave()
     }
     
     func diaryTempSavePressentBackBtn() {
         router?.detachDiaryTempSave()
+    }
+    
+    // tempSaveRealm에 저장
+    func saveTempSave(diaryModel: DiaryModel) {
+        print("DiaryWriting :: interactor -> tempsave!")
+        dependency.diaryRepository
+            .addTempSave(diaryModel: diaryModel)
+        
     }
     
     // MARK: - 미사용

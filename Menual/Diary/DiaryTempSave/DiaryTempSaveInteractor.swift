@@ -7,6 +7,7 @@
 
 import RIBs
 import RxSwift
+import RxRelay
 
 protocol DiaryTempSaveRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
@@ -22,16 +23,31 @@ protocol DiaryTempSaveListener: AnyObject {
     func diaryTempSavePressentBackBtn()
 }
 
+protocol DiaryTempSaveInteractorDependecy {
+    var diaryRepository: DiaryRepository { get }
+}
+
 final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresentable>, DiaryTempSaveInteractable, DiaryTempSavePresentableListener {
 
     weak var router: DiaryTempSaveRouting?
     weak var listener: DiaryTempSaveListener?
+    
+    private let dependency: DiaryTempSaveDependency
+    private let disposeBag = DisposeBag()
+    
+    var tempSaveRelay = BehaviorRelay<[TempSaveModel]>(value: [])
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
-    override init(presenter: DiaryTempSavePresentable) {
+    init(
+        presenter: DiaryTempSavePresentable,
+        dependency: DiaryTempSaveDependency
+    ) {
+        self.dependency = dependency
+        dependency.diaryRepository.fetchTempSave()
         super.init(presenter: presenter)
         presenter.listener = self
+        bind()
     }
 
     override func didBecomeActive() {
@@ -42,6 +58,17 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+    
+    func bind() {
+        dependency.diaryRepository
+            .tempSave
+            .subscribe(onNext: { [weak self] tempSave in
+                guard let self = self else { return }
+                print("TempSave :: tempSave구독! = \(tempSave)")
+                self.tempSaveRelay.accept(tempSave)
+            })
+            .disposed(by: disposeBag)
     }
     
     func pressedBackBtn() {

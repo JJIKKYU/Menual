@@ -10,17 +10,20 @@ import RxSwift
 import UIKit
 import SnapKit
 import Then
+import RxRelay
 
 protocol DiaryTempSavePresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
     // business logic, such as signIn(). This protocol is implemented by the corresponding
     // interactor class.
     func pressedBackBtn()
+    var tempSaveRelay: BehaviorRelay<[TempSaveModel]> { get }
 }
 
 final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresentable, DiaryTempSaveViewControllable {
 
     weak var listener: DiaryTempSavePresentableListener?
+    private let disposeBag = DisposeBag()
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -32,6 +35,7 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
         $0.delegate = self
         $0.register(TempSaveCell.self, forCellReuseIdentifier: "TempSaveCell")
         $0.rowHeight = 80
+        $0.backgroundColor = .clear
     }
     
     required init?(coder: NSCoder) {
@@ -44,6 +48,7 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         view.backgroundColor = Colors.background
         setViews()
+        bind()
     }
     
     lazy var naviView = MenualNaviView(type: .temporarySave).then {
@@ -74,6 +79,15 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
         }
     }
     
+    func bind() {
+        listener?.tempSaveRelay
+            .subscribe(onNext: { [weak self] tempSave in
+                guard let self = self else { return }
+                self.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+    }
+    
     @objc
     func pressedBackBtn() {
         print("pressedBackBtn")
@@ -90,7 +104,7 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
 
 extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 12
+        return listener?.tempSaveRelay.value.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -99,12 +113,14 @@ extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSourc
             return UITableViewCell()
         }
         
-        cell.title = "테스트입니다. \(indexPath.row)"
-        cell.date = "2022.12.0\(indexPath.row)"
+        guard let tempSaveArr = listener?.tempSaveRelay.value,
+              let model: TempSaveModel = tempSaveArr[safe: indexPath.row]
+        else { return UITableViewCell() }
+        
+        cell.title = model.title
+        cell.date = model.createdAt.toStringWithHourMin()
         print("여기!")
         
         return cell
     }
-    
-    
 }

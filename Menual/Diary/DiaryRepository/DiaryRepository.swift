@@ -21,10 +21,12 @@ public protocol DiaryRepository {
     var placeHistory: BehaviorRelay<[PlaceHistoryModel]> { get }
     var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
     var diarySearch: BehaviorRelay<[DiarySearchModel]> { get }
+    var tempSave: BehaviorRelay<[TempSaveModel]> { get }
     
 //    var realmDiaryOb: Observable<[DiaryModel]> { get }
     // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
     func fetch()
+    func fetchTempSave()
     func addDiary(info: DiaryModel)
     func updateDiary(info: DiaryModel)
     func hideDiary(isHide: Bool, info: DiaryModel) -> DiaryModel?
@@ -41,6 +43,9 @@ public protocol DiaryRepository {
     func addDiarySearch(info: DiaryModel)
     func fetchRecntDiarySearch() // 최근검색어
     func deleteAllRecentDiarySearch()
+    
+    // tempSave 로직
+    func addTempSave(diaryModel: DiaryModel)
     
     // Filter 로직
     func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int
@@ -88,6 +93,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     public var diarySearch: BehaviorRelay<[DiarySearchModel]> { diarySearchSubject }
     public let diarySearchSubject = BehaviorRelay<[DiarySearchModel]>(value: [])
+    
+    public var tempSave: BehaviorRelay<[TempSaveModel]> { tempSaveSubject }
+    public let tempSaveSubject = BehaviorRelay<[TempSaveModel]>(value: [])
     
     /*
     // public var cardOnFileString: ReadOnlyCurrentValuePublisher<[PaymentMethod]> { paymentMethodsSubject }
@@ -532,6 +540,44 @@ public final class DiaryRepositoryImp: DiaryRepository {
         // filteredDiaryStringSubject.accept(diaryMonthDic)
         filteredMonthDicSubject.accept(diaryMonthDic)
         return allCount
+    }
+    
+    // MARK: - TempSave
+    public func fetchTempSave() {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+
+        let tempSaveModelResults = realm.objects(TempSaveModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
+        tempSaveSubject.accept(tempSaveModelResults.map { TempSaveModel($0) })
+        print("diaryRepo :: fetchTempSave!")
+    }
+
+    public func addTempSave(diaryModel: DiaryModel) {
+        let model: TempSaveModel = TempSaveModel(uuid: UUID().uuidString,
+                                                 diaryModel: diaryModel,
+                                                 createAt: Date(),
+                                                 isDeleted: false
+        )
+        
+        let realmModel: TempSaveModelRealm = TempSaveModelRealm(model)
+        
+        print("diaryRepo :: addTempSave!")
+        // Realm에서 DiaryModelRealm Array를 받아온다.
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        realm.safeWrite {
+             realm.add(realmModel)
+            // realm.create(DiaryModelRealm.self, value: DiaryModelRealm(info))
+        }
+        
+        let result: [TempSaveModel] = (tempSaveSubject.value + [model]).sorted { $0.createdAt > $1.createdAt }
+        
+        tempSaveSubject.accept(result)
+        self.fetchTempSave()
+
     }
 }
 

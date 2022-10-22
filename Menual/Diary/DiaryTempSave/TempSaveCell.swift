@@ -93,6 +93,7 @@ class TempSaveCell: UITableViewCell {
     }
     
     func setViews() {
+        backgroundColor = .clear
         addSubview(titleLabel)
         addSubview(dateLabel)
         addSubview(pageLabel)
