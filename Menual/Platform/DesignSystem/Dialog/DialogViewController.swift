@@ -35,6 +35,10 @@ class DialogViewController: UIViewController {
         didSet { setText() }
     }
     
+    public var subTitleText: String = "서브타이틀 입니다." {
+        didSet { setText() }
+    }
+    
     public var cancleText: String = "취소" {
         didSet { setText() }
     }
@@ -56,10 +60,24 @@ class DialogViewController: UIViewController {
         $0.textColor = Colors.grey.g100
         $0.textAlignment = .center
         $0.text = "안녕하세요 반갑습니다."
+        $0.numberOfLines = 0
+    }
+    
+    private let subDialogTitle = UILabel().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = UIFont.AppBodyOnlyFont(.body_2)
+        $0.textColor = Colors.grey.g400
+        $0.textAlignment = .center
+        $0.text = "안녕하세요 반갑습니다."
+        $0.numberOfLines = 1
     }
     
     public var dialogButtonType: DialogButtonType = .twoBtn {
-        didSet { setButtonLayout() }
+        didSet {  }
+    }
+    
+    public var dialogSize: DialogSize = .small {
+        didSet {  }
     }
     
     // buttonType이 oneButton일때만 쓰이는 버튼
@@ -137,6 +155,13 @@ class DialogViewController: UIViewController {
         view.backgroundColor = .clear
         view.addSubview(dialogView)
         dialogView.addSubview(dialogTitle)
+        dialogView.addSubview(subDialogTitle)
+        
+        dialogTitle.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(44)
+            make.leading.equalToSuperview().offset(10)
+            make.width.equalToSuperview().inset(10)
+        }
         
         dialogView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
@@ -145,16 +170,40 @@ class DialogViewController: UIViewController {
             make.height.equalTo(156)
         }
         
-        dialogTitle.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(44)
+        subDialogTitle.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.width.equalToSuperview()
+            make.top.equalTo(dialogTitle.snp.bottom).offset(8)
+            make.leading.equalToSuperview().offset(10)
+            make.width.equalToSuperview().inset(10)
         }
         
         setButtonLayout()
     }
     
     func setButtonLayout() {
+        print("Dialog :: setButtonLaout = \(dialogSize)")
+        switch dialogSize {
+        case .small:
+            subDialogTitle.isHidden = true
+            dialogView.snp.updateConstraints { make in
+                make.height.equalTo(156)
+            }
+
+        case .medium:
+            subDialogTitle.isHidden = false
+            subDialogTitle.numberOfLines = 1
+            dialogView.snp.updateConstraints { make in
+                make.height.equalTo(179)
+            }
+
+        case .large:
+            subDialogTitle.isHidden = false
+            subDialogTitle.numberOfLines = 2
+            dialogView.snp.updateConstraints { make in
+                make.height.equalTo(189)
+            }
+        }
+        
         switch dialogButtonType {
         case .oneBtn:
             dialogView.addSubview(oneButton)
@@ -191,10 +240,13 @@ class DialogViewController: UIViewController {
                 make.bottom.equalToSuperview()
             }
         }
+        
+        self.view.layoutIfNeeded()
     }
     
     func setText() {
         dialogTitle.text = titleText
+        subDialogTitle.text = subTitleText
         leftButton.setTitle(cancleText, for: .normal)
         rightButton.setTitle(confirmText, for: .normal)
         oneButton.setTitle(confirmText, for: .normal)
@@ -228,6 +280,7 @@ extension DialogDelegate where Self: UIViewController {
         size: DialogSize,
         buttonType: DialogButtonType,
         titleText: String,
+        subTitleText: String? = "",
         cancelButtonText: String? = "",
         confirmButtonText: String
     ) {
@@ -240,9 +293,13 @@ extension DialogDelegate where Self: UIViewController {
         dialogViewController.modalTransitionStyle = .crossDissolve
 
         dialogViewController.dialogButtonType = buttonType
+        dialogViewController.dialogSize = size
+        print("dialog :: dialogSize = \(size)")
         dialogViewController.titleText = titleText
+        dialogViewController.subTitleText = subTitleText ?? ""
         dialogViewController.confirmText = confirmButtonText
         dialogViewController.cancleText = cancelButtonText ?? ""
+        dialogViewController.setButtonLayout()
 
         self.present(dialogViewController, animated: true, completion: nil)
     }
