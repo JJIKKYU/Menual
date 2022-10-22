@@ -94,7 +94,8 @@ class CustomCropViewController: CropViewController {
 extension CustomCropViewController {
     @objc
     func pressedBackBtn() {
-        dismiss(animated: true)
+        // dismiss(animated: true)
+        navigationController?.popViewController(animated: true)
     }
     
     @objc

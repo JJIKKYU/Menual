@@ -468,9 +468,12 @@ extension DiaryWritingViewController {
         phpickerConfiguration.filter = .images
         phpickerConfiguration.selectionLimit = 1
         imagePicker.isEditing = true
-        imagePicker.modalPresentationStyle = .overFullScreen
         // present(imagePicker, animated: true, completion: nil)
-        present(imagePicker, animated: true, completion: nil)
+        
+        let navigationController = UINavigationController(rootViewController: imagePicker)
+        navigationController.modalPresentationStyle = .overFullScreen
+        navigationController.navigationBar.isHidden = true
+        present(navigationController, animated: true, completion: nil)
     }
     
     @objc
@@ -677,7 +680,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
 extension DiaryWritingViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         print("DiaryWriting :: didFinishPicking!!")
-        picker.dismiss(animated: true)
+        // picker.dismiss(animated: true)
         
         let itemProvider = results.first?.itemProvider
         
@@ -685,12 +688,14 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
             if itemProvider.canLoadObject(ofClass: UIImage.self) {
                 itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                     DispatchQueue.main.async {
-                        self.imageView.image = image as? UIImage
-                        self.imageUploadView.image = image as? UIImage
+                        // self.imageView.image = image as? UIImage
+                        // self.imageUploadView.image = image as? UIImage
                         
                         let cropVC = CustomCropViewController(image: image as? UIImage ?? UIImage())
+//                        let navigationController = UINavigationController(rootViewController: cropVC)
                         cropVC.delegate = self
-                        self.present(cropVC, animated: true)
+                        picker.navigationController?.pushViewController(cropVC, animated: true)
+                        // self.present(cropVC, animated: true)
                         // picker.navigationController?.pushViewController(cropVC, animated: true)
                     }
                 }
