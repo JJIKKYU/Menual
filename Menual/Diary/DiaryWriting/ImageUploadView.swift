@@ -11,6 +11,17 @@ import SnapKit
 
 class ImageUploadView: UIView {
     
+    var image: UIImage? {
+        didSet { setNeedsLayout() }
+    }
+    
+    let uploadedImageView = UIImageView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isHidden = true
+        $0.contentMode = .scaleAspectFill
+        $0.layer.masksToBounds = true
+    }
+    
     let uploadBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("", for: .normal)
@@ -47,6 +58,7 @@ class ImageUploadView: UIView {
         backgroundColor = Colors.grey.g800.withAlphaComponent(0.4)
         addSubview(centerView)
         addSubview(uploadBtn)
+        addSubview(uploadedImageView)
         
         centerView.addSubview(placeHolderImageView)
         centerView.addSubview(placeHolderTextLabel)
@@ -75,10 +87,23 @@ class ImageUploadView: UIView {
             make.width.equalToSuperview()
             make.top.bottom.equalToSuperview()
         }
+    
+        uploadedImageView.snp.makeConstraints { make in
+            make.leading.width.top.bottom.equalToSuperview()
+        }
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        if let image = image {
+            print("DiaryWriting :: ImageUploadView :: image!")
+            uploadedImageView.image = image
+            uploadedImageView.isHidden = false
+        } else {
+            uploadedImageView.image = UIImage()
+            uploadedImageView.isHidden = true
+        }
     }
 
 }

@@ -28,6 +28,7 @@ target 'Menual' do
   
   # 이미지 크롭 // https://github.com/JJIKKYU/ImageCropper
   pod 'ImageCropper', :git=> 'https://github.com/JJIKKYU/ImageCropper', :branch => 'master'
+  pod 'CropViewController'
   
 
   target 'MenualTests' do

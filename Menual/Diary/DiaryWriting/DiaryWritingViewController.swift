@@ -11,6 +11,7 @@ import SnapKit
 import UIKit
 import PhotosUI
 import ImageCropper
+import CropViewController
 
 protocol DiaryWritingPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
@@ -463,13 +464,13 @@ extension DiaryWritingViewController {
     
     @objc
     func pressedImageUploadView() {
-        print("pressedImageUploadView!")
+        print("DiaryWriting :: pressedImageUploadView!")
         phpickerConfiguration.filter = .images
         phpickerConfiguration.selectionLimit = 1
         imagePicker.isEditing = true
-        imagePicker.modalPresentationStyle = .fullScreen
+        imagePicker.modalPresentationStyle = .overFullScreen
         // present(imagePicker, animated: true, completion: nil)
-        present(testImagePicker, animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
     
     @objc
@@ -675,6 +676,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
 // MARK: - PHPicker & ImagePicker
 extension DiaryWritingViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        print("DiaryWriting :: didFinishPicking!!")
         picker.dismiss(animated: true)
         
         let itemProvider = results.first?.itemProvider
@@ -684,6 +686,12 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                 itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                     DispatchQueue.main.async {
                         self.imageView.image = image as? UIImage
+                        self.imageUploadView.image = image as? UIImage
+                        
+                        let cropVC = CustomCropViewController(image: image as? UIImage ?? UIImage())
+                        cropVC.delegate = self
+                        self.present(cropVC, animated: true)
+                        // picker.navigationController?.pushViewController(cropVC, animated: true)
                     }
                 }
             }
@@ -695,6 +703,7 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
 
 extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        print("DiaryWriting :: didFinishPickingMediaWithInfo!")
         var newImage: UIImage?
         
         if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
@@ -703,32 +712,35 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
             newImage = image
         }
         
-        picker.dismiss(animated: true)
+        let cropVC = CropViewController(image: newImage!)
         
-        var config = ImageCropperConfiguration(with: newImage!, and: .customRect)
-        config.maskFillColor = UIColor.black.withAlphaComponent(0.5)
-        config.borderColor = UIColor.white
-
-        config.showGrid = true
-        config.gridColor = UIColor.white
-        config.doneTitle = "CROP"
-        config.cancelTitle = "Back"
-        config.customRatio = CGSize(width: 335, height: 70)
-        let cropper = ImageCropperViewController.initialize(with: config, completionHandler: { croppedImage in
-          /*
-          Code to perform after finishing cropping process
-          */
-            print("after finishing")
-            self.imageView.image = croppedImage
-        }) {
-          /*
-          Code to perform after dismissing controller
-          */
-            print("after dismissing")
-            self.dismiss(animated: true)
-        }
+        picker.pushViewController(cropVC, animated: true)
         
-        self.present(cropper, animated: true, completion: nil)
+        
+//        var config = ImageCropperConfiguration(with: newImage!, and: .customRect)
+//        config.maskFillColor = UIColor.black.withAlphaComponent(0.5)
+//        config.borderColor = UIColor.white
+//
+//        config.showGrid = true
+//        config.gridColor = UIColor.white
+//        config.doneTitle = "CROP"
+//        config.cancelTitle = "Back"
+//        config.customRatio = CGSize(width: 335, height: 70)
+//        let cropper = ImageCropperViewController.initialize(with: config, completionHandler: { croppedImage in
+//          /*
+//          Code to perform after finishing cropping process
+//          */
+//            print("after finishing")
+//            self.imageView.image = croppedImage
+//        }) {
+//          /*
+//          Code to perform after dismissing controller
+//          */
+//            print("after dismissing")
+//            self.dismiss(animated: true)
+//        }
+//
+//        self.present(cropper, animated: true, completion: nil)
     }
 }
 
@@ -764,5 +776,15 @@ extension DiaryWritingViewController: WeatherPlaceToolbarViewDelegate {
         print("DiaryWrting에서 전달 받았습니다 \(placeType)")
         locationSelectView.selectedPlaceType = placeType
         locationSelectView.selected = true
+    }
+}
+
+
+// MARK: - CustomCropViewController
+extension DiaryWritingViewController: CropViewControllerDelegate {
+    func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
+        print("image! = \(image)")
+        self.imageUploadView.image = image
+        dismiss(animated: true)
     }
 }

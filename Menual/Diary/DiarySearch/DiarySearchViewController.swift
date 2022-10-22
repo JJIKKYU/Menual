@@ -22,6 +22,7 @@ protocol DiarySearchPresentableListener: AnyObject {
     func fetchRecentSearchList()
     func pressedSearchCell(diaryModel: DiaryModel)
     func pressedRecentSearchCell(diaryModelRealm: DiaryModelRealm)
+    func deleteAllRecentSearchData()
 }
 
 final class DiarySearchViewController: UIViewController, DiarySearchPresentable, DiarySearchViewControllable {
@@ -37,16 +38,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.titleLabel.text = MenualString.title_search
     }
     
-    lazy var recentSearchTableView = UITableView(frame: CGRect.zero, style: .grouped).then {
-        $0.isHidden = false
-        $0.delegate = self
-        $0.dataSource = self
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .clear
-        $0.register(RecentSearchCell.self, forCellReuseIdentifier: "RecentSearchCell")
-        $0.tag = 1
-    }
-    
     lazy var tableView = UITableView(frame: CGRect.zero, style: .grouped).then {
         $0.delegate = self
         $0.dataSource = self
@@ -54,7 +45,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
         $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
-        $0.register(RecentSearchCell.self, forCellReuseIdentifier: "RecentSearchCell")
 
         $0.estimatedRowHeight = 72
         $0.rowHeight = 72
@@ -151,7 +141,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
                 let count = results.count
                 self.menualCount = count
                 self.tableView.reloadData()
-                self.recentSearchTableView.reloadData()
             })
             .disposed(by: disposeBag)
         
@@ -159,7 +148,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             .subscribe(onNext: { [weak self] results in
                 guard let self = self else { return }
                 print("Search :: recentSearchResultsRelay! = \(results)")
-                self.recentSearchTableView.reloadData()
+                self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
     }
@@ -169,7 +158,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         self.view.addSubview(tableView)
         self.view.addSubview(naviView)
         self.view.addSubview(searchTextField)
-        // self.view.addSubview(recentSearchTableView)
         self.view.bringSubviewToFront(naviView)
         
         searchTextField.snp.makeConstraints { make in
@@ -184,11 +172,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             make.leading.trailing.bottom.equalToSuperview()
         }
         
-//        recentSearchTableView.snp.makeConstraints { make in
-//            make.top.equalTo(searchTextField.snp.bottom).offset(24)
-//            make.leading.trailing.bottom.equalToSuperview()
-//        }
-        
         naviView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
@@ -201,7 +184,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     
     func reloadSearchTableView() {
         tableView.reloadData()
-        // recentSearchTableView.reloadData()
+        
     }
 }
 
@@ -216,7 +199,8 @@ extension DiarySearchViewController {
     // RecentSearchCell의 Delete Btn이 클릭되었을때
     @objc
     func pressedRecentSearchCellDeleteBtn() {
-        print("pressedDeleteBtn!")
+        print("Search :: pressedDeleteBtn!")
+        listener?.deleteAllRecentSearchData()
     }
     
     @objc
@@ -280,6 +264,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             
         case 1:
             let headerView = ListHeader(type: .search, rightIconType: .searchDelete)
+            headerView.rightTextBtn.addTarget(self, action: #selector(pressedRecentSearchCellDeleteBtn), for: .touchUpInside)
             let divider = Divider(type: ._2px)
             headerView.addSubview(divider)
             divider.snp.makeConstraints { make in

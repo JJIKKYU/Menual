@@ -134,6 +134,34 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.frame = CGRect(x: 0, y: 0, width: 58, height: 20)
     }
     
+    private let filterEmptyView = UIView().then {
+        let filterEmpty = Empty().then {
+            $0.screenType = .main
+            $0.mainType = .filter
+        }
+        let filterEmptyHeaderDivider = Divider(type: ._2px).then {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        $0.addSubview(filterEmpty)
+        $0.addSubview(filterEmptyHeaderDivider)
+        
+        filterEmptyHeaderDivider.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalToSuperview()
+            make.height.equalTo(2)
+        }
+        
+        filterEmpty.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(filterEmptyHeaderDivider.snp.bottom).offset(112)
+            make.width.equalToSuperview()
+            make.height.equalTo(180)
+        }
+        
+        $0.isHidden = true
+    }
+    
     // MARK: - VC 코드
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -160,6 +188,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.addSubview(indicatorView)
         
         self.view.addSubview(myMenualTableView)
+        self.view.addSubview(filterEmptyView)
         myMenualTableView.tableHeaderView = tableViewHeaderView
         
         tableViewHeaderView.addSubview(momentsCollectionView)
@@ -188,7 +217,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.top.equalToSuperview()
             make.width.equalToSuperview()
-            make.height.equalTo(220)
+            make.height.equalTo(210)
         }
         self.view.layoutIfNeeded()
         
@@ -229,6 +258,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.centerY.equalTo(myMenualTableView)
         }
         
+        filterEmptyView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalTo(tableViewHeaderView.snp.bottom)
+            make.bottom.equalToSuperview()
+        }
     }
     
     func bind() {
@@ -276,8 +311,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         listener?.filteredDiaryMonthSetRelay
             .subscribe(onNext: { [weak self] diaryYearModelArr in
                 guard let self = self else { return }
-                
-                print("DiaryHome :: filteredDiaryMonthSetRelay")
+                if self.isFilteredRelay.value == false { return }
+                print("DiaryHome :: filteredDiaryMonthSetRelay, count = \(diaryYearModelArr.count)")
                 
                 // 필터는 계속 변형되므로 Relay가 업데이트 될때마다 담은 정보 초기화
                 self.filteredSectionNameDic = [:]
@@ -285,6 +320,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 self.filteredCellsectionNumberDic2 = [:]
                 
                 var sectionCount: Int = 0
+                var allCount: Int = 0
                 for diaryYearModel in diaryYearModelArr {
                     // ["2022JUL", "2022JUM"]
                     guard let monthArr = diaryYearModel.months?.getMonthArr() else { return }
@@ -298,9 +334,15 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                         
                         sectionCount += 1
                     }
+                    
+                    allCount += diaryYearModel.months?.allCount ?? 0
                 }
-                
-                print("filter 후 sectionCount = \(sectionCount)")
+
+                // 필터 결과 하나도 없을 경우
+                if allCount == 0 {
+                    self.filterEmptyView.isHidden = false
+                }
+                print("DiaryHome :: filter 후 sectionCount = \(sectionCount), allCount = \(allCount)")
                 self.myMenualTableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -757,7 +799,7 @@ extension DiaryHomeViewController {
             self.fabWriteBtn.isFiltered = .disabled
             
             self.fabWriteBtn.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
-
+            self.filterEmptyView.isHidden = true
             self.myMenualTableView.reloadData()
         }
     }

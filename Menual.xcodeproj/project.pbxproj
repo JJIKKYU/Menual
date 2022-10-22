@@ -30,6 +30,7 @@
 		983CDF5328FBF14D001E2A2D /* EmptyViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983CDF4F28FBF14D001E2A2D /* EmptyViewViewController.swift */; };
 		983CDF5428FBF14D001E2A2D /* EmptyViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983CDF5028FBF14D001E2A2D /* EmptyViewBuilder.swift */; };
 		983CDF5528FBF14D001E2A2D /* EmptyViewInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983CDF5128FBF14D001E2A2D /* EmptyViewInteractor.swift */; };
+		984392902903A8E000EF526E /* CustomCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9843928F2903A8E000EF526E /* CustomCropViewController.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -257,6 +258,7 @@
 		983CDF4F28FBF14D001E2A2D /* EmptyViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyViewViewController.swift; sourceTree = "<group>"; };
 		983CDF5028FBF14D001E2A2D /* EmptyViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyViewBuilder.swift; sourceTree = "<group>"; };
 		983CDF5128FBF14D001E2A2D /* EmptyViewInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyViewInteractor.swift; sourceTree = "<group>"; };
+		9843928F2903A8E000EF526E /* CustomCropViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCropViewController.swift; sourceTree = "<group>"; };
 		985A52A927F023DB00B10829 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
@@ -552,6 +554,7 @@
 		98281EBF278AC14700736D59 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				9843928E2903A8C000EF526E /* SystemView */,
 				98B557622838968D00F8CA3E /* DesignSystemRIB */,
 				98239BE127E3234F00E216F1 /* DesignSystem */,
 				988A2D3927F82F220046C43A /* RIBs+TestSupport */,
@@ -607,6 +610,14 @@
 				983CDF5128FBF14D001E2A2D /* EmptyViewInteractor.swift */,
 			);
 			path = Empty;
+			sourceTree = "<group>";
+		};
+		9843928E2903A8C000EF526E /* SystemView */ = {
+			isa = PBXGroup;
+			children = (
+				9843928F2903A8E000EF526E /* CustomCropViewController.swift */,
+			);
+			path = SystemView;
 			sourceTree = "<group>";
 		};
 		985A52AA27F023E500B10829 /* Localizations */ = {
@@ -1565,6 +1576,7 @@
 				98EADB9028432A3F007C298C /* TabsCell.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
 				98EADBA128438039007C298C /* PaginationInteractor.swift in Sources */,
+				984392902903A8E000EF526E /* CustomCropViewController.swift in Sources */,
 				9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */,
 				983CDF4428FBEC93001E2A2D /* Empty.swift in Sources */,
 				983CDF5228FBF14D001E2A2D /* EmptyViewRouter.swift in Sources */,

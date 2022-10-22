@@ -40,6 +40,7 @@ public protocol DiaryRepository {
     // 최근검색목록 로직
     func addDiarySearch(info: DiaryModel)
     func fetchRecntDiarySearch() // 최근검색어
+    func deleteAllRecentDiarySearch()
     
     // Filter 로직
     func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int
@@ -445,6 +446,19 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         let diaryRecentSearchResults = realm.objects(DiarySearchModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
         diarySearchSubject.accept(diaryRecentSearchResults.map { DiarySearchModel($0) })
+    }
+    
+    public func deleteAllRecentDiarySearch() {
+        print("Search :: DiaryRepo :: deleteAllRecentDiarySearch!")
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        realm.safeWrite {
+            realm.delete(realm.objects(DiarySearchModelRealm.self))
+        }
+        
+        fetchRecntDiarySearch()
     }
     
     public func addDiarySearch(info: DiaryModel) {

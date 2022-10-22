@@ -164,4 +164,10 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
         }
     }
     
+    func deleteAllRecentSearchData() {
+        print("Search :: deleteAllRecentSearchData!")
+        
+        dependency.diaryRepository
+            .deleteAllRecentDiarySearch()
+    }
 }
