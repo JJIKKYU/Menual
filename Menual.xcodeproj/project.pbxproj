@@ -32,6 +32,10 @@
 		983CDF5528FBF14D001E2A2D /* EmptyViewInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983CDF5128FBF14D001E2A2D /* EmptyViewInteractor.swift */; };
 		984392902903A8E000EF526E /* CustomCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9843928F2903A8E000EF526E /* CustomCropViewController.swift */; };
 		9843929329045BF500EF526E /* TempSaveModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9843929229045BF400EF526E /* TempSaveModel.swift */; };
+		9843929929053CEC00EF526E /* DiaryDetailImageRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9843929529053CEC00EF526E /* DiaryDetailImageRouter.swift */; };
+		9843929A29053CEC00EF526E /* DiaryDetailImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9843929629053CEC00EF526E /* DiaryDetailImageViewController.swift */; };
+		9843929B29053CEC00EF526E /* DiaryDetailImageBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9843929729053CEC00EF526E /* DiaryDetailImageBuilder.swift */; };
+		9843929C29053CEC00EF526E /* DiaryDetailImageInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9843929829053CEC00EF526E /* DiaryDetailImageInteractor.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -261,6 +265,10 @@
 		983CDF5128FBF14D001E2A2D /* EmptyViewInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyViewInteractor.swift; sourceTree = "<group>"; };
 		9843928F2903A8E000EF526E /* CustomCropViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCropViewController.swift; sourceTree = "<group>"; };
 		9843929229045BF400EF526E /* TempSaveModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TempSaveModel.swift; sourceTree = "<group>"; };
+		9843929529053CEC00EF526E /* DiaryDetailImageRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailImageRouter.swift; sourceTree = "<group>"; };
+		9843929629053CEC00EF526E /* DiaryDetailImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailImageViewController.swift; sourceTree = "<group>"; };
+		9843929729053CEC00EF526E /* DiaryDetailImageBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailImageBuilder.swift; sourceTree = "<group>"; };
+		9843929829053CEC00EF526E /* DiaryDetailImageInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailImageInteractor.swift; sourceTree = "<group>"; };
 		985A52A927F023DB00B10829 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
@@ -622,6 +630,17 @@
 			path = SystemView;
 			sourceTree = "<group>";
 		};
+		9843929429053C8100EF526E /* DiaryDetailImage */ = {
+			isa = PBXGroup;
+			children = (
+				9843929529053CEC00EF526E /* DiaryDetailImageRouter.swift */,
+				9843929629053CEC00EF526E /* DiaryDetailImageViewController.swift */,
+				9843929729053CEC00EF526E /* DiaryDetailImageBuilder.swift */,
+				9843929829053CEC00EF526E /* DiaryDetailImageInteractor.swift */,
+			);
+			path = DiaryDetailImage;
+			sourceTree = "<group>";
+		};
 		985A52AA27F023E500B10829 /* Localizations */ = {
 			isa = PBXGroup;
 			children = (
@@ -747,6 +766,7 @@
 		988A186D278ACA7A00DF81DA /* Diary */ = {
 			isa = PBXGroup;
 			children = (
+				9843929429053C8100EF526E /* DiaryDetailImage */,
 				98F3A27928150034000851F0 /* DiaryBottomSheet */,
 				988A2D66280166A00046C43A /* Model */,
 				98A2BD97280A831E00C1FB92 /* DiaryDetail */,
@@ -1608,6 +1628,7 @@
 				98F3A28328152C04000851F0 /* BottomSheetSelectView.swift in Sources */,
 				98B5576A283896AA00F8CA3E /* DesignSystemInteractor.swift in Sources */,
 				98EADBB22866E195007C298C /* ProfileHomeModel.swift in Sources */,
+				9843929C29053CEC00EF526E /* DiaryDetailImageInteractor.swift in Sources */,
 				988A2D5927F97A000046C43A /* DiaryMomentsViewController.swift in Sources */,
 				98B557D12841F9B600F8CA3E /* UIButton+Util.swift in Sources */,
 				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
@@ -1626,6 +1647,7 @@
 				98B557B4283A4A8300F8CA3E /* CapsuleButtonInteractor.swift in Sources */,
 				98B557B2283A4A8300F8CA3E /* CapsuleButtonViewController.swift in Sources */,
 				98EADBAA284E45BF007C298C /* DividerCell.swift in Sources */,
+				9843929B29053CEC00EF526E /* DiaryDetailImageBuilder.swift in Sources */,
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				98B557BE2841D11900F8CA3E /* ListViewController.swift in Sources */,
 				98B5574D281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift in Sources */,
@@ -1651,6 +1673,7 @@
 				985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */,
 				98B55787283A0F3300F8CA3E /* ListHeaderViewController.swift in Sources */,
 				983CDF4128FBDD9B001E2A2D /* Badges.swift in Sources */,
+				9843929A29053CEC00EF526E /* DiaryDetailImageViewController.swift in Sources */,
 				98B5575E2830F0FF00F8CA3E /* TempSaveCell.swift in Sources */,
 				9838574D28FA77FF007378EC /* SectionListHeaderView.swift in Sources */,
 				988A2D68280166AA0046C43A /* DiaryModel.swift in Sources */,
@@ -1662,6 +1685,7 @@
 				98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */,
 				98A56C6B28682506000AC4FF /* WeatherPlaceSelectViewCell.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
+				9843929929053CEC00EF526E /* DiaryDetailImageRouter.swift in Sources */,
 				985E0F0627C232E300057951 /* RegisterPWBuilder.swift in Sources */,
 				98EADBB42866E91E007C298C /* DiarySearchView.swift in Sources */,
 				98A56C632867734A000AC4FF /* DatePageTextCountView.swift in Sources */,

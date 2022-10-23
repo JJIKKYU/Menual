@@ -18,6 +18,8 @@ protocol DiaryDetailPresentableListener: AnyObject {
     func pressedMenuMoreBtn()
     func pressedReminderBtn()
     
+    func pressedImageView()
+    
     func hideDiary()
     
     var diaryReplies: [DiaryReplyModel] { get }
@@ -115,10 +117,14 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    let imageView = UIImageView().then {
+    lazy var imageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
         $0.backgroundColor = .gray
+        let gesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(pressedImageView))
+        gesture.numberOfTapsRequired = 1
+        $0.isUserInteractionEnabled = true
+        $0.addGestureRecognizer(gesture)
     }
     
     let readCountLabel = UILabel().then {
@@ -220,6 +226,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         replyTableView.delegate = nil
         replyBottomView.replyTextView.delegate = nil
+        imageView.gestureRecognizers?.first?.delegate = nil
         
         // Keyboard observer해제
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -596,6 +603,12 @@ extension DiaryDetailViewController {
              confirmButtonText: "숨김 해제하기"
         )
         
+    }
+    
+    @objc
+    func pressedImageView() {
+        print("DiaryDetail :: pressedImageView!")
+        listener?.pressedImageView()
     }
 }
 

@@ -14,7 +14,7 @@ protocol DiaryDetailDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
 }
 
-final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency {
+final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency, DiaryDetailImageDependency {
 
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
@@ -43,6 +43,7 @@ final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDetailBuild
         
         let diaryBottomSheetBuildable = DiaryBottomSheetBuilder(dependency: component)
         let diaryWritingBuildable = DiaryWritingBuilder(dependency: component)
+        let diaryDetailImageBuildable = DiaryDetailImageBuilder(dependency: component)
 
         let viewController = DiaryDetailViewController()
         let interactor = DiaryDetailInteractor(
@@ -55,7 +56,8 @@ final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDetailBuild
             interactor: interactor,
             viewController: viewController,
             diarybottomSheetBuildable: diaryBottomSheetBuildable,
-            diaryWritingBuildable: diaryWritingBuildable
+            diaryWritingBuildable: diaryWritingBuildable,
+            diaryDetailImageBuildable: diaryDetailImageBuildable
         )
     }
 }

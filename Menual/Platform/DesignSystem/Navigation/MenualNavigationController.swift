@@ -26,6 +26,7 @@ enum NaviViewType {
     case menualDetail
     case edit
     case temporarySave
+    case detailImage
 }
 
 class MenualNaviView: UIView {
@@ -242,6 +243,15 @@ class MenualNaviView: UIView {
             backButton.isHidden = false
             backButton.tintColor = Colors.grey.g100
             backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            
+        case .detailImage:
+            titleLabel.isHidden = false
+            titleLabel.text = "사진보기"
+            titleLabel.font = UIFont.AppTitle(.title_3)
+            backButton.isHidden = true
+            rightButton1.isHidden = false
+            rightButton1.tintColor = Colors.grey.g100
+            rightButton1.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         }
     }
     
@@ -305,6 +315,8 @@ class MenualNaviView: UIView {
                 }
             }
         case .writePicture:
+            break
+        case .detailImage:
             break
         }
     }

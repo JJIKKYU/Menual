@@ -16,6 +16,10 @@ protocol DiaryDetailRouting: ViewableRouting {
     // 수정하기
     func attachDiaryWriting(diaryModel: DiaryModel)
     func detachDiaryWriting(isOnlyDetach: Bool)
+    
+    // 이미지 자세히 보기
+    func attachDiaryDetailImage(imageDataRelay: BehaviorRelay<Data>)
+    func detachDiaryDetailImage(isOnlyDetach: Bool)
 }
 
 protocol DiaryDetailPresentable: Presentable {
@@ -42,6 +46,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     private var disposebag = DisposeBag()
     private let changeCurrentDiarySubject = BehaviorSubject<Bool>(value: false)
+    private let imageDataRelay = BehaviorRelay<Data>(value: Data())
 
     weak var router: DiaryDetailRouting?
     weak var listener: DiaryDetailListener?
@@ -84,6 +89,10 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 //                    })
                 self.diaryReplies = currentDiaryModel.replies
                 self.currentDiaryPage = currentDiaryModel.pageNum
+                if let imageData: Data = currentDiaryModel.originalImage?.pngData() {
+                    self.imageDataRelay.accept(imageData)
+                }
+
                 presenter.loadDiaryDetail(model: currentDiaryModel)
             })
             .disposed(by: self.disposebag)
@@ -210,6 +219,18 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         self.diaryModel = hideDiary
         // presenter.loadDiaryDetail(model: hideDiary)
         // self.presenter.reloadTableView()
+    }
+    
+    // MARK: - DiaryDetailImage
+    func diaryDetailImagePressedBackBtn(isOnlyDetach: Bool) {
+        print("DiaryDetail :: diaryDetailImagePressedBackBtn!")
+        router?.detachDiaryDetailImage(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedImageView() {
+        print("DiaryDetail :: interactor -> pressedImageView!")
+        guard let imageData: Data = diaryModel?.originalImage?.pngData() else { return }
+        router?.attachDiaryDetailImage(imageDataRelay: self.imageDataRelay)
     }
 
     // 미사용

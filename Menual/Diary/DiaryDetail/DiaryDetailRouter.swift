@@ -8,7 +8,7 @@
 import RIBs
 import RxRelay
 
-protocol DiaryDetailInteractable: Interactable, DiaryBottomSheetListener, DiaryWritingListener {
+protocol DiaryDetailInteractable: Interactable, DiaryBottomSheetListener, DiaryWritingListener, DiaryDetailImageListener {
     var router: DiaryDetailRouting? { get set }
     var listener: DiaryDetailListener? { get set }
     func pressedBackBtn(isOnlyDetach: Bool)
@@ -27,16 +27,21 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
     
     private let diaryWritingBuildable: DiaryWritingBuildable
     private var diaryWritingRouting: Routing?
+    
+    private let diaryDetailImageBuildable: DiaryDetailImageBuildable
+    private var diaryDetailImageRouting: Routing?
 
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DiaryDetailInteractable,
         viewController: DiaryDetailViewControllable,
         diarybottomSheetBuildable: DiaryBottomSheetBuildable,
-        diaryWritingBuildable: DiaryWritingBuildable
+        diaryWritingBuildable: DiaryWritingBuildable,
+        diaryDetailImageBuildable: DiaryDetailImageBuildable
     ) {
         self.diaryBottomSheetBuildable = diarybottomSheetBuildable
         self.diaryWritingBuildable = diaryWritingBuildable
+        self.diaryDetailImageBuildable = diaryDetailImageBuildable
 
         super.init(
             interactor: interactor,
@@ -135,5 +140,37 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
         
         detachChild(router)
         diaryWritingRouting = nil
+    }
+    
+    // MARK: - 이미지 자세히 보기
+    func attachDiaryDetailImage(imageDataRelay: BehaviorRelay<Data>) {
+        if diaryDetailImageRouting != nil {
+            return
+        }
+        
+        let router = diaryDetailImageBuildable.build(
+            withListener: interactor,
+            imageDataRelay: imageDataRelay
+        )
+        
+        router.viewControllable.uiviewController.modalPresentationStyle = .fullScreen
+        presentInsideNavigation(router.viewControllable)
+        
+        diaryDetailImageRouting = router
+        attachChild(router)
+        
+    }
+    
+    func detachDiaryDetailImage(isOnlyDetach: Bool) {
+        guard let router = diaryDetailImageRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            dismissPresentedNavigation(completion: nil)
+        }
+        
+        detachChild(router)
+        diaryDetailImageRouting = nil
     }
 }
