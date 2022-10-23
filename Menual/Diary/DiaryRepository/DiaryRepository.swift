@@ -46,6 +46,7 @@ public protocol DiaryRepository {
     
     // tempSave 로직
     func addTempSave(diaryModel: DiaryModel)
+    func deleteTempSave(uuidArr: [String])
     
     // Filter 로직
     func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int
@@ -576,6 +577,28 @@ public final class DiaryRepositoryImp: DiaryRepository {
         let result: [TempSaveModel] = (tempSaveSubject.value + [model]).sorted { $0.createdAt > $1.createdAt }
         
         tempSaveSubject.accept(result)
+        self.fetchTempSave()
+
+    }
+    
+    public func deleteTempSave(uuidArr: [String]) {
+        print("DiaryRepo :: deleteTempSave!")
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        let tempSaveModelRealmObjects = realm.objects(TempSaveModelRealm.self)
+        var willDeleteModelObjects: [TempSaveModelRealm] = []
+        for uuid in uuidArr {
+            let model = tempSaveModelRealmObjects.filter { $0.uuid == uuid }
+            willDeleteModelObjects.append(contentsOf: model)
+        }
+        print("DiaryRepo :: willDeleteModelObjects = \(willDeleteModelObjects)")
+        
+        realm.safeWrite {
+            realm.delete(willDeleteModelObjects)
+        }
+        
         self.fetchTempSave()
 
     }

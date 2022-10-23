@@ -287,7 +287,23 @@ class MenualNaviView: UIView {
             }
             break
         case .temporarySave:
-            break
+            if rightButton1IsActive {
+                rightButton1.setImage(nil, for: .normal)
+                rightButton1.setTitle("취소", for: .normal)
+                rightButton1.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_3).withSize(14)
+                rightButton1.setTitleColor(Colors.tint.system.red.r100, for: .normal)
+                rightButton1.snp.updateConstraints { make in
+                    make.width.equalTo(26)
+                }
+            } else {
+                rightButton1.setTitle(nil, for: .normal)
+                rightButton1.setImage(Asset._24px.delete.image.withRenderingMode(.alwaysTemplate), for: .normal)
+                rightButton1.tintColor = Colors.grey.g100
+                rightButton1.snp.updateConstraints { make in
+                    make.width.equalTo(24)
+                    make.height.equalTo(24)
+                }
+            }
         case .writePicture:
             break
         }

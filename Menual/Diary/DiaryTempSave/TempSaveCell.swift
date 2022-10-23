@@ -12,53 +12,67 @@ import Then
 class TempSaveCell: UITableViewCell {
     
     public var title: String = "" {
-        didSet {
-            layoutSubviews()
-        }
+        didSet { setNeedsLayout() }
     }
     
     public var date: String = "" {
-        didSet {
-            layoutSubviews()
-        }
-    }
-    
-    public var page: String = "" {
-        didSet {
-            layoutSubviews()
-        }
+        didSet { setNeedsLayout() }
     }
     
     public var imageEnabled: Bool = false {
-        didSet {
-            layoutSubviews()
-        }
+        didSet { setNeedsLayout() }
+    }
+    
+    public var isWriting: Bool = false {
+        didSet { setNeedsLayout() }
+    }
+    
+    public var isDeleteMode: Bool = false {
+        didSet { setNeedsLayout() }
+    }
+    
+    public var isDeleteSelected: Bool = false {
+        didSet { setNeedsLayout() }
     }
     
     private let titleLabel = UILabel().then {
         $0.text = "테스트입니다"
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.textColor = Colors.grey.g100
+        $0.textColor = Colors.grey.g200
         $0.font = UIFont.AppTitle(.title_2)
     }
     
     private let dateLabel = UILabel().then {
         $0.text = "날짜입니다"
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.textColor = Colors.grey.g400
-        $0.font = UIFont.AppBodyOnlyFont(.body_1)
+        $0.textColor = Colors.grey.g600
+        $0.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
     }
     
-    private let pageLabel = UILabel().then {
+    // '작성중' 라벨
+    private let writingLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.textColor = Colors.grey.g400
-        $0.font = UIFont.AppBodyOnlyFont(.body_1)
+        $0.textColor = Colors.tint.sub.n400
+        $0.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
+        $0.text = "작성중"
     }
     
-    // 이건 아마 바뀔듯
     private let imageEnableView = UIImageView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.image = Asset._24px.picture.image.withRenderingMode(.alwaysTemplate)
+        $0.tintColor = Colors.grey.g200
         $0.isHidden = true
+    }
+    
+    private let divider = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = Colors.grey.g600
+    }
+    
+    private let delCheckBtn = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setImage(Asset._24px.Circle.Check.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.setImage(Asset._24px.Circle.Check.active.image.withRenderingMode(.alwaysTemplate), for: .selected)
     }
 
     override func awakeFromNib() {
@@ -86,9 +100,65 @@ class TempSaveCell: UITableViewCell {
         
         titleLabel.text = title
         dateLabel.text = date
-        pageLabel.text = page
-        if imageEnabled {
+        print("TempSave :: Cell isDeleteSelected = \(isDeleteSelected)")
+        
+        var margin: CGFloat = 20
+        switch isDeleteMode {
+        case true:
+            delCheckBtn.isHidden = false
+            delCheckBtn.isSelected = isDeleteSelected
+            if isDeleteSelected {
+                delCheckBtn.tintColor = Colors.tint.sub.n400
+            } else {
+                delCheckBtn.tintColor = Colors.grey.g200
+            }
+            
+            margin = 64
+
+        case false:
+            delCheckBtn.isSelected = false
+            delCheckBtn.isHidden = true
+            margin = 20
+        }
+        
+        switch isWriting {
+        case true:
+            divider.isHidden = false
+            writingLabel.isHidden = false
+            
+        case false:
+            divider.isHidden = true
+            writingLabel.isHidden = true
+        }
+        
+        switch imageEnabled {
+        case true:
             imageEnableView.isHidden = false
+
+            imageEnableView.snp.removeConstraints()
+            imageEnableView.snp.makeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.top.equalToSuperview().offset(14)
+                make.width.height.equalTo(24)
+            }
+            
+            titleLabel.snp.removeConstraints()
+            titleLabel.snp.makeConstraints { make in
+                make.leading.equalTo(imageEnableView.snp.trailing).offset(2)
+                make.centerY.equalTo(imageEnableView)
+                make.width.equalToSuperview().inset(margin)
+            }
+            
+        case false:
+            imageEnableView.isHidden = true
+            imageEnableView.snp.removeConstraints()
+            
+            titleLabel.snp.removeConstraints()
+            titleLabel.snp.makeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.top.equalToSuperview().offset(17)
+                make.width.equalToSuperview().inset(margin)
+            }
         }
     }
     
@@ -96,21 +166,47 @@ class TempSaveCell: UITableViewCell {
         backgroundColor = .clear
         addSubview(titleLabel)
         addSubview(dateLabel)
-        addSubview(pageLabel)
+        addSubview(imageEnableView)
+        addSubview(divider)
+        addSubview(writingLabel)
+        addSubview(delCheckBtn)
+        
+        imageEnableView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalToSuperview().offset(14)
+            make.width.height.equalTo(24)
+        }
         
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.top.equalToSuperview().offset(20)
+            make.leading.equalTo(imageEnableView.snp.trailing).offset(2)
+            make.centerY.equalTo(imageEnableView)
             make.width.equalToSuperview().inset(20)
-            make.height.equalTo(18)
         }
+
         titleLabel.sizeToFit()
         
         dateLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.top.equalTo(titleLabel.snp.bottom).offset(8)
-            make.height.equalTo(13)
+            make.top.equalTo(titleLabel.snp.bottom).offset(6)
         }
         dateLabel.sizeToFit()
+        
+        divider.snp.makeConstraints { make in
+            make.leading.equalTo(dateLabel.snp.trailing).offset(8)
+            make.width.equalTo(1)
+            make.height.equalTo(15)
+            make.centerY.equalTo(dateLabel)
+        }
+        
+        writingLabel.snp.makeConstraints { make in
+            make.leading.equalTo(divider.snp.trailing).offset(8)
+            make.centerY.equalTo(divider)
+        }
+        
+        delCheckBtn.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().inset(20)
+            make.width.height.equalTo(24)
+        }
     }
 }

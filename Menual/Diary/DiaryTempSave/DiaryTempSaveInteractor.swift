@@ -35,6 +35,7 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
     private let dependency: DiaryTempSaveDependency
     private let disposeBag = DisposeBag()
     
+    var deleteTempSaveUUIDArrRelay = BehaviorRelay<[String]>(value: [])
     var tempSaveRelay = BehaviorRelay<[TempSaveModel]>(value: [])
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
@@ -73,5 +74,10 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
     
     func pressedBackBtn() {
         listener?.diaryTempSavePressentBackBtn()
+    }
+    
+    func deleteTempSave() {
+        dependency.diaryRepository
+            .deleteTempSave(uuidArr: deleteTempSaveUUIDArrRelay.value)
     }
 }
