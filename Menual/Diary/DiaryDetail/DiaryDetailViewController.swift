@@ -101,18 +101,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    lazy var descriptionTextLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.font = UIFont.AppBodyOnlyFont(.body_3)
-        $0.textColor = .white
-        $0.text = "오늘의 메뉴얼을 입력해주세요.\n날짜가 적힌 곳을 탭하여 제목을 입력할 수 있습니다."
-        $0.backgroundColor = .gray
-        $0.numberOfLines = 0
-    }
-    
     lazy var descriptionTextView = UITextView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.font = UIFont.AppBodyOnlyFont(.body_3)
         $0.textColor = .white
         $0.text = "123"
         $0.isScrollEnabled = false
@@ -380,12 +370,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.height.equalTo(1)
         }
         
-//        descriptionTextLabel.snp.makeConstraints { make in
-//            make.leading.equalToSuperview().offset(20)
-//            make.width.equalToSuperview().inset(20)
-//            make.top.equalTo(divider3.snp.bottom).offset(16)
-//        }
-        
         descriptionTextView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
@@ -412,14 +396,24 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     }
     
     func loadDiaryDetail(model: DiaryModel) {
+        print("DiaryDetail :: model.isHide = \(model.isHide)")
+        // FAB Button
+        spaceRequiredFAB.spaceRequiredCurrentPage = String(model.pageNum)
+        
+        setImageConstraint(image: model.image)
+        
+        // cell 생성에 필요한 정보 임시 저장
+        pageNum = model.pageNum
+        print("pageNum = \(pageNum)")
+        
+        isHide = model.isHide
+        isHideMenual(isHide: model.isHide)
+        if isHide { return }
+
         // print("DiaryDetail :: \(model)")
         
         titleLabel.text = model.title
         titleLabel.sizeToFit()
-        
-        print("DiaryDetail :: model.isHide = \(model.isHide)")
-        isHide = model.isHide
-        isHideMenual(isHide: model.isHide)
         
         // DiaryModel에서 WeatherModel을 UnWerapping해서 세팅
         if let weatherModel: WeatherModel = model.weather {
@@ -439,24 +433,13 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_3,
                                                                      Colors.grey.g100,
                                                                      text: model.description)
-        descriptionTextLabel.setLineHeight()
-        // descriptionTextView.text = model.description
         descriptionTextView.sizeToFit()
         readCountLabel.text = "\(model.readCount)번 읽었습니다"
         
         createdAtPageView.createdAt = model.createdAt.toStringWithHourMin()
         createdAtPageView.page = String(model.pageNum)
         
-        // FAB Button
-        spaceRequiredFAB.spaceRequiredCurrentPage = String(model.pageNum)
-        
-        setImageConstraint(image: model.image)
-        
-        // cell 생성에 필요한 정보 임시 저장
-        pageNum = model.pageNum
-        print("pageNum = \(pageNum)")
         replyTableView.reloadData()
-        descriptionTextLabel.sizeToFit()
     }
     
     func isHideMenual(isHide: Bool) {
@@ -469,11 +452,10 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             divider2.isHidden = true
             locationSelectView.isHidden = true
             divider3.isHidden = true
-            descriptionTextLabel.isHidden = true
+            descriptionTextView.isHidden = true
             createdAtPageView.isHidden = true
             divider4.isHidden = true
             imageView.isHidden = true
-            
             
             tableViewHeaderView.snp.updateConstraints { make in
                 make.height.equalTo(400)
@@ -489,7 +471,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             divider2.isHidden = false
             locationSelectView.isHidden = false
             divider3.isHidden = false
-            descriptionTextLabel.isHidden = false
+            descriptionTextView.isHidden = false
             createdAtPageView.isHidden = false
             
             print("DiaryDetail :: isHide! -> isEnableImageView = \(isEnableImageView)")
@@ -500,7 +482,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
                 divider4.isHidden = true
                 imageView.isHidden = true
             }
-            
             
             hideView.isHidden = true
             replyTableView.reloadData()
