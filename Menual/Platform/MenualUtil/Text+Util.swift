@@ -160,7 +160,7 @@ extension UIFont {
         }
         
         // 행간 조절
-        // paragraphStyle.lineHeightMultiple = 1.28
+//        paragraphStyle.lineHeightMultiple = 1.28
         
         return [
             .font: font!,
@@ -169,6 +169,31 @@ extension UIFont {
             },
             .foregroundColor : color
         ]
+    }
+    
+    class func AppBodyWithText(_ body: BodyType, _ color: UIColor, text: String) -> NSAttributedString {
+        var font: UIFont?
+        
+        switch body {
+        case .body_4:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 16)
+        case .body_3:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 14)
+        case .body_2:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 12)
+        case .body_1:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 10)
+        }
+
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = systemLineHeight
+        let attributes = [
+            NSAttributedString.Key.paragraphStyle : style,
+            .font : font!,
+            .foregroundColor: color
+        ]
+        
+        return NSAttributedString(string: text, attributes: attributes)
     }
     
     // 디자인 시스템에 정의되어 있는 헤드 리턴

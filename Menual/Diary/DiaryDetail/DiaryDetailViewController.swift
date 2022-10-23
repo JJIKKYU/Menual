@@ -33,6 +33,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     private var replyBottomViewPlusHeight: CGFloat = 0
     // 숨김처리일 경우 사용되는 변수
     private var isHide: Bool = false
+    private var replyTextPlcaeHolder: String = "겹쓸내용을 입력해 주세요"
     
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -44,11 +45,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.writeBtn.addTarget(self, action: #selector(tempPressedSubmitReplyBtn), for: .touchUpInside)
         $0.replyTextView.delegate = self
-    }
-    
-    private let tempTextField = UITextField().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .red
     }
     
     lazy var tempSubmitBtn = UIButton().then {
@@ -112,6 +108,17 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.text = "오늘의 메뉴얼을 입력해주세요.\n날짜가 적힌 곳을 탭하여 제목을 입력할 수 있습니다."
         $0.backgroundColor = .gray
         $0.numberOfLines = 0
+    }
+    
+    lazy var descriptionTextView = UITextView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.font = UIFont.AppBodyOnlyFont(.body_3)
+        $0.textColor = .white
+        $0.text = "123"
+        $0.isScrollEnabled = false
+        $0.isEditable = false
+        $0.backgroundColor = .clear
+        
     }
     
     private let divider4 = Divider(type: ._1px).then {
@@ -248,7 +255,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         // 숨김처리가 아닐 경우에만
         if isHide == false {
-            changedHeight += 24 + titleLabel.frame.height + 16 + createdAtPageView.frame.height + 8 + divider1.frame.height + 12 + weatherSelectView.frame.height + 12 + divider2.frame.height + 12 + locationSelectView.frame.height + 12 + divider3.frame.height + 16 + descriptionTextLabel.frame.height + enabledImageViewHeight
+            changedHeight += 24 + titleLabel.frame.height + 16 + createdAtPageView.frame.height + 8 + divider1.frame.height + 12 + weatherSelectView.frame.height + 12 + divider2.frame.height + 12 + locationSelectView.frame.height + 12 + divider3.frame.height + 16 + descriptionTextView.frame.height + enabledImageViewHeight
             
             tableViewHeaderView.snp.updateConstraints { make in
                 make.height.equalTo(changedHeight)
@@ -278,7 +285,9 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         tableViewHeaderView.addSubview(locationSelectView)
         tableViewHeaderView.addSubview(divider3)
 
-        tableViewHeaderView.addSubview(descriptionTextLabel)
+        // tableViewHeaderView.addSubview(descriptionTextLabel)
+        tableViewHeaderView.addSubview(descriptionTextView)
+        
         tableViewHeaderView.addSubview(divider4)
         tableViewHeaderView.addSubview(imageView)
         tableViewHeaderView.addSubview(hideView)
@@ -371,7 +380,13 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.height.equalTo(1)
         }
         
-        descriptionTextLabel.snp.makeConstraints { make in
+//        descriptionTextLabel.snp.makeConstraints { make in
+//            make.leading.equalToSuperview().offset(20)
+//            make.width.equalToSuperview().inset(20)
+//            make.top.equalTo(divider3.snp.bottom).offset(16)
+//        }
+        
+        descriptionTextView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(divider3.snp.bottom).offset(16)
@@ -381,7 +396,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.height.equalTo(1)
-            make.top.equalTo(descriptionTextLabel.snp.bottom).offset(16)
+            make.top.equalTo(descriptionTextView.snp.bottom).offset(16)
         }
         
         imageView.snp.makeConstraints { make in
@@ -420,8 +435,13 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             locationSelectView.selectTitle = placeModel.detailText
         }
         
-        descriptionTextLabel.text = model.description
+        // descriptionTextLabel.text = model.description
+        descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_3,
+                                                                     Colors.grey.g100,
+                                                                     text: model.description)
         descriptionTextLabel.setLineHeight()
+        // descriptionTextView.text = model.description
+        descriptionTextView.sizeToFit()
         readCountLabel.text = "\(model.readCount)번 읽었습니다"
         
         createdAtPageView.createdAt = model.createdAt.toStringWithHourMin()
@@ -548,7 +568,20 @@ extension DiaryDetailViewController {
     
     @objc
     func pressedBackBtn() {
-        listener?.pressedBackBtn(isOnlyDetach: false)
+        print("DiaryDetail :: pressedBackBtn!")
+        guard let replyText: String = replyBottomView.replyTextView.text else { return }
+        
+        // 겹스끼 내용을 한 글자 이상 작성했을 경우 Alert (UX)
+        if replyText.count > 0 && replyText != replyTextPlcaeHolder {
+            show(size: .small,
+                 buttonType: .twoBtn,
+                 titleText: "겹쓰기를 취소하고 돌아가시겠어요?",
+                 cancelButtonText: "취소",
+                 confirmButtonText: "확인"
+            )
+        } else {
+            listener?.pressedBackBtn(isOnlyDetach: false)
+        }
     }
     
     @objc
@@ -710,7 +743,7 @@ extension DiaryDetailViewController: UITextViewDelegate {
         switch textView {
         case replyBottomView.replyTextView:
             guard let text = textView.text else { return false }
-            if text == "겹쓸내용을 입력해 주세요" {
+            if text == replyTextPlcaeHolder {
                 textView.text = nil
             }
 
@@ -726,7 +759,7 @@ extension DiaryDetailViewController: UITextViewDelegate {
         case replyBottomView.replyTextView:
             guard let text = textView.text else { return }
             if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                textView.text = "겹쓸내용을 입력해 주세요"
+                textView.text = replyTextPlcaeHolder
             }
 
         default:
@@ -742,7 +775,10 @@ extension DiaryDetailViewController: DialogDelegate {
         switch titleText {
         case "정말 해제허싈?":
             listener?.hideDiary()
-            break
+            
+        case "겹쓰기를 취소하고 돌아가시겠어요?":
+            listener?.pressedBackBtn(isOnlyDetach: false)
+
         default:
             break
         }
@@ -753,6 +789,10 @@ extension DiaryDetailViewController: DialogDelegate {
         switch titleText {
         case "정말 해제허싈?":
             break
+            
+        case "겹쓰기를 취소하고 돌아가시겠어요?":
+            break
+
         default:
             break
         }
