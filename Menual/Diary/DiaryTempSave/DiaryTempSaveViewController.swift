@@ -117,6 +117,7 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
             .subscribe(onNext: { [weak self] tempSave in
                 guard let self = self else { return }
                 if tempSave.count == 0 {
+                    self.naviView.rightButton1IsActive = false
                     self.naviView.rightButton1.isEnabled = false
                     self.emptyView.isHidden = false
                 } else {

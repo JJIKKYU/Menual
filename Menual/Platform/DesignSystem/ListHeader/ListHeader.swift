@@ -52,7 +52,7 @@ class ListHeader: UIView {
         didSet { setFilterIcon() }
     }
     
-    private let titleLabel = UILabel().then {
+    public let titleLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
