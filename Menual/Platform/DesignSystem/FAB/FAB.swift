@@ -21,6 +21,11 @@ enum FABStatus {
     case pressed
 }
 
+enum FABIsFilltered {
+    case enabled
+    case disabled
+}
+
 class FAB: UIButton {
     var fabType: FABType = .primary {
         didSet { setNeedsLayout() }
@@ -31,6 +36,10 @@ class FAB: UIButton {
     }
     
     var spaceRequiredCurrentPage: String = "P.999" {
+        didSet { setNeedsLayout() }
+    }
+    
+    var isFiltered: FABIsFilltered = .disabled {
         didSet { setNeedsLayout() }
     }
     
@@ -131,15 +140,34 @@ class FAB: UIButton {
         
         switch fabType {
         case .primary:
-            fabIconImageView.image = Asset._24px.write.image.withRenderingMode(.alwaysTemplate)
             fabIconImageView.tintColor = Colors.grey.g800
             fabIconImageView.isHidden = false
             
+            switch isFiltered {
+            case .enabled:
+                fabIconImageView.image = Asset._24px.Circle.front .image.withRenderingMode(.alwaysTemplate)
+                backgroundColor = Colors.tint.main.v400
+            case .disabled:
+                fabIconImageView.image = Asset._24px.write.image.withRenderingMode(.alwaysTemplate)
+                backgroundColor = Colors.tint.sub.n400
+            }
+            
             switch fabStatus {
             case .default_:
-                backgroundColor = Colors.tint.sub.n400
+                switch isFiltered {
+                case .enabled:
+                    backgroundColor = Colors.tint.main.v400
+                case .disabled:
+                    backgroundColor = Colors.tint.sub.n400
+                }
+
             case .pressed:
-                backgroundColor = Colors.tint.sub.n600
+                switch isFiltered {
+                case .enabled:
+                    backgroundColor = Colors.tint.main.v600
+                case .disabled:
+                    backgroundColor = Colors.tint.sub.n600
+                }
             }
             
         case .secondary:

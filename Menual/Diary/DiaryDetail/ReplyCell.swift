@@ -39,7 +39,7 @@ class ReplyCell: UITableViewCell {
         $0.clipsToBounds = true
     }
     
-    private let replyTextView = UITextView().then {
+    public let replyTextView = UITextView().then {
         $0.translatesAutoresizingMaskIntoConstraints = true
         $0.text = "testestestsetseestsetsetsetsetstsetse"
         $0.backgroundColor = Colors.grey.g800
@@ -92,16 +92,16 @@ class ReplyCell: UITableViewCell {
     
     func setViews() {
         backgroundColor = .brown
-        addSubview(replyTextView)
-        addSubview(testLabel)
-        addSubview(moreBtn)
-        
+        contentView.addSubview(replyTextView)
+        contentView.addSubview(testLabel)
+        contentView.addSubview(moreBtn)
         
         replyTextView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.height.equalTo(10)
+//            make.height.equalTo(80)
             make.top.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-50)
         }
         
         testLabel.snp.makeConstraints { make in
@@ -122,16 +122,19 @@ class ReplyCell: UITableViewCell {
         super.layoutSubviews()
         
         replyTextView.text = replyText
-        replyTextView.sizeToFit()
-        replyTextView.frame = CGRect(x: 20,
-                                     y: 0,
-                                     width: frame.size.width - 40,
-                                     height: replyTextView.frame.height)
-        
-        replyTextView.snp.updateConstraints { make in
-            make.height.equalTo(replyTextView.frame.height)
-        }
-        
+//         replyTextView.sizeThatFits(replyTextView.frame.size)
+//        replyTextView.sizeToFit()
+//        replyTextView.frame = CGRect(x: 20,
+//                                     y: 0,
+//                                     width: frame.size.width - 40,
+//                                     height: replyTextView.frame.height
+//        )
+////
+//        print("DiaryDetail :: cell's height = \(replyTextView.frame.height)")
+//        replyTextView.snp.updateConstraints { make in
+//            make.height.equalTo(replyTextView.frame.height)
+//        }
+//
         print("createdAT= \(createdAt.toString())")
         testLabel.text = createdAt.toString() + "  |  " + "P. \(pageNum)-\(String(replyNum))"
     }

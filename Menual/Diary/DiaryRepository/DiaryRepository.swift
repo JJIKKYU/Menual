@@ -37,7 +37,7 @@ public protocol DiaryRepository {
     func loadImageFromDocumentDirectory(imageName: String, completionHandler: @escaping (UIImage?) -> Void)
     
     // 겹쓰기 로직
-    func addReplay(info: DiaryReplyModel)
+    func addReply(info: DiaryReplyModel)
     
     // 최근검색목록 로직
     func addDiarySearch(info: DiaryModel)
@@ -428,7 +428,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
     
     // MARK: - 겹쓰기 로직
-    public func addReplay(info: DiaryReplyModel) {
+    public func addReply(info: DiaryReplyModel) {
         guard let realm = Realm.safeInit() else {
             return
         }
@@ -448,6 +448,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         let result: [DiaryModel] = models.sorted { $0.createdAt > $1.createdAt }
         
         diaryModelSubject.accept(result)
+        fetchDiary()
     }
 
     // MARK: - 최근검색목록 로직 (SearchModel)

@@ -97,6 +97,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             })
             .disposed(by: self.disposebag)
         
+        
         menuComponentRelay
             .subscribe(onNext: { [weak self] comp in
                 guard let self = self else { return }
@@ -151,7 +152,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         )
         
         dependency.diaryRepository
-            .addReplay(info: newDiaryReplyModel)
+            .addReply(info: newDiaryReplyModel)
     }
     
     // Diary 이동

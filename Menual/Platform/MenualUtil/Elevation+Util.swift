@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 enum ShadowType {
+    case shadow_0
     case shadow_1
     case shadow_2
     case shadow_3
@@ -38,6 +39,8 @@ extension UIView {
         layer.shadowColor = UIColor.black.cgColor
         
         switch type {
+        case .shadow_0:
+            layer.shadowOpacity = 0
         case .shadow_1:
             layer.shadowOffset = CGSize(width: 0, height: 4)
             layer.shadowRadius = 8

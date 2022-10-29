@@ -12,6 +12,11 @@ import UIKit
 import SnapKit
 import Then
 
+enum TableCollectionViewTag: Int {
+    case MomentsCollectionView = 0
+    case MyMenualTableView = 1
+}
+
 protocol DiaryHomePresentableListener: AnyObject {
     func pressedSearchBtn()
     func pressedMyPageBtn()
@@ -76,9 +81,21 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     // TODO: CustomView로 만들기
-    lazy var fabWriteBtn = BoxButton(frame: CGRect.zero, btnStatus: .active, btnSize: .xLarge).then {
+    lazy var writeBoxBtn = BoxButton(frame: CGRect.zero, btnStatus: .active, btnSize: .xLarge).then {
         $0.title = "N번째 메뉴얼 작성하기"
         $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
+    }
+    
+    lazy var writeFAB = FAB(fabType: .primary, fabStatus: .default_).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
+        $0.isHidden = true
+    }
+    
+    lazy var scrollToTopFAB = FAB(fabType: .secondary, fabStatus: .default_).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.addTarget(self, action: #selector(pressedScrollToTopFAB), for: .touchUpInside)
+        $0.isHidden = true
     }
 
     lazy var momentsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout()).then {
@@ -96,7 +113,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.backgroundColor = .clear
         $0.decelerationRate = .fast
         $0.isPagingEnabled = false
-        $0.tag = 0
+        $0.tag = TableCollectionViewTag.MomentsCollectionView.rawValue
         $0.showsHorizontalScrollIndicator = false
     }
     
@@ -122,7 +139,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.rowHeight = 72
         $0.showsVerticalScrollIndicator = true
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 72, right: 0)
-        $0.tag = -1
+        $0.tag = TableCollectionViewTag.MyMenualTableView.rawValue
         $0.separatorStyle = .singleLine
         $0.separatorColor = Colors.grey.g700
     }
@@ -184,11 +201,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.backgroundColor = Colors.background
         
         self.view.addSubview(naviView)
-        self.view.addSubview(fabWriteBtn)
+        self.view.addSubview(writeBoxBtn)
         self.view.addSubview(indicatorView)
         
         self.view.addSubview(myMenualTableView)
         self.view.addSubview(filterEmptyView)
+        self.view.addSubview(writeFAB)
+        self.view.addSubview(scrollToTopFAB)
         myMenualTableView.tableHeaderView = tableViewHeaderView
         
         tableViewHeaderView.addSubview(momentsCollectionView)
@@ -203,8 +222,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         }
         
         self.view.bringSubviewToFront(naviView)
-        self.view.bringSubviewToFront(fabWriteBtn)
+        self.view.bringSubviewToFront(writeBoxBtn)
         self.view.bringSubviewToFront(indicatorView)
+        self.view.bringSubviewToFront(tableViewHeaderView)
+        self.view.bringSubviewToFront(writeFAB)
+        self.view.bringSubviewToFront(scrollToTopFAB)
         
         myMenualTableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -244,7 +266,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.height.equalTo(22)
         }
         
-        fabWriteBtn.snp.makeConstraints { make in
+        writeBoxBtn.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().inset(20)
             make.height.equalTo(56)
@@ -264,6 +286,18 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.top.equalTo(tableViewHeaderView.snp.bottom)
             make.bottom.equalToSuperview()
         }
+        
+        writeFAB.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(34)
+            make.width.height.equalTo(56)
+        }
+        
+        scrollToTopFAB.snp.makeConstraints { make in
+            make.trailing.equalTo(writeFAB)
+            make.bottom.equalTo(writeFAB.snp.top).inset(-16)
+            make.width.height.equalTo(56)
+        }
     }
     
     func bind() {
@@ -274,7 +308,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 if self.isFilteredRelay.value {
                     self.myMenualTitleView.pageNumber = num
                 } else {
-                    self.fabWriteBtn.title = String(num + 1) + "번째 메뉴얼 작성하기"
+                    self.writeBoxBtn.title = String(num + 1) + "번째 메뉴얼 작성하기"
                     self.myMenualTitleView.pageNumber = num
                 }
             })
@@ -445,23 +479,86 @@ extension DiaryHomeViewController {
         print("DiaryHome :: filterReset!!")
         listener?.pressedFilterResetBtn()
     }
+    
+    @objc
+    func pressedScrollToTopFAB() {
+        print("DiaryHome :: pressedScrollToTopFAB!!")
+        myMenualTableView.setContentOffset(.zero, animated: true)
+    }
 }
 
 // MARK: - Scroll View
 extension DiaryHomeViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        momentsPagination(scrollView)
+        guard let tableCollectionViewTag = TableCollectionViewTag(rawValue: scrollView.tag) else { return }
         
-        isDraggingRelay.accept(true)
+        switch tableCollectionViewTag {
+        case .MomentsCollectionView:
+            momentsPagination(scrollView)
 
-        DispatchQueue.main.async {
-            let scrollIndicator = scrollView.subviews.last!
-            scrollIndicator.backgroundColor = .red
-            
-            self.indicatorView.snp.remakeConstraints { make in
-                make.trailing.equalToSuperview().inset(16)
-                make.centerY.equalTo(scrollIndicator)
+        case .MyMenualTableView:
+            isDraggingRelay.accept(true)
+            attachTopMyMenualTitleView(scrollView)
+
+            DispatchQueue.main.async {
+                let scrollIndicator = scrollView.subviews.last!
+                scrollIndicator.backgroundColor = .red
+                
+                self.indicatorView.snp.remakeConstraints { make in
+                    make.trailing.equalToSuperview().inset(16)
+                    make.centerY.equalTo(scrollIndicator)
+                }
             }
+        }
+    }
+    
+    // 스크롤시 상단에 titleView가 고정되도록
+    func attachTopMyMenualTitleView(_ scrollView: UIScrollView) {
+        guard let tableCollectionViewTag = TableCollectionViewTag(rawValue: scrollView.tag) else { return }
+        // myMenualTableView일때만 작동하도록
+        if case .MyMenualTableView = tableCollectionViewTag {
+            print("DiaryHome :: contents offset = \(scrollView.contentOffset.y)")
+            let offset = scrollView.contentOffset.y
+            // TitleView를 넘어서 스크롤할 경우
+            if offset > 155 {
+                print("DiaryHome :: contents > 155")
+                setFABMode(isEnabled: true)
+                myMenualTitleView.AppShadow(.shadow_6)
+                myMenualTitleView.backgroundColor = Colors.background
+                myMenualTitleView.snp.remakeConstraints { make in
+                    make.leading.equalToSuperview()
+                    make.width.equalToSuperview()
+                    make.top.equalTo(naviView.snp.bottom)
+                    make.height.equalTo(55)
+                }
+            } else {
+                print("DiaryHome :: contents <= 155")
+                setFABMode(isEnabled: false)
+                myMenualTitleView.AppShadow(.shadow_0)
+                myMenualTitleView.backgroundColor = .clear
+                myMenualTitleView.snp.remakeConstraints { make in
+                    make.leading.equalToSuperview()
+                    make.width.equalToSuperview()
+                    make.top.equalTo(momentsCollectionViewPagination.snp.bottom).offset(24)
+                    make.height.equalTo(22)
+                }
+            }
+        }
+    }
+
+    // isEnabled == true : FABMode
+    // isEnabled == false : FABMode 해제
+    func setFABMode(isEnabled: Bool) {
+        switch isEnabled {
+        case true:
+            writeBoxBtn.isHidden = true
+            scrollToTopFAB.isHidden = false
+            writeFAB.isHidden = false
+
+        case false:
+            writeBoxBtn.isHidden = false
+            scrollToTopFAB.isHidden = true
+            writeFAB.isHidden = true
         }
     }
 
@@ -471,8 +568,10 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
     }
 
     func momentsPagination(_ scrollView: UIScrollView) {
-        // MomentCollectionView 일때만 작동 되도록
-        if scrollView.tag == 0 {
+        guard let tableCollectionViewTag = TableCollectionViewTag(rawValue: scrollView.tag) else { return }
+
+        if case .MomentsCollectionView = tableCollectionViewTag {
+            print("DiaryHome :: momentsPagination!")
             let width = scrollView.bounds.size.width
             // Init할 때 width가 모두 그려지지 않을때 오류 발생
             if width == 0 { return }
@@ -629,6 +728,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let sectionListHeader = SectionListHeaderView()
+        sectionListHeader.layer.zPosition = -1
 
         sectionListHeader.backgroundColor = .clear
         sectionListHeader.title = "2022.999"
@@ -783,7 +883,8 @@ extension DiaryHomeViewController: DialogDelegate {
 extension DiaryHomeViewController {
     func setFilterStatus(isFiltered: Bool) {
         // 이미 적용된 target 제거
-        self.fabWriteBtn.removeTarget(nil, action: nil, for: .allEvents)
+        self.writeBoxBtn.removeTarget(nil, action: nil, for: .allEvents)
+        self.writeFAB.removeTarget(nil, action: nil, for: .allEvents)
 
         switch isFiltered {
         case true:
@@ -791,18 +892,24 @@ extension DiaryHomeViewController {
             self.myMenualTitleView.title = "TOTAL PAGE"
             self.myMenualTitleView.rightFilterBtnIsEnabled = true
             
-            self.fabWriteBtn.title = "필터 초기화"
-            self.fabWriteBtn.isFiltered = .enabled
+            self.writeBoxBtn.title = "필터 초기화"
+            self.writeBoxBtn.isFiltered = .enabled
+            
+            self.writeFAB.isFiltered = .enabled
 
-            self.fabWriteBtn.addTarget(self, action: #selector(pressedFilterResetBtn), for: .touchUpInside)
+            self.writeBoxBtn.addTarget(self, action: #selector(pressedFilterResetBtn), for: .touchUpInside)
+            self.writeFAB.addTarget(self, action: #selector(pressedFilterResetBtn), for: .touchUpInside)
+            
             
         case false:
             print("diaryHome :: isFiltered! = false")
             self.myMenualTitleView.title = "MY MENUAL"
             self.myMenualTitleView.rightFilterBtnIsEnabled = false
-            self.fabWriteBtn.isFiltered = .disabled
-            
-            self.fabWriteBtn.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
+            self.writeBoxBtn.isFiltered = .disabled
+            self.writeFAB.isFiltered = .disabled
+
+            self.writeBoxBtn.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
+            self.writeFAB.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
             self.filterEmptyView.isHidden = true
             self.myMenualTableView.reloadData()
         }

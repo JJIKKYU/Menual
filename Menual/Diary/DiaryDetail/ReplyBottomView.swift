@@ -19,6 +19,7 @@ class ReplyBottomView: UIView {
     var replyTextView = UITextView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isScrollEnabled = false
+        $0.scrollIndicatorInsets = UIEdgeInsets(top: 6, left: 0, bottom: 6, right: 40)
         $0.backgroundColor = Colors.grey.g700
         
         $0.layer.cornerRadius = 12

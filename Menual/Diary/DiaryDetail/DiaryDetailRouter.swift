@@ -152,8 +152,7 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
             withListener: interactor,
             imageDataRelay: imageDataRelay
         )
-        
-        router.viewControllable.uiviewController.modalPresentationStyle = .fullScreen
+
         presentInsideNavigation(router.viewControllable)
         
         diaryDetailImageRouting = router

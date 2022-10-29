@@ -45,14 +45,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     private lazy var replyBottomView = ReplyBottomView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.writeBtn.addTarget(self, action: #selector(tempPressedSubmitReplyBtn), for: .touchUpInside)
+        $0.writeBtn.addTarget(self, action: #selector(pressedSubmitReplyBtn), for: .touchUpInside)
         $0.replyTextView.delegate = self
-    }
-    
-    lazy var tempSubmitBtn = UIButton().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.addTarget(self, action: #selector(tempPressedSubmitReplyBtn), for: .touchUpInside)
-        $0.setTitle("올리기", for: .normal)
     }
 
     lazy var naviView = MenualNaviView(type: .menualDetail).then {
@@ -121,11 +115,9 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
         $0.backgroundColor = .gray
-        let gesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(pressedImageView))
-        gesture.numberOfTapsRequired = 1
-        $0.isUserInteractionEnabled = true
-        $0.addGestureRecognizer(gesture)
     }
+    
+    private lazy var imageViewGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(pressedImageView))
     
     let readCountLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -144,7 +136,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 72, right: 0)
         $0.register(ReplyCell.self, forCellReuseIdentifier: "ReplyCell")
         
-        $0.estimatedRowHeight = 30
+        $0.estimatedRowHeight = 44
         $0.rowHeight = UITableView.automaticDimension
         
         $0.sectionHeaderHeight = UITableView.automaticDimension
@@ -206,6 +198,17 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         super.viewDidLoad()
         view.backgroundColor = Colors.background
         setViews()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        replyTableView.delegate = self
+        replyBottomView.replyTextView.delegate = self
+        
+        imageViewGesture.numberOfTapsRequired = 1
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(imageViewGesture)
 
         // keyboard observer등록
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -226,7 +229,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         replyTableView.delegate = nil
         replyBottomView.replyTextView.delegate = nil
-        imageView.gestureRecognizers?.first?.delegate = nil
+        imageView.removeGestureRecognizer(imageViewGesture)
         
         // Keyboard observer해제
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -236,6 +239,10 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         print("DiaryDetail :: presentingVC = \(presentingViewController?.classForCoder)")
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        print("DiaryDetail :: viewDidLayoutSubviews!")
+    }
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
@@ -247,8 +254,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         if isEnableImageView == true {
             enabledImageViewHeight = 16 + divider4.frame.height + 12 + imageView.frame.height
         }
+        
         print("DiaryDetail :: isEnableImageView = \(isEnableImageView), enabledImageViewHeight = \(enabledImageViewHeight)")
-        print("changedHeight = \(changedHeight)")
         
         // 숨김처리가 아닐 경우에만
         if isHide == false {
@@ -258,7 +265,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
                 make.height.equalTo(changedHeight)
             }
         }
-
+        print("DiaryDetail :: changedHeight = \(changedHeight)")
+        
         DispatchQueue.main.async {
             self.replyTableView.reloadData()
         }
@@ -326,8 +334,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.height.equalTo(40)
             make.centerX.equalToSuperview()
         }
-        
-        self.view.layoutIfNeeded()
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -403,6 +409,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     }
     
     func loadDiaryDetail(model: DiaryModel) {
+        print("DiaryDetail :: loadDiaryDetail!")
         print("DiaryDetail :: model.isHide = \(model.isHide)")
         // FAB Button
         spaceRequiredFAB.spaceRequiredCurrentPage = String(model.pageNum)
@@ -446,7 +453,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         createdAtPageView.createdAt = model.createdAt.toStringWithHourMin()
         createdAtPageView.page = String(model.pageNum)
         
-        replyTableView.reloadData()
     }
     
     func isHideMenual(isHide: Bool) {
@@ -573,19 +579,19 @@ extension DiaryDetailViewController {
     }
     
     @objc
-    func tempPressedSubmitReplyBtn() {
-        print("pressedSubmitReplyBtn")
-        let text = replyBottomView.writedText
-        listener?.pressedReplySubmitBtn(desc: text)
-        replyBottomView.replyTextView.text = ""
-        DispatchQueue.main.async {
-            self.replyTableView.reloadData()
-        }
+    func pressedSubmitReplyBtn() {
+        print("DiaryDetail :: pressedSubmitReplyBtn")
+        show(size: .small,
+             buttonType: .twoBtn,
+             titleText: "겹쓰기 작성을 완료하시겠어요?",
+             cancelButtonText: "취소",
+             confirmButtonText: "확인"
+        )
     }
     
     @objc
     func pressedIndicatorBtn(sender: UIButton) {
-        print("sender.s tag = \(sender.tag)")
+        print("DiaryDetail :: sender.s tag = \(sender.tag)")
         listener?.pressedIndicatorButton(offset: sender.tag)
         DispatchQueue.main.async {
             self.replyTableView.reloadData()
@@ -618,18 +624,24 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
    {
        return UITableView.automaticDimension
    }
+    
+//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableView.automaticDimension
+//    }
+    
 
-   func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-
-       return UITableView.automaticDimension
-
-   }
+//   func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//
+//       return UITableView.automaticDimension
+//
+//   }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listener?.diaryReplies.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("DiaryDetail :: cellForRowAt!")
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell") as? ReplyCell else { return UITableViewCell() }
         
         let index = indexPath.row
@@ -647,6 +659,7 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
         cell.replyNum = replyNum
         cell.createdAt = createdAt
         cell.pageNum = pageNum
+        // cell.replyTextView.sizeToFit()
         
 //        if let currentDiaryPage = listener?.currentDiaryPage {
 //            cell.pageAndReview = "p.\(currentDiaryPage)-" + String(replyNum)
@@ -699,39 +712,49 @@ extension DiaryDetailViewController {
     }
 }
 
+
 // MARK: - textView Delegate
 extension DiaryDetailViewController: UITextViewDelegate {
     // MARK: textview 높이 자동조절
-    func textViewDidChange(_ textView: UITextView) {
-        
-        switch textView {
-        case replyBottomView.replyTextView:
-            let size = CGSize(width: replyBottomView.replyTextView.frame.width, height: .infinity)
-            let estimatedSize = textView.sizeThatFits(size)
-            
-            print("estmatedSize Height = \(estimatedSize.height)")
-            
-            textView.constraints.forEach { (constraint) in
-            
-              /// 40 이하일때는 더 이상 줄어들지 않게하기
-                if estimatedSize.height <= 40 {
-                
-                }
-                else {
-                    replyBottomView.replyTextView.snp.updateConstraints { make in
-                        make.height.equalTo(estimatedSize.height)
-                    }
-                    
-                    replyBottomViewPlusHeight = estimatedSize.height - 40
-                    replyBottomView.snp.updateConstraints { make in
-                        make.height.equalTo(103 + replyBottomViewPlusHeight)
-                    }
-                }
-            }
-        default:
-            break
-        }
-    }
+//    func textViewDidChange(_ textView: UITextView) {
+//
+//        switch textView {
+//        case replyBottomView.replyTextView:
+//            let size = CGSize(width: replyBottomView.replyTextView.frame.width, height: .infinity)
+//            let estimatedSize = textView.sizeThatFits(size)
+//
+//            print("estmatedSize Height = \(estimatedSize.height)")
+//            let line = textView.numberOfLines()
+//            print("DiaryDetail :: line = \(line)")
+//
+//            /*
+//            textView.constraints.forEach { (constraint) in
+//              /// 40 이하일때는 더 이상 줄어들지 않게하기
+//                if estimatedSize.height <= 40 {
+//
+//                }
+//                else if line < 5 {
+//                    print("DiaryDetail :: line < 5")
+//                    replyBottomView.replyTextView.isScrollEnabled = false
+//                    replyBottomView.replyTextView.snp.updateConstraints { make in
+//                        make.height.equalTo(estimatedSize.height)
+//                    }
+//
+//                    replyBottomViewPlusHeight = estimatedSize.height - 40
+//                    replyBottomView.snp.updateConstraints { make in
+//                        make.height.equalTo(103 + replyBottomViewPlusHeight)
+//                    }
+//                }
+//                else if line >= 5 {
+//                    print("DiaryDetail :: line > 5")
+//                    replyBottomView.replyTextView.isScrollEnabled = true
+//                }
+//            }
+//            */
+//        default:
+//            break
+//        }
+//    }
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         switch textView {
@@ -772,6 +795,16 @@ extension DiaryDetailViewController: DialogDelegate {
             
         case "겹쓰기를 취소하고 돌아가시겠어요?":
             listener?.pressedBackBtn(isOnlyDetach: false)
+            
+        case "겹쓰기 작성을 완료하시겠어요?":
+            let text = replyBottomView.writedText
+            listener?.pressedReplySubmitBtn(desc: text)
+            replyBottomView.replyTextView.text = ""
+            replyBottomView.replyTextView.layoutIfNeeded()
+
+            DispatchQueue.main.async {
+                self.replyTableView.reloadData()
+            }
 
         default:
             break
@@ -785,6 +818,9 @@ extension DiaryDetailViewController: DialogDelegate {
             break
             
         case "겹쓰기를 취소하고 돌아가시겠어요?":
+            break
+            
+        case "겹쓰기 작성을 완료하시겠어요?":
             break
 
         default:
