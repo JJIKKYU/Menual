@@ -79,6 +79,7 @@ class WeatherPlaceSelectViewCell: UICollectionViewCell {
         super.layoutSubviews()
         buttonImageView.image = image
         
+        print("WeatherPlaceSelectViewCell :: isSelected = \(isSelected)")
         switch isSelected {
         case true:
             buttonImageView.tintColor = Colors.grey.g800

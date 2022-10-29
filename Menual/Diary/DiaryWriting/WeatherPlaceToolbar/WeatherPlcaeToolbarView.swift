@@ -26,6 +26,13 @@ class WeatherPlcaeToolbarView: UIView {
         didSet { setNeedsLayout() }
     }
     
+    var selectedWeatherType: Weather? {
+        didSet { setNeedsLayout() }
+    }
+    var selectedPlaceType: Place? {
+        didSet { setNeedsLayout() }
+    }
+    
     private let titleLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppTitle(.title_3)
@@ -119,10 +126,18 @@ class WeatherPlcaeToolbarView: UIView {
             print("WeatherPlcaeToolbarView :: .weather")
             weatherPlaceSelectView.weatherPlaceType = .weather
             titleLabel.text = "날씨는 어땠나요?"
+            if let selectedWeatherType = selectedWeatherType {
+                print("WeatherPlcaeToolbarView :: weather를 선택한 적이 있습니다.")
+                weatherPlaceSelectView.selectedWeatherType = selectedWeatherType
+            }
         case .place:
             print("WeatherPlcaeToolbarView :: .place")
             weatherPlaceSelectView.weatherPlaceType = .place
             titleLabel.text = "지금 장소는 어디신가요?"
+            if let selectedPlaceType = selectedPlaceType {
+                print("WeatherPlcaeToolbarView :: place를 선택한 적이 있습니다.")
+                weatherPlaceSelectView.selectedPlaceType = selectedPlaceType
+            }
         }
     }
 

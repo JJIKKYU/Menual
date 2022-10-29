@@ -131,11 +131,11 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         $0.isUserInteractionEnabled = true
     }
     
-    private lazy var weatherPlaceSelectView = WeatherPlaceSelectView(type: .place).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.delegate = self
-        $0.isHidden = true
-    }
+//    private lazy var weatherPlaceSelectView = WeatherPlaceSelectView(type: .place).then {
+//        $0.translatesAutoresizingMaskIntoConstraints = false
+//        $0.delegate = self
+//        $0.isHidden = true
+//    }
     
     // 메뉴 컴포넌트
     private lazy var menuComponentView = MenualBottomSheetMenuComponentView().then {
@@ -184,7 +184,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         super.viewDidDisappear(animated)
         
         // super.delegate = nil
-        weatherPlaceSelectView.delegate = nil
+//        weatherPlaceSelectView.delegate = nil
         filterComponentView.delegate = nil
         listener?.pressedCloseBtn()
     }
@@ -300,16 +300,18 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         
         switch menualBottomSheetType {
         case .weather:
-            weatherPlaceSelectView.isHidden = false
-            weatherPlaceSelectView.weatherPlaceType = .weather
-            rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
-            rightBtn.isHidden = false
+            break
+//            weatherPlaceSelectView.isHidden = false
+//            weatherPlaceSelectView.weatherPlaceType = .weather
+//            rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
+//            rightBtn.isHidden = false
             
         case .place:
-            weatherPlaceSelectView.isHidden = false
-            weatherPlaceSelectView.weatherPlaceType = .place
-            rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
-            rightBtn.isHidden = false
+            break
+//            weatherPlaceSelectView.isHidden = false
+//            weatherPlaceSelectView.weatherPlaceType = .place
+//            rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
+//            rightBtn.isHidden = false
             
         case .reminder:
             bottomSheetTitle = "리마인더 알림"
@@ -412,7 +414,7 @@ extension DiaryBottomSheetViewController {
     func pressedAddBtn() {
         print("TODO :: pressedAddBtn!!")
         // super.delegate = nil
-        weatherPlaceSelectView.delegate = nil
+//        weatherPlaceSelectView.delegate = nil
 
         hideBottomSheetAndGoBack()
         resignFirstResponder()
@@ -430,6 +432,7 @@ extension DiaryBottomSheetViewController: UITextFieldDelegate {
     
 }
 
+/*
 // MARK: - WeatherPlaceSelectViewDelegate
 extension DiaryBottomSheetViewController: WeatherPlaceSelectViewDelegate {
     func isSelected(_ isSelected: Bool) {
@@ -455,6 +458,7 @@ extension DiaryBottomSheetViewController: WeatherPlaceSelectViewDelegate {
         listener?.updatePlace(place: placeType)
     }
 }
+*/
 
 // MARK: - Bottom Sheet 기본 컴포넌트
 extension DiaryBottomSheetViewController {

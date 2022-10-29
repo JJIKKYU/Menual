@@ -209,7 +209,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         
-        let diaryModelResults = realm.objects(DiaryModelRealm.self)
+        let diaryModelResults = realm.objects(DiaryModelRealm.self).filter { $0.isDeleted != true }
         
         var diaryYearModels: [DiaryYearModel] = []
         
@@ -339,8 +339,12 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let data = realm.objects(DiaryModelRealm.self).filter({ $0.uuid == info.uuid }).first
         else { return }
         
+//        realm.safeWrite {
+//            realm.delete(data)
+//        }
+
         realm.safeWrite {
-            realm.delete(data)
+            data.isDeleted = true
         }
         
         var idx: Int = 0
@@ -351,7 +355,20 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
 
         var arr = diaryModelSubject.value
-        arr.remove(at: idx)
+        arr[idx] = DiaryModel(uuid: info.uuid,
+                              pageNum: info.pageNum,
+                              title: info.title,
+                              weather: info.weather,
+                              place: info.place,
+                              description: info.description,
+                              image: info.image,
+                              originalImage: info.originalImage,
+                              readCount: info.readCount,
+                              createdAt: info.createdAt,
+                              replies: info.replies,
+                              isDeleted: true,
+                              isHide: info.isHide
+        )
 
         diaryModelSubject.accept(arr)
         fetch()

@@ -7,6 +7,7 @@
 
 import RIBs
 import RxSwift
+import RxRelay
 import SnapKit
 import UIKit
 import PhotosUI
@@ -46,6 +47,13 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     }
 
     weak var listener: DiaryWritingPresentableListener?
+    private let isEditBeginRelay = BehaviorRelay<Bool>(value: false)
+    private var editDiaryModel: DiaryModel?
+    
+    // 유저가 선택 후 기본 선택 되어있도록
+    private var selectedWeatherType: Weather?
+    private var selectedPlaceType: Place?
+    
     private var disposeBag = DisposeBag()
     
     private var writingType: WritingType = .writing
@@ -356,10 +364,30 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
                     self.naviView.rightButton1IsActive = false
                     return
                 }
-                self.datePageTextCountView.textCount = String(text.count)
-                if text.count > 0 {
+                
+                switch self.writingType {
+                case .writing:
+                    self.datePageTextCountView.textCount = String(text.count)
+                    if text.count > 0 {
+                        self.naviView.rightButton1IsActive = true
+                    } else {
+                        self.naviView.rightButton1IsActive = false
+                    }
+                case .edit:
+                    break
+
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        isEditBeginRelay
+            .subscribe(onNext: { [weak self] isEditBegin in
+                guard let self = self else { return }
+                print("DiaryWriting :: isEditBeginRelay! \(isEditBegin)")
+                switch isEditBegin {
+                case true:
                     self.naviView.rightButton1IsActive = true
-                } else {
+                case false:
                     self.naviView.rightButton1IsActive = false
                 }
             })
@@ -371,6 +399,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         guard let weather = model.weather else {
             return
         }
+        print("DiaryWriting ::setWeatherView = \(model)")
         weatherSelectView.selected = true
         weatherSelectView.selectedWeatherType = weather
     }
@@ -379,7 +408,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         guard let place = model.place else {
             return
         }
-        print("setPlaceView = \(model)")
+        print("DiaryWriting ::setPlaceView = \(model)")
         locationSelectView.selected = true
         locationSelectView.selectedPlaceType = place
     }
@@ -503,6 +532,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     
     // 수정하기일때만 사용!
     func setDiaryEditMode(diaryModel: DiaryModel) {
+        self.editDiaryModel = diaryModel
         self.diaryModelUUID = diaryModel.uuid
         self.writingType = .edit
         self.naviView.naviViewType = .edit
@@ -525,6 +555,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         self.imageUploadView.image = nil
         self.imageUploadView.image = diaryModel.image ?? UIImage()
         
+        self.selectedPlaceType = diaryModel.place?.place
+        self.selectedWeatherType = diaryModel.weather?.weather
+        
         self.view.layoutIfNeeded()
     }
 }
@@ -535,20 +568,32 @@ extension DiaryWritingViewController {
     func pressedBackBtn() {
         print("pressedBackBtn!")
         var titleText: String = ""
+        var isShowDialog: Bool = false
         switch writingType {
         case .writing:
             titleText = "메뉴얼 작성을 취소하시겠어요?"
+            isShowDialog = true
         case .edit:
             titleText = "메뉴얼 수정을 취소하시겠어요?"
+            if isEditBeginRelay.value == true {
+                isShowDialog = true
+            } else {
+                isShowDialog = false
+            }
         }
-
-        show(size: .medium,
-             buttonType: .twoBtn,
-             titleText: titleText,
-             subTitleText: "작성한 내용은 임시저장글에 저장됩니다.",
-             cancelButtonText: "취소",
-             confirmButtonText: "확인"
-        )
+        
+        if isShowDialog {
+            show(size: .medium,
+                 buttonType: .twoBtn,
+                 titleText: titleText,
+                 subTitleText: "작성한 내용은 임시저장글에 저장됩니다.",
+                 cancelButtonText: "취소",
+                 confirmButtonText: "확인"
+            )
+        } else {
+            listener?.pressedBackBtn(isOnlyDetach: false)
+        }
+        
     }
     
     @objc
@@ -633,6 +678,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             print("Weather TextView")
             weatherPlaceToolbarView.isHidden = false
             weatherPlaceToolbarView.weatherPlaceType = .weather
+            weatherPlaceToolbarView.selectedWeatherType = selectedWeatherType
             if textView.text == "오늘 날씨는 어땠나요?" {
                  weatherSelectView.selectTitle = ""
                 textView.text = nil
@@ -643,6 +689,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             print("Location TextView")
             weatherPlaceToolbarView.isHidden = false
             weatherPlaceToolbarView.weatherPlaceType = .place
+            weatherPlaceToolbarView.selectedPlaceType = selectedPlaceType
             if textView.text == "지금 장소는 어디신가요?" {
                  locationSelectView.selectTitle = ""
                 textView.text = nil
@@ -714,12 +761,15 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             textView.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
             print("JJIKKYU :: newSizeHeight = \(newSize.height)")
             // textView.centerVerticalText()
+            isEditBeginRelay.accept(true)
             
         case TextViewType.weather.rawValue:
             textView.centerVerticalText()
+            isEditBeginRelay.accept(true)
             
         case TextViewType.location.rawValue:
             textView.centerVerticalText()
+            isEditBeginRelay.accept(true)
             
         case TextViewType.description.rawValue:
             
@@ -738,6 +788,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
                     }
                 }
             }
+            isEditBeginRelay.accept(true)
             
         default:
             break
@@ -884,15 +935,19 @@ extension DiaryWritingViewController {
 // MARK: - WeatherPlaceToolbarView Delegate
 extension DiaryWritingViewController: WeatherPlaceToolbarViewDelegate {
     func weatherSendData(weatherType: Weather) {
-        print("DiaryWrting에서 전달 받았습니다 \(weatherType)")
+        print("DiaryWriting :: DiaryWrting에서 전달 받았습니다 \(weatherType)")
+        selectedWeatherType = weatherType
         weatherSelectView.selectedWeatherType = weatherType
         weatherSelectView.selected = true
+        isEditBeginRelay.accept(true)
     }
     
     func placeSendData(placeType: Place) {
-        print("DiaryWrting에서 전달 받았습니다 \(placeType)")
+        print("DiaryWriting :: DiaryWrting에서 전달 받았습니다 \(placeType)")
+        selectedPlaceType = placeType
         locationSelectView.selectedPlaceType = placeType
         locationSelectView.selected = true
+        isEditBeginRelay.accept(true)
     }
 }
 
@@ -904,6 +959,7 @@ extension DiaryWritingViewController: CropViewControllerDelegate {
         self.selectedImage = image
         self.imageUploadView.image = image
         self.isEdittedIamge = true
+        self.isEditBeginRelay.accept(true)
         dismiss(animated: true)
     }
 }
