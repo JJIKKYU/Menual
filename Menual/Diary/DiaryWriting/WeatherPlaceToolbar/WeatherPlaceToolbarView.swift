@@ -12,9 +12,10 @@ import Then
 protocol WeatherPlaceToolbarViewDelegate {
     func weatherSendData(weatherType: Weather)
     func placeSendData(placeType: Place)
+    func close()
 }
 
-class WeatherPlcaeToolbarView: UIView {
+class WeatherPlaceToolbarView: UIView {
     
     var delegate: WeatherPlaceToolbarViewDelegate?
     
@@ -40,13 +41,15 @@ class WeatherPlcaeToolbarView: UIView {
         $0.text = "날씨를 선택해 주세요"
     }
     
-    private var rightBtn = UIButton().then {
-        $0.contentMode = .scaleAspectFit
-        $0.contentHorizontalAlignment = .fill
-        $0.contentVerticalAlignment = .fill
-        $0.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = Colors.grey.g600
-    }
+//    private lazy var rightBtn = UIButton().then {
+//        $0.isEnabled = true
+//        $0.contentMode = .scaleAspectFit
+//        $0.contentHorizontalAlignment = .fill
+//        $0.contentVerticalAlignment = .fill
+//        $0.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+//        $0.tintColor = Colors.grey.g600
+//        $0.addTarget(self, action: #selector(pressedCloseBtn), for: .touchUpInside)
+//    }
     
     private let divider = Divider(type: ._1px).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -68,13 +71,13 @@ class WeatherPlcaeToolbarView: UIView {
     }
     
     func setViews() {
-        backgroundColor = .black
+        backgroundColor = Colors.background
         clipsToBounds = true
         layer.cornerRadius = 10
         layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         
         addSubview(titleLabel)
-        addSubview(rightBtn)
+        // addSubview(rightBtn)
         addSubview(divider)
         addSubview(weatherPlaceSelectView)
         
@@ -84,11 +87,11 @@ class WeatherPlcaeToolbarView: UIView {
             make.height.equalTo(20)
         }
         
-        rightBtn.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(24)
-            make.top.equalToSuperview().offset(24)
-            make.width.height.equalTo(24)
-        }
+//        rightBtn.snp.makeConstraints { make in
+//            make.trailing.equalToSuperview().inset(24)
+//            make.top.equalToSuperview().offset(24)
+//            make.width.height.equalTo(24)
+//        }
         
         divider.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -107,6 +110,7 @@ class WeatherPlcaeToolbarView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        /*
         switch menualBottomSheetRightBtnIsActivate {
         case .unActivate:
             rightBtn.tintColor = Colors.grey.g600
@@ -120,6 +124,7 @@ class WeatherPlcaeToolbarView: UIView {
             rightBtn.tintColor = Colors.grey.g600
             rightBtn.isUserInteractionEnabled = true
         }
+        */
         
         switch weatherPlaceType {
         case .weather:
@@ -140,10 +145,15 @@ class WeatherPlcaeToolbarView: UIView {
             }
         }
     }
+    
+    @objc
+    func pressedCloseBtn() {
+        delegate?.close()
+    }
 
 }
 
-extension WeatherPlcaeToolbarView: WeatherPlaceSelectViewDelegate {
+extension WeatherPlaceToolbarView: WeatherPlaceSelectViewDelegate {
     func isSelected(_ isSelected: Bool) {
         print("isSelected!")
     }

@@ -89,10 +89,11 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.rightButton2.setImage(Asset._24px.storage.image.withRenderingMode(.alwaysTemplate), for: .normal)
     }
     
-    private lazy var weatherPlaceToolbarView = WeatherPlcaeToolbarView().then {
+    private lazy var weatherPlaceToolbarView = WeatherPlaceToolbarView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
         $0.isHidden = true
+        $0.AppShadow(.shadow_6)
     }
     
     private lazy var scrollView = UIScrollView().then {
@@ -659,7 +660,7 @@ extension DiaryWritingViewController {
 // MARK: - UITextField
 extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        print("textViewShouldBeginEditing")
+        print("DiaryWriting :: textViewShouldBeginEditing")
         
         if textView == descriptionTextView {
             titleTextField.inputAccessoryView?.isHidden = true
@@ -934,6 +935,11 @@ extension DiaryWritingViewController {
 
 // MARK: - WeatherPlaceToolbarView Delegate
 extension DiaryWritingViewController: WeatherPlaceToolbarViewDelegate {
+    func close() {
+        weatherPlaceToolbarView.isHidden = true
+        print("DiaryWriting :: DiaryWrting에서 close 이벤트를 전달 받았습니다.")
+    }
+    
     func weatherSendData(weatherType: Weather) {
         print("DiaryWriting :: DiaryWrting에서 전달 받았습니다 \(weatherType)")
         selectedWeatherType = weatherType

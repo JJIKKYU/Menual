@@ -46,8 +46,6 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var placeFilterSelectedArrRelay = BehaviorRelay<[Place]>(value: [])
     var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
-    
-    let weatherOb = BehaviorRelay<WeatherModel>(value: WeatherModel(uuid: "", weather: .sun, detailText: ""))
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.

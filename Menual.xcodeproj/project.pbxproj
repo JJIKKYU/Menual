@@ -109,7 +109,7 @@
 		98A56C6728678F0F000AC4FF /* CreatedAtPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C6628678F0F000AC4FF /* CreatedAtPageView.swift */; };
 		98A56C692868224B000AC4FF /* WeatherPlaceSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C682868224B000AC4FF /* WeatherPlaceSelectView.swift */; };
 		98A56C6B28682506000AC4FF /* WeatherPlaceSelectViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C6A28682506000AC4FF /* WeatherPlaceSelectViewCell.swift */; };
-		98A56C6E2868426B000AC4FF /* WeatherPlcaeToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C6D2868426B000AC4FF /* WeatherPlcaeToolbarView.swift */; };
+		98A56C6E2868426B000AC4FF /* WeatherPlaceToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C6D2868426B000AC4FF /* WeatherPlaceToolbarView.swift */; };
 		98B55743281CFF5B00F8CA3E /* DiarySearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55742281CFF5B00F8CA3E /* DiarySearchCell.swift */; };
 		98B55745281D0FEE00F8CA3E /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55744281D0FEE00F8CA3E /* SearchModel.swift */; };
 		98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B55746281D157200F8CA3E /* RecentSearchCell.swift */; };
@@ -348,7 +348,7 @@
 		98A56C6628678F0F000AC4FF /* CreatedAtPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatedAtPageView.swift; sourceTree = "<group>"; };
 		98A56C682868224B000AC4FF /* WeatherPlaceSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherPlaceSelectView.swift; sourceTree = "<group>"; };
 		98A56C6A28682506000AC4FF /* WeatherPlaceSelectViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherPlaceSelectViewCell.swift; sourceTree = "<group>"; };
-		98A56C6D2868426B000AC4FF /* WeatherPlcaeToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherPlcaeToolbarView.swift; sourceTree = "<group>"; };
+		98A56C6D2868426B000AC4FF /* WeatherPlaceToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherPlaceToolbarView.swift; sourceTree = "<group>"; };
 		98B55742281CFF5B00F8CA3E /* DiarySearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchCell.swift; sourceTree = "<group>"; };
 		98B55744281D0FEE00F8CA3E /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		98B55746281D157200F8CA3E /* RecentSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCell.swift; sourceTree = "<group>"; };
@@ -964,7 +964,7 @@
 		98A56C6C28683D91000AC4FF /* WeatherPlaceToolbar */ = {
 			isa = PBXGroup;
 			children = (
-				98A56C6D2868426B000AC4FF /* WeatherPlcaeToolbarView.swift */,
+				98A56C6D2868426B000AC4FF /* WeatherPlaceToolbarView.swift */,
 			);
 			path = WeatherPlaceToolbar;
 			sourceTree = "<group>";
@@ -1763,7 +1763,7 @@
 				98B5576C28389E6300F8CA3E /* DesignSystemCell.swift in Sources */,
 				98B557CB2841EEAC00F8CA3E /* FABBuilder.swift in Sources */,
 				9838574F28FA7AE9007378EC /* IndicatorView.swift in Sources */,
-				98A56C6E2868426B000AC4FF /* WeatherPlcaeToolbarView.swift in Sources */,
+				98A56C6E2868426B000AC4FF /* WeatherPlaceToolbarView.swift in Sources */,
 				98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */,
 				9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */,
 				980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */,
