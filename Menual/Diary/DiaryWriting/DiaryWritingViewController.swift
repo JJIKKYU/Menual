@@ -124,6 +124,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.selectTextView.delegate = self
         $0.selectTextView.tag = TextViewType.weather.rawValue
         $0.selectTextView.text = "오늘 날씨는 어땠나요?"
+        $0.deleteBtn.addTarget(self, action: #selector(pressedWeatherViewDeleteBtn), for: .touchUpInside)
+
     }
     
     private let divider2 = Divider(type: ._1px).then {
@@ -137,6 +139,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.selectTextView.delegate = self
         $0.selectTextView.tag = TextViewType.location.rawValue
         $0.selectTextView.text = "지금 장소는 어디신가요?"
+        $0.deleteBtn.addTarget(self, action: #selector(pressedPlaceViewDeleteBtn), for: .touchUpInside)
     }
     
     private let divider3 = Divider(type: ._1px).then {
@@ -670,6 +673,26 @@ extension DiaryWritingViewController {
         imageUploadView.image = nil
         selectedImage = nil
         selectedOriginalImage = nil
+    }
+    
+    @objc
+    func pressedPlaceViewDeleteBtn() {
+        print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - locationView")
+        selectedPlaceType = nil
+        locationSelectView.selectedPlaceType = nil
+        locationSelectView.selected = false
+        locationSelectView.selectTextView.text = ""
+        weatherPlaceToolbarView.selectedPlaceType = nil
+    }
+    
+    @objc
+    func pressedWeatherViewDeleteBtn() {
+        print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - weatherView")
+        selectedWeatherType = nil
+        weatherSelectView.selectedWeatherType = nil
+        weatherSelectView.selected = false
+        weatherSelectView.selectTextView.text = ""
+        weatherPlaceToolbarView.selectedWeatherType = nil
     }
 }
 

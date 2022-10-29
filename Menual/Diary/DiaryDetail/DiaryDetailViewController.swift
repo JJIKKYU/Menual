@@ -79,6 +79,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.selected = true
         $0.selectedWeatherType = .rain
         $0.selectTitle = "레잉아"
+        $0.isDeleteBtnEnabled = false
     }
     
     private let divider2 = Divider(type: ._1px).then {
@@ -91,6 +92,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.selected = true
         $0.selectedPlaceType = .company
         $0.selectTitle = "컴퍼닝아"
+        $0.isDeleteBtnEnabled = false
     }
     
     private let divider3 = Divider(type: ._1px).then {

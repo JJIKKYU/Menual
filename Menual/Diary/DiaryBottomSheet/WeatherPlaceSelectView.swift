@@ -99,9 +99,9 @@ class WeatherPlaceSelectView: UIView {
             collectionView.reloadData()
         }
         
-        if let selectedPlaceType = selectedPlaceType {
+        if let _ = selectedPlaceType {
             selectCell()
-        } else if let selectedWeatherType = selectedWeatherType {
+        } else if let _ = selectedWeatherType {
             selectCell()
         }
     }

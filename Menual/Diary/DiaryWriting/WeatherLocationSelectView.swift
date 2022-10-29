@@ -43,6 +43,10 @@ class WeatherLocationSelectView: UIView {
         didSet { setNeedsLayout() }
     }
     
+    var isDeleteBtnEnabled: Bool = true {
+        didSet { setNeedsLayout() }
+    }
+    
     
     private let selectImageView = UIImageView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -56,14 +60,15 @@ class WeatherLocationSelectView: UIView {
         $0.textContainer.maximumNumberOfLines = 1
     }
     
+    public lazy var deleteBtn = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.setImage(Asset._24px.Circle.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.tintColor = Colors.grey.g700
+    }
+    
     private let selectLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
-    }
-    
-    private lazy var deleteBtn = UIButton().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.addTarget(self, action: #selector(pressedDeleteBtn), for: .touchUpInside)
     }
     
     init() {
@@ -148,7 +153,7 @@ class WeatherLocationSelectView: UIView {
                 
                 selectTextView.text = selectTitle
                 selectTextView.centerVerticalText()
-                deleteBtn.isHidden = false
+                deleteBtn.isHidden = !isDeleteBtnEnabled
                 
             case false:
                 selectImageView.image = Asset._24px.weather.image.withRenderingMode(.alwaysTemplate)
@@ -157,7 +162,7 @@ class WeatherLocationSelectView: UIView {
                 selectTextView.textColor = Colors.grey.g600
                 // selectTextView.text = "오늘 날씨는 어땠나요?"
                 selectTextView.centerVerticalText()
-                deleteBtn.isHidden = true
+                deleteBtn.isHidden = !isDeleteBtnEnabled
             }
             
         case .location:
@@ -177,7 +182,7 @@ class WeatherLocationSelectView: UIView {
                 selectTextView.text = selectTitle
                 
                 selectTextView.centerVerticalText()
-                deleteBtn.isHidden = false
+                deleteBtn.isHidden = !isDeleteBtnEnabled
                 
             case false:
                 selectImageView.image = Asset._24px.place.image.withRenderingMode(.alwaysTemplate)
@@ -186,7 +191,7 @@ class WeatherLocationSelectView: UIView {
                 selectTextView.textColor = Colors.grey.g600
                 // selectTextView.text = "지금 장소는 어디신가요?"
                 selectTextView.centerVerticalText()
-                deleteBtn.isHidden = true
+                deleteBtn.isHidden = !isDeleteBtnEnabled
             }
         }
         
@@ -221,10 +226,5 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.image = Asset._24px.Weather.thunder.image.withRenderingMode(.alwaysTemplate)
             }
         }
-    }
-    
-    @objc
-    func pressedDeleteBtn() {
-        selected = false
     }
 }
