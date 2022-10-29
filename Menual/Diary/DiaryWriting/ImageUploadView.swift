@@ -26,6 +26,7 @@ class ImageUploadView: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("", for: .normal)
         $0.backgroundColor = .clear
+        $0.backgroundColor = Colors.grey.g800.withAlphaComponent(0.4)
     }
     
     private let centerView = UIView().then {
@@ -44,6 +45,26 @@ class ImageUploadView: UIView {
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
         $0.text = "사진 추가"
     }
+    
+    public lazy var deleteBtn = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.contentMode = .scaleAspectFit
+        $0.contentHorizontalAlignment = .fill
+        $0.contentVerticalAlignment = .fill
+        $0.setImage(Asset._20px.delete.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.tintColor = Colors.grey.g600
+        $0.isHidden = true
+    }
+    
+    public lazy var editBtn = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.contentMode = .scaleAspectFit
+        $0.contentHorizontalAlignment = .fill
+        $0.contentVerticalAlignment = .fill
+        $0.setImage(Asset._20px.modify.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        $0.tintColor = Colors.grey.g600
+        $0.isHidden = true
+    }
 
     init() {
         super.init(frame: CGRect.zero)
@@ -55,10 +76,11 @@ class ImageUploadView: UIView {
     }
     
     func setViews() {
-        backgroundColor = Colors.grey.g800.withAlphaComponent(0.4)
         addSubview(centerView)
         addSubview(uploadBtn)
         addSubview(uploadedImageView)
+        addSubview(editBtn)
+        addSubview(deleteBtn)
         
         centerView.addSubview(placeHolderImageView)
         centerView.addSubview(placeHolderTextLabel)
@@ -79,18 +101,34 @@ class ImageUploadView: UIView {
             make.width.equalTo(75)
             make.height.equalTo(24)
             make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview()
+            make.centerY.equalTo(uploadBtn)
         }
         
         uploadBtn.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.bottom.equalToSuperview()
+            make.top.equalToSuperview()
+            make.height.equalTo(80)
         }
     
         uploadedImageView.snp.makeConstraints { make in
-            make.leading.width.top.bottom.equalToSuperview()
+            make.leading.width.top.equalToSuperview()
+            make.height.equalTo(80)
         }
+        
+        deleteBtn.snp.makeConstraints { make in
+            make.trailing.equalToSuperview()
+            make.top.equalTo(uploadedImageView.snp.bottom).offset(10)
+            make.width.equalTo(20)
+        }
+        
+        editBtn.snp.makeConstraints { make in
+            make.trailing.equalTo(deleteBtn.snp.leading).offset(-8)
+            make.top.equalTo(uploadedImageView.snp.bottom).offset(10)
+            make.width.equalTo(20)
+        }
+        
+        
     }
     
     override func layoutSubviews() {
@@ -100,9 +138,13 @@ class ImageUploadView: UIView {
             print("DiaryWriting :: ImageUploadView :: image!")
             uploadedImageView.image = image
             uploadedImageView.isHidden = false
+            editBtn.isHidden = false
+            deleteBtn.isHidden = false
         } else {
-            uploadedImageView.image = UIImage()
+            uploadedImageView.image = nil
             uploadedImageView.isHidden = true
+            editBtn.isHidden = true
+            deleteBtn.isHidden = true
         }
     }
 

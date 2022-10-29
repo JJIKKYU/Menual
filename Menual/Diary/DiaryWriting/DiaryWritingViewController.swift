@@ -169,6 +169,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     private lazy var imageUploadView = ImageUploadView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.uploadBtn.addTarget(self, action: #selector(pressedImageUploadView), for: .touchUpInside)
+        $0.deleteBtn.addTarget(self, action: #selector(pressedImageUploadViewDeleteBtn), for: .touchUpInside)
+        $0.editBtn.addTarget(self, action: #selector(pressedImageUploadViewEditBtn), for: .touchUpInside)
     }
     
     let imageView = UIImageView().then {
@@ -343,8 +345,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(divider4.snp.bottom).offset(16)
-            make.height.equalTo(80)
-            make.bottom.equalToSuperview()
+            make.height.equalTo(110)
         }
         
         weatherPlaceToolbarView.snp.makeConstraints { make in
@@ -554,7 +555,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         self.descriptionTextView.textColor = UIColor.white
         
         self.imageUploadView.image = nil
-        self.imageUploadView.image = diaryModel.image ?? UIImage()
+        self.imageUploadView.image = diaryModel.image ?? nil
         
         self.selectedPlaceType = diaryModel.place?.place
         self.selectedWeatherType = diaryModel.weather?.weather
@@ -654,6 +655,21 @@ extension DiaryWritingViewController {
     func pressedTempSaveBtn() {
         print("pressedTempSaveBtn")
         listener?.pressedTempSaveBtn()
+    }
+    
+    @objc
+    func pressedImageUploadViewEditBtn() {
+        print("DiaryWriting :: pressedImageUploadViewEditBtn")
+        // 따로 추가 기능이 없으므로 그대로 랜딩
+        pressedImageUploadView()
+    }
+    
+    @objc
+    func pressedImageUploadViewDeleteBtn() {
+        print("DiaryWriting :: pressedImageUploadViewDeleteBtn")
+        imageUploadView.image = nil
+        selectedImage = nil
+        selectedOriginalImage = nil
     }
 }
 
