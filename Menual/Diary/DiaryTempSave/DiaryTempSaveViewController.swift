@@ -20,6 +20,7 @@ protocol DiaryTempSavePresentableListener: AnyObject {
     var tempSaveRelay: BehaviorRelay<[TempSaveModel]> { get }
     var deleteTempSaveUUIDArrRelay: BehaviorRelay<[String]> { get }
     func deleteTempSave()
+    func pressedTempSaveCell(uuid: String)
 }
 
 final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresentable, DiaryTempSaveViewControllable {
@@ -40,6 +41,7 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
         $0.register(TempSaveCell.self, forCellReuseIdentifier: "TempSaveCell")
         $0.rowHeight = 80
         $0.backgroundColor = .clear
+        $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
     }
     
     private lazy var deleteBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .xLarge).then {
@@ -142,7 +144,10 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
             })
             .disposed(by: disposeBag)
     }
-    
+}
+
+// MARK: - IBAction
+extension DiaryTempSaveViewController {
     @objc
     func pressedBackBtn() {
         print("pressedBackBtn")
@@ -168,10 +173,9 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
         deleteBtn.isHidden = !isDeleteMode
         tableView.reloadData()
     }
-    
 }
 
-
+// MARK: - UITableViewDelegate
 extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listener?.tempSaveRelay.value.count ?? 0
@@ -216,7 +220,7 @@ extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSourc
             }
 
         case false:
-            break
+            listener?.pressedTempSaveCell(uuid: uuid)
         }
     }
 }

@@ -565,6 +565,29 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         self.view.layoutIfNeeded()
     }
+    
+    func setTempSaveModel(tempSaveModel: TempSaveModel) {
+        print("DiaryWriting :: setTempSaveModel")
+        self.titleTextField.text = tempSaveModel.title
+        self.titleTextField.textColor = Colors.grey.g200
+        
+        self.weatherSelectView.selectTitle = tempSaveModel.weatherDetailText ?? ""
+        self.weatherSelectView.selectedWeatherType = tempSaveModel.weather
+        self.weatherSelectView.selected = true
+
+        self.locationSelectView.selectedPlaceType = tempSaveModel.place
+        self.locationSelectView.selectTitle = tempSaveModel.placeDetilText ?? ""
+        self.locationSelectView.selected = true
+        
+        self.descriptionTextView.text = tempSaveModel.description
+        self.descriptionTextView.textColor = UIColor.white
+        
+        self.imageUploadView.image = nil
+        self.imageUploadView.image = tempSaveModel.image ?? nil
+        
+        self.selectedPlaceType = tempSaveModel.place
+        self.selectedWeatherType = tempSaveModel.weather
+    }
 }
 
 // MARK: - IBACtion
@@ -577,7 +600,11 @@ extension DiaryWritingViewController {
         switch writingType {
         case .writing:
             titleText = "메뉴얼 작성을 취소하시겠어요?"
-            isShowDialog = true
+            if isEditBeginRelay.value == true {
+                isShowDialog = true
+            } else {
+                isShowDialog = false
+            }
         case .edit:
             titleText = "메뉴얼 수정을 취소하시겠어요?"
             if isEditBeginRelay.value == true {

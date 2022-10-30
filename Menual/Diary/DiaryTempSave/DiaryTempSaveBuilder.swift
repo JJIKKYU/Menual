@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import RxRelay
 
 protocol DiaryTempSaveDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
@@ -14,7 +15,6 @@ protocol DiaryTempSaveDependency: Dependency {
 }
 
 final class DiaryTempSaveComponent: Component<DiaryTempSaveDependency>, DiaryTempSaveDependency {
-
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
@@ -22,7 +22,10 @@ final class DiaryTempSaveComponent: Component<DiaryTempSaveDependency>, DiaryTem
 // MARK: - Builder
 
 protocol DiaryTempSaveBuildable: Buildable {
-    func build(withListener listener: DiaryTempSaveListener) -> DiaryTempSaveRouting
+    func build(
+        withListener listener: DiaryTempSaveListener,
+        tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>
+    ) -> DiaryTempSaveRouting
 }
 
 final class DiaryTempSaveBuilder: Builder<DiaryTempSaveDependency>, DiaryTempSaveBuildable {
@@ -31,12 +34,17 @@ final class DiaryTempSaveBuilder: Builder<DiaryTempSaveDependency>, DiaryTempSav
         super.init(dependency: dependency)
     }
 
-    func build(withListener listener: DiaryTempSaveListener) -> DiaryTempSaveRouting {
+    func build(
+        withListener listener: DiaryTempSaveListener,
+        tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>
+    ) -> DiaryTempSaveRouting {
+
         let component = DiaryTempSaveComponent(dependency: dependency)
         let viewController = DiaryTempSaveViewController()
         let interactor = DiaryTempSaveInteractor(
             presenter: viewController,
-            dependency: component
+            dependency: component,
+            tempSaveDiaryModelRelay: tempSaveDiaryModelRelay
         )
         interactor.listener = listener
         return DiaryTempSaveRouter(interactor: interactor, viewController: viewController)

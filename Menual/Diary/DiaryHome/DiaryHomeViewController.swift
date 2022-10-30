@@ -179,6 +179,34 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.isHidden = true
     }
     
+    private let emptyView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        let divider = Divider(type: ._2px).then {
+            $0.backgroundColor = Colors.grey.g700
+        }
+        let empty = Empty().then {
+            $0.screenType = .main
+            $0.mainType = .main
+        }
+        $0.addSubview(divider)
+        $0.addSubview(empty)
+        
+        divider.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(2)
+        }
+        
+        empty.snp.makeConstraints { make in
+            make.top.equalTo(divider.snp.bottom).offset(112)
+            make.width.equalTo(188)
+            make.height.equalTo(180)
+            make.centerX.equalToSuperview()
+        }
+        $0.isHidden = true
+    }
+    
     // MARK: - VC 코드
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -208,6 +236,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.addSubview(filterEmptyView)
         self.view.addSubview(writeFAB)
         self.view.addSubview(scrollToTopFAB)
+        self.view.addSubview(emptyView)
         myMenualTableView.tableHeaderView = tableViewHeaderView
         
         tableViewHeaderView.addSubview(momentsCollectionView)
@@ -298,6 +327,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.bottom.equalTo(writeFAB.snp.top).inset(-16)
             make.width.height.equalTo(56)
         }
+        
+        emptyView.snp.makeConstraints { make in
+            make.top.equalTo(tableViewHeaderView.snp.bottom)
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
     }
     
     func bind() {
@@ -308,6 +344,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 if self.isFilteredRelay.value {
                     self.myMenualTitleView.pageNumber = num
                 } else {
+
+                    if num == 0 {
+                        print("DiaryHome :: EmptyView")
+                        self.setEmptyView(isEnabled: true)
+                    } else {
+                        self.setEmptyView(isEnabled: false)
+                    }
+                    
                     self.writeBoxBtn.title = String(num + 1) + "번째 메뉴얼 작성하기"
                     self.myMenualTitleView.pageNumber = num
                 }
@@ -335,6 +379,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                         sectionCount += 1
                     }
                 }
+
                 print("sectionCount = \(sectionCount)")
                 print("cell, for문 끝! sectionCount = \(sectionCount), sectionNameDic = \(self.sectionNameDic), cellSectionNumberDic = \(self.cellsectionNumberDic), cellsectionNumberDic2 = \(self.cellsectionNumberDic2)")
 
@@ -403,6 +448,16 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 self.setFilterStatus(isFiltered: isFiltered)
             })
             .disposed(by: disposeBag)
+    }
+    
+    func setEmptyView(isEnabled: Bool) {
+        switch isEnabled {
+        case true:
+            emptyView.isHidden = false
+
+        case false:
+            emptyView.isHidden = true
+        }
     }
 }
 

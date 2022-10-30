@@ -16,7 +16,9 @@ public struct TempSaveModel {
     let image: UIImage?
     let originalImage: UIImage?
     let weather: Weather?
+    let weatherDetailText: String?
     let place: Place?
+    let placeDetilText: String?
     let createdAt: Date
     let isDeleted: Bool
     
@@ -27,7 +29,9 @@ public struct TempSaveModel {
         self.image = diaryModel.image
         self.originalImage = diaryModel.originalImage
         self.weather = diaryModel.weather?.weather
+        self.weatherDetailText = diaryModel.weather?.detailText
         self.place = diaryModel.place?.place
+        self.placeDetilText = diaryModel.place?.detailText
         self.createdAt = createAt
         self.isDeleted = isDeleted
     }
@@ -37,7 +41,9 @@ public struct TempSaveModel {
         self.title = realm.title
         self.description = realm.desc
         self.weather = realm.weather
+        self.weatherDetailText = realm.weatherDetailText
         self.place = realm.place
+        self.placeDetilText = realm.placeDetailText
         self.createdAt = realm.createdAt
         self.isDeleted = realm.isDeleted
         
@@ -68,7 +74,9 @@ public class TempSaveModelRealm: Object {
     @Persisted var desc: String = ""
     @Persisted var image: Bool
     @Persisted var weather: Weather?
+    @Persisted var weatherDetailText: String?
     @Persisted var place: Place?
+    @Persisted var placeDetailText: String?
     @Persisted var createdAt: Date
     @Persisted var isDeleted: Bool
     
@@ -79,7 +87,9 @@ public class TempSaveModelRealm: Object {
         self.desc = diaryModel.description
         self.image = diaryModel.image != nil ? true : false
         self.weather = diaryModel.weather?.weather
+        self.weatherDetailText = diaryModel.weather?.detailText
         self.place = diaryModel.place?.place
+        self.placeDetailText = diaryModel.place?.detailText
         self.createdAt = createdAt
         self.isDeleted = isDeleted
     }
@@ -91,7 +101,9 @@ public class TempSaveModelRealm: Object {
         self.desc = tempSaveModel.description
         self.image = tempSaveModel.image != nil ? true : false
         self.weather = tempSaveModel.weather
+        self.weatherDetailText = tempSaveModel.weatherDetailText
         self.place = tempSaveModel.place
+        self.placeDetailText = tempSaveModel.placeDetilText
         
         self.createdAt = tempSaveModel.createdAt
         self.isDeleted = tempSaveModel.isDeleted

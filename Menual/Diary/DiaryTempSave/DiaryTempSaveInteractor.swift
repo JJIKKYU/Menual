@@ -28,9 +28,11 @@ protocol DiaryTempSaveInteractorDependecy {
 }
 
 final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresentable>, DiaryTempSaveInteractable, DiaryTempSavePresentableListener {
-
+    
     weak var router: DiaryTempSaveRouting?
     weak var listener: DiaryTempSaveListener?
+    
+    private let tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>
     
     private let dependency: DiaryTempSaveDependency
     private let disposeBag = DisposeBag()
@@ -42,10 +44,12 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
     // in constructor.
     init(
         presenter: DiaryTempSavePresentable,
-        dependency: DiaryTempSaveDependency
+        dependency: DiaryTempSaveDependency,
+        tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>
     ) {
         self.dependency = dependency
         dependency.diaryRepository.fetchTempSave()
+        self.tempSaveDiaryModelRelay = tempSaveDiaryModelRelay
         super.init(presenter: presenter)
         presenter.listener = self
         bind()
@@ -79,5 +83,12 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
     func deleteTempSave() {
         dependency.diaryRepository
             .deleteTempSave(uuidArr: deleteTempSaveUUIDArrRelay.value)
+    }
+    
+    func pressedTempSaveCell(uuid: String) {
+        print("TempSave :: pressedTempSaveCell -> uuid - \(uuid)")
+        guard let tempSaveDiaryModel: TempSaveModel = dependency.diaryRepository.tempSave.value.filter({ $0.uuid == uuid }).first else { return }
+        print("TempSaveDiaryModel = \(tempSaveDiaryModel)")
+        tempSaveDiaryModelRelay.accept(tempSaveDiaryModel)
     }
 }
