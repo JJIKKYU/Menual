@@ -122,14 +122,14 @@ class ListHeader: UIView {
         rightArrowBtn.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.width.height.equalTo(24)
-            make.centerY.equalToSuperview()
+            make.centerY.equalTo(titleLabel)
             // make.top.bottom.equalToSuperview()
         }
         
         rightFilterBtn.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.width.height.equalTo(24)
-            make.centerY.equalToSuperview()
+            make.centerY.equalTo(titleLabel)
             // make.top.bottom.equalToSuperview()
         }
         
@@ -140,7 +140,7 @@ class ListHeader: UIView {
         
         rightTextBtn.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
-            make.centerY.equalToSuperview()
+            make.centerY.equalTo(titleLabel)
             make.width.equalTo(47)
             make.height.equalTo(15)
         }
@@ -149,7 +149,7 @@ class ListHeader: UIView {
         rightCalenderBtn.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(52)
             make.width.height.equalTo(24)
-            make.centerY.equalToSuperview()
+            make.centerY.equalTo(titleLabel)
         }
     }
     

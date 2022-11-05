@@ -215,31 +215,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             make.top.equalToSuperview()
             make.width.equalToSuperview()
         }
-        
-//        tableView.addSubview(headerView)
-//        headerView.addSubview(divider)
-//        headerView.addSubview(searchEmptyView)
-//
-//        headerView.snp.makeConstraints { make in
-//            make.leading.equalToSuperview()
-//            make.width.equalToSuperview()
-//            make.top.equalToSuperview()
-//            make.height.equalTo(24)
-//        }
-//
-//        divider.snp.makeConstraints { make in
-//            make.top.equalTo(headerView.snp.bottom).offset(8)
-//            make.leading.equalToSuperview().offset(20)
-//            make.width.equalToSuperview().inset(20)
-//            make.height.equalTo(2)
-//        }
-//
-//        searchEmptyView.snp.makeConstraints { make in
-//            make.centerX.equalToSuperview()
-//            make.top.equalTo(headerView.snp.bottom).offset(40)
-//            make.width.equalTo(170)
-//            make.height.equalTo(180)
-//        }
     }
 
     
@@ -273,6 +248,8 @@ extension DiarySearchViewController {
     func pressedTextFieldDeleteBtn() {
         self.searchTextField.textField.text = ""
         self.searchTextField.deleteBtn.isHidden = true
+        self.searchText = ""
+        self.searchTextField.layoutIfNeeded()
         self.listener?.searchTest(keyword: "")
     }
 }
@@ -305,6 +282,10 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        // 최근 검색어 갯수
+        let recentSearchCount = listener?.recentSearchResultsRelay.value.count ?? 0
+
+        // 검색할 경우에는 두 section 모두 나타냄
         if menualCount == 0 {
             return 2
         } else {
@@ -352,8 +333,10 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             headerView.rightTextBtn.addTarget(self, action: #selector(pressedRecentSearchCellDeleteBtn), for: .touchUpInside)
             
             if let recentSearchCount: Int = listener?.recentSearchResultsRelay.value.count {
+                
+                // 최근 검색 결과가 없으면 해당 Section도 나타나지 않도록
                 if recentSearchCount == 0 {
-                    headerView.rightTextBtn.isEnabled = false
+                    return UIView()
                 } else {
                     headerView.rightTextBtn.isEnabled = true
                 }
