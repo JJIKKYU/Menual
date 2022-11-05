@@ -220,7 +220,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
     
     func reloadSearchTableView() {
         tableView.reloadData()
-        
     }
 }
 
@@ -264,10 +263,10 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             } else if menualCount == 0 && searchText.count == 0 {
                 return 0
             } else {
-                return 34
+                return 36
             }
         case 1:
-            return 34
+            return 36
         default:
             return 0
         }
@@ -277,14 +276,15 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
         return nil
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 98
+    }
+    
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return .leastNormalMagnitude
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        // 최근 검색어 갯수
-        let recentSearchCount = listener?.recentSearchResultsRelay.value.count ?? 0
-
         // 검색할 경우에는 두 section 모두 나타냄
         if menualCount == 0 {
             return 2
@@ -407,23 +407,26 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
                 cell.listType = .hide
             } else {
                 if let image = model.originalImage {
-                    cell.listType = .textAndImage
+                    cell.listType = .bodyTextImage
                     cell.image = image
                 } else {
-                    cell.listType = .normal
+                    cell.listType = .bodyText
                 }
             }
             cell.title = model.title
-            cell.dateAndTime = model.createdAt.toString()
+            cell.date = model.createdAt.toString()
+            cell.time = model.createdAt.toStringHourMin()
+            cell.body = model.description
 
-            let page = "P.\(model.pageNum)"
+            let pageCount = "\(model.pageNum)"
             var replies = ""
             if model.replies.count != 0 {
-                replies = "- \(model.replies.count)"
+                replies = "\(model.replies.count)"
             }
 
             cell.searchKeyword = searchKeyword
-            cell.pageAndReview = page + replies
+            cell.pageCount = pageCount
+            cell.reviewCount = replies
             
             return cell
         }
@@ -447,23 +450,26 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
                 cell.listType = .hide
             } else {
                 if let image = data.originalImage {
-                    cell.listType = .textAndImage
+                    cell.listType = .bodyTextImage
                     cell.image = image
                 } else {
-                    cell.listType = .normal
+                    cell.listType = .bodyText
                 }
             }
             cell.title = data.title
-            cell.dateAndTime = data.createdAt.toString()
+            cell.date = data.createdAt.toString()
+            cell.time = data.createdAt.toStringHourMin()
+            cell.body = data.description
 
-            let page = "P.\(data.pageNum)"
+            let pageCount = "\(data.pageNum)"
             var replies = ""
             if diary.replies.count != 0 {
-                replies = "- \(data.replies.count)"
+                replies = "\(data.replies.count)"
             }
 
             cell.searchKeyword = ""
-            cell.pageAndReview = page + replies
+            cell.pageCount = pageCount
+            cell.reviewCount = replies
             
             return cell
         }
@@ -508,7 +514,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
         // 최근 검색어만 지원
         if indexPath.section == 1 {
             guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return nil }
-            let modifyAction = UIContextualAction(style: .normal, title:  "Delete", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            let modifyAction = UIContextualAction(style: .normal, title:  "", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
                     self.listener?.deleteRecentSearchData(uuid: cell.uuid)
                     print("Search :: Update action ...")
                     success(true)

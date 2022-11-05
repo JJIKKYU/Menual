@@ -41,6 +41,8 @@
 		984392A7291632DB00EF526E /* MetaDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984392A3291632DB00EF526E /* MetaDataViewController.swift */; };
 		984392A8291632DB00EF526E /* MetaDataBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984392A4291632DB00EF526E /* MetaDataBuilder.swift */; };
 		984392A9291632DB00EF526E /* MetaDataInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984392A5291632DB00EF526E /* MetaDataInteractor.swift */; };
+		984392AB29163ADB00EF526E /* ListInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984392AA29163ADB00EF526E /* ListInfoView.swift */; };
+		984392AD2916435A00EF526E /* ListTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984392AC2916435A00EF526E /* ListTitleView.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -279,6 +281,8 @@
 		984392A3291632DB00EF526E /* MetaDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaDataViewController.swift; sourceTree = "<group>"; };
 		984392A4291632DB00EF526E /* MetaDataBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaDataBuilder.swift; sourceTree = "<group>"; };
 		984392A5291632DB00EF526E /* MetaDataInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaDataInteractor.swift; sourceTree = "<group>"; };
+		984392AA29163ADB00EF526E /* ListInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListInfoView.swift; sourceTree = "<group>"; };
+		984392AC2916435A00EF526E /* ListTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTitleView.swift; sourceTree = "<group>"; };
 		985A52A927F023DB00B10829 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
@@ -1158,6 +1162,8 @@
 			isa = PBXGroup;
 			children = (
 				98B557C22841D4D600F8CA3E /* ListCell.swift */,
+				984392AA29163ADB00EF526E /* ListInfoView.swift */,
+				984392AC2916435A00EF526E /* ListTitleView.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -1785,12 +1791,14 @@
 				98B557752838A4ED00F8CA3E /* BoxButtonViewController.swift in Sources */,
 				989AE04627F0900800177573 /* DiarySearchInteractor.swift in Sources */,
 				98EADB9428433BC2007C298C /* TabsText.swift in Sources */,
+				984392AB29163ADB00EF526E /* ListInfoView.swift in Sources */,
 				98EADB9828437D13007C298C /* CollectionView+Util.swift in Sources */,
 				98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */,
 				98EADBA028438039007C298C /* PaginationBuilder.swift in Sources */,
 				98B557A7283A3E7900F8CA3E /* DividerBuilder.swift in Sources */,
 				98B55768283896AA00F8CA3E /* DesignSystemViewController.swift in Sources */,
 				980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */,
+				984392AD2916435A00EF526E /* ListTitleView.swift in Sources */,
 				989AE04327F0900800177573 /* DiarySearchRouter.swift in Sources */,
 				98B5577E283A031400F8CA3E /* GNBHeaderViewController.swift in Sources */,
 				98EADB9F28438039007C298C /* PaginationViewController.swift in Sources */,
@@ -1998,7 +2006,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -2031,7 +2039,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -2062,7 +2070,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -2088,7 +2096,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -2113,7 +2121,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2137,7 +2145,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

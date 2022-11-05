@@ -745,15 +745,17 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         cell.title = data.title
-        cell.dateAndTime = data.createdAt.toString()
+        cell.date = data.createdAt.toString()
+        cell.time = data.createdAt.toStringHourMin()
         
-        let page = "P.\(data.pageNum)"
+        let pageCount = "\(data.pageNum)"
         var replies = ""
         if data.replies.count != 0 {
-            replies = "- \(data.replies.count)"
+            replies = "\(data.replies.count)"
         }
 
-        cell.pageAndReview = page + replies
+        cell.pageCount = pageCount
+        cell.reviewCount = replies
         cell.testModel = data
 
         return cell

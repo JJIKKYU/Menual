@@ -15,6 +15,7 @@ enum ListType {
     case textAndImage
     // case textAndImageReview
     case bodyText
+    case bodyTextImage
     case hide
 }
 
@@ -58,11 +59,19 @@ class ListCell: UITableViewCell {
         didSet { setNeedsLayout() }
     }
     
-    var dateAndTime: String = "" {
+    var date: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var pageAndReview: String = "" {
+    var time: String = "" {
+        didSet { setNeedsLayout() }
+    }
+    
+    var pageCount: String = "" {
+        didSet { setNeedsLayout() }
+    }
+    
+    var reviewCount: String = "" {
         didSet { setNeedsLayout() }
     }
     
@@ -70,45 +79,30 @@ class ListCell: UITableViewCell {
         didSet { setNeedsLayout() }
     }
     
-    private let lockImageView = UIImageView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.image = Asset._24px.lock.image.withRenderingMode(.alwaysTemplate)
-        $0.tintColor = Colors.grey.g500
-        $0.contentMode = .scaleAspectFit
-        $0.layer.masksToBounds = true
+    var body: String = "" {
+        didSet { setNeedsLayout() }
     }
     
-    private let titleLabel = UILabel().then {
+    private let listTitleView = ListTitleView(type: .title).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.textColor = Colors.grey.g200
-        $0.font = UIFont.AppTitle(.title_2)
-        $0.lineBreakMode = .byTruncatingTail
-        $0.numberOfLines = 1
     }
-    
+
     private let menualImageView = UIImageView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .blue
         $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
         $0.AppCorner(._2pt)
+        $0.isHidden = true
     }
     
-    private let dateAndTimeLabel = UILabel().then {
+    private let listInfoView = ListInfoView(type: .time).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.font = UIFont.AppBodyOnlyFont(.body_2)
-        $0.textColor = Colors.grey.g600
     }
     
-    private let divider = UIView().then {
+    private let listBodyView = ListTitleView(type: .titleBodyText).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.grey.g600
-    }
-    
-    private let pageAndReviewLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.font = UIFont.AppBodyOnlyFont(.body_2)
-        $0.textColor = Colors.grey.g600
+        $0.isHidden = true
     }
 
     override func awakeFromNib() {
@@ -127,48 +121,36 @@ class ListCell: UITableViewCell {
     
     func setViews() {
         backgroundColor = Colors.background
-        addSubview(lockImageView)
-        addSubview(titleLabel)
+        addSubview(listTitleView)
         addSubview(menualImageView)
-        addSubview(dateAndTimeLabel)
-        addSubview(divider)
-        addSubview(pageAndReviewLabel)
-        
-        lockImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.top.equalToSuperview().offset(12)
-            make.width.height.equalTo(24)
-        }
-        
+        addSubview(listInfoView)
+        addSubview(listBodyView)
+
         menualImageView.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.top.equalToSuperview().offset(12)
             make.width.height.equalTo(48)
         }
-        
-        titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(lockImageView.snp.trailing).offset(2)
+
+        listTitleView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().inset(80)
-        }
-        
-        dateAndTimeLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.top.equalTo(titleLabel.snp.bottom).offset(6)
-            make.bottom.equalToSuperview().inset(17)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(18)
         }
         
-        divider.snp.makeConstraints { make in
-            make.leading.equalTo(dateAndTimeLabel.snp.trailing).offset(8)
-            make.width.equalTo(0.5)
-            make.top.equalTo(dateAndTimeLabel)
-            make.bottom.equalTo(dateAndTimeLabel)
+        listBodyView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalTo(listTitleView)
+            make.top.equalTo(listTitleView.snp.bottom).offset(6)
+            make.height.equalTo(18)
         }
         
-        pageAndReviewLabel.snp.makeConstraints { make in
-            make.leading.equalTo(divider.snp.trailing).offset(8)
-            make.top.equalTo(divider)
-            make.bottom.equalTo(divider)
+        listInfoView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(listBodyView.snp.bottom).offset(6)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(15)
         }
     }
     
@@ -176,22 +158,35 @@ class ListCell: UITableViewCell {
         super.layoutSubviews()
         
         removeSectionSeparators()
-        titleLabel.text = title
-        dateAndTimeLabel.text = dateAndTime
-        pageAndReviewLabel.text = pageAndReview
+        listTitleView.titleText = title
+        listBodyView.bodyText = body
+        listInfoView.date = date
+        listInfoView.time = time
+        listInfoView.pageCount = pageCount
+        listInfoView.reviewCount = reviewCount
+        listInfoView.infoType = .info
+        
+        if reviewCount != "" {
+            print("revieCount = \(reviewCount)")
+            listInfoView.infoType = .infoReview
+        }
         
         switch listType {
         case .normal:
             menualImageView.isHidden = true
-            lockImageView.isHidden = true
-            lockImageView.snp.removeConstraints()
-            titleLabel.textColor = Colors.grey.g200
-            titleLabel.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(20)
+            listTitleView.snp.remakeConstraints { make in
                 make.top.equalToSuperview().offset(16)
-                make.trailing.equalToSuperview().inset(19)
+                make.leading.equalToSuperview().offset(20)
+                make.width.equalToSuperview().inset(20)
+                make.height.equalTo(18)
             }
-            lockImageView.snp.removeConstraints()
+            listInfoView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.top.equalTo(listTitleView.snp.bottom).offset(6)
+                make.width.equalToSuperview().inset(20)
+                make.height.equalTo(15)
+            }
+//            lockImageView.snp.removeConstraints()
         case .textAndImage:
             menualImageView.isHidden = false
             if let image = image {
@@ -202,32 +197,67 @@ class ListCell: UITableViewCell {
                 make.top.equalToSuperview().offset(12)
                 make.width.height.equalTo(48)
             }
-            lockImageView.isHidden = true
-            titleLabel.textColor = Colors.grey.g200
-            titleLabel.snp.remakeConstraints { make in
+            listTitleView.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(20)
                 make.top.equalToSuperview().offset(16)
                 make.trailing.equalToSuperview().inset(80)
+                make.height.equalTo(18)
             }
-            lockImageView.snp.removeConstraints()
-        case .hide:
-            menualImageView.isHidden = true
-            lockImageView.isHidden = false
-            titleLabel.text = "숨긴 메뉴얼이에요."
-            titleLabel.textColor = Colors.grey.g500
-            menualImageView.snp.removeConstraints()
-            titleLabel.snp.remakeConstraints { make in
-                make.leading.equalTo(lockImageView.snp.trailing).offset(2)
-                make.top.equalToSuperview().offset(16)
-                make.trailing.equalToSuperview().inset(19)
-            }
-            lockImageView.snp.makeConstraints { make in
+            listInfoView.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(20)
-                make.top.equalToSuperview().offset(12)
-                make.width.height.equalTo(24)
+                make.top.equalTo(listTitleView.snp.bottom).offset(6)
+                make.width.equalToSuperview().inset(20)
+                make.height.equalTo(15)
             }
+        case .hide:
+            listTitleView.isHidden = true
+
         case .bodyText:
-            break
+            listBodyView.isHidden = false
+            menualImageView.isHidden = true
+            listTitleView.snp.remakeConstraints { make in
+                make.top.equalToSuperview().offset(16)
+                make.leading.equalToSuperview().offset(20)
+                make.width.equalToSuperview().inset(20)
+                make.height.equalTo(18)
+            }
+            listBodyView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.width.equalToSuperview().inset(20)
+                make.top.equalTo(listTitleView.snp.bottom).offset(6)
+                make.height.equalTo(18)
+            }
+            listInfoView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.top.equalTo(listBodyView.snp.bottom).offset(8)
+                make.width.equalToSuperview().inset(20)
+                make.height.equalTo(15)
+            }
+            // menualImageView.snp.removeConstraints()
+
+        case .bodyTextImage:
+            listBodyView.isHidden = false
+            menualImageView.isHidden = false
+            if let image = image {
+                menualImageView.image = image
+            }
+            menualImageView.snp.makeConstraints { make in
+                make.trailing.equalToSuperview().inset(20)
+                make.top.equalToSuperview().offset(12)
+                make.width.height.equalTo(48)
+            }
+            listBodyView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().inset(80)
+                make.top.equalTo(listTitleView.snp.bottom).offset(6)
+                make.height.equalTo(18)
+            }
+            listTitleView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.top.equalToSuperview().offset(16)
+                make.trailing.equalToSuperview().inset(80)
+                make.height.equalTo(18)
+            }
         }
         
         switch listStatus {
@@ -238,22 +268,8 @@ class ListCell: UITableViewCell {
         case .highlighed:
             backgroundColor = Colors.grey.g800
         }
-        
-        highlightText(keyword: searchKeyword)
-    }
-    
-    func highlightText(keyword: String) {
-        print("keyword = \(keyword)")
-        // 타이틀
-        let titleAtrString = NSMutableAttributedString(string: title)
-        titleAtrString.addAttribute(.foregroundColor, value: Colors.tint.main.v400, range: (title as NSString).range(of: keyword))
-        titleLabel.attributedText = titleAtrString
-        
-        // TODO: - 내용도 하이라이트 될 수 있도록 추가할 것
-        /*
-        let descAtrString = NSMutableAttributedString(string: desc)
-        descAtrString.addAttribute(.foregroundColor, value: UIColor.blue, range: (desc as NSString).range(of: text))
-        descriptionLabel.attributedText = descAtrString
-        */
+     
+        listTitleView.searchKeyword = searchKeyword
+        listBodyView.searchKeyword = searchKeyword
     }
 }

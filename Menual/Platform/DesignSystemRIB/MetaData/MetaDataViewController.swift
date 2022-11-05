@@ -126,7 +126,7 @@ final class MetaDataViewController: UIViewController, MetaDataPresentable, MetaD
         metaDataWritingHeader.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
             make.top.equalToSuperview().offset(66)
-            make.height.equalTo(44)
+            make.height.equalTo(30)
         }
         
         metaDataWriting.snp.makeConstraints { make in
@@ -139,7 +139,7 @@ final class MetaDataViewController: UIViewController, MetaDataPresentable, MetaD
         metaDataViewHeader.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
             make.top.equalTo(metaDataWriting.snp.bottom).offset(45)
-            make.height.equalTo(44)
+            make.height.equalTo(30)
         }
         
         metaDataView.snp.makeConstraints { make in
@@ -152,7 +152,7 @@ final class MetaDataViewController: UIViewController, MetaDataPresentable, MetaD
         metaDataImageHeader.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
             make.top.equalTo(metaDataView.snp.bottom).offset(45)
-            make.height.equalTo(44)
+            make.height.equalTo(30)
         }
         
         metaDataImage.snp.makeConstraints { make in
@@ -165,7 +165,7 @@ final class MetaDataViewController: UIViewController, MetaDataPresentable, MetaD
         metaDataRewritingHeader.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
             make.top.equalTo(metaDataImage.snp.bottom).offset(45)
-            make.height.equalTo(44)
+            make.height.equalTo(30)
         }
         
         metaDataRewriting.snp.makeConstraints { make in

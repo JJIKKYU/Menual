@@ -99,7 +99,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     private lazy var scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
-        $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
+        $0.isScrollEnabled = true
+        // $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
     }
     
     private lazy var titleTextField = UITextView().then {
@@ -349,6 +350,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(divider4.snp.bottom).offset(16)
             make.height.equalTo(110)
+            make.bottom.equalToSuperview()
         }
         
         weatherPlaceToolbarView.snp.makeConstraints { make in
@@ -865,6 +867,10 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         switch textView.tag {
         case TextViewType.title.rawValue:
+            if text == "\n" {
+                return false
+            }
+
             //이전 글자 - 선택된 글자 + 새로운 글자(대체될 글자)
             let newLength = textView.text.count - range.length + text.count
             let koreanMaxCount = TITLE_TEXT_MAX_COUNT + 1
@@ -886,10 +892,14 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             }
             
         case TextViewType.weather.rawValue:
-            break
+            if text == "\n" {
+                return false
+            }
             
         case TextViewType.location.rawValue:
-            break
+            if text == "\n" {
+                return false
+            }
             
         case TextViewType.description.rawValue:
             break
@@ -950,32 +960,6 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
         
         let cropVC = CropViewController(image: newImage!)
         picker.pushViewController(cropVC, animated: true)
-        
-        
-//        var config = ImageCropperConfiguration(with: newImage!, and: .customRect)
-//        config.maskFillColor = UIColor.black.withAlphaComponent(0.5)
-//        config.borderColor = UIColor.white
-//
-//        config.showGrid = true
-//        config.gridColor = UIColor.white
-//        config.doneTitle = "CROP"
-//        config.cancelTitle = "Back"
-//        config.customRatio = CGSize(width: 335, height: 70)
-//        let cropper = ImageCropperViewController.initialize(with: config, completionHandler: { croppedImage in
-//          /*
-//          Code to perform after finishing cropping process
-//          */
-//            print("after finishing")
-//            self.imageView.image = croppedImage
-//        }) {
-//          /*
-//          Code to perform after dismissing controller
-//          */
-//            print("after dismissing")
-//            self.dismiss(animated: true)
-//        }
-//
-//        self.present(cropper, animated: true, completion: nil)
     }
 }
 
@@ -984,7 +968,7 @@ extension DiaryWritingViewController {
     @objc
     func keyboardWillShow(_ notification: NSNotification) {
         guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
-        print("keyboardWillShow! - \(keyboardHeight)")
+        print("DiaryWriting :: keyboardWillShow! - \(keyboardHeight)")
         scrollView.snp.updateConstraints { make in
             make.bottom.equalToSuperview().inset(keyboardHeight)
         }
@@ -992,7 +976,7 @@ extension DiaryWritingViewController {
     
     @objc
     func keyboardWillHide(_ notification: NSNotification) {
-        print("keyboardWillHide!")
+        print("DiaryWriting :: keyboardWillHide!")
         scrollView.snp.updateConstraints { make in
             make.bottom.equalToSuperview()
         }
