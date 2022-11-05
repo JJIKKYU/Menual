@@ -410,7 +410,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
                     cell.listType = .textAndImage
                     cell.image = image
                 } else {
-                    cell.listType = .text
+                    cell.listType = .normal
                 }
             }
             cell.title = model.title
@@ -450,7 +450,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
                     cell.listType = .textAndImage
                     cell.image = image
                 } else {
-                    cell.listType = .text
+                    cell.listType = .normal
                 }
             }
             cell.title = data.title

@@ -101,12 +101,12 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         
         switch index {
         case 0:
-            cell.listType = .text
+            cell.listType = .normal
             cell.title = "타이틀 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사..."
             cell.dateAndTime = "2099.99.99"
             cell.pageAndReview = "P.999"
         case 1:
-            cell.listType = .text
+            cell.listType = .normal
             cell.title = "타이틀 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사..."
             cell.dateAndTime = "2099.99.99"
             cell.pageAndReview = "P.999 - 999"

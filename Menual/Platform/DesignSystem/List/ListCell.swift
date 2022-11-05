@@ -10,10 +10,11 @@ import Then
 import SnapKit
 
 enum ListType {
-    case text
+    case normal
     // case textReview
     case textAndImage
     // case textAndImageReview
+    case bodyText
     case hide
 }
 
@@ -31,7 +32,7 @@ class ListCell: UITableViewCell {
     // Search 후에 필요한 정보를 임시로 담고 있도록
     var uuid: String = ""
     
-    var listType: ListType = .text {
+    var listType: ListType = .normal {
         didSet { setNeedsLayout() }
     }
     
@@ -180,7 +181,7 @@ class ListCell: UITableViewCell {
         pageAndReviewLabel.text = pageAndReview
         
         switch listType {
-        case .text:
+        case .normal:
             menualImageView.isHidden = true
             lockImageView.isHidden = true
             lockImageView.snp.removeConstraints()
@@ -225,6 +226,8 @@ class ListCell: UITableViewCell {
                 make.top.equalToSuperview().offset(12)
                 make.width.height.equalTo(24)
             }
+        case .bodyText:
+            break
         }
         
         switch listStatus {

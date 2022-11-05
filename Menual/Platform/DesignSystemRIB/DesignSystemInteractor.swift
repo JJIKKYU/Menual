@@ -43,6 +43,9 @@ protocol DesignSystemRouting: ViewableRouting {
     
     func attachEmptyVC()
     func detachEmptyVC(isOnlyDetach: Bool)
+    
+    func attachMetaDataVC()
+    func detachMetaDataVC(isOnlyDetach: Bool)
 }
 
 protocol DesignSystemPresentable: Presentable {
@@ -73,7 +76,8 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
         "Divider",
         "Moments",
         "List",
-        "Empty"
+        "Empty",
+        "MetaData"
     ]
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
@@ -183,5 +187,13 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     
     func emptyPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachEmptyVC(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedMetaDataCell() {
+        router?.attachMetaDataVC()
+    }
+    
+    func metaDataPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachMetaDataVC(isOnlyDetach: isOnlyDetach)
     }
 }

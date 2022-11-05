@@ -740,7 +740,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.listType = .textAndImage
                 cell.image = image
             } else {
-                cell.listType = .text
+                cell.listType = .normal
             }
         }
         
