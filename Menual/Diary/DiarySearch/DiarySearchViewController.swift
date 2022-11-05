@@ -23,6 +23,7 @@ protocol DiarySearchPresentableListener: AnyObject {
     func pressedSearchCell(diaryModel: DiaryModel)
     func pressedRecentSearchCell(diaryModelRealm: DiaryModelRealm)
     func deleteAllRecentSearchData()
+    func deleteRecentSearchData(uuid: String)
 }
 
 final class DiarySearchViewController: UIViewController, DiarySearchPresentable, DiarySearchViewControllable {
@@ -517,6 +518,36 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             
             listener?.pressedRecentSearchCell(diaryModelRealm: diaryModelRealm)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        // 최근 검색어만 지원
+        if indexPath.section == 1 {
+            guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return nil }
+            let modifyAction = UIContextualAction(style: .normal, title:  "Delete", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+                    self.listener?.deleteRecentSearchData(uuid: cell.uuid)
+                    print("Search :: Update action ...")
+                    success(true)
+                })
+            modifyAction.image = Asset._24px.delete.image.withRenderingMode(.alwaysTemplate)
+            modifyAction.image?.withTintColor(.white)
+            modifyAction.backgroundColor = Colors.tint.system.red.r200
+            
+            return UISwipeActionsConfiguration(actions: [modifyAction])
+        }
+        
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        
+        // 최근 검색어만 지원
+        if indexPath.section == 1 {
+            return true
+        }
+        
+        return false
     }
 }
 

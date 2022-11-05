@@ -125,13 +125,13 @@ class BoxButton: UIButton {
             }
         }
         
-        if btnStatus == .inactive { return }
-        switch btnSelected {
-        case true:
-            btnStatus = .pressed
-            
-        case false:
-            btnStatus = .active
-        }
+//        if btnStatus == .inactive { return }
+//        switch btnSelected {
+//        case true:
+//            btnStatus = .pressed
+//            
+//        case false:
+//            btnStatus = .active
+//        }
     }
 }

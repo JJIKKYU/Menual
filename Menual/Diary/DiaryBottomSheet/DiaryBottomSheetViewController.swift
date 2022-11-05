@@ -33,8 +33,8 @@ enum MenualBottomSheetType {
 }
 
 protocol DiaryBottomSheetPresentableListener: AnyObject {
-    var weatherFilterSelectedArrRelay: BehaviorRelay<[Weather]> { get set }
-    var placeFilterSelectedArrRelay: BehaviorRelay<[Place]> { get set }
+    var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get set }
+    var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get set }
     
     func pressedCloseBtn()
 
@@ -533,12 +533,12 @@ extension DiaryBottomSheetViewController {
 
 // MARK: - MenualBottomSheetFilterComponentView
 extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelegate {
-    var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]> {
-        listener?.weatherFilterSelectedArrRelay ?? BehaviorRelay<[Weather]>(value: [])
+    var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]>? {
+        listener?.filteredWeatherArrRelay
     }
     
-    var filterPlaceSelectedArrRelay: BehaviorRelay<[Place]> {
-        listener?.placeFilterSelectedArrRelay ?? BehaviorRelay<[Place]>(value: [])
+    var filterPlaceSelectedArrRelay: BehaviorRelay<[Place]>? {
+        listener?.filteredPlaceArrRelay
     }
     
     var filteredMenaulCountsObservable: Observable<Int> {
@@ -557,6 +557,19 @@ extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelega
     
     func setFilterBtnCount(count: Int) {
         filterComponentView.filteredCount = count
+    }
+    
+    func setCurrentFilteredBtn(weatherArr: [Weather], placeArr: [Place]) {
+        print("DiaryBottomSheet :: setCurrentFilteredBtn, weatherArr = \(weatherArr), placeArr = \(placeArr)")
+        filterComponentView.setBindRelay()
+        // listener?.weatherFilterSelectedArrRelay.accept(weatherArr)
+        // filterComponentView.setCurrentFilterBtn(weatherArr: weatherArr, placeArr: placeArr)
+        // filterComponentView.placeSelectedArr = placeArr
+        // filterComponentView.placeSelectedArr
+        // filterComponentView.delegate?.filterPlaceSelectedArrRelay
+        // filterComponentView.placeSelectedArr = placeArr
+        //filterComponentView.weatherse
+        // listener?.placeFilterSelectedArrRelay.accept(placeArr)
     }
 }
 

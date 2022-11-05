@@ -114,7 +114,7 @@ class ListHeader: UIView {
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview()
             make.height.equalTo(22)
         }
         titleLabel.sizeToFit()

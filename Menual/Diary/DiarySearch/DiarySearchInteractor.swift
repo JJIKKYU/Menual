@@ -164,10 +164,19 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
         }
     }
     
+    // 최근 검색어 전체 삭제
     func deleteAllRecentSearchData() {
         print("Search :: deleteAllRecentSearchData!")
         
         dependency.diaryRepository
             .deleteAllRecentDiarySearch()
+    }
+    
+    // 최근 검색어 하나 삭제
+    func deleteRecentSearchData(uuid: String) {
+        print("Search :: deleteRecentSearchData!")
+
+        dependency.diaryRepository
+            .deleteRecentDiarySearch(uuid: uuid)
     }
 }

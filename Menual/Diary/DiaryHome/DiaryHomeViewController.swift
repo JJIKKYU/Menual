@@ -383,6 +383,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 print("sectionCount = \(sectionCount)")
                 print("cell, for문 끝! sectionCount = \(sectionCount), sectionNameDic = \(self.sectionNameDic), cellSectionNumberDic = \(self.cellsectionNumberDic), cellsectionNumberDic2 = \(self.cellsectionNumberDic2)")
 
+                self.setEmptyView(isEnabled: false)
                 self.myMenualTableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -420,7 +421,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 // 필터 결과 하나도 없을 경우
                 if allCount == 0 {
                     self.filterEmptyView.isHidden = false
+                } else {
+                    self.filterEmptyView.isHidden = true
                 }
+
                 print("DiaryHome :: filter 후 sectionCount = \(sectionCount), allCount = \(allCount)")
                 self.myMenualTableView.reloadData()
             })
@@ -446,11 +450,15 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             .subscribe(onNext: { [weak self] isFiltered in
                 guard let self = self else { return }
                 self.setFilterStatus(isFiltered: isFiltered)
+                if isFiltered {
+                    self.setEmptyView(isEnabled: false)
+                }
             })
             .disposed(by: disposeBag)
     }
     
     func setEmptyView(isEnabled: Bool) {
+        print("DiaryHome :: setEmptyView = \(isEnabled)")
         switch isEnabled {
         case true:
             emptyView.isHidden = false
@@ -470,22 +478,9 @@ extension DiaryHomeViewController {
     
     @objc
     func pressedMyPageBtn() {
-        // listener?.pressedMyPageBtn()
-        // let dialogViewController = DialogViewController()
-        // self.present(dialogViewController, animated: false)
-//        show(size: .small,
-//             buttonType: .oneBtn,
-//             titleText: "사랑하십니까",
-//             cancelButtonText: nil,
-//             confirmButtonText: "네"
-//        )
-        
-        show(size: .small,
-             buttonType: .twoBtn,
-             titleText: "사랑하십니까",
-             cancelButtonText: "아니오",
-             confirmButtonText: "네"
-        )
+        listener?.pressedMyPageBtn()
+        let dialogViewController = DialogViewController()
+        self.present(dialogViewController, animated: false)
     }
     
     @objc

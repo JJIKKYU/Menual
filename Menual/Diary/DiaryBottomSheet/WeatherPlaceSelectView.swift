@@ -34,6 +34,10 @@ class WeatherPlaceSelectView: UIView {
         didSet { setNeedsLayout() }
     }
     
+    var selectedWeatherTypes: [Weather]?
+    
+    var selectedPlaceTypes: [Place]?
+    
     var delegate: WeatherPlaceSelectViewDelegate?
     
     var selectionLimit: Int = 1 {
@@ -92,17 +96,25 @@ class WeatherPlaceSelectView: UIView {
             collectionView.allowsMultipleSelection = false
         }
         
-        switch weatherPlaceType {
-        case .weather:
-            collectionView.reloadData()
-        case .place:
-            collectionView.reloadData()
-        }
+//        switch weatherPlaceType {
+//        case .weather:
+//            collectionView.reloadData()
+//        case .place:
+//            collectionView.reloadData()
+//        }
+        collectionView.reloadData()
+        collectionView.layoutIfNeeded()
         
         if let _ = selectedPlaceType {
             selectCell()
         } else if let _ = selectedWeatherType {
             selectCell()
+        }
+        
+        if let _ = selectedPlaceTypes {
+            selectCells()
+        } else if let _ = selectedWeatherTypes {
+            selectCells()
         }
     }
     
@@ -139,8 +151,6 @@ class WeatherPlaceSelectView: UIView {
     
     func selectCell() {
         print("WeatherPlaceSelectView :: selectCell")
-        collectionView.reloadData()
-        collectionView.layoutIfNeeded()
 
         for row in 0..<collectionView.numberOfItems(inSection: 0) {
             let currentIndexPath = IndexPath(row: row, section: 0)
@@ -169,6 +179,57 @@ class WeatherPlaceSelectView: UIView {
                 self.collectionView(self.collectionView, didSelectItemAt: willSelectIndexPath)
             }
         }
+    }
+    
+    func selectCells() {
+        print("WeatherPlaceSelectView :: selectCells")
+        
+        print("WeatherPlaceSelectView :: selectedPlaceTypes = \(selectedPlaceTypes)")
+
+        
+//         collectionView.reloadData()
+//         collectionView.layoutIfNeeded()
+        print("WeatherPlaceSelectView :: collectionView.numberOfItems(inSection: 0) = \(collectionView.numberOfItems(inSection: 0))")
+
+        for row in 0..<collectionView.numberOfItems(inSection: 0) {
+            let currentIndexPath = IndexPath(row: row, section: 0)
+            guard let cell = collectionView.cellForItem(at: currentIndexPath) as? WeatherPlaceSelectViewCell else { return }
+
+            // var willSelectIndexPath: IndexPath?
+            switch weatherPlaceType {
+            case .weather:
+                guard let selectedWeatherTypes = selectedWeatherTypes else {
+                    return
+                }
+
+                for weatherType in selectedWeatherTypes {
+                    print("WeatherPlaceSelectView :: weatherType = \(weatherType)")
+                    if cell.weatherIconType == weatherType {
+                        let willSelectIndexPath = IndexPath(row: row, section: 0)
+                        self.collectionView.selectItem(at: willSelectIndexPath, animated: false, scrollPosition: .top)
+//                        self.collectionView(self.collectionView, didSelectItemAt: willSelectIndexPath)
+                    }
+                }
+
+            case .place:
+                guard let selectedPlaceTypes = selectedPlaceTypes else {
+                    return
+                }
+
+
+                for placeType in selectedPlaceTypes {
+                    print("WeatherPlaceSelectView :: placeType = \(placeType)")
+                    if cell.placeIconType == placeType {
+                        print("WeatherPlaceSelectView :: placeType == cell.placeIconType")
+                        let willSelectIndexPath = IndexPath(row: row, section: 0)
+                        self.collectionView.selectItem(at: willSelectIndexPath, animated: false, scrollPosition: .top)
+//                         self.collectionView(self.collectionView, didSelectItemAt: willSelectIndexPath)
+                    }
+                }
+            }
+        }
+
+         
     }
 }
 

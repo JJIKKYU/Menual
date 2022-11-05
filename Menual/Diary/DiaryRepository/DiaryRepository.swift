@@ -43,6 +43,7 @@ public protocol DiaryRepository {
     func addDiarySearch(info: DiaryModel)
     func fetchRecntDiarySearch() // 최근검색어
     func deleteAllRecentDiarySearch()
+    func deleteRecentDiarySearch(uuid: String)
     
     // tempSave 로직
     func addTempSave(diaryModel: DiaryModel)
@@ -490,6 +491,23 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         realm.safeWrite {
             realm.delete(realm.objects(DiarySearchModelRealm.self))
+        }
+        
+        fetchRecntDiarySearch()
+    }
+    
+    public func deleteRecentDiarySearch(uuid: String) {
+        print("Search :: DiaryRepository :: deleteRecentDiarySearch!")
+        
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        guard let data = realm.objects(DiarySearchModelRealm.self).filter({ $0.uuid == uuid }).first
+        else { return }
+        
+        realm.safeWrite {
+            realm.delete(data)
         }
         
         fetchRecntDiarySearch()

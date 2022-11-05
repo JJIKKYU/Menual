@@ -21,6 +21,7 @@ protocol DiaryBottomSheetPresentable: Presentable {
     func setViewsWithPlaceMOdel(model: PlaceModel)
     func setFilterBtnCount(count: Int)
     func setViews(type: MenualBottomSheetType)
+    func setCurrentFilteredBtn(weatherArr: [Weather], placeArr: [Place])
 }
 
 protocol DiaryBottomSheetListener: AnyObject {
@@ -42,10 +43,12 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var bottomSheetType: MenualBottomSheetType = .weather
     
     // FilterComponentView에서 사용되는 Weather/Place Filter Selected Arr
-    var weatherFilterSelectedArrRelay = BehaviorRelay<[Weather]>(value: [])
-    var placeFilterSelectedArrRelay = BehaviorRelay<[Place]>(value: [])
+    // var weatherFilterSelectedArrRelay = BehaviorRelay<[Weather]>(value: [])
+    // var placeFilterSelectedArrRelay = BehaviorRelay<[Place]>(value: [])
     var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
+    var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
+    var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -81,28 +84,75 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     }
     
     func bind() {
-        Observable.combineLatest(
-            weatherFilterSelectedArrRelay,
-            placeFilterSelectedArrRelay
-        )
-        .subscribe(onNext: { [weak self] weatherArr, placeArr in
-            guard let self = self else { return }
-            
-            print("!!! \(weatherArr), \(placeArr)")
-            self.listener?.filterWithWeatherPlace(weatherArr: weatherArr, placeArr: placeArr)
-        })
-        .disposed(by: disposeBag)
+//        Observable.combineLatest(
+//            weatherFilterSelectedArrRelay,
+//            placeFilterSelectedArrRelay
+//        )
+//        .subscribe(onNext: { [weak self] weatherArr, placeArr in
+//            guard let self = self else { return }
+//
+//            print("!!! \(weatherArr), \(placeArr)")
+//            self.listener?.filterWithWeatherPlace(weatherArr: weatherArr, placeArr: placeArr)
+//        })
+//        .disposed(by: disposeBag)
     }
     
     func setFilteredDiaryCountRelay(relay: BehaviorRelay<Int>?) {
+        print("DiaryBottomSheet :: setFilteredDiaryCountRelay! = \(relay)")
         filteredDiaryCountRelay = relay
         filteredDiaryCountRelay?
             .subscribe(onNext: { [weak self] count in
                 guard let self = self else { return }
-                print("ddddd!! = count = \(count)")
+                print("DiaryBottomSheet = setFilterCount! count = \(count)")
                 self.presenter.setFilterBtnCount(count: count)
             })
             .disposed(by: disposeBag)
+    }
+    
+    func setFilteredWeatherPlaceArrRelay(weatherArrRelay: BehaviorRelay<[Weather]>?, placeArrRelay: BehaviorRelay<[Place]>?) {
+        print("DiaryBottomSheet :: setFilteredWeatherPlaceArrRelay!")
+        self.filteredWeatherArrRelay = weatherArrRelay
+        self.filteredPlaceArrRelay = placeArrRelay
+        self.presenter.setCurrentFilteredBtn(weatherArr: [], placeArr: [])
+        // self.presenter.setCurrentFilteredBtn(weatherArr: <#T##[Weather]#>, placeArr: <#T##[Place]#>)
+//        self.presenter.setCurrentFilteredBtn(weatherArr: weatherArrRelay?.value ?? [], placeArr: placeArrRelay?.value ?? [])
+        
+        guard let weatherArrRelay = weatherArrRelay,
+              let placeArrRelay = placeArrRelay else {
+            return
+        }
+//
+//        self.filteredWeatherArrRelay = weatherArrRelay
+//        self.filteredPlaceArrRelay = placeArrRelay
+//
+//
+        Observable.combineLatest(
+            weatherArrRelay,
+            placeArrRelay
+        )
+        .subscribe(onNext: { [weak self] weatherArr, placeArr in
+            guard let self = self else { return }
+
+            print("DiaryBottomSheet :: !!! \(weatherArr), \(placeArr)")
+            self.listener?.filterWithWeatherPlace(weatherArr: weatherArr, placeArr: placeArr)
+        })
+        .disposed(by: disposeBag)
+        
+        /*
+        self.filteredWeatherArrRelay?
+            .subscribe(onNext: { [weak self] filteredWeatherArr in
+                guard let self = self else { return }
+                print("DiaryBottomSheet :: filteredWeatherArr = \(filteredWeatherArr)")
+            })
+            .disposed(by: disposeBag)
+        
+        self.filteredPlaceArrRelay?
+            .subscribe(onNext: { [weak self] filteredPlaceArr in
+                guard let self = self else { return }
+                self.presenter.setCurrentFilteredBtn(weatherArr: [], placeArr: filteredPlaceArr)
+            })
+            .disposed(by: disposeBag)
+         */
     }
     
     func pressedCloseBtn() {

@@ -56,8 +56,10 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
     let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
     
-    var filteredWeatherArr: [Weather] = []
-    var filteredPlaceArr: [Place] = []
+    let filteredWeatherArrRelay = BehaviorRelay<[Weather]>(value: [])
+    let filteredPlaceArrRelay = BehaviorRelay<[Place]>(value: [])
+//    var filteredWeatherArr: [Weather] = []
+//    var filteredPlaceArr: [Place] = []
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -275,24 +277,20 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     // filterComponenetView
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) {
-        print("diaryHome!! \(weatherArr), \(placeArr)")
-        
+        print("diaryHome :: \(weatherArr), \(placeArr)")
         if weatherArr.count == 0 && placeArr.count == 0 {
             print("diaryHome :: Interactor -> isFiltered = false")
-            filteredPlaceArr = []
-            filteredWeatherArr = []
-
+//            filteredWeatherArrRelay.accept([])
+//            filteredPlaceArrRelay.accept([])
             filteredDiaryCountRelay.accept(-1)
-
         } else if weatherArr.count > 0 || placeArr.count > 0 {
             print("diaryHome :: Interactor -> isFiltered = true")
-
-            filteredWeatherArr = weatherArr
-            filteredPlaceArr = placeArr
+            // filteredWeatherArrRelay.accept(weatherArr)
+            // filteredPlaceArrRelay.accept(placeArr)
             
             let filterCount: Int = dependency.diaryRepository
-                .filterDiary(weatherTypes: filteredWeatherArr,
-                             placeTypes: filteredPlaceArr,
+                .filterDiary(weatherTypes: weatherArr,
+                             placeTypes: placeArr,
                              isOnlyFilterCount: true
                 )
             filteredDiaryCountRelay.accept(filterCount)
@@ -303,27 +301,26 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     func filterWithWeatherPlacePressedFilterBtn() {
         print("diaryHomeInteractor :: filterWithWeatherPlacePressedFilterBtn!")
 
-        if filteredWeatherArr.count == 0 && filteredPlaceArr.count == 0 {
+        if filteredWeatherArrRelay.value.count == 0 && filteredPlaceArrRelay.value.count == 0 {
             presenter.isFilteredRelay.accept(false)
             dependency.diaryRepository.fetch()
         } else {
             presenter.isFilteredRelay.accept(true)
             let _ = dependency.diaryRepository
-                .filterDiary(weatherTypes: filteredWeatherArr,
-                             placeTypes: filteredPlaceArr,
+                .filterDiary(weatherTypes: filteredWeatherArrRelay.value,
+                             placeTypes: filteredPlaceArrRelay.value,
                              isOnlyFilterCount: false
                 )
         }
-        
         router?.detachBottomSheet()
     }
     
     // interactor에 저장된 필터 목록을 제거하고, repository에서 새로 fetch
     func pressedFilterResetBtn() {
         print("diaryHome :: Inetactor -> filterReset!")
-        self.filteredWeatherArr = []
-        self.filteredPlaceArr = []
-
+        filteredWeatherArrRelay.accept([])
+        filteredPlaceArrRelay.accept([])
+        
         presenter.isFilteredRelay.accept(false)
         dependency.diaryRepository
             .fetch()

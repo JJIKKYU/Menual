@@ -15,7 +15,8 @@ protocol DiaryHomeDependency: Dependency {
 
 final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency, DiaryBottomSheetDependency {
     
-
+    var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
+    var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
@@ -57,6 +58,8 @@ final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
         )
         interactor.listener = listener
         component.filteredDiaryCountRelay = interactor.filteredDiaryCountRelay
+        component.filteredPlaceArrRelay = interactor.filteredPlaceArrRelay
+        component.filteredWeatherArrRelay = interactor.filteredWeatherArrRelay
         
         return DiaryHomeRouter(
             interactor: interactor,
