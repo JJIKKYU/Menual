@@ -14,6 +14,9 @@ protocol ProfileHomePresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
     var profileHomeDataArr_Setting1: [ProfileHomeModel] { get }
     var profileHomeDataArr_Setting2: [ProfileHomeModel] { get }
+    
+    // ProfilePassword
+    func pressedProfilePasswordCell()
 }
 
 enum ProfileHomeSection: Int {
@@ -33,7 +36,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
     lazy var settingTableView = UITableView(frame: CGRect.zero, style: .grouped).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
-        $0.contentInset = UIEdgeInsets(top: UIApplication.topSafeAreaHeight, left: 0, bottom: 0, right: 0)
+        $0.contentInset = UIEdgeInsets(top: UIApplication.topSafeAreaHeight + 24, left: 0, bottom: 0, right: 0)
         $0.sectionHeaderHeight = 34
         $0.delegate = self
         $0.dataSource = self
@@ -126,10 +129,10 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
 
         switch section {
         case ProfileHomeSection.SETTING1.rawValue:
-            headerView.title = "SETTING - 1"
+            headerView.title = "메뉴얼 설정"
             return headerView
         case ProfileHomeSection.SETTING2.rawValue:
-            headerView.title = "SETTING - 2"
+            headerView.title = "기타"
             return headerView
         default:
             return UIView()
@@ -150,7 +153,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileHomeCell", for: indexPath) as? ProfileHomeCell else { return UITableViewCell() }
         let index = indexPath.row
-        
+        cell.selectionStyle = .none
         let section = indexPath.section
         switch section {
         case ProfileHomeSection.SETTING1.rawValue:
@@ -173,18 +176,22 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileHomeCell", for: indexPath) as? ProfileHomeCell else { return }
+        
+        guard let cell = tableView.cellForRow(at: indexPath) as? ProfileHomeCell else { return }
         let section = indexPath.section
         let index = indexPath.row
-        print("indexpath = \(indexPath)")
+        print("ProfileHome :: indexpath = \(indexPath)")
 
         // TODO: - 실제 데이터 기반으로 변경
         switch section {
         case ProfileHomeSection.SETTING1.rawValue:
             guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return }
-            if data.type == .toggle {
-                cell.switchBtn.isOn = !cell.switchBtn.isOn
+            if data.title == "비밀번호 설정하기" {
+                listener?.pressedProfilePasswordCell()
             }
+//            if data.type == .toggle {
+//                cell.switchBtn.isOn = !cell.switchBtn.isOn
+//            }
             break
         case ProfileHomeSection.SETTING2.rawValue:
             break

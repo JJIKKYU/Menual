@@ -46,6 +46,9 @@ protocol DesignSystemRouting: ViewableRouting {
     
     func attachMetaDataVC()
     func detachMetaDataVC(isOnlyDetach: Bool)
+    
+    func attachNumberPadVC()
+    func detachNumberPadVC(isOnlyDetach: Bool)
 }
 
 protocol DesignSystemPresentable: Presentable {
@@ -77,7 +80,8 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
         "Moments",
         "List",
         "Empty",
-        "MetaData"
+        "MetaData",
+        "NumberPad",
     ]
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
@@ -195,5 +199,13 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     
     func metaDataPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachMetaDataVC(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedNumberPadCell() {
+        router?.attachNumberPadVC()
+    }
+    
+    func numberPadPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachNumberPadVC(isOnlyDetach: isOnlyDetach)
     }
 }

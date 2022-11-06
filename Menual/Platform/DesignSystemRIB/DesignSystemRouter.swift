@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener, FABListener, TabsListener, PaginationListener, EmptyViewListener, MetaDataListener {
+protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener, FABListener, TabsListener, PaginationListener, EmptyViewListener, MetaDataListener, NumberPadListener {
     var router: DesignSystemRouting? { get set }
     var listener: DesignSystemListener? { get set }
 }
@@ -54,6 +54,9 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
     private let metaDataBuildable: MetaDataBuildable
     private var metaDataRouting: Routing?
     
+    private let numberPadBuildable: NumberPadBuildable
+    private var numberPadRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DesignSystemInteractable,
@@ -69,7 +72,8 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         tabsBuildable: TabsBuildable,
         paginationBuildable: PaginationBuildable,
         emptyBuildable: EmptyViewBuildable,
-        metaDataBuildable: MetaDataBuildable
+        metaDataBuildable: MetaDataBuildable,
+        numberPadBuildable: NumberPadBuildable
     ) {
         self.boxButtonBuildable = boxButtonBuildable
         self.gnbHeaderBuildable = gnbHeaderBuildable
@@ -83,6 +87,7 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         self.paginationBuildable = paginationBuildable
         self.emptyBuildable = emptyBuildable
         self.metaDataBuildable = metaDataBuildable
+        self.numberPadBuildable = numberPadBuildable
         super.init(interactor: interactor,
                    viewController: viewController
         )
@@ -400,4 +405,31 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         detachChild(router)
         metaDataRouting = nil
     }
+    
+    // MARK: - NumberPad
+    func attachNumberPadVC() {
+        if numberPadRouting != nil {
+            return
+        }
+        
+        let router = numberPadBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        numberPadRouting = router
+        attachChild(router)
+    }
+    
+    func detachNumberPadVC(isOnlyDetach: Bool) {
+        guard let router = numberPadRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        numberPadRouting = nil
+    }
+
 }

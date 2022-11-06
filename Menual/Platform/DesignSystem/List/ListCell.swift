@@ -174,6 +174,7 @@ class ListCell: UITableViewCell {
         switch listType {
         case .normal:
             menualImageView.isHidden = true
+            listTitleView.listTitleType = .title
             listTitleView.snp.remakeConstraints { make in
                 make.top.equalToSuperview().offset(16)
                 make.leading.equalToSuperview().offset(20)
@@ -188,6 +189,7 @@ class ListCell: UITableViewCell {
             }
 //            lockImageView.snp.removeConstraints()
         case .textAndImage:
+            listTitleView.listTitleType = .title
             menualImageView.isHidden = false
             if let image = image {
                 menualImageView.image = image
@@ -210,11 +212,21 @@ class ListCell: UITableViewCell {
                 make.height.equalTo(15)
             }
         case .hide:
-            listTitleView.isHidden = true
+            listTitleView.isHidden = false
+            listTitleView.listTitleType = .titleHide
+            listBodyView.isHidden = true
+            menualImageView.isHidden = true
+            listInfoView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.top.equalTo(listTitleView.snp.bottom).offset(6)
+                make.width.equalToSuperview().inset(20)
+                make.height.equalTo(15)
+            }
 
         case .bodyText:
             listBodyView.isHidden = false
             menualImageView.isHidden = true
+            listTitleView.listTitleType = .title
             listTitleView.snp.remakeConstraints { make in
                 make.top.equalToSuperview().offset(16)
                 make.leading.equalToSuperview().offset(20)
@@ -238,6 +250,7 @@ class ListCell: UITableViewCell {
         case .bodyTextImage:
             listBodyView.isHidden = false
             menualImageView.isHidden = false
+            listTitleView.listTitleType = .title
             if let image = image {
                 menualImageView.image = image
             }
@@ -257,6 +270,12 @@ class ListCell: UITableViewCell {
                 make.top.equalToSuperview().offset(16)
                 make.trailing.equalToSuperview().inset(80)
                 make.height.equalTo(18)
+            }
+            listInfoView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.top.equalTo(listBodyView.snp.bottom).offset(8)
+                make.width.equalToSuperview().inset(20)
+                make.height.equalTo(15)
             }
         }
         

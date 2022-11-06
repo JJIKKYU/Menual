@@ -12,7 +12,7 @@ protocol ProfileHomeDependency: Dependency {
     // created by this RIB.
 }
 
-final class ProfileHomeComponent: Component<ProfileHomeDependency> {
+final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
@@ -20,7 +20,9 @@ final class ProfileHomeComponent: Component<ProfileHomeDependency> {
 // MARK: - Builder
 
 protocol ProfileHomeBuildable: Buildable {
-    func build(withListener listener: ProfileHomeListener) -> ProfileHomeRouting
+    func build(
+        withListener listener: ProfileHomeListener
+    ) -> ProfileHomeRouting
 }
 
 final class ProfileHomeBuilder: Builder<ProfileHomeDependency>, ProfileHomeBuildable {
@@ -31,9 +33,19 @@ final class ProfileHomeBuilder: Builder<ProfileHomeDependency>, ProfileHomeBuild
 
     func build(withListener listener: ProfileHomeListener) -> ProfileHomeRouting {
         let component = ProfileHomeComponent(dependency: dependency)
+        
+        let profilePasswordBuildable = ProfilePasswordBuilder(dependency: component)
+        
         let viewController = ProfileHomeViewController()
-        let interactor = ProfileHomeInteractor(presenter: viewController)
+        let interactor = ProfileHomeInteractor(
+            presenter: viewController
+        )
         interactor.listener = listener
-        return ProfileHomeRouter(interactor: interactor, viewController: viewController)
+
+        return ProfileHomeRouter(
+            interactor: interactor,
+            viewController: viewController,
+            profilePasswordBuildable: profilePasswordBuildable
+        )
     }
 }

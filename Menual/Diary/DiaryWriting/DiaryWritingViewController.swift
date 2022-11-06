@@ -651,12 +651,16 @@ extension DiaryWritingViewController {
     @objc
     func pressedImageUploadView() {
         print("DiaryWriting :: pressedImageUploadView!")
+        
         phpickerConfiguration.filter = .images
         phpickerConfiguration.selectionLimit = 1
         imagePicker.isEditing = true
         // present(imagePicker, animated: true, completion: nil)
+//        testImagePicker.modalPresentationStyle = .fullScreen
         
+//        present(testImagePicker, animated: true)
         let navigationController = UINavigationController(rootViewController: imagePicker)
+//        let navigationController = UINavigationController(rootViewController: testImagePicker)
         navigationController.modalPresentationStyle = .overFullScreen
         navigationController.navigationBar.isHidden = true
         navigationController.isNavigationBarHidden = true
@@ -769,7 +773,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             print("Description TextView")
             if textView.text == defaultDescriptionText {
                 textView.text = nil
-                textView.textColor = UIColor.white
+                textView.textColor = Colors.grey.g600
             }
             
         default:
@@ -799,21 +803,21 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             }
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && weatherSelectView.selected == false {
                 textView.text = "오늘 날씨는 어땠나요?"
-                textView.textColor = .lightGray
+                textView.textColor = Colors.grey.g600
             }
             break
             
         case TextViewType.location.rawValue:
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && locationSelectView.selected == false {
                 textView.text = "지금 장소는 어디신가요?"
-                textView.textColor = .lightGray
+                textView.textColor = Colors.grey.g600
             }
             break
             
         case TextViewType.description.rawValue:
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 textView.text = defaultDescriptionText
-                textView.textColor = .lightGray
+                textView.textColor = Colors.grey.g600
             }
             
         default:

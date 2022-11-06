@@ -9,7 +9,8 @@ import RIBs
 import RxSwift
 
 protocol ProfileHomeRouting: ViewableRouting {
-    // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
+    func attachProfilePassword()
+    func detachProfilePassword(isOnlyDetach: Bool)
 }
 
 protocol ProfileHomePresentable: Presentable {
@@ -27,7 +28,6 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     var profileHomeDataArr_Setting1: [ProfileHomeModel] {
         let arr: [ProfileHomeModel] = [
             ProfileHomeModel(section: .SETTING1, type: .arrow, title: "메뉴얼 가이드 보기"),
-            ProfileHomeModel(section: .SETTING1, type: .toggle, title: "생체인증 사용하기"),
             ProfileHomeModel(section: .SETTING1, type: .toggle, title: "비밀번호 설정하기"),
             ProfileHomeModel(section: .SETTING1, type: .arrow, title: "비밀번호 변경하기"),
         ]
@@ -71,5 +71,16 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     func pressedBackBtn(isOnlyDetach: Bool) {
         // detach 하기 위해서 부모에게 넘겨줌
         listener?.profileHomePressedBackBtn(isOnlyDetach: isOnlyDetach)
+    }
+    
+    // MARK: - ProfilePassword
+
+    func profilePasswordPressedBackBtn(isOnlyDetach: Bool) {
+        print("ProfileHome :: profilePasswordPressedBackBtn")
+        router?.detachProfilePassword(isOnlyDetach: isOnlyDetach)
+    }
+    func pressedProfilePasswordCell() {
+        print("ProfileHome :: pressedProfilePasswordCell")
+        router?.attachProfilePassword()
     }
 }

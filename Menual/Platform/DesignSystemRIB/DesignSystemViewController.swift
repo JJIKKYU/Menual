@@ -30,6 +30,7 @@ protocol DesignSystemPresentableListener: AnyObject {
     func pressedPaginationCell()
     func pressedEmptyCell()
     func pressedMetaDataCell()
+    func pressedNumberPadCell()
 }
 
 final class DesignSystemViewController: UIViewController, DesignSystemPresentable, DesignSystemViewControllable {
@@ -105,7 +106,7 @@ final class DesignSystemViewController: UIViewController, DesignSystemPresentabl
 // MARK: - TableView
 extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 13
+        return 14
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -140,6 +141,8 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         case "Empty":
             cell.backgroundColor = Colors.tint.main.v400
         case "MetaData":
+            cell.backgroundColor = Colors.tint.main.v400
+        case "NumberPad":
             cell.backgroundColor = Colors.tint.main.v400
         default:
             break
@@ -181,6 +184,8 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
             listener?.pressedEmptyCell()
         case "MetaData":
             listener?.pressedMetaDataCell()
+        case "NumberPad":
+            listener?.pressedNumberPadCell()
         default:
             break
         }

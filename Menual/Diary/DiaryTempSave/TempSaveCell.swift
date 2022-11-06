@@ -15,6 +15,10 @@ class TempSaveCell: UITableViewCell {
         didSet { setNeedsLayout() }
     }
     
+    public var time: String = "" {
+        didSet { setNeedsLayout() }
+    }
+    
     public var date: String = "" {
         didSet { setNeedsLayout() }
     }
@@ -35,38 +39,12 @@ class TempSaveCell: UITableViewCell {
         didSet { setNeedsLayout() }
     }
     
-    private let titleLabel = UILabel().then {
-        $0.text = "테스트입니다"
+    private let listTitleView = ListTitleView(type: .title).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.textColor = Colors.grey.g200
-        $0.font = UIFont.AppTitle(.title_2)
     }
-    
-    private let dateLabel = UILabel().then {
-        $0.text = "날짜입니다"
+
+    private let listInfoView = ListInfoView(type: .info).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.textColor = Colors.grey.g600
-        $0.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
-    }
-    
-    // '작성중' 라벨
-    private let writingLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.textColor = Colors.tint.sub.n400
-        $0.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
-        $0.text = "작성중"
-    }
-    
-    private let imageEnableView = UIImageView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.image = Asset._24px.picture.image.withRenderingMode(.alwaysTemplate)
-        $0.tintColor = Colors.grey.g200
-        $0.isHidden = true
-    }
-    
-    private let divider = UIView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.grey.g600
     }
     
     private let delCheckBtn = UIButton().then {
@@ -98,11 +76,12 @@ class TempSaveCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        titleLabel.text = title
-        dateLabel.text = date
+        listTitleView.titleText = title
+        listInfoView.date = date
+        listInfoView.time = time
+
         print("TempSave :: Cell isDeleteSelected = \(isDeleteSelected)")
         
-        var margin: CGFloat = 20
         switch isDeleteMode {
         case true:
             delCheckBtn.isHidden = false
@@ -112,95 +91,44 @@ class TempSaveCell: UITableViewCell {
             } else {
                 delCheckBtn.tintColor = Colors.grey.g200
             }
-            
-            margin = 64
 
         case false:
             delCheckBtn.isSelected = false
             delCheckBtn.isHidden = true
-            margin = 20
         }
         
         switch isWriting {
         case true:
-            divider.isHidden = false
-            writingLabel.isHidden = false
+            listInfoView.infoType = .infoWriting
             
         case false:
-            divider.isHidden = true
-            writingLabel.isHidden = true
+            listInfoView.infoType = .time
         }
         
         switch imageEnabled {
         case true:
-            imageEnableView.isHidden = false
-
-            imageEnableView.snp.removeConstraints()
-            imageEnableView.snp.makeConstraints { make in
-                make.leading.equalToSuperview().offset(20)
-                make.top.equalToSuperview().offset(14)
-                make.width.height.equalTo(24)
-            }
-            
-            titleLabel.snp.removeConstraints()
-            titleLabel.snp.makeConstraints { make in
-                make.leading.equalTo(imageEnableView.snp.trailing).offset(2)
-                make.centerY.equalTo(imageEnableView)
-                make.width.equalToSuperview().inset(margin)
-            }
+            listTitleView.listTitleType = .titlePicture
             
         case false:
-            imageEnableView.isHidden = true
-            imageEnableView.snp.removeConstraints()
-            
-            titleLabel.snp.removeConstraints()
-            titleLabel.snp.makeConstraints { make in
-                make.leading.equalToSuperview().offset(20)
-                make.top.equalToSuperview().offset(17)
-                make.width.equalToSuperview().inset(margin)
-            }
+            listTitleView.listTitleType = .title
         }
     }
     
     func setViews() {
         backgroundColor = .clear
-        addSubview(titleLabel)
-        addSubview(dateLabel)
-        addSubview(imageEnableView)
-        addSubview(divider)
-        addSubview(writingLabel)
+        addSubview(listTitleView)
+        addSubview(listInfoView)
         addSubview(delCheckBtn)
         
-        imageEnableView.snp.makeConstraints { make in
+        listTitleView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.top.equalToSuperview().offset(14)
-            make.width.height.equalTo(24)
-        }
-        
-        titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(imageEnableView.snp.trailing).offset(2)
-            make.centerY.equalTo(imageEnableView)
-            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(24)
         }
 
-        titleLabel.sizeToFit()
-        
-        dateLabel.snp.makeConstraints { make in
+        listInfoView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.top.equalTo(titleLabel.snp.bottom).offset(6)
-        }
-        dateLabel.sizeToFit()
-        
-        divider.snp.makeConstraints { make in
-            make.leading.equalTo(dateLabel.snp.trailing).offset(8)
-            make.width.equalTo(1)
-            make.height.equalTo(15)
-            make.centerY.equalTo(dateLabel)
-        }
-        
-        writingLabel.snp.makeConstraints { make in
-            make.leading.equalTo(divider.snp.trailing).offset(8)
-            make.centerY.equalTo(divider)
+            make.top.equalTo(listTitleView.snp.bottom).offset(6)
         }
         
         delCheckBtn.snp.makeConstraints { make in

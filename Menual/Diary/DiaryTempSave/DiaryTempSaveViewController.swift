@@ -18,6 +18,7 @@ protocol DiaryTempSavePresentableListener: AnyObject {
     // interactor class.
     func pressedBackBtn()
     var tempSaveRelay: BehaviorRelay<[TempSaveModel]> { get }
+    var tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?> { get }
     var deleteTempSaveUUIDArrRelay: BehaviorRelay<[String]> { get }
     func deleteTempSave()
     func pressedTempSaveCell(uuid: String)
@@ -171,6 +172,7 @@ extension DiaryTempSaveViewController {
         listener?.deleteTempSaveUUIDArrRelay.accept([])
         isDeleteMode = !isDeleteMode
         deleteBtn.isHidden = !isDeleteMode
+        naviView.rightButton1IsActive = false
         tableView.reloadData()
     }
 }
@@ -191,10 +193,20 @@ extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSourc
               let model: TempSaveModel = tempSaveArr[safe: indexPath.row]
         else { return UITableViewCell() }
         
+        let currentTempSaveUUID: String = listener?.tempSaveDiaryModelRelay.value?.uuid ?? ""
+        
+        // 이전에 선택했던 UUID가 같다면 작성중으로 표현
+        if model.uuid == currentTempSaveUUID {
+            cell.isWriting = true
+            print("TempSave :: 작성중아!")
+        }
+        
         cell.isDeleteSelected = false
         cell.isDeleteMode = isDeleteMode
         cell.title = model.title
-        cell.date = model.createdAt.toStringWithHourMin()
+        cell.date = model.createdAt.toString()
+        cell.time = model.createdAt.toStringHourMin()
+
         print("여기!")
         
         return cell

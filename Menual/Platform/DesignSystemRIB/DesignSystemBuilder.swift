@@ -12,7 +12,7 @@ protocol DesignSystemDependency: Dependency {
     // created by this RIB.
 }
 
-final class DesignSystemComponent: Component<DesignSystemDependency>, BoxButtonDependency, GNBHeaderDependency, ListHeaderDependency, MomentsDependency, DividerDependency, CapsuleButtonDependency, ListDependency, FABDependency, TabsDependency, PaginationDependency, EmptyViewDependency, MetaDataDependency {
+final class DesignSystemComponent: Component<DesignSystemDependency>, BoxButtonDependency, GNBHeaderDependency, ListHeaderDependency, MomentsDependency, DividerDependency, CapsuleButtonDependency, ListDependency, FABDependency, TabsDependency, PaginationDependency, EmptyViewDependency, MetaDataDependency, NumberPadDependency {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
@@ -44,6 +44,7 @@ final class DesignSystemBuilder: Builder<DesignSystemDependency>, DesignSystemBu
         let paginationBuildable = PaginationBuilder(dependency: component)
         let emptyBuildable = EmptyViewBuilder(dependency: component)
         let metaDataBuildable = MetaDataBuilder(dependency: component)
+        let numberPadBuildable = NumberPadBuilder(dependency: component)
         
         let viewController = DesignSystemViewController()
         let interactor = DesignSystemInteractor(presenter: viewController)
@@ -62,7 +63,8 @@ final class DesignSystemBuilder: Builder<DesignSystemDependency>, DesignSystemBu
             tabsBuildable: tabsBuildable,
             paginationBuildable: paginationBuildable,
             emptyBuildable: emptyBuildable,
-            metaDataBuildable: metaDataBuildable
+            metaDataBuildable: metaDataBuildable,
+            numberPadBuildable: numberPadBuildable
         )
     }
 }

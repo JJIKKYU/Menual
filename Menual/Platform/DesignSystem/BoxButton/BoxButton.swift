@@ -129,7 +129,7 @@ class BoxButton: UIButton {
 //        switch btnSelected {
 //        case true:
 //            btnStatus = .pressed
-//            
+//
 //        case false:
 //            btnStatus = .active
 //        }

@@ -51,11 +51,11 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
     }
     
     // Bottom Up 으로 스크린을 띄울때
-    private func presentInsideNavigation(_ viewControllable: ViewControllable) {
+    private func presentInsideNavigation(_ viewControllable: ViewControllable, style: UIModalPresentationStyle) {
         let navigation = NavigationControllerable(root: viewControllable)
         // navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
         navigation.navigationController.isNavigationBarHidden = true
-        navigation.navigationController.modalPresentationStyle = .fullScreen
+        navigation.navigationController.modalPresentationStyle = style
         self.navigationControllable = navigation
         
         viewController.present(navigation, animated: true, completion:  nil)
@@ -120,8 +120,7 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
             diaryModel: diaryModel
         )
 
-        router.viewControllable.uiviewController.modalPresentationStyle = .fullScreen
-        presentInsideNavigation(router.viewControllable)
+        presentInsideNavigation(router.viewControllable, style: .fullScreen)
         // viewController.present(router.viewControllable, animated: true, completion: nil)
         // viewController.pushViewController(router.viewControllable, animated: true)
         
@@ -153,7 +152,7 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
             imageDataRelay: imageDataRelay
         )
 
-        presentInsideNavigation(router.viewControllable)
+        presentInsideNavigation(router.viewControllable, style: .fullScreen)
         
         diaryDetailImageRouting = router
         attachChild(router)

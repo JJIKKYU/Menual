@@ -103,6 +103,8 @@ class ListTitleView: UIView {
             titleLabel.textColor = Colors.grey.g200
             titleLabel.isHidden = false
             
+            titleLeftImageView.isHidden = true
+            
             titleLabel.snp.remakeConstraints { make in
                 make.leading.width.equalToSuperview()
                 make.centerY.equalToSuperview()
@@ -133,6 +135,8 @@ class ListTitleView: UIView {
             }
             
         case .titleBodyText:
+            titleLeftImageView.isHidden = true
+            
             titleLabel.textColor = Colors.grey.g200
             bodyLabel.textColor = Colors.grey.g400
             bodyLabel.isHidden = false

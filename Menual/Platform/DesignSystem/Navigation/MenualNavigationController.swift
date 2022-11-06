@@ -20,6 +20,7 @@ enum NaviViewType {
     case moments
     case search
     case myPage
+    case myPageCancel
     
     case write
     case writePicture
@@ -180,6 +181,12 @@ class MenualNaviView: UIView {
             backButton.tintColor = Colors.grey.g100
             backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
             titleLabel.isHidden = false
+        case .myPageCancel:
+            titleLabel.isHidden = true
+            backButton.isHidden = true
+            rightButton1.isHidden = false
+            rightButton1.tintColor = Colors.grey.g100
+            rightButton1.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         case .search:
             titleLabel.text = "SEARCH"
             titleLabel.font = UIFont.AppHead(.head_4)
@@ -266,6 +273,8 @@ class MenualNaviView: UIView {
         case .search:
             break
         case .myPage:
+            break
+        case .myPageCancel:
             break
         case .write:
             if rightButton1IsActive {

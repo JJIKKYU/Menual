@@ -479,8 +479,6 @@ extension DiaryHomeViewController {
     @objc
     func pressedMyPageBtn() {
         listener?.pressedMyPageBtn()
-        let dialogViewController = DialogViewController()
-        self.present(dialogViewController, animated: false)
     }
     
     @objc
