@@ -9,6 +9,7 @@ import RIBs
 import RxSwift
 import UIKit
 import SnapKit
+import RxRelay
 
 protocol ProfileHomePresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
@@ -17,6 +18,7 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // ProfilePassword
     func pressedProfilePasswordCell()
+    var isEnabledPasswordRelay: BehaviorRelay<Bool> { get }
 }
 
 enum ProfileHomeSection: Int {
@@ -27,7 +29,8 @@ enum ProfileHomeSection: Int {
 final class ProfileHomeViewController: UIViewController, ProfileHomePresentable, ProfileHomeViewControllable {
 
     weak var listener: ProfileHomePresentableListener?
-    
+    private let disposeBag = DisposeBag()
+
     lazy var naviView = MenualNaviView(type: .myPage).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
@@ -42,6 +45,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         $0.dataSource = self
         $0.register(ProfileHomeCell.self, forCellReuseIdentifier: "ProfileHomeCell")
         $0.rowHeight = 56
+        $0.separatorStyle = .none
     }
     
     init() {
@@ -61,6 +65,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         // 뒤로가기 제스쳐 가능하도록
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         setViews()
+        bind()
     }
     
     func setViews() {
@@ -78,6 +83,15 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         settingTableView.snp.makeConstraints { make in
             make.leading.width.top.bottom.equalToSuperview()
         }
+    }
+    
+    func bind() {
+        listener?.isEnabledPasswordRelay
+            .subscribe(onNext: { [weak self] isEnabledPassword in
+                guard let self = self else { return }
+                self.settingTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -142,7 +156,13 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case ProfileHomeSection.SETTING1.rawValue:
-            return listener?.profileHomeDataArr_Setting1.count ?? 0
+            
+            var count = listener?.profileHomeDataArr_Setting1.count ?? 0
+            if listener?.isEnabledPasswordRelay.value ?? false == false {
+                count -= 1
+            }
+
+            return count
         case ProfileHomeSection.SETTING2.rawValue:
             return listener?.profileHomeDataArr_Setting2.count ?? 0
         default:
@@ -154,15 +174,14 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileHomeCell", for: indexPath) as? ProfileHomeCell else { return UITableViewCell() }
         let index = indexPath.row
         cell.selectionStyle = .none
+        cell.isUserInteractionEnabled = true
         let section = indexPath.section
         switch section {
         case ProfileHomeSection.SETTING1.rawValue:
             guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.profileHomeCellType = data.type
-            if data.type == .toggle && index == 1 {
-                cell.switchBtn.isOn = true
-            }
+            cell.switchIsOn = listener?.isEnabledPasswordRelay.value ?? false
             return cell
         case ProfileHomeSection.SETTING2.rawValue:
             guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return UITableViewCell() }
@@ -186,7 +205,11 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         switch section {
         case ProfileHomeSection.SETTING1.rawValue:
             guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return }
+
             if data.title == "비밀번호 설정하기" {
+                print("ProfileHome :: 비밀번호 설정하기")
+                // cell.switchIsOn = !cell.switchIsOn
+                // cell.switchBtn.isOn = listener?.isEnabledPasswordRelay.value ?? false
                 listener?.pressedProfilePasswordCell()
             } else if data.title == "비밀번호 변경하기" {
                 listener?.pressedProfilePasswordCell()

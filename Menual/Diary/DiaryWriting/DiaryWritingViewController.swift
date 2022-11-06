@@ -773,7 +773,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             print("Description TextView")
             if textView.text == defaultDescriptionText {
                 textView.text = nil
-                textView.textColor = Colors.grey.g600
+                textView.textColor = Colors.grey.g200
             }
             
         default:

@@ -65,7 +65,7 @@ final class AppRootInteractor: PresentableInteractor<AppRootPresentable>,
                 guard let self = self else { return }
                 
                 // password 설정을 안했다면
-                if model == nil {
+                if model == nil || model?.isEnabled == false {
                     self.router?.attachMainHome()
                 } else {
                     self.router?.attachProfilePassword()

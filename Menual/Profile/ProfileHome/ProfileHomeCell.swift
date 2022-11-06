@@ -24,6 +24,10 @@ class ProfileHomeCell: UITableViewCell {
         didSet { setNeedsLayout() }
     }
     
+    var switchIsOn: Bool = false {
+        didSet { setNeedsLayout() }
+    }
+    
     private let titleLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppBodyOnlyFont(.body_4)
@@ -58,11 +62,11 @@ class ProfileHomeCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-//    override func setSelected(_ selected: Bool, animated: Bool) {
-//        super.setSelected(selected, animated: animated)
-//        
-//        // Configure the view for the selected state
-//    }
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+        // Configure the view for the selected state
+    }
     
     func setViews() {
         addSubview(titleLabel)
@@ -97,6 +101,7 @@ class ProfileHomeCell: UITableViewCell {
             arrowImageView.isHidden = false
             switchBtn.isHidden = true
         case .toggle:
+            switchBtn.isOn = switchIsOn
             arrowImageView.isHidden = true
             switchBtn.isHidden = false
         }

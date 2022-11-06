@@ -7,6 +7,7 @@
 
 import RIBs
 import RxSwift
+import RxRelay
 
 protocol ProfileHomeRouting: ViewableRouting {
     func attachProfilePassword()
@@ -28,6 +29,8 @@ protocol ProfileHomeInteractorDependency {
 }
 
 final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>, ProfileHomeInteractable, ProfileHomePresentableListener {
+
+    var isEnabledPasswordRelay: BehaviorRelay<Bool>
     
     var profileHomeDataArr_Setting1: [ProfileHomeModel] {
         let arr: [ProfileHomeModel] = [
@@ -53,6 +56,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     weak var router: ProfileHomeRouting?
     weak var listener: ProfileHomeListener?
+    private let disposeBag = DisposeBag()
     private let dependency: ProfileHomeInteractorDependency
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
@@ -61,6 +65,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         presenter: ProfileHomePresentable,
         dependency: ProfileHomeInteractorDependency
     ) {
+        self.isEnabledPasswordRelay = BehaviorRelay<Bool>(value: false)
         self.dependency = dependency
         super.init(presenter: presenter)
         presenter.listener = self
@@ -68,7 +73,8 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
 
     override func didBecomeActive() {
         super.didBecomeActive()
-        // TODO: Implement business logic here.
+        bind()
+        setEnabledPassword()
     }
 
     override func willResignActive() {
@@ -82,15 +88,49 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         listener?.profileHomePressedBackBtn(isOnlyDetach: isOnlyDetach)
     }
     
+    func bind() {
+        dependency.diaryRepository
+            .password
+            .subscribe(onNext: { [weak self] passwordModel in
+                guard let self = self else { return }
+                let isEnabled: Bool = passwordModel?.isEnabled ?? false
+                self.isEnabledPasswordRelay.accept(isEnabled)
+            })
+            .disposed(by: disposeBag)
+    }
+    
     // MARK: - ProfilePassword
+    func setEnabledPassword() {
+        var isEnabledPassword: Bool = false
+        if let passwordModel = dependency.diaryRepository.password.value {
+            isEnabledPassword = passwordModel.isEnabled
+        }
+        isEnabledPasswordRelay.accept(isEnabledPassword)
+    }
 
     func profilePasswordPressedBackBtn(isOnlyDetach: Bool) {
         print("ProfileHome :: profilePasswordPressedBackBtn")
         router?.detachProfilePassword(isOnlyDetach: isOnlyDetach)
     }
+
     func pressedProfilePasswordCell() {
         print("ProfileHome :: pressedProfilePasswordCell")
-        router?.attachProfilePassword()
+        // 비밀번호 설정을 안했으면 설정할 수 있도록 설정창 띄우기
+        if isEnabledPasswordRelay.value == false {
+            router?.attachProfilePassword()
+        }
+        // 비밀번호 설정 했으면 비밀번호 설정 Disabled로 변경
+        else {
+            guard let model = dependency.diaryRepository.password.value else { return }
+
+            let newModel = PasswordModel(uuid: model.uuid,
+                                         password: model.password,
+                                         isEnabled: false
+            )
+
+            dependency.diaryRepository
+                .updatePassword(model: newModel)
+        }
     }
     
     func goDiaryHome() { }

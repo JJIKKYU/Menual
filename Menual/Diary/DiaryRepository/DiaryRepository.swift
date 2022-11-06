@@ -688,6 +688,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         realm.safeWrite {
             data.password = model.password
+            data.isEnabled = model.isEnabled
         }
         
         print("diaryRepo :: updatePassword! - 2")
