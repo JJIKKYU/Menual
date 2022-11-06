@@ -10,11 +10,12 @@ import RIBs
 protocol ProfileHomeDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
+    var diaryRepository: DiaryRepository { get }
 }
 
-final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency {
+final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency, ProfileHomeInteractorDependency {
 
-    // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
+    var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
 
 // MARK: - Builder
@@ -38,7 +39,8 @@ final class ProfileHomeBuilder: Builder<ProfileHomeDependency>, ProfileHomeBuild
         
         let viewController = ProfileHomeViewController()
         let interactor = ProfileHomeInteractor(
-            presenter: viewController
+            presenter: viewController,
+            dependency: component
         )
         interactor.listener = listener
 

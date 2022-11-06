@@ -12,6 +12,8 @@ import RxSwift
 protocol AppRootRouting: Routing {
     func cleanupViews()
     func attachMainHome()
+    func attachProfilePassword()
+    func detachProfilePassword()
 }
 
 protocol AppRootPresentable: Presentable {
@@ -23,11 +25,15 @@ protocol AppRootListener: AnyObject {
     
 }
 
+protocol AppRootInteractorDependency {
+    var diaryRepository: DiaryRepository { get }
+}
+
 final class AppRootInteractor: PresentableInteractor<AppRootPresentable>,
                                AppRootInteractable,
                                AppRootPresentableListener,
                                URLHandler {
-    
+
     
     func handle(_ url: URL) {
         
@@ -36,11 +42,15 @@ final class AppRootInteractor: PresentableInteractor<AppRootPresentable>,
 
     weak var router: AppRootRouting?
     weak var listener: AppRootListener?
+    private let disposeBag = DisposeBag()
+    private let dependency: AppRootInteractorDependency
 
     // in constructor.
-    override init(
-        presenter: AppRootPresentable
+    init(
+        presenter: AppRootPresentable,
+        dependency: AppRootInteractorDependency
     ) {
+        self.dependency = dependency
         super.init(presenter: presenter)
         presenter.listener = self
     }
@@ -48,6 +58,27 @@ final class AppRootInteractor: PresentableInteractor<AppRootPresentable>,
     override func didBecomeActive() {
         super.didBecomeActive()
         
+        dependency.diaryRepository.fetchPassword()
+        dependency.diaryRepository
+            .password
+            .subscribe(onNext: { [weak self] model in
+                guard let self = self else { return }
+                
+                // password 설정을 안했다면
+                if model == nil {
+                    self.router?.attachMainHome()
+                } else {
+                    self.router?.attachProfilePassword()
+                }
+                print("AppRoot :: model! \(model)")
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func goDiaryHome() {
+        print("AppRoot :: goDiaryHome!")
+        router?.detachProfilePassword()
+//        router?.attachMainHome()
     }
 
     override func willResignActive() {
@@ -55,5 +86,12 @@ final class AppRootInteractor: PresentableInteractor<AppRootPresentable>,
 
         router?.cleanupViews()
         // TODO: Pause any business logic.
+        
+        
+        
+    }
+    
+    func profilePasswordPressedBackBtn(isOnlyDetach: Bool) {
+        print("AppRoot :: profilePasswordPressedBackBtn!")
     }
 }

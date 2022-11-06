@@ -10,7 +10,8 @@ import RIBs
 protocol AppRootInteractable: Interactable,
                               RegisterHomeListener,
                               LoginHomeListener,
-                              DiaryHomeListener
+                              DiaryHomeListener,
+                              ProfilePasswordListener
 {
     var router: AppRootRouting? { get set }
     var listener: AppRootListener? { get set }
@@ -22,24 +23,30 @@ protocol AppRootViewControllable: ViewControllable {
 
 final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControllable>, AppRootRouting {
     
+    var navigationController: NavigationControllerable?
+    
     private let registerHome: RegisterHomeBuildable
     private let loginHome: LoginHomeBuildable
     private let diaryHome: DiaryHomeBuildable
+    private let profilePassword: ProfilePasswordBuildable
     
     private var registerHomeRouting: ViewableRouting?
     private var loginHomeRouting: ViewableRouting?
     private var diaryHomeRouting: ViewableRouting?
+    private var profilePasswordRouting: ViewableRouting?
     
     init(
         interactor: AppRootInteractable,
         viewController: AppRootViewControllable,
         registerHome: RegisterHomeBuildable,
         loginHome: LoginHomeBuildable,
-        diaryHome: DiaryHomeBuildable
+        diaryHome: DiaryHomeBuildable,
+        profilePassword: ProfilePasswordBuildable
     ) {
         self.registerHome = registerHome
         self.loginHome = loginHome
         self.diaryHome = diaryHome
+        self.profilePassword = profilePassword
         
         super.init(interactor: interactor, viewController: viewController)
 
@@ -47,7 +54,27 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
     }
     
     override func didLoad() {
-        attachMainHome()
+        // attachMainHome()
+    }
+    
+    // Bottom Up 으로 스크린을 띄울때
+    private func presentInsideNavigation(_ viewControllable: ViewControllable) {
+        let navigation = NavigationControllerable(root: viewControllable)
+        // navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
+        navigation.navigationController.isNavigationBarHidden = true
+        navigation.navigationController.modalPresentationStyle = .fullScreen
+        self.navigationController = navigation
+        
+        viewController.present(navigation, animated: true, completion:  nil)
+    }
+    
+    private func dismissPresentedNavigation(completion: (() -> Void)?) {
+        if self.navigationController == nil {
+            return
+        }
+        
+        viewController.dismiss(completion: nil)
+        self.navigationController = nil
     }
     
     func attachMainHome() {
@@ -89,6 +116,47 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
     func cleanupViews() {
         // TODO: Since this router does not own its view, it needs to cleanup the views
         // it may have added to the view hierarchy, when its interactor is deactivated.
+    }
+    
+    func detachProfilePassword() {
+        print("AppRoot :: detachProfilePassword!")
+        
+        guard let router = profilePasswordRouting else {
+            return
+        }
+        
+        // viewController.popViewController(animated: true)
+//        let diaryHomeRouting = diaryHome.build(withListener: interactor)
+//        attachChild(diaryHomeRouting)
+//        self.navigationController?.pushViewController(diaryHomeRouting.viewControllable, animated: true)
+        // self.navigationController?.popViewController(animated: true)
+        navigationController?.dismiss(completion: nil)
+
+        detachChild(router)
+        profilePasswordRouting = nil
+    }
+    
+    func attachProfilePassword() {
+        print("AppRoot :: attachProfilePassword!")
+        
+        let profilePasswordRouting = profilePassword.build(
+            withListener: interactor,
+            isMainScreen: true
+        )
+        self.profilePasswordRouting = profilePasswordRouting
+        attachChild(profilePasswordRouting)
+        
+        let diaryHomeRouting = diaryHome.build(withListener: interactor)
+        attachChild(diaryHomeRouting)
+        
+        let navigation = NavigationControllerable(root: diaryHomeRouting.viewControllable)
+        navigationController = navigation
+        
+        navigation.navigationController.modalPresentationStyle = .fullScreen
+        viewController.setViewController(navigation)
+        
+        // presentInsideNavigation(profilePasswordRouting.viewControllable)
+        navigation.present(profilePasswordRouting.viewControllable, animated: true, completion: nil)
     }
 
 }

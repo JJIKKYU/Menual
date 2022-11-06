@@ -188,6 +188,8 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return }
             if data.title == "비밀번호 설정하기" {
                 listener?.pressedProfilePasswordCell()
+            } else if data.title == "비밀번호 변경하기" {
+                listener?.pressedProfilePasswordCell()
             }
 //            if data.type == .toggle {
 //                cell.switchBtn.isOn = !cell.switchBtn.isOn

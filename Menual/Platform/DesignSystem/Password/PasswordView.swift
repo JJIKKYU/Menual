@@ -11,6 +11,25 @@ import SnapKit
 
 class PasswordView: UIView {
     
+    enum PasswordViewType {
+        case first
+        case second
+        case error
+    }
+    
+    enum ScreenType {
+        case setting
+        case main
+    }
+    
+    public var type: PasswordViewType = .first {
+        didSet { setNeedsLayout() }
+    }
+    
+    public var screenType: ScreenType = .setting {
+        didSet { setNeedsLayout() }
+    }
+    
     public var numberArr: [Int] = [] {
         didSet { setNeedsLayout() }
     }
@@ -108,37 +127,73 @@ class PasswordView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        print("PasswordView :: numberArr = \(numberArr)")
-
-        password1.type = ._default
-        password2.type = ._default
-        password3.type = ._default
-        password4.type = ._default
-        
-        switch numberArr.count {
-        case 0:
-            break
+        switch type {
+        case .first:
+            subTitleLabel.textColor = Colors.tint.main.v400
+            subTitleLabel.text = "비밀번호를 분실 시 찾을 수 없으니 신중하게 입력해 주세요!"
+            titleLabel.text = "비밀번호를 입력해 주세요"
+        case .second:
+            subTitleLabel.textColor = Colors.tint.main.v400
+            subTitleLabel.text = "비밀번호를 분실 시 찾을 수 없으니 신중하게 입력해 주세요!"
+            titleLabel.text = "한 번 더 입력해 주세요"
+        case .error:
+            subTitleLabel.textColor = Colors.tint.system.red.r200
+            subTitleLabel.text = "비밀번호가 올바르지 않습니다"
             
-        case 1:
-            password1.type = .typed
-            
-        case 2:
-            password1.type = .typed
-            password2.type = .typed
-            
-        case 3:
-            password1.type = .typed
-            password2.type = .typed
-            password3.type = .typed
-            
-        case 4:
-            password1.type = .typed
-            password2.type = .typed
-            password3.type = .typed
-            password4.type = .typed
-            
-        default:
-            break
         }
+        
+        switch screenType {
+        case .setting:
+            subTitleLabel.isHidden = false
+        case .main:
+            subTitleLabel.isHidden = true
+            if type == .error {
+                subTitleLabel.isHidden = false
+                subTitleLabel.textColor = Colors.tint.system.red.r200
+                subTitleLabel.text = "비밀번호가 맞지 않아요."
+            }
+        }
+        
+        print("PasswordView :: numberArr = \(numberArr)")
+        
+        // error가 아닐 경우 하나씩 반응하도록
+        if type != .error {
+            password1.type = ._default
+            password2.type = ._default
+            password3.type = ._default
+            password4.type = ._default
+            
+            switch numberArr.count {
+            case 0:
+                break
+                
+            case 1:
+                password1.type = .typed
+                
+            case 2:
+                password1.type = .typed
+                password2.type = .typed
+                
+            case 3:
+                password1.type = .typed
+                password2.type = .typed
+                password3.type = .typed
+                
+            case 4:
+                password1.type = .typed
+                password2.type = .typed
+                password3.type = .typed
+                password4.type = .typed
+                
+            default:
+                break
+            }
+        } else {
+            password1.type = .error
+            password2.type = .error
+            password3.type = .error
+            password4.type = .error
+        }
+        
     }
 }

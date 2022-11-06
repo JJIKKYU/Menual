@@ -26,7 +26,9 @@ final class AppRootComponent: Component<AppRootDependency> {
 
 extension AppRootComponent: RegisterHomeDependency,
                             LoginHomeDependency,
-                            DiaryHomeDependency
+                            DiaryHomeDependency,
+                            ProfilePasswordDependency,
+                            AppRootInteractorDependency
 {
     var registerHomeBuildable: RegisterHomeBuildable {
         return RegisterHomeBuilder(dependency: self)

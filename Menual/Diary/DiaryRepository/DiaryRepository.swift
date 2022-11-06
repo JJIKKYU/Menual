@@ -22,6 +22,7 @@ public protocol DiaryRepository {
     var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
     var diarySearch: BehaviorRelay<[DiarySearchModel]> { get }
     var tempSave: BehaviorRelay<[TempSaveModel]> { get }
+    var password: BehaviorRelay<PasswordModel?> { get }
     
 //    var realmDiaryOb: Observable<[DiaryModel]> { get }
     // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
@@ -51,6 +52,11 @@ public protocol DiaryRepository {
     
     // Filter 로직
     func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int
+    
+    // Password 로직
+    func fetchPassword()
+    func addPassword(model: PasswordModel)
+    func updatePassword(model: PasswordModel)
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
@@ -98,6 +104,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     public var tempSave: BehaviorRelay<[TempSaveModel]> { tempSaveSubject }
     public let tempSaveSubject = BehaviorRelay<[TempSaveModel]>(value: [])
+    
+    public var password: BehaviorRelay<PasswordModel?> { passwordSubject }
+    public let passwordSubject = BehaviorRelay<PasswordModel?>(value: nil)
     
     /*
     // public var cardOnFileString: ReadOnlyCurrentValuePublisher<[PaymentMethod]> { paymentMethodsSubject }
@@ -636,6 +645,54 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
         
         self.fetchTempSave()
+    }
+    
+    // MARK: - Password
+    public func fetchPassword() {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        print("diaryRepo :: passwordFetch! - 1")
+
+        guard let passwordModelRealm = realm.objects(PasswordModelRealm.self).first
+        else { return }
+        let passwordModel = PasswordModel(passwordModelRealm)
+        passwordSubject.accept(passwordModel)
+        print("diaryRepo :: passwordFetch! - 2")
+    }
+    
+    public func addPassword(model: PasswordModel) {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        print("diaryRepo :: addPassword! - 1")
+
+        let realmModel: PasswordModelRealm = PasswordModelRealm(model)
+    
+        realm.safeWrite {
+             realm.add(realmModel)
+    
+        }
+        
+        print("diaryRepo :: addPassword! - 2")
+        fetchPassword()
+    }
+    
+    public func updatePassword(model: PasswordModel) {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        print("diaryRepo :: updatePassword! - 1")
+        
+        guard let data = realm.objects(PasswordModelRealm.self).first else { return }
+        
+        realm.safeWrite {
+            data.password = model.password
+        }
+        
+        print("diaryRepo :: updatePassword! - 2")
+        
+        fetchPassword()
     }
 }
 

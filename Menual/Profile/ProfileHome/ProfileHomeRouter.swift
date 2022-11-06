@@ -61,7 +61,10 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
             return
         }
         
-        let router = profilePasswordBuildable.build(withListener: interactor)
+        let router = profilePasswordBuildable.build(
+            withListener: interactor,
+            isMainScreen: false
+        )
         // viewController.pushViewController(router.viewControllable, animated: true)
         presentInsideNavigation(router.viewControllable)
         

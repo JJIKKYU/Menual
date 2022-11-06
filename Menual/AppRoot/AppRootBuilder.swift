@@ -34,7 +34,11 @@ final class AppRootBuilder: Builder<AppRootDependency>, AppRootBuildable {
             rootViewController: viewController
         )
         
-        let interactor = AppRootInteractor(presenter: viewController)
+        let interactor = AppRootInteractor(
+            presenter: viewController,
+            dependency: component
+        )
+        let profilePassword = ProfilePasswordBuilder(dependency: component)
         let registerHome = RegisterHomeBuilder(dependency: component)
         let loginHome = LoginHomeBuilder(dependency: component)
         let diaryHome = DiaryHomeBuilder(dependency: component)
@@ -44,7 +48,8 @@ final class AppRootBuilder: Builder<AppRootDependency>, AppRootBuildable {
             viewController: viewController,
             registerHome: registerHome,
             loginHome: loginHome,
-            diaryHome: diaryHome
+            diaryHome: diaryHome,
+            profilePassword: profilePassword
         )
         
         return (router, interactor)

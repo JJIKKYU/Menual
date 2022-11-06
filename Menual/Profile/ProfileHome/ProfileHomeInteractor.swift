@@ -23,6 +23,10 @@ protocol ProfileHomeListener: AnyObject {
     func profileHomePressedBackBtn(isOnlyDetach: Bool)
 }
 
+protocol ProfileHomeInteractorDependency {
+    var diaryRepository: DiaryRepository { get }
+}
+
 final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>, ProfileHomeInteractable, ProfileHomePresentableListener {
     
     var profileHomeDataArr_Setting1: [ProfileHomeModel] {
@@ -49,10 +53,15 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     weak var router: ProfileHomeRouting?
     weak var listener: ProfileHomeListener?
+    private let dependency: ProfileHomeInteractorDependency
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
-    override init(presenter: ProfileHomePresentable) {
+    init(
+        presenter: ProfileHomePresentable,
+        dependency: ProfileHomeInteractorDependency
+    ) {
+        self.dependency = dependency
         super.init(presenter: presenter)
         presenter.listener = self
     }
@@ -83,4 +92,6 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         print("ProfileHome :: pressedProfilePasswordCell")
         router?.attachProfilePassword()
     }
+    
+    func goDiaryHome() { }
 }

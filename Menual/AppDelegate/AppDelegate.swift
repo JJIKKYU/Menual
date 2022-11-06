@@ -26,6 +26,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
         
+        let realm = Realm.safeInit()
+         print("Realm Location = \(String(describing: realm?.configuration.fileURL))")
+        
+        print("AppDelegate :: 앱을 실행한다꿍")
+        
+        if let passwordModelRealm = realm?.objects(PasswordModelRealm.self).first {
+            let passwordModel = PasswordModel(passwordModelRealm)
+        }
+        
         let result = AppRootBuilder(dependency: AppComponent()).build()
         self.launchRouter = result.launchRouter
         self.urlHandler = result.urlHandler
@@ -57,8 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
          */
         
-        let realm = Realm.safeInit()
-         print("Realm Location = \(String(describing: realm?.configuration.fileURL))")
+        
         
         return true
     }
