@@ -33,7 +33,7 @@ protocol DiaryWritingPresentable: Presentable {
 
 protocol DiaryWritingListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
-    func diaryWritingPressedBackBtn(isOnlyDetach: Bool)
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryWritingInteractor.DiaryWritingMode)
 }
 
 protocol DiaryWritingInteractorDependency {
@@ -42,12 +42,20 @@ protocol DiaryWritingInteractorDependency {
 
 final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentable>, DiaryWritingInteractable, DiaryWritingPresentableListener {
     
+    enum DiaryWritingMode {
+        case writing
+        case edit
+        case none
+    }
+    
     var weatherHistoryModel: BehaviorRelay<[WeatherHistoryModel]> {
         dependency.diaryRepository.weatherHistory
     }
     var plcaeHistoryModel: BehaviorRelay<[PlaceHistoryModel]> {
         dependency.diaryRepository.placeHistory
     }
+    
+    var diaryWritingMode: DiaryWritingMode = .writing
 
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
     
@@ -160,6 +168,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                 else { return }
                 
                 print("수정하기 모드로 바꿔야 할걸? = \(diaryModel)")
+                self.diaryWritingMode = .edit
                 self.presenter.setDiaryEditMode(diaryModel: diaryModel)
             })
             .disposed(by: disposebag)
@@ -177,7 +186,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
 
                 if croppedImageIsSaved && originalImageIsSaved {
                     print("DiaryWriting :: 모두 저장이 완료되었습니다.")
-                    self.listener?.diaryWritingPressedBackBtn(isOnlyDetach: false)
+                    self.listener?.diaryWritingPressedBackBtn(isOnlyDetach: false, isNeedToast: true, mode: .edit)
                     self.dependency.diaryRepository
                                 .updateDiary(info: newDiary)
                 }
@@ -200,7 +209,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     }
     
     func pressedBackBtn(isOnlyDetach: Bool) {
-        listener?.diaryWritingPressedBackBtn(isOnlyDetach: isOnlyDetach)
+        listener?.diaryWritingPressedBackBtn(isOnlyDetach: isOnlyDetach, isNeedToast: false, mode: .none)
     }
     
     // 글 작성할 때
@@ -248,7 +257,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                 .addWeatherHistory(info: weatherHistoryModel)
         }
         
-        listener?.diaryWritingPressedBackBtn(isOnlyDetach: false)
+        listener?.diaryWritingPressedBackBtn(isOnlyDetach: false, isNeedToast: true, mode: .writing)
     }
     
     // 글 수정할 때

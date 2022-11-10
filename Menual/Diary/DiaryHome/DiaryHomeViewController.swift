@@ -11,6 +11,7 @@ import RxRelay
 import UIKit
 import SnapKit
 import Then
+import RxViewController
 
 enum TableCollectionViewTag: Int {
     case MomentsCollectionView = 0
@@ -58,6 +59,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     let isFilteredRelay = BehaviorRelay<Bool>(value: false)
     private let isDraggingRelay = BehaviorRelay<Bool>(value: false)
+    var isShowToastDiaryResultRelay = RxRelay.BehaviorRelay<DiaryWritingInteractor.DiaryWritingMode?>(value: nil)
     
     // MARK: - UI 코드
     private let tableViewHeaderView = UIView().then {
@@ -452,6 +454,24 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 self.setFilterStatus(isFiltered: isFiltered)
                 if isFiltered {
                     self.setEmptyView(isEnabled: false)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        rx.viewWillAppear
+            .withLatestFrom(isShowToastDiaryResultRelay)
+            .subscribe(onNext: { [weak self] mode in
+                guard let self = self else { return }
+                print("DiaryHome :: rxViewWillAppear! -> mode = \(mode)")
+                switch mode {
+                case .writing:
+                    self.showToastDiaryResult(mode: .writing)
+                case .edit:
+                    self.showToastDiaryResult(mode: .edit)
+                case .none:
+                    break
+                default:
+                    break
                 }
             })
             .disposed(by: disposeBag)
@@ -963,5 +983,24 @@ extension DiaryHomeViewController {
             self.filterEmptyView.isHidden = true
             self.myMenualTableView.reloadData()
         }
+    }
+}
+
+// MARK: - Toast
+extension DiaryHomeViewController {
+    func showToastDiaryResult(mode: DiaryWritingInteractor.DiaryWritingMode) {
+        print("DiaryHome :: showToastDiaryResult!")
+        switch mode {
+        case .writing:
+            showToast(message: "메뉴얼 등록이 완료되었습니다.")
+
+        case .edit:
+            showToast(message: "메뉴얼 등록이 수정되었습니다.")
+
+        case .none:
+            break
+        }
+
+        isShowToastDiaryResultRelay.accept(nil)
     }
 }

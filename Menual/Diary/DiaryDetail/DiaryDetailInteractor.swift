@@ -193,12 +193,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         router?.attachBottomSheet(type: .menu, menuComponentRelay: menuComponentRelay)
     }
     
-    func diaryWritingPressedBackBtn(isOnlyDetach: Bool) {
-        // TODO
-        print("diaryWritingPressedBackBtn")
-        router?.detachDiaryWriting(isOnlyDetach: isOnlyDetach)
-    }
-    
     // 유저가 바텀싯을 통해서 숨기기를 눌렀을 경우
     func hideDiary() {
         print("DiaryDetail :: hideDiary! 1")
@@ -236,5 +230,10 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 
     // 미사용
     func filterWithWeatherPlacePressedFilterBtn() { }
+
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryWritingInteractor.DiaryWritingMode) {
+        print("DiaryDetail :: diaryWritingPressedBackBtn! ")
+        router?.detachDiaryWriting(isOnlyDetach: isOnlyDetach)
+    }
 }
  

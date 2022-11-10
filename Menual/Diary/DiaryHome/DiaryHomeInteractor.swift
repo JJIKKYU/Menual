@@ -30,6 +30,7 @@ protocol DiaryHomeRouting: ViewableRouting {
 protocol DiaryHomePresentable: Presentable {
     var listener: DiaryHomePresentableListener? { get set }
     var isFilteredRelay: BehaviorRelay<Bool> { get }
+    var isShowToastDiaryResultRelay: BehaviorRelay<DiaryWritingInteractor.DiaryWritingMode?> { get }
     
     func reloadTableView()
 }
@@ -206,7 +207,11 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         router?.attachDiaryWriting()
     }
     
-    func diaryWritingPressedBackBtn(isOnlyDetach: Bool) {
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryWritingInteractor.DiaryWritingMode) {
+        if isNeedToast {
+            presenter.isShowToastDiaryResultRelay.accept(mode)
+        }
+
         router?.detachDiaryWriting(isOnlyDetach: isOnlyDetach)
     }
     

@@ -33,7 +33,7 @@ protocol DiaryBottomSheetListener: AnyObject {
 }
 
 final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPresentable>, DiaryBottomSheetInteractable, DiaryBottomSheetPresentableListener {
-
+    
     weak var router: DiaryBottomSheetRouting?
     weak var listener: DiaryBottomSheetListener?
     var disposeBag = DisposeBag()
@@ -212,4 +212,13 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         print("diaryWritingPressedBackBtn!")
     }
     
+    
+    
+}
+
+// MARK: - 미사용
+extension DiaryBottomSheetInteractor {
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryWritingInteractor.DiaryWritingMode) {
+        
+    }
 }
