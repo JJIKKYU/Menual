@@ -108,6 +108,7 @@
 		988A2D65280162790046C43A /* DiaryWritingMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D64280162790046C43A /* DiaryWritingMock.swift */; };
 		988A2D68280166AA0046C43A /* DiaryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D67280166AA0046C43A /* DiaryModel.swift */; };
 		988A2D6B280167D20046C43A /* DiaryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D6A280167D20046C43A /* DiaryRepository.swift */; };
+		988C10A92920BA0100C80937 /* MenualBottomSheetReminderComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988C10A82920BA0100C80937 /* MenualBottomSheetReminderComponentView.swift */; };
 		98934A9927E6F13700178A8E /* ProfileHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */; };
 		98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */; };
 		98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */; };
@@ -256,12 +257,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		24B06901DAD6C1819FD42947 /* Pods-Menual-MenualUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual-MenualUITests.debug.xcconfig"; path = "Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		2F6083CA813FC6C00D4C96D8 /* Pods-MenualTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenualTests.debug.xcconfig"; path = "Target Support Files/Pods-MenualTests/Pods-MenualTests.debug.xcconfig"; sourceTree = "<group>"; };
+		146913CAF8A1A7F002CD5FE4 /* Pods-MenualTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenualTests.debug.xcconfig"; path = "Target Support Files/Pods-MenualTests/Pods-MenualTests.debug.xcconfig"; sourceTree = "<group>"; };
+		14B2CBE1BDA5FD82DA28DF98 /* Pods-Menual.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.debug.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.debug.xcconfig"; sourceTree = "<group>"; };
 		4B7AFEEEC2884EE3D9B20D25 /* Pods_MenualTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MenualTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		51C59AD422F160C7C260E2D9 /* Pods-Menual.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.debug.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.debug.xcconfig"; sourceTree = "<group>"; };
-		611BE1DAFD06695449F2132F /* Pods-Menual-MenualUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual-MenualUITests.release.xcconfig"; path = "Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests.release.xcconfig"; sourceTree = "<group>"; };
-		8AB1EEBE6F2C30203EE560C0 /* Pods-Menual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.release.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.release.xcconfig"; sourceTree = "<group>"; };
+		4EE85DE83B386BD87B7AC16E /* Pods-MenualTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenualTests.release.xcconfig"; path = "Target Support Files/Pods-MenualTests/Pods-MenualTests.release.xcconfig"; sourceTree = "<group>"; };
+		850884D7609C295FBFAE27B8 /* Pods-Menual-MenualUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual-MenualUITests.release.xcconfig"; path = "Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests.release.xcconfig"; sourceTree = "<group>"; };
 		906BFBDD86A4807682FB5575 /* Pods_Menual_MenualUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual_MenualUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9803132B28F11ECA005CBD01 /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
 		9805D4D527E1B6C40035FB49 /* Elevation+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Elevation+Util.swift"; sourceTree = "<group>"; };
@@ -367,6 +367,7 @@
 		988A2D64280162790046C43A /* DiaryWritingMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingMock.swift; sourceTree = "<group>"; };
 		988A2D67280166AA0046C43A /* DiaryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryModel.swift; sourceTree = "<group>"; };
 		988A2D6A280167D20046C43A /* DiaryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryRepository.swift; sourceTree = "<group>"; };
+		988C10A82920BA0100C80937 /* MenualBottomSheetReminderComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetReminderComponentView.swift; sourceTree = "<group>"; };
 		98934A9527E6F13700178A8E /* ProfileHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeRouter.swift; sourceTree = "<group>"; };
 		98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeViewController.swift; sourceTree = "<group>"; };
 		98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeBuilder.swift; sourceTree = "<group>"; };
@@ -496,7 +497,8 @@
 		98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryBottomSheetInteractor.swift; sourceTree = "<group>"; };
 		98F3A28228152C04000851F0 /* BottomSheetSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetSelectView.swift; sourceTree = "<group>"; };
 		9D128C3C26B0CD2866B637F4 /* Pods_Menual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A53C98DCB5D2180263C3A986 /* Pods-MenualTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenualTests.release.xcconfig"; path = "Target Support Files/Pods-MenualTests/Pods-MenualTests.release.xcconfig"; sourceTree = "<group>"; };
+		B0D284BB62383F1EDBC7DFA5 /* Pods-Menual-MenualUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual-MenualUITests.debug.xcconfig"; path = "Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		BEDDEE19F3D821C5744FB7B2 /* Pods-Menual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.release.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -804,8 +806,8 @@
 				9888DDF227646F000091918F /* MenualTests */,
 				9888DDFC27646F000091918F /* MenualUITests */,
 				9888DDDA27646EFF0091918F /* Products */,
-				C136E0769DBA6A801D667AFF /* Pods */,
 				EBD7C8EB992F559C0691738A /* Frameworks */,
+				A020371E0B2962BA164D45ED /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1352,6 +1354,7 @@
 				98F31DC428CC65B900EE1C8A /* MenualBottomSheetMenuComponentView.swift */,
 				98F31DC728CC782B00EE1C8A /* MenualBottomSheetFilterComponentView.swift */,
 				98F31DC928CC7F2000EE1C8A /* MenualDateFilterComponentView.swift */,
+				988C10A82920BA0100C80937 /* MenualBottomSheetReminderComponentView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1398,15 +1401,15 @@
 			path = DiaryBottomSheet;
 			sourceTree = "<group>";
 		};
-		C136E0769DBA6A801D667AFF /* Pods */ = {
+		A020371E0B2962BA164D45ED /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				51C59AD422F160C7C260E2D9 /* Pods-Menual.debug.xcconfig */,
-				8AB1EEBE6F2C30203EE560C0 /* Pods-Menual.release.xcconfig */,
-				24B06901DAD6C1819FD42947 /* Pods-Menual-MenualUITests.debug.xcconfig */,
-				611BE1DAFD06695449F2132F /* Pods-Menual-MenualUITests.release.xcconfig */,
-				2F6083CA813FC6C00D4C96D8 /* Pods-MenualTests.debug.xcconfig */,
-				A53C98DCB5D2180263C3A986 /* Pods-MenualTests.release.xcconfig */,
+				14B2CBE1BDA5FD82DA28DF98 /* Pods-Menual.debug.xcconfig */,
+				BEDDEE19F3D821C5744FB7B2 /* Pods-Menual.release.xcconfig */,
+				B0D284BB62383F1EDBC7DFA5 /* Pods-Menual-MenualUITests.debug.xcconfig */,
+				850884D7609C295FBFAE27B8 /* Pods-Menual-MenualUITests.release.xcconfig */,
+				146913CAF8A1A7F002CD5FE4 /* Pods-MenualTests.debug.xcconfig */,
+				4EE85DE83B386BD87B7AC16E /* Pods-MenualTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1868,6 +1871,7 @@
 				985E0EF827C21DEC00057951 /* RegisterIDInteractor.swift in Sources */,
 				980924B6279BCD670034D0CC /* DiaryHomeRouter.swift in Sources */,
 				98F3A28128150052000851F0 /* DiaryBottomSheetInteractor.swift in Sources */,
+				988C10A92920BA0100C80937 /* MenualBottomSheetReminderComponentView.swift in Sources */,
 				98A56C65286775CA000AC4FF /* ImageUploadView.swift in Sources */,
 				98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */,
 				985E0F0427C232E300057951 /* RegisterPWRouter.swift in Sources */,
@@ -2095,14 +2099,14 @@
 		};
 		9888DE0427646F000091918F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 51C59AD422F160C7C260E2D9 /* Pods-Menual.debug.xcconfig */;
+			baseConfigurationReference = 14B2CBE1BDA5FD82DA28DF98 /* Pods-Menual.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -2117,10 +2121,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menual;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2129,14 +2136,14 @@
 		};
 		9888DE0527646F000091918F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8AB1EEBE6F2C30203EE560C0 /* Pods-Menual.release.xcconfig */;
+			baseConfigurationReference = BEDDEE19F3D821C5744FB7B2 /* Pods-Menual.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -2151,10 +2158,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menual;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2163,12 +2173,12 @@
 		};
 		9888DE0727646F000091918F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2F6083CA813FC6C00D4C96D8 /* Pods-MenualTests.debug.xcconfig */;
+			baseConfigurationReference = 146913CAF8A1A7F002CD5FE4 /* Pods-MenualTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -2189,12 +2199,12 @@
 		};
 		9888DE0827646F000091918F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A53C98DCB5D2180263C3A986 /* Pods-MenualTests.release.xcconfig */;
+			baseConfigurationReference = 4EE85DE83B386BD87B7AC16E /* Pods-MenualTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -2215,11 +2225,11 @@
 		};
 		9888DE0A27646F000091918F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 24B06901DAD6C1819FD42947 /* Pods-Menual-MenualUITests.debug.xcconfig */;
+			baseConfigurationReference = B0D284BB62383F1EDBC7DFA5 /* Pods-Menual-MenualUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2239,11 +2249,11 @@
 		};
 		9888DE0B27646F000091918F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 611BE1DAFD06695449F2132F /* Pods-Menual-MenualUITests.release.xcconfig */;
+			baseConfigurationReference = 850884D7609C295FBFAE27B8 /* Pods-Menual-MenualUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 115;
+				CURRENT_PROJECT_VERSION = 116;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
