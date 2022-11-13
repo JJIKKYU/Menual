@@ -164,6 +164,12 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         $0.isHidden = true
     }
     
+    // 리마인더 컴포넌트
+    private lazy var reminderComponentView = MenualBottomSheetReminderComponentView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isHidden = true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setViews()
@@ -243,6 +249,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         bottomSheetView.addSubview(menuComponentView)
         bottomSheetView.addSubview(filterComponentView)
         bottomSheetView.addSubview(dateFilterComponentView)
+        bottomSheetView.addSubview(reminderComponentView)
 
 //        weatherPlaceSelectView.snp.makeConstraints { make in
 //            make.leading.width.equalToSuperview()
@@ -266,6 +273,13 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             make.top.equalTo(self.divider.snp.bottom).offset(64)
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
+        }
+        
+        reminderComponentView.snp.makeConstraints { make in
+            make.top.equalTo(self.divider.snp.bottom).offset(16)
+            make.leading.equalToSuperview().offset(24)
+            make.width.equalToSuperview().inset(24)
+            make.bottom.equalToSuperview().inset(35)
         }
     }
     
@@ -315,6 +329,9 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             
         case .reminder:
             bottomSheetTitle = "리마인더 알림"
+            reminderComponentView.isHidden = false
+            menualBottomSheetRightBtnType = .close
+            rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .menu:
             bottomSheetTitle = "메뉴"
@@ -525,7 +542,7 @@ extension DiaryBottomSheetViewController {
             
         case .reminder:
             bottomSheetTitle = "리마인더 알림"
-            bottomSheetHeight = 592
+            bottomSheetHeight = 622
         }
     }
 

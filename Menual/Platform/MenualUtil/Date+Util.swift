@@ -142,3 +142,30 @@ extension String {
         }
     }
 }
+
+// MARK: - Custom Calndar 제작을 위한 extension
+extension Date {
+    var weekday: Int {
+        get {
+            Calendar.current.component(.weekday, from: self)
+        }
+    }
+    
+    var fistDayOfTheMonth: Date {
+        get {
+            Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
+        }
+    }
+}
+
+extension String {
+    static var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    
+    var date: Date? {
+        String.dateFormatter.date(from: self)
+    }
+}
