@@ -333,6 +333,16 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             menualBottomSheetRightBtnType = .close
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
+            // TODO
+            let center = UNUserNotificationCenter.current()
+            center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                if let error = error {
+                    print("DiaryBottomSheet :: error! \(error.localizedDescription)")
+                }
+                
+                print("DiaryBottomSheet :: 권한 됐니?")
+            }
+            
         case .menu:
             bottomSheetTitle = "메뉴"
             print("DiaryBottomSheet :: 메뉴입니다.")

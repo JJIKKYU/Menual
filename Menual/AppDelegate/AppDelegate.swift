@@ -67,6 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          */
         
         
+        UNUserNotificationCenter.current().delegate = self
         
         return true
     }
@@ -74,4 +75,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 protocol URLHandler: AnyObject {
   func handle(_ url: URL)
+}
+
+
+// MARK: - Notification
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.list, .banner])
+    }
 }

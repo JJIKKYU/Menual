@@ -233,6 +233,50 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
+            guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
+                print("Reminder :: 알림 권한이 없습니다.")
+                return
+            }
+            
+            if settings.alertSetting == .enabled {
+                // Schedule an alert-only notification
+                print("Reminder :: 알림 권한이 enabled 합니다. - Schedule an alert-only notification")
+            } else {
+                print("Reminder :: 알림 권한이 enabled 합니다. - Schedule a notification with a badge and sound.")
+            }
+            
+            let content = UNMutableNotificationContent()
+            content.title = "알림 테스트입니다."
+            content.body = "알림 테스트 알림 테스트 알림 테스트 알림 테스트 알림 테스트"
+            
+            // Configure the recurring date.
+            var dateComponents = DateComponents()
+            dateComponents.calendar = Calendar.current
+            dateComponents.weekday = 2
+            dateComponents.hour = 17
+            dateComponents.minute = 41
+            
+            // Create the trigger as a repating event.
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+            
+            // Create the request
+            let uuidString = UUID().uuidString
+            let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
+            
+            // Schedule the request with the system
+            let notificationCenter = UNUserNotificationCenter.current()
+            notificationCenter.add(request) { error in
+                print("Reminder :: 됐나!? - 1")
+                if error != nil {
+                    print("Reminder :: 됐나!? NoError! - 2")
+                }
+            }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let widthHeight = collectionView.frame.width / 7
         return CGSize(width: widthHeight, height: widthHeight)
