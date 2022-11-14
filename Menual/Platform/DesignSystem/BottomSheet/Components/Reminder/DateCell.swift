@@ -11,11 +11,21 @@ import SnapKit
 
 class DateCell: UICollectionViewCell {
     
+    public var index: Int = 0
+    
     public var date: String = "0" {
         didSet { setNeedsLayout() }
     }
     
     public var labelColor: UIColor = Colors.grey.g600 {
+        didSet { setNeedsLayout() }
+    }
+    
+    override var isSelected: Bool {
+        didSet { setNeedsLayout() }
+    }
+    
+    public override var isUserInteractionEnabled: Bool {
         didSet { setNeedsLayout() }
     }
 
@@ -55,5 +65,21 @@ class DateCell: UICollectionViewCell {
         
         dateLabel.text = date
         dateLabel.textColor = labelColor
+        
+        print("Reminder :: cell -> isSelected! = \(isSelected)")
+        
+        switch isUserInteractionEnabled {
+        case true:
+            switch isSelected {
+            case true:
+                dateLabel.textColor = .red
+
+            case false:
+                dateLabel.textColor = Colors.grey.g200
+            }
+            
+        case false:
+            dateLabel.textColor = Colors.grey.g600
+        }
     }
 }

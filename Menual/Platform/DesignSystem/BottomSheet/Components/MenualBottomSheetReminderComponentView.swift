@@ -164,10 +164,14 @@ class MenualBottomSheetReminderComponentView: UIView {
     }
     
     func setInitCalendar() {
+        monthView.yearAndMonth = Date().toString()
+        
         currentMonthIndex = Calendar.current.component(.month, from: Date())
         presentMonthIndex = currentMonthIndex
+
         currentYear = Calendar.current.component(.year, from: Date())
         presentYear = currentYear
+
         todaysDate = Calendar.current.component(.day, from: Date())
         firstWeekDayOfMonth=getFirstWeekDay()
     }
@@ -205,6 +209,7 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         if indexPath.item <= firstWeekDayOfMonth - 2 {
             let calcDate = numOfDaysInMonth[currentMonthIndex - 2] - ((firstWeekDayOfMonth - 2) / (indexPath.row + 1))
             cell.date = "\(calcDate)"
+            cell.isUserInteractionEnabled = false
             // cell.isHidden = true
         } else {
             let calcDate = indexPath.row - firstWeekDayOfMonth + 2
@@ -230,10 +235,35 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
                 }
             }
         }
+        
+        cell.index = indexPath.row
+
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+
+        guard let cell = collectionView.cellForItem(at: indexPath) as? DateCell else { return true }
+        
+        // 이미 선택했을 경우 선택해제 되도록
+        if cell.isSelected {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            return false
+        } else {
+            return true
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+        guard let cell = collectionView.cellForItem(at: indexPath) as? DateCell else { return }
+        
+        let selectedIndex = cell.index
+        let date = cell.date
+        
+        print("Reminder :: Selected! cell = \(cell.index), date = \(cell.date)")
+        /*
+         
         let center = UNUserNotificationCenter.current()
         center.getNotificationSettings { settings in
             guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
@@ -275,6 +305,13 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
                 }
             }
         }
+         */
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? DateCell else { return }
+        
+        print("Reminder :: didDeselected!")
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
