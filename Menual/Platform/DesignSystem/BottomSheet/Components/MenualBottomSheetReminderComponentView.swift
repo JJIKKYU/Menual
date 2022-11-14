@@ -8,6 +8,8 @@
 import UIKit
 import Then
 import SnapKit
+import RxSwift
+import RxRelay
 
 protocol MenualBottomSheetReminderComponentViewDelegate {
     func pressedQuestionBtn()
@@ -20,12 +22,19 @@ class MenualBottomSheetReminderComponentView: UIView {
     // 윤달 처리를 위해서
     private var numOfDaysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31]
 
+    // 오늘 연도 / 달
     var currentMonthIndex: Int = 0
     var currentYear: Int = 0
+
+    // 오늘이 아닌 보여주고 있는 연도 / 달
     var presentMonthIndex = 0
     var presentYear = 0
+
     var todaysDate = 0
     var firstWeekDayOfMonth = 0   //(Sunday-Saturday 1-
+    
+    private let isEnabledReminderRelay = BehaviorRelay<Bool>(value: false)
+    private let disposedBag = DisposeBag()
     
     private let reminderTitleLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -46,7 +55,7 @@ class MenualBottomSheetReminderComponentView: UIView {
     
     lazy var switchBtn = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        // $0.addTarget(self, action: #selector(selectedSwitchBtn), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(selectedSwitchBtn), for: .touchUpInside)
         $0.onTintColor = Colors.tint.main.v400
         $0.tintColor = Colors.grey.g700
         $0.transform = CGAffineTransform(scaleX: 0.78, y: 0.78)
@@ -56,9 +65,10 @@ class MenualBottomSheetReminderComponentView: UIView {
         $0.backgroundColor = Colors.grey.g700
     }
     
-    private let monthView = MonthView().then { (view: MonthView) in
+    private lazy var monthView = MonthView().then { (view: MonthView) in
         view.yearAndMonth = "2022.12"
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.delegate = self
     }
     
     private lazy var calendarCollectionView = UICollectionView(frame: .zero, collectionViewLayout: .init()).then {
@@ -80,9 +90,10 @@ class MenualBottomSheetReminderComponentView: UIView {
 
     }
     
-    private lazy var selectBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = "선택 완료"
+    private lazy var selectBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then { (btn: BoxButton) in
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.title = "선택 완료"
+        btn.addTarget(self, action: #selector(pressedSelectBtn), for: .touchUpInside)
     }
 
     init() {
@@ -90,6 +101,7 @@ class MenualBottomSheetReminderComponentView: UIView {
         setInitCalendar()
         setLeapYear()
         setViews()
+        bind()
     }
     
     required init?(coder: NSCoder) {
@@ -156,6 +168,18 @@ class MenualBottomSheetReminderComponentView: UIView {
         super.layoutSubviews()
     }
     
+    func bind() {
+        isEnabledReminderRelay
+            .subscribe(onNext: { [weak self] isEnabled in
+                guard let self = self else { return }
+
+                self.monthView.isEnabled = isEnabled
+                self.calendarCollectionView.reloadData()
+                
+            })
+            .disposed(by: disposedBag)
+    }
+    
     // 윤달 처리
     func setLeapYear() {
         if currentMonthIndex == 2 && currentYear % 4 == 0 {
@@ -173,7 +197,7 @@ class MenualBottomSheetReminderComponentView: UIView {
         presentYear = currentYear
 
         todaysDate = Calendar.current.component(.day, from: Date())
-        firstWeekDayOfMonth=getFirstWeekDay()
+        firstWeekDayOfMonth = getFirstWeekDay()
     }
     
     func getFirstWeekDay() -> Int {
@@ -190,6 +214,18 @@ extension MenualBottomSheetReminderComponentView {
         // delegate?.pressedQuestionBtn()
         calendarCollectionView.reloadData()
     }
+    
+    @objc
+    func selectedSwitchBtn() {
+        let isEnabled = switchBtn.isOn
+        print("Reminder :: isEnabled = \(isEnabled)")
+        isEnabledReminderRelay.accept(isEnabled)
+    }
+    
+    @objc
+    func pressedSelectBtn() {
+        print("Reminder :: pressedSelectBtn!")
+    }
 }
 
 // MARK: - Calendar UICollectionVIew Delegate
@@ -201,30 +237,45 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print("Reminder :: !!")
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DateCell", for: indexPath) as? DateCell else {
             return UICollectionViewCell()
         }
 
+        cell.isToday = false
+
         if indexPath.item <= firstWeekDayOfMonth - 2 {
-            let calcDate = numOfDaysInMonth[currentMonthIndex - 2] - ((firstWeekDayOfMonth - 2) / (indexPath.row + 1))
-            cell.date = "\(calcDate)"
-            cell.isUserInteractionEnabled = false
+            // 저번달이 작년 12월일 경우
+            if currentMonthIndex - 2 < 0 {
+                let calcDate = numOfDaysInMonth[11] - ((firstWeekDayOfMonth - 2) / (indexPath.row + 1))
+                cell.date = "\(calcDate)"
+                cell.isUserInteractionEnabled = false
+            } else {
+                let calcDate = numOfDaysInMonth[currentMonthIndex - 2] - ((firstWeekDayOfMonth - 2) / (indexPath.row + 1))
+                cell.date = "\(calcDate)"
+                cell.isUserInteractionEnabled = false
+            }
+            
             // cell.isHidden = true
         } else {
             let calcDate = indexPath.row - firstWeekDayOfMonth + 2
             cell.isHidden = false
             cell.date = "\(calcDate)"
 
-            // 현재 표시하고 있는 달이 현재 날짜보다 지난 날일 경우 선택 못하도록
-            if calcDate < todaysDate && currentYear == presentYear && currentMonthIndex == presentMonthIndex {
-                print("Reminder :: 1- calcDate! \(calcDate)")
+            // 오늘
+            if calcDate == todaysDate && currentYear == presentYear && currentMonthIndex == presentMonthIndex {
                 cell.isUserInteractionEnabled = false
-                cell.labelColor = Colors.grey.g600
+                // cell.labelColor = Colors.grey.g600
+                cell.isToday = true
+            }
+            // 현재 표시하고 있는 달이 현재 날짜보다 지난 날일 경우 선택 못하도록
+            else if calcDate < todaysDate && currentYear == presentYear && currentMonthIndex == presentMonthIndex {
+                // print("Reminder :: 1- calcDate! \(calcDate)")
+                cell.isUserInteractionEnabled = false
+                // cell.labelColor = Colors.grey.g600
             } else {
-                print("Reminder :: 2- calcDate! \(calcDate)")
+                // print("Reminder :: 2- calcDate! \(calcDate)")
                 cell.isUserInteractionEnabled = true
-                cell.labelColor = Colors.grey.g200
+                // cell.labelColor = Colors.grey.g200
 
                 // 다음달 일 경우
                 if indexPath.item > numOfDaysInMonth[currentMonthIndex - 1] + firstWeekDayOfMonth - 2 {
@@ -237,6 +288,11 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         }
         
         cell.index = indexPath.row
+        // cell.layoutIfNeeded()
+        
+        if isEnabledReminderRelay.value == false {
+            cell.isUserInteractionEnabled = false
+        }
 
         return cell
     }
@@ -325,5 +381,56 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+}
+
+// MARK: - MonthView Delgate
+extension MenualBottomSheetReminderComponentView: MonthViewDelegate {
+    func pressedLeftBtn() {
+        print("Reminder :: left!")
+        
+        if presentYear == currentYear {
+            if presentMonthIndex == currentMonthIndex {
+                print("Reminder :: 이전 달 이동 불가능")
+            } else {
+                currentMonthIndex -= 1
+            }
+        } else if presentYear != currentYear {
+            if currentMonthIndex <= 1 {
+                currentMonthIndex = 12
+                currentYear -= 1
+            } else {
+                currentMonthIndex -= 1
+            }
+        }
+        
+        firstWeekDayOfMonth = getFirstWeekDay()
+        monthView.yearAndMonth = "\(currentYear).\(currentMonthIndex)"
+        calendarCollectionView.reloadData()
+    }
+    
+    func pressedRightBtn() {
+        print("Reminder :: right!")
+
+        // 다음 달 이동이 가능하면
+//        if let presentMonth = numOfDaysInMonth[safe: presentMonthIndex] {
+//            print("Reminder :: presentMonth = \(presentMonth)")
+//            presentMonthIndex += 1
+//        }
+//
+        if currentMonthIndex >= 12  {
+            print("Reminder :: 다음 달 이동 불가능")
+            currentMonthIndex = 1
+            currentYear += 1
+        } else {
+            print("Reminder :: 다음 달 이동 가능")
+            currentMonthIndex += 1
+        }
+        
+        firstWeekDayOfMonth = getFirstWeekDay()
+        monthView.yearAndMonth = "\(currentYear).\(currentMonthIndex)"
+        calendarCollectionView.reloadData()
+
+        print("Reminder :: currentMonthIndex = \(currentMonthIndex)")
     }
 }

@@ -9,6 +9,11 @@ import UIKit
 import Then
 import SnapKit
 
+protocol MonthViewDelegate {
+    func pressedLeftBtn()
+    func pressedRightBtn()
+}
+
 class MonthView: UIView {
     
     private var presentedMonth: Int = Calendar.current.component(.month, from: Date())
@@ -18,11 +23,37 @@ class MonthView: UIView {
         didSet { setNeedsLayout() }
     }
     
+    var isEnabled: Bool = false {
+        didSet { setNeedsLayout() }
+    }
+    
+    var delegate: MonthViewDelegate?
+    
     private let monthLabel = UILabel().then {
         $0.font = UIFont.AppTitle(.title_3)
         $0.text = "20YY년 MM월"
         $0.textColor = Colors.grey.g600
         $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private lazy var leftBtn = UIButton().then { (btn: UIButton) in
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.tintColor = Colors.grey.g600
+        btn.contentMode = .scaleAspectFit
+        btn.contentHorizontalAlignment = .fill
+        btn.contentVerticalAlignment = .fill
+        btn.addTarget(self, action: #selector(pressedLeftBtn), for: .touchUpInside)
+    }
+    
+    private lazy var rightBtn = UIButton().then { (btn: UIButton) in
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setImage(Asset._24px.Arrow.front.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.tintColor = Colors.grey.g200
+        btn.contentMode = .scaleAspectFit
+        btn.contentHorizontalAlignment = .fill
+        btn.contentVerticalAlignment = .fill
+        btn.addTarget(self, action: #selector(pressedRightBtn), for: .touchUpInside)
     }
 
     init() {
@@ -36,10 +67,24 @@ class MonthView: UIView {
     
     func setViews() {
         addSubview(monthLabel)
+        addSubview(leftBtn)
+        addSubview(rightBtn)
         
         monthLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
+        }
+        
+        leftBtn.snp.makeConstraints { make in
+            make.trailing.equalTo(monthLabel.snp.leading).offset(-16)
+            make.centerY.equalTo(monthLabel)
+            make.width.height.equalTo(24)
+        }
+        
+        rightBtn.snp.makeConstraints { make in
+            make.leading.equalTo(monthLabel.snp.trailing).offset(16)
+            make.centerY.equalTo(monthLabel)
+            make.width.height.equalTo(24)
         }
     }
     
@@ -54,6 +99,39 @@ class MonthView: UIView {
         }
         
         monthLabel.text = "\(year)년 \(month)월"
+        
+        switch isEnabled {
+        case true:
+            monthLabel.textColor = Colors.grey.g100
+            rightBtn.tintColor = Colors.grey.g100
+            if Int(year) == presentedYear && Int(month) == presentedMonth {
+                leftBtn.tintColor = Colors.grey.g600
+            } else {
+                leftBtn.tintColor = Colors.grey.g100
+            }
+            leftBtn.isUserInteractionEnabled = true
+            rightBtn.isUserInteractionEnabled = true
+            
+        case false:
+            monthLabel.textColor = Colors.grey.g600
+            rightBtn.tintColor = Colors.grey.g600
+            leftBtn.tintColor = Colors.grey.g600
+            leftBtn.isUserInteractionEnabled = false
+            rightBtn.isUserInteractionEnabled = false
+        }
     }
 
+}
+
+// MARK: - IBAction
+extension MonthView {
+    @objc
+    func pressedLeftBtn() {
+        delegate?.pressedLeftBtn()
+    }
+    
+    @objc
+    func pressedRightBtn() {
+        delegate?.pressedRightBtn()
+    }
 }
