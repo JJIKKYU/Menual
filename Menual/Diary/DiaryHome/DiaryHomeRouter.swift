@@ -174,13 +174,17 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     }
     
     // MARK: - Diary Writing 관련 함수
-    func attachDiaryWriting() {
+    func attachDiaryWriting(page: Int) {
         print("DiaryHomeRouter :: attachDiaryWriting")
         if diaryWritingRouting != nil {
             return
         }
         
-        let router = diaryWritingBuildable.build(withListener: interactor, diaryModel: nil)
+        let router = diaryWritingBuildable.build(
+            withListener: interactor,
+            diaryModel: nil,
+            page: page
+        )
         // Bottom Up 되도록 수정
         presentInsideNavigation(router.viewControllable)
         // viewController.present(router.viewControllable, animated: true, completion: nil)

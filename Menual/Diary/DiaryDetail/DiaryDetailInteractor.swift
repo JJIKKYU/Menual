@@ -14,7 +14,7 @@ protocol DiaryDetailRouting: ViewableRouting {
     func detachBottomSheet(isWithDiaryDetatil: Bool)
     
     // 수정하기
-    func attachDiaryWriting(diaryModel: DiaryModel)
+    func attachDiaryWriting(diaryModel: DiaryModel, page: Int)
     func detachDiaryWriting(isOnlyDetach: Bool)
     
     // 이미지 자세히 보기
@@ -109,7 +109,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 case .edit:
                     self.router?.detachBottomSheet(isWithDiaryDetatil: false)
                     guard let diaryModel = self.diaryModel else { return }
-                    self.router?.attachDiaryWriting(diaryModel: diaryModel)
+                    self.router?.attachDiaryWriting(diaryModel: diaryModel, page: diaryModel.pageNum)
                     
                 case .delete:
                     guard let diaryModel = self.diaryModel else { return }

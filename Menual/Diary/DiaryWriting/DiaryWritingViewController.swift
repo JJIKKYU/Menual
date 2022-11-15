@@ -28,6 +28,8 @@ protocol DiaryWritingPresentableListener: AnyObject {
     func saveTempSave(diaryModel: DiaryModel)
     func pressedWeatherPlaceAddBtn(type: BottomSheetSelectViewType)
     func pressedTempSaveBtn()
+    
+    var page: Int { get }
 }
 
 final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable {
@@ -161,8 +163,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.tag = TextViewType.description.rawValue
     }
     
-    private let datePageTextCountView = DatePageTextCountView().then {
+    private lazy var datePageTextCountView = DatePageTextCountView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.page = String(self.listener?.page ?? 0)
     }
     
     private let divider4 = Divider(type: ._1px).then {

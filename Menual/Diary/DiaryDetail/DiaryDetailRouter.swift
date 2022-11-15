@@ -110,14 +110,15 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
     }
     
     // 바텀싯 수정하기
-    func attachDiaryWriting(diaryModel: DiaryModel) {
+    func attachDiaryWriting(diaryModel: DiaryModel, page: Int) {
         if diaryWritingRouting != nil {
             return
         }
         print("바텀싯 수정하기! = \(diaryModel)")
         let router = diaryWritingBuildable.build(
             withListener: interactor,
-            diaryModel: diaryModel
+            diaryModel: diaryModel,
+            page: page
         )
 
         presentInsideNavigation(router.viewControllable, style: .fullScreen)

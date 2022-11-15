@@ -17,7 +17,7 @@ protocol DiaryHomeRouting: ViewableRouting {
     func detachDiarySearch(isOnlyDetach: Bool)
     func attachDiaryMoments()
     func detachDiaryMoments()
-    func attachDiaryWriting()
+    func attachDiaryWriting(page: Int)
     func detachDiaryWriting(isOnlyDetach: Bool)
     func attachDiaryDetail(model: DiaryModel)
     func detachDiaryDetail(isOnlyDetach: Bool)
@@ -204,7 +204,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     // MARK: - Diary Writing 관련 함수
     func pressedWritingBtn() {
         print("DiaryHomeInteractor :: pressedWritingBtn!")
-        router?.attachDiaryWriting()
+        router?.attachDiaryWriting(page: lastPageNumRelay.value + 1)
     }
     
     func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryWritingInteractor.DiaryWritingMode) {

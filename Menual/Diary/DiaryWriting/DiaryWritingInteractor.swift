@@ -41,6 +41,8 @@ protocol DiaryWritingInteractorDependency {
 }
 
 final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentable>, DiaryWritingInteractable, DiaryWritingPresentableListener {
+
+    var page: Int
     
     enum DiaryWritingMode {
         case writing
@@ -99,7 +101,8 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     init(
         presenter: DiaryWritingPresentable,
         dependency: DiaryWritingInteractorDependency,
-        diaryModel: DiaryModel?
+        diaryModel: DiaryModel?,
+        page: Int
     ) {
         self.dependency = dependency
         self.disposebag = DisposeBag()
@@ -107,6 +110,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         if let diaryModel = diaryModel {
             self.diaryModelRelay.accept(diaryModel)
         }
+        self.page = page
         super.init(presenter: presenter)
         presenter.listener = self
     }
