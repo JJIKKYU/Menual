@@ -34,6 +34,8 @@ class MenualBottomSheetReminderComponentView: UIView {
     var firstWeekDayOfMonth = 0   //(Sunday-Saturday 1-
     
     private let isEnabledReminderRelay = BehaviorRelay<Bool>(value: false)
+    private let isSelectedReminderDayIndexRelay = BehaviorRelay<Int?>(value: nil)
+
     private let disposedBag = DisposeBag()
     
     private let reminderTitleLabel = UILabel().then {
@@ -174,8 +176,37 @@ class MenualBottomSheetReminderComponentView: UIView {
                 guard let self = self else { return }
 
                 self.monthView.isEnabled = isEnabled
+                switch isEnabled {
+                case true:
+                    self.selectBtn.isEnabled = true
+
+                case false:
+                    self.selectBtn.btnStatus = .inactive
+                    self.selectBtn.isEnabled = false
+                    self.isSelectedReminderDayIndexRelay.accept(nil)
+                }
+                
                 self.calendarCollectionView.reloadData()
                 
+            })
+            .disposed(by: disposedBag)
+        
+        isSelectedReminderDayIndexRelay
+            .subscribe(onNext: { [weak self] selectedDate in
+                guard let self = self else { return }
+
+                // select가 취소 되었을 경우
+                guard let selectedDate = selectedDate else {
+                    print("Reminder :: 선택한 날이 없습니다.")
+                    self.selectBtn.btnStatus = .inactive
+                    return
+                }
+                
+                self.selectBtn.btnStatus = .active
+                print("Reminder :: selectedDate = \(selectedDate)")
+                
+                print("Reminder :: \(self.currentYear)년 \(self.currentMonthIndex)월 \(selectedDate)일을 선택 하셨습니다.")
+
             })
             .disposed(by: disposedBag)
     }
@@ -316,8 +347,10 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         
         let selectedIndex = cell.index
         let date = cell.date
-        
+
         print("Reminder :: Selected! cell = \(cell.index), date = \(cell.date)")
+        isSelectedReminderDayIndexRelay.accept(Int(cell.date))
+
         /*
          
         let center = UNUserNotificationCenter.current()

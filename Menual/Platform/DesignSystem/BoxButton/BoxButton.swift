@@ -48,6 +48,16 @@ class BoxButton: UIButton {
         didSet { setNeedsLayout() }
     }
     
+    override var isHighlighted: Bool {
+        didSet {
+            if isHighlighted {
+                btnStatus = .pressed
+            } else {
+                setNeedsLayout()
+            }
+        }
+    }
+    
     private let btnLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = Colors.grey.g800
@@ -123,6 +133,14 @@ class BoxButton: UIButton {
             } else {
                 backgroundColor = Colors.tint.sub.n400
             }
+        }
+        
+        switch isHighlighted {
+        case true:
+            print("BoxButton :: isSelecteed! - true")
+
+        case false:
+            print("BoxButton :: isSelecteed! - false")
         }
         
 //        if btnStatus == .inactive { return }

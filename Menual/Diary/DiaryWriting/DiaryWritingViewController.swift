@@ -390,7 +390,10 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         isEditBeginRelay
             .subscribe(onNext: { [weak self] isEditBegin in
                 guard let self = self else { return }
+                if self.writingType != .edit { return }
+
                 print("DiaryWriting :: isEditBeginRelay! \(isEditBegin)")
+
                 switch isEditBegin {
                 case true:
                     self.naviView.rightButton1IsActive = true
@@ -444,7 +447,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
                                         title: title == defaultTitleText ? Date().toString() : title,
                                         weather: weatherModel,
                                         place: placeModel,
-                                        description: description,
+                                        description: description == defaultDescriptionText ? "" : description,
                                         image: self.selectedImage,
                                         originalImage: self.selectedOriginalImage,
                                         readCount: 0,
@@ -476,7 +479,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
                                         title: title == defaultTitleText ? Date().toString() : title,
                                         weather: weatherModel,
                                         place: placeModel,
-                                        description: description,
+                                        description: description == defaultDescriptionText ? "" : description,
                                         image: self.selectedImage,
                                         originalImage: self.selectedOriginalImage,
                                         readCount: 0,
@@ -1019,7 +1022,14 @@ extension DiaryWritingViewController: CropViewControllerDelegate {
         self.selectedImage = image
         self.imageUploadView.image = image
         self.isEdittedIamge = true
-        self.isEditBeginRelay.accept(true)
+
+        // 텍스트는 기본 텍스트고 이미지만 변경했을 경우에는 업로드 불가능
+        if descriptionTextView.text == defaultDescriptionText && writingType == .writing {
+            self.isEditBeginRelay.accept(false)
+        } else {
+            self.isEditBeginRelay.accept(true)
+        }
+
         dismiss(animated: true)
     }
 }

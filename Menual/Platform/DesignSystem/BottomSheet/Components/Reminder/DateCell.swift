@@ -116,6 +116,7 @@ class DateCell: UICollectionViewCell {
             
         case false:
             dateLabel.textColor = Colors.grey.g600
+            selectedCircleView.isHidden = true
         }
         
         switch isToday {
