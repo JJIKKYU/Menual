@@ -226,11 +226,23 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
 
         locationSelectView.selectTextView.inputAccessoryView = weatherPlaceToolbarView
         weatherSelectView.selectTextView.inputAccessoryView = weatherPlaceToolbarView
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
         // keyboard observer등록
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
                 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+
+        // Delegate 해제
+        weatherPlaceToolbarView.delegate = self
+        titleTextField.delegate = self
+        descriptionTextView.delegate = self
+        weatherSelectView.selectTextView.delegate = self
+        locationSelectView.selectTextView.delegate = self
+        cropVC?.delegate = self
     }
     
     override func viewDidDisappear(_ animated: Bool) {
