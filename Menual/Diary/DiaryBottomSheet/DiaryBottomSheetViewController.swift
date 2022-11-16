@@ -55,6 +55,7 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     
     // MenualBottomSheetReminderComponentView
     func reminderCompViewshowToast(isEding: Bool)
+    func reminderCompViewSetReminder(requestDateComponents: DateComponents, requestDate: Date)
     // var filteredDiaryCountRelay: BehaviorRelay<Int>? { get set }
 }
 
@@ -648,7 +649,7 @@ extension DiaryBottomSheetViewController {
 
 // MARK: - ReminderComponentView
 extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentViewDelegate {
-    func pressedSelectBtn(isEditing: Bool) {
+    func pressedSelectBtn(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date) {
 //        switch isEditing {
 //        case true:
 //            showToast(message: "리마인더 알림이 수정되었어요.")
@@ -660,7 +661,9 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
 //            hideBottomSheetAndGoBack()
 //        }
 //
+        
         listener?.reminderCompViewshowToast(isEding: isEditing)
+        listener?.reminderCompViewSetReminder(requestDateComponents: requestDateComponents, requestDate: requestDate)
         hideBottomSheetAndGoBack()
     }
     
@@ -672,6 +675,14 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
              titleText: "날짜를 선택해 보세요",
              subTitleText: "오늘 쓴 일기 알림을 보내드려요.\n과거의 내가 어떻게 달라졌는지 확인해 보세요",
              confirmButtonText: "좋아요")
+    }
+    
+    func isNeedReminderAuthorization() {
+        show(size: .small,
+             buttonType: .oneBtn,
+             titleText: "설정에서 Menual의 알림을 활성화 해주세요.",
+             confirmButtonText: "네"
+        )
     }
 }
 
@@ -688,6 +699,14 @@ extension DiaryBottomSheetViewController: DialogDelegate {
         case "해당 메뉴얼을 삭제하시겠어요?":
             listener?.menuComponentRelay?.accept(.delete)
             hideBottomSheetAndGoBack()
+            
+        case "설정에서 Menual의 알림을 활성화 해주세요.":
+            guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            }
+            break
 
         default:
             break
@@ -703,6 +722,9 @@ extension DiaryBottomSheetViewController: DialogDelegate {
             
         case "해당 메뉴얼을 삭제하시겠어요?":
             hideBottomSheetAndGoBack()
+            
+        case "설정에서 Menual의 알림을 활성화 해주세요.":
+            break
 
         default:
             break

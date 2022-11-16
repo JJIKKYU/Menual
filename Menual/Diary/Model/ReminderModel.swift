@@ -28,7 +28,7 @@ public struct ReminderModel {
     
     init(_ realm: ReminderModelRealm) {
         self.uuid = realm.uuid
-        self.diaryUUID = realm.uuid
+        self.diaryUUID = realm.diaryUUID
         self.requestDate = realm.requestDate
         self.requestUUID = realm.requestUUID
         self.createdAt = realm.createdAt

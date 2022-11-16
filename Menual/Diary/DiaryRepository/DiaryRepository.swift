@@ -221,6 +221,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         self.fetchDiary()
         self.fetchRecntDiarySearch()
+        self.fetchReminder()
     }
     
     // MARK: - Diary Fetch
@@ -745,6 +746,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             realm.add(realmModel)
         }
         
+        print("diaryRepo :: addReminder!!")
         self.fetchReminder()
     }
     

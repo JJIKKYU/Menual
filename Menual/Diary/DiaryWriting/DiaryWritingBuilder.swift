@@ -19,6 +19,8 @@ final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWriti
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? // 미사용
+
 }
 
 // MARK: - Builder

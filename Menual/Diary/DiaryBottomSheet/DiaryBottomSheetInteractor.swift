@@ -50,6 +50,8 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
+    
+    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>?
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -156,6 +158,16 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
          */
     }
     
+    func setReminderRequestDate(relay: BehaviorRelay<DateComponents?>?) {
+        self.reminderRequestDateRelay = relay
+        self.reminderRequestDateRelay?
+            .subscribe(onNext : { [weak self] date in
+                guard let self = self else { return }
+                print("DiaryBottomSheet :: 나중에 수정 만들때 하면 될듯")
+        })
+            .disposed(by: disposeBag)
+    }
+    
     func pressedCloseBtn() {
         print("pressedCloseBtn")
         listener?.diaryBottomSheetPressedCloseBtn()
@@ -217,7 +229,10 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     func reminderCompViewshowToast(isEding: Bool) {
         listener?.reminderCompViewshowToast(isEding: isEding)
     }
-    
+
+    func reminderCompViewSetReminder(requestDateComponents: DateComponents, requestDate: Date) {
+        self.reminderRequestDateRelay?.accept(requestDateComponents)
+    }
 }
 
 // MARK: - 미사용

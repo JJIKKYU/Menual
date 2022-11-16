@@ -16,6 +16,7 @@ protocol DiaryBottomSheetDependency: Dependency {
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
+    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
 }
 
 final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency>, DiaryWritingDependency {
@@ -65,6 +66,7 @@ final class DiaryBottomSheetBuilder: Builder<DiaryBottomSheetDependency>, DiaryB
 
         interactor.setFilteredDiaryCountRelay(relay: dependency.filteredDiaryCountRelay)
         interactor.setFilteredWeatherPlaceArrRelay(weatherArrRelay: dependency.filteredWeatherArrRelay, placeArrRelay: dependency.filteredPlaceArrRelay)
+        interactor.setReminderRequestDate(relay: dependency.reminderRequestDateRelay)
 
         interactor.listener = listener
 

@@ -21,6 +21,8 @@ final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailI
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>?
+
 }
 
 // MARK: - Builder
@@ -53,7 +55,10 @@ final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDetailBuild
             diaryModel: diaryModel,
             dependency: component
         )
+        
         interactor.listener = listener
+        component.reminderRequestDateRelay = interactor.reminderRequestDateRelay
+        
         return DiaryDetailRouter(
             interactor: interactor,
             viewController: viewController,

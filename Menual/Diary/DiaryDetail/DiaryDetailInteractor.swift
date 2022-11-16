@@ -29,6 +29,7 @@ protocol DiaryDetailPresentable: Presentable {
     func loadDiaryDetail(model: DiaryModel)
     func testLoadDiaryImage(imageName: UIImage?)
     func reminderCompViewshowToast(isEding: Bool)
+    func setReminderIconEnabled(isEnabled: Bool)
 }
 protocol DiaryDetailInteractorDependency {
     var diaryRepository: DiaryRepository { get }
@@ -48,6 +49,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     private var disposebag = DisposeBag()
     private let changeCurrentDiarySubject = BehaviorSubject<Bool>(value: false)
     private let imageDataRelay = BehaviorRelay<Data>(value: Data())
+    let reminderRequestDateRelay = BehaviorRelay<DateComponents?>(value: nil)
 
     weak var router: DiaryDetailRouting?
     weak var listener: DiaryDetailListener?
@@ -123,6 +125,35 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 }
             })
             .disposed(by: self.disposebag)
+        
+        reminderRequestDateRelay
+            .subscribe(onNext: { [weak self] dateComponents in
+                guard let self = self, let dateComponents = dateComponents else { return }
+                print("DiaryDetail :: reminderRequestDateRelay! \(dateComponents)")
+                self.setReminderDate(requestDateComponents: dateComponents)
+            })
+            .disposed(by: disposebag)
+        
+        
+        dependency.diaryRepository
+            .reminder
+            .subscribe(onNext: { [weak self] reminderArr in
+                guard let self = self,
+                      let diaryModel = self.diaryModel
+                else { return }
+
+                var isEnabled: Bool = false
+                for reminder in reminderArr {
+                    if reminder.diaryUUID == diaryModel.uuid {
+                        isEnabled = true
+                    }
+                }
+
+                print("DiaryDetail :: 이 메뉴얼에 reminder가 등록되어 있습니다. => \(isEnabled)")
+                self.presenter.setReminderIconEnabled(isEnabled: isEnabled)
+            })
+            .disposed(by: disposebag)
+        
     }
 
     override func didBecomeActive() {
@@ -219,6 +250,71 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     func reminderCompViewshowToast(isEding: Bool) {
         presenter.reminderCompViewshowToast(isEding: isEding)
+    }
+    
+    func setReminderDate(requestDateComponents: DateComponents) {
+        guard let diaryModel = diaryModel else { return }
+        
+        var requestUUID: String = ""
+        let center = UNUserNotificationCenter.current()
+        /*
+        center.getNotificationSettings { [weak self] settings in
+            guard let self = self else { return }
+            guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
+                print("DiaryDetail :: 알림 권한이 없습니다.")
+                return
+            }
+            
+            if settings.alertSetting == .enabled {
+                // Schedule an alert-only notification
+                print("DiaryDetail :: 알림 권한이 enabled 합니다. - Schedule an alert-only notification")
+            } else {
+                print("DiaryDetail :: 알림 권한이 enabled 합니다. - Schedule a notification with a badge and sound.")
+            }
+            
+            let content = UNMutableNotificationContent()
+            content.title = "알림 테스트입니다."
+            content.body = "알림 테스트 알림 테스트 알림 테스트 알림 테스트 알림 테스트"
+            
+            // Configure the recurring date.
+//            var dateComponents = DateComponents()
+//            dateComponents.year = requestDate.year
+//            dateComponents.day = 2
+//            dateComponents.hour = 17
+//            dateComponents.minute = 41
+            
+            // Create the trigger as a repating event.
+            let trigger = UNCalendarNotificationTrigger(dateMatching: requestDateComponents, repeats: false)
+            
+            // Create the request
+            requestUUID = UUID().uuidString
+            let request = UNNotificationRequest(identifier: requestUUID, content: content, trigger: trigger)
+            
+            // Schedule the request with the system
+            let notificationCenter = UNUserNotificationCenter.current()
+            notificationCenter.add(request) { error in
+                print("Reminder :: 됐나!? - 1")
+                if error != nil {
+                    print("Reminder :: 됐나!? NoError! - 2")
+                }
+            }
+            
+            guard let requestDate = Calendar.current.date(from: requestDateComponents) else { return }
+            let requestReminderModel = ReminderModel(uuid: UUID().uuidString,
+                                                     diaryUUID: diaryModel.uuid,
+                                                     requestDate: requestDate,
+                                                     requestUUID: requestUUID,
+                                                     createdAt: Date(),
+                                                     isEnabled: true
+            )
+            
+            self.dependency.diaryRepository
+                .addReminder(model: requestReminderModel)
+
+            print("DiaryDetail :: requestDate! -> \(requestReminderModel)")
+         
+        }
+         */
     }
     
     

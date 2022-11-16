@@ -559,6 +559,15 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         }
         showToast(message: message)
     }
+    
+    func setReminderIconEnabled(isEnabled: Bool) {
+        switch isEnabled {
+        case true:
+            naviView.rightButton2IsActive = true
+        case false:
+            naviView.rightButton2IsActive = false
+        }
+    }
 }
 
 // MARK: - IBAction

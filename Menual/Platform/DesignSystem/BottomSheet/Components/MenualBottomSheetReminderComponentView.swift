@@ -13,7 +13,8 @@ import RxRelay
 
 protocol MenualBottomSheetReminderComponentViewDelegate {
     func pressedQuestionBtn()
-    func pressedSelectBtn(isEditing: Bool)
+    func pressedSelectBtn(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date)
+    func isNeedReminderAuthorization()
 }
 
 class MenualBottomSheetReminderComponentView: UIView {
@@ -35,6 +36,7 @@ class MenualBottomSheetReminderComponentView: UIView {
     var firstWeekDayOfMonth = 0   //(Sunday-Saturday 1-
     
     private let isEnabledReminderRelay = BehaviorRelay<Bool>(value: false)
+    private let isNeedReminderAuthorizationRelay = BehaviorRelay<Bool>(value: false)
     private let isSelectedReminderDayIndexRelay = BehaviorRelay<Int?>(value: nil)
 
     private let disposedBag = DisposeBag()
@@ -251,21 +253,57 @@ extension MenualBottomSheetReminderComponentView {
     
     @objc
     func selectedSwitchBtn() {
-        let isEnabled = switchBtn.isOn
-        print("Reminder :: isEnabled = \(isEnabled)")
+        
+        
+        // 권한 물어보기
+        let userNotiCenter = UNUserNotificationCenter.current()
+        let notiAuthOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
+        userNotiCenter.requestAuthorization(options: notiAuthOptions) { (success, error) in
+            if let error = error {
+                print(#function, error)
+                print("Reminder :: 권한 요청? error! = \(error)")
+                self.delegate?.isNeedReminderAuthorization()
+            }
+            
+            if success == true {
+                print("Reminder :: 권한 요청? success! = \(success)")
+                DispatchQueue.main.async {
+                    let isEnabled = self.switchBtn.isOn
+                    self.isEnabledReminderRelay.accept(isEnabled)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.switchBtn.setOn(false, animated: true)
+                    self.delegate?.isNeedReminderAuthorization()
+                }
+            }
+        }
         
         // 날짜를 선택했다면 팝업 띄우기
 //        if isSelectedReminderDayIndexRelay.value != nil {
 //
 //            return
 //        }
-        isEnabledReminderRelay.accept(isEnabled)
+        // print("Reminder :: isEnabled = \(isEnabled)")
     }
     
     @objc
     func pressedSelectBtn() {
-        print("Reminder :: pressedSelectBtn!")
-        delegate?.pressedSelectBtn(isEditing: false)
+        guard let selectedDate = isSelectedReminderDayIndexRelay.value else { return }
+        
+        var dateComponents = DateComponents()
+        dateComponents.year = currentYear
+        dateComponents.month = currentMonthIndex
+        dateComponents.day = selectedDate
+        dateComponents.hour = 12
+        dateComponents.minute = 00
+        dateComponents.timeZone = TimeZone(identifier: TimeZone.current.identifier)
+        
+        guard let requestDate = Calendar.current.date(from: dateComponents) else { return }
+        print("Reminder :: pressedSelectBtn-> \(self.currentYear)년 \(self.currentMonthIndex)월 \(isSelectedReminderDayIndexRelay.value)일을 선택 하셨습니다.")
+        print("Reminder :: requestDate = \(requestDate)")
+        
+        delegate?.pressedSelectBtn(isEditing: false, requestDateComponents: dateComponents, requestDate: requestDate)
     }
 }
 
@@ -361,51 +399,6 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
 
         print("Reminder :: Selected! cell = \(cell.index), date = \(cell.date)")
         isSelectedReminderDayIndexRelay.accept(Int(cell.date))
-
-        /*
-         
-        let center = UNUserNotificationCenter.current()
-        center.getNotificationSettings { settings in
-            guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
-                print("Reminder :: 알림 권한이 없습니다.")
-                return
-            }
-            
-            if settings.alertSetting == .enabled {
-                // Schedule an alert-only notification
-                print("Reminder :: 알림 권한이 enabled 합니다. - Schedule an alert-only notification")
-            } else {
-                print("Reminder :: 알림 권한이 enabled 합니다. - Schedule a notification with a badge and sound.")
-            }
-            
-            let content = UNMutableNotificationContent()
-            content.title = "알림 테스트입니다."
-            content.body = "알림 테스트 알림 테스트 알림 테스트 알림 테스트 알림 테스트"
-            
-            // Configure the recurring date.
-            var dateComponents = DateComponents()
-            dateComponents.calendar = Calendar.current
-            dateComponents.weekday = 2
-            dateComponents.hour = 17
-            dateComponents.minute = 41
-            
-            // Create the trigger as a repating event.
-            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-            
-            // Create the request
-            let uuidString = UUID().uuidString
-            let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
-            
-            // Schedule the request with the system
-            let notificationCenter = UNUserNotificationCenter.current()
-            notificationCenter.add(request) { error in
-                print("Reminder :: 됐나!? - 1")
-                if error != nil {
-                    print("Reminder :: 됐나!? NoError! - 2")
-                }
-            }
-        }
-         */
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
