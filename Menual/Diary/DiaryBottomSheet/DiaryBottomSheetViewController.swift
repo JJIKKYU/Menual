@@ -168,6 +168,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     private lazy var reminderComponentView = MenualBottomSheetReminderComponentView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isHidden = true
+        $0.delegate = self
     }
     
     override func viewDidLoad() {
@@ -192,6 +193,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         // super.delegate = nil
 //        weatherPlaceSelectView.delegate = nil
         filterComponentView.delegate = nil
+        reminderComponentView.delegate = nil
         listener?.pressedCloseBtn()
     }
     
@@ -636,6 +638,19 @@ extension DiaryBottomSheetViewController {
              cancelButtonText: "취소",
              confirmButtonText: "확인"
         )
+    }
+}
+
+// MARK: - ReminderComponentView
+extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentViewDelegate {
+    func pressedQuestionBtn() {
+        print("DiaryBottomSheet :: pressedReminderQuestionBtn")
+
+        show(size: .large,
+             buttonType: .oneBtn,
+             titleText: "날짜를 선택해 보세요",
+             subTitleText: "오늘 쓴 일기 알림을 보내드려요.\n과거의 내가 어떻게 달라졌는지 확인해 보세요",
+             confirmButtonText: "좋아요")
     }
 }
 

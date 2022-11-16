@@ -242,8 +242,8 @@ class MenualBottomSheetReminderComponentView: UIView {
 extension MenualBottomSheetReminderComponentView {
     @objc
     func pressedQuestionBtn() {
-        // delegate?.pressedQuestionBtn()
-        calendarCollectionView.reloadData()
+        delegate?.pressedQuestionBtn()
+        // calendarCollectionView.reloadData()
     }
     
     @objc

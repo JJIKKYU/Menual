@@ -137,6 +137,11 @@ class DialogViewController: UIViewController {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = Colors.tint.main.v400
     }
+    
+    private let dimmedView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = Colors.background.withAlphaComponent(0.7)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -153,6 +158,7 @@ class DialogViewController: UIViewController {
 
     func setViews() {
         view.backgroundColor = .clear
+        view.addSubview(dimmedView)
         view.addSubview(dialogView)
         dialogView.addSubview(dialogTitle)
         dialogView.addSubview(subDialogTitle)
@@ -175,6 +181,11 @@ class DialogViewController: UIViewController {
             make.top.equalTo(dialogTitle.snp.bottom).offset(8)
             make.leading.equalToSuperview().offset(10)
             make.width.equalToSuperview().inset(10)
+        }
+        
+        dimmedView.snp.makeConstraints { make in
+            make.leading.width.equalToSuperview()
+            make.top.bottom.equalToSuperview()
         }
         
         setButtonLayout()
