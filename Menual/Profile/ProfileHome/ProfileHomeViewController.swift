@@ -219,6 +219,10 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
 //            }
             break
         case ProfileHomeSection.SETTING2.rawValue:
+            guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return }
+            if data.title == "개발자 도구" {
+                print("ProfileHome :: 개발자 도구 호출!")
+            }
             break
         default:
             break
