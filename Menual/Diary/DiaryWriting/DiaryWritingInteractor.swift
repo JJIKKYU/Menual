@@ -371,8 +371,11 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             .addTempSave(diaryModel: diaryModel)
         
     }
-    
-    // MARK: - 미사용
+}
+
+// MARK: - 미사용
+extension DiaryWritingInteractor {
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) { }
     func filterWithWeatherPlacePressedFilterBtn() { }
+    func reminderCompViewshowToast(isEding: Bool) { }
 }

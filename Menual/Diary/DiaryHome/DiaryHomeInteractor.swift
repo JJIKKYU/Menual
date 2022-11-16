@@ -44,7 +44,7 @@ protocol DiaryHomeInteractorDependency {
 }
 
 final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, DiaryHomeInteractable, DiaryHomePresentableListener, AdaptivePresentationControllerDelegate {
-    
+
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
 
     weak var router: DiaryHomeRouting?
@@ -330,4 +330,10 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         dependency.diaryRepository
             .fetch()
     }
+}
+
+
+// MARK: - 미사용
+extension DiaryHomeInteractor {
+    func reminderCompViewshowToast(isEding: Bool) { }
 }

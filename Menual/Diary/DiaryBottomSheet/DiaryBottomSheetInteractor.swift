@@ -30,6 +30,7 @@ protocol DiaryBottomSheetListener: AnyObject {
     
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place])
     func filterWithWeatherPlacePressedFilterBtn()
+    func reminderCompViewshowToast(isEding: Bool)
 }
 
 final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPresentable>, DiaryBottomSheetInteractable, DiaryBottomSheetPresentableListener {
@@ -212,7 +213,10 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         print("diaryWritingPressedBackBtn!")
     }
     
-    
+    // MARK: - ReminderComponentView
+    func reminderCompViewshowToast(isEding: Bool) {
+        listener?.reminderCompViewshowToast(isEding: isEding)
+    }
     
 }
 

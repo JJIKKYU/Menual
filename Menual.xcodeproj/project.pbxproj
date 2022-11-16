@@ -57,6 +57,7 @@
 		984392CC2917B43A00EF526E /* PasswordIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984392CB2917B43A00EF526E /* PasswordIconView.swift */; };
 		984392CE2917C34000EF526E /* PasswordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984392CD2917C34000EF526E /* PasswordModel.swift */; };
 		98536EAD291CB74400A72B8E /* ToastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98536EAC291CB74400A72B8E /* ToastViewController.swift */; };
+		985BFF6829249B8D00D86106 /* ReminderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF6729249B8D00D86106 /* ReminderModel.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -315,6 +316,7 @@
 		984392CD2917C34000EF526E /* PasswordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordModel.swift; sourceTree = "<group>"; };
 		98536EAC291CB74400A72B8E /* ToastViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewController.swift; sourceTree = "<group>"; };
 		985A52A927F023DB00B10829 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		985BFF6729249B8D00D86106 /* ReminderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderModel.swift; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
 		985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDBuilder.swift; sourceTree = "<group>"; };
@@ -1014,6 +1016,7 @@
 				98EADBA5284C6F1E007C298C /* DiaryReplayModel.swift */,
 				98EADBA7284DD7C8007C298C /* DiaryMonthModel.swift */,
 				98EADBAD2855C1A4007C298C /* DiarySearchModel.swift */,
+				985BFF6729249B8D00D86106 /* ReminderModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1874,6 +1877,7 @@
 				984392A7291632DB00EF526E /* MetaDataViewController.swift in Sources */,
 				98EADB8B28432850007C298C /* TabsViewController.swift in Sources */,
 				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,
+				985BFF6829249B8D00D86106 /* ReminderModel.swift in Sources */,
 				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
 				98B557532830C7B200F8CA3E /* DiaryTempSaveRouter.swift in Sources */,
 				98B55767283896AA00F8CA3E /* DesignSystemRouter.swift in Sources */,

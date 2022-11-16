@@ -27,7 +27,7 @@ protocol DiaryDetailPresentableListener: AnyObject {
 }
 
 final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable, DiaryDetailViewControllable {
-
+    
     weak var listener: DiaryDetailPresentableListener?
     private var pageNum: Int = 0
     private var isEnableImageView: Bool = false
@@ -547,6 +547,17 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     func reloadTableView() {
         print("diaryDetailViewController reloadTableView!")
         self.replyTableView.reloadData()
+    }
+    
+    func reminderCompViewshowToast(isEding: Bool) {
+        var message: String = ""
+        switch isEding {
+        case true:
+            message = "리마인더 알림이 수정되었어요."
+        case false:
+            message = "리마인더 알림이 설정되었어요."
+        }
+        showToast(message: message)
     }
 }
 

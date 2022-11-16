@@ -52,6 +52,9 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>? { get set }
     
     func filterWithWeatherPlacePressedFilterBtn()
+    
+    // MenualBottomSheetReminderComponentView
+    func reminderCompViewshowToast(isEding: Bool)
     // var filteredDiaryCountRelay: BehaviorRelay<Int>? { get set }
 }
 
@@ -86,8 +89,8 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         $0.backgroundColor = Colors.background.withAlphaComponent(0.7)
         $0.alpha = 0
         
-        // let dimmedTap = UITapGestureRecognizer(target: self, action: #selector(dimmedViewTapped))
-        // $0.addGestureRecognizer(dimmedTap)
+        let dimmedTap = UITapGestureRecognizer(target: self, action: #selector(dimmedViewTapped))
+        $0.addGestureRecognizer(dimmedTap)
         $0.isUserInteractionEnabled = true
     }
     
@@ -176,6 +179,8 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         setViews()
         bind()
         bottomSheetView.backgroundColor = Colors.background
+        
+        isModalInPresentation = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -643,6 +648,22 @@ extension DiaryBottomSheetViewController {
 
 // MARK: - ReminderComponentView
 extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentViewDelegate {
+    func pressedSelectBtn(isEditing: Bool) {
+//        switch isEditing {
+//        case true:
+//            showToast(message: "리마인더 알림이 수정되었어요.")
+//            hideBottomSheetAndGoBack()
+//
+//
+//        case false:
+//            showToast(message: "리마인더 알림이 설정되었어요.")
+//            hideBottomSheetAndGoBack()
+//        }
+//
+        listener?.reminderCompViewshowToast(isEding: isEditing)
+        hideBottomSheetAndGoBack()
+    }
+    
     func pressedQuestionBtn() {
         print("DiaryBottomSheet :: pressedReminderQuestionBtn")
 

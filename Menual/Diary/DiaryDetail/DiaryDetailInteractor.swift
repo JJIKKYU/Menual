@@ -28,6 +28,7 @@ protocol DiaryDetailPresentable: Presentable {
     func reloadTableView()
     func loadDiaryDetail(model: DiaryModel)
     func testLoadDiaryImage(imageName: UIImage?)
+    func reminderCompViewshowToast(isEding: Bool)
 }
 protocol DiaryDetailInteractorDependency {
     var diaryRepository: DiaryRepository { get }
@@ -216,6 +217,11 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         // self.presenter.reloadTableView()
     }
     
+    func reminderCompViewshowToast(isEding: Bool) {
+        presenter.reminderCompViewshowToast(isEding: isEding)
+    }
+    
+    
     // MARK: - DiaryDetailImage
     func diaryDetailImagePressedBackBtn(isOnlyDetach: Bool) {
         print("DiaryDetail :: diaryDetailImagePressedBackBtn!")
@@ -228,12 +234,13 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         router?.attachDiaryDetailImage(imageDataRelay: self.imageDataRelay)
     }
 
-    // 미사용
-    func filterWithWeatherPlacePressedFilterBtn() { }
-
     func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryWritingInteractor.DiaryWritingMode) {
         print("DiaryDetail :: diaryWritingPressedBackBtn! ")
         router?.detachDiaryWriting(isOnlyDetach: isOnlyDetach)
     }
 }
  
+// MARK: - 미사용
+extension DiaryDetailInteractor {
+    func filterWithWeatherPlacePressedFilterBtn() { }
+}

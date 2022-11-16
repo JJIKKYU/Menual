@@ -13,6 +13,7 @@ import RxRelay
 
 protocol MenualBottomSheetReminderComponentViewDelegate {
     func pressedQuestionBtn()
+    func pressedSelectBtn(isEditing: Bool)
 }
 
 class MenualBottomSheetReminderComponentView: UIView {
@@ -199,10 +200,12 @@ class MenualBottomSheetReminderComponentView: UIView {
                 guard let selectedDate = selectedDate else {
                     print("Reminder :: 선택한 날이 없습니다.")
                     self.selectBtn.btnStatus = .inactive
+                    self.selectBtn.isUserInteractionEnabled = false
                     return
                 }
                 
                 self.selectBtn.btnStatus = .active
+                self.selectBtn.isUserInteractionEnabled = true
                 print("Reminder :: selectedDate = \(selectedDate)")
                 
                 print("Reminder :: \(self.currentYear)년 \(self.currentMonthIndex)월 \(selectedDate)일을 선택 하셨습니다.")
@@ -250,12 +253,19 @@ extension MenualBottomSheetReminderComponentView {
     func selectedSwitchBtn() {
         let isEnabled = switchBtn.isOn
         print("Reminder :: isEnabled = \(isEnabled)")
+        
+        // 날짜를 선택했다면 팝업 띄우기
+//        if isSelectedReminderDayIndexRelay.value != nil {
+//
+//            return
+//        }
         isEnabledReminderRelay.accept(isEnabled)
     }
     
     @objc
     func pressedSelectBtn() {
         print("Reminder :: pressedSelectBtn!")
+        delegate?.pressedSelectBtn(isEditing: false)
     }
 }
 
@@ -335,6 +345,7 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         // 이미 선택했을 경우 선택해제 되도록
         if cell.isSelected {
             collectionView.deselectItem(at: indexPath, animated: true)
+            self.isSelectedReminderDayIndexRelay.accept(nil)
             return false
         } else {
             return true
@@ -398,6 +409,7 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        // print("Reminder :: deS")
         guard let cell = collectionView.cellForItem(at: indexPath) as? DateCell else { return }
         
         print("Reminder :: didDeselected!")

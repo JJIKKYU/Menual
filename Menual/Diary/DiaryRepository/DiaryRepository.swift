@@ -23,6 +23,7 @@ public protocol DiaryRepository {
     var diarySearch: BehaviorRelay<[DiarySearchModel]> { get }
     var tempSave: BehaviorRelay<[TempSaveModel]> { get }
     var password: BehaviorRelay<PasswordModel?> { get }
+    var reminder: BehaviorRelay<[ReminderModel]> { get }
     
 //    var realmDiaryOb: Observable<[DiaryModel]> { get }
     // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
@@ -57,6 +58,12 @@ public protocol DiaryRepository {
     func fetchPassword()
     func addPassword(model: PasswordModel)
     func updatePassword(model: PasswordModel)
+    
+    // Reminder 로직
+    func fetchReminder()
+    func fetchDiaryReminder(diaryUUID: String) -> Observable<ReminderModel?>
+    func addReminder(model: ReminderModel)
+    func updateReminder(model: ReminderModel)
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
@@ -107,6 +114,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     public var password: BehaviorRelay<PasswordModel?> { passwordSubject }
     public let passwordSubject = BehaviorRelay<PasswordModel?>(value: nil)
+    
+    public var reminder: BehaviorRelay<[ReminderModel]> { reminderSubject }
+    public let reminderSubject = BehaviorRelay<[ReminderModel]>(value: [])
     
     /*
     // public var cardOnFileString: ReadOnlyCurrentValuePublisher<[PaymentMethod]> { paymentMethodsSubject }
@@ -695,6 +705,63 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         fetchPassword()
     }
+    
+    public func fetchReminder() {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        let reminderModelRealmResults = realm.objects(ReminderModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
+        
+        self.reminderSubject.accept(reminderModelRealmResults.map { ReminderModel($0) })
+    }
+
+    // 한 개의 Reminder만 얻고자 할 경우
+    public func fetchDiaryReminder(diaryUUID: String) -> Observable<ReminderModel?> {
+        guard let realm = Realm.safeInit() else {
+            return Observable.just(nil)
+        }
+        print("diaryRepo :: fetchDiaryReminder! - 1")
+
+//        guard let reminderModelRealm = realm.objects(ReminderModelRealm.self).filter { $0.diaryUUID == diaryUUID }
+//        else { return Observable.just(nil) }
+        
+        guard let reminderModelRealm = realm.objects(ReminderModelRealm.self).filter({ $0.diaryUUID == diaryUUID }).first else { return Observable.just(nil) }
+
+        let reminderModel = ReminderModel(reminderModelRealm)
+        // reminder.accept(reminderModel)
+        print("diaryRepo :: fetchDiaryReminder! - 2")
+        return Observable.just(reminderModel)
+    }
+    
+    public func addReminder(model: ReminderModel) {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        let realmModel = ReminderModelRealm(model)
+
+        realm.safeWrite {
+            realm.add(realmModel)
+        }
+        
+        self.fetchReminder()
+    }
+    
+    public func updateReminder(model: ReminderModel) {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        guard let data = realm.objects(ReminderModelRealm.self).filter ({ $0.uuid == model.uuid }).first else { return }
+        
+        realm.safeWrite {
+            data.isEnabled = model.isEnabled
+            data.createdAt = model.createdAt
+            data.requestUUID = model.requestUUID
+            data.requestDate = model.requestDate
+        }
+        
+        self.fetchReminder()
+    }
 }
-
-
