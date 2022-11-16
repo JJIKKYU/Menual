@@ -12,6 +12,9 @@ import RxRelay
 protocol ProfileHomeRouting: ViewableRouting {
     func attachProfilePassword()
     func detachProfilePassword(isOnlyDetach: Bool)
+    
+    func attachProfileDeveloper()
+    func detachProfileDeveloper(isOnlyDetach: Bool)
 }
 
 protocol ProfileHomePresentable: Presentable {
@@ -132,6 +135,15 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
             dependency.diaryRepository
                 .updatePassword(model: newModel)
         }
+    }
+    
+    // MARK: - ProfileDeveloper (개발자 도구)
+    func profileDeveloperPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachProfileDeveloper(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedProfileDeveloperCell() {
+        router?.attachProfileDeveloper()
     }
     
     func goDiaryHome() { }

@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol ProfileHomeInteractable: Interactable, ProfilePasswordListener {
+protocol ProfileHomeInteractable: Interactable, ProfilePasswordListener, ProfileDeveloperListener {
     var router: ProfileHomeRouting? { get set }
     var listener: ProfileHomeListener? { get set }
 }
@@ -22,14 +22,19 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
     
     private let profilePasswordBuildable: ProfilePasswordBuildable
     private var profilePasswordRouting: Routing?
+    
+    private var profileDeveloperBuildable: ProfileDeveloperBuildable
+    private var profileDeveloperRouting: Routing?
 
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: ProfileHomeInteractable,
         viewController: ProfileHomeViewControllable,
-        profilePasswordBuildable: ProfilePasswordBuildable
+        profilePasswordBuildable: ProfilePasswordBuildable,
+        profileDeveloperBuildable: ProfileDeveloperBuildable
     ) {
         self.profilePasswordBuildable = profilePasswordBuildable
+        self.profileDeveloperBuildable = profileDeveloperBuildable
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
     }
@@ -85,5 +90,31 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
         
         detachChild(router)
         profilePasswordRouting = nil
+    }
+    
+    // MARK: - ProfileDeveloper (개발자도구)
+    func attachProfileDeveloper() {
+        if profileDeveloperRouting != nil {
+            return
+        }
+        
+        let router = profileDeveloperBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        profileDeveloperRouting = router
+        attachChild(router)
+    }
+    
+    func detachProfileDeveloper(isOnlyDetach: Bool) {
+        guard let router = profileDeveloperRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        profileDeveloperRouting = nil
     }
 }

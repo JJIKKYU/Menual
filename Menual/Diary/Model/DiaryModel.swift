@@ -104,13 +104,13 @@ class DiaryModelRealm: Object {
     @Persisted var desc: String = ""
     @Persisted var image: Bool = false
     @Persisted var readCount: Int
-    @Persisted var createdAt = Date()
+    @Persisted var createdAt: Date
     // @Persisted var createdAt: Date = Date()
     @Persisted var isDeleted: Bool
     @Persisted var replies: List<DiaryReplyModelRealm>
     @Persisted var isHide: Bool
     
-    convenience init(uuid: String, pageNum: Int, title: String, weather: WeatherModelRealm?, place: PlaceModelRealm?, desc: String, image: Bool, readCount: Int, replies: [DiaryReplyModelRealm], isDeleted: Bool, isHide: Bool) {
+    convenience init(uuid: String, pageNum: Int, title: String, weather: WeatherModelRealm?, place: PlaceModelRealm?, desc: String, image: Bool, readCount: Int, createdAt: Date, replies: [DiaryReplyModelRealm], isDeleted: Bool, isHide: Bool) {
         self.init()
         self.uuid = uuid
         self.pageNum = pageNum
@@ -120,7 +120,7 @@ class DiaryModelRealm: Object {
         self.desc = desc
         self.image = image
         self.readCount = readCount
-        // self.createdAt = createdAt
+        self.createdAt = createdAt
         self.isDeleted = isDeleted
         self.replies.append(objectsIn: replies)
         self.isHide = isHide
@@ -141,7 +141,7 @@ class DiaryModelRealm: Object {
             self.image = true
         }
         
-        // self.createdAt = diaryModel.createdAt
+        self.createdAt = diaryModel.createdAt
         self.readCount = readCount
         self.isDeleted = diaryModel.isDeleted
 

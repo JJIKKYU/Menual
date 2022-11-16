@@ -10,12 +10,15 @@ import RIBs
 protocol ProfileDeveloperDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
+    var diaryRepository: DiaryRepository { get }
 }
 
-final class ProfileDeveloperComponent: Component<ProfileDeveloperDependency> {
+final class ProfileDeveloperComponent: Component<ProfileDeveloperDependency>, ProfileDeveloperInteractorDependency {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
+    var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
+
 
 // MARK: - Builder
 
@@ -32,7 +35,10 @@ final class ProfileDeveloperBuilder: Builder<ProfileDeveloperDependency>, Profil
     func build(withListener listener: ProfileDeveloperListener) -> ProfileDeveloperRouting {
         let component = ProfileDeveloperComponent(dependency: dependency)
         let viewController = ProfileDeveloperViewController()
-        let interactor = ProfileDeveloperInteractor(presenter: viewController)
+        let interactor = ProfileDeveloperInteractor(
+            presenter: viewController,
+            dependency: component
+        )
         interactor.listener = listener
         return ProfileDeveloperRouter(interactor: interactor, viewController: viewController)
     }

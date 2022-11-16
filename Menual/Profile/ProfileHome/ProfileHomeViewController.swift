@@ -18,6 +18,9 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // ProfilePassword
     func pressedProfilePasswordCell()
+    
+    // ProfileDeveloper
+    func pressedProfileDeveloperCell()
     var isEnabledPasswordRelay: BehaviorRelay<Bool> { get }
 }
 
@@ -222,6 +225,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return }
             if data.title == "개발자 도구" {
                 print("ProfileHome :: 개발자 도구 호출!")
+                listener?.pressedProfileDeveloperCell()
             }
             break
         default:
