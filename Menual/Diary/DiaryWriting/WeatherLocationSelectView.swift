@@ -43,7 +43,7 @@ class WeatherLocationSelectView: UIView {
         didSet { setNeedsLayout() }
     }
     
-    var isDeleteBtnEnabled: Bool = true {
+    var isDeleteBtnEnabled: Bool = false {
         didSet { setNeedsLayout() }
     }
     

@@ -128,7 +128,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.selectTextView.tag = TextViewType.weather.rawValue
         $0.selectTextView.text = "오늘 날씨는 어땠나요?"
         $0.deleteBtn.addTarget(self, action: #selector(pressedWeatherViewDeleteBtn), for: .touchUpInside)
-
+        $0.isDeleteBtnEnabled = false
     }
     
     private let divider2 = Divider(type: ._1px).then {
@@ -143,6 +143,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.selectTextView.tag = TextViewType.location.rawValue
         $0.selectTextView.text = "지금 장소는 어디신가요?"
         $0.deleteBtn.addTarget(self, action: #selector(pressedPlaceViewDeleteBtn), for: .touchUpInside)
+        $0.isDeleteBtnEnabled = false
     }
     
     private let divider3 = Divider(type: ._1px).then {
@@ -376,6 +377,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     }
     
     func bind() {
+
         descriptionTextView.rx.text
             .orEmpty
             .distinctUntilChanged()
@@ -415,6 +417,39 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
                 case false:
                     self.naviView.rightButton1IsActive = false
                 }
+            })
+            .disposed(by: disposeBag)
+        
+        locationSelectView.selectTextView.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else { return }
+
+                print("DiaryWriting :: text - \(text)")
+                if text == "지금 장소는 어디신가요?" || text.count == 0 {
+                    self.locationSelectView.isDeleteBtnEnabled = false
+                    return
+                }
+                print("DiaryWriting :: isDeleteBtnEnabled!")
+                self.locationSelectView.isDeleteBtnEnabled = true
+
+            })
+            .disposed(by: disposeBag)
+        
+        weatherSelectView.selectTextView.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] text in
+                guard let self = self else { return }
+
+                print("DiaryWriting :: text - \(text)")
+                if text == "오늘 날씨는 어땠나요?" || text.count == 0 {
+                    self.weatherSelectView.isDeleteBtnEnabled = false
+                    return
+                }
+                print("DiaryWriting :: isDeleteBtnEnabled!")
+                self.weatherSelectView.isDeleteBtnEnabled = true
             })
             .disposed(by: disposeBag)
     }
@@ -635,7 +670,7 @@ extension DiaryWritingViewController {
         }
         
         if isShowDialog {
-            show(size: .medium,
+            show(size: .small,
                  buttonType: .twoBtn,
                  titleText: titleText,
                  subTitleText: "작성한 내용은 임시저장글에 저장됩니다.",
@@ -721,29 +756,32 @@ extension DiaryWritingViewController {
     @objc
     func pressedImageUploadViewDeleteBtn() {
         print("DiaryWriting :: pressedImageUploadViewDeleteBtn")
-        imageUploadView.image = nil
-        selectedImage = nil
-        selectedOriginalImage = nil
+        show(size: .medium,
+             buttonType: .twoBtn,
+             titleText: "사진을 삭제하시겠어요?",
+             cancelButtonText: "취소",
+             confirmButtonText: "확인"
+        )
     }
     
     @objc
     func pressedPlaceViewDeleteBtn() {
         print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - locationView")
-        selectedPlaceType = nil
-        locationSelectView.selectedPlaceType = nil
-        locationSelectView.selected = false
+        // selectedPlaceType = nil
+        // locationSelectView.selectedPlaceType = nil
+        // locationSelectView.selected = false
         locationSelectView.selectTextView.text = ""
-        weatherPlaceToolbarView.selectedPlaceType = nil
+        // weatherPlaceToolbarView.selectedPlaceType = nil
     }
     
     @objc
     func pressedWeatherViewDeleteBtn() {
         print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - weatherView")
-        selectedWeatherType = nil
-        weatherSelectView.selectedWeatherType = nil
-        weatherSelectView.selected = false
+        // selectedWeatherType = nil
+        // weatherSelectView.selectedWeatherType = nil
+        // weatherSelectView.selected = false
         weatherSelectView.selectTextView.text = ""
-        weatherPlaceToolbarView.selectedWeatherType = nil
+        // weatherPlaceToolbarView.selectedWeatherType = nil
     }
 }
 
@@ -1064,6 +1102,13 @@ extension DiaryWritingViewController: DialogDelegate {
              "메뉴얼을 수정하시겠어요?":
             addDiary()
             
+        case "사진을 삭제하시겠어요?":
+            imageUploadView.image = nil
+            selectedImage = nil
+            selectedOriginalImage = nil
+            showToast(message: "메뉴얼 수정이 완료되었습니다.")
+            break
+            
         default:
             break
             
@@ -1078,6 +1123,9 @@ extension DiaryWritingViewController: DialogDelegate {
             
         case "메뉴얼을 등록하시겠어요?",
              "메뉴얼을 수정하시겠어요?":
+            break
+            
+        case "사진을 삭제하시겠어요?":
             break
             
         default:
