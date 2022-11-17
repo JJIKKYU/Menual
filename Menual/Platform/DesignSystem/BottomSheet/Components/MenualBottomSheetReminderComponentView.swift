@@ -35,6 +35,10 @@ class MenualBottomSheetReminderComponentView: UIView {
     var todaysDate = 0
     var firstWeekDayOfMonth = 0   //(Sunday-Saturday 1-
     
+    public var dateComponets: DateComponents? {
+        didSet { setNeedsLayout() }
+    }
+    
     private let isEnabledReminderRelay = BehaviorRelay<Bool>(value: false)
     private let isNeedReminderAuthorizationRelay = BehaviorRelay<Bool>(value: false)
     private let isSelectedReminderDayIndexRelay = BehaviorRelay<Int?>(value: nil)
@@ -171,6 +175,15 @@ class MenualBottomSheetReminderComponentView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        if let dateComponets = dateComponets {
+            let weekday = dateComponets.weekday
+            let month = dateComponets.month
+            let day = dateComponets.day
+            
+            isEnabledReminderRelay.accept(true)
+            print("Reminder :: compView에서 받은 데이터 = weekDay = \(weekday), month = \(month), day = \(day)")
+        }
     }
     
     func bind() {

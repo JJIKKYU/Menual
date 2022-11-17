@@ -22,6 +22,7 @@ protocol DiaryBottomSheetPresentable: Presentable {
     func setFilterBtnCount(count: Int)
     func setViews(type: MenualBottomSheetType)
     func setCurrentFilteredBtn(weatherArr: [Weather], placeArr: [Place])
+    func setCurrentReminderData(isEnabled: Bool, dateComponets: DateComponents?)
 }
 
 protocol DiaryBottomSheetListener: AnyObject {
@@ -164,6 +165,8 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
             .subscribe(onNext : { [weak self] date in
                 guard let self = self else { return }
                 print("DiaryBottomSheet :: 나중에 수정 만들때 하면 될듯")
+                let isEnabled: Bool = date == nil ? false : true
+                self.presenter.setCurrentReminderData(isEnabled: isEnabled, dateComponets: date)
         })
             .disposed(by: disposeBag)
     }

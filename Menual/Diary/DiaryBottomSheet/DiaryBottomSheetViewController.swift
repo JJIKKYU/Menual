@@ -56,6 +56,7 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     // MenualBottomSheetReminderComponentView
     func reminderCompViewshowToast(isEding: Bool)
     func reminderCompViewSetReminder(requestDateComponents: DateComponents, requestDate: Date)
+    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get set }
     // var filteredDiaryCountRelay: BehaviorRelay<Int>? { get set }
 }
 
@@ -340,16 +341,6 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             reminderComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
-            
-            // TODO
-            let center = UNUserNotificationCenter.current()
-            center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-                if let error = error {
-                    print("DiaryBottomSheet :: error! \(error.localizedDescription)")
-                }
-                
-                print("DiaryBottomSheet :: 권한 됐니?")
-            }
             
         case .menu:
             bottomSheetTitle = "메뉴"
@@ -683,6 +674,22 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
              titleText: "설정에서 Menual의 알림을 활성화 해주세요.",
              confirmButtonText: "네"
         )
+    }
+    
+    func setCurrentReminderData(isEnabled: Bool, dateComponets: DateComponents?) {
+        print("DiaryBottomSheet :: setCurrentReminderData! => isEnabled = \(isEnabled), dateComponents = \(dateComponets)")
+        switch isEnabled {
+        case true:
+            // reminderComponentView.selectedSwitchBtn()
+            reminderComponentView.dateComponets = dateComponets
+            // reminderComponentView.switchBtn.sendActions(for: .touchUpInside)
+            
+        case false:
+            // reminderComponentView.switchBtn.isOn = false
+            // reminderComponentView.dateComponets = dateComponets
+            break
+            
+        }
     }
 }
 
