@@ -153,6 +153,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                         self.reminderUUID = reminder.uuid
                         self.isEnabledReminder = isEnabled
 
+                        break
                     }
                 }
 
@@ -318,22 +319,23 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                                                      isEnabled: true
             )
             
-            // 이미 리마인더가 적용되어 있다면
-            if self.isEnabledReminder {
-                print("DiaryDetail :: Reminder가 이미 적용되어 있으므로 update를 호출합니다.")
-                
-                self.dependency.diaryRepository
-                    .updateReminder(model: requestReminderModel)
+            DispatchQueue.main.async {
+                // 이미 리마인더가 적용되어 있다면
+                if self.isEnabledReminder {
+                    print("DiaryDetail :: Reminder가 이미 적용되어 있으므로 update를 호출합니다.")
+                    
+                    self.dependency.diaryRepository
+                        .updateReminder(model: requestReminderModel)
 
-            } else {
-                print("DiaryDetail :: Reminder를 새로 생성합니다.")
+                } else {
+                    print("DiaryDetail :: Reminder를 새로 생성합니다.")
 
-                self.dependency.diaryRepository
-                    .addReminder(model: requestReminderModel)
+                    self.dependency.diaryRepository
+                        .addReminder(model: requestReminderModel)
+                }
+
+                print("DiaryDetail :: requestDate! -> \(requestReminderModel)")
             }
-
-            print("DiaryDetail :: requestDate! -> \(requestReminderModel)")
-         
         }
 
     }
