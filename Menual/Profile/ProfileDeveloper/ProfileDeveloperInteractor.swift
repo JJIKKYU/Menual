@@ -68,10 +68,10 @@ final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeveloperPr
                 guard let isStarted = isStarted else { return }
                 if isStarted == false { return }
                 
-                let diaryModelArr = []
+                // let diaryModelArr = []
                 let intervale: Double = 600000
                 var unixTime = Date().timeIntervalSinceNow - (intervale * 30)
-                var date = Date(timeIntervalSince1970: unixTime)
+                // var date = Date(timeIntervalSince1970: unixTime)
                 
                 for idx in 0..<30  {
                     var weatherModel = WeatherModel(uuid: "", weather: nil, detailText: "")

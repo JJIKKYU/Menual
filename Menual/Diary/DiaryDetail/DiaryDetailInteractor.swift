@@ -50,6 +50,9 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     private let changeCurrentDiarySubject = BehaviorSubject<Bool>(value: false)
     private let imageDataRelay = BehaviorRelay<Data>(value: Data())
     let reminderRequestDateRelay = BehaviorRelay<DateComponents?>(value: nil)
+    
+    private var reminderUUID: String?
+    private var isEnabledReminder: Bool = false
 
     weak var router: DiaryDetailRouting?
     weak var listener: DiaryDetailListener?
@@ -146,14 +149,19 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 for reminder in reminderArr {
                     if reminder.diaryUUID == diaryModel.uuid {
                         isEnabled = true
+
+                        self.reminderUUID = reminder.uuid
+                        self.isEnabledReminder = isEnabled
+
                     }
                 }
 
                 print("DiaryDetail :: 이 메뉴얼에 reminder가 등록되어 있습니다. => \(isEnabled)")
+
                 self.presenter.setReminderIconEnabled(isEnabled: isEnabled)
             })
             .disposed(by: disposebag)
-        
+
     }
 
     override func didBecomeActive() {
@@ -257,7 +265,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         
         var requestUUID: String = ""
         let center = UNUserNotificationCenter.current()
-        /*
+        
         center.getNotificationSettings { [weak self] settings in
             guard let self = self else { return }
             guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
@@ -300,7 +308,9 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             }
             
             guard let requestDate = Calendar.current.date(from: requestDateComponents) else { return }
-            let requestReminderModel = ReminderModel(uuid: UUID().uuidString,
+            let uuid: String = self.isEnabledReminder == true ? self.reminderUUID ?? "" : UUID().uuidString
+
+            let requestReminderModel = ReminderModel(uuid: uuid,
                                                      diaryUUID: diaryModel.uuid,
                                                      requestDate: requestDate,
                                                      requestUUID: requestUUID,
@@ -308,13 +318,24 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                                                      isEnabled: true
             )
             
-            self.dependency.diaryRepository
-                .addReminder(model: requestReminderModel)
+            // 이미 리마인더가 적용되어 있다면
+            if self.isEnabledReminder {
+                print("DiaryDetail :: Reminder가 이미 적용되어 있으므로 update를 호출합니다.")
+                
+                self.dependency.diaryRepository
+                    .updateReminder(model: requestReminderModel)
+
+            } else {
+                print("DiaryDetail :: Reminder를 새로 생성합니다.")
+
+                self.dependency.diaryRepository
+                    .addReminder(model: requestReminderModel)
+            }
 
             print("DiaryDetail :: requestDate! -> \(requestReminderModel)")
          
         }
-         */
+
     }
     
     
