@@ -26,7 +26,6 @@ protocol DiaryWritingPresentableListener: AnyObject {
     func saveCropImage(diaryUUID: String, imageData: Data)
     func saveOriginalImage(diaryUUID: String, imageData: Data)
     func saveTempSave(diaryModel: DiaryModel)
-    func pressedWeatherPlaceAddBtn(type: BottomSheetSelectViewType)
     func pressedTempSaveBtn()
     
     var page: Int { get }
@@ -727,8 +726,6 @@ extension DiaryWritingViewController {
         titleTextField.inputAccessoryView?.isHidden = false
         descriptionTextView.inputAccessoryView?.isHidden = false
         view.layoutIfNeeded()
-
-        //listener?.pressedWeatherPlaceAddBtn(type: .weather)
     }
     
     @objc
@@ -736,8 +733,6 @@ extension DiaryWritingViewController {
         titleTextField.inputAccessoryView?.isHidden = false
         descriptionTextView.inputAccessoryView?.isHidden = false
         view.layoutIfNeeded()
-
-        // listener?.pressedWeatherPlaceAddBtn(type: .place)
     }
     
     @objc

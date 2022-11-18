@@ -973,6 +973,7 @@ extension DiaryHomeViewController {
             print("diaryHome :: isFiltered! = true")
             self.myMenualTitleView.title = "TOTAL PAGE"
             self.myMenualTitleView.rightFilterBtnIsEnabled = true
+            self.myMenualTitleView.rightCalendarBtnIsEnabled = true
             
             self.writeBoxBtn.title = "필터 초기화"
             self.writeBoxBtn.isFiltered = .enabled
@@ -987,6 +988,7 @@ extension DiaryHomeViewController {
             print("diaryHome :: isFiltered! = false")
             self.myMenualTitleView.title = "MY MENUAL"
             self.myMenualTitleView.rightFilterBtnIsEnabled = false
+            self.myMenualTitleView.rightCalendarBtnIsEnabled = false
             self.writeBoxBtn.isFiltered = .disabled
             self.writeFAB.isFiltered = .disabled
 

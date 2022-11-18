@@ -56,10 +56,11 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
     var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
     let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
+    let filteredDateDiaryCountRelay = BehaviorRelay<Int>(value: -1)
     
     let filteredWeatherArrRelay = BehaviorRelay<[Weather]>(value: [])
     let filteredPlaceArrRelay = BehaviorRelay<[Place]>(value: [])
-    let filteredDateRelay = BehaviorRelay<Date>(value: Date())
+    let filteredDateRelay = BehaviorRelay<Date?>(value: nil)
 //    var filteredWeatherArr: [Weather] = []
 //    var filteredPlaceArr: [Place] = []
 
@@ -149,6 +150,17 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             })
             .disposed(by: disposebag)
          */
+        filteredDateRelay
+            .subscribe(onNext: { [weak self] date in
+                guard let self = self else { return }
+                guard let date = date else { return }
+                
+                let count = self.dependency.diaryRepository
+                    .filterDiary(date: date, isOnlyFilterCount: true)
+                print("DiaryHome :: filteredDateRelay! = \(date), count = \(count)")
+                self.filteredDateDiaryCountRelay.accept(count)
+            })
+            .disposed(by: disposebag)
     }
     
     func getMyMenualCount() -> Int {
@@ -279,6 +291,10 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func pressedDateFilterBtn() {
         router?.attachBottomSheet(type: .dateFilter)
+        
+        if filteredDateRelay.value == nil {
+            filteredDateRelay.accept(Date())
+        }
     }
     
     // filterComponenetView
@@ -328,12 +344,22 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         filteredPlaceArrRelay.accept([])
         
         presenter.isFilteredRelay.accept(false)
+        filteredDateRelay.accept(nil)
         dependency.diaryRepository
             .fetch()
     }
     
     // DateFilter
-    
+    func filterDatePressedFilterBtn() {
+        guard let date = filteredDateRelay.value else { return }
+
+        presenter.isFilteredRelay.accept(true)
+        _ = dependency.diaryRepository
+            .filterDiary(date: date, isOnlyFilterCount: false)
+        // filteredDateRelay.accept(nil)
+        
+        router?.detachBottomSheet()
+    }
 }
 
 

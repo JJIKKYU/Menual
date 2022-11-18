@@ -337,18 +337,6 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     }
     
     // MARK: - DiaryBottomSheet
-    
-    func pressedWeatherPlaceAddBtn(type: BottomSheetSelectViewType) {
-        // 이미 선택한 경우에 다시 선택했다면 뷰를 세팅해주어야 하기 때문
-        // switch로 진행한 이유는 첫 뷰 세팅을 위해서
-        switch type {
-        case .place:
-            router?.attachBottomSheet(weatherModelOb: weatherModelRelay, placeModelOb: placeModelRelay, bottomSheetType: .place)
-        case .weather:
-            router?.attachBottomSheet(weatherModelOb: weatherModelRelay, placeModelOb: placeModelRelay, bottomSheetType: .weather)
-        }
-    }
-    
     func diaryBottomSheetPressedCloseBtn() {
         print("diaryBottomSheetPressedCloseBtn")
         router?.detachBottomSheet()
@@ -378,4 +366,5 @@ extension DiaryWritingInteractor {
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) { }
     func filterWithWeatherPlacePressedFilterBtn() { }
     func reminderCompViewshowToast(isEding: Bool) { }
+    func filterDatePressedFilterBtn() { }
 }

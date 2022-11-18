@@ -33,7 +33,8 @@ enum MenualBottomSheetType {
 }
 
 protocol DiaryBottomSheetPresentableListener: AnyObject {
-    var filteredDateRelay: BehaviorRelay<Date>? { get set }
+    var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { get set }
+    var filteredDateRelay: BehaviorRelay<Date?>? { get set }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get set }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get set }
     
@@ -53,6 +54,7 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>? { get set }
     
     func filterWithWeatherPlacePressedFilterBtn()
+    func filterDatePressedFilterBtn()
     
     // MenualBottomSheetReminderComponentView
     func reminderCompViewshowToast(isEding: Bool)
@@ -62,7 +64,7 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
 }
 
 final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPresentable, DiaryBottomSheetViewControllable {
-    
+
     weak var listener: DiaryBottomSheetPresentableListener?
     var disposeBag = DisposeBag()
     var keyHeight: CGFloat?
@@ -159,7 +161,6 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         $0.delegate = self
         $0.bind()
         $0.isHidden = true
-        $0.weatherTitleBtn.addTarget(self, action: #selector(pressedWeatherTitleBtn), for: .touchUpInside)
         $0.filterBtn.addTarget(self, action: #selector(pressedFilterBtn), for: .touchUpInside)
         // $0.delegate = self
     }
@@ -167,14 +168,13 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     // 날짜 필터 컴포넌트
     private lazy var dateFilterComponentView = MenualDateFilterComponentView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isHidden = true
         $0.delegate = self
-        $0.bind()
         $0.prevMonthArrowBtn.addTarget(self, action: #selector(pressedPrevMonthBtn), for: .touchUpInside)
         $0.nextMonthArrowBtn.addTarget(self, action: #selector(pressedNextMonthBtn), for: .touchUpInside)
         $0.prevYearArrowBtn.addTarget(self, action: #selector(pressedPrevYearBtn), for: .touchUpInside)
         $0.nextYearArrowBtn.addTarget(self, action: #selector(pressedNextYearBtn), for: .touchUpInside)
         $0.filterBtn.addTarget(self, action: #selector(pressedDateFilterBtn), for: .touchUpInside)
+        $0.isHidden = true
     }
     
     // 리마인더 컴포넌트
@@ -187,7 +187,6 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     override func viewDidLoad() {
         super.viewDidLoad()
         setViews()
-        bind()
         bottomSheetView.backgroundColor = Colors.background
         
         isModalInPresentation = true
@@ -291,6 +290,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             make.top.equalTo(self.divider.snp.bottom).offset(64)
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
+            make.height.equalTo(260)
         }
         
         reminderComponentView.snp.makeConstraints { make in
@@ -300,25 +300,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             make.bottom.equalToSuperview().inset(35)
         }
     }
-    
-    func bind() {
-//        guard let filteredDiaryCountRelay = listener?.filteredDiaryCountRelay else { return }
-//        filteredDiaryCountRelay
-//            .subscribe(onNext: { [weak self] count in
-//                guard let self = self else { return }
-//                print("diaryBottomSheetViewController :: count! \(count)")
-//        })
-//            .disposed(by: disposeBag)
-    }
-    
-    func setViewsWithWeatherModel(model: WeatherModel) {
-        // 재진입 할 경우 이전에 선택했던 정보 세팅
 
-    }
-    
-    func setViewsWithPlaceMOdel(model: PlaceModel) {
-        
-    }
     
     @objc
     func dimmedViewTapped(_ tapRecognizer: UITapGestureRecognizer) {
@@ -532,11 +514,6 @@ extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelega
         listener?.filterWithWeatherPlacePressedFilterBtn()
     }
     
-    @objc
-    func pressedWeatherTitleBtn() {
-        print("DiaryBottomSheet :: pressedWeatherTitleBtn")
-    }
-    
     func setFilterBtnCount(count: Int) {
         filterComponentView.filteredCount = count
     }
@@ -557,33 +534,60 @@ extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelega
 
 // MARK: - MenualBottomSheetDateFilterComponentView
 extension DiaryBottomSheetViewController: MenualDateFilterComponentDelegate {
-    var filteredDateRelay: BehaviorRelay<Date>? {
+    var filteredDateMenaulCountsObservable: Observable<Int>? {
+        listener?.filteredDateDiaryCountRelay?.asObservable()
+    }
+    
+    var filteredDateRelay: BehaviorRelay<Date?>? {
         listener?.filteredDateRelay
+    }
+    
+    func setDateFilteredRelay() {
+        dateFilterComponentView.bind()
     }
     
     @objc
     func pressedPrevMonthBtn() {
         print("DiaryBottomSheet :: pressedPrevMonthBtn!")
+        guard let date = filteredDateRelay?.value else { return }
+        let prevMonth = Calendar.current.component(.month, from: date)
+        let prevMonthDate = Calendar.current.date(byAdding: .month, value: prevMonth == 1 ? +11 : -1, to: date) ?? Date()
+        listener?.filteredDateRelay?.accept(prevMonthDate)
     }
     
     @objc
     func pressedNextMonthBtn() {
         print("DiaryBottomSheet :: pressedNextMonthBtn!")
+        guard let date = filteredDateRelay?.value else { return }
+        let nextMonth = Calendar.current.component(.month, from: date)
+        let nextMonthDate = Calendar.current.date(byAdding: .month, value: nextMonth == 12 ? -11 : +1, to: date) ?? Date()
+        listener?.filteredDateRelay?.accept(nextMonthDate)
     }
     
     @objc
     func pressedPrevYearBtn() {
         print("DiaryBottomSheet :: pressedPrevYearBtn!")
+        guard let date = filteredDateRelay?.value else { return }
+        let prevYearDate = Calendar.current.date(byAdding: .year, value: -1, to: date) ?? Date()
+        listener?.filteredDateRelay?.accept(prevYearDate)
     }
     
     @objc
     func pressedNextYearBtn() {
         print("DiaryBottomSheet :: pressedNextYearBtn!")
+        guard let date = filteredDateRelay?.value else { return }
+        let currentDate = Date()
+        let nextYearDate = Calendar.current.date(byAdding: .year, value: +1, to: date) ?? Date()
+        if currentDate < nextYearDate {
+            print("DiaryBottomSheet :: 미래는 안된단다!")
+        }
+        listener?.filteredDateRelay?.accept(nextYearDate)
     }
     
     @objc
     func pressedDateFilterBtn() {
         print("DiaryBottomSheet :: pressedDateFilterBtn!")
+        listener?.filterDatePressedFilterBtn()
     }
 }
 

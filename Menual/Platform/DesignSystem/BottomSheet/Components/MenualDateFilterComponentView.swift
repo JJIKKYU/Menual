@@ -12,21 +12,40 @@ import RxSwift
 import RxRelay
 
 protocol MenualDateFilterComponentDelegate {
-    var filteredMenaulCountsObservable: Observable<Int> { get }
-    var filteredDateRelay: BehaviorRelay<Date>? { get }
+    var filteredDateMenaulCountsObservable: Observable<Int>? { get }
+    var filteredDateRelay: BehaviorRelay<Date?>? { get }
 }
 
 class MenualDateFilterComponentView: UIView {
     
     public var delegate: MenualDateFilterComponentDelegate?
+
     var disposeBag = DisposeBag()
+
+    let currentYear = Calendar.current.component(.year, from: Date())
+    let currentMonth = Calendar.current.component(.month, from: Date())
+    
+    private var month: String = "00" {
+        didSet { setNeedsLayout() }
+    }
+    
+    private var year: String = "0000" {
+        didSet { setNeedsLayout() }
+    }
+    
+    private var count: Int = 0 {
+        didSet { setNeedsLayout() }
+    }
    
     // Year
     public lazy var prevYearArrowBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = Colors.grey.g700
+        $0.tintColor = Colors.grey.g200
         $0.isUserInteractionEnabled = true
+        $0.contentMode = .scaleAspectFit
+        $0.contentHorizontalAlignment = .fill
+        $0.contentVerticalAlignment = .fill
     }
     
     public lazy var nextYearArrowBtn = UIButton().then {
@@ -34,6 +53,9 @@ class MenualDateFilterComponentView: UIView {
         $0.setImage(Asset._24px.Arrow.front.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g700
         $0.isUserInteractionEnabled = true
+        $0.contentMode = .scaleAspectFit
+        $0.contentHorizontalAlignment = .fill
+        $0.contentVerticalAlignment = .fill
     }
     
     private let yearTitle = UILabel().then {
@@ -44,20 +66,24 @@ class MenualDateFilterComponentView: UIView {
     }
     
     // Month
-    public lazy var prevMonthArrowBtn = UIButton().then {
+    lazy var prevMonthArrowBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = Colors.grey.g700
-        $0.isUserInteractionEnabled = true
+        $0.tintColor = Colors.grey.g200
+        $0.contentMode = .scaleAspectFit
+        $0.contentHorizontalAlignment = .fill
+        $0.contentVerticalAlignment = .fill
     }
     
     public lazy var nextMonthArrowBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.front.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g700
-        $0.isUserInteractionEnabled = true
+        $0.contentMode = .scaleAspectFit
+        $0.contentHorizontalAlignment = .fill
+        $0.contentVerticalAlignment = .fill
     }
-    
+
     private let monthTitle = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppTitle(.title_5)
@@ -65,7 +91,7 @@ class MenualDateFilterComponentView: UIView {
         $0.text = "12월"
     }
     
-    public let filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
+    public let filterBtn = BoxButton(frame: .zero, btnStatus: .active, btnSize: .large).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "텍스트"
     }
@@ -137,16 +163,25 @@ class MenualDateFilterComponentView: UIView {
         delegate?.filteredDateRelay?
             .subscribe(onNext: { [weak self] date in
                 guard let self = self else { return }
+                guard let date = date else { return }
                 
                 print("DiaryBottomSheet :: filteredDateRelay 넘어왔당아! \(date)")
+                
+                let calendar = Calendar.current
+                let month = calendar.component(.month, from: date)
+                self.month = String(month)
+                
+                let year = calendar.component(.year, from: date)
+                self.year = String(year)
             })
             .disposed(by: disposeBag)
         
-        delegate?.filteredMenaulCountsObservable
+        delegate?.filteredDateMenaulCountsObservable?
             .subscribe(onNext: { [weak self] count in
                 guard let self = self else { return }
                 
                 print("DiaryBottomSheet :: filteredMenualCountsObservable 구독! = \(count)")
+                self.count = count
             })
             .disposed(by: disposeBag)
         
@@ -154,5 +189,37 @@ class MenualDateFilterComponentView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        monthTitle.text = "\(month)월"
+        yearTitle.text = "\(year)년"
+        filterBtn.title = "\(count)개의 메뉴얼 보기"
+        
+        print("DiaryBottomSheet = \(currentYear) \(Int(year) ?? 0 + 1) ,,,, \(currentMonth < Int(month) ?? 0)")
+        if currentYear == (Int(year) ?? 0) + 1 && currentMonth < Int(month) ?? 0 {
+            print("DiaryBottomSheet :: 내년을 누르면 미래가 되어버리니 비활성화합니다.")
+            nextYearArrowBtn.tintColor = Colors.grey.g700
+            nextYearArrowBtn.isUserInteractionEnabled = false
+        }
+        
+        // 오늘 연도 / 월이 같으면 미래 일기는 볼 수 없도록 비활성화
+        else if String(currentYear) == year && String(currentMonth) == month {
+            nextMonthArrowBtn.tintColor = Colors.grey.g700
+            nextMonthArrowBtn.isUserInteractionEnabled = false
+            
+            nextYearArrowBtn.tintColor = Colors.grey.g700
+            nextYearArrowBtn.isUserInteractionEnabled = false
+        } else if String(currentYear) == year {
+            nextYearArrowBtn.tintColor = Colors.grey.g700
+            nextYearArrowBtn.isUserInteractionEnabled = false
+            
+            nextMonthArrowBtn.tintColor = Colors.grey.g200
+            nextMonthArrowBtn.isUserInteractionEnabled = true
+        } else {
+            nextMonthArrowBtn.tintColor = Colors.grey.g200
+            nextMonthArrowBtn.isUserInteractionEnabled = true
+            
+            nextYearArrowBtn.tintColor = Colors.grey.g200
+            nextYearArrowBtn.isUserInteractionEnabled = true
+        }
     }
 }

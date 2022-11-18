@@ -605,17 +605,22 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         let diarymonthDic: [DiaryYearModel] = diaryMonthDicSubject.value
         
-        guard let filteredDiaryYearModel = diarymonthDic.filter { String($0.year) == date.toStringWithYYYY() }.last else { return 0 }
+        guard let filteredDiaryYearModel = diarymonthDic.filter({ String($0.year) == date.toStringWithYYYY() }).last else {
+            filteredMonthDicSubject.accept([])
+            return 0
+        }
+        var diaryYearModel = filteredDiaryYearModel
+        let count = diaryYearModel.months?.filterDiary(date: date)
         
         print("diaryRepo :: filter! = \(filteredDiaryYearModel)")
         
         if isOnlyFilterCount == true {
-            print("diaryRepo :: 필터 결과 총 개수 = \(filteredDiaryYearModel.months?.allCount)")
-            return filteredDiaryYearModel.months?.allCount ?? 0
+            print("diaryRepo :: 필터 결과 총 개수 = \(count)")
+            return count ?? 0
         }
         
-        filteredMonthDicSubject.accept([filteredDiaryYearModel])
-        return filteredDiaryYearModel.months?.allCount ?? 0
+        filteredMonthDicSubject.accept([diaryYearModel])
+        return count ?? 0
         // fetchDiary 후 얻은 결과 원본
     }
     

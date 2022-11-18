@@ -414,4 +414,5 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 // MARK: - 미사용
 extension DiaryDetailInteractor {
     func filterWithWeatherPlacePressedFilterBtn() { }
+    func filterDatePressedFilterBtn() { }
 }

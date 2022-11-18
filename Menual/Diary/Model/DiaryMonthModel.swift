@@ -131,6 +131,33 @@ public struct DiaryMonthModel {
         decDiary.sort { $0.createdAt > $1.createdAt }
     }
     
+    mutating func removeAll() {
+        janDiary.removeAll()
+        jan = 0
+        fabDiary.removeAll()
+        fab = 0
+        marDiary.removeAll()
+        mar = 0
+        aprDiary.removeAll()
+        apr = 0
+        mayDiary.removeAll()
+        may = 0
+        junDiary.removeAll()
+        jun = 0
+        julDiary.removeAll()
+        jul = 0
+        augDiary.removeAll()
+        aug = 0
+        sepDiary.removeAll()
+        sep = 0
+        octDiary.removeAll()
+        oct = 0
+        novDiary.removeAll()
+        nov = 0
+        decDiary.removeAll()
+        dec = 0
+    }
+    
     mutating func filterDiary(weatherTypes: [Weather], placeTypes: [Place]) {
         // 각 monthsArr를 담아준다
         var monthsArr = [janDiary, fabDiary, marDiary, aprDiary, mayDiary, junDiary, julDiary, augDiary, sepDiary, octDiary, novDiary, decDiary]
@@ -162,8 +189,10 @@ public struct DiaryMonthModel {
         // return monthsArr
     }
     
-    mutating func filterDiary(date: Date) {
+    // 필터 후에 해당 월의 메뉴얼 개수 반환
+    mutating func filterDiary(date: Date) -> Int {
         // 각 monthsArr를 담아준다
+        /*
         var monthsArr: [[DiaryModel]] = []
         
         let monthEngName = date.toStringWithMonthEngName()
@@ -172,8 +201,15 @@ public struct DiaryMonthModel {
         
         monthsArr.append(monthMenualArr)
         setAllDiary(monthsArr: monthsArr)
+        */
         
-        print("DiaryMonthModel :: monthENgName = \(monthEngName), monthsArr = \(monthsArr)")
+        let monthEngName = date.toStringWithMonthEngName()
+        let monthMenualArr = getMenualArr(MM: monthEngName)
+        setMenualArr(MM: monthEngName, diaryModel: monthMenualArr)
+        setMenualAllCount()
+
+        print("DiaryMonthModel :: monthENgName = \(monthEngName), allCount = \(allCount)")
+        return monthMenualArr.count
     }
     
     func getMenualCountWithMonth(MM: String) -> Int {
@@ -238,6 +274,68 @@ public struct DiaryMonthModel {
         default:
             return []
         }
+    }
+    
+    // 날짜 필터 사용
+    mutating func setMenualArr(MM: String, diaryModel: [DiaryModel]) {
+        removeAll()
+        let mm: String = MM.lowercased()
+        switch mm {
+        case "jan":
+            janDiary.removeAll()
+            jan = diaryModel.count
+            janDiary = diaryModel
+        case "fab":
+            fabDiary.removeAll()
+            fab = diaryModel.count
+            fabDiary = diaryModel
+        case "mar":
+            marDiary.removeAll()
+            mar = diaryModel.count
+            marDiary = diaryModel
+        case "apr":
+            aprDiary.removeAll()
+            apr = diaryModel.count
+            aprDiary = diaryModel
+        case "may":
+            mayDiary.removeAll()
+            may = diaryModel.count
+            mayDiary = diaryModel
+        case "jun":
+            junDiary.removeAll()
+            jun = diaryModel.count
+            junDiary = diaryModel
+        case "jul":
+            julDiary.removeAll()
+            jul = diaryModel.count
+            julDiary = diaryModel
+        case "aug":
+            augDiary.removeAll()
+            aug = diaryModel.count
+            augDiary = diaryModel
+        case "sep":
+            sepDiary.removeAll()
+            sep = diaryModel.count
+            sepDiary = diaryModel
+        case "oct":
+            octDiary.removeAll()
+            oct = diaryModel.count
+            octDiary = diaryModel
+        case "nov":
+            novDiary.removeAll()
+            nov = diaryModel.count
+            novDiary = diaryModel
+        case "dec":
+            decDiary.removeAll()
+            dec = diaryModel.count
+            decDiary = diaryModel
+        default:
+            break
+        }
+    }
+    
+    mutating func setMenualAllCount() {
+        allCount = jan + fab + mar + apr + may + jun + jul + aug + sep + oct + nov + dec
     }
     
     func getArr() -> [Int] {

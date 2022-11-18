@@ -42,7 +42,6 @@ class MenualBottomSheetFilterComponentView: UIView {
         $0.tintColor = Colors.grey.g600
         $0.marginImageWithText(margin: 4)
         $0.addTarget(self, action: #selector(pressedWeatherTitleBtn), for: .touchUpInside)
-//        $0.isUserInteractionEnabled = true
     }
     
     private let weatherSelectNumTitle = UILabel().then {

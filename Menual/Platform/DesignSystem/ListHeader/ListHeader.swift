@@ -52,6 +52,10 @@ class ListHeader: UIView {
         didSet { setFilterIcon() }
     }
     
+    var rightCalendarBtnIsEnabled: Bool = false {
+        didSet { setNeedsLayout() }
+    }
+    
     public let titleLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -84,6 +88,9 @@ class ListHeader: UIView {
         $0.setTitleColor(Colors.grey.g500, for: .normal)
     }
     
+    let rightCalenderBtnBadge = Badges().then {
+        $0.badgeType = .dot
+    }
     let rightCalenderBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.calendar.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -111,6 +118,7 @@ class ListHeader: UIView {
         rightFilterBtn.addSubview(rightFilterBtnBadge)
         addSubview(rightTextBtn)
         addSubview(rightCalenderBtn)
+        rightCalenderBtn.addSubview(rightCalenderBtnBadge)
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -146,6 +154,10 @@ class ListHeader: UIView {
         }
         rightTextBtn.sizeToFit()
         
+        rightCalenderBtnBadge.snp.makeConstraints { make in
+            make.trailing.top.equalToSuperview()
+            make.width.height.equalTo(4)
+        }
         rightCalenderBtn.snp.makeConstraints { make in
             make.trailing.equalTo(rightFilterBtn.snp.leading).offset(-11)
             make.width.height.equalTo(24)
@@ -275,6 +287,13 @@ class ListHeader: UIView {
 
         case false:
             rightFilterBtnBadge.hide()
+        }
+        
+        switch rightCalendarBtnIsEnabled {
+        case true:
+            rightCalenderBtnBadge.show()
+        case false:
+            rightCalenderBtnBadge.hide()
         }
     }
 }

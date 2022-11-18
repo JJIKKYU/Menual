@@ -16,13 +16,12 @@ protocol DiaryBottomSheetRouting: ViewableRouting {
 
 protocol DiaryBottomSheetPresentable: Presentable {
     var listener: DiaryBottomSheetPresentableListener? { get set }
-    
-    func setViewsWithWeatherModel(model: WeatherModel)
-    func setViewsWithPlaceMOdel(model: PlaceModel)
+
     func setFilterBtnCount(count: Int)
     func setViews(type: MenualBottomSheetType)
     func setCurrentFilteredBtn(weatherArr: [Weather], placeArr: [Place])
     func setCurrentReminderData(isEnabled: Bool, dateComponets: DateComponents?)
+    func setDateFilteredRelay()
 }
 
 protocol DiaryBottomSheetListener: AnyObject {
@@ -32,6 +31,7 @@ protocol DiaryBottomSheetListener: AnyObject {
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place])
     func filterWithWeatherPlacePressedFilterBtn()
     func reminderCompViewshowToast(isEding: Bool)
+    func filterDatePressedFilterBtn()
 }
 
 final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPresentable>, DiaryBottomSheetInteractable, DiaryBottomSheetPresentableListener {
@@ -48,10 +48,11 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     // var weatherFilterSelectedArrRelay = BehaviorRelay<[Weather]>(value: [])
     // var placeFilterSelectedArrRelay = BehaviorRelay<[Place]>(value: [])
     var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
+    var filteredDateDiaryCountRelay: BehaviorRelay<Int>?
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
-    var filteredDateRelay: BehaviorRelay<Date>?
+    var filteredDateRelay: BehaviorRelay<Date?>?
     
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>?
 
@@ -76,11 +77,6 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
 
     override func didBecomeActive() {
         super.didBecomeActive()
-        
-        print("weatherModel = \(weatherModel)")
-        
-//        presenter.setViewsWithWeatherModel(model: weatherModel)
-//        presenter.setViewsWithPlaceMOdel(model: placeModel)
     }
 
     override func willResignActive() {
@@ -102,13 +98,21 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
 //        .disposed(by: disposeBag)
     }
     
-    func setFilteredDateRelay(relay: BehaviorRelay<Date>?) {
-        print("DiaryBottomSheet :: setFilteredDateRelay! = \(relay)")
+    func setFilteredDateRelay(relay: BehaviorRelay<Date?>?, countRelay: BehaviorRelay<Int>?) {
+        print("DiaryBottomSheet :: setFilteredDateRelay! = \(relay), countRelay = \(countRelay)")
         filteredDateRelay = relay
+        filteredDateDiaryCountRelay = countRelay
         filteredDateRelay?
             .subscribe(onNext: { [weak self] date in
                 guard let self = self else { return }
-
+                self.presenter.setDateFilteredRelay()
+            })
+            .disposed(by: disposeBag)
+        
+        filteredDateDiaryCountRelay?
+            .subscribe(onNext: { [weak self] count in
+                guard let self = self else { return }
+                print("DiaryBottomSheet :: count! = \(count)")
             })
             .disposed(by: disposeBag)
     }
@@ -247,6 +251,11 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
 
     func reminderCompViewSetReminder(requestDateComponents: DateComponents, requestDate: Date) {
         self.reminderRequestDateRelay?.accept(requestDateComponents)
+    }
+    
+    // MARK: - DateFilater
+    func filterDatePressedFilterBtn() {
+        listener?.filterDatePressedFilterBtn()
     }
 }
 
