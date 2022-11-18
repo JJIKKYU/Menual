@@ -8,6 +8,10 @@
 import Foundation
 import RealmSwift
 
+// 무슨 다이러인지
+// 언제 알림 설정했는지
+// 언제 알람이 오게 했는지
+
 // MARK: - 앱에서 사용하는 ReminderModel
 public struct ReminderModel {
     let uuid: String

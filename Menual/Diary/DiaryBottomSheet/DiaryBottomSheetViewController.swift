@@ -23,8 +23,8 @@ enum MenualBottomSheetRightBtnIsActivate {
 }
 
 enum MenualBottomSheetType {
-    case weather
-    case place
+//    case weather
+//    case place
     case menu
     case calender
     case reminder
@@ -33,6 +33,7 @@ enum MenualBottomSheetType {
 }
 
 protocol DiaryBottomSheetPresentableListener: AnyObject {
+    var filteredDateRelay: BehaviorRelay<Date>? { get set }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get set }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get set }
     
@@ -82,7 +83,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         didSet { layoutUpdate() }
     }
     
-    var menualBottomSheetType: MenualBottomSheetType = .weather {
+    var menualBottomSheetType: MenualBottomSheetType = .menu {
         didSet { menualBottomSheetTypeLayoutUpdate() }
     }
     
@@ -167,6 +168,13 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     private lazy var dateFilterComponentView = MenualDateFilterComponentView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isHidden = true
+        $0.delegate = self
+        $0.bind()
+        $0.prevMonthArrowBtn.addTarget(self, action: #selector(pressedPrevMonthBtn), for: .touchUpInside)
+        $0.nextMonthArrowBtn.addTarget(self, action: #selector(pressedNextMonthBtn), for: .touchUpInside)
+        $0.prevYearArrowBtn.addTarget(self, action: #selector(pressedPrevYearBtn), for: .touchUpInside)
+        $0.nextYearArrowBtn.addTarget(self, action: #selector(pressedNextYearBtn), for: .touchUpInside)
+        $0.filterBtn.addTarget(self, action: #selector(pressedDateFilterBtn), for: .touchUpInside)
     }
     
     // 리마인더 컴포넌트
@@ -201,6 +209,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
 //        weatherPlaceSelectView.delegate = nil
         filterComponentView.delegate = nil
         reminderComponentView.delegate = nil
+        dateFilterComponentView.delegate = nil
         listener?.pressedCloseBtn()
     }
     
@@ -322,20 +331,6 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         menualBottomSheetType = type
         
         switch menualBottomSheetType {
-        case .weather:
-            break
-//            weatherPlaceSelectView.isHidden = false
-//            weatherPlaceSelectView.weatherPlaceType = .weather
-//            rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
-//            rightBtn.isHidden = false
-            
-        case .place:
-            break
-//            weatherPlaceSelectView.isHidden = false
-//            weatherPlaceSelectView.weatherPlaceType = .place
-//            rightBtn.addTarget(self, action: #selector(pressedAddBtn), for: .touchUpInside)
-//            rightBtn.isHidden = false
-            
         case .reminder:
             bottomSheetTitle = "리마인더 알림"
             reminderComponentView.isHidden = false
@@ -350,11 +345,13 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .filter:
+            bottomSheetTitle = "필터"
             filterComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .dateFilter:
+            bottomSheetTitle = "필터"
             dateFilterComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
@@ -453,39 +450,6 @@ extension DiaryBottomSheetViewController {
     }
 }
 
-// MARK: - UITextFieldDelegate
-extension DiaryBottomSheetViewController: UITextFieldDelegate {
-    
-}
-
-/*
-// MARK: - WeatherPlaceSelectViewDelegate
-extension DiaryBottomSheetViewController: WeatherPlaceSelectViewDelegate {
-    func isSelected(_ isSelected: Bool) {
-        // 선택 유무로 체크표시 변경
-        print("DiaryBottomSheet :: isSelected! = \(isSelected)")
-        switch isSelected {
-        case true:
-            menualBottomSheetRightBtnIsActivate = .activate
-        case false:
-            menualBottomSheetRightBtnIsActivate = .unActivate
-        }
-    }
-    
-    // weather 선택시 넘어오는 정보
-    func weatherSendData(weatherType: Weather, isSelected: Bool) {
-        listener?.updateWeather(weather: weatherType)
-    }
-    
-    // place 선택시 넘어는 정보
-    func placeSendData(placeType: Place, isSelected: Bool) {
-        
-        print("DiaryBottomSheet :: placeSendData = \(placeType)")
-        listener?.updatePlace(place: placeType)
-    }
-}
-*/
-
 // MARK: - Bottom Sheet 기본 컴포넌트
 extension DiaryBottomSheetViewController {
     func hideBottomSheetAndGoBack() {
@@ -529,14 +493,6 @@ extension DiaryBottomSheetViewController {
     func menualBottomSheetTypeLayoutUpdate() {
         print("!!! \(menualBottomSheetType)")
         switch menualBottomSheetType {
-        case .weather:
-            bottomSheetTitle = "날씨를 선택해 주세요"
-            bottomSheetHeight = 130
-            
-        case .place:
-            bottomSheetTitle = "장소를 선택해 주세요"
-            bottomSheetHeight = 130
-
         case .calender:
             bottomSheetTitle = "날짜"
             bottomSheetHeight = 375
@@ -599,6 +555,37 @@ extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelega
     }
 }
 
+// MARK: - MenualBottomSheetDateFilterComponentView
+extension DiaryBottomSheetViewController: MenualDateFilterComponentDelegate {
+    var filteredDateRelay: BehaviorRelay<Date>? {
+        listener?.filteredDateRelay
+    }
+    
+    @objc
+    func pressedPrevMonthBtn() {
+        print("DiaryBottomSheet :: pressedPrevMonthBtn!")
+    }
+    
+    @objc
+    func pressedNextMonthBtn() {
+        print("DiaryBottomSheet :: pressedNextMonthBtn!")
+    }
+    
+    @objc
+    func pressedPrevYearBtn() {
+        print("DiaryBottomSheet :: pressedPrevYearBtn!")
+    }
+    
+    @objc
+    func pressedNextYearBtn() {
+        print("DiaryBottomSheet :: pressedNextYearBtn!")
+    }
+    
+    @objc
+    func pressedDateFilterBtn() {
+        print("DiaryBottomSheet :: pressedDateFilterBtn!")
+    }
+}
 
 // MARK: - Debugging
 extension DiaryBottomSheetViewController {

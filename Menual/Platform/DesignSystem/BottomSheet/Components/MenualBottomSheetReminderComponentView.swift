@@ -131,6 +131,7 @@ class MenualBottomSheetReminderComponentView: UIView {
         reminderTitleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalToSuperview().offset(16)
+            make.height.equalTo(18)
         }
         
         reminderTitleQuestionBtn.snp.makeConstraints { make in

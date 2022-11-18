@@ -15,7 +15,7 @@ protocol DiaryDetailDependency: Dependency {
 }
 
 final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency, DiaryDetailImageDependency {
-    
+    var filteredDateRelay: BehaviorRelay<Date>?
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     var filteredDiaryCountRelay: BehaviorRelay<Int>?

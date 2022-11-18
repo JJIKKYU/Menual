@@ -756,7 +756,7 @@ extension DiaryWritingViewController {
     @objc
     func pressedImageUploadViewDeleteBtn() {
         print("DiaryWriting :: pressedImageUploadViewDeleteBtn")
-        show(size: .medium,
+        show(size: .small,
              buttonType: .twoBtn,
              titleText: "사진을 삭제하시겠어요?",
              cancelButtonText: "취소",

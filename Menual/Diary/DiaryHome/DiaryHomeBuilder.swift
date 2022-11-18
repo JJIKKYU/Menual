@@ -15,6 +15,7 @@ protocol DiaryHomeDependency: Dependency {
 
 final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency, DiaryBottomSheetDependency {
     
+    var filteredDateRelay: BehaviorRelay<Date>?
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
@@ -62,6 +63,7 @@ final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
         component.filteredDiaryCountRelay = interactor.filteredDiaryCountRelay
         component.filteredPlaceArrRelay = interactor.filteredPlaceArrRelay
         component.filteredWeatherArrRelay = interactor.filteredWeatherArrRelay
+        component.filteredDateRelay = interactor.filteredDateRelay
         
         return DiaryHomeRouter(
             interactor: interactor,

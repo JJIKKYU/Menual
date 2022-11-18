@@ -42,7 +42,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     
     var weatherModel: WeatherModel = WeatherModel(uuid: "", weather: nil, detailText: "")
     var placeModel: PlaceModel = PlaceModel(uuid: "", place: nil, detailText: "")
-    var bottomSheetType: MenualBottomSheetType = .weather
+    var bottomSheetType: MenualBottomSheetType = .menu
     
     // FilterComponentView에서 사용되는 Weather/Place Filter Selected Arr
     // var weatherFilterSelectedArrRelay = BehaviorRelay<[Weather]>(value: [])
@@ -51,6 +51,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
+    var filteredDateRelay: BehaviorRelay<Date>?
     
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>?
 
@@ -99,6 +100,17 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
 //            self.listener?.filterWithWeatherPlace(weatherArr: weatherArr, placeArr: placeArr)
 //        })
 //        .disposed(by: disposeBag)
+    }
+    
+    func setFilteredDateRelay(relay: BehaviorRelay<Date>?) {
+        print("DiaryBottomSheet :: setFilteredDateRelay! = \(relay)")
+        filteredDateRelay = relay
+        filteredDateRelay?
+            .subscribe(onNext: { [weak self] date in
+                guard let self = self else { return }
+
+            })
+            .disposed(by: disposeBag)
     }
     
     func setFilteredDiaryCountRelay(relay: BehaviorRelay<Int>?) {

@@ -14,6 +14,7 @@ protocol DiaryBottomSheetDependency: Dependency {
     // created by this RIB.
     var diaryRepository: DiaryRepository { get }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
+    var filteredDateRelay: BehaviorRelay<Date>? { get }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
@@ -64,8 +65,14 @@ final class DiaryBottomSheetBuilder: Builder<DiaryBottomSheetDependency>, DiaryB
         )
         print("ddddd!! = \(dependency.filteredDiaryCountRelay)")
 
+        // filter
         interactor.setFilteredDiaryCountRelay(relay: dependency.filteredDiaryCountRelay)
         interactor.setFilteredWeatherPlaceArrRelay(weatherArrRelay: dependency.filteredWeatherArrRelay, placeArrRelay: dependency.filteredPlaceArrRelay)
+        
+        // date filter
+        interactor.setFilteredDateRelay(relay: dependency.filteredDateRelay)
+        
+        // reminder
         interactor.setReminderRequestDate(relay: dependency.reminderRequestDateRelay)
 
         interactor.listener = listener

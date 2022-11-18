@@ -84,7 +84,7 @@ func showToast(message : String) {
         
     }
 
-    UIView.animate(withDuration: 1.0, delay: 3, options: .curveEaseInOut, animations: {
+    UIView.animate(withDuration: 0.3, delay: 2, options: .curveEaseInOut, animations: {
         toastView.snp.updateConstraints { make in
             make.top.equalToSuperview().inset(-UIApplication.topSafeAreaHeight - 36)
         }

@@ -53,6 +53,7 @@ public protocol DiaryRepository {
     
     // Filter 로직
     func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int
+    func filterDiary(date: Date, isOnlyFilterCount: Bool) -> Int
     
     // Password 로직
     func fetchPassword()
@@ -560,7 +561,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     // MARK: - Filter 로직
     public func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int {
-        print("diaryRepo :: filterDiary")
+        print("diaryRepo :: filterDiary -> 날짜/장소")
         // fetchDiary 후 얻은 결과 원본
         var diaryMonthDic: [DiaryYearModel] = diaryMonthDicSubject.value
 
@@ -597,6 +598,25 @@ public final class DiaryRepositoryImp: DiaryRepository {
         // filteredDiaryStringSubject.accept(diaryMonthDic)
         filteredMonthDicSubject.accept(diaryMonthDic)
         return allCount
+    }
+    
+    public func filterDiary(date: Date, isOnlyFilterCount: Bool) -> Int {
+        print("diaryRepo :: filterDiary! -> 날짜")
+        
+        let diarymonthDic: [DiaryYearModel] = diaryMonthDicSubject.value
+        
+        guard let filteredDiaryYearModel = diarymonthDic.filter { String($0.year) == date.toStringWithYYYY() }.last else { return 0 }
+        
+        print("diaryRepo :: filter! = \(filteredDiaryYearModel)")
+        
+        if isOnlyFilterCount == true {
+            print("diaryRepo :: 필터 결과 총 개수 = \(filteredDiaryYearModel.months?.allCount)")
+            return filteredDiaryYearModel.months?.allCount ?? 0
+        }
+        
+        filteredMonthDicSubject.accept([filteredDiaryYearModel])
+        return filteredDiaryYearModel.months?.allCount ?? 0
+        // fetchDiary 후 얻은 결과 원본
     }
     
     // MARK: - TempSave

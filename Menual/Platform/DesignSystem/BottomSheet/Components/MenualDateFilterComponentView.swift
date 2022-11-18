@@ -8,20 +8,32 @@
 import UIKit
 import SnapKit
 import Then
+import RxSwift
+import RxRelay
+
+protocol MenualDateFilterComponentDelegate {
+    var filteredMenaulCountsObservable: Observable<Int> { get }
+    var filteredDateRelay: BehaviorRelay<Date>? { get }
+}
 
 class MenualDateFilterComponentView: UIView {
+    
+    public var delegate: MenualDateFilterComponentDelegate?
+    var disposeBag = DisposeBag()
    
     // Year
-    private let prevYearArrowBtn = UIButton().then {
+    public lazy var prevYearArrowBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g700
+        $0.isUserInteractionEnabled = true
     }
     
-    private let nextYearArrowBtn = UIButton().then {
+    public lazy var nextYearArrowBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.front.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g700
+        $0.isUserInteractionEnabled = true
     }
     
     private let yearTitle = UILabel().then {
@@ -32,16 +44,18 @@ class MenualDateFilterComponentView: UIView {
     }
     
     // Month
-    private let prevMonthArrowBtn = UIButton().then {
+    public lazy var prevMonthArrowBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g700
+        $0.isUserInteractionEnabled = true
     }
     
-    private let nextMonthArrowBtn = UIButton().then {
+    public lazy var nextMonthArrowBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.front.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g700
+        $0.isUserInteractionEnabled = true
     }
     
     private let monthTitle = UILabel().then {
@@ -51,7 +65,7 @@ class MenualDateFilterComponentView: UIView {
         $0.text = "12월"
     }
     
-    private let filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
+    public let filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "텍스트"
     }
@@ -118,8 +132,27 @@ class MenualDateFilterComponentView: UIView {
         }
     }
     
+    func bind() {
+        print("DiaryBottomSheet :: filterDate 바인드!")
+        delegate?.filteredDateRelay?
+            .subscribe(onNext: { [weak self] date in
+                guard let self = self else { return }
+                
+                print("DiaryBottomSheet :: filteredDateRelay 넘어왔당아! \(date)")
+            })
+            .disposed(by: disposeBag)
+        
+        delegate?.filteredMenaulCountsObservable
+            .subscribe(onNext: { [weak self] count in
+                guard let self = self else { return }
+                
+                print("DiaryBottomSheet :: filteredMenualCountsObservable 구독! = \(count)")
+            })
+            .disposed(by: disposeBag)
+        
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
     }
-
 }

@@ -147,7 +147,7 @@ class ListHeader: UIView {
         rightTextBtn.sizeToFit()
         
         rightCalenderBtn.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(52)
+            make.trailing.equalTo(rightFilterBtn.snp.leading).offset(-11)
             make.width.height.equalTo(24)
             make.centerY.equalTo(titleLabel)
         }

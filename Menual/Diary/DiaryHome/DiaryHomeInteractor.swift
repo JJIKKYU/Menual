@@ -59,6 +59,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     let filteredWeatherArrRelay = BehaviorRelay<[Weather]>(value: [])
     let filteredPlaceArrRelay = BehaviorRelay<[Place]>(value: [])
+    let filteredDateRelay = BehaviorRelay<Date>(value: Date())
 //    var filteredWeatherArr: [Weather] = []
 //    var filteredPlaceArr: [Place] = []
 
@@ -330,6 +331,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         dependency.diaryRepository
             .fetch()
     }
+    
+    // DateFilter
+    
 }
 
 

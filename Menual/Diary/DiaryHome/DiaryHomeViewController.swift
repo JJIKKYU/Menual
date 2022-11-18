@@ -127,6 +127,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     lazy var myMenualTitleView = ListHeader(type: .main, rightIconType: .filterAndCalender).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "MY MENUAL"
+        $0.layer.zPosition = 1
         $0.rightCalenderBtn.addTarget(self, action: #selector(pressedDateFilterBtn), for: .touchUpInside)
         $0.rightFilterBtn.addTarget(self, action: #selector(pressedFilterBtn), for: .touchUpInside)
     }
@@ -258,6 +259,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.bringSubviewToFront(tableViewHeaderView)
         self.view.bringSubviewToFront(writeFAB)
         self.view.bringSubviewToFront(scrollToTopFAB)
+        self.view.bringSubviewToFront(myMenualTitleView)
         
         myMenualTableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -593,17 +595,27 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
                 setFABMode(isEnabled: true)
                 myMenualTitleView.AppShadow(.shadow_6)
                 myMenualTitleView.backgroundColor = Colors.background
+                myMenualTitleView.titleLabel.snp.remakeConstraints { make in
+                    make.leading.equalToSuperview().offset(20)
+                    make.centerY.equalToSuperview()
+                    make.height.equalTo(22)
+                }
                 myMenualTitleView.snp.remakeConstraints { make in
                     make.leading.equalToSuperview()
                     make.width.equalToSuperview()
                     make.top.equalTo(naviView.snp.bottom)
-                    make.height.equalTo(55)
+                    make.height.equalTo(44)
                 }
             } else {
                 print("DiaryHome :: contents <= 155")
                 setFABMode(isEnabled: false)
                 myMenualTitleView.AppShadow(.shadow_0)
                 myMenualTitleView.backgroundColor = .clear
+                myMenualTitleView.titleLabel.snp.remakeConstraints { make in
+                    make.leading.equalToSuperview().offset(20)
+                    make.top.equalToSuperview()
+                    make.height.equalTo(22)
+                }
                 myMenualTitleView.snp.remakeConstraints { make in
                     make.leading.equalToSuperview()
                     make.width.equalToSuperview()

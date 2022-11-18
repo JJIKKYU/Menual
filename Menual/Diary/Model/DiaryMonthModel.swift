@@ -132,8 +132,6 @@ public struct DiaryMonthModel {
     }
     
     mutating func filterDiary(weatherTypes: [Weather], placeTypes: [Place]) {
-        print("filter 이전 = sepDiary = \(sepDiary)")
-        
         // 각 monthsArr를 담아준다
         var monthsArr = [janDiary, fabDiary, marDiary, aprDiary, mayDiary, junDiary, julDiary, augDiary, sepDiary, octDiary, novDiary, decDiary]
         
@@ -162,6 +160,20 @@ public struct DiaryMonthModel {
         
         print("filter 후 = sepDiary = \(sepDiary)")
         // return monthsArr
+    }
+    
+    mutating func filterDiary(date: Date) {
+        // 각 monthsArr를 담아준다
+        var monthsArr: [[DiaryModel]] = []
+        
+        let monthEngName = date.toStringWithMonthEngName()
+        
+        let monthMenualArr = getMenualArr(MM: monthEngName)
+        
+        monthsArr.append(monthMenualArr)
+        setAllDiary(monthsArr: monthsArr)
+        
+        print("DiaryMonthModel :: monthENgName = \(monthEngName), monthsArr = \(monthsArr)")
     }
     
     func getMenualCountWithMonth(MM: String) -> Int {
