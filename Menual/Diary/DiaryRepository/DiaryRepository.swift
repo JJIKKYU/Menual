@@ -32,6 +32,7 @@ public protocol DiaryRepository {
     func addDiary(info: DiaryModel)
     func updateDiary(info: DiaryModel)
     func hideDiary(isHide: Bool, info: DiaryModel) -> DiaryModel?
+    func removeAllDiary()
     func addWeatherHistory(info: WeatherHistoryModel)
     func addPlaceHistory(info: PlaceHistoryModel)
     func deleteDiary(info: DiaryModel)
@@ -353,6 +354,22 @@ public final class DiaryRepositoryImp: DiaryRepository {
         self.fetch()
     }
     
+    public func removeAllDiary() {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        realm.safeWrite {
+            realm.delete(realm.objects(DiaryModelRealm.self))
+        }
+        
+        self.diaryMonthDic.accept([])
+        self.diaryMonthDicSubject.accept([])
+        self.filteredMonthDicSubject.accept([])
+        self.diaryModelSubject.accept([])
+        self.fetch()
+    }
+    
     public func deleteDiary(info: DiaryModel) {
         guard let realm = Realm.safeInit() else {
             return
@@ -361,10 +378,11 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let data = realm.objects(DiaryModelRealm.self).filter({ $0.uuid == info.uuid }).first
         else { return }
         
-//        realm.safeWrite {
-//            realm.delete(data)
-//        }
+        realm.safeWrite {
+            realm.delete(data)
+        }
 
+        /*
         realm.safeWrite {
             data.isDeleted = true
         }
@@ -393,6 +411,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         )
 
         diaryModelSubject.accept(arr)
+         */
         fetch()
     }
     

@@ -127,4 +127,9 @@ final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeveloperPr
     func pressedBackBtn(isOnlyDetach: Bool) {
         listener?.profileDeveloperPressedBackBtn(isOnlyDetach: isOnlyDetach)
     }
+
+    func allMenualRemove() {
+        dependency.diaryRepository
+            .removeAllDiary()
+    }
 }

@@ -249,7 +249,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         listener?.reminderCompViewshowToast(isEding: isEding)
     }
 
-    func reminderCompViewSetReminder(requestDateComponents: DateComponents, requestDate: Date) {
+    func reminderCompViewSetReminder(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date) {
         self.reminderRequestDateRelay?.accept(requestDateComponents)
     }
     

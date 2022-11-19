@@ -58,7 +58,7 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     
     // MenualBottomSheetReminderComponentView
     func reminderCompViewshowToast(isEding: Bool)
-    func reminderCompViewSetReminder(requestDateComponents: DateComponents, requestDate: Date)
+    func reminderCompViewSetReminder(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date)
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get set }
     // var filteredDiaryCountRelay: BehaviorRelay<Int>? { get set }
 }
@@ -650,7 +650,7 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
 //
         
         listener?.reminderCompViewshowToast(isEding: isEditing)
-        listener?.reminderCompViewSetReminder(requestDateComponents: requestDateComponents, requestDate: requestDate)
+        listener?.reminderCompViewSetReminder(isEditing: isEditing, requestDateComponents: requestDateComponents, requestDate: requestDate)
         hideBottomSheetAndGoBack()
     }
     

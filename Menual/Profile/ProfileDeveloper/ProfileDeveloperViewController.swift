@@ -21,13 +21,15 @@ protocol ProfileDeveloperPresentableListener: AnyObject {
     
     var tempMenualSetRelay: BehaviorRelay<Bool?> { get }
     var reminderDataCallRelay: BehaviorRelay<Bool?> { get }
+    func allMenualRemove()
 }
 
 final class ProfileDeveloperViewController: UIViewController, ProfileDeveloperPresentable, ProfileDeveloperViewControllable {
     
     private let tableviewDataArr = [
         "테스트 게시글 30개 세팅",
-        "리마인더 적용 데이터 목록"
+        "리마인더 적용 데이터 목록",
+        "게시글 모두 삭제"
     ]
 
     weak var listener: ProfileDeveloperPresentableListener?
@@ -150,9 +152,31 @@ extension ProfileDeveloperViewController: UITableViewDelegate, UITableViewDataSo
             }
             
         }
-        // Reminder 목록 호출
+        // 리마인더 적용 데이터 목록
         else if text == tableviewDataArr[1] {
-            
+            let center = UNUserNotificationCenter.current()
+            var localPushCount: Int = 0
+            var text: String = ""
+            center.getPendingNotificationRequests { (notifications) in
+                print("DiaryDetail :: LocalPush :: Count: \(notifications.count)")
+                localPushCount = notifications.count
+                text += "현재 적용된 푸쉬 = \(localPushCount)\n\n\n"
+                for item in notifications {
+                    text += "고유ID = \(item.identifier)\n트리거 = \(item.trigger.debugDescription)\n타이틀 =  \(item.content.title)\n바디 = \(item.content.body)\n담긴정보 =  \(item.content.userInfo)\n\n"
+                    // print(item.content)
+                }
+                
+                DispatchQueue.main.async {
+                    self.textView.text = text
+                }
+            }
+        }
+        // 게시글 모두 삭제
+        else if text == tableviewDataArr[2] {
+            textView.text = "테스트 게시글을 모두 삭제합니다."
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) {
+                self.listener?.allMenualRemove()
+            }
         }
     }
 }

@@ -138,11 +138,11 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 print("DiaryDetail :: reminderRequestDateRelay! \(dateComponents)")
                 switch self.isEnabledReminder {
                 case true:
-                    print("DiaryDetail :: self.isEnabledReminder = \(self.isEnabledReminder)")
+                    print("DiaryDetail :: self.isEnabledReminder = \(self.isEnabledReminder) -> 수정")
                     
                     
                 case false:
-                    print("DiaryDetail :: self.isEnabledReminder = \(self.isEnabledReminder)")
+                    print("DiaryDetail :: self.isEnabledReminder = \(self.isEnabledReminder) -> 세팅")
                     self.setReminderDate(requestDateComponents: dateComponents)
                 }
                 
@@ -284,81 +284,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         guard let diaryModel = diaryModel else { return }
         
         var requestUUID: String = ""
-        let center = UNUserNotificationCenter.current()
-        /*
-        
-        center.getNotificationSettings { [weak self] settings in
-            guard let self = self else { return }
-            guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
-                print("DiaryDetail :: 알림 권한이 없습니다.")
-                return
-            }
-            
-            if settings.alertSetting == .enabled {
-                // Schedule an alert-only notification
-                print("DiaryDetail :: 알림 권한이 enabled 합니다. - Schedule an alert-only notification")
-            } else {
-                print("DiaryDetail :: 알림 권한이 enabled 합니다. - Schedule a notification with a badge and sound.")
-            }
-            
-            let content = UNMutableNotificationContent()
-            content.title = "알림 테스트입니다."
-            content.body = "알림 테스트 알림 테스트 알림 테스트 알림 테스트 알림 테스트"
-            
-            // Configure the recurring date.
-//            var dateComponents = DateComponents()
-//            dateComponents.year = requestDate.year
-//            dateComponents.day = 2
-//            dateComponents.hour = 17
-//            dateComponents.minute = 41
-            
-            // Create the trigger as a repating event.
-            let trigger = UNCalendarNotificationTrigger(dateMatching: requestDateComponents, repeats: false)
-            
-            // Create the request
-            requestUUID = UUID().uuidString
-            let request = UNNotificationRequest(identifier: requestUUID, content: content, trigger: trigger)
-            
-            // Schedule the request with the system
-            let notificationCenter = UNUserNotificationCenter.current()
-            notificationCenter.add(request) { error in
-                print("Reminder :: 됐나!? - 1")
-                if error != nil {
-                    print("Reminder :: 됐나!? NoError! - 2")
-                }
-            }
-            
-            guard let requestDate = Calendar.current.date(from: requestDateComponents) else { return }
-            let uuid: String = self.isEnabledReminder == true ? self.reminderUUID ?? "" : UUID().uuidString
 
-            let requestReminderModel = ReminderModel(uuid: uuid,
-                                                     diaryUUID: diaryModel.uuid,
-                                                     requestDate: requestDate,
-                                                     requestUUID: requestUUID,
-                                                     createdAt: Date(),
-                                                     isEnabled: true
-            )
-            
-            DispatchQueue.main.async {
-                // 이미 리마인더가 적용되어 있다면
-                if self.isEnabledReminder {
-                    print("DiaryDetail :: Reminder가 이미 적용되어 있으므로 update를 호출합니다.")
-                    
-                    self.dependency.diaryRepository
-                        .updateReminder(model: requestReminderModel)
-
-                } else {
-                    print("DiaryDetail :: Reminder를 새로 생성합니다.")
-
-                    self.dependency.diaryRepository
-                        .addReminder(model: requestReminderModel)
-                }
-
-                print("DiaryDetail :: requestDate! -> \(requestReminderModel)")
-            }
-        }
-        */
-        
         let content = UNMutableNotificationContent()
         content.title = "알림 테스트입니다."
         content.body = "알림 테스트 알림 테스트 알림 테스트 알림 테스트 알림 테스트"

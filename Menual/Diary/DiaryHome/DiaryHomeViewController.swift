@@ -210,6 +210,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.isHidden = true
     }
     
+    private lazy var momentsEmptyView = MomentsEmptyView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .clear
+        $0.writingBtn.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
+        $0.isHidden = true
+    }
+    
     // MARK: - VC 코드
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -240,6 +247,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.addSubview(writeFAB)
         self.view.addSubview(scrollToTopFAB)
         self.view.addSubview(emptyView)
+        self.view.addSubview(momentsEmptyView)
         myMenualTableView.tableHeaderView = tableViewHeaderView
         
         tableViewHeaderView.addSubview(momentsCollectionView)
@@ -283,6 +291,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.width.equalToSuperview()
             make.top.equalToSuperview().offset(12)
             make.height.equalTo(125)
+        }
+        
+        momentsEmptyView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(momentsCollectionView.snp.top).offset(20)
+            make.bottom.equalTo(momentsCollectionView.snp.bottom).inset(20)
         }
         
         momentsCollectionViewPagination.snp.makeConstraints { make in
@@ -358,6 +373,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                     
                     self.writeBoxBtn.title = String(num + 1) + "번째 메뉴얼 작성하기"
                     self.myMenualTitleView.pageNumber = num
+                    self.reloadTableView()
                 }
             })
             .disposed(by: self.disposeBag)
@@ -371,7 +387,9 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 var sectionCount: Int = 0
                 for diaryYearModel in diaryYearModelArr {
                     // ["2022JUL", "2022JUM"]
-                    guard let monthArr = diaryYearModel.months?.getMonthArr() else { return }
+                    guard let monthArr = diaryYearModel.months?.getMonthArr() else {
+                        return
+                    }
                     
                     for month in monthArr {
                         let sectionName: String = "\(diaryYearModel.year)\(month)"
@@ -385,10 +403,18 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 }
 
                 print("sectionCount = \(sectionCount)")
+                
+                // sectionCount가 하나도 없다는 것은 아무런 메뉴얼도 없다는 뜻이므로 변수 초기화
+                if sectionCount == 0 {
+                    self.sectionNameDic = [:]
+                    self.cellsectionNumberDic = [:]
+                    self.cellsectionNumberDic2 = [:]
+                }
                 print("cell, for문 끝! sectionCount = \(sectionCount), sectionNameDic = \(self.sectionNameDic), cellSectionNumberDic = \(self.cellsectionNumberDic), cellsectionNumberDic2 = \(self.cellsectionNumberDic2)")
 
-                self.setEmptyView(isEnabled: false)
-                self.myMenualTableView.reloadData()
+                // self.setEmptyView(isEnabled: false)
+                // self.myMenualTableView.reloadData()
+                self.reloadTableView()
             })
             .disposed(by: disposeBag)
         
@@ -430,7 +456,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 }
 
                 print("DiaryHome :: filter 후 sectionCount = \(sectionCount), allCount = \(allCount)")
-                self.myMenualTableView.reloadData()
+                self.reloadTableView()
             })
             .disposed(by: disposeBag)
         
@@ -806,6 +832,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         // self.isFiltered = isFiltered
         // self.isFilteredRelay.accept(isFiltered)
         myMenualTableView.reloadData()
+        momentsCollectionView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -897,12 +924,24 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("DiaryHome :: collectionView numberOfItemsInSection! = \(listener?.lastPageNumRelay.value)")
         switch collectionView.tag {
         // MomentsCollectionView
         case 0:
-            let momentsCollectionViewCount: Int = 5
-            self.momentsCollectionViewPagination.numberOfPages = momentsCollectionViewCount
-            return momentsCollectionViewCount
+            self.momentsEmptyView.isHidden = false
+            self.momentsCollectionViewPagination.numberOfPages = 0
+            return 0
+            /*
+            if listener?.diaryMonthSetRelay.value.count ?? 0 == 0 {
+                self.momentsEmptyView.isHidden = false
+                self.momentsCollectionViewPagination.numberOfPages = 0
+                return 0
+            } else {
+                let momentsCollectionViewCount: Int = 5
+                self.momentsCollectionViewPagination.numberOfPages = momentsCollectionViewCount
+                return momentsCollectionViewCount
+            }
+             */
         
         default:
             return 5

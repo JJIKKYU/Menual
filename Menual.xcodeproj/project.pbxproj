@@ -63,6 +63,7 @@
 		985BFF702924C36500D86106 /* ProfileDeveloperBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF6C2924C36500D86106 /* ProfileDeveloperBuilder.swift */; };
 		985BFF712924C36500D86106 /* ProfileDeveloperInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF6D2924C36500D86106 /* ProfileDeveloperInteractor.swift */; };
 		985BFF732927E7D200D86106 /* FilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF722927E7D200D86106 /* FilterModel.swift */; };
+		985BFF7529290E9A00D86106 /* MomentsEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7429290E9A00D86106 /* MomentsEmptyView.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -327,6 +328,7 @@
 		985BFF6C2924C36500D86106 /* ProfileDeveloperBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDeveloperBuilder.swift; sourceTree = "<group>"; };
 		985BFF6D2924C36500D86106 /* ProfileDeveloperInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDeveloperInteractor.swift; sourceTree = "<group>"; };
 		985BFF722927E7D200D86106 /* FilterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterModel.swift; sourceTree = "<group>"; };
+		985BFF7429290E9A00D86106 /* MomentsEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsEmptyView.swift; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
 		985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDBuilder.swift; sourceTree = "<group>"; };
@@ -575,6 +577,7 @@
 				98A2BD902802B43E00C1FB92 /* MyMenualCell.swift */,
 				9838574C28FA77FF007378EC /* SectionListHeaderView.swift */,
 				9838574E28FA7AE9007378EC /* IndicatorView.swift */,
+				985BFF7429290E9A00D86106 /* MomentsEmptyView.swift */,
 			);
 			path = DiaryHome;
 			sourceTree = "<group>";
@@ -1777,6 +1780,7 @@
 				984392C129179A6600EF526E /* NumberPadViewController.swift in Sources */,
 				98B557A6283A3E7900F8CA3E /* DividerViewController.swift in Sources */,
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
+				985BFF7529290E9A00D86106 /* MomentsEmptyView.swift in Sources */,
 				98A2BDA1280A87E300C1FB92 /* Swift+Util.swift in Sources */,
 				985BFF712924C36500D86106 /* ProfileDeveloperInteractor.swift in Sources */,
 				98B55749281E426300F8CA3E /* WeatherModel.swift in Sources */,

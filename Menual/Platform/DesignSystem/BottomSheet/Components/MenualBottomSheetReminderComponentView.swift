@@ -41,6 +41,8 @@ class MenualBottomSheetReminderComponentView: UIView {
     // private var isInitSetting: Bool = false
     var pressedSelctBtn: Bool = false
     
+    var isEditingMode: Bool = false
+    
     public var dateComponets: DateComponents? {
         didSet { setNeedsLayout() }
     }
@@ -268,10 +270,12 @@ class MenualBottomSheetReminderComponentView: UIView {
                 
                 guard let requestDate = requestDate else {
                     print("Reminder :: requestDate가 없으므로 return 합니다.")
+                    self.isEditingMode = false
                     return
                 }
                 
                 print("Reminder :: \(requestDate.year)년 \(requestDate.month)월 \(requestDate.day)일을 세팅해야 합니다.")
+                self.isEditingMode = true
 
                 // self.switchBtn.setOn(true, animated: true)
                 self.selectedSwitchBtn()
@@ -411,7 +415,7 @@ extension MenualBottomSheetReminderComponentView {
         print("Reminder :: requestDate = \(requestDate)")
         
         pressedSelctBtn = true
-        delegate?.pressedSelectBtn(isEditing: false, requestDateComponents: dateComponents, requestDate: requestDate)
+        delegate?.pressedSelectBtn(isEditing: isEditingMode, requestDateComponents: dateComponents, requestDate: requestDate)
     }
 }
 
