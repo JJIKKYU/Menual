@@ -101,6 +101,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     
     public lazy var filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
         $0.title = "필터를 선택해 주세요."
+        $0.isEnabled = false
     }
 
     init() {
@@ -232,6 +233,7 @@ class MenualBottomSheetFilterComponentView: UIView {
             resetBtn.tintColor = Colors.tint.main.v500
             
             filterBtn.btnStatus = .active
+            filterBtn.isEnabled = true
         }
         // 아무것도 선택되지 않았을 경우 버튼 비활성화
         else if weatherSelectedArr.count == 0 || placeSelectedArr.count == 0 {
@@ -240,6 +242,7 @@ class MenualBottomSheetFilterComponentView: UIView {
             resetBtn.tintColor = Colors.grey.g600
             
             filterBtn.btnStatus = .inactive
+            filterBtn.isEnabled = false
         }
         
         // 날씨 전체 선택 버튼 로직

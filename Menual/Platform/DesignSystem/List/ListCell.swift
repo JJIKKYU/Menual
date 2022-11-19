@@ -45,10 +45,10 @@ class ListCell: UITableViewCell {
         didSet { setNeedsLayout() }
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-       super.setSelected(selected, animated: animated)
-        listStatus = selected ? .pressed : .default_
-   }
+//    override func setSelected(_ selected: Bool, animated: Bool) {
+//       super.setSelected(selected, animated: animated)
+//        listStatus = selected ? .pressed : .default_
+//   }
        
    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
        super.setHighlighted(highlighted, animated: animated)
@@ -221,6 +221,7 @@ class ListCell: UITableViewCell {
                 make.top.equalTo(listTitleView.snp.bottom).offset(6)
                 make.width.equalToSuperview().inset(20)
                 make.height.equalTo(15)
+                // make.bottom.equalToSuperview().inset(18)
             }
 
         case .bodyText:

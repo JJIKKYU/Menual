@@ -48,7 +48,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
 
         $0.estimatedRowHeight = 72
-        $0.rowHeight = 72
+        $0.rowHeight = UITableView.automaticDimension
         $0.showsVerticalScrollIndicator = false
         $0.contentInset = .zero
         $0.contentInsetAdjustmentBehavior = .never
@@ -277,6 +277,37 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        print("DiarySearch :: indexPath = \(indexPath)")
+        
+        let section = indexPath.section
+        switch section {
+        // 검색 결과 TableView
+        case 0:
+            guard let model = listener?.searchResultsRelay.value[safe: indexPath.row] else {
+                return 98
+            }
+            
+            if model.isHide {
+                return 75
+            }
+            
+        // 최근 검색 키워드 TableView
+        case 1:
+            guard let model = listener?.recentSearchResultsRelay.value[safe: indexPath.row],
+                  let diary = model.diary else {
+                print("DiarySearch :: 여기서 팅귀나?")
+                return 98
+            }
+            
+            print("DiarySearch :: diary.isHide = \(diary.isHide)")
+            if diary.isHide {
+                return 75
+            }
+            
+        default:
+            break
+        }
+
         return 98
     }
     

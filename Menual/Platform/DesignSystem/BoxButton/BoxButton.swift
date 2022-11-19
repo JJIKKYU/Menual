@@ -50,7 +50,7 @@ class BoxButton: UIButton {
     
     override var isHighlighted: Bool {
         didSet {
-            if isHighlighted {
+            if isHighlighted && btnStatus != .inactive {
                 btnStatus = .pressed
             } else {
                 setNeedsLayout()
@@ -126,12 +126,12 @@ class BoxButton: UIButton {
             if btnSize == .xLarge {
                 switch isFiltered {
                 case .enabled:
-                    backgroundColor = Colors.tint.main.v400
+                    backgroundColor = Colors.tint.main.v600
                 case .disabled:
-                    backgroundColor = Colors.tint.sub.n400
+                    backgroundColor = Colors.tint.sub.n600
                 }
             } else {
-                backgroundColor = Colors.tint.sub.n400
+                backgroundColor = Colors.tint.sub.n600
             }
         }
         
