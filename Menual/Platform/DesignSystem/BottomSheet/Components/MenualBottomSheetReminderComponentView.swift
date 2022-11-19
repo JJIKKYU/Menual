@@ -10,9 +10,12 @@ import Then
 import SnapKit
 import RxSwift
 import RxRelay
+import RxViewController
 
 protocol MenualBottomSheetReminderComponentViewDelegate {
+    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
     func pressedQuestionBtn()
+    func pressedIsEnabledSwitchBtn(isEnabled: Bool)
     func pressedSelectBtn(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date)
     func isNeedReminderAuthorization()
 }
@@ -35,11 +38,14 @@ class MenualBottomSheetReminderComponentView: UIView {
     var todaysDate = 0
     var firstWeekDayOfMonth = 0   //(Sunday-Saturday 1-
     
+    // private var isInitSetting: Bool = false
+    var pressedSelctBtn: Bool = false
+    
     public var dateComponets: DateComponents? {
         didSet { setNeedsLayout() }
     }
     
-    private let isEnabledReminderRelay = BehaviorRelay<Bool>(value: false)
+    let isEnabledReminderRelay = BehaviorRelay<Bool>(value: false)
     private let isNeedReminderAuthorizationRelay = BehaviorRelay<Bool>(value: false)
     private let isSelectedReminderDayIndexRelay = BehaviorRelay<Int?>(value: nil)
 
@@ -64,10 +70,16 @@ class MenualBottomSheetReminderComponentView: UIView {
     
     lazy var switchBtn = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.addTarget(self, action: #selector(selectedSwitchBtn), for: .touchUpInside)
+        // $0.addTarget(self, action: #selector(selectedSwitchBtn), for: .touchUpInside)
         $0.onTintColor = Colors.tint.main.v400
         $0.tintColor = Colors.grey.g700
         $0.transform = CGAffineTransform(scaleX: 0.78, y: 0.78)
+        $0.isUserInteractionEnabled = false
+    }
+    
+    lazy var switchBtnImp = UIButton().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.addTarget(self, action: #selector(selectedSwitchBtn), for: .touchUpInside)
     }
     
     private let divider = Divider(type: ._1px).then {
@@ -121,6 +133,7 @@ class MenualBottomSheetReminderComponentView: UIView {
         addSubview(reminderTitleLabel)
         addSubview(reminderTitleQuestionBtn)
         addSubview(switchBtn)
+        addSubview(switchBtnImp)
         addSubview(divider)
         
         addSubview(monthView)
@@ -139,12 +152,18 @@ class MenualBottomSheetReminderComponentView: UIView {
             make.centerY.equalTo(reminderTitleLabel)
             make.width.height.equalTo(16)
         }
-        
+
         switchBtn.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
             make.centerY.equalTo(reminderTitleLabel)
         }
         
+        switchBtnImp.snp.makeConstraints { make in
+            make.trailing.equalToSuperview()
+            make.centerY.equalTo(switchBtn)
+            make.width.height.equalTo(switchBtn)
+        }
+
         divider.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalTo(reminderTitleLabel.snp.bottom).offset(19)
@@ -158,14 +177,14 @@ class MenualBottomSheetReminderComponentView: UIView {
             make.height.equalTo(24)
             make.top.equalTo(divider.snp.bottom).offset(32)
         }
-        
+
         calendarCollectionView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.top.equalTo(monthView.snp.bottom).offset(16)
             make.height.equalTo(300)
         }
-        
+
         selectBtn.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
@@ -196,10 +215,12 @@ class MenualBottomSheetReminderComponentView: UIView {
                 switch isEnabled {
                 case true:
                     self.selectBtn.isEnabled = true
+                    self.switchBtn.setOn(true, animated: true)
 
                 case false:
                     self.selectBtn.btnStatus = .inactive
                     self.selectBtn.isEnabled = false
+                    self.switchBtn.setOn(false, animated: true)
                     self.isSelectedReminderDayIndexRelay.accept(nil)
                 }
                 
@@ -220,12 +241,78 @@ class MenualBottomSheetReminderComponentView: UIView {
                     return
                 }
                 
+                if selectedDate == self.delegate?.reminderRequestDateRelay?.value?.day ?? 0 {
+                    print("Reminder :: 이미 선택했던 날짜와 같을 경우")
+                    self.selectBtn.btnStatus = .inactive
+                    self.selectBtn.isUserInteractionEnabled = false
+                    return
+                }
+                
                 self.selectBtn.btnStatus = .active
                 self.selectBtn.isUserInteractionEnabled = true
                 print("Reminder :: selectedDate = \(selectedDate)")
                 
                 print("Reminder :: \(self.currentYear)년 \(self.currentMonthIndex)월 \(selectedDate)일을 선택 하셨습니다.")
 
+            })
+            .disposed(by: disposedBag)
+    }
+    
+    func bindDlelegateRelay() {
+        
+        delegate?.reminderRequestDateRelay?
+            .subscribe(onNext: { [weak self] requestDate in
+                guard let self = self else { return }
+                if self.pressedSelctBtn == true { return }
+                print("Reminder :: requestDate = \(requestDate)")
+                
+                guard let requestDate = requestDate else {
+                    print("Reminder :: requestDate가 없으므로 return 합니다.")
+                    return
+                }
+                
+                print("Reminder :: \(requestDate.year)년 \(requestDate.month)월 \(requestDate.day)일을 세팅해야 합니다.")
+
+                // self.switchBtn.setOn(true, animated: true)
+                self.selectedSwitchBtn()
+                // self.isSelectedReminderDayIndexRelay.accept(requestDate.day)
+
+                 // self.selectBtn.btnStatus = .active
+                // self.calendarCollectionView.reloadData()
+                 // self.selectBtn.isUserInteractionEnabled = true
+            })
+            .disposed(by: disposedBag)
+        
+        
+        guard let reminderRequestDateRelay = delegate?.reminderRequestDateRelay else { return }
+        Observable.combineLatest(
+            reminderRequestDateRelay,
+            calendarCollectionView.rx.observe(CGSize.self, "contentSize")
+        )
+        // calendarCollectionView.rx.observe(CGSize.self, "contentSize")
+            .subscribe(onNext: { [weak self] requestDate, size in
+                // if size?.height ?? 0 < 290 { return }
+                guard let self = self,
+                      let requestDate = requestDate
+                else { return }
+                if self.pressedSelctBtn == true { return }
+                // if self.isInitSetting == true { return }
+                
+                print("Reminder :: requestDate = \(requestDate), currentYear = \(self.currentYear), currentMonth = \(self.currentMonthIndex)")
+                
+                if self.currentYear != requestDate.year ?? 0 || self.currentMonthIndex != requestDate.month ?? 0 {
+                    print("Reminder :: 다른 곳은 세팅 안해요!")
+                    return
+                }
+
+                guard let selectedDate = requestDate.day else { return }
+                let calcDate = (selectedDate - 1) + (self.firstWeekDayOfMonth - 1)
+
+                print("Reminder :: Size! = \(size)")
+                self.calendarCollectionView.selectItem(at: IndexPath(row: calcDate, section: 0), animated: false, scrollPosition: .top)
+                self.collectionView(self.calendarCollectionView, didSelectItemAt: IndexPath(row: calcDate, section: 0))
+                
+                // self.isInitSetting = true
             })
             .disposed(by: disposedBag)
     }
@@ -267,7 +354,13 @@ extension MenualBottomSheetReminderComponentView {
     
     @objc
     func selectedSwitchBtn() {
-        
+        print("Reminder :: isOn = \(switchBtn.isOn)")
+
+        // 연결되어 있을 경우 연결 해제 팝업
+        if switchBtn.isOn == true {
+            delegate?.pressedIsEnabledSwitchBtn(isEnabled: false)
+            return
+        }
         
         // 권한 물어보기
         let userNotiCenter = UNUserNotificationCenter.current()
@@ -282,8 +375,7 @@ extension MenualBottomSheetReminderComponentView {
             if success == true {
                 print("Reminder :: 권한 요청? success! = \(success)")
                 DispatchQueue.main.async {
-                    let isEnabled = self.switchBtn.isOn
-                    self.isEnabledReminderRelay.accept(isEnabled)
+                    self.isEnabledReminderRelay.accept(true)
                 }
             } else {
                 DispatchQueue.main.async {
@@ -292,6 +384,7 @@ extension MenualBottomSheetReminderComponentView {
                 }
             }
         }
+
         
         // 날짜를 선택했다면 팝업 띄우기
 //        if isSelectedReminderDayIndexRelay.value != nil {
@@ -317,6 +410,7 @@ extension MenualBottomSheetReminderComponentView {
         print("Reminder :: pressedSelectBtn-> \(self.currentYear)년 \(self.currentMonthIndex)월 \(isSelectedReminderDayIndexRelay.value)일을 선택 하셨습니다.")
         print("Reminder :: requestDate = \(requestDate)")
         
+        pressedSelctBtn = true
         delegate?.pressedSelectBtn(isEditing: false, requestDateComponents: dateComponents, requestDate: requestDate)
     }
 }
@@ -386,6 +480,7 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         if isEnabledReminderRelay.value == false {
             cell.isUserInteractionEnabled = false
         }
+        
 
         return cell
     }

@@ -126,5 +126,13 @@ class DateCell: UICollectionViewCell {
         case false:
             todayCircleView.isHidden = true
         }
+        
+        selectedCircleView.snp.remakeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+            make.width.height.equalTo(self.bounds.width * 0.66)
+        }
+        layoutIfNeeded()
+        todayCircleView.layer.cornerRadius = todayCircleView.bounds.width / 2
+        selectedCircleView.layer.cornerRadius = selectedCircleView.bounds.width / 2
     }
 }

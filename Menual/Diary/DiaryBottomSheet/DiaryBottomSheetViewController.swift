@@ -297,7 +297,8 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             make.top.equalTo(self.divider.snp.bottom).offset(16)
             make.leading.equalToSuperview().offset(24)
             make.width.equalToSuperview().inset(24)
-            make.bottom.equalToSuperview().inset(35)
+            make.height.equalTo(488)
+            // make.bottom.equalToSuperview().inset(35)
         }
     }
 
@@ -631,6 +632,10 @@ extension DiaryBottomSheetViewController {
 
 // MARK: - ReminderComponentView
 extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentViewDelegate {
+    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? {
+        listener?.reminderRequestDateRelay
+    }
+    
     func pressedSelectBtn(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date) {
 //        switch isEditing {
 //        case true:
@@ -669,6 +674,7 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
     
     func setCurrentReminderData(isEnabled: Bool, dateComponets: DateComponents?) {
         print("DiaryBottomSheet :: setCurrentReminderData! => isEnabled = \(isEnabled), dateComponents = \(dateComponets)")
+        reminderComponentView.bindDlelegateRelay()
         switch isEnabled {
         case true:
             // reminderComponentView.selectedSwitchBtn()
@@ -681,6 +687,15 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
             break
             
         }
+    }
+    
+    func pressedIsEnabledSwitchBtn(isEnabled: Bool) {
+        show(size: .small,
+             buttonType: .twoBtn,
+             titleText: "리마인더 알림을 해제하시겠어요?",
+             cancelButtonText: "아니요",
+             confirmButtonText: "네"
+        )
     }
 }
 
@@ -705,6 +720,10 @@ extension DiaryBottomSheetViewController: DialogDelegate {
                 UIApplication.shared.open(url)
             }
             break
+            
+        case "리마인더 알림을 해제하시겠어요?":
+            reminderComponentView.isEnabledReminderRelay.accept(false)
+            break
 
         default:
             break
@@ -722,6 +741,9 @@ extension DiaryBottomSheetViewController: DialogDelegate {
             hideBottomSheetAndGoBack()
             
         case "설정에서 Menual의 알림을 활성화 해주세요.":
+            break
+            
+        case "리마인더 알림을 해제하시겠어요?":
             break
 
         default:

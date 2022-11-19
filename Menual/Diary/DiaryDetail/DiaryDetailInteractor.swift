@@ -136,7 +136,16 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 else { return }
 
                 print("DiaryDetail :: reminderRequestDateRelay! \(dateComponents)")
-                self.setReminderDate(requestDateComponents: dateComponents)
+                switch self.isEnabledReminder {
+                case true:
+                    print("DiaryDetail :: self.isEnabledReminder = \(self.isEnabledReminder)")
+                    
+                    
+                case false:
+                    print("DiaryDetail :: self.isEnabledReminder = \(self.isEnabledReminder)")
+                    self.setReminderDate(requestDateComponents: dateComponents)
+                }
+                
             })
             .disposed(by: disposebag)
         
@@ -155,13 +164,20 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 
                         self.reminderUUID = reminder.uuid
                         self.isEnabledReminder = isEnabled
+                        var dateComponets = DateComponents()
+                        dateComponets.year = Calendar.current.component(.year, from: reminder.requestDate)
+                        dateComponets.month = Calendar.current.component(.month, from: reminder.requestDate)
+                        dateComponets.day = Calendar.current.component(.day, from: reminder.requestDate)
+                        self.reminderRequestDateRelay.accept(dateComponets)
+                        
+                        print("DiaryDetail :: reminder.requestDate = \(reminder.requestDate)")
+                        print("DiaryDetail :: dateComponents = \(dateComponets)")
 
                         break
                     }
                 }
 
                 print("DiaryDetail :: 이 메뉴얼에 reminder가 등록되어 있습니다. => \(isEnabled)")
-
                 self.presenter.setReminderIconEnabled(isEnabled: isEnabled)
             })
             .disposed(by: disposebag)
