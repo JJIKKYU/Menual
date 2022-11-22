@@ -16,7 +16,7 @@ protocol DiaryTempSavePresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
     // business logic, such as signIn(). This protocol is implemented by the corresponding
     // interactor class.
-    func pressedBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool)
     var tempSaveRelay: BehaviorRelay<[TempSaveModel]> { get }
     var tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?> { get }
     var deleteTempSaveUUIDArrRelay: BehaviorRelay<[String]> { get }
@@ -68,6 +68,15 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
         view.backgroundColor = Colors.background
         setViews()
         bind()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        if isMovingFromParent || isBeingDismissed {
+            print("!!?")
+            listener?.pressedBackBtn(isOnlyDetach: true)
+        }
     }
     
     lazy var naviView = MenualNaviView(type: .temporarySave).then {
@@ -152,7 +161,7 @@ extension DiaryTempSaveViewController {
     @objc
     func pressedBackBtn() {
         print("pressedBackBtn")
-        listener?.pressedBackBtn()
+        listener?.pressedBackBtn(isOnlyDetach: false)
     }
     
     @objc

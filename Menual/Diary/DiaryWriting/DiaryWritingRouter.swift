@@ -113,12 +113,15 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
         attachChild(router)
     }
     
-    func detachDiaryTempSave() {
+    func detachDiaryTempSave(isOnlyDetach: Bool) {
         guard let router = diaryTempSaveRouting else {
             return
         }
         
-        viewControllable.popViewController(animated: true)
+        if !isOnlyDetach {
+            viewControllable.popViewController(animated: true)
+        }
+
         detachChild(router)
         diaryTempSaveRouting = nil
     }

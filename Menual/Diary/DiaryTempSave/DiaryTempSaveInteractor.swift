@@ -20,7 +20,7 @@ protocol DiaryTempSavePresentable: Presentable {
 
 protocol DiaryTempSaveListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
-    func diaryTempSavePressentBackBtn()
+    func diaryTempSavePressentBackBtn(isOnlyDetach: Bool)
 }
 
 protocol DiaryTempSaveInteractorDependecy {
@@ -76,8 +76,8 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
             .disposed(by: disposeBag)
     }
     
-    func pressedBackBtn() {
-        listener?.diaryTempSavePressentBackBtn()
+    func pressedBackBtn(isOnlyDetach: Bool) {
+        listener?.diaryTempSavePressentBackBtn(isOnlyDetach: isOnlyDetach)
     }
     
     func deleteTempSave() {
@@ -90,6 +90,6 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
         guard let tempSaveDiaryModel: TempSaveModel = dependency.diaryRepository.tempSave.value.filter({ $0.uuid == uuid }).first else { return }
         print("TempSaveDiaryModel = \(tempSaveDiaryModel)")
         tempSaveDiaryModelRelay.accept(tempSaveDiaryModel)
-        listener?.diaryTempSavePressentBackBtn()
+        listener?.diaryTempSavePressentBackBtn(isOnlyDetach: false)
     }
 }

@@ -16,7 +16,7 @@ protocol DiaryWritingRouting: ViewableRouting {
     func detachBottomSheet()
     
     func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>)
-    func detachDiaryTempSave()
+    func detachDiaryTempSave(isOnlyDetach: Bool)
 }
 
 protocol DiaryWritingPresentable: Presentable {
@@ -348,8 +348,8 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         router?.attachDiaryTempSave(tempSaveDiaryModelRelay: tempSaveDiaryModelRelay)
     }
     
-    func diaryTempSavePressentBackBtn() {
-        router?.detachDiaryTempSave()
+    func diaryTempSavePressentBackBtn(isOnlyDetach: Bool) {
+        router?.detachDiaryTempSave(isOnlyDetach: isOnlyDetach)
     }
     
     // tempSaveRealm에 저장
