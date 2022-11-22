@@ -454,7 +454,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         arr[idx] = newDiary
 
         diaryModelSubject.accept(arr)
-        fetch()
+        fetchDiary()
         return newDiary
     }
     
