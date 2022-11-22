@@ -241,7 +241,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         titleTextField.delegate = self
         descriptionTextView.delegate = self
         weatherSelectView.selectTextView.delegate = self
+        weatherSelectView.selectTextView.centerVerticalText()
         locationSelectView.selectTextView.delegate = self
+        locationSelectView.selectTextView.centerVerticalText()
         cropVC?.delegate = self
     }
     
