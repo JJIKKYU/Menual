@@ -40,7 +40,7 @@ class ReplyCell: UITableViewCell {
     }
     
     public let replyTextView = UITextView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = true
+        $0.translatesAutoresizingMaskIntoConstraints = false
         $0.text = "testestestsetseestsetsetsetsetstsetse"
         $0.backgroundColor = Colors.grey.g800
         $0.isScrollEnabled = false
@@ -55,6 +55,7 @@ class ReplyCell: UITableViewCell {
         $0.clipsToBounds = true
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
         $0.textColor = Colors.grey.g300
+        $0.isEditable = false
     }
     
     let testLabel = UILabel().then {
@@ -68,6 +69,11 @@ class ReplyCell: UITableViewCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._20px.more.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g600
+    }
+    
+    let wrapView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .blue
     }
 
     override func awakeFromNib() {
@@ -92,9 +98,16 @@ class ReplyCell: UITableViewCell {
     
     func setViews() {
         backgroundColor = .brown
-        contentView.addSubview(replyTextView)
-        contentView.addSubview(testLabel)
-        contentView.addSubview(moreBtn)
+        contentView.addSubview(wrapView)
+        wrapView.addSubview(replyTextView)
+        wrapView.addSubview(replyTextView)
+        wrapView.addSubview(testLabel)
+        wrapView.addSubview(moreBtn)
+        
+        wrapView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.width.height.equalToSuperview()
+        }
         
         replyTextView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -115,6 +128,7 @@ class ReplyCell: UITableViewCell {
             make.top.equalTo(testLabel)
             make.trailing.equalToSuperview().inset(20)
             make.width.height.equalTo(20)
+            make.bottom.equalToSuperview()
         }
     }
     
@@ -122,6 +136,7 @@ class ReplyCell: UITableViewCell {
         super.layoutSubviews()
         
         replyTextView.text = replyText
+        replyTextView.sizeToFit()
 //         replyTextView.sizeThatFits(replyTextView.frame.size)
 //        replyTextView.sizeToFit()
 //        replyTextView.frame = CGRect(x: 20,

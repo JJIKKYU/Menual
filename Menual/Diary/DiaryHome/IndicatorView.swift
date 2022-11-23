@@ -11,6 +11,10 @@ import Then
 
 class IndicatorView: UIView {
     
+    public var title: String = "" {
+        didSet { setNeedsLayout() }
+    }
+    
     private let backgroundView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = Colors.grey.g800
@@ -59,5 +63,7 @@ class IndicatorView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        indicatorLabel.text = title
     }
 }

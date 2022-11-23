@@ -595,6 +595,7 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
         case .MyMenualTableView:
             isDraggingRelay.accept(true)
             attachTopMyMenualTitleView(scrollView)
+            setIndicatorView(scrollView)
 
             DispatchQueue.main.async {
                 let scrollIndicator = scrollView.subviews.last!
@@ -613,11 +614,11 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
         guard let tableCollectionViewTag = TableCollectionViewTag(rawValue: scrollView.tag) else { return }
         // myMenualTableView일때만 작동하도록
         if case .MyMenualTableView = tableCollectionViewTag {
-            print("DiaryHome :: contents offset = \(scrollView.contentOffset.y)")
+            // print("DiaryHome :: contents offset = \(scrollView.contentOffset.y)")
             let offset = scrollView.contentOffset.y
             // TitleView를 넘어서 스크롤할 경우
             if offset > 155 {
-                print("DiaryHome :: contents > 155")
+                // print("DiaryHome :: contents > 155")
                 setFABMode(isEnabled: true)
                 myMenualTitleView.AppShadow(.shadow_6)
                 myMenualTitleView.backgroundColor = Colors.background
@@ -633,7 +634,7 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
                     make.height.equalTo(44)
                 }
             } else {
-                print("DiaryHome :: contents <= 155")
+                // print("DiaryHome :: contents <= 155")
                 setFABMode(isEnabled: false)
                 myMenualTitleView.AppShadow(.shadow_0)
                 myMenualTitleView.backgroundColor = .clear
@@ -689,6 +690,23 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
                 momentsCollectionViewPagination.currentPage = newPage
             }
         }
+    }
+    
+    func setIndicatorView(_ scrollView: UIScrollView) {
+        let visibleIndices = myMenualTableView.indexPathsForVisibleRows ?? []
+        let lowestVisibleSection = visibleIndices.map({$0.section}).min() ?? 0
+        debugPrint("DiaryHome :: I see \(lowestVisibleSection), \(sectionNameDic[lowestVisibleSection])")
+        guard let sectionNameFormat = sectionNameDic[lowestVisibleSection] else { return }
+        
+        // 연도 변경
+        let yearRange = NSRange(sectionNameFormat.startIndex..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4), in: sectionNameFormat)
+        let year = (sectionNameFormat as NSString).substring(with: yearRange)
+
+        // 월로 변경
+        let monthRange = NSRange(sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4)..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 7), in: sectionNameFormat)
+        let month = (sectionNameFormat as NSString).substring(with: monthRange).convertMonthName()
+
+        indicatorView.title = year + "." + month
     }
 }
 
@@ -822,7 +840,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
               let data = cell.testModel
         else { return }
 
-        print("select! model = \(cell.testModel)")
+        // print("select! model = \(cell.testModel)")
         
         listener?.pressedDiaryCell(diaryModel: data)
     }
@@ -842,7 +860,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         sectionListHeader.backgroundColor = .clear
         sectionListHeader.title = "2022.999"
         
-        print("section, section = \(section)")
+        // print("section, section = \(section)")
 
         var sectionNameFormat: String = ""
         if self.isFilteredRelay.value {
@@ -869,6 +887,24 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        let position = cell.convert(CGPoint.zero, to: tableView)
+//        guard let indexPath = tableView.indexPathForRow(at: position) else {
+//            return
+//        }
+//        let section = indexPath.section
+//        print("DiaryHome :: The section is \(section), \(sectionNameDic[section])")
+//        guard let sectionNameFormat = sectionNameDic[section] else { return }
+//
+//        // 연도 변경
+//        let yearRange = NSRange(sectionNameFormat.startIndex..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4), in: sectionNameFormat)
+//        let year = (sectionNameFormat as NSString).substring(with: yearRange)
+//
+//        // 월로 변경
+//        let monthRange = NSRange(sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4)..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 7), in: sectionNameFormat)
+//        let month = (sectionNameFormat as NSString).substring(with: monthRange).convertMonthName()
+//
+//        indicatorView.title = year + "." + month
+        
         // print("tableView ContentSize = \(self.myMenualTableView.contentSize.height)")
         
 //        myMenualTableView.snp.removeConstraints()

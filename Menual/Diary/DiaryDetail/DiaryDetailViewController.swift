@@ -270,7 +270,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         print("DiaryDetail :: changedHeight = \(changedHeight)")
         
         DispatchQueue.main.async {
-            self.replyTableView.reloadData()
+             self.replyTableView.reloadData()
         }
     }
     
