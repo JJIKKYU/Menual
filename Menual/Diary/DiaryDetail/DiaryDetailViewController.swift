@@ -390,7 +390,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         descriptionTextView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.top.equalTo(divider3.snp.bottom).offset(16)
+            make.top.equalTo(weatherLocationStackView.snp.bottom).offset(16)
         }
         
         divider4.snp.makeConstraints { make in
@@ -439,13 +439,25 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             weatherSelectView.selected = true
             weatherSelectView.selectedWeatherType = weatherModel.weather
             weatherSelectView.selectTitle = weatherModel.detailText
+            if weatherModel.weather == nil {
+                print("DiaryDetail :: weather이 없습니다.")
+                divider2.isHidden = true
+                weatherSelectView.isHidden = true
+            }
         }
+        
+        print("DiaryDetail :: weatherModel = \(model.weather)")
         
         // DiaryModel에서 PlaceModel을 UnWerapping해서 세팅
         if let placeModel: PlaceModel = model.place {
             locationSelectView.selected = true
             locationSelectView.selectedPlaceType = placeModel.place
             locationSelectView.selectTitle = placeModel.detailText
+            if placeModel.place == nil {
+                print("DiaryDetail :: place가 없습니다.")
+                divider3.isHidden = true
+                locationSelectView.isHidden = true
+            }
         }
         
         // descriptionTextLabel.text = model.description
