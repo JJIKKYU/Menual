@@ -51,7 +51,7 @@ class CreatedAtPageView: UIView {
         addSubview(pageLabel)
         
         createdAtLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
+            make.leading.equalToSuperview()
             make.height.equalTo(15)
             make.centerY.equalToSuperview()
         }

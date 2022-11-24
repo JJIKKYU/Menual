@@ -69,6 +69,15 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    private let weatherLocationStackView = UIStackView(frame: .zero).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .clear
+        $0.axis = .vertical
+        $0.alignment = .fill
+        $0.spacing = 13
+        $0.distribution = .fill
+    }
+    
     private let divider1 = Divider(type: ._1px).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -284,20 +293,20 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.view.addSubview(spaceRequiredFAB)
         
         self.view.addSubview(naviView)
+        
         tableViewHeaderView.addSubview(titleLabel)
         tableViewHeaderView.addSubview(createdAtPageView)
-        tableViewHeaderView.addSubview(divider1)
-        tableViewHeaderView.addSubview(weatherSelectView)
-        tableViewHeaderView.addSubview(divider2)
-        tableViewHeaderView.addSubview(locationSelectView)
-        tableViewHeaderView.addSubview(divider3)
-
-        // tableViewHeaderView.addSubview(descriptionTextLabel)
+        tableViewHeaderView.addSubview(weatherLocationStackView)
+        weatherLocationStackView.addArrangedSubview(divider1)
+        weatherLocationStackView.addArrangedSubview(weatherSelectView)
+        weatherLocationStackView.addArrangedSubview(divider2)
+        weatherLocationStackView.addArrangedSubview(locationSelectView)
+        weatherLocationStackView.addArrangedSubview(divider3)
         tableViewHeaderView.addSubview(descriptionTextView)
-        
         tableViewHeaderView.addSubview(divider4)
         tableViewHeaderView.addSubview(imageView)
         tableViewHeaderView.addSubview(hideView)
+        
         self.view.bringSubviewToFront(naviView)
         self.view.bringSubviewToFront(replyBottomView)
         self.view.bringSubviewToFront(spaceRequiredFAB)
@@ -342,49 +351,42 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.width.equalToSuperview().inset(20)
             make.top.equalToSuperview().offset(24)
         }
-        
+
         createdAtPageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
+            make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview()
             make.top.equalTo(titleLabel.snp.bottom).offset(16)
             make.height.equalTo(15)
         }
         
-        divider1.snp.makeConstraints { make in
+        weatherLocationStackView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(createdAtPageView.snp.bottom).offset(8)
+        }
+        
+        divider1.snp.makeConstraints { make in
             make.height.equalTo(1)
         }
         
         weatherSelectView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
             make.height.equalTo(24)
-            make.top.equalTo(divider1.snp.bottom).offset(12)
+            make.leading.equalToSuperview()
         }
         
         divider2.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(weatherSelectView.snp.bottom).offset(12)
             make.height.equalTo(1)
         }
         
         locationSelectView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalTo(divider2.snp.bottom).offset(12)
             make.height.equalTo(24)
+            make.leading.equalToSuperview()
         }
         
         divider3.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(locationSelectView.snp.bottom).offset(12)
             make.height.equalTo(1)
         }
-        
+
         descriptionTextView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
@@ -404,10 +406,11 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.top.equalTo(divider4.snp.bottom).offset(12)
             make.height.equalTo(80)
         }
-        
+
         hideView.snp.makeConstraints { make in
             make.top.bottom.width.height.equalToSuperview()
         }
+
     }
     
     func loadDiaryDetail(model: DiaryModel) {
