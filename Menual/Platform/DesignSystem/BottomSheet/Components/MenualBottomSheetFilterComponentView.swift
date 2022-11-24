@@ -107,7 +107,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     init() {
         super.init(frame: CGRect.zero)
         setViews()
-        // setBindRelay()
+        setBindRelay()
     }
     
     required init?(coder: NSCoder) {

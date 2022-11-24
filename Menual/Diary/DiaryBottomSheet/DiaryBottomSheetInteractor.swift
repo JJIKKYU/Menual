@@ -34,45 +34,54 @@ protocol DiaryBottomSheetListener: AnyObject {
     func filterDatePressedFilterBtn()
 }
 
+protocol DiaryBottomSheetInteractorDependency {
+    var filteredDateRelay: BehaviorRelay<Date?>? { get }
+    var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { get }
+    var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
+    var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
+    var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
+    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
+}
+
 final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPresentable>, DiaryBottomSheetInteractable, DiaryBottomSheetPresentableListener {
+    
     
     weak var router: DiaryBottomSheetRouting?
     weak var listener: DiaryBottomSheetListener?
     var disposeBag = DisposeBag()
-    
-    var weatherModel: WeatherModel = WeatherModel(uuid: "", weather: nil, detailText: "")
-    var placeModel: PlaceModel = PlaceModel(uuid: "", place: nil, detailText: "")
     var bottomSheetType: MenualBottomSheetType = .menu
     
     // FilterComponentView에서 사용되는 Weather/Place Filter Selected Arr
     // var weatherFilterSelectedArrRelay = BehaviorRelay<[Weather]>(value: [])
     // var placeFilterSelectedArrRelay = BehaviorRelay<[Place]>(value: [])
     var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
-    var filteredDateDiaryCountRelay: BehaviorRelay<Int>?
-    var filteredDiaryCountRelay: BehaviorRelay<Int>?
-    var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
-    var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
-    var filteredDateRelay: BehaviorRelay<Date?>?
-    
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>?
+    var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDateDiaryCountRelay }
+    var filteredDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDiaryCountRelay }
+    var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { dependency.filteredWeatherArrRelay }
+    var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { dependency.filteredPlaceArrRelay }
+    var filteredDateRelay: BehaviorRelay<Date?>? { dependency.filteredDateRelay }
+    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { dependency.reminderRequestDateRelay }
+    private let dependency: DiaryBottomSheetInteractorDependency
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
     init(
         presenter: DiaryBottomSheetPresentable,
+        dependency: DiaryBottomSheetInteractorDependency,
         bottomSheetType: MenualBottomSheetType,
         menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
     ) {
         self.bottomSheetType = bottomSheetType
+        self.dependency = dependency
         if let menuComponentRelay = menuComponentRelay {
             self.menuComponentRelay = menuComponentRelay
         }
 
         print("menualBottomSheetType = \(bottomSheetType)")
         super.init(presenter: presenter)
+        bind()
         presenter.listener = self
         presenter.setViews(type: bottomSheetType)
-        bind()
     }
 
     override func didBecomeActive() {
@@ -85,105 +94,51 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     }
     
     func bind() {
-//        Observable.combineLatest(
-//            weatherFilterSelectedArrRelay,
-//            placeFilterSelectedArrRelay
-//        )
-//        .subscribe(onNext: { [weak self] weatherArr, placeArr in
-//            guard let self = self else { return }
-//
-//            print("!!! \(weatherArr), \(placeArr)")
-//            self.listener?.filterWithWeatherPlace(weatherArr: weatherArr, placeArr: placeArr)
-//        })
-//        .disposed(by: disposeBag)
-    }
-    
-    func setFilteredDateRelay(relay: BehaviorRelay<Date?>?, countRelay: BehaviorRelay<Int>?) {
-        print("DiaryBottomSheet :: setFilteredDateRelay! = \(relay), countRelay = \(countRelay)")
-        filteredDateRelay = relay
-        filteredDateDiaryCountRelay = countRelay
-        filteredDateRelay?
+        dependency.filteredDateRelay?
             .subscribe(onNext: { [weak self] date in
                 guard let self = self else { return }
+                print("DiaryBottomSheet :: filteredDateRelayt! = \(date)")
                 self.presenter.setDateFilteredRelay()
             })
             .disposed(by: disposeBag)
         
-        filteredDateDiaryCountRelay?
+        dependency.filteredDateDiaryCountRelay?
             .subscribe(onNext: { [weak self] count in
                 guard let self = self else { return }
                 print("DiaryBottomSheet :: count! = \(count)")
             })
             .disposed(by: disposeBag)
-    }
-    
-    func setFilteredDiaryCountRelay(relay: BehaviorRelay<Int>?) {
-        print("DiaryBottomSheet :: setFilteredDiaryCountRelay! = \(relay)")
-        filteredDiaryCountRelay = relay
-        filteredDiaryCountRelay?
+        
+        dependency.filteredDiaryCountRelay?
             .subscribe(onNext: { [weak self] count in
                 guard let self = self else { return }
                 print("DiaryBottomSheet = setFilterCount! count = \(count)")
                 self.presenter.setFilterBtnCount(count: count)
             })
             .disposed(by: disposeBag)
-    }
-    
-    func setFilteredWeatherPlaceArrRelay(weatherArrRelay: BehaviorRelay<[Weather]>?, placeArrRelay: BehaviorRelay<[Place]>?) {
-        print("DiaryBottomSheet :: setFilteredWeatherPlaceArrRelay!")
-        self.filteredWeatherArrRelay = weatherArrRelay
-        self.filteredPlaceArrRelay = placeArrRelay
-        self.presenter.setCurrentFilteredBtn(weatherArr: [], placeArr: [])
-        // self.presenter.setCurrentFilteredBtn(weatherArr: <#T##[Weather]#>, placeArr: <#T##[Place]#>)
-//        self.presenter.setCurrentFilteredBtn(weatherArr: weatherArrRelay?.value ?? [], placeArr: placeArrRelay?.value ?? [])
         
-        guard let weatherArrRelay = weatherArrRelay,
-              let placeArrRelay = placeArrRelay else {
-            return
+        if let filteredWeatherArrRelay = dependency.filteredWeatherArrRelay,
+           let filteredPlaceArrRelay = dependency.filteredPlaceArrRelay {
+            Observable.combineLatest(
+                filteredWeatherArrRelay,
+                filteredPlaceArrRelay
+            )
+            .subscribe(onNext: { [weak self] weatherArr, placeArr in
+                guard let self = self else { return }
+                
+                print("DiaryBottomSheet :: !!! \(weatherArr), \(placeArr)")
+                self.listener?.filterWithWeatherPlace(weatherArr: weatherArr, placeArr: placeArr)
+            })
+            .disposed(by: disposeBag)
         }
-//
-//        self.filteredWeatherArrRelay = weatherArrRelay
-//        self.filteredPlaceArrRelay = placeArrRelay
-//
-//
-        Observable.combineLatest(
-            weatherArrRelay,
-            placeArrRelay
-        )
-        .subscribe(onNext: { [weak self] weatherArr, placeArr in
-            guard let self = self else { return }
-
-            print("DiaryBottomSheet :: !!! \(weatherArr), \(placeArr)")
-            self.listener?.filterWithWeatherPlace(weatherArr: weatherArr, placeArr: placeArr)
-        })
-        .disposed(by: disposeBag)
         
-        /*
-        self.filteredWeatherArrRelay?
-            .subscribe(onNext: { [weak self] filteredWeatherArr in
-                guard let self = self else { return }
-                print("DiaryBottomSheet :: filteredWeatherArr = \(filteredWeatherArr)")
-            })
-            .disposed(by: disposeBag)
-        
-        self.filteredPlaceArrRelay?
-            .subscribe(onNext: { [weak self] filteredPlaceArr in
-                guard let self = self else { return }
-                self.presenter.setCurrentFilteredBtn(weatherArr: [], placeArr: filteredPlaceArr)
-            })
-            .disposed(by: disposeBag)
-         */
-    }
-    
-    func setReminderRequestDate(relay: BehaviorRelay<DateComponents?>?) {
-        self.reminderRequestDateRelay = relay
-        self.reminderRequestDateRelay?
-            .subscribe(onNext : { [weak self] date in
+        dependency.reminderRequestDateRelay?
+            .subscribe(onNext: { [weak self] date in
                 guard let self = self else { return }
                 print("DiaryBottomSheet :: 나중에 수정 만들때 하면 될듯")
                 let isEnabled: Bool = date == nil ? false : true
                 self.presenter.setCurrentReminderData(isEnabled: isEnabled, dateComponets: date)
-        })
+            })
             .disposed(by: disposeBag)
     }
     
@@ -194,44 +149,6 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     
     func pressedWriteBtn() {
         listener?.diaryBottomSheetPressedCloseBtn()
-    }
-    
-    // MARK: - Weather(날씨)
-    func updateWeather(weather: Weather) {
-        print("updateWeather = \(weather)")
-
-        let newWeatherModel = WeatherModel(uuid: weatherModel.uuid,
-                                           weather: weather,
-                                           detailText: weatherModel.detailText
-        )
-        self.weatherModel = newWeatherModel
-    }
-    
-    func updateWeatherDetailText(text: String) {
-        let newWeatherModel = WeatherModel(uuid: weatherModel.uuid,
-                                           weather: weatherModel.weather,
-                                           detailText: text
-        )
-        self.weatherModel = newWeatherModel
-    }
-    
-    // MARK: - Place(장소)
-    func updatePlaceDetailText(text: String) {
-        let newPlaceModel = PlaceModel(uuid: placeModel.uuid,
-                                       place: placeModel.place,
-                                       detailText: text
-        )
-        self.placeModel = newPlaceModel
-    }
-    
-    func updatePlace(place: Place) {
-        print("updatePlace = \(place)")
-
-        let newPlaceModel = PlaceModel(uuid: placeModel.uuid,
-                                       place: place,
-                                       detailText: placeModel.detailText
-        )
-        self.placeModel = newPlaceModel
     }
     
     // MARK: - Place/Weahter Filter

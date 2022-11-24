@@ -748,10 +748,10 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         cell.backgroundColor = .clear
 
-        print("cell, ------------------")
+        // print("cell, ------------------")
         let index: Int = indexPath.row
         let section: Int = indexPath.section
-        print("cell, section!! = \(section), indexPath = \(indexPath), index = \(index), !!? \(sectionNameDic[section])")
+        // print("cell, section!! = \(section), indexPath = \(indexPath), index = \(index), !!? \(sectionNameDic[section])")
         // guard let data = myMenualArr[safe: index] else { return UITableViewCell() }
         var data: DiaryModel?
         
@@ -774,7 +774,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         // AUG, SEP 등 Month Parsing
         let monthRange = NSRange(sectionName.index(sectionName.startIndex, offsetBy: 4)..<sectionName.index(sectionName.startIndex, offsetBy: 7), in: sectionName)
         let month = (sectionName as NSString).substring(with: monthRange)
-        print("cell, year = \(year), month = \(month)")
+        // print("cell, year = \(year), month = \(month)")
         
         var diaryYearModelArr: [DiaryYearModel] = []
         if self.isFilteredRelay.value {
@@ -785,10 +785,10 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         for diaryYearModel in diaryYearModelArr {
             if diaryYearModel.year.description != year { continue }
-            print("cell, diaryYearmodel과 같은 year을 찾았습니다! = \(year)")
+            // print("cell, diaryYearmodel과 같은 year을 찾았습니다! = \(year)")
             guard let diaryModelData: [DiaryModel] = diaryYearModel.months?.getMenualArr(MM: month) else { return defaultCell }
 
-            print("cell, diaryModelData를 찾았습니다. = \(diaryModelData)")
+            // print("cell, diaryModelData를 찾았습니다. = \(diaryModelData)")
             data = diaryModelData[safe: index]
             
         }
@@ -805,7 +805,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         }
         // let sectionNumber: Int = cellsectionNumberDic[data.getSectionName()]
 
-        print("cell, sectionNumber = \(sectionNumber), section = \(section)")
+        // print("cell, sectionNumber = \(sectionNumber), section = \(section)")
         
         if data.isHide {
             cell.listType = .hide

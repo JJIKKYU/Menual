@@ -33,21 +33,12 @@ enum MenualBottomSheetType {
 }
 
 protocol DiaryBottomSheetPresentableListener: AnyObject {
-    var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { get set }
-    var filteredDateRelay: BehaviorRelay<Date?>? { get set }
-    var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get set }
-    var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get set }
+    var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { get }
+    var filteredDateRelay: BehaviorRelay<Date?>? { get }
+    var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
+    var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
     
     func pressedCloseBtn()
-
-    // weather
-    func updateWeatherDetailText(text: String)
-    func updateWeather(weather: Weather)
-    
-    // place
-    func updatePlaceDetailText(text: String)
-    func updatePlace(place: Place)
-
     func pressedWriteBtn()
     
     // MenualBottomSheetMenuComponentView
@@ -59,7 +50,7 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     // MenualBottomSheetReminderComponentView
     func reminderCompViewshowToast(isEding: Bool)
     func reminderCompViewSetReminder(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date)
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get set }
+    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
     // var filteredDiaryCountRelay: BehaviorRelay<Int>? { get set }
 }
 
