@@ -180,3 +180,8 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
             .deleteRecentDiarySearch(uuid: uuid)
     }
 }
+
+// MARK: - 미사용
+extension DiarySearchInteractor {
+    func diaryDeleteNeedToast(isNeedToast: Bool) { }
+}

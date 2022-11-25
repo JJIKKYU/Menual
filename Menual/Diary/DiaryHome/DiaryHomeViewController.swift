@@ -43,6 +43,13 @@ protocol DiaryHomePresentableListener: AnyObject {
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
     
+    enum ShowToastType {
+        case writing
+        case delete
+        case edit
+        case none
+    }
+    
     weak var listener: DiaryHomePresentableListener?
     // 스크롤 위치 저장하는 Dictionary
     var disposeBag = DisposeBag()
@@ -59,7 +66,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     let isFilteredRelay = BehaviorRelay<Bool>(value: false)
     private let isDraggingRelay = BehaviorRelay<Bool>(value: false)
-    var isShowToastDiaryResultRelay = RxRelay.BehaviorRelay<DiaryWritingInteractor.DiaryWritingMode?>(value: nil)
+    var isShowToastDiaryResultRelay = BehaviorRelay<DiaryHomeViewController.ShowToastType?>(value: nil)
     
     // MARK: - UI 코드
     private let tableViewHeaderView = UIView().then {
@@ -496,9 +503,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                     self.showToastDiaryResult(mode: .writing)
                 case .edit:
                     self.showToastDiaryResult(mode: .edit)
-                case .none:
+                case .delete:
+                    self.showToastDiaryResult(mode: .delete)
+                case nil:
                     break
-                default:
+                case .some(.none):
                     break
                 }
             })
@@ -1077,7 +1086,7 @@ extension DiaryHomeViewController {
 
 // MARK: - Toast
 extension DiaryHomeViewController {
-    func showToastDiaryResult(mode: DiaryWritingInteractor.DiaryWritingMode) {
+    func showToastDiaryResult(mode: DiaryHomeViewController.ShowToastType) {
         print("DiaryHome :: showToastDiaryResult!")
         switch mode {
         case .writing:
@@ -1085,7 +1094,10 @@ extension DiaryHomeViewController {
 
         case .edit:
             showToast(message: "메뉴얼 등록이 수정되었습니다.")
-
+            
+        case .delete:
+            showToast(message: "메뉴얼 삭제를 완료했어요.")
+            
         case .none:
             break
         }

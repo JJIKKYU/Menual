@@ -30,7 +30,7 @@ protocol DiaryHomeRouting: ViewableRouting {
 protocol DiaryHomePresentable: Presentable {
     var listener: DiaryHomePresentableListener? { get set }
     var isFilteredRelay: BehaviorRelay<Bool> { get }
-    var isShowToastDiaryResultRelay: BehaviorRelay<DiaryWritingInteractor.DiaryWritingMode?> { get }
+    var isShowToastDiaryResultRelay: BehaviorRelay<DiaryHomeViewController.ShowToastType?> { get }
     
     func reloadTableView()
 }
@@ -220,7 +220,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         router?.attachDiaryWriting(page: lastPageNumRelay.value + 1)
     }
     
-    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryWritingInteractor.DiaryWritingMode) {
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryHomeViewController.ShowToastType) {
         if isNeedToast {
             presenter.isShowToastDiaryResultRelay.accept(mode)
         }
@@ -268,6 +268,11 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     //ㅅㅏㄹㅏㅇㅎㅐ i luv u ㅅㅏㄹㅏㅇㅅㅏㄹㅏㅇㅎㅐ ㅅㅏㄹ6ㅎㅐ jjikkyu
     func diaryDetailPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachDiaryDetail(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func diaryDeleteNeedToast(isNeedToast: Bool) {
+        print("DiaryHome :: diaryDeleteNeedToast = \(isNeedToast)")
+        presenter.isShowToastDiaryResultRelay.accept(.delete)
     }
 
     // MARK: - Menual Title Btn을 눌렀을때 Action

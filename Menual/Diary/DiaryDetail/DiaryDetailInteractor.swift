@@ -38,6 +38,7 @@ protocol DiaryDetailInteractorDependency {
 protocol DiaryDetailListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func diaryDetailPressedBackBtn(isOnlyDetach: Bool)
+    func diaryDeleteNeedToast(isNeedToast: Bool)
 }
 
 final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>, DiaryDetailInteractable, DiaryDetailPresentableListener {
@@ -122,6 +123,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                     guard let diaryModel = self.diaryModel else { return }
                     dependency.diaryRepository
                         .deleteDiary(info: diaryModel)
+                    self.listener?.diaryDeleteNeedToast(isNeedToast: true)
                     self.router?.detachBottomSheet(isWithDiaryDetatil: true)
                     
                 case .none:
@@ -350,7 +352,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         router?.attachDiaryDetailImage(imageDataRelay: self.imageDataRelay)
     }
 
-    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryWritingInteractor.DiaryWritingMode) {
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryHomeViewController.ShowToastType) {
         print("DiaryDetail :: diaryWritingPressedBackBtn! ")
         router?.detachDiaryWriting(isOnlyDetach: isOnlyDetach)
     }

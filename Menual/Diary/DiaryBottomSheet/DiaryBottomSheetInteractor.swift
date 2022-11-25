@@ -189,7 +189,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
 
 // MARK: - 미사용
 extension DiaryBottomSheetInteractor {
-    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryWritingInteractor.DiaryWritingMode) {
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryHomeViewController.ShowToastType) {
         
     }
 }

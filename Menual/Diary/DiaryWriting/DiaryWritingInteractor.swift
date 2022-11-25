@@ -33,7 +33,7 @@ protocol DiaryWritingPresentable: Presentable {
 
 protocol DiaryWritingListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
-    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryWritingInteractor.DiaryWritingMode)
+    func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryHomeViewController.ShowToastType)
 }
 
 protocol DiaryWritingInteractorDependency {
