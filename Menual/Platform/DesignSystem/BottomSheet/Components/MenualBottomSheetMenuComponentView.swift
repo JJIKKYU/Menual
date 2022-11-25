@@ -18,6 +18,10 @@ class MenualBottomSheetMenuComponentView: UIView {
         case delete
     }
     
+    public var isHide: Bool = false {
+        didSet { setNeedsLayout() }
+    }
+    
     private let stackView = UIStackView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.axis = .vertical
@@ -117,5 +121,14 @@ class MenualBottomSheetMenuComponentView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        switch isHide {
+        case true:
+            hideMenuBtn.setImage(Asset._24px.lock.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            hideMenuBtn.setTitle("메뉴얼 숨기기", for: .normal)
+        case false:
+            hideMenuBtn.setImage(Asset._24px.unlock.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            hideMenuBtn.setTitle("숨긴 메뉴얼 보기", for: .normal)
+        }
     }
 }

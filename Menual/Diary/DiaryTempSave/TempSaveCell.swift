@@ -99,7 +99,7 @@ class TempSaveCell: UITableViewCell {
         
         switch isWriting {
         case true:
-            listInfoView.infoType = .infoWriting
+            listInfoView.infoType = .timeWriting
             
         case false:
             listInfoView.infoType = .time
@@ -129,6 +129,8 @@ class TempSaveCell: UITableViewCell {
         listInfoView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.top.equalTo(listTitleView.snp.bottom).offset(6)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(15)
         }
         
         delCheckBtn.snp.makeConstraints { make in

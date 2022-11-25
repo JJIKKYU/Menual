@@ -32,6 +32,7 @@ protocol DiaryBottomSheetListener: AnyObject {
     func filterWithWeatherPlacePressedFilterBtn()
     func reminderCompViewshowToast(isEding: Bool)
     func filterDatePressedFilterBtn()
+    func setHideBtnTitle(isHide: Bool)
 }
 
 protocol DiaryBottomSheetInteractorDependency {
@@ -41,6 +42,7 @@ protocol DiaryBottomSheetInteractorDependency {
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
+    var isHideMenualRelay: BehaviorRelay<Bool>? { get }
 }
 
 final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPresentable>, DiaryBottomSheetInteractable, DiaryBottomSheetPresentableListener {
@@ -61,6 +63,8 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { dependency.filteredPlaceArrRelay }
     var filteredDateRelay: BehaviorRelay<Date?>? { dependency.filteredDateRelay }
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { dependency.reminderRequestDateRelay }
+    var isHideMenualRelay: BehaviorRelay<Bool>? { dependency.isHideMenualRelay }
+
     private let dependency: DiaryBottomSheetInteractorDependency
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
@@ -138,6 +142,13 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
                 print("DiaryBottomSheet :: 나중에 수정 만들때 하면 될듯")
                 let isEnabled: Bool = date == nil ? false : true
                 self.presenter.setCurrentReminderData(isEnabled: isEnabled, dateComponets: date)
+            })
+            .disposed(by: disposeBag)
+        
+        dependency.isHideMenualRelay?
+            .subscribe(onNext: { [weak self] isHide in
+                guard let self = self else { return }
+                print("DiaryBottomSheet :: isHide = \(isHide)")
             })
             .disposed(by: disposeBag)
     }

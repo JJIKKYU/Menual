@@ -367,4 +367,5 @@ extension DiaryWritingInteractor {
     func filterWithWeatherPlacePressedFilterBtn() { }
     func reminderCompViewshowToast(isEding: Bool) { }
     func filterDatePressedFilterBtn() { }
+    func setHideBtnTitle(isHide: Bool) { }
 }

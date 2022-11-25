@@ -445,9 +445,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
                 weatherSelectView.isHidden = true
             }
         }
-        
-        print("DiaryDetail :: weatherModel = \(model.weather)")
-        
+
         // DiaryModel에서 PlaceModel을 UnWerapping해서 세팅
         if let placeModel: PlaceModel = model.place {
             locationSelectView.selected = true

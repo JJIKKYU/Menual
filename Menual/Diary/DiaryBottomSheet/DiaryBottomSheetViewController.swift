@@ -37,6 +37,7 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     var filteredDateRelay: BehaviorRelay<Date?>? { get }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
+    var isHideMenualRelay: BehaviorRelay<Bool>? { get }
     
     func pressedCloseBtn()
     func pressedWriteBtn()
@@ -487,6 +488,13 @@ extension DiaryBottomSheetViewController {
 
 }
 
+// MARK: - MenualBottomSheetMenulComponentView
+extension DiaryBottomSheetViewController {
+    func setHideBtnTitle(isHide: Bool) {
+        menuComponentView.isHide = isHide
+    }
+}
+
 // MARK: - MenualBottomSheetFilterComponentView
 extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelegate {
     var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]>? {
@@ -595,9 +603,18 @@ extension DiaryBottomSheetViewController {
     @objc
     func pressedHideMenuBtn() {
         print("DiaryBottomSheet :: pressedHideMenuBtn")
+        let isHide = listener?.isHideMenualRelay?.value ?? false
+        var titleText: String = ""
+        switch isHide {
+        case true:
+            titleText = "숨긴 메뉴얼을 보시겠어요?"
+        case false:
+            titleText = "이 메뉴얼을 숨기시겠어요?"
+        }
+
         show(size: .small,
              buttonType: .twoBtn,
-             titleText: "이 메뉴얼을 숨기시겠어요?",
+             titleText: titleText,
              cancelButtonText: "취소",
              confirmButtonText: "확인"
         )
@@ -695,7 +712,7 @@ extension DiaryBottomSheetViewController: DialogDelegate {
     func action(titleText: String) {
         print("DiaryBottomSheet :: action! -> \(titleText)")
         switch titleText {
-        case "이 메뉴얼을 숨기시겠어요?":
+        case "이 메뉴얼을 숨기시겠어요?", "숨긴 메뉴얼을 보시겠어요?":
             print("DiaryBottomSheet :: 숨기기 action!")
             listener?.menuComponentRelay?.accept(.hide)
             hideBottomSheetAndGoBack()
@@ -724,7 +741,7 @@ extension DiaryBottomSheetViewController: DialogDelegate {
     func exit(titleText: String) {
         print("DiaryBottomSheet :: exit!")
         switch titleText {
-        case "이 메뉴얼을 숨기시겠어요?":
+        case "이 메뉴얼을 숨기시겠어요?", "숨긴 메뉴얼을 보시겠어요?":
             print("DiaryBottomSheet :: 숨기기 exit!")
             hideBottomSheetAndGoBack()
             

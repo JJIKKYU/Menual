@@ -14,6 +14,7 @@ protocol DiaryWritingDependency: Dependency {
 
 final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWritingInteractorDependency, DiaryBottomSheetDependency, DiaryTempSaveDependency {
     
+    var isHideMenualRelay: BehaviorRelay<Bool>?
     var filteredDateDiaryCountRelay: RxRelay.BehaviorRelay<Int>?
     var filteredDateRelay: BehaviorRelay<Date?>?
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?

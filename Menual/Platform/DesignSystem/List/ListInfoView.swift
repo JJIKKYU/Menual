@@ -13,6 +13,7 @@ class ListInfoView: UIView {
     
     enum InfoType {
         case time
+        case timeWriting
         case info
         case infoReview
         case infoWriting
@@ -178,6 +179,16 @@ class ListInfoView: UIView {
             dateLabel.isHidden = false
             timeLabel.isHidden = false
             
+        case .timeWriting:
+            dateLabel.isHidden = false
+            timeLabel.isHidden = false
+            verticalDivider1.isHidden = false
+            writingLabel.isHidden = false
+            writingLabel.snp.remakeConstraints { make in
+                make.leading.equalTo(verticalDivider1.snp.trailing).offset(8)
+                make.centerY.equalToSuperview()
+            }
+            
         case .info:
             dateLabel.isHidden = false
             timeLabel.isHidden = false
@@ -203,6 +214,10 @@ class ListInfoView: UIView {
             pageLabel.isHidden = false
             verticalDivider2.isHidden = false
             writingLabel.isHidden = false
+            writingLabel.snp.remakeConstraints { make in
+                make.leading.equalTo(verticalDivider2.snp.trailing).offset(8)
+                make.centerY.equalToSuperview()
+            }
         }
     }
 

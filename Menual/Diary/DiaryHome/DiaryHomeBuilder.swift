@@ -14,7 +14,8 @@ protocol DiaryHomeDependency: Dependency {
 }
 
 final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency, DiaryBottomSheetDependency {
-    
+
+    var isHideMenualRelay: RxRelay.BehaviorRelay<Bool>?
     var filteredDateDiaryCountRelay: BehaviorRelay<Int>?
     var filteredDateRelay: BehaviorRelay<Date?>?
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?

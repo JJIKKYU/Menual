@@ -662,12 +662,9 @@ extension DiaryWritingViewController {
                 isShowDialog = false
             }
         case .edit:
+            // 수정일 때는 임시저장 되지 않도록
             titleText = "메뉴얼 수정을 취소하시겠어요?"
-            if isEditBeginRelay.value == true {
-                isShowDialog = true
-            } else {
-                isShowDialog = false
-            }
+            isShowDialog = false
         }
         
         if isShowDialog {

@@ -50,6 +50,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     private let changeCurrentDiarySubject = BehaviorSubject<Bool>(value: false)
     private let imageDataRelay = BehaviorRelay<Data>(value: Data())
     let reminderRequestDateRelay = BehaviorRelay<DateComponents?>(value: nil)
+    let isHideMenualRelay = BehaviorRelay<Bool>(value: false)
     
     private var reminderUUID: String?
     private var isEnabledReminder: Bool = false
@@ -250,6 +251,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     // MARK: - BottomSheet Menu
     func pressedMenuMoreBtn() {
+        guard let diaryModel = self.diaryModel else { return }
+        isHideMenualRelay.accept(diaryModel.isHide)
         router?.attachBottomSheet(type: .menu, menuComponentRelay: menuComponentRelay)
     }
     
@@ -357,4 +360,5 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 extension DiaryDetailInteractor {
     func filterWithWeatherPlacePressedFilterBtn() { }
     func filterDatePressedFilterBtn() { }
+    func setHideBtnTitle(isHide: Bool) { }
 }

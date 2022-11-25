@@ -19,6 +19,7 @@ protocol DiaryBottomSheetDependency: Dependency {
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
+    var isHideMenualRelay: BehaviorRelay<Bool>? { get }
 }
 
 final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency>, DiaryWritingDependency, DiaryBottomSheetInteractorDependency {
@@ -30,6 +31,7 @@ final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency>, Di
     var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDateDiaryCountRelay }
     var filteredDateRelay: BehaviorRelay<Date?>? { dependency.filteredDateRelay }
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    var isHideMenualRelay: BehaviorRelay<Bool>? { dependency.isHideMenualRelay }
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
     override init(

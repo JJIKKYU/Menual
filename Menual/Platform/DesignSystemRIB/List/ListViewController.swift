@@ -32,7 +32,15 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
         $0.backgroundColor = .clear
         $0.isUserInteractionEnabled = false
     }
+
+    let stackView = UIStackView(frame: .zero).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.alignment = .fill
+        $0.axis = .vertical
+        $0.spacing = 10.0
+    }
     
+    // LIST/TIME
     let infoViewTimeHeader = ListHeader(type: .text, rightIconType: .none).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "LIST/TIME"
@@ -41,6 +49,16 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
     private let infoViewTime = ListInfoView(type: .time).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
+    
+    let infoViewTimeWritingHeader = ListHeader(type: .text, rightIconType: .none).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.title = "LIST/TIME/WRITING"
+    }
+    
+    private let infoViewTimeWriting = ListInfoView(type: .timeWriting)
+    
+    
+    // LIST/INFO
     
     let infoViewInfoHeader = ListHeader(type: .text, rightIconType: .none).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -156,6 +174,71 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
         }
         tableViewHeader.layoutIfNeeded()
         
+        tableViewHeader.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalToSuperview()
+        }
+        stackView.addArrangedSubview(infoViewTimeHeader)
+        stackView.addArrangedSubview(infoViewTime)
+        stackView.addArrangedSubview(infoViewTimeWritingHeader)
+        stackView.addArrangedSubview(infoViewTimeWriting)
+        
+        stackView.addArrangedSubview(infoViewInfoHeader)
+        stackView.addArrangedSubview(infoViewInfo)
+        stackView.addArrangedSubview(infoViewReviewHeader)
+        stackView.addArrangedSubview(infoViewReview)
+        stackView.addArrangedSubview(infoViewWritingHeader)
+        stackView.addArrangedSubview(infoViewWriting)
+        
+        stackView.addArrangedSubview(listTitleViewTitleHeader)
+        stackView.addArrangedSubview(listTitleViewTitle)
+        stackView.addArrangedSubview(listTitleViewTitlePictureHeader)
+        stackView.addArrangedSubview(listTitleViewTitlePicture)
+        stackView.addArrangedSubview(listTitleViewTitleHideHeader)
+        stackView.addArrangedSubview(listTitleViewTitleHide)
+        stackView.addArrangedSubview(listTitleViewBodyTextHeader)
+        stackView.addArrangedSubview(listTitleViewBodyText)
+        
+        stackView.subviews.forEach { view in
+            let classForCoder = NSStringFromClass(view.classForCoder)
+            print("classForCoder = \(classForCoder)")
+            if classForCoder == "Menual.ListHeader" {
+                guard let view = view as? ListHeader else { return }
+                view.titleLabel.snp.remakeConstraints { make in
+                    make.leading.equalToSuperview()
+                    make.centerY.equalToSuperview()
+                    make.height.equalTo(22)
+                }
+                view.snp.makeConstraints { make in
+                    make.height.equalTo(45)
+                    // make.leading.equalToSuperview()
+                }
+            }
+            
+            else if classForCoder == "Menual.ListInfoView" {
+                view.snp.makeConstraints { make in
+                    make.height.equalTo(15)
+                    // make.leading.equalToSuperview().offset(20)
+                }
+            }
+            
+            else if classForCoder == "Menual.ListTitleView" {
+                view.snp.makeConstraints { make in
+                    make.height.equalTo(18)
+                    // make.leading.equalToSuperview().offset(20)
+                }
+            }
+        }
+        
+        listTitleViewBodyText.snp.remakeConstraints { make in
+            make.height.equalTo(18)
+            make.bottom.equalToSuperview()
+        }
+
+        
+        /*
         tableViewHeader.addSubview(infoViewTimeHeader)
         tableViewHeader.addSubview(infoViewTime)
         tableViewHeader.addSubview(infoViewInfoHeader)
@@ -277,6 +360,7 @@ final class ListViewController: UIViewController, ListPresentable, ListViewContr
             make.height.equalTo(18)
             make.width.equalToSuperview().inset(20)
         }
+         */
         
         
         naviView.snp.makeConstraints { make in
