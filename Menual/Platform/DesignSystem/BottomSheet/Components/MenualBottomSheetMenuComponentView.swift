@@ -123,10 +123,10 @@ class MenualBottomSheetMenuComponentView: UIView {
         super.layoutSubviews()
         
         switch isHide {
-        case true:
+        case false:
             hideMenuBtn.setImage(Asset._24px.lock.image.withRenderingMode(.alwaysTemplate), for: .normal)
             hideMenuBtn.setTitle("메뉴얼 숨기기", for: .normal)
-        case false:
+        case true:
             hideMenuBtn.setImage(Asset._24px.unlock.image.withRenderingMode(.alwaysTemplate), for: .normal)
             hideMenuBtn.setTitle("숨긴 메뉴얼 보기", for: .normal)
         }

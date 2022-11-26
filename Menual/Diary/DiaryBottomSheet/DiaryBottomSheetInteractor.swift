@@ -36,6 +36,7 @@ protocol DiaryBottomSheetListener: AnyObject {
 }
 
 protocol DiaryBottomSheetInteractorDependency {
+    var diaryRepository: DiaryRepository { get }
     var filteredDateRelay: BehaviorRelay<Date?>? { get }
     var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { get }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
@@ -83,13 +84,13 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
 
         print("menualBottomSheetType = \(bottomSheetType)")
         super.init(presenter: presenter)
-        bind()
         presenter.listener = self
         presenter.setViews(type: bottomSheetType)
     }
 
     override func didBecomeActive() {
         super.didBecomeActive()
+        bind()
     }
 
     override func willResignActive() {
@@ -149,6 +150,28 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
             .subscribe(onNext: { [weak self] isHide in
                 guard let self = self else { return }
                 print("DiaryBottomSheet :: isHide = \(isHide)")
+            })
+            .disposed(by: disposeBag)
+        
+        dependency.diaryRepository
+            .diaryMonthDic
+            .subscribe(onNext: { [weak self] diaryMonthDic in
+                guard let self = self else { return }
+                
+                print("DiaryBottomSheet :: DiaryMonthDic! - 1 = \(diaryMonthDic)")
+                
+                var dateFilterModelArr: [DateFilterModel] = []
+                diaryMonthDic.forEach {
+                    let year = $0.year
+                    var months: [Int] = $0.months?.getIsValidDiary() ?? []
+                    dateFilterModelArr.append(DateFilterModel(year: year, months: months))
+                }
+                
+                print("DiaryBottomSheet :: DiaryMonthDic! - 2 = \(dateFilterModelArr)")
+                
+//                let year = diaryMonthDic.forEach { diaryYearModel in
+//                    diaryYearModel.year
+//                }
             })
             .disposed(by: disposeBag)
     }

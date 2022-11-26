@@ -64,6 +64,7 @@
 		985BFF712924C36500D86106 /* ProfileDeveloperInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF6D2924C36500D86106 /* ProfileDeveloperInteractor.swift */; };
 		985BFF732927E7D200D86106 /* FilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF722927E7D200D86106 /* FilterModel.swift */; };
 		985BFF7529290E9A00D86106 /* MomentsEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7429290E9A00D86106 /* MomentsEmptyView.swift */; };
+		985BFF772930A15400D86106 /* DateFilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF762930A15400D86106 /* DateFilterModel.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -329,6 +330,7 @@
 		985BFF6D2924C36500D86106 /* ProfileDeveloperInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDeveloperInteractor.swift; sourceTree = "<group>"; };
 		985BFF722927E7D200D86106 /* FilterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterModel.swift; sourceTree = "<group>"; };
 		985BFF7429290E9A00D86106 /* MomentsEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsEmptyView.swift; sourceTree = "<group>"; };
+		985BFF762930A15400D86106 /* DateFilterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFilterModel.swift; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
 		985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDBuilder.swift; sourceTree = "<group>"; };
@@ -1042,6 +1044,7 @@
 				98EADBAD2855C1A4007C298C /* DiarySearchModel.swift */,
 				985BFF6729249B8D00D86106 /* ReminderModel.swift */,
 				985BFF722927E7D200D86106 /* FilterModel.swift */,
+				985BFF762930A15400D86106 /* DateFilterModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1788,6 +1791,7 @@
 				98EADBA4284734E4007C298C /* Pagination.swift in Sources */,
 				98B557562830C7B200F8CA3E /* DiaryTempSaveInteractor.swift in Sources */,
 				98B557542830C7B200F8CA3E /* DiaryTempSaveViewController.swift in Sources */,
+				985BFF772930A15400D86106 /* DateFilterModel.swift in Sources */,
 				98A76E6D292125410024CE35 /* DateCell.swift in Sources */,
 				985BFF6E2924C36500D86106 /* ProfileDeveloperRouter.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,

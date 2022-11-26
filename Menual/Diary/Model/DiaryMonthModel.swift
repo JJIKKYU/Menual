@@ -417,6 +417,49 @@ public struct DiaryMonthModel {
         allCount = jan + fab + mar + apr + may + jun + jul + aug + sep + oct + nov + dec
         print("allCount = \(allCount)")
     }
+    
+    // 작성한 메뉴얼이 있는 달만 리턴
+    func getIsValidDiary() -> [Int] {
+        var months: [Int] = []
+        if janDiary.count != 0 {
+            months.append(1)
+        }
+        if fabDiary.count != 0 {
+            months.append(2)
+        }
+        if marDiary.count != 0 {
+            months.append(3)
+        }
+        if fabDiary.count != 0 {
+            months.append(4)
+        }
+        if mayDiary.count != 0 {
+            months.append(5)
+        }
+        if julDiary.count != 0 {
+            months.append(6)
+        }
+        if julDiary.count != 0 {
+            months.append(7)
+        }
+        if augDiary.count != 0 {
+            months.append(8)
+        }
+        if sepDiary.count != 0 {
+            months.append(9)
+        }
+        if octDiary.count != 0 {
+            months.append(10)
+        }
+        if novDiary.count != 0 {
+            months.append(11)
+        }
+        if decDiary.count != 0 {
+            months.append(12)
+        }
+        
+        return months
+    }
 }
 
 public struct DiaryYearModel {

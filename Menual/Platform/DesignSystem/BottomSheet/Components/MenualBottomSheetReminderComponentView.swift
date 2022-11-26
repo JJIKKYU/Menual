@@ -22,7 +22,9 @@ protocol MenualBottomSheetReminderComponentViewDelegate {
 
 class MenualBottomSheetReminderComponentView: UIView {
     
-    var delegate: MenualBottomSheetReminderComponentViewDelegate?
+    var delegate: MenualBottomSheetReminderComponentViewDelegate? {
+        didSet { bind() }
+    }
     
     // 윤달 처리를 위해서
     private var numOfDaysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31]
@@ -124,7 +126,6 @@ class MenualBottomSheetReminderComponentView: UIView {
         setInitCalendar()
         setLeapYear()
         setViews()
-        bind()
     }
     
     required init?(coder: NSCoder) {
@@ -209,6 +210,7 @@ class MenualBottomSheetReminderComponentView: UIView {
     }
     
     func bind() {
+        print("Reminder :: bind()")
         isEnabledReminderRelay
             .subscribe(onNext: { [weak self] isEnabled in
                 guard let self = self else { return }
@@ -258,9 +260,6 @@ class MenualBottomSheetReminderComponentView: UIView {
 
             })
             .disposed(by: disposedBag)
-    }
-    
-    func bindDlelegateRelay() {
         
         delegate?.reminderRequestDateRelay?
             .subscribe(onNext: { [weak self] requestDate in
@@ -319,6 +318,11 @@ class MenualBottomSheetReminderComponentView: UIView {
                 // self.isInitSetting = true
             })
             .disposed(by: disposedBag)
+    }
+    
+    func bindDlelegateRelay() {
+        
+        
     }
     
     // 윤달 처리

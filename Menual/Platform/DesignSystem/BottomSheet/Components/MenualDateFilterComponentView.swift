@@ -175,7 +175,7 @@ class MenualDateFilterComponentView: UIView {
                 self.year = String(year)
             })
             .disposed(by: disposeBag)
-        
+
         delegate?.filteredDateMenaulCountsObservable?
             .subscribe(onNext: { [weak self] count in
                 guard let self = self else { return }

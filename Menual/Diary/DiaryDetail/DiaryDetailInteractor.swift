@@ -164,6 +164,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 for reminder in reminderArr {
                     if reminder.diaryUUID == diaryModel.uuid {
                         isEnabled = true
+                        print("DiaryDetail :: reminder! = \(reminder) - 1")
 
                         self.reminderUUID = reminder.uuid
                         self.isEnabledReminder = isEnabled
@@ -184,7 +185,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 self.presenter.setReminderIconEnabled(isEnabled: isEnabled)
             })
             .disposed(by: disposebag)
-
     }
 
     override func didBecomeActive() {
