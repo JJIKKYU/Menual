@@ -15,13 +15,11 @@ protocol DiaryHomeDependency: Dependency {
 
 final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency, DiaryBottomSheetDependency {
 
-    var isHideMenualRelay: RxRelay.BehaviorRelay<Bool>?
     var filteredDateDiaryCountRelay: BehaviorRelay<Int>?
     var filteredDateRelay: BehaviorRelay<Date?>?
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? // 미사용
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
 
     var diaryRepository: DiaryRepository { dependency.diaryRepository }

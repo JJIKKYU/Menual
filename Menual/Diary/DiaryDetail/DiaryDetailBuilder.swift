@@ -15,7 +15,8 @@ protocol DiaryDetailDependency: Dependency {
 }
 
 final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency, DiaryDetailImageDependency {
-
+    
+    var isEnabledReminderRelay: BehaviorRelay<Bool?>?
     var isHideMenualRelay: BehaviorRelay<Bool>?
     var filteredDateDiaryCountRelay: RxRelay.BehaviorRelay<Int>?
     var filteredDateRelay: BehaviorRelay<Date?>?
@@ -62,6 +63,7 @@ final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDetailBuild
         interactor.listener = listener
         component.reminderRequestDateRelay = interactor.reminderRequestDateRelay
         component.isHideMenualRelay = interactor.isHideMenualRelay
+        component.isEnabledReminderRelay = interactor.isEnabledReminderRelay
         
         return DiaryDetailRouter(
             interactor: interactor,

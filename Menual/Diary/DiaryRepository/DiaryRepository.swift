@@ -66,6 +66,7 @@ public protocol DiaryRepository {
     func fetchDiaryReminder(diaryUUID: String) -> Observable<ReminderModel?>
     func addReminder(model: ReminderModel)
     func updateReminder(model: ReminderModel)
+    func deleteReminder(reminderUUID: String)
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
@@ -806,6 +807,21 @@ public final class DiaryRepositoryImp: DiaryRepository {
             data.createdAt = model.createdAt
             data.requestUUID = model.requestUUID
             data.requestDate = model.requestDate
+        }
+        
+        self.fetchReminder()
+    }
+    
+    public func deleteReminder(reminderUUID: String) {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        guard let data = realm.objects(ReminderModelRealm.self).filter({ $0.uuid == reminderUUID }).first
+        else { return }
+        
+        realm.safeWrite {
+            realm.delete(data)
         }
         
         self.fetchReminder()

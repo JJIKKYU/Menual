@@ -44,19 +44,16 @@ protocol DiaryBottomSheetInteractorDependency {
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
     var isHideMenualRelay: BehaviorRelay<Bool>? { get }
+    var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
 }
 
 final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPresentable>, DiaryBottomSheetInteractable, DiaryBottomSheetPresentableListener {
-    
     
     weak var router: DiaryBottomSheetRouting?
     weak var listener: DiaryBottomSheetListener?
     var disposeBag = DisposeBag()
     var bottomSheetType: MenualBottomSheetType = .menu
-    
-    // FilterComponentView에서 사용되는 Weather/Place Filter Selected Arr
-    // var weatherFilterSelectedArrRelay = BehaviorRelay<[Weather]>(value: [])
-    // var placeFilterSelectedArrRelay = BehaviorRelay<[Place]>(value: [])
+
     var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
     var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDateDiaryCountRelay }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDiaryCountRelay }
@@ -65,6 +62,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var filteredDateRelay: BehaviorRelay<Date?>? { dependency.filteredDateRelay }
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { dependency.reminderRequestDateRelay }
     var isHideMenualRelay: BehaviorRelay<Bool>? { dependency.isHideMenualRelay }
+    var isEnabledReminderRelay: BehaviorRelay<Bool?>? { dependency.isEnabledReminderRelay }
 
     private let dependency: DiaryBottomSheetInteractorDependency
 

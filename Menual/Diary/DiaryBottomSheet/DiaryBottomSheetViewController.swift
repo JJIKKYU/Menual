@@ -52,6 +52,7 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     func reminderCompViewshowToast(isEding: Bool)
     func reminderCompViewSetReminder(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date)
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
+    var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
     // var filteredDiaryCountRelay: BehaviorRelay<Int>? { get set }
 }
 
@@ -201,7 +202,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         filterComponentView.delegate = nil
         reminderComponentView.delegate = nil
         dateFilterComponentView.delegate = nil
-        listener?.pressedCloseBtn()
+        // listener?.pressedCloseBtn()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -640,6 +641,11 @@ extension DiaryBottomSheetViewController {
 
 // MARK: - ReminderComponentView
 extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentViewDelegate {
+    var isEnabledReminderRelay: BehaviorRelay<Bool?>? {
+        print("DiaryBottomSheet :: isEnabledReminderRelay = \(listener?.isEnabledReminderRelay)")
+        return listener?.isEnabledReminderRelay
+    }
+    
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? {
         listener?.reminderRequestDateRelay
     }
@@ -682,7 +688,6 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
     
     func setCurrentReminderData(isEnabled: Bool, dateComponets: DateComponents?) {
         print("DiaryBottomSheet :: setCurrentReminderData! => isEnabled = \(isEnabled), dateComponents = \(dateComponets)")
-        reminderComponentView.bindDlelegateRelay()
         switch isEnabled {
         case true:
             // reminderComponentView.selectedSwitchBtn()
@@ -730,7 +735,7 @@ extension DiaryBottomSheetViewController: DialogDelegate {
             break
             
         case "리마인더 알림을 해제하시겠어요?":
-            reminderComponentView.isEnabledReminderRelay.accept(false)
+            listener?.isEnabledReminderRelay?.accept(false)
             break
 
         default:

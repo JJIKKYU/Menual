@@ -14,14 +14,12 @@ protocol DiaryWritingDependency: Dependency {
 
 final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWritingInteractorDependency, DiaryBottomSheetDependency, DiaryTempSaveDependency {
     
-    var isHideMenualRelay: BehaviorRelay<Bool>?
-    var filteredDateDiaryCountRelay: RxRelay.BehaviorRelay<Int>?
+    var filteredDateDiaryCountRelay: BehaviorRelay<Int>?
     var filteredDateRelay: BehaviorRelay<Date?>?
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? // 미사용
 
 }
 

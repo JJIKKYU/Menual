@@ -18,13 +18,12 @@ protocol MenualBottomSheetReminderComponentViewDelegate {
     func pressedIsEnabledSwitchBtn(isEnabled: Bool)
     func pressedSelectBtn(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date)
     func isNeedReminderAuthorization()
+    var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
 }
 
 class MenualBottomSheetReminderComponentView: UIView {
     
-    var delegate: MenualBottomSheetReminderComponentViewDelegate? {
-        didSet { bind() }
-    }
+    var delegate: MenualBottomSheetReminderComponentViewDelegate?
     
     // 윤달 처리를 위해서
     private var numOfDaysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31]
@@ -49,7 +48,6 @@ class MenualBottomSheetReminderComponentView: UIView {
         didSet { setNeedsLayout() }
     }
     
-    let isEnabledReminderRelay = BehaviorRelay<Bool>(value: false)
     private let isNeedReminderAuthorizationRelay = BehaviorRelay<Bool>(value: false)
     private let isSelectedReminderDayIndexRelay = BehaviorRelay<Int?>(value: nil)
 
@@ -131,6 +129,12 @@ class MenualBottomSheetReminderComponentView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+        super.willMove(toWindow: newWindow)
+        print("Reminder :: willMove! = \(delegate)")
+        bind()
+    }
     
     func setViews() {
         addSubview(reminderTitleLabel)
@@ -204,16 +208,17 @@ class MenualBottomSheetReminderComponentView: UIView {
             let month = dateComponets.month
             let day = dateComponets.day
             
-            isEnabledReminderRelay.accept(true)
+            delegate?.isEnabledReminderRelay?.accept(true)
             print("Reminder :: compView에서 받은 데이터 = weekDay = \(weekday), month = \(month), day = \(day)")
         }
     }
     
     func bind() {
-        print("Reminder :: bind()")
-        isEnabledReminderRelay
+        delegate?.isEnabledReminderRelay?
             .subscribe(onNext: { [weak self] isEnabled in
-                guard let self = self else { return }
+                guard let self = self,
+                      let isEnabled = isEnabled
+                else { return }
 
                 self.monthView.isEnabled = isEnabled
                 switch isEnabled {
@@ -277,7 +282,7 @@ class MenualBottomSheetReminderComponentView: UIView {
                 self.isEditingMode = true
 
                 // self.switchBtn.setOn(true, animated: true)
-                self.selectedSwitchBtn()
+                // self.selectedSwitchBtn()
                 // self.isSelectedReminderDayIndexRelay.accept(requestDate.day)
 
                  // self.selectBtn.btnStatus = .active
@@ -318,11 +323,6 @@ class MenualBottomSheetReminderComponentView: UIView {
                 // self.isInitSetting = true
             })
             .disposed(by: disposedBag)
-    }
-    
-    func bindDlelegateRelay() {
-        
-        
     }
     
     // 윤달 처리
@@ -383,7 +383,7 @@ extension MenualBottomSheetReminderComponentView {
             if success == true {
                 print("Reminder :: 권한 요청? success! = \(success)")
                 DispatchQueue.main.async {
-                    self.isEnabledReminderRelay.accept(true)
+                    self.delegate?.isEnabledReminderRelay?.accept(true)
                 }
             } else {
                 DispatchQueue.main.async {
@@ -419,7 +419,10 @@ extension MenualBottomSheetReminderComponentView {
         print("Reminder :: requestDate = \(requestDate)")
         
         pressedSelctBtn = true
-        delegate?.pressedSelectBtn(isEditing: isEditingMode, requestDateComponents: dateComponents, requestDate: requestDate)
+        delegate?.pressedSelectBtn(isEditing: isEditingMode,
+                                   requestDateComponents: dateComponents,
+                                   requestDate: requestDate
+        )
     }
 }
 
@@ -485,7 +488,7 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         cell.index = indexPath.row
         // cell.layoutIfNeeded()
         
-        if isEnabledReminderRelay.value == false {
+        if delegate?.isEnabledReminderRelay?.value ?? false == false {
             cell.isUserInteractionEnabled = false
         }
         

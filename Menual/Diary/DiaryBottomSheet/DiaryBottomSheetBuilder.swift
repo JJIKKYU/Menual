@@ -9,6 +9,13 @@ import RIBs
 import RxSwift
 import RxRelay
 
+// 사용하려고 하는 곳에만 Dependency 설정
+extension DiaryBottomSheetDependency {
+    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { nil }
+    var isHideMenualRelay: BehaviorRelay<Bool>? { nil }
+    var isEnabledReminderRelay: BehaviorRelay<Bool?>? { nil }
+}
+
 protocol DiaryBottomSheetDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
@@ -20,6 +27,7 @@ protocol DiaryBottomSheetDependency: Dependency {
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
     var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
     var isHideMenualRelay: BehaviorRelay<Bool>? { get }
+    var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
 }
 
 final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency>, DiaryWritingDependency, DiaryBottomSheetInteractorDependency {
@@ -32,6 +40,7 @@ final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency>, Di
     var filteredDateRelay: BehaviorRelay<Date?>? { dependency.filteredDateRelay }
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
     var isHideMenualRelay: BehaviorRelay<Bool>? { dependency.isHideMenualRelay }
+    var isEnabledReminderRelay: BehaviorRelay<Bool?>? { dependency.isEnabledReminderRelay }
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
     override init(
