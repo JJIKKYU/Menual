@@ -419,46 +419,58 @@ public struct DiaryMonthModel {
     }
     
     // 작성한 메뉴얼이 있는 달만 리턴
-    func getIsValidDiary() -> [Int] {
-        var months: [Int] = []
+    func getIsValidDiary() -> [DateFilterMonthsModel] {
+        var monthsModelArr: [DateFilterMonthsModel] = []
         if janDiary.count != 0 {
-            months.append(1)
+            let monthModel = DateFilterMonthsModel(month: 1, diaryCount: jan)
+            monthsModelArr.append(monthModel)
         }
         if fabDiary.count != 0 {
-            months.append(2)
+            let monthModel = DateFilterMonthsModel(month: 2, diaryCount: fab)
+            monthsModelArr.append(monthModel)
         }
         if marDiary.count != 0 {
-            months.append(3)
+            let monthModel = DateFilterMonthsModel(month: 3, diaryCount: mar)
+            monthsModelArr.append(monthModel)
         }
         if fabDiary.count != 0 {
-            months.append(4)
+            let monthModel = DateFilterMonthsModel(month: 4, diaryCount: fab)
+            monthsModelArr.append(monthModel)
         }
         if mayDiary.count != 0 {
-            months.append(5)
+            let monthModel = DateFilterMonthsModel(month: 5, diaryCount: may)
+            monthsModelArr.append(monthModel)
+        }
+        if junDiary.count != 0 {
+            let monthModel = DateFilterMonthsModel(month: 6, diaryCount: jun)
+            monthsModelArr.append(monthModel)
         }
         if julDiary.count != 0 {
-            months.append(6)
-        }
-        if julDiary.count != 0 {
-            months.append(7)
+            let monthModel = DateFilterMonthsModel(month: 7, diaryCount: jul)
+            monthsModelArr.append(monthModel)
         }
         if augDiary.count != 0 {
-            months.append(8)
+            let monthModel = DateFilterMonthsModel(month: 8, diaryCount: aug)
+            monthsModelArr.append(monthModel)
         }
         if sepDiary.count != 0 {
-            months.append(9)
+            let monthModel = DateFilterMonthsModel(month: 9, diaryCount: sep)
+            monthsModelArr.append(monthModel)
         }
         if octDiary.count != 0 {
-            months.append(10)
+            let monthModel = DateFilterMonthsModel(month: 10, diaryCount: oct)
+            monthsModelArr.append(monthModel)
         }
         if novDiary.count != 0 {
-            months.append(11)
+            let monthModel = DateFilterMonthsModel(month: 11, diaryCount: nov)
+            monthsModelArr.append(monthModel)
         }
         if decDiary.count != 0 {
-            months.append(12)
+            let monthModel = DateFilterMonthsModel(month: 12, diaryCount: dec)
+            monthsModelArr.append(monthModel)
         }
         
-        return months
+        return monthsModelArr
     }
 }
 

@@ -33,6 +33,7 @@ protocol DiaryHomePresentable: Presentable {
     var isShowToastDiaryResultRelay: BehaviorRelay<DiaryHomeViewController.ShowToastType?> { get }
     
     func reloadTableView()
+    func scrollToDateFilter(yearDateFormatString: String)
 }
 
 protocol DiaryHomeListener: AnyObject {
@@ -56,11 +57,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
     var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
     let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
-    let filteredDateDiaryCountRelay = BehaviorRelay<Int>(value: -1)
     
     let filteredWeatherArrRelay = BehaviorRelay<[Weather]>(value: [])
     let filteredPlaceArrRelay = BehaviorRelay<[Place]>(value: [])
-    let filteredDateRelay = BehaviorRelay<Date?>(value: nil)
 //    var filteredWeatherArr: [Weather] = []
 //    var filteredPlaceArr: [Place] = []
 
@@ -137,28 +136,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 
                 self.presenter.isFilteredRelay.accept(false)
                 self.presenter.reloadTableView()
-            })
-            .disposed(by: disposebag)
-
-        /*
-        dependency.diaryRepository
-            .realmDiaryOb
-            .subscribe(onNext: { [weak self] data in
-                guard let self = self else { return }
-                print("아이클라우드에서 받아온 정보 : \(data)")
-                // self.presenter.reloadTableView()
-            })
-            .disposed(by: disposebag)
-         */
-        filteredDateRelay
-            .subscribe(onNext: { [weak self] date in
-                guard let self = self else { return }
-                guard let date = date else { return }
-                
-                let count = self.dependency.diaryRepository
-                    .filterDiary(date: date, isOnlyFilterCount: true)
-                print("DiaryHome :: filteredDateRelay! = \(date), count = \(count)")
-                self.filteredDateDiaryCountRelay.accept(count)
             })
             .disposed(by: disposebag)
     }
@@ -297,9 +274,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     func pressedDateFilterBtn() {
         router?.attachBottomSheet(type: .dateFilter)
         
-        if filteredDateRelay.value == nil {
-            filteredDateRelay.accept(Date())
-        }
+//        if filteredDateRelay.value == nil {
+//            filteredDateRelay.accept(Date())
+//        }
     }
     
     // filterComponenetView
@@ -349,21 +326,22 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         filteredPlaceArrRelay.accept([])
         
         presenter.isFilteredRelay.accept(false)
-        filteredDateRelay.accept(nil)
+        // filteredDateRelay.accept(nil)
         filteredDiaryCountRelay.accept(-1)
         dependency.diaryRepository
             .fetch()
     }
     
     // DateFilter
-    func filterDatePressedFilterBtn() {
-        guard let date = filteredDateRelay.value else { return }
+    func filterDatePressedFilterBtn(yearDateFormatString: String) {
+        print("DiaryHome :: filterBtn!, yearDateFormatString = \(yearDateFormatString)")
+        // guard let date = filteredDateRelay.value else { return }
 
-        presenter.isFilteredRelay.accept(true)
-        _ = dependency.diaryRepository
-            .filterDiary(date: date, isOnlyFilterCount: false)
+        // presenter.isFilteredRelay.accept(true)
+//        _ = dependency.diaryRepository
+//            .filterDiary(date: date, isOnlyFilterCount: false)
         // filteredDateRelay.accept(nil)
-        
+        presenter.scrollToDateFilter(yearDateFormatString: yearDateFormatString)
         router?.detachBottomSheet()
     }
 }

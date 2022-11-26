@@ -12,8 +12,7 @@ import RxSwift
 import RxRelay
 
 protocol MenualDateFilterComponentDelegate {
-    var filteredDateMenaulCountsObservable: Observable<Int>? { get }
-    var filteredDateRelay: BehaviorRelay<Date?>? { get }
+    var dateFilterModelRelay: BehaviorRelay<[DateFilterModel]?>? { get }
 }
 
 class MenualDateFilterComponentView: UIView {
@@ -24,6 +23,12 @@ class MenualDateFilterComponentView: UIView {
 
     let currentYear = Calendar.current.component(.year, from: Date())
     let currentMonth = Calendar.current.component(.month, from: Date())
+    
+    let monthArrowIdxRelay = BehaviorRelay<Int>(value: 0)
+    let yearArrowIdxRelay = BehaviorRelay<Int>(value: 0)
+    
+    // "2022NOV" 같은 DiaryHome에서 사용
+    var yearEngMonth: String = ""
     
     private var month: String = "00" {
         didSet { setNeedsLayout() }
@@ -158,33 +163,110 @@ class MenualDateFilterComponentView: UIView {
         }
     }
     
+    override func willMove(toWindow newWindow: UIWindow?) {
+        super.willMove(toWindow: newWindow)
+        
+        print("DiaryBottomSheet :: willMove!")
+        bind()
+    }
+    
     func bind() {
-        print("DiaryBottomSheet :: filterDate 바인드!")
-        delegate?.filteredDateRelay?
-            .subscribe(onNext: { [weak self] date in
+        delegate?.dateFilterModelRelay?
+            .subscribe(onNext: { [weak self] dateFilterModelArr in
                 guard let self = self else { return }
-                guard let date = date else { return }
                 
-                print("DiaryBottomSheet :: filteredDateRelay 넘어왔당아! \(date)")
+                guard let dateFilterModelArr = dateFilterModelArr else {
+                    print("DiaryBottomSheet :: dateFilterModelArr가 nil이므로 선택할 곳이 없게 합니다.")
+                    return
+                }
                 
                 let calendar = Calendar.current
-                let month = calendar.component(.month, from: date)
-                self.month = String(month)
-                
-                let year = calendar.component(.year, from: date)
-                self.year = String(year)
-            })
-            .disposed(by: disposeBag)
 
-        delegate?.filteredDateMenaulCountsObservable?
-            .subscribe(onNext: { [weak self] count in
-                guard let self = self else { return }
+                // 이번년도 찾기
+                // 이번달 찾기
+                var yearIndex: Int = 0
+                var monthIndex: Int = 0
+                for (index, model) in dateFilterModelArr.enumerated() {
+                    if model.year == self.currentYear {
+                        yearIndex = index
+
+                        for (index, modelMonthModel) in model.months.enumerated() {
+                            if self.currentMonth == modelMonthModel.month {
+                                monthIndex = index
+                            }
+                        }
+                    }
+                }
                 
-                print("DiaryBottomSheet :: filteredMenualCountsObservable 구독! = \(count)")
-                self.count = count
+                
+                print("DiaryBottomSheet :: 이번년도Idx = \(yearIndex), 이번달Idx = \(monthIndex)")
+                print("DiaryBottomSheet :: \(dateFilterModelArr[safe: yearIndex]?.months[safe: monthIndex]?.month)월, \(dateFilterModelArr[safe: yearIndex]?.months[safe: monthIndex]?.diaryCount)개")
+                
+                // print("DiaryBottomSheet :: dateFilterModelRelay = \(model)")
+                self.yearArrowIdxRelay.accept(yearIndex)
+                self.monthArrowIdxRelay.accept(monthIndex)
             })
             .disposed(by: disposeBag)
         
+        Observable.combineLatest(
+            yearArrowIdxRelay,
+            monthArrowIdxRelay
+        )
+        .subscribe(onNext: { [weak self] yearIdx, monthIdx in
+            guard let self = self else { return }
+            guard let dateFilterModelArr = self.delegate?.dateFilterModelRelay?.value else { return }
+            
+            print("DiaryBottomSheet :: yearIdx = \(yearIdx), monthIdx = \(monthIdx)")
+            print("DiaryBottomSheet :: dateFilterModelArr[safe: yearIdx + 1] = \(dateFilterModelArr[safe: yearIdx + 1])")
+            
+            
+            if dateFilterModelArr[safe: yearIdx - 1] == nil {
+                print("DiaryBottomSheet :: prevYear은 nil이므로 비활성화")
+                self.prevYearArrowBtn.tintColor = Colors.grey.g700
+                self.prevYearArrowBtn.isUserInteractionEnabled = false
+            } else {
+                // self.monthArrowIdxRelay.accept(0)
+                self.prevYearArrowBtn.tintColor = Colors.grey.g200
+                self.prevYearArrowBtn.isUserInteractionEnabled = true
+            }
+            
+            if dateFilterModelArr[safe: yearIdx + 1] == nil {
+                print("DiaryBottomSheet :: nextYear은 nil이므로 비활성화")
+                self.nextYearArrowBtn.tintColor = Colors.grey.g700
+                self.nextYearArrowBtn.isUserInteractionEnabled = false
+            } else {
+                // self.monthArrowIdxRelay.accept(0)
+                self.nextYearArrowBtn.tintColor = Colors.grey.g200
+                self.nextYearArrowBtn.isUserInteractionEnabled = true
+            }
+            
+            if dateFilterModelArr[safe: yearIdx]?.months[safe: monthIdx - 1] == nil {
+                print("DiaryBottomSheet :: prevMonth nil이므로 비활성화")
+                self.prevMonthArrowBtn.tintColor = Colors.grey.g700
+                self.prevMonthArrowBtn.isUserInteractionEnabled = false
+            } else {
+                self.prevMonthArrowBtn.tintColor = Colors.grey.g200
+                self.prevMonthArrowBtn.isUserInteractionEnabled = true
+            }
+            
+            if dateFilterModelArr[safe: yearIdx]?.months[safe: monthIdx + 1] == nil {
+                print("DiaryBottomSheet :: nextMonth nil이므로 비활성화")
+                self.nextMonthArrowBtn.tintColor = Colors.grey.g700
+                self.nextMonthArrowBtn.isUserInteractionEnabled = false
+            } else {
+                self.nextMonthArrowBtn.tintColor = Colors.grey.g200
+                self.nextMonthArrowBtn.isUserInteractionEnabled = true
+            }
+            
+            self.year = String(dateFilterModelArr[safe: yearIdx]?.year ?? self.currentYear)
+            
+            self.month = String(dateFilterModelArr[safe: yearIdx]?.months[safe: monthIdx]?.month ?? self.currentMonth)
+            let engMonth = String(self.month).convertEngMonthName()
+            self.yearEngMonth = self.year + engMonth
+            print("DiaryBottomSheet :: EngMonthFormat = \(self.yearEngMonth)")
+            self.count = dateFilterModelArr[safe: yearIdx]?.months[safe: monthIdx]?.diaryCount ?? 0
+        })
+        .disposed(by: disposeBag)
     }
     
     override func layoutSubviews() {
@@ -194,6 +276,9 @@ class MenualDateFilterComponentView: UIView {
         yearTitle.text = "\(year)년"
         filterBtn.title = "\(count)개의 메뉴얼 보기"
         
+        
+        
+        /*
         print("DiaryBottomSheet = \(currentYear) \(Int(year) ?? 0 + 1) ,,,, \(currentMonth < Int(month) ?? 0)")
         if currentYear == (Int(year) ?? 0) + 1 && currentMonth < Int(month) ?? 0 {
             print("DiaryBottomSheet :: 내년을 누르면 미래가 되어버리니 비활성화합니다.")
@@ -221,5 +306,6 @@ class MenualDateFilterComponentView: UIView {
             nextYearArrowBtn.tintColor = Colors.grey.g200
             nextYearArrowBtn.isUserInteractionEnabled = true
         }
+        */
     }
 }

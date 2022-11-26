@@ -69,7 +69,7 @@ final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeveloperPr
                 if isStarted == false { return }
                 
                 // let diaryModelArr = []
-                let intervale: Double = 600000
+                let intervale: Double = 1200000
                 var unixTime = Date().timeIntervalSinceNow - (intervale * 30)
                 // var date = Date(timeIntervalSince1970: unixTime)
                 

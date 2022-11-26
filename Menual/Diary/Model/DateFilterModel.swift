@@ -9,5 +9,10 @@ import Foundation
 
 struct DateFilterModel {
     var year: Int
-    var months: [Int]
+    var months: [DateFilterMonthsModel]
+}
+
+struct DateFilterMonthsModel {
+    var month: Int
+    var diaryCount: Int
 }

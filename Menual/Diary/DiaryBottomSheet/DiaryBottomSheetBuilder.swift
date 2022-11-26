@@ -21,8 +21,6 @@ protocol DiaryBottomSheetDependency: Dependency {
     // created by this RIB.
     var diaryRepository: DiaryRepository { get }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
-    var filteredDateRelay: BehaviorRelay<Date?>? { get }
-    var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { get }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
@@ -36,8 +34,6 @@ final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency>, Di
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { dependency.filteredWeatherArrRelay }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { dependency.filteredPlaceArrRelay }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDiaryCountRelay }
-    var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDateDiaryCountRelay }
-    var filteredDateRelay: BehaviorRelay<Date?>? { dependency.filteredDateRelay }
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
     var isHideMenualRelay: BehaviorRelay<Bool>? { dependency.isHideMenualRelay }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { dependency.isEnabledReminderRelay }
@@ -83,17 +79,7 @@ final class DiaryBottomSheetBuilder: Builder<DiaryBottomSheetDependency>, DiaryB
             bottomSheetType: bottomSheetType,
             menuComponentRelay: menuComponentRelay
         )
-        print("ddddd!! = \(dependency.filteredDiaryCountRelay)")
 
-        // filter
-        // interactor.setFilteredDiaryCountRelay(relay: dependency.filteredDiaryCountRelay)
-        // interactor.setFilteredWeatherPlaceArrRelay(weatherArrRelay: dependency.filteredWeatherArrRelay, placeArrRelay: dependency.filteredPlaceArrRelay)
-        
-        // date filter
-//        interactor.setFilteredDateRelay(relay: dependency.filteredDateRelay, countRelay: dependency.filteredDateDiaryCountRelay)
-        
-        // reminder
-        // interactor.setReminderRequestDate(relay: dependency.reminderRequestDateRelay)
 
         interactor.listener = listener
 

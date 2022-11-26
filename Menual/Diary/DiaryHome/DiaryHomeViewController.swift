@@ -524,6 +524,16 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             emptyView.isHidden = true
         }
     }
+    
+    func scrollToDateFilter(yearDateFormatString: String) {
+        // let a = tableview(myMenualTableView, sectionForSectionIndexTitle: yearDateFormatString, at: 0)
+        // myMenualTableView.scrollToRow(at: <#T##IndexPath#>, at: <#T##UITableView.ScrollPosition#>, animated: <#T##Bool#>)
+        // tableView?(self.myMenualTableView, sectionForSectionIndexTitle: "", at: 0)
+        // tableView(<#T##tableView: UITableView##UITableView#>, cellForRowAt: <#T##IndexPath#>)
+        guard let sectionIdx = cellsectionNumberDic[yearDateFormatString] else { return }
+        myMenualTableView.scrollToRow(at: IndexPath(row: 0, section: sectionIdx), at: .middle, animated: true)
+        print("DiaryHome :: scrollToDateFilter = \(sectionIdx)")
+    }
 }
 
 // MARK: - IBAction
@@ -608,7 +618,7 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
 
             DispatchQueue.main.async {
                 let scrollIndicator = scrollView.subviews.last!
-                scrollIndicator.backgroundColor = .red
+                scrollView.scrollIndicators.vertical?.backgroundColor = Colors.grey.g700
                 
                 self.indicatorView.snp.remakeConstraints { make in
                     make.trailing.equalToSuperview().inset(16)
@@ -702,8 +712,15 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
     }
     
     func setIndicatorView(_ scrollView: UIScrollView) {
-        let visibleIndices = myMenualTableView.indexPathsForVisibleRows ?? []
-        let lowestVisibleSection = visibleIndices.map({$0.section}).min() ?? 0
+        let visibleIndices = (myMenualTableView.indexPathsForVisibleRows ?? []).middle ?? []
+        
+        let middleIndex = ((myMenualTableView.indexPathsForVisibleRows?.first?.row)! + (myMenualTableView.indexPathsForVisibleRows?.last?.row)!)/2
+        // let indexPath = tableView.indexPathForRow(at: tableView.bounds.center)
+
+        // let lowestVisibleSection = visibleIndices.map({ $0.section }).min() ?? 0
+        let lowestVisibleSection = visibleIndices.section
+        
+        print("DiaryHome :: middleIndex = \(middleIndex), lower = \(lowestVisibleSection)")
         debugPrint("DiaryHome :: I see \(lowestVisibleSection), \(sectionNameDic[lowestVisibleSection])")
         guard let sectionNameFormat = sectionNameDic[lowestVisibleSection] else { return }
         

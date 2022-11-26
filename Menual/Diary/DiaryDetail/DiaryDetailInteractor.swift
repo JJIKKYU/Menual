@@ -335,6 +335,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 
         notificationCenter.removePendingNotificationRequests(withIdentifiers: [reminderRequestUUID])
         reminderRequestDateRelay.accept(nil)
+        self.isEnabledReminderRelay.accept(nil)
         self.reminderUUID = nil
         self.reminderRequestUUID = nil
         self.isEnabledReminder = false
@@ -428,5 +429,5 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 // MARK: - 미사용
 extension DiaryDetailInteractor {
     func filterWithWeatherPlacePressedFilterBtn() { }
-    func filterDatePressedFilterBtn() { }
+    func filterDatePressedFilterBtn(yearDateFormatString: String) {}
 }

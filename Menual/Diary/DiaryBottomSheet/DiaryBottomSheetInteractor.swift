@@ -21,7 +21,6 @@ protocol DiaryBottomSheetPresentable: Presentable {
     func setViews(type: MenualBottomSheetType)
     func setCurrentFilteredBtn(weatherArr: [Weather], placeArr: [Place])
     func setCurrentReminderData(isEnabled: Bool, dateComponets: DateComponents?)
-    func setDateFilteredRelay()
     func setHideBtnTitle(isHide: Bool)
 }
 
@@ -32,13 +31,11 @@ protocol DiaryBottomSheetListener: AnyObject {
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place])
     func filterWithWeatherPlacePressedFilterBtn()
     func reminderCompViewshowToast(isEding: Bool)
-    func filterDatePressedFilterBtn()
+    func filterDatePressedFilterBtn(yearDateFormatString: String)
 }
 
 protocol DiaryBottomSheetInteractorDependency {
     var diaryRepository: DiaryRepository { get }
-    var filteredDateRelay: BehaviorRelay<Date?>? { get }
-    var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { get }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
@@ -55,14 +52,13 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var bottomSheetType: MenualBottomSheetType = .menu
 
     var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?
-    var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDateDiaryCountRelay }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDiaryCountRelay }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { dependency.filteredWeatherArrRelay }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { dependency.filteredPlaceArrRelay }
-    var filteredDateRelay: BehaviorRelay<Date?>? { dependency.filteredDateRelay }
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { dependency.reminderRequestDateRelay }
     var isHideMenualRelay: BehaviorRelay<Bool>? { dependency.isHideMenualRelay }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { dependency.isEnabledReminderRelay }
+    var dateFilterModelRelay: RxRelay.BehaviorRelay<[DateFilterModel]?>? = BehaviorRelay<[DateFilterModel]?>(value: nil)
 
     private let dependency: DiaryBottomSheetInteractorDependency
 
@@ -97,21 +93,6 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     }
     
     func bind() {
-        dependency.filteredDateRelay?
-            .subscribe(onNext: { [weak self] date in
-                guard let self = self else { return }
-                print("DiaryBottomSheet :: filteredDateRelayt! = \(date)")
-                self.presenter.setDateFilteredRelay()
-            })
-            .disposed(by: disposeBag)
-        
-        dependency.filteredDateDiaryCountRelay?
-            .subscribe(onNext: { [weak self] count in
-                guard let self = self else { return }
-                print("DiaryBottomSheet :: count! = \(count)")
-            })
-            .disposed(by: disposeBag)
-        
         dependency.filteredDiaryCountRelay?
             .subscribe(onNext: { [weak self] count in
                 guard let self = self else { return }
@@ -168,12 +149,14 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
                 var dateFilterModelArr: [DateFilterModel] = []
                 diaryMonthDic.forEach {
                     let year = $0.year
-                    var months: [Int] = $0.months?.getIsValidDiary() ?? []
+                    let months: [DateFilterMonthsModel] = $0.months?.getIsValidDiary() ?? []
+
                     dateFilterModelArr.append(DateFilterModel(year: year, months: months))
                 }
                 
                 print("DiaryBottomSheet :: DiaryMonthDic! - 2 = \(dateFilterModelArr)")
                 
+                self.dateFilterModelRelay?.accept(dateFilterModelArr.sorted { $0.year < $1.year })
 //                let year = diaryMonthDic.forEach { diaryYearModel in
 //                    diaryYearModel.year
 //                }
@@ -211,8 +194,8 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     
     
     // MARK: - DateFilater
-    func filterDatePressedFilterBtn() {
-        listener?.filterDatePressedFilterBtn()
+    func filterDatePressedFilterBtn(yearDateFormatString: String) {
+        listener?.filterDatePressedFilterBtn(yearDateFormatString: yearDateFormatString)
     }
 }
 

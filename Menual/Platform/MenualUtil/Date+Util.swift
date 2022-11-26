@@ -82,23 +82,23 @@ extension Date {
 extension String {
     func convertEngMonthName() -> String {
         switch self {
-        case "01":
+        case "01", "1":
             return "JAN"
-        case "02":
+        case "02", "2":
             return "FAB"
-        case "03":
+        case "03", "3":
             return "MAR"
-        case "04":
+        case "04", "4":
             return "APR"
-        case "05":
+        case "05", "5":
             return "MAY"
-        case "06":
+        case "06", "6":
             return "JUN"
-        case "07":
+        case "07", "7":
             return "JUL"
-        case "08":
+        case "08", "8":
             return "AUG"
-        case "09":
+        case "09", "9":
             return "SEP"
         case "10":
             return "OCT"
