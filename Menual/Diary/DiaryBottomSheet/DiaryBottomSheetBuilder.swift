@@ -11,7 +11,7 @@ import RxRelay
 
 // 사용하려고 하는 곳에만 Dependency 설정
 extension DiaryBottomSheetDependency {
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { nil }
+    var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { nil }
     var isHideMenualRelay: BehaviorRelay<Bool>? { nil }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { nil }
 }
@@ -25,14 +25,14 @@ protocol DiaryBottomSheetDependency: Dependency {
     var filteredDateDiaryCountRelay: BehaviorRelay<Int>? { get }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
+    var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
     var isHideMenualRelay: BehaviorRelay<Bool>? { get }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
 }
 
 final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency>, DiaryWritingDependency, DiaryBottomSheetInteractorDependency {
 
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { dependency.reminderRequestDateRelay }
+    var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { dependency.reminderRequestDateRelay }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { dependency.filteredWeatherArrRelay }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { dependency.filteredPlaceArrRelay }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDiaryCountRelay }

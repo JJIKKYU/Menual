@@ -51,7 +51,7 @@ protocol DiaryBottomSheetPresentableListener: AnyObject {
     // MenualBottomSheetReminderComponentView
     func reminderCompViewshowToast(isEding: Bool)
     func reminderCompViewSetReminder(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date)
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
+    var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
     // var filteredDiaryCountRelay: BehaviorRelay<Int>? { get set }
 }
@@ -642,11 +642,10 @@ extension DiaryBottomSheetViewController {
 // MARK: - ReminderComponentView
 extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentViewDelegate {
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? {
-        print("DiaryBottomSheet :: isEnabledReminderRelay = \(listener?.isEnabledReminderRelay)")
-        return listener?.isEnabledReminderRelay
+        listener?.isEnabledReminderRelay
     }
     
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? {
+    var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? {
         listener?.reminderRequestDateRelay
     }
     
@@ -663,8 +662,22 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
 //        }
 //
         
+        switch isEditing {
+        case true:
+            print("DiaryBottomSheet :: 수정모드 이므로 팝업 띄웁니다")
+
+        case false:
+            print("DiaryBottomSheet :: 새로 등록하므로 팝업 안띄웁니다.")
+        }
+        
         listener?.reminderCompViewshowToast(isEding: isEditing)
-        listener?.reminderCompViewSetReminder(isEditing: isEditing, requestDateComponents: requestDateComponents, requestDate: requestDate)
+        
+        let model = ReminderRequsetModel(isEditing: isEditing,
+                                         requestDateComponents: requestDateComponents,
+                                         requestDate: requestDate
+        )
+        listener?.reminderRequestDateRelay?.accept(model)
+        // listener?.reminderCompViewSetReminder(isEditing: isEditing, requestDateComponents: requestDateComponents, requestDate: requestDate)
         hideBottomSheetAndGoBack()
     }
     

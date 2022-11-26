@@ -65,6 +65,7 @@
 		985BFF732927E7D200D86106 /* FilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF722927E7D200D86106 /* FilterModel.swift */; };
 		985BFF7529290E9A00D86106 /* MomentsEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7429290E9A00D86106 /* MomentsEmptyView.swift */; };
 		985BFF772930A15400D86106 /* DateFilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF762930A15400D86106 /* DateFilterModel.swift */; };
+		985BFF7929320FDC00D86106 /* ReminderRequsetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7829320FDC00D86106 /* ReminderRequsetModel.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -331,6 +332,7 @@
 		985BFF722927E7D200D86106 /* FilterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterModel.swift; sourceTree = "<group>"; };
 		985BFF7429290E9A00D86106 /* MomentsEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsEmptyView.swift; sourceTree = "<group>"; };
 		985BFF762930A15400D86106 /* DateFilterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFilterModel.swift; sourceTree = "<group>"; };
+		985BFF7829320FDC00D86106 /* ReminderRequsetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderRequsetModel.swift; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
 		985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDBuilder.swift; sourceTree = "<group>"; };
@@ -1045,6 +1047,7 @@
 				985BFF6729249B8D00D86106 /* ReminderModel.swift */,
 				985BFF722927E7D200D86106 /* FilterModel.swift */,
 				985BFF762930A15400D86106 /* DateFilterModel.swift */,
+				985BFF7829320FDC00D86106 /* ReminderRequsetModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1834,6 +1837,7 @@
 				9843929B29053CEC00EF526E /* DiaryDetailImageBuilder.swift in Sources */,
 				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				98B557BE2841D11900F8CA3E /* ListViewController.swift in Sources */,
+				985BFF7929320FDC00D86106 /* ReminderRequsetModel.swift in Sources */,
 				98B5574D281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift in Sources */,
 				988A2D5A27F97A000046C43A /* DiaryMomentsBuilder.swift in Sources */,
 				984392B52917601C00EF526E /* ProfilePasswordViewController.swift in Sources */,

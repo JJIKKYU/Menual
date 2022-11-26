@@ -13,7 +13,7 @@ import RxRelay
 import RxViewController
 
 protocol MenualBottomSheetReminderComponentViewDelegate {
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
+    var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
     func pressedQuestionBtn()
     func pressedIsEnabledSwitchBtn(isEnabled: Bool)
     func pressedSelectBtn(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date)
@@ -250,7 +250,7 @@ class MenualBottomSheetReminderComponentView: UIView {
                     return
                 }
                 
-                if selectedDate == self.delegate?.reminderRequestDateRelay?.value?.day ?? 0 {
+                if selectedDate == self.delegate?.reminderRequestDateRelay?.value?.requestDateComponents?.day ?? 0 {
                     print("Reminder :: 이미 선택했던 날짜와 같을 경우")
                     self.selectBtn.btnStatus = .inactive
                     self.selectBtn.isUserInteractionEnabled = false
@@ -267,12 +267,17 @@ class MenualBottomSheetReminderComponentView: UIView {
             .disposed(by: disposedBag)
         
         delegate?.reminderRequestDateRelay?
-            .subscribe(onNext: { [weak self] requestDate in
-                guard let self = self else { return }
+            .subscribe(onNext: { [weak self] model in
+                guard let self = self,
+                      let model = model
+                else {
+                    self?.isEditingMode = false
+                    return
+                }
                 if self.pressedSelctBtn == true { return }
-                print("Reminder :: requestDate = \(requestDate)")
+                print("Reminder :: requestDate = \(model.requestDate)")
                 
-                guard let requestDate = requestDate else {
+                guard let requestDate = model.requestDateComponents else {
                     print("Reminder :: requestDate가 없으므로 return 합니다.")
                     self.isEditingMode = false
                     return
@@ -298,10 +303,11 @@ class MenualBottomSheetReminderComponentView: UIView {
             calendarCollectionView.rx.observe(CGSize.self, "contentSize")
         )
         // calendarCollectionView.rx.observe(CGSize.self, "contentSize")
-            .subscribe(onNext: { [weak self] requestDate, size in
+            .subscribe(onNext: { [weak self] (data: (ReminderRequsetModel?, CGSize?)) in
                 // if size?.height ?? 0 < 290 { return }
                 guard let self = self,
-                      let requestDate = requestDate
+                      let model = data.0,
+                      let requestDate = model.requestDateComponents
                 else { return }
                 if self.pressedSelctBtn == true { return }
                 // if self.isInitSetting == true { return }
@@ -316,7 +322,7 @@ class MenualBottomSheetReminderComponentView: UIView {
                 guard let selectedDate = requestDate.day else { return }
                 let calcDate = (selectedDate - 1) + (self.firstWeekDayOfMonth - 1)
 
-                print("Reminder :: Size! = \(size)")
+                // print("Reminder :: Size! = \(size)")
                 self.calendarCollectionView.selectItem(at: IndexPath(row: calcDate, section: 0), animated: false, scrollPosition: .top)
                 self.collectionView(self.calendarCollectionView, didSelectItemAt: IndexPath(row: calcDate, section: 0))
                 

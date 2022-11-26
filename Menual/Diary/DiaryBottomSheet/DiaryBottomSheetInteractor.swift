@@ -42,7 +42,7 @@ protocol DiaryBottomSheetInteractorDependency {
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { get }
+    var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
     var isHideMenualRelay: BehaviorRelay<Bool>? { get }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
 }
@@ -60,7 +60,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { dependency.filteredWeatherArrRelay }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { dependency.filteredPlaceArrRelay }
     var filteredDateRelay: BehaviorRelay<Date?>? { dependency.filteredDateRelay }
-    var reminderRequestDateRelay: BehaviorRelay<DateComponents?>? { dependency.reminderRequestDateRelay }
+    var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { dependency.reminderRequestDateRelay }
     var isHideMenualRelay: BehaviorRelay<Bool>? { dependency.isHideMenualRelay }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { dependency.isEnabledReminderRelay }
 
@@ -136,11 +136,17 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         }
         
         dependency.reminderRequestDateRelay?
-            .subscribe(onNext: { [weak self] date in
+            .subscribe(onNext: { [weak self] model in
                 guard let self = self else { return }
                 print("DiaryBottomSheet :: 나중에 수정 만들때 하면 될듯")
+                
+                let isEnabled: Bool = model == nil ? false : true
+                self.presenter.setCurrentReminderData(isEnabled: isEnabled, dateComponets: model?.requestDateComponents)
+                
+                /*
                 let isEnabled: Bool = date == nil ? false : true
                 self.presenter.setCurrentReminderData(isEnabled: isEnabled, dateComponets: date)
+                 */
             })
             .disposed(by: disposeBag)
         
@@ -199,8 +205,9 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     }
 
     func reminderCompViewSetReminder(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date) {
-        self.reminderRequestDateRelay?.accept(requestDateComponents)
+        // self.reminderRequestDateRelay?.accept(requestDateComponents)
     }
+    
     
     // MARK: - DateFilater
     func filterDatePressedFilterBtn() {
