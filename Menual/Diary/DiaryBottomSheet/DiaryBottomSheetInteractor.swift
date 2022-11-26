@@ -22,6 +22,7 @@ protocol DiaryBottomSheetPresentable: Presentable {
     func setCurrentFilteredBtn(weatherArr: [Weather], placeArr: [Place])
     func setCurrentReminderData(isEnabled: Bool, dateComponets: DateComponents?)
     func setDateFilteredRelay()
+    func setHideBtnTitle(isHide: Bool)
 }
 
 protocol DiaryBottomSheetListener: AnyObject {
@@ -32,7 +33,6 @@ protocol DiaryBottomSheetListener: AnyObject {
     func filterWithWeatherPlacePressedFilterBtn()
     func reminderCompViewshowToast(isEding: Bool)
     func filterDatePressedFilterBtn()
-    func setHideBtnTitle(isHide: Bool)
 }
 
 protocol DiaryBottomSheetInteractorDependency {
@@ -154,6 +154,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
             .subscribe(onNext: { [weak self] isHide in
                 guard let self = self else { return }
                 print("DiaryBottomSheet :: isHide = \(isHide)")
+                self.presenter.setHideBtnTitle(isHide: isHide)
             })
             .disposed(by: disposeBag)
         

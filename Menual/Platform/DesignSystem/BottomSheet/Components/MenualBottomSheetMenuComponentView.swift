@@ -121,6 +121,7 @@ class MenualBottomSheetMenuComponentView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        print("DiaryBottomSheet :: Hide \(isHide)")
         
         switch isHide {
         case false:

@@ -429,5 +429,4 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 extension DiaryDetailInteractor {
     func filterWithWeatherPlacePressedFilterBtn() { }
     func filterDatePressedFilterBtn() { }
-    func setHideBtnTitle(isHide: Bool) { }
 }

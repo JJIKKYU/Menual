@@ -492,6 +492,7 @@ extension DiaryBottomSheetViewController {
 // MARK: - MenualBottomSheetMenulComponentView
 extension DiaryBottomSheetViewController {
     func setHideBtnTitle(isHide: Bool) {
+        print("DiaryBottomSheet :: setHideBtnTitle = \(isHide)")
         menuComponentView.isHide = isHide
     }
 }

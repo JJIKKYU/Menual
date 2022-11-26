@@ -372,5 +372,4 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 // MARK: - 미사용
 extension DiaryHomeInteractor {
     func reminderCompViewshowToast(isEding: Bool) { }
-    func setHideBtnTitle(isHide: Bool) { }
 }
