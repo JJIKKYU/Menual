@@ -24,7 +24,6 @@ final class DiaryDetailImageViewController: UIViewController, DiaryDetailImagePr
     
     lazy var naviView = MenualNaviView(type: .detailImage).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        
         $0.rightButton1.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
     }
     
@@ -70,7 +69,7 @@ final class DiaryDetailImageViewController: UIViewController, DiaryDetailImagePr
     }
     
     func setViews() {
-        view.backgroundColor = Colors.background
+        view.backgroundColor = .black
     
         view.addSubview(naviView)
         view.addSubview(scrollView)
@@ -79,15 +78,15 @@ final class DiaryDetailImageViewController: UIViewController, DiaryDetailImagePr
         
         naviView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+            make.height.equalTo(54)
             make.top.equalToSuperview()
             make.width.equalToSuperview()
         }
         
         scrollView.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
-            make.top.equalTo(naviView.snp.bottom)
-            make.bottom.equalToSuperview().inset(107)
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
         
         imageView.snp.makeConstraints { make in

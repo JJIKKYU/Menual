@@ -12,6 +12,8 @@ protocol DiaryDetailInteractable: Interactable, DiaryBottomSheetListener, DiaryW
     var router: DiaryDetailRouting? { get set }
     var listener: DiaryDetailListener? { get set }
     func pressedBackBtn(isOnlyDetach: Bool)
+    
+    var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
 }
 
 protocol DiaryDetailViewControllable: ViewControllable {
@@ -153,7 +155,10 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
             imageDataRelay: imageDataRelay
         )
 
-        presentInsideNavigation(router.viewControllable, style: .fullScreen)
+        let navigation = NavigationControllerable(root: router.viewControllable)
+        navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
+        viewControllable.present(navigation, animated: true, completion: nil)
+        // presentInsideNavigation(navigation, style: .popover)
         
         diaryDetailImageRouting = router
         attachChild(router)
@@ -166,7 +171,8 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
         }
         
         if !isOnlyDetach {
-            dismissPresentedNavigation(completion: nil)
+            // dismissPresentedNavigation(completion: nil)
+            viewControllable.dismiss(completion: nil)
         }
         
         detachChild(router)

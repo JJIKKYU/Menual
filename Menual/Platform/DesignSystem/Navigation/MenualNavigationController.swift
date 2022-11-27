@@ -253,8 +253,8 @@ class MenualNaviView: UIView {
             
         case .detailImage:
             titleLabel.isHidden = false
-            titleLabel.text = "사진보기"
-            titleLabel.font = UIFont.AppTitle(.title_3)
+            titleLabel.text = ""
+            backgroundColor = .clear
             backButton.isHidden = true
             rightButton1.isHidden = false
             rightButton1.tintColor = Colors.grey.g100
@@ -326,6 +326,7 @@ class MenualNaviView: UIView {
         case .writePicture:
             break
         case .detailImage:
+            backgroundColor = .clear
             break
         }
     }

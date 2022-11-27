@@ -41,11 +41,13 @@ protocol DiaryDetailListener: AnyObject {
     func diaryDeleteNeedToast(isNeedToast: Bool)
 }
 
-final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>, DiaryDetailInteractable, DiaryDetailPresentableListener {
+final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>, DiaryDetailInteractable, DiaryDetailPresentableListener, AdaptivePresentationControllerDelegate {
     
     var diaryReplies: [DiaryReplyModel]
     var currentDiaryPage: Int
     var diaryModel: DiaryModel?
+    
+    let presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
     
     private var disposebag = DisposeBag()
     private let changeCurrentDiarySubject = BehaviorSubject<Bool>(value: false)
@@ -76,12 +78,15 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         diaryModel: DiaryModel,
         dependency: DiaryDetailInteractorDependency
     ) {
+        self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
         self.diaryModel = diaryModel
         self.dependency = dependency
         self.diaryReplies = diaryModel.replies
         self.currentDiaryPage = diaryModel.pageNum
         super.init(presenter: presenter)
         presenter.listener = self
+        
+        self.presentationDelegateProxy.delegate = self
         
         print("interactor = \(diaryModel)")
         presenter.loadDiaryDetail(model: diaryModel)
@@ -417,13 +422,17 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     func pressedImageView() {
         print("DiaryDetail :: interactor -> pressedImageView!")
-        guard let imageData: Data = diaryModel?.originalImage?.pngData() else { return }
+        guard let _: Data = diaryModel?.originalImage?.pngData() else { return }
         router?.attachDiaryDetailImage(imageDataRelay: self.imageDataRelay)
     }
 
     func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryHomeViewController.ShowToastType) {
         print("DiaryDetail :: diaryWritingPressedBackBtn! ")
         router?.detachDiaryWriting(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func presentationControllerDidDismiss() {
+        router?.detachDiaryDetailImage(isOnlyDetach: true)
     }
 }
  
