@@ -11,7 +11,6 @@ import RxRelay
 import SnapKit
 import UIKit
 import PhotosUI
-import ImageCropper
 import CropViewController
 
 protocol DiaryWritingPresentableListener: AnyObject {

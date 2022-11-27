@@ -220,6 +220,11 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 listener?.pressedProfilePasswordCell()
             } else if data.title == "비밀번호 변경하기" {
                 listener?.pressedProfilePasswordCell()
+            } else if data.title == "메뉴얼 가이드 보기" {
+                //사파리로 링크열기
+                if let url = URL(string: "http://naver.com") {
+                    UIApplication.shared.open(url, options: [:])
+                }
             }
 //            if data.type == .toggle {
 //                cell.switchBtn.isOn = !cell.switchBtn.isOn
