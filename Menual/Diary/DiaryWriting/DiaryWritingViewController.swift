@@ -1110,7 +1110,7 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
         // picker.pushViewController(cropVC, animated: true)
         let cropVC = CustomCropViewController(image: newImage)
         cropVC.cropVCNaviViewType = .close
-        self.cropVC = cropVC
+        // self.cropVC = cropVC
         cropVC.delegate = self
         self.selectedOriginalImage = newImage
         dismiss(animated: true) {
