@@ -13,7 +13,7 @@ protocol ProfileHomeDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
 }
 
-final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency, ProfileDeveloperDependency, ProfileHomeInteractorDependency {
+final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency, ProfileDeveloperDependency, ProfileHomeInteractorDependency, ProfileOpensourceDependency {
 
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
@@ -37,6 +37,7 @@ final class ProfileHomeBuilder: Builder<ProfileHomeDependency>, ProfileHomeBuild
         
         let profilePasswordBuildable = ProfilePasswordBuilder(dependency: component)
         let profileDveloperBuildable = ProfileDeveloperBuilder(dependency: component)
+        let profileOpensourceBuildable = ProfileOpensourceBuilder(dependency: component)
         
         let viewController = ProfileHomeViewController()
         let interactor = ProfileHomeInteractor(
@@ -49,7 +50,8 @@ final class ProfileHomeBuilder: Builder<ProfileHomeDependency>, ProfileHomeBuild
             interactor: interactor,
             viewController: viewController,
             profilePasswordBuildable: profilePasswordBuildable,
-            profileDeveloperBuildable: profileDveloperBuildable
+            profileDeveloperBuildable: profileDveloperBuildable,
+            profileOpensourceBuildable: profileOpensourceBuildable
         )
     }
 }

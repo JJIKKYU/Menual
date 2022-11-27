@@ -15,6 +15,9 @@ protocol ProfileHomeRouting: ViewableRouting {
     
     func attachProfileDeveloper()
     func detachProfileDeveloper(isOnlyDetach: Bool)
+    
+    func attachProfileOpensource()
+    func detachProfileOpensource(isOnlyDetach: Bool)
 }
 
 protocol ProfileHomePresentable: Presentable {
@@ -144,6 +147,15 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     func pressedProfileDeveloperCell() {
         router?.attachProfileDeveloper()
+    }
+    
+    // MARK: - ProfileOpensource (오픈 소스 라이브러리 보기)
+    func profileOpensourcePressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachProfileOpensource(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedProfileOpensourceCell() {
+        router?.attachProfileOpensource()
     }
     
     func goDiaryHome() { }

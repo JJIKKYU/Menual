@@ -22,6 +22,9 @@ protocol ProfileHomePresentableListener: AnyObject {
     // ProfileDeveloper
     func pressedProfileDeveloperCell()
     var isEnabledPasswordRelay: BehaviorRelay<Bool> { get }
+    
+    // ProfileOpensource
+    func pressedProfileOpensourceCell()
 }
 
 enum ProfileHomeSection: Int {
@@ -226,6 +229,9 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             if data.title == "개발자 도구" {
                 print("ProfileHome :: 개발자 도구 호출!")
                 listener?.pressedProfileDeveloperCell()
+            } else if data.title == "오픈 소스 라이브러리 보기" {
+                print("ProfileHome :: 오픈 소스 라이브러리 보기 호출!")
+                listener?.pressedProfileOpensourceCell()
             }
             break
         default:

@@ -70,6 +70,10 @@
 		985BFF7D29323AD100D86106 /* Array+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7C29323AD100D86106 /* Array+Util.swift */; };
 		985BFF7F29323DC400D86106 /* UIScrollView+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7E29323DC400D86106 /* UIScrollView+Util.swift */; };
 		985BFF8129335AE900D86106 /* UINavigationController+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF8029335AE900D86106 /* UINavigationController+Util.swift */; };
+		985BFF872933721700D86106 /* ProfileOpensourceRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF832933721700D86106 /* ProfileOpensourceRouter.swift */; };
+		985BFF882933721700D86106 /* ProfileOpensourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF842933721700D86106 /* ProfileOpensourceViewController.swift */; };
+		985BFF892933721700D86106 /* ProfileOpensourceBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF852933721700D86106 /* ProfileOpensourceBuilder.swift */; };
+		985BFF8A2933721700D86106 /* ProfileOpensourceInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF862933721700D86106 /* ProfileOpensourceInteractor.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -340,6 +344,10 @@
 		985BFF7C29323AD100D86106 /* Array+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Util.swift"; sourceTree = "<group>"; };
 		985BFF7E29323DC400D86106 /* UIScrollView+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Util.swift"; sourceTree = "<group>"; };
 		985BFF8029335AE900D86106 /* UINavigationController+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Util.swift"; sourceTree = "<group>"; };
+		985BFF832933721700D86106 /* ProfileOpensourceRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceRouter.swift; sourceTree = "<group>"; };
+		985BFF842933721700D86106 /* ProfileOpensourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceViewController.swift; sourceTree = "<group>"; };
+		985BFF852933721700D86106 /* ProfileOpensourceBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceBuilder.swift; sourceTree = "<group>"; };
+		985BFF862933721700D86106 /* ProfileOpensourceInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceInteractor.swift; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
 		985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDBuilder.swift; sourceTree = "<group>"; };
@@ -808,6 +816,17 @@
 			path = ProfileDeveloper;
 			sourceTree = "<group>";
 		};
+		985BFF82293371F400D86106 /* ProfileOpensource */ = {
+			isa = PBXGroup;
+			children = (
+				985BFF832933721700D86106 /* ProfileOpensourceRouter.swift */,
+				985BFF842933721700D86106 /* ProfileOpensourceViewController.swift */,
+				985BFF852933721700D86106 /* ProfileOpensourceBuilder.swift */,
+				985BFF862933721700D86106 /* ProfileOpensourceInteractor.swift */,
+			);
+			path = ProfileOpensource;
+			sourceTree = "<group>";
+		};
 		985E0EF027C21DD700057951 /* RegistreID */ = {
 			isa = PBXGroup;
 			children = (
@@ -1069,6 +1088,7 @@
 		98934A9327E6F11100178A8E /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				985BFF82293371F400D86106 /* ProfileOpensource */,
 				985BFF692924C35000D86106 /* ProfileDeveloper */,
 				984392AF29175F5800EF526E /* ProfilePassword */,
 				98934A9427E6F11E00178A8E /* ProfileHome */,
@@ -1770,6 +1790,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				985BFF732927E7D200D86106 /* FilterModel.swift in Sources */,
+				985BFF872933721700D86106 /* ProfileOpensourceRouter.swift in Sources */,
 				988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */,
 				98B557BF2841D11900F8CA3E /* ListBuilder.swift in Sources */,
 				98A56C6128676AC2000AC4FF /* WeatherLocationSelectView.swift in Sources */,
@@ -1783,6 +1804,7 @@
 				983CDF5328FBF14D001E2A2D /* EmptyViewViewController.swift in Sources */,
 				98EADB9028432A3F007C298C /* TabsCell.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
+				985BFF882933721700D86106 /* ProfileOpensourceViewController.swift in Sources */,
 				98EADBA128438039007C298C /* PaginationInteractor.swift in Sources */,
 				984392902903A8E000EF526E /* CustomCropViewController.swift in Sources */,
 				9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */,
@@ -1869,6 +1891,8 @@
 				98EADBAC284E475C007C298C /* DividerView.swift in Sources */,
 				98F3A27F28150052000851F0 /* DiaryBottomSheetViewController.swift in Sources */,
 				9888DE142764825F0091918F /* AppRootRouter.swift in Sources */,
+				985BFF8A2933721700D86106 /* ProfileOpensourceInteractor.swift in Sources */,
+				985BFF892933721700D86106 /* ProfileOpensourceBuilder.swift in Sources */,
 				98536EAD291CB74400A72B8E /* ToastViewController.swift in Sources */,
 				98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */,
 				984392CE2917C34000EF526E /* PasswordModel.swift in Sources */,

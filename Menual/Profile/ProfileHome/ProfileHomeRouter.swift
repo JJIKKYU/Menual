@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol ProfileHomeInteractable: Interactable, ProfilePasswordListener, ProfileDeveloperListener {
+protocol ProfileHomeInteractable: Interactable, ProfilePasswordListener, ProfileDeveloperListener, ProfileOpensourceListener {
     var router: ProfileHomeRouting? { get set }
     var listener: ProfileHomeListener? { get set }
 }
@@ -25,16 +25,21 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
     
     private var profileDeveloperBuildable: ProfileDeveloperBuildable
     private var profileDeveloperRouting: Routing?
+    
+    private var profileOpensourceBuildable: ProfileOpensourceBuildable
+    private var profileOpensourceRouting: Routing?
 
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: ProfileHomeInteractable,
         viewController: ProfileHomeViewControllable,
         profilePasswordBuildable: ProfilePasswordBuildable,
-        profileDeveloperBuildable: ProfileDeveloperBuildable
+        profileDeveloperBuildable: ProfileDeveloperBuildable,
+        profileOpensourceBuildable: ProfileOpensourceBuildable
     ) {
         self.profilePasswordBuildable = profilePasswordBuildable
         self.profileDeveloperBuildable = profileDeveloperBuildable
+        self.profileOpensourceBuildable = profileOpensourceBuildable
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
     }
@@ -116,5 +121,31 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
         
         detachChild(router)
         profileDeveloperRouting = nil
+    }
+    
+    // MARK: - Profile Opensource (오픈소스라이브러리 보기)
+    func attachProfileOpensource() {
+        if profileOpensourceRouting != nil {
+            return
+        }
+        
+        let router = profileOpensourceBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        profileOpensourceRouting = router
+        attachChild(router)
+    }
+    
+    func detachProfileOpensource(isOnlyDetach: Bool) {
+        guard let router = profileOpensourceRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        profileOpensourceRouting = nil
     }
 }
