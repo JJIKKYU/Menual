@@ -94,6 +94,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     }
     
     private lazy var weatherPlaceToolbarView = WeatherPlaceToolbarView().then {
+        $0.clipsToBounds = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
         $0.isHidden = true
@@ -238,13 +239,11 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         setViews()
         bind()
         self.datePageTextCountView.date = Date().toString()
-
-        locationSelectView.selectTextView.inputAccessoryView = weatherPlaceToolbarView
-        weatherSelectView.selectTextView.inputAccessoryView = weatherPlaceToolbarView
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        print("DiaryWriting :: viewWillAppear")
 
         // keyboard observer등록
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -268,11 +267,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        print("DiaryWriting :: ViewDidDisAppear!")
         
         // Keyboard observer해제
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        // NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: notificationIdentifier), object: nil)
+         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: notificationIdentifier), object: nil)
         
         // Delegate 해제
         weatherPlaceToolbarView.delegate = nil
@@ -282,6 +282,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         locationSelectView.selectTextView.delegate = nil
         cropVC?.delegate = nil
         pullDownImageButton.menu = nil
+        pullDownImageButtonEditBtn.menu = nil
         // testImagePicker.delegate = nil
         
         if isMovingFromParent || isBeingDismissed {
@@ -309,8 +310,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         self.view.addSubview(naviView)
         self.view.addSubview(scrollView)
         self.view.addSubview(weatherPlaceToolbarView)
-        self.view.addSubview(pullDownImageButton)
-        self.view.addSubview(pullDownImageButtonEditBtn)
         
         scrollView.addSubview(titleTextField)
         scrollView.addSubview(divider1)
@@ -322,6 +321,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         scrollView.addSubview(datePageTextCountView)
         scrollView.addSubview(divider4)
         scrollView.addSubview(imageUploadView)
+        scrollView.addSubview(pullDownImageButton)
+        scrollView.addSubview(pullDownImageButtonEditBtn)
         self.view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
@@ -404,7 +405,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(divider4.snp.bottom).offset(16)
             make.height.equalTo(110)
-            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview().inset(40)
         }
         
         pullDownImageButton.snp.makeConstraints { make in
@@ -418,7 +419,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         weatherPlaceToolbarView.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
-            make.top.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview()
             make.height.equalTo(130)
         }
     }
@@ -761,25 +762,10 @@ extension DiaryWritingViewController {
     }
     
     @objc
-    func pressedWeatherAddBtn() {
-        print("pressedWeatherAddBtn")
-
-        titleTextField.inputAccessoryView?.isHidden = false
-        descriptionTextView.inputAccessoryView?.isHidden = false
-        view.layoutIfNeeded()
-    }
-    
-    @objc
-    func pressedPlaceAddBtn() {
-        titleTextField.inputAccessoryView?.isHidden = false
-        descriptionTextView.inputAccessoryView?.isHidden = false
-        view.layoutIfNeeded()
-    }
-    
-    @objc
     func pressedTempSaveBtn() {
-        print("pressedTempSaveBtn")
-        listener?.pressedTempSaveBtn()
+        print("DiaryWriting :: pressedTempSaveBtn")
+        // listener?.pressedTempSaveBtn()
+        view.endEditing(true)
     }
     
     @objc
@@ -860,8 +846,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
         print("DiaryWriting :: textViewShouldBeginEditing")
         
         if textView == descriptionTextView {
-            titleTextField.inputAccessoryView?.isHidden = true
-            descriptionTextView.inputAccessoryView?.isHidden = true
+            weatherPlaceToolbarView.isHidden = true
         }
 
         switch textView.tag {
@@ -1124,7 +1109,16 @@ extension DiaryWritingViewController {
     func keyboardWillShow(_ notification: NSNotification) {
         guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
         print("DiaryWriting :: keyboardWillShow! - \(keyboardHeight)")
+        
+        var height: CGFloat = keyboardHeight
+        if weatherPlaceToolbarView.isHidden == false {
+            height += 130
+        }
         scrollView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview().inset(height)
+        }
+        
+        weatherPlaceToolbarView.snp.updateConstraints { make in
             make.bottom.equalToSuperview().inset(keyboardHeight)
         }
     }
@@ -1133,6 +1127,10 @@ extension DiaryWritingViewController {
     func keyboardWillHide(_ notification: NSNotification) {
         print("DiaryWriting :: keyboardWillHide!")
         scrollView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview()
+        }
+        
+        weatherPlaceToolbarView.snp.updateConstraints { make in
             make.bottom.equalToSuperview()
         }
     }
