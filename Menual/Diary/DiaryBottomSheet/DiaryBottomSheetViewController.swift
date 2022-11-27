@@ -327,7 +327,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .dateFilter:
-            bottomSheetTitle = "필터"
+            bottomSheetTitle = "날짜"
             dateFilterComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
