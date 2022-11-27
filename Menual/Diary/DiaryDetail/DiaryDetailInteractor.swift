@@ -101,6 +101,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 //                    .loadImageFromDocumentDirectory(imageName: diaryModel.uuid, completionHandler: { image in
 //                        self.presenter.testLoadDiaryImage(imageName:image)
 //                    })
+                self.diaryModel = currentDiaryModel
                 self.diaryReplies = currentDiaryModel.replies
                 self.currentDiaryPage = currentDiaryModel.pageNum
                 if let imageData: Data = currentDiaryModel.originalImage?.pngData() {

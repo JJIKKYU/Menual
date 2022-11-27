@@ -249,11 +249,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         print("DiaryDetail :: presentingVC = \(presentingViewController?.classForCoder)")
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        print("DiaryDetail :: viewDidLayoutSubviews!")
-    }
+
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
@@ -659,17 +655,6 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
    {
        return UITableView.automaticDimension
    }
-    
-//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return UITableView.automaticDimension
-//    }
-    
-
-//   func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//
-//       return UITableView.automaticDimension
-//
-//   }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listener?.diaryReplies.count ?? 0
