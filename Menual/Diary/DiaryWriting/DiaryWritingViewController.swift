@@ -315,7 +315,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         weatherSelectView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview()
+            make.width.equalToSuperview().inset(20)
             make.height.equalTo(24)
             make.top.equalTo(divider1.snp.bottom).offset(13)
         }
@@ -329,7 +329,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         locationSelectView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview()
+            make.width.equalToSuperview().inset(20)
             make.height.equalTo(24)
             make.top.equalTo(divider2.snp.bottom).offset(12)
         }

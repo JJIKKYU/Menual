@@ -140,24 +140,6 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             })
             .disposed(by: disposebag)
         
-        /*
-        dependency.diaryRepository
-            .weatherHistory
-            .subscribe(onNext: { [weak self] model in
-                guard let self = self else { return }
-                print("DiaryWritingInteractor :: weatherHistory = \(model)")
-            })
-            .disposed(by: disposebag)
-        
-        dependency.diaryRepository
-            .placeHistory
-            .subscribe(onNext: { [weak self] model in
-                guard let self = self else { return }
-                print("DiaryWritingInteractor :: placeHistory = \(model)")
-            })
-            .disposed(by: disposebag)
-        */
-        
         diaryModelRelay
             .subscribe(onNext: { [weak self] diaryModel in
                 guard let self = self,
@@ -230,6 +212,15 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         
         dependency.diaryRepository
             .addDiary(info: newDiaryModel)
+        
+        // 임시 저장된 메뉴얼이 있을 경우 삭제하고 업로드
+        
+        if let tempSaveModel = tempSaveDiaryModelRelay.value {
+            print("DiaryWriting :: 임시저장된 메뉴얼이 있습니다. 같이 삭제를 진행합니다.")
+            let uuid = tempSaveModel.uuid
+            dependency.diaryRepository
+                .deleteTempSave(uuidArr: [uuid])
+        }
         
         listener?.diaryWritingPressedBackBtn(isOnlyDetach: false, isNeedToast: true, mode: .writing)
     }
