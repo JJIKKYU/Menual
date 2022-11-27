@@ -19,8 +19,17 @@ class CustomCropViewController: CropViewController {
         case close
     }
     
+    enum CropVCButtonType {
+        case add
+        case edit
+    }
+    
     public var cropVCNaviViewType: CropVCNaviViewType = .backArrow {
         didSet { setNaviViewType() }
+    }
+    
+    public var cropVCButtonType: CropVCButtonType = .add {
+        didSet { setButtonType() }
     }
     
     private lazy var naviView = MenualNaviView(type: .writePicture).then {
@@ -101,15 +110,29 @@ class CustomCropViewController: CropViewController {
     }
 
     func setNaviViewType() {
-        switch cropVCNaviViewType {
-        case .backArrow:
-            naviView.naviViewType = .writePicture
+        DispatchQueue.main.async {
+            switch self.cropVCNaviViewType {
+            case .backArrow:
+                self.naviView.naviViewType = .writePicture
 
-        case .close:
-            naviView.naviViewType = .writePictureClose
+            case .close:
+                self.naviView.naviViewType = .writePictureClose
+            }
+            
+            self.naviView.setNaviViewType()
+        }
+    }
+    
+    func setButtonType() {
+        DispatchQueue.main.async {
+            switch self.cropVCButtonType {
+            case .add:
+                self.customDoneButton.title = "사진 추가하기"
+            case .edit:
+                self.customDoneButton.title = "사진 수정하기"
+            }
         }
         
-        naviView.setNaviViewType()
     }
 }
 

@@ -178,7 +178,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     
     private lazy var imageUploadView = ImageUploadView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.uploadBtn.addTarget(self, action: #selector(pressedImageUploadView), for: .touchUpInside)
         $0.deleteBtn.addTarget(self, action: #selector(pressedImageUploadViewDeleteBtn), for: .touchUpInside)
         $0.editBtn.addTarget(self, action: #selector(pressedImageUploadViewEditBtn), for: .touchUpInside)
     }
@@ -186,7 +185,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     private lazy var pullDownImageButton = UIButton(frame: .zero).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
-        $0.addTarget(self, action: #selector(pressedImageUploadView), for: .touchUpInside)
+        $0.showsMenuAsPrimaryAction = true
+    }
+    
+    private lazy var pullDownImageButtonEditBtn = UIButton(frame: .zero).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .clear
         $0.showsMenuAsPrimaryAction = true
     }
     
@@ -306,6 +310,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         self.view.addSubview(scrollView)
         self.view.addSubview(weatherPlaceToolbarView)
         self.view.addSubview(pullDownImageButton)
+        self.view.addSubview(pullDownImageButtonEditBtn)
         
         scrollView.addSubview(titleTextField)
         scrollView.addSubview(divider1)
@@ -406,6 +411,11 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.leading.width.height.top.equalTo(imageUploadView.uploadedImageView)
         }
         
+        pullDownImageButtonEditBtn.snp.makeConstraints { make in
+            make.leading.top.equalTo(imageUploadView.editBtn)
+            make.width.height.equalTo(24)
+        }
+        
         weatherPlaceToolbarView.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
             make.top.equalToSuperview().inset(20)
@@ -414,7 +424,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     }
     
     func bind() {
-
         descriptionTextView.rx.text
             .orEmpty
             .distinctUntilChanged()
@@ -604,11 +613,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
              print("DiaryWriting :: action! = \(action)")
             self.pressedTakeImagePullDownBtn()
         }
-
-        pullDownImageButton.menu = UIMenu(title: "타이틀",
-                                          image: nil,
-                                          identifier: nil,
-                                          children: [takeImage, uploadImage])
+        pullDownImageButton.menu = UIMenu(children: [takeImage, uploadImage])
+        pullDownImageButtonEditBtn.menu = UIMenu(children: [takeImage, uploadImage])
     }
     
     // tempSaveModel로 만들기 위해서 오물락조물락
@@ -755,29 +761,6 @@ extension DiaryWritingViewController {
     }
     
     @objc
-    func pressedImageUploadView() {
-        print("DiaryWriting :: pressedImageUploadView!")
-        
-        
-        
-        /*
-        phpickerConfiguration.filter = .images
-        phpickerConfiguration.selectionLimit = 1
-        imagePicker.isEditing = true
-        // present(imagePicker, animated: true, completion: nil)
-//        testImagePicker.modalPresentationStyle = .fullScreen
-        
-//        present(testImagePicker, animated: true)
-        let navigationController = UINavigationController(rootViewController: imagePicker)
-//        let navigationController = UINavigationController(rootViewController: testImagePicker)
-        navigationController.modalPresentationStyle = .overFullScreen
-        navigationController.navigationBar.isHidden = true
-        navigationController.isNavigationBarHidden = true
-        present(navigationController, animated: true, completion: nil)
-        */
-    }
-    
-    @objc
     func pressedWeatherAddBtn() {
         print("pressedWeatherAddBtn")
 
@@ -803,7 +786,7 @@ extension DiaryWritingViewController {
     func pressedImageUploadViewEditBtn() {
         print("DiaryWriting :: pressedImageUploadViewEditBtn")
         // 따로 추가 기능이 없으므로 그대로 랜딩
-        pressedImageUploadView()
+        // pressedImageUploadView()
     }
     
     @objc
@@ -1076,6 +1059,14 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                         if let image = image as? UIImage {
                             let cropVC = CustomCropViewController(image: image)
                             cropVC.cropVCNaviViewType = .backArrow
+                            
+                            switch self.writingType {
+                            case .writing:
+                                cropVC.cropVCButtonType = .add
+                            case .edit:
+                                cropVC.cropVCButtonType = .edit
+                            }
+                            
                             self.cropVC = cropVC
                             cropVC.delegate = self
                             print("DiaryWriting :: selectedOriginalImage = \(image)")
@@ -1110,6 +1101,14 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
         // picker.pushViewController(cropVC, animated: true)
         let cropVC = CustomCropViewController(image: newImage)
         cropVC.cropVCNaviViewType = .close
+        
+        switch writingType {
+        case .writing:
+            cropVC.cropVCButtonType = .add
+        case .edit:
+            cropVC.cropVCButtonType = .edit
+        }
+
         // self.cropVC = cropVC
         cropVC.delegate = self
         self.selectedOriginalImage = newImage
