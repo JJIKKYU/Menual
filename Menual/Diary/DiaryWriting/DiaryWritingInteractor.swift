@@ -49,14 +49,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         case edit
         case none
     }
-    
-    var weatherHistoryModel: BehaviorRelay<[WeatherHistoryModel]> {
-        dependency.diaryRepository.weatherHistory
-    }
-    var plcaeHistoryModel: BehaviorRelay<[PlaceHistoryModel]> {
-        dependency.diaryRepository.placeHistory
-    }
-    
+
     var diaryWritingMode: DiaryWritingMode = .writing
 
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
@@ -237,29 +230,6 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         
         dependency.diaryRepository
             .addDiary(info: newDiaryModel)
-        
-        // weather, place가 Optional이므로, 존재할 경우에만 History 저장
-        if let place = placeModelValue.place {
-            let placeHistoryModel = PlaceHistoryModel(uuid: NSUUID().uuidString,
-                                                      selectedPlace: place,
-                                                      info: placeModelValue.detailText,
-                                                      createdAt: info.createdAt,
-                                                      isDeleted: false
-            )
-            dependency.diaryRepository
-                .addPlaceHistory(info: placeHistoryModel)
-        }
-        
-        if let weather = weatherModelValue.weather {
-            let weatherHistoryModel = WeatherHistoryModel(uuid: NSUUID().uuidString,
-                                                          selectedWeather: weather,
-                                                          info: weatherModelValue.detailText,
-                                                          createdAt: info.createdAt,
-                                                          isDeleted: false
-            )
-            dependency.diaryRepository
-                .addWeatherHistory(info: weatherHistoryModel)
-        }
         
         listener?.diaryWritingPressedBackBtn(isOnlyDetach: false, isNeedToast: true, mode: .writing)
     }

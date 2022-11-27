@@ -17,8 +17,6 @@ public protocol DiaryRepository {
     
     var diaryString: BehaviorRelay<[DiaryModel]> { get }
     var filteredMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
-    var weatherHistory: BehaviorRelay<[WeatherHistoryModel]> { get }
-    var placeHistory: BehaviorRelay<[PlaceHistoryModel]> { get }
     var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
     var diarySearch: BehaviorRelay<[DiarySearchModel]> { get }
     var tempSave: BehaviorRelay<[TempSaveModel]> { get }
@@ -33,8 +31,6 @@ public protocol DiaryRepository {
     func updateDiary(info: DiaryModel)
     func hideDiary(isHide: Bool, info: DiaryModel) -> DiaryModel?
     func removeAllDiary()
-    func addWeatherHistory(info: WeatherHistoryModel)
-    func addPlaceHistory(info: PlaceHistoryModel)
     func deleteDiary(info: DiaryModel)
     func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void)
     func loadImageFromDocumentDirectory(imageName: String, completionHandler: @escaping (UIImage?) -> Void)
@@ -102,12 +98,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     public var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { diaryMonthDicSubject }
     public let diaryMonthDicSubject = BehaviorRelay<[DiaryYearModel]>(value: [])
-    
-    public var weatherHistory: BehaviorRelay<[WeatherHistoryModel]> { weatherHistorySubject }
-    public let weatherHistorySubject = BehaviorRelay<[WeatherHistoryModel]>(value: [])
-    
-    public var placeHistory: BehaviorRelay<[PlaceHistoryModel]> { placeHistorySubject }
-    public let placeHistorySubject = BehaviorRelay<[PlaceHistoryModel]>(value: [])
     
     public var diarySearch: BehaviorRelay<[DiarySearchModel]> { diarySearchSubject }
     public let diarySearchSubject = BehaviorRelay<[DiarySearchModel]>(value: [])
@@ -215,12 +205,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         let diaryModelResults = realm.objects(DiaryModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
         diaryModelSubject.accept(diaryModelResults.map { DiaryModel($0) })
-        
-        let weatherHistoryResults = realm.objects(WeatherHistoryModelRealm.self)
-        weatherHistorySubject.accept(weatherHistoryResults.map { WeatherHistoryModel($0) })
-        
-        let placeHistoryResults = realm.objects(PlaceHistoryModelRealm.self)
-        placeHistorySubject.accept(placeHistoryResults.map { PlaceHistoryModel($0) })
         
         self.fetchDiary()
         self.fetchRecntDiarySearch()
@@ -457,33 +441,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         diaryModelSubject.accept(arr)
         fetchDiary()
         return newDiary
-    }
-    
-    // MARK: - History CRUD
-    public func addWeatherHistory(info: WeatherHistoryModel) {
-        print("DiaryRepository :: addWeatherHistory")
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-        realm.safeWrite {
-             realm.add(WeatherHistoryModelRealm(info))
-        }
-        
-        weatherHistorySubject.accept(weatherHistorySubject.value + [info])
-    }
-    
-    public func addPlaceHistory(info: PlaceHistoryModel) {
-        print("DiaryRepository :: addPlaceHistory")
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-        realm.safeWrite {
-             realm.add(PlaceHistoryModelRealm(info))
-        }
-        
-        placeHistorySubject.accept(placeHistorySubject.value + [info])
     }
     
     // MARK: - 겹쓰기 로직

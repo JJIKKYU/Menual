@@ -250,7 +250,6 @@
 		98F3A27F28150052000851F0 /* DiaryBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A27B28150052000851F0 /* DiaryBottomSheetViewController.swift */; };
 		98F3A28028150052000851F0 /* DiaryBottomSheetBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A27C28150052000851F0 /* DiaryBottomSheetBuilder.swift */; };
 		98F3A28128150052000851F0 /* DiaryBottomSheetInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */; };
-		98F3A28328152C04000851F0 /* BottomSheetSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A28228152C04000851F0 /* BottomSheetSelectView.swift */; };
 		9D65621A6BC58BDB19B31435 /* Pods_MenualTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B7AFEEEC2884EE3D9B20D25 /* Pods_MenualTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -525,7 +524,6 @@
 		98F3A27B28150052000851F0 /* DiaryBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryBottomSheetViewController.swift; sourceTree = "<group>"; };
 		98F3A27C28150052000851F0 /* DiaryBottomSheetBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryBottomSheetBuilder.swift; sourceTree = "<group>"; };
 		98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryBottomSheetInteractor.swift; sourceTree = "<group>"; };
-		98F3A28228152C04000851F0 /* BottomSheetSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetSelectView.swift; sourceTree = "<group>"; };
 		9D128C3C26B0CD2866B637F4 /* Pods_Menual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0D284BB62383F1EDBC7DFA5 /* Pods-Menual-MenualUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual-MenualUITests.debug.xcconfig"; path = "Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		BEDDEE19F3D821C5744FB7B2 /* Pods-Menual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.release.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.release.xcconfig"; sourceTree = "<group>"; };
@@ -1435,7 +1433,6 @@
 				98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */,
 				98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */,
 				98F3A2772813E561000851F0 /* MenualBottomSheetCell.swift */,
-				98F3A28228152C04000851F0 /* BottomSheetSelectView.swift */,
 			);
 			path = BottomSheet;
 			sourceTree = "<group>";
@@ -1818,7 +1815,6 @@
 				98A2BD9F280A833000C1FB92 /* DiaryDetailInteractor.swift in Sources */,
 				98EADBA8284DD7C8007C298C /* DiaryMonthModel.swift in Sources */,
 				98B557AB283A413F00F8CA3E /* Divider.swift in Sources */,
-				98F3A28328152C04000851F0 /* BottomSheetSelectView.swift in Sources */,
 				98B5576A283896AA00F8CA3E /* DesignSystemInteractor.swift in Sources */,
 				984392A8291632DB00EF526E /* MetaDataBuilder.swift in Sources */,
 				984392C229179A6600EF526E /* NumberPadBuilder.swift in Sources */,
@@ -2182,7 +2178,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -2219,7 +2215,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -2254,7 +2250,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -2280,7 +2276,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -2305,7 +2301,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2329,7 +2325,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

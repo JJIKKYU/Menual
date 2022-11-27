@@ -24,7 +24,7 @@ class CustomCropViewController: CropViewController {
     
     public lazy var customDoneButton = BoxButton(frame: .zero, btnStatus: .active, btnSize: .large).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = "선택하기"
+        $0.title = "사진 추가하기"
         $0.addTarget(self, action: #selector(pressedDoneBtn), for: .touchUpInside)
     }
     
