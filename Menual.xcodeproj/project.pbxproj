@@ -69,6 +69,7 @@
 		985BFF7B293239A000D86106 /* CGRect+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7A293239A000D86106 /* CGRect+Util.swift */; };
 		985BFF7D29323AD100D86106 /* Array+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7C29323AD100D86106 /* Array+Util.swift */; };
 		985BFF7F29323DC400D86106 /* UIScrollView+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7E29323DC400D86106 /* UIScrollView+Util.swift */; };
+		985BFF8129335AE900D86106 /* UINavigationController+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF8029335AE900D86106 /* UINavigationController+Util.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -338,6 +339,7 @@
 		985BFF7A293239A000D86106 /* CGRect+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+Util.swift"; sourceTree = "<group>"; };
 		985BFF7C29323AD100D86106 /* Array+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Util.swift"; sourceTree = "<group>"; };
 		985BFF7E29323DC400D86106 /* UIScrollView+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Util.swift"; sourceTree = "<group>"; };
+		985BFF8029335AE900D86106 /* UINavigationController+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Util.swift"; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
 		985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDBuilder.swift; sourceTree = "<group>"; };
@@ -1340,6 +1342,7 @@
 				985BFF7A293239A000D86106 /* CGRect+Util.swift */,
 				985BFF7C29323AD100D86106 /* Array+Util.swift */,
 				985BFF7E29323DC400D86106 /* UIScrollView+Util.swift */,
+				985BFF8029335AE900D86106 /* UINavigationController+Util.swift */,
 			);
 			path = MenualUtil;
 			sourceTree = "<group>";
@@ -1796,6 +1799,7 @@
 				98A2BDA1280A87E300C1FB92 /* Swift+Util.swift in Sources */,
 				985BFF712924C36500D86106 /* ProfileDeveloperInteractor.swift in Sources */,
 				98B55749281E426300F8CA3E /* WeatherModel.swift in Sources */,
+				985BFF8129335AE900D86106 /* UINavigationController+Util.swift in Sources */,
 				9803132C28F11ECA005CBD01 /* DialogViewController.swift in Sources */,
 				98EADBA4284734E4007C298C /* Pagination.swift in Sources */,
 				98B557562830C7B200F8CA3E /* DiaryTempSaveInteractor.swift in Sources */,

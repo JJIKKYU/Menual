@@ -71,6 +71,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
     private let defaultTitleText: String = "제목을 입력할 수 있어요"
     private let defaultDescriptionText: String = "오늘의 메뉴얼을 작성해주세요."
     
+    // Camera Delegate
+    let notificationIdentifier: String = "StartCamera"
+    
     // delegate 저장 후 VC 삭제시 해제 용도
     private var cropVC: CustomCropViewController?
     
@@ -180,11 +183,19 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         $0.editBtn.addTarget(self, action: #selector(pressedImageUploadViewEditBtn), for: .touchUpInside)
     }
     
+    private lazy var pullDownImageButton = UIButton(frame: .zero).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .clear
+        $0.addTarget(self, action: #selector(pressedImageUploadView), for: .touchUpInside)
+        $0.showsMenuAsPrimaryAction = true
+    }
+    
     let imageView = UIImageView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.layer.masksToBounds = true
         $0.backgroundColor = .brown
         $0.contentMode = .scaleAspectFill
+
     }
     
     /*
@@ -235,6 +246,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
                 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(setDelegate), name: NSNotification.Name(rawValue: notificationIdentifier), object: nil)
 
         // Delegate 해제
         weatherPlaceToolbarView.delegate = self
@@ -245,6 +258,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         locationSelectView.selectTextView.delegate = self
         locationSelectView.selectTextView.centerVerticalText()
         cropVC?.delegate = self
+        setImageButtonUIActionMenu()
+        // testImagePicker.delegate = self
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -253,6 +268,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         // Keyboard observer해제
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        // NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: notificationIdentifier), object: nil)
         
         // Delegate 해제
         weatherPlaceToolbarView.delegate = nil
@@ -261,10 +277,24 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         weatherSelectView.selectTextView.delegate = nil
         locationSelectView.selectTextView.delegate = nil
         cropVC?.delegate = nil
+        pullDownImageButton.menu = nil
+        // testImagePicker.delegate = nil
         
         if isMovingFromParent || isBeingDismissed {
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
+    }
+    
+    @objc
+    func setDelegate() {
+        print("setDelegate!")
+        
+        dismiss(animated: false) {
+            self.pressedTakeImagePullDownBtn()
+        }
+        print("navigationController?.viewControllers = \(navigationController?.viewControllers)")
+        // testImagePicker.popViewController(animated: true)
+        // self.navigationController?.popViewController(animated: true)
     }
     
     func setViews() {
@@ -275,6 +305,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         self.view.addSubview(naviView)
         self.view.addSubview(scrollView)
         self.view.addSubview(weatherPlaceToolbarView)
+        self.view.addSubview(pullDownImageButton)
+        
         scrollView.addSubview(titleTextField)
         scrollView.addSubview(divider1)
         scrollView.addSubview(weatherSelectView)
@@ -368,6 +400,10 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
             make.top.equalTo(divider4.snp.bottom).offset(16)
             make.height.equalTo(110)
             make.bottom.equalToSuperview()
+        }
+        
+        pullDownImageButton.snp.makeConstraints { make in
+            make.leading.width.height.top.equalTo(imageUploadView.uploadedImageView)
         }
         
         weatherPlaceToolbarView.snp.makeConstraints { make in
@@ -556,6 +592,25 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         }
     }
     
+    func setImageButtonUIActionMenu() {
+        let uploadImage = UIAction(title: "이미지 가져와",
+                                   image: Asset._24px.album.image.withRenderingMode(.alwaysTemplate)) { action in
+            print("DiaryWriting :: action! = \(action)")
+            self.pressedImageUploadPullDownBtn()
+        }
+
+        let takeImage = UIAction(title: "이미지 찍어",
+                                 image: Asset._24px.camera.image.withRenderingMode(.alwaysTemplate)) { action in
+             print("DiaryWriting :: action! = \(action)")
+            self.pressedTakeImagePullDownBtn()
+        }
+
+        pullDownImageButton.menu = UIMenu(title: "타이틀",
+                                          image: nil,
+                                          identifier: nil,
+                                          children: [takeImage, uploadImage])
+    }
+    
     // tempSaveModel로 만들기 위해서 오물락조물락
     func zipDiaryModelForTempSave() -> DiaryModel? {
         guard let title = self.titleTextField.text,
@@ -703,6 +758,9 @@ extension DiaryWritingViewController {
     func pressedImageUploadView() {
         print("DiaryWriting :: pressedImageUploadView!")
         
+        
+        
+        /*
         phpickerConfiguration.filter = .images
         phpickerConfiguration.selectionLimit = 1
         imagePicker.isEditing = true
@@ -716,6 +774,7 @@ extension DiaryWritingViewController {
         navigationController.navigationBar.isHidden = true
         navigationController.isNavigationBarHidden = true
         present(navigationController, animated: true, completion: nil)
+        */
     }
     
     @objc
@@ -776,6 +835,39 @@ extension DiaryWritingViewController {
         // weatherSelectView.selected = false
         weatherSelectView.selectTextView.text = ""
         // weatherPlaceToolbarView.selectedWeatherType = nil
+    }
+}
+
+// MARK: - ImageUpload
+extension DiaryWritingViewController {
+    // 앨범
+    func pressedImageUploadPullDownBtn() {
+        phpickerConfiguration.filter = .images
+        phpickerConfiguration.selectionLimit = 1
+        imagePicker.isEditing = true
+        // present(imagePicker, animated: true, completion: nil)
+//        testImagePicker.modalPresentationStyle = .fullScreen
+        
+//        present(testImagePicker, animated: true)
+        let navigationController = UINavigationController(rootViewController: imagePicker)
+//        let navigationController = UINavigationController(rootViewController: testImagePicker)
+        navigationController.modalPresentationStyle = .overFullScreen
+        navigationController.navigationBar.isHidden = true
+        navigationController.isNavigationBarHidden = true
+        present(navigationController, animated: true, completion: nil)
+    }
+    
+    // 카메라 호출
+    @objc func pressedTakeImagePullDownBtn() {
+        print("DiaryWriting :: TakeImage!")
+        // phpickerConfiguration.filter = .images
+        testImagePicker.sourceType = .camera
+        
+//        let navigationController = UINavigationController(rootViewController: testImagePicker)
+//        navigationController.modalPresentationStyle = .overFullScreen
+//        navigationController.navigationBar.isHidden = true
+//        navigationController.isNavigationBarHidden = true
+        present(testImagePicker, animated: true, completion: nil)
     }
 }
 
@@ -983,6 +1075,7 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                         
                         if let image = image as? UIImage {
                             let cropVC = CustomCropViewController(image: image)
+                            cropVC.cropVCNaviViewType = .backArrow
                             self.cropVC = cropVC
                             cropVC.delegate = self
                             print("DiaryWriting :: selectedOriginalImage = \(image)")
@@ -1012,8 +1105,17 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
             newImage = image
         }
         
-        let cropVC = CropViewController(image: newImage!)
-        picker.pushViewController(cropVC, animated: true)
+        guard let newImage = newImage else { return }
+        // let cropVC = CropViewController(image: newImage!)
+        // picker.pushViewController(cropVC, animated: true)
+        let cropVC = CustomCropViewController(image: newImage)
+        cropVC.cropVCNaviViewType = .close
+        self.cropVC = cropVC
+        cropVC.delegate = self
+        self.selectedOriginalImage = newImage
+        dismiss(animated: true) {
+            self.present(cropVC, animated: true, completion: nil)
+        }
     }
 }
 
@@ -1100,7 +1202,6 @@ extension DiaryWritingViewController: DialogDelegate {
             imageUploadView.image = nil
             selectedImage = nil
             selectedOriginalImage = nil
-            showToast(message: "메뉴얼 수정이 완료되었습니다.")
             break
             
         default:

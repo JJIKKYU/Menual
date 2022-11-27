@@ -24,6 +24,7 @@ enum NaviViewType {
     
     case write
     case writePicture
+    case writePictureClose
     case menualDetail
     case edit
     case temporarySave
@@ -251,6 +252,15 @@ class MenualNaviView: UIView {
             backButton.tintColor = Colors.grey.g100
             backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
             
+        case .writePictureClose:
+            titleLabel.isHidden = false
+            titleLabel.text = "사진추가"
+            titleLabel.font = UIFont.AppTitle(.title_3)
+            backButton.isHidden = true
+            rightButton1.isHidden = false
+            rightButton1.tintColor = Colors.grey.g100
+            rightButton1.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            
         case .detailImage:
             titleLabel.isHidden = false
             titleLabel.text = ""
@@ -323,7 +333,7 @@ class MenualNaviView: UIView {
                     make.height.equalTo(24)
                 }
             }
-        case .writePicture:
+        case .writePicture, .writePictureClose:
             break
         case .detailImage:
             backgroundColor = .clear

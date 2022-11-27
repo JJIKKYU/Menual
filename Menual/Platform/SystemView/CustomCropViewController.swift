@@ -12,9 +12,21 @@ import SnapKit
 
 class CustomCropViewController: CropViewController {
     
+    let notificationIdentifier: String = "StartCamera"
+    
+    enum CropVCNaviViewType {
+        case backArrow
+        case close
+    }
+    
+    public var cropVCNaviViewType: CropVCNaviViewType = .backArrow {
+        didSet { setNaviViewType() }
+    }
+    
     private lazy var naviView = MenualNaviView(type: .writePicture).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+        $0.rightButton1.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
     }
     
     private let doneButtonBackgorundView = UIView().then {
@@ -88,6 +100,17 @@ class CustomCropViewController: CropViewController {
         }
     }
 
+    func setNaviViewType() {
+        switch cropVCNaviViewType {
+        case .backArrow:
+            naviView.naviViewType = .writePicture
+
+        case .close:
+            naviView.naviViewType = .writePictureClose
+        }
+        
+        naviView.setNaviViewType()
+    }
 }
 
 // MARK: - IBAction
@@ -95,7 +118,13 @@ extension CustomCropViewController {
     @objc
     func pressedBackBtn() {
         // dismiss(animated: true)
-        navigationController?.popViewController(animated: true)
+        switch cropVCNaviViewType {
+        case .backArrow:
+            navigationController?.popViewController(animated: true)
+        case .close:
+            dismiss(animated: true)
+        }
+        
     }
     
     @objc
