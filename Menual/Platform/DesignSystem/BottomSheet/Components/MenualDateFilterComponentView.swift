@@ -281,6 +281,9 @@ class MenualDateFilterComponentView: UIView {
             filterBtn.title = "작성한 메뉴얼 없는뎁쇼?"
             filterBtn.btnStatus = .inactive
             filterBtn.isUserInteractionEnabled = false
+        } else {
+            filterBtn.btnStatus = .active
+            filterBtn.isUserInteractionEnabled = true
         }
         
         

@@ -764,8 +764,7 @@ extension DiaryWritingViewController {
     @objc
     func pressedTempSaveBtn() {
         print("DiaryWriting :: pressedTempSaveBtn")
-        // listener?.pressedTempSaveBtn()
-        view.endEditing(true)
+        listener?.pressedTempSaveBtn()
     }
     
     @objc
@@ -845,13 +844,10 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         print("DiaryWriting :: textViewShouldBeginEditing")
         
-        if textView == descriptionTextView {
-            weatherPlaceToolbarView.isHidden = true
-        }
-
         switch textView.tag {
         case TextViewType.title.rawValue:
             print("Title TextView")
+            weatherPlaceToolbarView.isHidden = true
             if textView.text == defaultTitleText {
                 textView.text = nil
                 textView.textColor = Colors.grey.g200
@@ -881,6 +877,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             
         case TextViewType.description.rawValue:
             print("Description TextView")
+            weatherPlaceToolbarView.isHidden = true
             if textView.text == defaultDescriptionText {
                 textView.text = nil
                 textView.textColor = Colors.grey.g200
