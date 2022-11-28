@@ -339,7 +339,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             return
         }
 
-        notificationCenter.removePendingNotificationRequests(withIdentifiers: [reminderRequestUUID])
+        // notificationCenter.removePendingNotificationRequests(withIdentifiers: [reminderRequestUUID])
         reminderRequestDateRelay.accept(nil)
         self.isEnabledReminderRelay.accept(nil)
         self.reminderUUID = nil

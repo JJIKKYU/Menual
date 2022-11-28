@@ -366,6 +366,22 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
             realm.delete(data)
         }
+        
+        // 검색된 결과가 있으면 함께 삭제
+        if let searchData = realm.objects(DiarySearchModelRealm.self).filter({ $0.diaryUuid == info.uuid }).first {
+            print("DiaryRepo :: 검색한 결과가 있습니다.")
+            realm.safeWrite {
+                realm.delete(searchData)
+            }
+        }
+        
+        if let reminderData: ReminderModelRealm = realm.objects(ReminderModelRealm.self).filter({ $0.diaryUUID == info.uuid }).first {
+            deleteReminder(reminderUUID: reminderData.uuid)
+        }
+        
+        // deleteRecentDiarySearch(uuid: )
+        
+        // 리마인더가 있따면 함께 삭제
 
         /*
         realm.safeWrite {
@@ -776,6 +792,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         guard let data = realm.objects(ReminderModelRealm.self).filter({ $0.uuid == reminderUUID }).first
         else { return }
+        
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [data.requestUUID])
         
         realm.safeWrite {
             realm.delete(data)
