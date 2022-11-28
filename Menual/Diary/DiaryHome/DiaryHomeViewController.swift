@@ -11,6 +11,7 @@ import RxRelay
 import UIKit
 import SnapKit
 import Then
+import FirebaseAnalytics
 import RxViewController
 
 enum TableCollectionViewTag: Int {
@@ -21,8 +22,7 @@ enum TableCollectionViewTag: Int {
 protocol DiaryHomePresentableListener: AnyObject {
     func pressedSearchBtn()
     func pressedMyPageBtn()
-    func pressedMomentsTitleBtn()
-    func pressedMomentsMoreBtn()
+
     func pressedWritingBtn()
     
     func getMyMenualCount() -> Int
@@ -240,6 +240,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         print("DiaryHome!")
         setViews()
         bind()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        Analytics.logEvent("Home_Appear", parameters: nil)
     }
     
     func setViews() {
@@ -541,64 +547,55 @@ extension DiaryHomeViewController {
     @objc
     func pressedSearchBtn() {
         listener?.pressedSearchBtn()
+        Analytics.logEvent("Home_Button_Search", parameters: nil)
     }
     
     @objc
     func pressedMyPageBtn() {
         listener?.pressedMyPageBtn()
-    }
-    
-    @objc
-    func pressedMomentsTitleBtn() {
-        listener?.pressedMomentsTitleBtn()
-        print("Moments Title Pressed!")
-    }
-    
-    @objc
-    func pressedMomentsMoreBtn() {
-        listener?.pressedMomentsMoreBtn()
-        print("Moments More Pressed!")
-    }
-    
-    @objc
-    func pressedMyMenualBtn() {
-        
+        Analytics.logEvent("Home_Button_Profile", parameters: nil)
     }
     
     @objc
     func pressedFABWritingBtn() {
         print("FABWritingBtn Pressed!")
         listener?.pressedWritingBtn()
+        Analytics.logEvent("Home_Button_Writing", parameters: nil)
     }
     
     @objc
     func pressedMenualBtn() {
         print("메뉴얼 버튼 눌렀니?")
         listener?.pressedMenualTitleBtn()
+        Analytics.logEvent("Home_Button_MenualTitle", parameters: nil)
     }
     
     @objc
     func pressedDateFilterBtn() {
         print("pressedLightCalenderBtn")
         listener?.pressedDateFilterBtn()
+        Analytics.logEvent("Home_Button_DateFilter", parameters: nil)
     }
     
     @objc
     func pressedFilterBtn() {
         print("pressedFilterBtn")
         listener?.pressedFilterBtn()
+        Analytics.logEvent("Home_Button_Filter", parameters: nil)
     }
     
     @objc
     func pressedFilterResetBtn() {
         print("DiaryHome :: filterReset!!")
         listener?.pressedFilterResetBtn()
+        Analytics.logEvent("Home-Button-FilterReset", parameters: nil)
     }
     
     @objc
     func pressedScrollToTopFAB() {
         print("DiaryHome :: pressedScrollToTopFAB!!")
         myMenualTableView.setContentOffset(.zero, animated: true)
+        Analytics.logEvent("Home-Button-ScrollToTop", parameters: nil)
     }
 }
 
@@ -1106,12 +1103,15 @@ extension DiaryHomeViewController {
         switch mode {
         case .writing:
             showToast(message: "메뉴얼 등록이 완료되었습니다.")
+            Analytics.logEvent("Home_Toast_Writing", parameters: nil)
 
         case .edit:
             showToast(message: "메뉴얼 등록이 수정되었습니다.")
+            Analytics.logEvent("Home_Toast_Edit", parameters: nil)
             
         case .delete:
             showToast(message: "메뉴얼 삭제를 완료했어요.")
+            Analytics.logEvent("Home_Toast_Delete", parameters: nil)
             
         case .none:
             break
