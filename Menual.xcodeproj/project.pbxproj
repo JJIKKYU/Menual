@@ -74,6 +74,7 @@
 		985BFF882933721700D86106 /* ProfileOpensourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF842933721700D86106 /* ProfileOpensourceViewController.swift */; };
 		985BFF892933721700D86106 /* ProfileOpensourceBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF852933721700D86106 /* ProfileOpensourceBuilder.swift */; };
 		985BFF8A2933721700D86106 /* ProfileOpensourceInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF862933721700D86106 /* ProfileOpensourceInteractor.swift */; };
+		985BFF8C2935ED6100D86106 /* String+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF8B2935ED6100D86106 /* String+Util.swift */; };
 		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
 		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
 		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
@@ -348,6 +349,7 @@
 		985BFF842933721700D86106 /* ProfileOpensourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceViewController.swift; sourceTree = "<group>"; };
 		985BFF852933721700D86106 /* ProfileOpensourceBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceBuilder.swift; sourceTree = "<group>"; };
 		985BFF862933721700D86106 /* ProfileOpensourceInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceInteractor.swift; sourceTree = "<group>"; };
+		985BFF8B2935ED6100D86106 /* String+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Util.swift"; sourceTree = "<group>"; };
 		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
 		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
 		985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDBuilder.swift; sourceTree = "<group>"; };
@@ -1363,6 +1365,7 @@
 				985BFF7C29323AD100D86106 /* Array+Util.swift */,
 				985BFF7E29323DC400D86106 /* UIScrollView+Util.swift */,
 				985BFF8029335AE900D86106 /* UINavigationController+Util.swift */,
+				985BFF8B2935ED6100D86106 /* String+Util.swift */,
 			);
 			path = MenualUtil;
 			sourceTree = "<group>";
@@ -1897,6 +1900,7 @@
 				98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */,
 				984392CE2917C34000EF526E /* PasswordModel.swift in Sources */,
 				985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */,
+				985BFF8C2935ED6100D86106 /* String+Util.swift in Sources */,
 				98B55787283A0F3300F8CA3E /* ListHeaderViewController.swift in Sources */,
 				983CDF4128FBDD9B001E2A2D /* Badges.swift in Sources */,
 				9843929A29053CEC00EF526E /* DiaryDetailImageViewController.swift in Sources */,
@@ -2206,7 +2210,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -2243,7 +2247,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -2278,7 +2282,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -2304,7 +2308,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -2329,7 +2333,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2353,7 +2357,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

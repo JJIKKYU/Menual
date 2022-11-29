@@ -18,7 +18,24 @@ public extension Array {
 
 extension Realm {
     static func safeInit() -> Realm? {
+        // let keyString: String = "Menual"
+        // let key = keyString.data(using: .utf8)!
+        
+        let testKeychain = "111"
+        
+        
+        let key = NSMutableData(length: 64)!
+        
+        let data2 = "메뉴얼프로젝트의비밀번호는무엇임".toBase64().data(using: .utf8)
+        let data22 = data2?.base64EncodedString().fromBase64()
+        let data33 = data2?.hexEncodedString()
+        // let data = String("Menual").toBase64()
+        print("JJIKKYU :: realm Key = \(key), data2 = \(data2), data22 = \(data22), data33 = \(data33)")
+
+        // let encryptionConfig = Realm.Configuration(encryptionKey: data2!)
+
         do {
+            // let realm = try Realm(configuration: encryptionConfig)
             let realm = try Realm()
             return realm
         }

@@ -26,6 +26,9 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // ProfileOpensource
     func pressedProfileOpensourceCell()
+    
+    // iCloud 저장
+    func saveiCloud()
 }
 
 enum ProfileHomeSection: Int {
@@ -240,6 +243,9 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 listener?.pressedProfileOpensourceCell()
             } else if data.title == "개발자에게 문의하기" {
                 self.pressedDeveloperQACell()
+            } else if data.title == "iCloud 동기화하기" {
+                print("ProfileHome :: iCloud 동기화하기!")
+                self.listener?.saveiCloud()
             }
             break
         default:

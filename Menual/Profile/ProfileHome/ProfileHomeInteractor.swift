@@ -8,6 +8,8 @@
 import RIBs
 import RxSwift
 import RxRelay
+import CloudKit
+import RealmSwift
 
 protocol ProfileHomeRouting: ViewableRouting {
     func attachProfilePassword()
@@ -159,4 +161,147 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     }
     
     func goDiaryHome() { }
+    
+    // MARK: - iCloud 동기화하기
+    func saveiCloud() {
+        if(isCloudEnabled() == false)
+       {
+           // self.iCloudSetupNotAvailable()
+           return
+       }
+
+       let fileManager = FileManager.default
+
+       // self.checkForExistingDir()
+
+       let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents", isDirectory: true)
+
+       let iCloudDocumentToCheckURL = iCloudDocumentsURL?.appendingPathComponent("default.realm", isDirectory: false)
+
+       let realmArchiveURL = iCloudDocumentToCheckURL//containerURL?.appendingPathComponent("MyArchivedRealm.realm")
+
+       if(fileManager.fileExists(atPath: realmArchiveURL?.path ?? ""))
+       {
+           do
+           {
+               try fileManager.removeItem(at: realmArchiveURL!)
+               print("REPLACE")
+               let realm = try! Realm()
+               try! realm.writeCopy(toFile: realmArchiveURL!)
+
+           }catch
+           {
+               print("ERR")
+           }
+       }
+       else
+       {
+           print("Need to store ")
+           let realm = try! Realm()
+           try! realm.writeCopy(toFile: realmArchiveURL!)
+       }
+    }
+    
+    // Return true if iCloud is enabled
+    func isCloudEnabled() -> Bool {
+        if DocumentsDirectory.iCloudDocumentsURL != nil { return true }
+        else { return false }
+    }
 }
+
+struct DocumentsDirectory {
+    static let localDocumentsURL = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: .userDomainMask).last!
+    static let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents")
+}
+
+/*
+class CloudDataManager {
+
+static let sharedInstance = CloudDataManager() // Singleton
+
+// Return the Document directory (Cloud OR Local)
+// To do in a background thread
+
+func getDocumentDiretoryURL() -> NSURL {
+    print(DocumentsDirectory.iCloudDocumentsURL)
+    print(DocumentsDirectory.localDocumentsURL)
+    if userDefault.boolForKey("useCloud") && isCloudEnabled()  {
+        return DocumentsDirectory.iCloudDocumentsURL! as NSURL
+    } else {
+        return DocumentsDirectory.localDocumentsURL! as NSURL
+    }
+}
+
+// Return true if iCloud is enabled
+
+func isCloudEnabled() -> Bool {
+    if DocumentsDirectory.iCloudDocumentsURL != nil { return true }
+    else { return false }
+}
+
+// Delete All files at URL
+
+func deleteFilesInDirectory(url: NSURL?) {
+    let fileManager = NSFileManager.defaultManager()
+    let enumerator = fileManager.enumeratorAtPath(url!.path!)
+    while let file = enumerator?.nextObject() as? String {
+
+        do {
+            try fileManager.removeItemAtURL(url!.URLByAppendingPathComponent(file))
+            print("Files deleted")
+        } catch let error as NSError {
+            print("Failed deleting files : \(error)")
+        }
+    }
+}
+
+// Move local files to iCloud
+// iCloud will be cleared before any operation
+// No data merging
+
+func moveFileToCloud() {
+    if isCloudEnabled() {
+        deleteFilesInDirectory(url: DocumentsDirectory.iCloudDocumentsURL!) // Clear destination
+        let fileManager = NSFileManager.defaultManager
+        let enumerator = fileManager.enumeratorAtPath(DocumentsDirectory.localDocumentsURL!.path!)
+        while let file = enumerator?.nextObject() as? String {
+
+            do {
+                try fileManager.setUbiquitous(true,
+                    itemAtURL: DocumentsDirectory.localDocumentsURL!.URLByAppendingPathComponent(file),
+                    destinationURL: DocumentsDirectory.iCloudDocumentsURL!.URLByAppendingPathComponent(file))
+                print("Moved to iCloud")
+            } catch let error as NSError {
+                print("Failed to move file to Cloud : \(error)")
+            }
+        }
+    }
+}
+
+// Move iCloud files to local directory
+// Local dir will be cleared
+// No data merging
+
+func moveFileToLocal() {
+    if isCloudEnabled() {
+        deleteFilesInDirectory(url: DocumentsDirectory.localDocumentsURL!)
+        let fileManager = FileManager.default
+        let enumerator = fileManager.enumerator(atPath: DocumentsDirectory.iCloudDocumentsURL!.path!)
+        while let file = enumerator?.nextObject() as? String {
+
+            do {
+                try fileManager.setUbiquitous(false,
+                    itemAtURL: DocumentsDirectory.iCloudDocumentsURL!.URLByAppendingPathComponent(file),
+                    destinationURL: DocumentsDirectory.localDocumentsURL!.URLByAppendingPathComponent(file))
+                print("Moved to local dir")
+            } catch let error as NSError {
+                print("Failed to move file to local dir : \(error)")
+            }
+        }
+    }
+}
+
+
+
+}
+*/
