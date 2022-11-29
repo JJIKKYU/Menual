@@ -24,6 +24,10 @@ target 'Menual' do
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
   
+  # 백업데이터 업로드용
+  pod 'SSZipArchive'
+  pod 'ZIPFoundation', '~> 0.9'
+  
   # then 문법 사용
   pod 'Then'
   

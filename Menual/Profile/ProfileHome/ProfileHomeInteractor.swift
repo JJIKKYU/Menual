@@ -10,6 +10,8 @@ import RxSwift
 import RxRelay
 import CloudKit
 import RealmSwift
+import SSZipArchive
+import ZIPFoundation
 
 protocol ProfileHomeRouting: ViewableRouting {
     func attachProfilePassword()
@@ -164,144 +166,80 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     // MARK: - iCloud 동기화하기
     func saveiCloud() {
-        if(isCloudEnabled() == false)
-       {
-           // self.iCloudSetupNotAvailable()
-           return
-       }
+        let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+        let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+        let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+        
+        
+        
+        var filePaths: [String] = []
+        let enumerator = FileManager.default.enumerator(atPath: path.first!)
+       while let element = enumerator?.nextObject() as? String {
+           print(element)
 
-       let fileManager = FileManager.default
+           if let fType = enumerator?.fileAttributes?[FileAttributeKey.type] as? FileAttributeType{
 
-       // self.checkForExistingDir()
-
-       let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents", isDirectory: true)
-
-       let iCloudDocumentToCheckURL = iCloudDocumentsURL?.appendingPathComponent("default.realm", isDirectory: false)
-
-       let realmArchiveURL = iCloudDocumentToCheckURL//containerURL?.appendingPathComponent("MyArchivedRealm.realm")
-
-       if(fileManager.fileExists(atPath: realmArchiveURL?.path ?? ""))
-       {
-           do
-           {
-               try fileManager.removeItem(at: realmArchiveURL!)
-               print("REPLACE")
-               let realm = try! Realm()
-               try! realm.writeCopy(toFile: realmArchiveURL!)
-
-           }catch
-           {
-               print("ERR")
+               switch fType{
+               case .typeRegular:
+                   print("a file")
+                   filePaths.append(path.first! + "/" + element)
+               case .typeDirectory:
+                   print("a dir")
+                   filePaths.append(path.first! + "/" + element)
+               default:
+                   break
+               }
            }
+
        }
-       else
-       {
-           print("Need to store ")
-           let realm = try! Realm()
-           try! realm.writeCopy(toFile: realmArchiveURL!)
-       }
+        
+        if let directoryPath = path.first {
+//            SSZipArchive.createZipFile(atPath: tempZipPath(),
+//                                       withContentsOfDirectory: directoryPath + "/",
+//                                       keepParentDirectory: false
+//            )
+//
+//            DispatchQueue.main.async {
+//                SSZipArchive.createZipFile(atPath: self.tempZipPath(),
+//                                           withFilesAtPaths: filePaths
+//                )
+//
+//            }
+            let tempZipPath2 = tempZipPath()
+//            SSZipArchive.createZipFile(atPath: tempZipPath2,
+//                                       withFilesAtPaths: filePaths,
+//                                       withPassword: nil,
+//                                       keepSymlinks: false
+//            )
+//
+            let a = SSZipArchive.init(path: tempZipPath2)
+            a.open()
+            // a.writeFolder(atPath: tempZipPath2, withFolderName: "123", withPassword: nil)
+            a.writeFolder(atPath: tempZipPath2, withFolderName: "default.realm.management", withPassword: nil)
+//            SSZipArchive.createZipFile(atPath: tempZipPath()+"_2",
+//                                       withContentsOfDirectory: directoryPath,
+//                                       keepParentDirectory: false
+//            )
+            
+            for file in filePaths {
+                print("- \(file)")
+                a.writeFile(file, withPassword: nil)
+                // a.writeFile(atPath: file, withFileName: nil, withPassword: nil)
+            }
+            
+            
+            a.close()
+            
+
+        }
+        
+  
+        
     }
     
-    // Return true if iCloud is enabled
-    func isCloudEnabled() -> Bool {
-        if DocumentsDirectory.iCloudDocumentsURL != nil { return true }
-        else { return false }
+    func tempZipPath() -> String {
+        var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+        path += "/\(UUID().uuidString).zip"
+        return path
     }
 }
-
-struct DocumentsDirectory {
-    static let localDocumentsURL = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: .userDomainMask).last!
-    static let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents")
-}
-
-/*
-class CloudDataManager {
-
-static let sharedInstance = CloudDataManager() // Singleton
-
-// Return the Document directory (Cloud OR Local)
-// To do in a background thread
-
-func getDocumentDiretoryURL() -> NSURL {
-    print(DocumentsDirectory.iCloudDocumentsURL)
-    print(DocumentsDirectory.localDocumentsURL)
-    if userDefault.boolForKey("useCloud") && isCloudEnabled()  {
-        return DocumentsDirectory.iCloudDocumentsURL! as NSURL
-    } else {
-        return DocumentsDirectory.localDocumentsURL! as NSURL
-    }
-}
-
-// Return true if iCloud is enabled
-
-func isCloudEnabled() -> Bool {
-    if DocumentsDirectory.iCloudDocumentsURL != nil { return true }
-    else { return false }
-}
-
-// Delete All files at URL
-
-func deleteFilesInDirectory(url: NSURL?) {
-    let fileManager = NSFileManager.defaultManager()
-    let enumerator = fileManager.enumeratorAtPath(url!.path!)
-    while let file = enumerator?.nextObject() as? String {
-
-        do {
-            try fileManager.removeItemAtURL(url!.URLByAppendingPathComponent(file))
-            print("Files deleted")
-        } catch let error as NSError {
-            print("Failed deleting files : \(error)")
-        }
-    }
-}
-
-// Move local files to iCloud
-// iCloud will be cleared before any operation
-// No data merging
-
-func moveFileToCloud() {
-    if isCloudEnabled() {
-        deleteFilesInDirectory(url: DocumentsDirectory.iCloudDocumentsURL!) // Clear destination
-        let fileManager = NSFileManager.defaultManager
-        let enumerator = fileManager.enumeratorAtPath(DocumentsDirectory.localDocumentsURL!.path!)
-        while let file = enumerator?.nextObject() as? String {
-
-            do {
-                try fileManager.setUbiquitous(true,
-                    itemAtURL: DocumentsDirectory.localDocumentsURL!.URLByAppendingPathComponent(file),
-                    destinationURL: DocumentsDirectory.iCloudDocumentsURL!.URLByAppendingPathComponent(file))
-                print("Moved to iCloud")
-            } catch let error as NSError {
-                print("Failed to move file to Cloud : \(error)")
-            }
-        }
-    }
-}
-
-// Move iCloud files to local directory
-// Local dir will be cleared
-// No data merging
-
-func moveFileToLocal() {
-    if isCloudEnabled() {
-        deleteFilesInDirectory(url: DocumentsDirectory.localDocumentsURL!)
-        let fileManager = FileManager.default
-        let enumerator = fileManager.enumerator(atPath: DocumentsDirectory.iCloudDocumentsURL!.path!)
-        while let file = enumerator?.nextObject() as? String {
-
-            do {
-                try fileManager.setUbiquitous(false,
-                    itemAtURL: DocumentsDirectory.iCloudDocumentsURL!.URLByAppendingPathComponent(file),
-                    destinationURL: DocumentsDirectory.localDocumentsURL!.URLByAppendingPathComponent(file))
-                print("Moved to local dir")
-            } catch let error as NSError {
-                print("Failed to move file to local dir : \(error)")
-            }
-        }
-    }
-}
-
-
-
-}
-*/
