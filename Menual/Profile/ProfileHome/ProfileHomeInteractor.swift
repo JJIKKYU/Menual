@@ -26,6 +26,7 @@ protocol ProfileHomeRouting: ViewableRouting {
 protocol ProfileHomePresentable: Presentable {
     var listener: ProfileHomePresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
+    func showShareSheet(path: String)
 }
 
 protocol ProfileHomeListener: AnyObject {
@@ -200,6 +201,8 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
             zip.writeFile(atPath: file, withFileName: fileElements[index], withPassword: nil)
         }
         zip.close()
+
+        presenter.showShareSheet(path: savePath)
     }
     
     func tempZipPath() -> String {
