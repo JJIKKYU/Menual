@@ -499,10 +499,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     func scrollToDateFilter(yearDateFormatString: String) {
-        // let a = tableview(myMenualTableView, sectionForSectionIndexTitle: yearDateFormatString, at: 0)
-        // myMenualTableView.scrollToRow(at: <#T##IndexPath#>, at: <#T##UITableView.ScrollPosition#>, animated: <#T##Bool#>)
-        // tableView?(self.myMenualTableView, sectionForSectionIndexTitle: "", at: 0)
-        // tableView(<#T##tableView: UITableView##UITableView#>, cellForRowAt: <#T##IndexPath#>)
         guard let sectionIdx = cellsectionNumberDic[yearDateFormatString] else { return }
         myMenualTableView.scrollToRow(at: IndexPath(row: 0, section: sectionIdx), at: .middle, animated: true)
         print("DiaryHome :: scrollToDateFilter = \(sectionIdx)")
@@ -838,36 +834,6 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         return sectionListHeader
     }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        let position = cell.convert(CGPoint.zero, to: tableView)
-//        guard let indexPath = tableView.indexPathForRow(at: position) else {
-//            return
-//        }
-//        let section = indexPath.section
-//        print("DiaryHome :: The section is \(section), \(sectionNameDic[section])")
-//        guard let sectionNameFormat = sectionNameDic[section] else { return }
-//
-//        // 연도 변경
-//        let yearRange = NSRange(sectionNameFormat.startIndex..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4), in: sectionNameFormat)
-//        let year = (sectionNameFormat as NSString).substring(with: yearRange)
-//
-//        // 월로 변경
-//        let monthRange = NSRange(sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4)..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 7), in: sectionNameFormat)
-//        let month = (sectionNameFormat as NSString).substring(with: monthRange).convertMonthName()
-//
-//        indicatorView.title = year + "." + month
-        
-        // print("tableView ContentSize = \(self.myMenualTableView.contentSize.height)")
-        
-//        myMenualTableView.snp.removeConstraints()
-//        myMenualTableView.snp.makeConstraints { make in
-//            make.leading.equalToSuperview()
-//            make.width.equalToSuperview()
-//            make.bottom.equalToSuperview().inset(myMenualTableView.contentSize.height)
-//            make.top.equalTo(divider.snp.bottom).offset(0)
-//        }
-    }
 }
 
 // MARK: - UICollectionView Delegate, Datasource
@@ -975,17 +941,6 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         default:
             return
         }
-    }
-}
-
-// MARK: - Test
-extension DiaryHomeViewController: DialogDelegate {
-    func action(titleText: String) {
-        print("액션마")
-    }
-    
-    func exit(titleText: String) {
-        print("나감마")
     }
 }
 
