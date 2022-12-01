@@ -65,7 +65,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     var filteredCellsectionNumberDic2: [Int: Int] = [:]
     
     let isFilteredRelay = BehaviorRelay<Bool>(value: false)
-    private let isDraggingRelay = BehaviorRelay<Bool>(value: false)
     var isShowToastDiaryResultRelay = BehaviorRelay<DiaryHomeViewController.ShowToastType?>(value: nil)
     
     // MARK: - UI 코드
@@ -152,13 +151,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.tag = TableCollectionViewTag.MyMenualTableView.rawValue
         $0.separatorStyle = .singleLine
         $0.separatorColor = Colors.grey.g700
-    }
-    
-    private let indicatorView = IndicatorView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isHidden = true
-        $0.alpha = 1
-        $0.frame = CGRect(x: 0, y: 0, width: 58, height: 20)
     }
     
     private let filterEmptyView = UIView().then {
@@ -253,7 +245,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         
         self.view.addSubview(naviView)
         self.view.addSubview(writeBoxBtn)
-        self.view.addSubview(indicatorView)
         
         self.view.addSubview(myMenualTableView)
         self.view.addSubview(filterEmptyView)
@@ -276,7 +267,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         
         self.view.bringSubviewToFront(naviView)
         self.view.bringSubviewToFront(writeBoxBtn)
-        self.view.bringSubviewToFront(indicatorView)
         self.view.bringSubviewToFront(tableViewHeaderView)
         self.view.bringSubviewToFront(writeFAB)
         self.view.bringSubviewToFront(scrollToTopFAB)
@@ -332,13 +322,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.trailing.equalToSuperview().inset(20)
             make.height.equalTo(56)
             make.bottom.equalToSuperview().inset(34)
-        }
-        
-        indicatorView.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(16)
-            make.width.equalTo(56)
-            make.height.equalTo(20)
-            make.centerY.equalTo(myMenualTableView)
         }
         
         filterEmptyView.snp.makeConstraints { make in
@@ -473,22 +456,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             })
             .disposed(by: disposeBag)
         
-        // 드래그를 하고 있을 경우 true
-        // 드래그를 멈추는 시점에 false
-        isDraggingRelay
-            .subscribe(onNext: { [weak self] isDragging in
-                guard let self = self else { return }
-                DispatchQueue.main.async {
-                    switch isDragging {
-                    case true:
-                        self.indicatorView.isHidden = false
-                    case false:
-                        self.indicatorView.isHidden = true
-                    }
-                }
-            })
-            .disposed(by: disposeBag)
-        
         isFilteredRelay
             .subscribe(onNext: { [weak self] isFiltered in
                 guard let self = self else { return }
@@ -609,19 +576,7 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
             momentsPagination(scrollView)
 
         case .MyMenualTableView:
-            isDraggingRelay.accept(true)
             attachTopMyMenualTitleView(scrollView)
-            setIndicatorView(scrollView)
-
-            DispatchQueue.main.async {
-                let scrollIndicator = scrollView.subviews.last!
-                scrollView.scrollIndicators.vertical?.backgroundColor = Colors.grey.g700
-                
-                self.indicatorView.snp.remakeConstraints { make in
-                    make.trailing.equalToSuperview().inset(16)
-                    make.centerY.equalTo(scrollIndicator)
-                }
-            }
         }
     }
     
@@ -687,7 +642,6 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         print("scrollViewDidEndDecelerating")
-        isDraggingRelay.accept(false)
     }
 
     func momentsPagination(_ scrollView: UIScrollView) {
@@ -706,30 +660,6 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
                 momentsCollectionViewPagination.currentPage = newPage
             }
         }
-    }
-    
-    func setIndicatorView(_ scrollView: UIScrollView) {
-        let visibleIndices = (myMenualTableView.indexPathsForVisibleRows ?? []).middle ?? []
-        
-        let middleIndex = ((myMenualTableView.indexPathsForVisibleRows?.first?.row)! + (myMenualTableView.indexPathsForVisibleRows?.last?.row)!)/2
-        // let indexPath = tableView.indexPathForRow(at: tableView.bounds.center)
-
-        // let lowestVisibleSection = visibleIndices.map({ $0.section }).min() ?? 0
-        let lowestVisibleSection = visibleIndices.section
-        
-        print("DiaryHome :: middleIndex = \(middleIndex), lower = \(lowestVisibleSection)")
-        debugPrint("DiaryHome :: I see \(lowestVisibleSection), \(sectionNameDic[lowestVisibleSection])")
-        guard let sectionNameFormat = sectionNameDic[lowestVisibleSection] else { return }
-        
-        // 연도 변경
-        let yearRange = NSRange(sectionNameFormat.startIndex..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4), in: sectionNameFormat)
-        let year = (sectionNameFormat as NSString).substring(with: yearRange)
-
-        // 월로 변경
-        let monthRange = NSRange(sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4)..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 7), in: sectionNameFormat)
-        let month = (sectionNameFormat as NSString).substring(with: monthRange).convertMonthName()
-
-        indicatorView.title = year + "." + month
     }
 }
 
