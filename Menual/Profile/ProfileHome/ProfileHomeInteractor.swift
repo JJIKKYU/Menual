@@ -169,72 +169,38 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
         let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
         let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-        
-        
-        
+
         var filePaths: [String] = []
+        var fileElements: [String] = []
+        var folderPaths: [String] = []
         let enumerator = FileManager.default.enumerator(atPath: path.first!)
-       while let element = enumerator?.nextObject() as? String {
-           print(element)
-
-           if let fType = enumerator?.fileAttributes?[FileAttributeKey.type] as? FileAttributeType{
-
-               switch fType{
-               case .typeRegular:
-                   print("a file")
-                   filePaths.append(path.first! + "/" + element)
-               case .typeDirectory:
-                   print("a dir")
-                   filePaths.append(path.first! + "/" + element)
-               default:
-                   break
-               }
-           }
-
-       }
-        
-        if let directoryPath = path.first {
-//            SSZipArchive.createZipFile(atPath: tempZipPath(),
-//                                       withContentsOfDirectory: directoryPath + "/",
-//                                       keepParentDirectory: false
-//            )
-//
-//            DispatchQueue.main.async {
-//                SSZipArchive.createZipFile(atPath: self.tempZipPath(),
-//                                           withFilesAtPaths: filePaths
-//                )
-//
-//            }
-            let tempZipPath2 = tempZipPath()
-//            SSZipArchive.createZipFile(atPath: tempZipPath2,
-//                                       withFilesAtPaths: filePaths,
-//                                       withPassword: nil,
-//                                       keepSymlinks: false
-//            )
-//
-            let a = SSZipArchive.init(path: tempZipPath2)
-            a.open()
-            // a.writeFolder(atPath: tempZipPath2, withFolderName: "123", withPassword: nil)
-            a.writeFolder(atPath: tempZipPath2, withFolderName: "default.realm.management", withPassword: nil)
-//            SSZipArchive.createZipFile(atPath: tempZipPath()+"_2",
-//                                       withContentsOfDirectory: directoryPath,
-//                                       keepParentDirectory: false
-//            )
-            
-            for file in filePaths {
-                print("- \(file)")
-                a.writeFile(file, withPassword: nil)
-                // a.writeFile(atPath: file, withFileName: nil, withPassword: nil)
+        // Documents폴더를 돌면서 파일의 절대값과, 업로드하고자 하는 상대값을 두 Array에 담아서 저장
+        // 폴더는 미리 생성하기 위해서 저장
+        while let element = enumerator?.nextObject() as? String {
+            if let fType = enumerator?.fileAttributes?[FileAttributeKey.type] as? FileAttributeType {
+                switch fType {
+                case .typeRegular:
+                    filePaths.append(path.first! + "/" + element)
+                    fileElements.append(element)
+                case .typeDirectory:
+                    folderPaths.append(element)
+                default:
+                    break
+                }
             }
-            
-            
-            a.close()
-            
-
         }
-        
-  
-        
+
+        let savePath: String = tempZipPath()
+        let zip = SSZipArchive.init(path: savePath)
+        zip.open()
+        for path in folderPaths {
+            zip.writeFolder(atPath: savePath, withFolderName: path, withPassword: nil)
+        }
+
+        for (index, file) in filePaths.enumerated() {
+            zip.writeFile(atPath: file, withFileName: fileElements[index], withPassword: nil)
+        }
+        zip.close()
     }
     
     func tempZipPath() -> String {
