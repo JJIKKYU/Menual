@@ -26,13 +26,11 @@ target 'Menual' do
   
   # 백업데이터 업로드용
   pod 'SSZipArchive'
-  pod 'ZIPFoundation', '~> 0.9'
   
   # then 문법 사용
   pod 'Then'
   
-  # 이미지 크롭 // https://github.com/JJIKKYU/ImageCropper
-  pod 'ImageCropper', :git=> 'https://github.com/JJIKKYU/ImageCropper', :branch => 'master'
+  # 이미지 크롭
   pod 'CropViewController', :git=> 'https://github.com/JJIKKYU/TOCropViewController', :branch => 'main'
   
 
