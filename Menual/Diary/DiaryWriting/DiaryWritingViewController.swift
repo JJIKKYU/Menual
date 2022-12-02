@@ -33,6 +33,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
 final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable {
     
     private let TITLE_TEXT_MAX_COUNT: Int = 40
+    private let WEATHER_PLACE_TEXT_MAX_COUNT: Int = 25
     
     enum TextViewType: Int {
         case title = 0
@@ -477,7 +478,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
                     self.locationSelectView.isDeleteBtnEnabled = false
                     return
                 }
-                print("DiaryWriting :: isDeleteBtnEnabled!")
+                print("DiaryWriting :: isDeleteBtnEnabled!, text.count = \(text.count)")
                 self.locationSelectView.isDeleteBtnEnabled = true
 
             })
@@ -936,9 +937,15 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
 
         switch textView.tag {
         case TextViewType.title.rawValue:
+            textView.attributedText = UIFont.AppTitleWithText(.title_5,
+                                                             Colors.grey.g100,
+                                                             text: textView.text
+            )
+            
             let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
-            textView.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
-            print("JJIKKYU :: newSizeHeight = \(newSize.height)")
+            textView.frame.size = CGSize(width: max(newSize.width, fixedWidth),
+                                         height: max(50.3, newSize.height))
+            print("JJIKKYU :: newSizeHeight = \(newSize.height), \(textView.frame.height)")
             // textView.centerVerticalText()
             isEditBeginRelay.accept(true)
             
@@ -951,15 +958,20 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             isEditBeginRelay.accept(true)
             
         case TextViewType.description.rawValue:
-            
+            textView.attributedText = UIFont.AppBodyWithText(.body_4,
+                                                             Colors.grey.g100,
+                                                             text: textView.text
+            )
+
             let size = CGSize(width: view.frame.width, height: .infinity)
             let estimatedSize = textView.sizeThatFits(size)
             
             textView.constraints.forEach { (constraint) in
-            
               /// 180 이하일때는 더 이상 줄어들지 않게하기
                 if estimatedSize.height <= 185 {
-                
+                    if constraint.firstAttribute == .height {
+                        constraint.constant = 185
+                    }
                 }
                 else {
                     if constraint.firstAttribute == .height {
@@ -976,14 +988,20 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         switch textView.tag {
-        case TextViewType.title.rawValue:
+        case TextViewType.title.rawValue, TextViewType.weather.rawValue, TextViewType.location.rawValue:
             if text == "\n" {
                 return false
             }
 
             //이전 글자 - 선택된 글자 + 새로운 글자(대체될 글자)
             let newLength = textView.text.count - range.length + text.count
-            let koreanMaxCount = TITLE_TEXT_MAX_COUNT + 1
+            var koreanMaxCount = 0
+            if textView.tag == TextViewType.title.rawValue {
+                koreanMaxCount = TITLE_TEXT_MAX_COUNT + 1
+            } else {
+                koreanMaxCount = WEATHER_PLACE_TEXT_MAX_COUNT + 1
+            }
+
             //글자수가 초과 된 경우 or 초과되지 않은 경우
             if newLength > koreanMaxCount { //11글자
                 let overflow = newLength - koreanMaxCount //초과된 글자수
@@ -998,16 +1016,6 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
                     
                 textView.replace(textRange, withText: String(newText))
                 
-                return false
-            }
-            
-        case TextViewType.weather.rawValue:
-            if text == "\n" {
-                return false
-            }
-            
-        case TextViewType.location.rawValue:
-            if text == "\n" {
                 return false
             }
             

@@ -116,7 +116,7 @@ class WeatherLocationSelectView: UIView {
         }
         
         deleteBtn.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(20)
+            make.trailing.equalToSuperview()
             make.width.height.equalTo(24)
             make.centerY.equalToSuperview()
         }

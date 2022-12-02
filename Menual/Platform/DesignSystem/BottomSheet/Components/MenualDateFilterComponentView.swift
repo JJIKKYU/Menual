@@ -278,7 +278,9 @@ class MenualDateFilterComponentView: UIView {
         
         // count가 0이 잡힌다는 것은 하나도 안쓴 상태
         if count == 0 {
-            filterBtn.title = "작성한 메뉴얼 없는뎁쇼?"
+            monthTitle.text = "-"
+            yearTitle.text = "-"
+            filterBtn.title = "작성한 메뉴얼이 없어요."
             filterBtn.btnStatus = .inactive
             filterBtn.isUserInteractionEnabled = false
         } else {

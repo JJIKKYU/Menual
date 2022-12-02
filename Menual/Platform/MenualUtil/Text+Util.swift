@@ -171,6 +171,35 @@ extension UIFont {
         ]
     }
     
+    class func AppTitleWithText(_ title: TitleType, _ color: UIColor, text: String) -> NSAttributedString {
+        var font: UIFont?
+        
+        switch title {
+        case .title_1:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 12)
+        case .title_2:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 14)
+        case .title_3:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 16)
+        case .title_4:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 18)
+        case .title_5:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 21)
+        case .title_6:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 24)
+        }
+
+        let style = NSMutableParagraphStyle()
+        style.lineSpacing = systemLineHeight
+        let attributes = [
+            NSAttributedString.Key.paragraphStyle : style,
+            .font : font!,
+            .foregroundColor: color
+        ]
+        
+        return NSAttributedString(string: text, attributes: attributes)
+    }
+    
     class func AppBodyWithText(_ body: BodyType, _ color: UIColor, text: String) -> NSAttributedString {
         var font: UIFont?
         
