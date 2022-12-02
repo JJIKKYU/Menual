@@ -54,6 +54,7 @@ class WeatherLocationSelectView: UIView {
     }
     
     var selectTextView = UITextView().then {
+        $0.font = UIFont.AppBodyOnlyFont(.body_2)
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
         $0.textContainerInset = UIEdgeInsets.zero
@@ -96,7 +97,7 @@ class WeatherLocationSelectView: UIView {
         
         selectImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.width.height.equalTo(20)
+            make.width.height.equalTo(24)
             make.centerY.equalToSuperview()
         }
         /*

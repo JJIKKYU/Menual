@@ -80,7 +80,7 @@ class ReplyBottomView: UIView {
             make.top.equalToSuperview().offset(20)
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.height.equalTo(40)
+            make.height.equalTo(43)
         }
         
         writeBtn.snp.makeConstraints { make in

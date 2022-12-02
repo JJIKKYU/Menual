@@ -115,7 +115,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.isScrollEnabled = false
         $0.isEditable = false
         $0.backgroundColor = .clear
-        
+        $0.textContainerInset = .zero
+        $0.textContainer.lineFragmentPadding = 0
     }
     
     private let divider4 = Divider(type: ._1px).then {
@@ -126,32 +127,23 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
         $0.backgroundColor = .gray
+        $0.AppCorner(._4pt)
     }
     
     private lazy var imageViewGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(pressedImageView))
-    
-    let readCountLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.font = UIFont.AppBodyOnlyFont(.body_3)
-        $0.textColor = .white
-        $0.backgroundColor = .gray
-        $0.numberOfLines = 1
-        $0.textAlignment = .right
-        $0.text = "0번 읽었슴다"
-    }
     
     lazy var replyTableView = UITableView(frame: .zero, style: .grouped).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
         $0.dataSource = self
-        $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 72, right: 0)
+        $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 100, right: 0)
         $0.register(ReplyCell.self, forCellReuseIdentifier: "ReplyCell")
         
         $0.estimatedRowHeight = 44
         $0.rowHeight = UITableView.automaticDimension
         
-        $0.sectionHeaderHeight = UITableView.automaticDimension
-        $0.estimatedSectionHeaderHeight = 64
+        // $0.sectionHeaderHeight = UITableView.automaticDimension
+        // $0.estimatedSectionHeaderHeight = 64
         
         $0.showsVerticalScrollIndicator = false
         $0.backgroundColor = Colors.background
@@ -257,23 +249,27 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         var changedHeight: CGFloat = 0
         var enabledImageViewHeight: CGFloat = 0
-        
+
         if isEnableImageView == true {
             enabledImageViewHeight = 16 + divider4.frame.height + 12 + imageView.frame.height
         }
-        
+
         print("DiaryDetail :: isEnableImageView = \(isEnableImageView), enabledImageViewHeight = \(enabledImageViewHeight)")
-        
+
+
         // 숨김처리가 아닐 경우에만
         if isHide == false {
-            changedHeight += 24 + titleLabel.frame.height + 16 + createdAtPageView.frame.height + 8 + divider1.frame.height + 12 + weatherSelectView.frame.height + 12 + divider2.frame.height + 12 + locationSelectView.frame.height + 12 + divider3.frame.height + 16 + descriptionTextView.frame.height + enabledImageViewHeight
-            
+//            changedHeight += 24 + titleLabel.frame.height + 16 + createdAtPageView.frame.height + 8 + divider1.frame.height + 12 + weatherSelectView.frame.height + 12 + divider2.frame.height + 12 + locationSelectView.frame.height + 12 + divider3.frame.height + 16 + descriptionTextView.frame.height + enabledImageViewHeight
+            changedHeight += 24 + titleLabel.frame.height + 16 + createdAtPageView.frame.height + 8 + weatherLocationStackView.frame.height + 16 + descriptionTextView.frame.height + enabledImageViewHeight + 28
+
             tableViewHeaderView.snp.updateConstraints { make in
                 make.height.equalTo(changedHeight)
             }
         }
         print("DiaryDetail :: changedHeight = \(changedHeight)")
-        
+
+
+
         DispatchQueue.main.async {
              self.replyTableView.reloadData()
         }
@@ -332,7 +328,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.bottom.equalToSuperview()
-            make.height.equalTo(103)
+            make.height.equalTo(106)
         }
         
         spaceRequiredFAB.snp.makeConstraints { make in
@@ -351,7 +347,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         createdAtPageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview()
-            make.top.equalTo(titleLabel.snp.bottom).offset(16)
+            make.top.equalTo(titleLabel.snp.bottom).offset(20)
             make.height.equalTo(15)
         }
         
@@ -386,14 +382,14 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         descriptionTextView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.top.equalTo(weatherLocationStackView.snp.bottom).offset(16)
+            make.top.equalTo(weatherLocationStackView.snp.bottom).offset(20)
         }
         
         divider4.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.height.equalTo(1)
-            make.top.equalTo(descriptionTextView.snp.bottom).offset(16)
+            make.top.equalTo(descriptionTextView.snp.bottom).offset(20)
         }
         
         imageView.snp.makeConstraints { make in
@@ -428,6 +424,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         // print("DiaryDetail :: \(model)")
         
         titleLabel.text = model.title
+        titleLabel.setLineHeight(lineHeight: 1.28)
+        titleLabel.lineBreakStrategy = .hangulWordPriority
         titleLabel.sizeToFit()
         
         // DiaryModel에서 WeatherModel을 UnWerapping해서 세팅
@@ -459,10 +457,11 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
                                                                      Colors.grey.g100,
                                                                      text: model.description)
         descriptionTextView.sizeToFit()
-        readCountLabel.text = "\(model.readCount)번 읽었습니다"
         
-        createdAtPageView.createdAt = model.createdAt.toStringWithHourMin()
+        createdAtPageView.createdAt = model.createdAt.toString()
         createdAtPageView.page = String(model.pageNum)
+        
+        replyTableView.reloadData()
         
     }
     
@@ -651,10 +650,28 @@ extension DiaryDetailViewController {
 
 // MARK: - ReplayTableView
 extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
-   {
-       return UITableView.automaticDimension
-   }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let index = indexPath.row
+        
+        guard let replies = listener?.diaryReplies,
+              let desc = replies[safe: index]?.desc else { return 0 }
+
+        let lblDescLong = UITextView()
+        lblDescLong.textContainerInset = UIEdgeInsets(top: 17, left: 16, bottom: 19, right: 16)
+        lblDescLong.textAlignment = .left
+        // lblDescLong.text = desc
+        // lblDescLong.font = UIFont.AppBodyOnlyFont(.body_2)
+        lblDescLong.attributedText = UIFont.AppBodyWithText(.body_3,
+                                                    Colors.grey.g300,
+                                                    text: desc
+        )
+        lblDescLong.sizeToFit()
+        let width = UIScreen.main.bounds.width - 40
+        let newSize = lblDescLong.sizeThatFits(CGSize(width: width, height: CGFloat.greatestFiniteMagnitude))
+        let moreBtnSizeHeight: CGFloat = 50
+        print("width = \(width), newSize = \(newSize), cellReplyText = \(desc)")
+        return newSize.height + moreBtnSizeHeight
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listener?.diaryReplies.count ?? 0
@@ -722,7 +739,7 @@ extension DiaryDetailViewController {
         
         replyBottomView.snp.updateConstraints { make in
             make.bottom.equalToSuperview()
-            make.height.equalTo(103 + replyBottomViewPlusHeight)
+            make.height.equalTo(106 + replyBottomViewPlusHeight)
         }
     }
     
@@ -736,45 +753,44 @@ extension DiaryDetailViewController {
 // MARK: - textView Delegate
 extension DiaryDetailViewController: UITextViewDelegate {
     // MARK: textview 높이 자동조절
-//    func textViewDidChange(_ textView: UITextView) {
-//
-//        switch textView {
-//        case replyBottomView.replyTextView:
-//            let size = CGSize(width: replyBottomView.replyTextView.frame.width, height: .infinity)
-//            let estimatedSize = textView.sizeThatFits(size)
-//
-//            print("estmatedSize Height = \(estimatedSize.height)")
-//            let line = textView.numberOfLines()
-//            print("DiaryDetail :: line = \(line)")
-//
-//            /*
-//            textView.constraints.forEach { (constraint) in
-//              /// 40 이하일때는 더 이상 줄어들지 않게하기
-//                if estimatedSize.height <= 40 {
-//
-//                }
-//                else if line < 5 {
-//                    print("DiaryDetail :: line < 5")
-//                    replyBottomView.replyTextView.isScrollEnabled = false
-//                    replyBottomView.replyTextView.snp.updateConstraints { make in
-//                        make.height.equalTo(estimatedSize.height)
-//                    }
-//
-//                    replyBottomViewPlusHeight = estimatedSize.height - 40
-//                    replyBottomView.snp.updateConstraints { make in
-//                        make.height.equalTo(103 + replyBottomViewPlusHeight)
-//                    }
-//                }
-//                else if line >= 5 {
-//                    print("DiaryDetail :: line > 5")
-//                    replyBottomView.replyTextView.isScrollEnabled = true
-//                }
-//            }
-//            */
-//        default:
-//            break
-//        }
-//    }
+    func textViewDidChange(_ textView: UITextView) {
+
+        switch textView {
+        case replyBottomView.replyTextView:
+            let size = CGSize(width: replyBottomView.replyTextView.frame.width, height: .infinity)
+            let estimatedSize = textView.sizeThatFits(size)
+
+            print("estmatedSize Height = \(estimatedSize.height)")
+            let line = textView.numberOfLines()
+            print("DiaryDetail :: line = \(line)")
+
+            textView.constraints.forEach { (constraint) in
+              /// 40 이하일때는 더 이상 줄어들지 않게하기
+                if estimatedSize.height <= 43 {
+
+                }
+                else if line < 5 {
+                    print("DiaryDetail :: line < 5")
+                    replyBottomView.replyTextView.isScrollEnabled = false
+                    replyBottomView.replyTextView.snp.updateConstraints { make in
+                        make.height.equalTo(estimatedSize.height)
+                    }
+
+                    replyBottomViewPlusHeight = estimatedSize.height - 40
+                    replyBottomView.snp.updateConstraints { make in
+                        make.height.equalTo(103 + replyBottomViewPlusHeight)
+                    }
+                }
+                else if line >= 5 {
+                    print("DiaryDetail :: line > 5")
+                    replyBottomView.replyTextView.isScrollEnabled = true
+                }
+            }
+
+        default:
+            break
+        }
+    }
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         switch textView {
@@ -823,7 +839,7 @@ extension DiaryDetailViewController: DialogDelegate {
             replyBottomView.replyTextView.layoutIfNeeded()
 
             DispatchQueue.main.async {
-                self.replyTableView.reloadData()
+                // self.replyTableView.reloadData()
             }
 
         default:

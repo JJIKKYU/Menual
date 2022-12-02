@@ -57,14 +57,14 @@ class CreatedAtPageView: UIView {
         }
         
         divider.snp.makeConstraints { make in
-            make.leading.equalTo(createdAtLabel.snp.trailing).offset(8)
+            make.leading.equalTo(createdAtLabel.snp.trailing).offset(10)
             make.width.equalTo(1)
-            make.height.equalTo(15)
+            make.height.equalTo(10)
             make.centerY.equalToSuperview()
         }
         
         pageLabel.snp.makeConstraints { make in
-            make.leading.equalTo(divider.snp.trailing).offset(8)
+            make.leading.equalTo(divider.snp.trailing).offset(10)
             make.height.equalTo(15)
             make.centerY.equalToSuperview()
         }
