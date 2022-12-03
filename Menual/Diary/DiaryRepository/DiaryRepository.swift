@@ -46,6 +46,7 @@ public protocol DiaryRepository {
     
     // tempSave 로직
     func addTempSave(diaryModel: DiaryModel)
+    func updateTempSave(diaryModel: DiaryModel, tempSaveUUID: String)
     func deleteTempSave(uuidArr: [String])
     
     // Filter 로직
@@ -66,6 +67,8 @@ public protocol DiaryRepository {
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
+    
+    
 
 //    public var realmDiaryOb: Observable<[DiaryModel]> {
 //        let realm = try! Realm()
@@ -671,6 +674,35 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         realm.safeWrite {
             realm.delete(willDeleteModelObjects)
+        }
+        
+        self.fetchTempSave()
+    }
+    
+    public func updateTempSave(diaryModel: DiaryModel, tempSaveUUID: String) {
+        print("DiaryRepo :: updateTempSave!")
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        
+        let model: TempSaveModel = TempSaveModel(uuid: tempSaveUUID,
+                                                 diaryModel: diaryModel,
+                                                 createAt: Date(),
+                                                 isDeleted: false
+        )
+        
+        guard let data = realm.objects(TempSaveModelRealm.self).filter({ $0.uuid == tempSaveUUID }).first else { return }
+        
+        realm.safeWrite {
+            data.title = model.title
+            data.weatherDetailText = model.weatherDetailText
+            data.weather = model.weather
+            data.placeDetailText = model.placeDetilText
+            data.place = model.place
+            data.image = model.image != nil ? true : false
+            data.createdAt = model.createdAt
+            data.isDeleted = model.isDeleted
+            data.desc = model.description
         }
         
         self.fetchTempSave()

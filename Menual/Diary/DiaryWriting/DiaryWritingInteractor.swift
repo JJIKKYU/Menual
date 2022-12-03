@@ -335,8 +335,15 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     // tempSaveRealm에 저장
     func saveTempSave(diaryModel: DiaryModel) {
         print("DiaryWriting :: interactor -> tempsave!")
-        dependency.diaryRepository
-            .addTempSave(diaryModel: diaryModel)
+        if let tempSaveModel = tempSaveDiaryModelRelay.value {
+            print("DiaryWriting :: interactor -> TempSaveModel이 이미 있으므로 업데이트합니다.")
+            dependency.diaryRepository
+                .updateTempSave(diaryModel: diaryModel, tempSaveUUID: tempSaveModel.uuid)
+        } else {
+            print("DiaryWriting :: interactor -> TempSaveModel이 없으므로 새로 저장합니다.")
+            dependency.diaryRepository
+                .addTempSave(diaryModel: diaryModel)
+        }
         
     }
 }

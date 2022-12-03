@@ -82,17 +82,10 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     private lazy var naviView = MenualNaviView(type: .write).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
-        $0.backButton.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        
         // 글 작성 완료 버튼
         $0.rightButton1.addTarget(self, action: #selector(pressedCheckBtn), for: .touchUpInside)
-        $0.rightButton1.tintColor = .white
-        $0.rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        
         // 임시 저장 버튼
         $0.rightButton2.addTarget(self, action: #selector(pressedTempSaveBtn), for: .touchUpInside)
-        $0.rightButton2.tintColor = .white
-        $0.rightButton2.setImage(Asset._24px.storage.image.withRenderingMode(.alwaysTemplate), for: .normal)
     }
     
     private lazy var weatherPlaceToolbarView = WeatherPlaceToolbarView().then {
@@ -610,12 +603,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         else { return nil }
         print("DiaryWriting :: zipDiaryModelForTempSave!")
         
-        var weatherModel = WeatherModel(uuid: NSUUID().uuidString,
+        let weatherModel = WeatherModel(uuid: NSUUID().uuidString,
                                         weather: weatherSelectView.selectedWeatherType ?? nil,
                                         detailText: weatherSelectView.selectTitle
         )
 
-        var placeModel = PlaceModel(uuid: NSUUID().uuidString,
+        let placeModel = PlaceModel(uuid: NSUUID().uuidString,
                                     place: locationSelectView.selectedPlaceType ?? nil,
                                     detailText: locationSelectView.selectTitle
         )
@@ -626,6 +619,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         if title.count == 0 || title == defaultTitleText {
             fixedTitle = Date().toString()
         }
+        
+        
         
         let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
                                     pageNum: 0,
@@ -727,8 +722,10 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
             self.locationSelectView.selected = true
         }
         
-        self.descriptionTextView.text = tempSaveModel.description
-        self.descriptionTextView.textColor = UIColor.white
+        self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
+                                                                         Colors.grey.g100,
+                                                                         text: tempSaveModel.description
+        )
         
         self.imageUploadView.image = nil
         self.imageUploadView.image = tempSaveModel.image ?? nil
@@ -946,12 +943,13 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             }
             
         case TextViewType.weather.rawValue:
-            if weatherSelectView.selected == true {
-                
-            }
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && weatherSelectView.selected == false {
                 textView.text = defaultWeatherText
                 textView.textColor = Colors.grey.g600
+            }
+            // 선택은 했는데 따로 텍스트를 입력안했을 경우 선택한 날씨 기본 텍스트 입력하도록
+            else if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && weatherSelectView.selected == true {
+                textView.text = weatherSelectView.selectedWeatherType?.rawValue ?? ""
             }
             break
             
@@ -960,7 +958,11 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
                 textView.text = defaultPlaceText
                 textView.textColor = Colors.grey.g600
             }
-            break
+            // 선택은 했는데 따로 텍스트를 입력안했을 경우 선택한 장소 기본 텍스트 입력하도록
+            else if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && locationSelectView.selected == true {
+                textView.text = locationSelectView.selectedPlaceType?.rawValue ?? ""
+                
+                break}
             
         case TextViewType.description.rawValue:
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {

@@ -201,6 +201,7 @@ class MenualNaviView: UIView {
             titleLabel.font = UIFont.AppTitle(.title_3)
             titleLabel.text = "메뉴얼 작성"
             backButton.isHidden = false
+            backButton.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
             rightButton2.isHidden = false
             rightButton2.setImage(Asset._24px.storage.image.withRenderingMode(.alwaysTemplate), for: .normal)
             rightButton2.tintColor = Colors.grey.g100
