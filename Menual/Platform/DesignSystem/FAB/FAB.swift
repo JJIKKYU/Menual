@@ -43,6 +43,14 @@ class FAB: UIButton {
         didSet { setNeedsLayout() }
     }
     
+    var leftArrowIsEnabled: Bool =  true {
+        didSet { setNeedsLayout() }
+    }
+    
+    var rightArrowIsEnabled: Bool = true {
+        didSet { setNeedsLayout() }
+    }
+    
     private let fabIconImageView = UIImageView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.contentMode = .scaleAspectFit
@@ -201,6 +209,24 @@ class FAB: UIButton {
                 backgroundColor = Colors.grey.g800
             }
             
+        }
+        
+        switch leftArrowIsEnabled {
+        case true:
+            spaceRequiredLeftArrowBtn.isUserInteractionEnabled = true
+            spaceRequiredLeftArrowBtn.tintColor = Colors.tint.main.v500
+        case false:
+            spaceRequiredLeftArrowBtn.isUserInteractionEnabled = false
+            spaceRequiredLeftArrowBtn.tintColor = Colors.grey.g700
+        }
+        
+        switch rightArrowIsEnabled {
+        case true:
+            spaceRequiredRightArrowBtn.isUserInteractionEnabled = true
+            spaceRequiredRightArrowBtn.tintColor = Colors.tint.main.v500
+        case false:
+            spaceRequiredRightArrowBtn.isUserInteractionEnabled = false
+            spaceRequiredRightArrowBtn.tintColor = Colors.grey.g700
         }
     }
 }

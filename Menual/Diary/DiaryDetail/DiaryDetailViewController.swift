@@ -7,6 +7,7 @@
 
 import RIBs
 import RxSwift
+import RxRelay
 import UIKit
 import Then
 import SnapKit
@@ -14,7 +15,7 @@ import SnapKit
 protocol DiaryDetailPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
     func pressedReplySubmitBtn(desc: String)
-    func pressedIndicatorButton(offset: Int)
+    func pressedIndicatorButton(offset: Int, isInitMode: Bool)
     func pressedMenuMoreBtn()
     func pressedReminderBtn()
     
@@ -404,6 +405,11 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
 
     }
     
+    func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool) {
+        spaceRequiredFAB.leftArrowIsEnabled = leftArrowIsEnabled
+        spaceRequiredFAB.rightArrowIsEnabled = rightArrowIsEnabled
+    }
+    
     func loadDiaryDetail(model: DiaryModel) {
         print("DiaryDetail :: loadDiaryDetail!")
         print("DiaryDetail :: model.isHide = \(model.isHide)")
@@ -452,7 +458,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         }
         
         // descriptionTextLabel.text = model.description
-        descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_3,
+        descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
                                                                      Colors.grey.g100,
                                                                      text: model.description)
         descriptionTextView.sizeToFit()
@@ -621,7 +627,7 @@ extension DiaryDetailViewController {
     @objc
     func pressedIndicatorBtn(sender: UIButton) {
         print("DiaryDetail :: sender.s tag = \(sender.tag)")
-        listener?.pressedIndicatorButton(offset: sender.tag)
+        listener?.pressedIndicatorButton(offset: sender.tag, isInitMode: false)
         DispatchQueue.main.async {
             self.replyTableView.reloadData()
         }

@@ -30,6 +30,7 @@ protocol DiaryDetailPresentable: Presentable {
     func testLoadDiaryImage(imageName: UIImage?)
     func reminderCompViewshowToast(isEding: Bool)
     func setReminderIconEnabled(isEnabled: Bool)
+    func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool)
 }
 protocol DiaryDetailInteractorDependency {
     var diaryRepository: DiaryRepository { get }
@@ -90,6 +91,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         
         print("interactor = \(diaryModel)")
         presenter.loadDiaryDetail(model: diaryModel)
+        
+        pressedIndicatorButton(offset: 0, isInitMode: true)
         
         Observable.combineLatest(
             dependency.diaryRepository.diaryString,
@@ -261,9 +264,9 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         dependency.diaryRepository
             .addReply(info: newDiaryReplyModel)
     }
-    
+
     // Diary 이동
-    func pressedIndicatorButton(offset: Int) {
+    func pressedIndicatorButton(offset: Int, isInitMode: Bool) {
         // 1. 현재 diaryNum을 기준으로
         // 2. 왼쪽 or 오른쪽으로 이동 (pageNum이 현재 diaryNum기준 -1, +1)
         // 3. 삭제된 놈이면 건너뛰고 (isDeleted가 true일 경우)
@@ -274,12 +277,32 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         let willChangedIdx = (currentDiaryPage - 1) + offset
         print("willChangedIdx = \(willChangedIdx)")
         let willChangedDiaryModel = diaries[safe: willChangedIdx]
-
-        self.diaryModel = willChangedDiaryModel
-        print("willChangedDiaryModel = \(willChangedDiaryModel?.pageNum)")
         
-        self.changeCurrentDiarySubject.onNext(true)
-        print("pass true!")
+        // 이전 메뉴얼이 있는지 체크
+        var leftArrowIsEnabled: Bool = false
+        if let _ = diaries[safe: willChangedIdx - 1] {
+            print("DiaryDetail :: prevDiaryModel이 있습니다.")
+            leftArrowIsEnabled = true
+        }
+
+        // 다음 메뉴얼이 있는지 체크
+        var rightArrowIsEnabled: Bool = false
+        if let _ = diaries[safe: willChangedIdx + 1] {
+            print("DiaryDetail :: nextDiaryModel이 있습니다.")
+            rightArrowIsEnabled = true
+        }
+        
+        // 최초 초기화 모드일 경우에는 fab만 세팅
+        if isInitMode == true {
+            presenter.setFAB(leftArrowIsEnabled: leftArrowIsEnabled, rightArrowIsEnabled: rightArrowIsEnabled)
+        } else {
+            self.diaryModel = willChangedDiaryModel
+            print("willChangedDiaryModel = \(willChangedDiaryModel?.pageNum)")
+            
+            self.changeCurrentDiarySubject.onNext(true)
+            presenter.setFAB(leftArrowIsEnabled: leftArrowIsEnabled, rightArrowIsEnabled: rightArrowIsEnabled)
+            print("pass true!")
+        }
     }
     
     func diaryBottomSheetPressedCloseBtn() {

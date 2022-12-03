@@ -676,9 +676,10 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         self.writingType = .edit
         self.naviView.naviViewType = .edit
         self.naviView.setNaviViewType()
-        
-        self.titleTextField.text = diaryModel.title
-        self.titleTextField.textColor = Colors.grey.g200
+
+        self.titleTextField.attributedText = UIFont.AppTitleWithText(.title_5,
+                                                                     Colors.grey.g200,
+                                                                     text: diaryModel.title)
         
         self.weatherSelectView.selectTitle = diaryModel.weather?.detailText ?? ""
         self.weatherSelectView.selectedWeatherType = diaryModel.weather?.weather ?? .snow
@@ -688,8 +689,9 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         self.locationSelectView.selectTitle = diaryModel.place?.detailText ?? ""
         self.locationSelectView.selected = true
         
-        self.descriptionTextView.text = diaryModel.description
-        self.descriptionTextView.textColor = UIColor.white
+        self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
+                                                                         Colors.grey.g100,
+                                                                         text: diaryModel.description)
         
         self.imageUploadView.image = nil
         self.imageUploadView.image = diaryModel.image ?? nil
@@ -706,6 +708,7 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         self.titleTextField.textColor = Colors.grey.g200
         
         self.weatherSelectView.selectTitle = tempSaveModel.weatherDetailText ?? ""
+        self.weatherSelectView.selectTextView.centerVerticalText()
         self.weatherSelectView.selectedWeatherType = tempSaveModel.weather
         if tempSaveModel.weatherDetailText ?? "" == defaultWeatherText {
             print("DiaryWriting :: weatherDetailText가 기본입니다!")
@@ -716,6 +719,7 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         }
 
         self.locationSelectView.selectedPlaceType = tempSaveModel.place
+        self.locationSelectView.selectTextView.centerVerticalText()
         self.locationSelectView.selectTitle = tempSaveModel.placeDetilText ?? ""
         if tempSaveModel.placeDetilText ?? "" == defaultPlaceText {
             self.locationSelectView.selectTextView.textColor = Colors.grey.g600

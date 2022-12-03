@@ -45,6 +45,7 @@ enum TitleType {
 }
 
 enum BodyType {
+    case body_5
     /// - Spoqa Han Sans Pro
     /// - Regular
     /// - 16pt
@@ -133,10 +134,12 @@ extension UIFont {
     // 디자인 시스템에 정의되어 있는 타이틀 리턴
     class func AppBodyOnlyFont(_ body: BodyType) -> UIFont! {
         switch body {
-        case .body_4:
+        case .body_5:
             return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 16)
-        case .body_3:
+        case .body_4:
             return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 14)
+        case .body_3:
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 13)
         case .body_2:
             return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 12)
         case .body_1:
@@ -149,10 +152,12 @@ extension UIFont {
         var font: UIFont?
         
         switch body {
-        case .body_4:
+        case .body_5:
             font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 16)
-        case .body_3:
+        case .body_4:
             font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 14)
+        case .body_3:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 13)
         case .body_2:
             font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 12)
         case .body_1:
@@ -204,10 +209,12 @@ extension UIFont {
         var font: UIFont?
         
         switch body {
-        case .body_4:
+        case .body_5:
             font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 16)
-        case .body_3:
+        case .body_4:
             font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 14)
+        case .body_3:
+            font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 13)
         case .body_2:
             font = UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 12)
         case .body_1:
