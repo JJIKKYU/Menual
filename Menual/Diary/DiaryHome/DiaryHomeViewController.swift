@@ -793,7 +793,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         listener?.pressedDiaryCell(diaryModel: data)
     }
-    
+    //reloadJJIKKYU() -> JJIKKYU Love YangSSuz <3 진균이는 내가 아는 사람중에 제일 멋져!!! ~v~ 
     func reloadTableView() {
         print("reloadTableView!")
         // self.isFiltered = isFiltered

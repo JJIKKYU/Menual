@@ -635,9 +635,16 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
                                     detailText: locationSelectView.selectTitle
         )
         
+        // 만약 타이틀을 하나도 안썼을 경우, 쓰려고 했다가 모두 지워서 하나도 안쓴 것처럼 되었을 경우
+        // 날짜가 기본으로 입력되도록
+        var fixedTitle: String = title
+        if title.count == 0 || title == defaultTitleText {
+            fixedTitle = Date().toString()
+        }
+        
         let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
                                     pageNum: 0,
-                                    title: title == defaultTitleText ? Date().toString() : title,
+                                    title: fixedTitle,
                                     weather: weatherModel,
                                     place: placeModel,
                                     description: description,
@@ -730,7 +737,7 @@ extension DiaryWritingViewController {
         }
         
         if isShowDialog {
-            show(size: .small,
+            show(size: writingType == .writing ? .medium : .small,
                  buttonType: .twoBtn,
                  titleText: titleText,
                  subTitleText: "작성한 내용은 임시저장글에 저장됩니다.",
