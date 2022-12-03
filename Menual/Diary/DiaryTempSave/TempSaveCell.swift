@@ -39,6 +39,15 @@ class TempSaveCell: UITableViewCell {
         didSet { setNeedsLayout() }
     }
     
+    var listStatus: ListStatus = .default_ {
+        didSet { setNeedsLayout() }
+    }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        listStatus = highlighted ? .highlighed : .default_
+    }
+    
     private let listTitleView = ListTitleView(type: .title).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -112,13 +121,22 @@ class TempSaveCell: UITableViewCell {
         case false:
             listTitleView.listTitleType = .title
         }
+        
+        switch listStatus {
+        case .default_:
+            contentView.backgroundColor = Colors.background
+        case .pressed:
+            contentView.backgroundColor = Colors.grey.g700
+        case .highlighed:
+            contentView.backgroundColor = Colors.grey.g800
+        }
+        print("TempSave :: listStatus = \(listStatus)")
     }
     
     func setViews() {
-        backgroundColor = .clear
-        addSubview(listTitleView)
-        addSubview(listInfoView)
-        addSubview(delCheckBtn)
+        contentView.addSubview(listTitleView)
+        contentView.addSubview(listInfoView)
+        contentView.addSubview(delCheckBtn)
         
         listTitleView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
