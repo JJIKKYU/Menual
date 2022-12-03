@@ -210,6 +210,11 @@ class WeatherLocationSelectView: UIView {
             case .school:
                 selectImageView.image = Asset._24px.Place.school.image.withRenderingMode(.alwaysTemplate)
             }
+        } else {
+            if selectedWeatherLocationType == .location {
+                selectImageView.image = Asset._24px.place.image.withRenderingMode(.alwaysTemplate)
+                selectImageView.tintColor = Colors.grey.g700
+            }
         }
         
         if let selectedWeatherType = selectedWeatherType {
@@ -225,6 +230,11 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.image = Asset._24px.Weather.snow.image.withRenderingMode(.alwaysTemplate)
             case .thunder:
                 selectImageView.image = Asset._24px.Weather.thunder.image.withRenderingMode(.alwaysTemplate)
+            }
+        } else {
+            if selectedWeatherLocationType == .weather {
+                selectImageView.image = Asset._24px.weather.image.withRenderingMode(.alwaysTemplate)
+                selectImageView.tintColor = Colors.grey.g700
             }
         }
     }

@@ -70,6 +70,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     
     private let defaultTitleText: String = "제목을 입력할 수 있어요"
     private let defaultDescriptionText: String = "오늘의 메뉴얼을 작성해주세요."
+    private let defaultWeatherText: String = "오늘 날씨는 어땠나요?"
+    private let defaultPlaceText: String = "지금 장소는 어디신가요?"
     
     // Camera Delegate
     let notificationIdentifier: String = "StartCamera"
@@ -129,7 +131,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         
         $0.selectTextView.delegate = self
         $0.selectTextView.tag = TextViewType.weather.rawValue
-        $0.selectTextView.text = "오늘 날씨는 어땠나요?"
+        $0.selectTextView.text = self.defaultWeatherText
         $0.deleteBtn.addTarget(self, action: #selector(pressedWeatherViewDeleteBtn), for: .touchUpInside)
         $0.isDeleteBtnEnabled = false
     }
@@ -144,7 +146,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
         $0.selectTextView.delegate = self
         $0.selectTextView.tag = TextViewType.location.rawValue
-        $0.selectTextView.text = "지금 장소는 어디신가요?"
+        $0.selectTextView.text = self.defaultPlaceText
         $0.deleteBtn.addTarget(self, action: #selector(pressedPlaceViewDeleteBtn), for: .touchUpInside)
         $0.isDeleteBtnEnabled = false
     }
@@ -474,7 +476,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                 guard let self = self else { return }
 
                 print("DiaryWriting :: text - \(text)")
-                if text == "지금 장소는 어디신가요?" || text.count == 0 {
+                if text == self.defaultPlaceText || text.count == 0 {
                     self.locationSelectView.isDeleteBtnEnabled = false
                     return
                 }
@@ -491,7 +493,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                 guard let self = self else { return }
 
                 print("DiaryWriting :: text - \(text)")
-                if text == "오늘 날씨는 어땠나요?" || text.count == 0 {
+                if text == self.defaultWeatherText || text.count == 0 {
                     self.weatherSelectView.isDeleteBtnEnabled = false
                     return
                 }
@@ -608,12 +610,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         else { return nil }
         print("DiaryWriting :: zipDiaryModelForTempSave!")
         
-        let weatherModel = WeatherModel(uuid: NSUUID().uuidString,
+        var weatherModel = WeatherModel(uuid: NSUUID().uuidString,
                                         weather: weatherSelectView.selectedWeatherType ?? nil,
                                         detailText: weatherSelectView.selectTitle
         )
 
-        let placeModel = PlaceModel(uuid: NSUUID().uuidString,
+        var placeModel = PlaceModel(uuid: NSUUID().uuidString,
                                     place: locationSelectView.selectedPlaceType ?? nil,
                                     detailText: locationSelectView.selectTitle
         )
@@ -708,11 +710,22 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         
         self.weatherSelectView.selectTitle = tempSaveModel.weatherDetailText ?? ""
         self.weatherSelectView.selectedWeatherType = tempSaveModel.weather
-        self.weatherSelectView.selected = true
+        if tempSaveModel.weatherDetailText ?? "" == defaultWeatherText {
+            print("DiaryWriting :: weatherDetailText가 기본입니다!")
+            self.weatherSelectView.selectTextView.textColor = Colors.grey.g600
+            self.weatherSelectView.selected = false
+        } else {
+            self.weatherSelectView.selected = true
+        }
 
         self.locationSelectView.selectedPlaceType = tempSaveModel.place
         self.locationSelectView.selectTitle = tempSaveModel.placeDetilText ?? ""
-        self.locationSelectView.selected = true
+        if tempSaveModel.placeDetilText ?? "" == defaultPlaceText {
+            self.locationSelectView.selectTextView.textColor = Colors.grey.g600
+            self.locationSelectView.selected = false
+        } else {
+            self.locationSelectView.selected = true
+        }
         
         self.descriptionTextView.text = tempSaveModel.description
         self.descriptionTextView.textColor = UIColor.white
@@ -886,10 +899,10 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             weatherPlaceToolbarView.isHidden = false
             weatherPlaceToolbarView.weatherPlaceType = .weather
             weatherPlaceToolbarView.selectedWeatherType = selectedWeatherType
-            if textView.text == "오늘 날씨는 어땠나요?" {
+            if textView.text == defaultWeatherText {
                  weatherSelectView.selectTitle = ""
                 textView.text = nil
-                textView.textColor = UIColor.white
+                textView.textColor = Colors.grey.g400
             }
             
         case TextViewType.location.rawValue:
@@ -897,10 +910,10 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             weatherPlaceToolbarView.isHidden = false
             weatherPlaceToolbarView.weatherPlaceType = .place
             weatherPlaceToolbarView.selectedPlaceType = selectedPlaceType
-            if textView.text == "지금 장소는 어디신가요?" {
+            if textView.text == defaultPlaceText {
                  locationSelectView.selectTitle = ""
                 textView.text = nil
-                textView.textColor = UIColor.white
+                textView.textColor = Colors.grey.g400
             }
             
         case TextViewType.description.rawValue:
@@ -937,14 +950,14 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
                 
             }
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && weatherSelectView.selected == false {
-                textView.text = "오늘 날씨는 어땠나요?"
+                textView.text = defaultWeatherText
                 textView.textColor = Colors.grey.g600
             }
             break
             
         case TextViewType.location.rawValue:
             if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && locationSelectView.selected == false {
-                textView.text = "지금 장소는 어디신가요?"
+                textView.text = defaultPlaceText
                 textView.textColor = Colors.grey.g600
             }
             break

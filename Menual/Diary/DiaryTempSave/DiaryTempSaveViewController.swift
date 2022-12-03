@@ -224,6 +224,8 @@ extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSourc
         if model.uuid == currentTempSaveUUID {
             cell.isWriting = true
             print("TempSave :: 작성중아!")
+        } else {
+            cell.isWriting = false
         }
         
         cell.isDeleteSelected = false
