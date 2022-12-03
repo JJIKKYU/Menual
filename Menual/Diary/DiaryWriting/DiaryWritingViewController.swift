@@ -649,11 +649,13 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
          self.titleTextField.textColor = Colors.grey.g600
         
         self.weatherSelectView.selectTitle = ""
+        self.weatherSelectView.selectTextView.text = defaultWeatherText
         self.weatherSelectView.selectedWeatherType = nil
         self.weatherSelectView.selected = false
 
         self.locationSelectView.selectedPlaceType = nil
         self.locationSelectView.selectTitle = ""
+        self.locationSelectView.selectTextView.text = defaultPlaceText
         self.locationSelectView.selected = false
         
         self.descriptionTextView.text = defaultDescriptionText
