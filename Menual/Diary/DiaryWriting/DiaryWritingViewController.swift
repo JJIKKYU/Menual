@@ -536,9 +536,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
             print("diaryModel.id = \(diaryModel.uuid)")
             if isEdittedIamge == true,
                let selectedImage = selectedImage,
-               let selectedImageData = selectedImage.pngData(),
+               let selectedImageData = selectedImage.jpegData(compressionQuality: 0.5),
                let selectedOriginalImage = selectedOriginalImage,
-               let selectedOriginalImageData = selectedOriginalImage.pngData() {
+               let selectedOriginalImageData = selectedOriginalImage.jpegData(compressionQuality: 0.5) {
                 print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
                 listener?.saveCropImage(diaryUUID: diaryModel.uuid, imageData: selectedImageData)
                 listener?.saveOriginalImage(diaryUUID: diaryModel.uuid, imageData: selectedOriginalImageData)
@@ -568,9 +568,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
             if isEdittedIamge == true,
                let selectedImage = selectedImage,
-               let selectedImageData = selectedImage.pngData(),
+               let selectedImageData = selectedImage.jpegData(compressionQuality: 0.5),
                let selectedOriginalImage = selectedOriginalImage,
-               let selectedOriginalImageData = selectedOriginalImage.pngData(),
+               let selectedOriginalImageData = selectedOriginalImage.jpegData(compressionQuality: 0.5),
                let diaryModelUUID = diaryModelUUID {
                 print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
                 listener?.saveCropImage(diaryUUID: diaryModelUUID, imageData: selectedImageData)

@@ -545,18 +545,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         }
     }
     
-    func testLoadDiaryImage(imageName: UIImage?) {
-//        print("DiaryDetail :: Image! = \(imageName)")
-//        if let image = imageName {
-//            isEnableImageView = true
-//            divider4.isHidden = false
-//            imageView.isHidden = false
-//
-//        } else {
-//
-//        }
-    }
-    
     func reloadTableView() {
         print("diaryDetailViewController reloadTableView!")
         self.replyTableView.reloadData()

@@ -27,7 +27,6 @@ protocol DiaryDetailPresentable: Presentable {
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     func reloadTableView()
     func loadDiaryDetail(model: DiaryModel)
-    func testLoadDiaryImage(imageName: UIImage?)
     func reminderCompViewshowToast(isEding: Bool)
     func setReminderIconEnabled(isEnabled: Bool)
     func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool)
@@ -105,14 +104,10 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 print("DiaryDetail :: diaryString 구독 중!, isChanged = \(isChanged), diaryModel.uuid = \(diaryModel.pageNum)")
                 guard let currentDiaryModel = diaryArr.filter({ diaryModel.uuid == $0.uuid }).first else { return }
                 print("<- reloadTableView")
-//                dependency.diaryRepository
-//                    .loadImageFromDocumentDirectory(imageName: diaryModel.uuid, completionHandler: { image in
-//                        self.presenter.testLoadDiaryImage(imageName:image)
-//                    })
                 self.diaryModel = currentDiaryModel
                 self.diaryReplies = currentDiaryModel.replies
                 self.currentDiaryPage = currentDiaryModel.pageNum
-                if let imageData: Data = currentDiaryModel.originalImage?.pngData() {
+                if let imageData: Data = currentDiaryModel.originalImage?.jpegData(compressionQuality: 0.5) {
                     self.imageDataRelay.accept(imageData)
                 }
 
