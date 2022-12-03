@@ -25,6 +25,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
     func saveOriginalImage(diaryUUID: String, imageData: Data)
     func saveTempSave(diaryModel: DiaryModel)
     func pressedTempSaveBtn()
+    func deleteAllImages(diaryUUID: String)
     
     var page: Int { get }
 }
@@ -562,6 +563,14 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                                         isHide: false
             )
             
+            if let editDiaryModel = editDiaryModel {
+                // 전에는 이미지가 있었으나 수정할 때 이미지를 삭제한 경우
+                if editDiaryModel.image != nil && self.selectedImage == nil {
+                    print("DiaryWriting :: 전에는 이미지가 있었으나 수정할 때 이미지를 삭제한 경우")
+                    self.listener?.deleteAllImages(diaryUUID: editDiaryModel.uuid)
+                }
+            }
+            
             self.listener?.updateDiary(info: diaryModel, edittedImage: self.isEdittedIamge)
 
             if isEdittedIamge == true,
@@ -677,13 +686,24 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
                                                                      Colors.grey.g200,
                                                                      text: diaryModel.title)
         
-        self.weatherSelectView.selectTitle = diaryModel.weather?.detailText ?? ""
-        self.weatherSelectView.selectedWeatherType = diaryModel.weather?.weather ?? .snow
-        self.weatherSelectView.selected = true
+        self.weatherSelectView.selectedWeatherType = diaryModel.weather?.weather ?? nil
+        if diaryModel.weather?.detailText ?? "" == defaultWeatherText {
+            self.weatherSelectView.selected = false
+        } else {
+            self.weatherSelectView.selected = true
+            self.weatherSelectView.selectTextView.text = diaryModel.weather?.detailText ?? ""
+            self.weatherSelectView.selectTitle = diaryModel.weather?.detailText ?? ""
+        }
 
-        self.locationSelectView.selectedPlaceType = diaryModel.place?.place ?? .company
-        self.locationSelectView.selectTitle = diaryModel.place?.detailText ?? ""
-        self.locationSelectView.selected = true
+        self.locationSelectView.selectedPlaceType = diaryModel.place?.place ?? nil
+        if diaryModel.place?.detailText ?? "" == defaultPlaceText {
+            self.locationSelectView.selected = false
+        } else {
+            self.locationSelectView.selected = true
+            self.locationSelectView.selectTextView.text = diaryModel.place?.detailText ?? ""
+            self.locationSelectView.selectTitle = diaryModel.place?.detailText ?? ""
+        }
+        
         
         self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
                                                                          Colors.grey.g100,

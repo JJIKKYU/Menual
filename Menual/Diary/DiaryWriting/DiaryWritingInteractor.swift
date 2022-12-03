@@ -315,6 +315,14 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             }
     }
     
+    func deleteAllImages(diaryUUID: String) {
+        print("DiaryWriting :: deleteAllImages!")
+        dependency.diaryRepository
+            .deleteImageFromDocumentDirectory(diaryUUID: diaryUUID) { isDeleted in
+                print("DiaryWriting :: 이미지가 삭제되었습니다.")
+            }
+    }
+    
     // MARK: - DiaryBottomSheet
     func diaryBottomSheetPressedCloseBtn() {
         print("diaryBottomSheetPressedCloseBtn")
