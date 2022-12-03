@@ -244,7 +244,6 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                 .deleteImageFromDocumentDirectory(diaryUUID: uuid) { isDeleted in
                     print("DiaryWriting :: 삭제가 완료되었습니다.")
                 }
-            
         }
         
         listener?.diaryWritingPressedBackBtn(isOnlyDetach: false, isNeedToast: true, mode: .writing)

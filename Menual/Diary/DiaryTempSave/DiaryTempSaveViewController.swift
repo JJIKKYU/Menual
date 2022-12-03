@@ -228,6 +228,13 @@ extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSourc
             cell.isWriting = false
         }
         
+        if let _ = model.image {
+            print("TempSave :: 이미지가 있다면")
+            cell.imageEnabled = true
+        } else {
+            cell.imageEnabled = false
+        }
+        
         cell.isDeleteSelected = false
         cell.isDeleteMode = isDeleteMode
         cell.title = model.title
