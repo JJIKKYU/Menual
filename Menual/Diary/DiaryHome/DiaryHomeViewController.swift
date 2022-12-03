@@ -761,8 +761,11 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             if let image = data.originalImage {
                 cell.listType = .textAndImage
-                cell.image = image
+                DispatchQueue.main.async {
+                    cell.image = UIImage(data: image)
+                }
             } else {
+                cell.image = nil
                 cell.listType = .normal
             }
         }
@@ -793,7 +796,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         listener?.pressedDiaryCell(diaryModel: data)
     }
-    //reloadJJIKKYU() -> JJIKKYU Love YangSSuz <3 진균이는 내가 아는 사람중에 제일 멋져!!! ~v~ 
+    //reloadJJIKKYU() -> JJIKKYU Love YangSSuz <3 진균이는 내가 아는 사람중에 제일 멋져!!! ~v~
     func reloadTableView() {
         print("reloadTableView!")
         // self.isFiltered = isFiltered

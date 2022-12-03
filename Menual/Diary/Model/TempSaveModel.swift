@@ -13,8 +13,8 @@ public struct TempSaveModel {
     let uuid: String
     let title: String
     let description: String
-    let image: UIImage?
-    let originalImage: UIImage?
+    let image: Data?
+    let originalImage: Data?
     let weather: Weather?
     let weatherDetailText: String?
     let place: Place?
@@ -57,8 +57,8 @@ public struct TempSaveModel {
             let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(realm.uuid)
             let originalImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(realm.uuid + "Original")
             // 3. UIImage로 불러오기
-            self.image = UIImage(contentsOfFile: imageURL.path)
-            self.originalImage = UIImage(contentsOfFile: originalImageURL.path)
+            self.image = UIImage(contentsOfFile: imageURL.path)?.jpegData(compressionQuality: 0.5)
+            self.originalImage = UIImage(contentsOfFile: originalImageURL.path)?.jpegData(compressionQuality: 0.5)
         } else {
             self.image = nil
             self.originalImage = nil

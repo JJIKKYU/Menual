@@ -32,8 +32,11 @@ public protocol DiaryRepository {
     func hideDiary(isHide: Bool, info: DiaryModel) -> DiaryModel?
     func removeAllDiary()
     func deleteDiary(info: DiaryModel)
+    
+    // Image
     func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void)
     func loadImageFromDocumentDirectory(imageName: String, completionHandler: @escaping (UIImage?) -> Void)
+    func deleteImageFromDocumentDirectory(diaryUUID: String, completionHandler: @escaping (Bool) -> Void)
     
     // 겹쓰기 로직
     func addReply(info: DiaryReplyModel)
@@ -45,7 +48,7 @@ public protocol DiaryRepository {
     func deleteRecentDiarySearch(uuid: String)
     
     // tempSave 로직
-    func addTempSave(diaryModel: DiaryModel)
+    func addTempSave(diaryModel: DiaryModel, tempSaveUUID: String)
     func updateTempSave(diaryModel: DiaryModel, tempSaveUUID: String)
     func deleteTempSave(uuidArr: [String])
     
@@ -67,6 +70,10 @@ public protocol DiaryRepository {
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
+    
+    
+    
+    
     
     
 
@@ -198,6 +205,40 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
         
         completionHandler(nil)
+    }
+    
+    public func deleteImageFromDocumentDirectory(diaryUUID: String, completionHandler: @escaping (Bool) -> Void) {
+        // 1. 이미지를 삭제할 경로를 설정해줘야함 - 도큐먼트 폴더,File 관련된건 Filemanager가 관리함(싱글톤 패턴)
+        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {return}
+        
+        // 2. 이미지 파일 이름 & 최종 경로 설정
+        let imageURL = documentDirectory.appendingPathComponent(diaryUUID)
+        let originalURL = documentDirectory.appendingPathComponent(diaryUUID + "Original")
+        
+        // 3. 이미지 삭제
+        if FileManager.default.fileExists(atPath: imageURL.path) {
+            // 4. 이미지가 존재한다면 기존 경로에 있는 이미지 삭제
+            do {
+                try FileManager.default.removeItem(at: imageURL)
+                print("DiaryWriting :: DiaryRepository :: 이미지 삭제 완료 -> Crop")
+            } catch {
+                print("DiaryWriting :: DiaryRepository :: 이미지를 삭제하지 못했습니다.")
+                completionHandler(false)
+            }
+        }
+        
+        if FileManager.default.fileExists(atPath: originalURL.path) {
+            // 4. 이미지가 존재한다면 기존 경로에 있는 이미지 삭제
+            do {
+                try FileManager.default.removeItem(at: originalURL)
+                print("DiaryWriting :: DiaryRepository :: 이미지 삭제 완료 -> Original")
+            } catch {
+                print("DiaryWriting :: DiaryRepository :: 이미지를 삭제하지 못했습니다.")
+                completionHandler(false)
+            }
+        }
+        
+        completionHandler(true)
     }
     
     public func fetch() {
@@ -631,8 +672,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
         print("diaryRepo :: fetchTempSave!")
     }
 
-    public func addTempSave(diaryModel: DiaryModel) {
-        let model: TempSaveModel = TempSaveModel(uuid: UUID().uuidString,
+    public func addTempSave(diaryModel: DiaryModel, tempSaveUUID: String) {
+        let model: TempSaveModel = TempSaveModel(uuid: tempSaveUUID,
                                                  diaryModel: diaryModel,
                                                  createAt: Date(),
                                                  isDeleted: false

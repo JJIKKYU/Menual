@@ -89,7 +89,7 @@ class ListCell: UITableViewCell {
 
     private let menualImageView = UIImageView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .blue
+        $0.backgroundColor = .clear
         $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
         $0.AppCorner(._2pt)

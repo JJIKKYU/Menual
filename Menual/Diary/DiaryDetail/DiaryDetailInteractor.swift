@@ -107,7 +107,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 self.diaryModel = currentDiaryModel
                 self.diaryReplies = currentDiaryModel.replies
                 self.currentDiaryPage = currentDiaryModel.pageNum
-                if let imageData: Data = currentDiaryModel.originalImage?.jpegData(compressionQuality: 0.5) {
+                if let imageData: Data = currentDiaryModel.originalImage {
                     self.imageDataRelay.accept(imageData)
                 }
 
@@ -440,7 +440,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     func pressedImageView() {
         print("DiaryDetail :: interactor -> pressedImageView!")
-        guard let _: Data = diaryModel?.originalImage?.pngData() else { return }
+        guard let _: Data = diaryModel?.originalImage else { return }
         router?.attachDiaryDetailImage(imageDataRelay: self.imageDataRelay)
     }
 

@@ -439,7 +439,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             } else {
                 if let image = model.originalImage {
                     cell.listType = .bodyTextImage
-                    cell.image = image
+                    cell.image = UIImage(data: image)
                 } else {
                     cell.listType = .bodyText
                 }
@@ -482,7 +482,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             } else {
                 if let image = data.originalImage {
                     cell.listType = .bodyTextImage
-                    cell.image = image
+                    cell.image = UIImage(data: image)
                 } else {
                     cell.listType = .bodyText
                 }

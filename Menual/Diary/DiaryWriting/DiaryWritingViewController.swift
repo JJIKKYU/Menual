@@ -21,7 +21,6 @@ protocol DiaryWritingPresentableListener: AnyObject {
     func writeDiary(info: DiaryModel)
     func updateDiary(info: DiaryModel, edittedImage: Bool)
     
-    func testSaveImage(imageName: String, image: UIImage)
     func saveCropImage(diaryUUID: String, imageData: Data)
     func saveOriginalImage(diaryUUID: String, imageData: Data)
     func saveTempSave(diaryModel: DiaryModel)
@@ -523,8 +522,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                                         weather: weatherModel,
                                         place: placeModel,
                                         description: description == defaultDescriptionText ? "" : description,
-                                        image: self.selectedImage,
-                                        originalImage: self.selectedOriginalImage,
+                                        image: self.selectedImage?.jpegData(compressionQuality: 0.5),
+                                        originalImage: self.selectedOriginalImage?.jpegData(compressionQuality: 0.5),
                                         readCount: 0,
                                         createdAt: Date(),
                                         replies: [],
@@ -543,7 +542,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                 listener?.saveCropImage(diaryUUID: diaryModel.uuid, imageData: selectedImageData)
                 listener?.saveOriginalImage(diaryUUID: diaryModel.uuid, imageData: selectedOriginalImageData)
             }
-            // listener?.testSaveImage(imageName: diaryModel.uuid, image: self.selectedImage ?? UIImage())
             listener?.writeDiary(info: diaryModel)
             dismiss(animated: true)
 
@@ -555,8 +553,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                                         weather: weatherModel,
                                         place: placeModel,
                                         description: description == defaultDescriptionText ? "" : description,
-                                        image: self.selectedImage,
-                                        originalImage: self.selectedOriginalImage,
+                                        image: self.selectedImage?.jpegData(compressionQuality: 0.5),
+                                        originalImage: self.selectedOriginalImage?.jpegData(compressionQuality: 0.5),
                                         readCount: 0,
                                         createdAt: Date(),
                                         replies: [],
@@ -620,16 +618,14 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
             fixedTitle = Date().toString()
         }
         
-        
-        
         let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
                                     pageNum: 0,
                                     title: fixedTitle,
                                     weather: weatherModel,
                                     place: placeModel,
                                     description: description,
-                                    image: self.selectedImage,
-                                    originalImage: self.selectedOriginalImage,
+                                    image: self.selectedImage?.jpegData(compressionQuality: 0.5),
+                                    originalImage: self.selectedOriginalImage?.jpegData(compressionQuality: 0.5),
                                     readCount: 0,
                                     createdAt: Date(),
                                     replies: [],
@@ -693,8 +689,13 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
                                                                          Colors.grey.g100,
                                                                          text: diaryModel.description)
         
-        self.imageUploadView.image = nil
-        self.imageUploadView.image = diaryModel.image ?? nil
+        
+        if let image = diaryModel.image {
+            self.imageUploadView.image = UIImage(data: image)
+        } else {
+            self.imageUploadView.image = nil
+        }
+        
         
         self.selectedPlaceType = diaryModel.place?.place
         self.selectedWeatherType = diaryModel.weather?.weather
@@ -733,8 +734,18 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
                                                                          text: tempSaveModel.description
         )
         
-        self.imageUploadView.image = nil
-        self.imageUploadView.image = tempSaveModel.image ?? nil
+        if let tempSaveModelImage = tempSaveModel.image {
+            self.imageUploadView.image = UIImage(data: tempSaveModelImage)
+            self.selectedImage = UIImage(data: tempSaveModelImage)
+            self.isEdittedIamge = true
+        } else {
+            self.imageUploadView.image = nil
+        }
+        
+        if let tempSaveModelOriginalImage = tempSaveModel.originalImage {
+            self.selectedOriginalImage = UIImage(data: tempSaveModelOriginalImage)
+        }
+        
         
         self.selectedPlaceType = tempSaveModel.place
         self.selectedWeatherType = tempSaveModel.weather
@@ -1108,7 +1119,7 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                             self.cropVC = cropVC
                             cropVC.delegate = self
                             print("DiaryWriting :: selectedOriginalImage = \(image)")
-                            self.selectedOriginalImage = image
+                            self.selectedOriginalImage = self.fixImageOrientation(image)
                             picker.navigationController?.pushViewController(cropVC, animated: true)
                         }
                     }
@@ -1120,6 +1131,14 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
             self.isEdittedIamge = false
             dismiss(animated: true)
         }
+    }
+    
+    func fixImageOrientation(_ image: UIImage) -> UIImage {
+        UIGraphicsBeginImageContext(image.size)
+        image.draw(at: .zero)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage ?? image
     }
 }
 

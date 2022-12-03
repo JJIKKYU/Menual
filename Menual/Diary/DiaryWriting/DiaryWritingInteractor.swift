@@ -239,6 +239,12 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             let uuid = tempSaveModel.uuid
             dependency.diaryRepository
                 .deleteTempSave(uuidArr: [uuid])
+            
+            dependency.diaryRepository
+                .deleteImageFromDocumentDirectory(diaryUUID: uuid) { isDeleted in
+                    print("DiaryWriting :: 삭제가 완료되었습니다.")
+                }
+            
         }
         
         listener?.diaryWritingPressedBackBtn(isOnlyDetach: false, isNeedToast: true, mode: .writing)
@@ -283,13 +289,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
 //            listener?.diaryWritingPressedBackBtn(isOnlyDetach: false)
 //        }
     }
-    
-    func testSaveImage(imageName: String, image: UIImage) {
-        print("testSaveImage")
-//        dependency.diaryRepository
-//            .saveImageToDocumentDirectory(imageName: imageName, image: image)
-    }
-    
+
     func saveCropImage(diaryUUID: String, imageData: Data) {
         print("DiaryWriting :: interactor -> saveCropImage!")
 
@@ -334,6 +334,16 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     
     // tempSaveRealm에 저장
     func saveTempSave(diaryModel: DiaryModel) {
+        // 임시저장 이미지를 위해서 uuid를 미리 알고 있어야함
+        let uuid: String = UUID().uuidString
+        if let cropImageData = diaryModel.image {
+            saveCropImage(diaryUUID: uuid, imageData: cropImageData)
+        }
+        
+        if let originalImageData = diaryModel.originalImage {
+            saveOriginalImage(diaryUUID: uuid, imageData: originalImageData)
+        }
+        
         print("DiaryWriting :: interactor -> tempsave!")
         if let tempSaveModel = tempSaveDiaryModelRelay.value {
             print("DiaryWriting :: interactor -> TempSaveModel이 이미 있으므로 업데이트합니다.")
@@ -342,7 +352,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         } else {
             print("DiaryWriting :: interactor -> TempSaveModel이 없으므로 새로 저장합니다.")
             dependency.diaryRepository
-                .addTempSave(diaryModel: diaryModel)
+                .addTempSave(diaryModel: diaryModel, tempSaveUUID: uuid)
         }
         
     }

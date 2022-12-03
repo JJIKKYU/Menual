@@ -516,7 +516,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         }
     }
     
-    func setImageConstraint(image: UIImage?) {
+    func setImageConstraint(image: Data?) {
         let isImageEnabled: Bool = image != nil ? true : false
 
         print("DiaryDetail :: isImageEnabled = \(isEnableImageView)")
@@ -532,7 +532,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             imageView.isHidden = false
             
             DispatchQueue.main.async {
-                self.imageView.image = image
+                self.imageView.image = UIImage(data: image)
             }
         case false:
             divider4.isHidden = true
