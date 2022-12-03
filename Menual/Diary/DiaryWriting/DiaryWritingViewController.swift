@@ -30,7 +30,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
     var page: Int { get }
 }
 
-final class DiaryWritingViewController: UIViewController, DiaryWritingPresentable, DiaryWritingViewControllable {
+final class DiaryWritingViewController: UIViewController, DiaryWritingViewControllable {
     
     private let TITLE_TEXT_MAX_COUNT: Int = 40
     private let WEATHER_PLACE_TEXT_MAX_COUNT: Int = 25
@@ -499,25 +499,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
                 self.weatherSelectView.isDeleteBtnEnabled = true
             })
             .disposed(by: disposeBag)
-    }
-    
-    func setWeatherView(model: WeatherModel) {
-        // 날씨를 선택하지 않았으면 뷰를 변경할 필요 없음
-        guard let weather = model.weather else {
-            return
-        }
-        print("DiaryWriting ::setWeatherView = \(model)")
-        weatherSelectView.selected = true
-        weatherSelectView.selectedWeatherType = weather
-    }
-
-    func setPlaceView(model: PlaceModel) {
-        guard let place = model.place else {
-            return
-        }
-        print("DiaryWriting ::setPlaceView = \(model)")
-        locationSelectView.selected = true
-        locationSelectView.selectedPlaceType = place
+        
+        
     }
     
     func addDiary() {
@@ -659,6 +642,33 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         return diaryModel
     }
+}
+
+// MARK: - Interactor Dependency Function
+extension DiaryWritingViewController: DiaryWritingPresentable {
+    func resetDiary() {
+        print("DiaryWriting :: resetDiary!")
+        self.titleTextField.text = defaultTitleText
+         self.titleTextField.textColor = Colors.grey.g600
+        
+        self.weatherSelectView.selectTitle = ""
+        self.weatherSelectView.selectedWeatherType = nil
+        self.weatherSelectView.selected = false
+
+        self.locationSelectView.selectedPlaceType = nil
+        self.locationSelectView.selectTitle = ""
+        self.locationSelectView.selected = false
+        
+        self.descriptionTextView.text = defaultDescriptionText
+        self.descriptionTextView.textColor = Colors.grey.g600
+        
+        self.imageUploadView.image = nil
+        
+        self.selectedPlaceType = nil
+        self.selectedWeatherType = nil
+        
+        self.view.layoutIfNeeded()
+    }
     
     // 수정하기일때만 사용!
     func setDiaryEditMode(diaryModel: DiaryModel) {
@@ -712,6 +722,25 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingPresentabl
         
         self.selectedPlaceType = tempSaveModel.place
         self.selectedWeatherType = tempSaveModel.weather
+    }
+    
+    func setWeatherView(model: WeatherModel) {
+        // 날씨를 선택하지 않았으면 뷰를 변경할 필요 없음
+        guard let weather = model.weather else {
+            return
+        }
+        print("DiaryWriting ::setWeatherView = \(model)")
+        weatherSelectView.selected = true
+        weatherSelectView.selectedWeatherType = weather
+    }
+
+    func setPlaceView(model: PlaceModel) {
+        guard let place = model.place else {
+            return
+        }
+        print("DiaryWriting ::setPlaceView = \(model)")
+        locationSelectView.selected = true
+        locationSelectView.selectedPlaceType = place
     }
 }
 
@@ -795,21 +824,13 @@ extension DiaryWritingViewController {
     @objc
     func pressedPlaceViewDeleteBtn() {
         print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - locationView")
-        // selectedPlaceType = nil
-        // locationSelectView.selectedPlaceType = nil
-        // locationSelectView.selected = false
         locationSelectView.selectTextView.text = ""
-        // weatherPlaceToolbarView.selectedPlaceType = nil
     }
     
     @objc
     func pressedWeatherViewDeleteBtn() {
         print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - weatherView")
-        // selectedWeatherType = nil
-        // weatherSelectView.selectedWeatherType = nil
-        // weatherSelectView.selected = false
         weatherSelectView.selectTextView.text = ""
-        // weatherPlaceToolbarView.selectedWeatherType = nil
     }
 }
 

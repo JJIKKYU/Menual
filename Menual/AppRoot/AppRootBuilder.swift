@@ -39,15 +39,11 @@ final class AppRootBuilder: Builder<AppRootDependency>, AppRootBuildable {
             dependency: component
         )
         let profilePassword = ProfilePasswordBuilder(dependency: component)
-        let registerHome = RegisterHomeBuilder(dependency: component)
-        let loginHome = LoginHomeBuilder(dependency: component)
         let diaryHome = DiaryHomeBuilder(dependency: component)
         
         let router = AppRootRouter(
             interactor: interactor,
             viewController: viewController,
-            registerHome: registerHome,
-            loginHome: loginHome,
             diaryHome: diaryHome,
             profilePassword: profilePassword
         )

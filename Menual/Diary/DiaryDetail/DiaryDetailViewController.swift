@@ -110,7 +110,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     lazy var descriptionTextView = UITextView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.textColor = .white
         $0.text = "123"
         $0.isScrollEnabled = false
         $0.isEditable = false

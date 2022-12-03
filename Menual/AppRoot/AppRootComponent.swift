@@ -24,15 +24,10 @@ final class AppRootComponent: Component<AppRootDependency> {
     }
 }
 
-extension AppRootComponent: RegisterHomeDependency,
-                            LoginHomeDependency,
-                            DiaryHomeDependency,
+extension AppRootComponent: DiaryHomeDependency,
                             ProfilePasswordDependency,
                             AppRootInteractorDependency
 {
-    var registerHomeBuildable: RegisterHomeBuildable {
-        return RegisterHomeBuilder(dependency: self)
-    }
     
     var registerHomeBaseController: ViewControllable { rootViewController.topViewControllable }
 }

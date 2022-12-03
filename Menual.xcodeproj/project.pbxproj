@@ -74,21 +74,6 @@
 		985BFF892933721700D86106 /* ProfileOpensourceBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF852933721700D86106 /* ProfileOpensourceBuilder.swift */; };
 		985BFF8A2933721700D86106 /* ProfileOpensourceInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF862933721700D86106 /* ProfileOpensourceInteractor.swift */; };
 		985BFF8C2935ED6100D86106 /* String+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF8B2935ED6100D86106 /* String+Util.swift */; };
-		985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */; };
-		985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */; };
-		985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */; };
-		985E0EF827C21DEC00057951 /* RegisterIDInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF427C21DEC00057951 /* RegisterIDInteractor.swift */; };
-		985E0EFC27C21E9900057951 /* RegisterHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EF927C21E9900057951 /* RegisterHomeRouter.swift */; };
-		985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EFA27C21E9900057951 /* RegisterHomeBuilder.swift */; };
-		985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0EFB27C21E9900057951 /* RegisterHomeInteractor.swift */; };
-		985E0F0427C232E300057951 /* RegisterPWRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0027C232E300057951 /* RegisterPWRouter.swift */; };
-		985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0127C232E300057951 /* RegisterPWViewController.swift */; };
-		985E0F0627C232E300057951 /* RegisterPWBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0227C232E300057951 /* RegisterPWBuilder.swift */; };
-		985E0F0727C232E300057951 /* RegisterPWInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0327C232E300057951 /* RegisterPWInteractor.swift */; };
-		985E0F0D27C2690500057951 /* LoginHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0927C2690500057951 /* LoginHomeRouter.swift */; };
-		985E0F0E27C2690500057951 /* LoginHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0A27C2690500057951 /* LoginHomeViewController.swift */; };
-		985E0F0F27C2690500057951 /* LoginHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0B27C2690500057951 /* LoginHomeBuilder.swift */; };
-		985E0F1027C2690500057951 /* LoginHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F0C27C2690500057951 /* LoginHomeInteractor.swift */; };
 		985E0F1327C2750D00057951 /* AdaptivePresentationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
@@ -351,21 +336,6 @@
 		985BFF852933721700D86106 /* ProfileOpensourceBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceBuilder.swift; sourceTree = "<group>"; };
 		985BFF862933721700D86106 /* ProfileOpensourceInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceInteractor.swift; sourceTree = "<group>"; };
 		985BFF8B2935ED6100D86106 /* String+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Util.swift"; sourceTree = "<group>"; };
-		985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDRouter.swift; sourceTree = "<group>"; };
-		985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDViewController.swift; sourceTree = "<group>"; };
-		985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDBuilder.swift; sourceTree = "<group>"; };
-		985E0EF427C21DEC00057951 /* RegisterIDInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterIDInteractor.swift; sourceTree = "<group>"; };
-		985E0EF927C21E9900057951 /* RegisterHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterHomeRouter.swift; sourceTree = "<group>"; };
-		985E0EFA27C21E9900057951 /* RegisterHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterHomeBuilder.swift; sourceTree = "<group>"; };
-		985E0EFB27C21E9900057951 /* RegisterHomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterHomeInteractor.swift; sourceTree = "<group>"; };
-		985E0F0027C232E300057951 /* RegisterPWRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterPWRouter.swift; sourceTree = "<group>"; };
-		985E0F0127C232E300057951 /* RegisterPWViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterPWViewController.swift; sourceTree = "<group>"; };
-		985E0F0227C232E300057951 /* RegisterPWBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterPWBuilder.swift; sourceTree = "<group>"; };
-		985E0F0327C232E300057951 /* RegisterPWInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterPWInteractor.swift; sourceTree = "<group>"; };
-		985E0F0927C2690500057951 /* LoginHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginHomeRouter.swift; sourceTree = "<group>"; };
-		985E0F0A27C2690500057951 /* LoginHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginHomeViewController.swift; sourceTree = "<group>"; };
-		985E0F0B27C2690500057951 /* LoginHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginHomeBuilder.swift; sourceTree = "<group>"; };
-		985E0F0C27C2690500057951 /* LoginHomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginHomeInteractor.swift; sourceTree = "<group>"; };
 		985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptivePresentationControllerDelegate.swift; sourceTree = "<group>"; };
 		9888DDD927646EFF0091918F /* Menual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9888DDDC27646EFF0091918F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -663,27 +633,6 @@
 			path = Platform;
 			sourceTree = "<group>";
 		};
-		98281EC5278AC26600736D59 /* Register */ = {
-			isa = PBXGroup;
-			children = (
-				985E0F0827C2688E00057951 /* LoginHome */,
-				985E0EFF27C232D100057951 /* RegisterPW */,
-				985E0EF027C21DD700057951 /* RegistreID */,
-				98281EC8278AC35600736D59 /* RegisterHome */,
-			);
-			path = Register;
-			sourceTree = "<group>";
-		};
-		98281EC8278AC35600736D59 /* RegisterHome */ = {
-			isa = PBXGroup;
-			children = (
-				985E0EF927C21E9900057951 /* RegisterHomeRouter.swift */,
-				985E0EFA27C21E9900057951 /* RegisterHomeBuilder.swift */,
-				985E0EFB27C21E9900057951 /* RegisterHomeInteractor.swift */,
-			);
-			path = RegisterHome;
-			sourceTree = "<group>";
-		};
 		983CDF3F28FBDD85001E2A2D /* Badges */ = {
 			isa = PBXGroup;
 			children = (
@@ -829,39 +778,6 @@
 			path = ProfileOpensource;
 			sourceTree = "<group>";
 		};
-		985E0EF027C21DD700057951 /* RegistreID */ = {
-			isa = PBXGroup;
-			children = (
-				985E0EF127C21DEC00057951 /* RegisterIDRouter.swift */,
-				985E0EF227C21DEC00057951 /* RegisterIDViewController.swift */,
-				985E0EF327C21DEC00057951 /* RegisterIDBuilder.swift */,
-				985E0EF427C21DEC00057951 /* RegisterIDInteractor.swift */,
-			);
-			path = RegistreID;
-			sourceTree = "<group>";
-		};
-		985E0EFF27C232D100057951 /* RegisterPW */ = {
-			isa = PBXGroup;
-			children = (
-				985E0F0027C232E300057951 /* RegisterPWRouter.swift */,
-				985E0F0127C232E300057951 /* RegisterPWViewController.swift */,
-				985E0F0227C232E300057951 /* RegisterPWBuilder.swift */,
-				985E0F0327C232E300057951 /* RegisterPWInteractor.swift */,
-			);
-			path = RegisterPW;
-			sourceTree = "<group>";
-		};
-		985E0F0827C2688E00057951 /* LoginHome */ = {
-			isa = PBXGroup;
-			children = (
-				985E0F0927C2690500057951 /* LoginHomeRouter.swift */,
-				985E0F0A27C2690500057951 /* LoginHomeViewController.swift */,
-				985E0F0B27C2690500057951 /* LoginHomeBuilder.swift */,
-				985E0F0C27C2690500057951 /* LoginHomeInteractor.swift */,
-			);
-			path = LoginHome;
-			sourceTree = "<group>";
-		};
 		9888DDD027646EFF0091918F = {
 			isa = PBXGroup;
 			children = (
@@ -897,7 +813,6 @@
 				98934A9327E6F11100178A8E /* Profile */,
 				988A186D278ACA7A00DF81DA /* Diary */,
 				98281EBF278AC14700736D59 /* Platform */,
-				98281EC5278AC26600736D59 /* Register */,
 			);
 			path = Menual;
 			sourceTree = "<group>";
@@ -1851,7 +1766,6 @@
 				9843929C29053CEC00EF526E /* DiaryDetailImageInteractor.swift in Sources */,
 				988A2D5927F97A000046C43A /* DiaryMomentsViewController.swift in Sources */,
 				98B557D12841F9B600F8CA3E /* UIButton+Util.swift in Sources */,
-				985E0EF527C21DEC00057951 /* RegisterIDRouter.swift in Sources */,
 				989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */,
 				98A56C692868224B000AC4FF /* WeatherPlaceSelectView.swift in Sources */,
 				98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */,
@@ -1870,7 +1784,6 @@
 				985BFF7B293239A000D86106 /* CGRect+Util.swift in Sources */,
 				98EADBAA284E45BF007C298C /* DividerCell.swift in Sources */,
 				9843929B29053CEC00EF526E /* DiaryDetailImageBuilder.swift in Sources */,
-				985E0EFD27C21E9900057951 /* RegisterHomeBuilder.swift in Sources */,
 				98B557BE2841D11900F8CA3E /* ListViewController.swift in Sources */,
 				985BFF7929320FDC00D86106 /* ReminderRequsetModel.swift in Sources */,
 				98B5574D281E60D200F8CA3E /* WeatherPlaceHistoryCell.swift in Sources */,
@@ -1880,7 +1793,6 @@
 				98B557762838A4ED00F8CA3E /* BoxButtonBuilder.swift in Sources */,
 				98B55769283896AA00F8CA3E /* DesignSystemBuilder.swift in Sources */,
 				98A2BD912802B43E00C1FB92 /* MyMenualCell.swift in Sources */,
-				985E0F0F27C2690500057951 /* LoginHomeBuilder.swift in Sources */,
 				988A2D3B27F82F3B0046C43A /* ViewControllableMock.swift in Sources */,
 				98EADBB02866D3D4007C298C /* ProfileHomeCell.swift in Sources */,
 				98F31DC528CC65B900EE1C8A /* MenualBottomSheetMenuComponentView.swift in Sources */,
@@ -1890,7 +1802,6 @@
 				985BFF6F2924C36500D86106 /* ProfileDeveloperViewController.swift in Sources */,
 				9888DE1B276483DD0091918F /* AppRootComponent.swift in Sources */,
 				988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */,
-				985E0EF727C21DEC00057951 /* RegisterIDBuilder.swift in Sources */,
 				98EADBAC284E475C007C298C /* DividerView.swift in Sources */,
 				98F3A27F28150052000851F0 /* DiaryBottomSheetViewController.swift in Sources */,
 				9888DE142764825F0091918F /* AppRootRouter.swift in Sources */,
@@ -1899,7 +1810,6 @@
 				98536EAD291CB74400A72B8E /* ToastViewController.swift in Sources */,
 				98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */,
 				984392CE2917C34000EF526E /* PasswordModel.swift in Sources */,
-				985E0EF627C21DEC00057951 /* RegisterIDViewController.swift in Sources */,
 				985BFF8C2935ED6100D86106 /* String+Util.swift in Sources */,
 				98B55787283A0F3300F8CA3E /* ListHeaderViewController.swift in Sources */,
 				983CDF4128FBDD9B001E2A2D /* Badges.swift in Sources */,
@@ -1917,7 +1827,6 @@
 				98A56C6B28682506000AC4FF /* WeatherPlaceSelectViewCell.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
 				9843929929053CEC00EF526E /* DiaryDetailImageRouter.swift in Sources */,
-				985E0F0627C232E300057951 /* RegisterPWBuilder.swift in Sources */,
 				984392B42917601C00EF526E /* ProfilePasswordRouter.swift in Sources */,
 				98EADBB42866E91E007C298C /* DiarySearchView.swift in Sources */,
 				98A56C632867734A000AC4FF /* DatePageTextCountView.swift in Sources */,
@@ -1931,16 +1840,12 @@
 				98B5577F283A031400F8CA3E /* GNBHeaderBuilder.swift in Sources */,
 				989AE04427F0900800177573 /* DiarySearchViewController.swift in Sources */,
 				98B55780283A031400F8CA3E /* GNBHeaderInteractor.swift in Sources */,
-				985E0F0E27C2690500057951 /* LoginHomeViewController.swift in Sources */,
 				98EADB842841FEAA007C298C /* Date+Util.swift in Sources */,
-				985E0F1027C2690500057951 /* LoginHomeInteractor.swift in Sources */,
 				988A2D5027F96BEF0046C43A /* Icons+Generated.swift in Sources */,
 				984392CC2917B43A00EF526E /* PasswordIconView.swift in Sources */,
 				980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */,
-				985E0F0727C232E300057951 /* RegisterPWInteractor.swift in Sources */,
 				98EADB8C28432850007C298C /* TabsBuilder.swift in Sources */,
 				98B557CC2841EEAC00F8CA3E /* FABInteractor.swift in Sources */,
-				985E0EFC27C21E9900057951 /* RegisterHomeRouter.swift in Sources */,
 				98A76E6B2920EFD40024CE35 /* CalendarView.swift in Sources */,
 				98EADB8A28432850007C298C /* TabsRouter.swift in Sources */,
 				98B557C02841D11900F8CA3E /* ListInteractor.swift in Sources */,
@@ -1954,9 +1859,7 @@
 				98EADB9628437828007C298C /* MomentsCell.swift in Sources */,
 				984392A7291632DB00EF526E /* MetaDataViewController.swift in Sources */,
 				98EADB8B28432850007C298C /* TabsViewController.swift in Sources */,
-				985E0F0527C232E300057951 /* RegisterPWViewController.swift in Sources */,
 				985BFF6829249B8D00D86106 /* ReminderModel.swift in Sources */,
-				985E0EFE27C21E9900057951 /* RegisterHomeInteractor.swift in Sources */,
 				98B557532830C7B200F8CA3E /* DiaryTempSaveRouter.swift in Sources */,
 				98B55767283896AA00F8CA3E /* DesignSystemRouter.swift in Sources */,
 				985BFF7F29323DC400D86106 /* UIScrollView+Util.swift in Sources */,
@@ -1970,14 +1873,12 @@
 				98B557552830C7B200F8CA3E /* DiaryTempSaveBuilder.swift in Sources */,
 				98B557B3283A4A8300F8CA3E /* CapsuleButtonBuilder.swift in Sources */,
 				9888DE162764825F0091918F /* AppRootInteractor.swift in Sources */,
-				985E0EF827C21DEC00057951 /* RegisterIDInteractor.swift in Sources */,
 				980924B6279BCD670034D0CC /* DiaryHomeRouter.swift in Sources */,
 				98F3A28128150052000851F0 /* DiaryBottomSheetInteractor.swift in Sources */,
 				988C10A92920BA0100C80937 /* MenualBottomSheetReminderComponentView.swift in Sources */,
 				98A56C65286775CA000AC4FF /* ImageUploadView.swift in Sources */,
 				985BFF7D29323AD100D86106 /* Array+Util.swift in Sources */,
 				98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */,
-				985E0F0427C232E300057951 /* RegisterPWRouter.swift in Sources */,
 				98B55798283A177700F8CA3E /* Moments.swift in Sources */,
 				98A2BD9E280A833000C1FB92 /* DiaryDetailBuilder.swift in Sources */,
 				98B557B7283A4C6300F8CA3E /* CapsuleButton.swift in Sources */,
@@ -1985,7 +1886,6 @@
 				983783F4287A951400EAD78C /* ReplyCell.swift in Sources */,
 				98EADB9228432FA5007C298C /* TabsIconView.swift in Sources */,
 				984392B62917601C00EF526E /* ProfilePasswordBuilder.swift in Sources */,
-				985E0F0D27C2690500057951 /* LoginHomeRouter.swift in Sources */,
 				98F31DCA28CC7F2000EE1C8A /* MenualDateFilterComponentView.swift in Sources */,
 				98A76E692920ED090024CE35 /* MonthView.swift in Sources */,
 				9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */,

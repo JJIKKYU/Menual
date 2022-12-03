@@ -15,7 +15,7 @@ protocol DiaryWritingRouting: ViewableRouting {
     func attachBottomSheet(weatherModelOb: BehaviorRelay<WeatherModel?>, placeModelOb: BehaviorRelay<PlaceModel?>, bottomSheetType: MenualBottomSheetType)
     func detachBottomSheet()
     
-    func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>)
+    func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>, tempSaveResetRelay: BehaviorRelay<Bool>)
     func detachDiaryTempSave(isOnlyDetach: Bool)
 }
 
@@ -29,6 +29,9 @@ protocol DiaryWritingPresentable: Presentable {
     // 다이어리 수정 모드로 변경
     func setDiaryEditMode(diaryModel: DiaryModel)
     func setTempSaveModel(tempSaveModel: TempSaveModel)
+    
+    // 다이어리 초기화
+    func resetDiary()
 }
 
 protocol DiaryWritingListener: AnyObject {
@@ -78,8 +81,10 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     // 수정하기일 경우에는 내용을 세팅해야하기 때문에 릴레이에 작접 accept 해줌
     private let diaryModelRelay = BehaviorRelay<DiaryModel?>(value: nil)
     
-    // TempSave -> DiaryWrtiting으로 전달하기 위한 Relay
+    // TempSave <-> DiaryWrtiting으로 전달하기 위한 Relay
     private let tempSaveDiaryModelRelay = BehaviorRelay<TempSaveModel?>(value: nil)
+    // TempSave 적용되었던 메뉴얼을 초기화해야 할 경우
+    private let tempSaveResetRelay = BehaviorRelay<Bool>(value: false)
     
     // 이미지 업로드 후 updateDiary 하기 위해 관리하는 Relay
     private let updateDiaryModelRelay = BehaviorRelay<DiaryModel?>(value: nil)
@@ -183,6 +188,20 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
 
                 print("DiaryWriting :: tempSaveDiaryModelRelay! = \(tempSaveModel)")
                 self.presenter.setTempSaveModel(tempSaveModel: tempSaveModel)
+            })
+            .disposed(by: disposebag)
+        
+        tempSaveResetRelay
+            .subscribe(onNext: { [weak self] needReset in
+                guard let self = self else { return }
+                
+                switch needReset {
+                case true:
+                    self.presenter.resetDiary()
+
+                case false:
+                    break
+                }
             })
             .disposed(by: disposebag)
     }
@@ -306,7 +325,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     // MARK: - diaryTempSave
     
     func pressedTempSaveBtn() {
-        router?.attachDiaryTempSave(tempSaveDiaryModelRelay: tempSaveDiaryModelRelay)
+        router?.attachDiaryTempSave(tempSaveDiaryModelRelay: tempSaveDiaryModelRelay, tempSaveResetRelay: tempSaveResetRelay)
     }
     
     func diaryTempSavePressentBackBtn(isOnlyDetach: Bool) {

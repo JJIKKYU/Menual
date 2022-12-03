@@ -95,14 +95,15 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
     }
     
     // MARK: - DiaryTempSave
-    func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>) {
+    func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>, tempSaveResetRelay: BehaviorRelay<Bool>) {
         if diaryTempSaveRouting != nil {
             return
         }
         
         let router = diaryTempSaveBuildable.build(
             withListener: interactor,
-            tempSaveDiaryModelRelay: tempSaveDiaryModelRelay
+            tempSaveDiaryModelRelay: tempSaveDiaryModelRelay,
+            tempSaveResetRelay: tempSaveResetRelay
         )
         
         // presentInsideNavigation(router.viewControllable)

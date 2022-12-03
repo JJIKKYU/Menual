@@ -33,6 +33,7 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
     weak var listener: DiaryTempSaveListener?
     
     internal let tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>
+    internal let tempSaveResetRelay: BehaviorRelay<Bool>
     
     private let dependency: DiaryTempSaveDependency
     private let disposeBag = DisposeBag()
@@ -45,11 +46,13 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
     init(
         presenter: DiaryTempSavePresentable,
         dependency: DiaryTempSaveDependency,
-        tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>
+        tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>,
+        tempSaveResetRelay: BehaviorRelay<Bool>
     ) {
         self.dependency = dependency
         dependency.diaryRepository.fetchTempSave()
         self.tempSaveDiaryModelRelay = tempSaveDiaryModelRelay
+        self.tempSaveResetRelay = tempSaveResetRelay
         super.init(presenter: presenter)
         presenter.listener = self
         bind()

@@ -19,6 +19,7 @@ protocol DiaryTempSavePresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
     var tempSaveRelay: BehaviorRelay<[TempSaveModel]> { get }
     var tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?> { get }
+    var tempSaveResetRelay: BehaviorRelay<Bool> { get }
     var deleteTempSaveUUIDArrRelay: BehaviorRelay<[String]> { get }
     func deleteTempSave()
     func pressedTempSaveCell(uuid: String)
@@ -177,6 +178,18 @@ extension DiaryTempSaveViewController {
     @objc
     func pressedBottomDeleteBtn() {
         print("TempSave :: pressedBottomDeleteBtn")
+
+        // 임시저장된 메뉴얼을 '작성중' 상태로 만들었는데 삭제할 경우
+        if let tempSaveDiaryModel = listener?.tempSaveDiaryModelRelay.value {
+            let willDeleteTempSaveDiaryModel = listener?.deleteTempSaveUUIDArrRelay.value.filter({ $0 == tempSaveDiaryModel.uuid }).first ?? ""
+            
+            // 삭제하려고 하는 메뉴얼 중에 작성중인 상태의 메뉴얼이 있을 경우
+            if tempSaveDiaryModel.uuid == willDeleteTempSaveDiaryModel {
+                print("TempSave :: 삭제하려고 하는 메뉴얼 중에 작성중인 메뉴얼이 있습니다.")
+                listener?.tempSaveResetRelay.accept(true)
+            }
+        }
+        
         listener?.deleteTempSave()
         listener?.deleteTempSaveUUIDArrRelay.accept([])
         isDeleteMode = !isDeleteMode
