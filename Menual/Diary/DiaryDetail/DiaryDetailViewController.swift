@@ -11,6 +11,7 @@ import RxRelay
 import UIKit
 import Then
 import SnapKit
+import RealmSwift
 
 protocol DiaryDetailPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
@@ -22,6 +23,7 @@ protocol DiaryDetailPresentableListener: AnyObject {
     func pressedImageView()
     
     func hideDiary()
+    func deleteReply(uuid: String)
     
     var diaryReplies: [DiaryReplyModel] { get }
     var currentDiaryPage: Int { get }
@@ -37,6 +39,9 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     // 숨김처리일 경우 사용되는 변수
     private var isHide: Bool = false
     private var replyTextPlcaeHolder: String = "겹쓸내용을 입력해 주세요"
+    
+    private var isShowKeboard: Bool = false
+    private var willDeleteReplyUUID: String?
     
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -639,6 +644,21 @@ extension DiaryDetailViewController {
         print("DiaryDetail :: pressedImageView!")
         listener?.pressedImageView()
     }
+    
+    @objc
+    func pressedReplyCloseBtn(sender: UIButton) {
+        print("DiaryDetail :: pressedRelyCloseBtn!, sender.tag = \(sender.tag)")
+        guard let cell = replyTableView.cellForRow(at: IndexPath(row: sender.tag, section: 0)) as? ReplyCell else { return }
+        
+        print("DiaryDetail :: uuid = \(cell.replyUUID)")
+        self.willDeleteReplyUUID = cell.replyUUID
+        show(size: .small,
+             buttonType: .twoBtn,
+             titleText: "겹쓰기를 삭제할까요?",
+             cancelButtonText: "아녀",
+             confirmButtonText: "넹"
+        )
+    }
 }
 
 // MARK: - ReplayTableView
@@ -679,7 +699,9 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
         guard let replies = listener?.diaryReplies,
               let desc = replies[safe: index]?.desc,
               let createdAt = replies[safe: index]?.createdAt,
-              let replyNum = replies[safe: index]?.replyNum else { return UITableViewCell() }
+              let replyNum = replies[safe: index]?.replyNum,
+              let uuid = replies[safe: index]?.uuid
+        else { return UITableViewCell() }
 
         cell.backgroundColor = .clear
         // cell이 클릭되지 않도록
@@ -689,6 +711,9 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
         cell.replyNum = replyNum
         cell.createdAt = createdAt
         cell.pageNum = pageNum
+        cell.replyUUID = uuid
+        cell.closeBtn.tag = indexPath.row
+        cell.closeBtn.addTarget(self, action: #selector(pressedReplyCloseBtn(sender:)), for: .touchUpInside)
         // cell.replyTextView.sizeToFit()
         
 //        if let currentDiaryPage = listener?.currentDiaryPage {
@@ -709,6 +734,7 @@ extension DiaryDetailViewController {
         print("keyboardWillShow! - \(keyboardHeight)")
         
         spaceRequiredFAB.isHidden = true
+        isShowKeboard = true
         
         replyTableView.snp.updateConstraints { make in
             make.bottom.equalToSuperview().inset(keyboardHeight)
@@ -724,6 +750,7 @@ extension DiaryDetailViewController {
     func keyboardWillHide(_ notification: NSNotification) {
         print("keyboardWillHide!")
         
+        isShowKeboard = false
         spaceRequiredFAB.isHidden = false
         
         replyTableView.snp.updateConstraints { make in
@@ -770,8 +797,14 @@ extension DiaryDetailViewController: UITextViewDelegate {
                     }
 
                     replyBottomViewPlusHeight = estimatedSize.height - 40
-                    replyBottomView.snp.updateConstraints { make in
-                        make.height.equalTo(103 + replyBottomViewPlusHeight)
+                    if isShowKeboard {
+                        replyBottomView.snp.updateConstraints { make in
+                            make.height.equalTo(84 + replyBottomViewPlusHeight)
+                        }
+                    } else {
+                        replyBottomView.snp.updateConstraints { make in
+                            make.height.equalTo(106 + replyBottomViewPlusHeight)
+                        }
                     }
                 }
                 else if line >= 5 {
@@ -831,9 +864,9 @@ extension DiaryDetailViewController: DialogDelegate {
             replyBottomView.replyTextView.text = ""
             replyBottomView.replyTextView.layoutIfNeeded()
 
-            DispatchQueue.main.async {
-                // self.replyTableView.reloadData()
-            }
+        case "겹쓰기를 삭제할까요?":
+            guard let willDeleteReplyUUID = willDeleteReplyUUID else { return }
+            listener?.deleteReply(uuid: willDeleteReplyUUID)
 
         default:
             break
@@ -851,6 +884,9 @@ extension DiaryDetailViewController: DialogDelegate {
             
         case "겹쓰기 작성을 완료하시겠어요?":
             break
+            
+        case "겹쓰기를 삭제할까요?":
+            self.willDeleteReplyUUID = nil
 
         default:
             break

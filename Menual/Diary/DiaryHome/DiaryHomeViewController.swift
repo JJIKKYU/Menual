@@ -39,6 +39,7 @@ protocol DiaryHomePresentableListener: AnyObject {
     var lastPageNumRelay: BehaviorRelay<Int> { get }
     var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> { get }
     var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> { get }
+    var diaryDictionary: [String: DiaryHomeSectionModel] { get }
 }
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
@@ -374,46 +375,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             })
             .disposed(by: self.disposeBag)
         
-        listener?.diaryMonthSetRelay
-            .subscribe(onNext: { [weak self] diaryYearModelArr in
-                guard let self = self else { return }
-                
-                print("DiaryHome :: diaryMonthSetRelay")
-                
-                var sectionCount: Int = 0
-                for diaryYearModel in diaryYearModelArr {
-                    // ["2022JUL", "2022JUM"]
-                    guard let monthArr = diaryYearModel.months?.getMonthArr() else {
-                        return
-                    }
-                    
-                    for month in monthArr {
-                        let sectionName: String = "\(diaryYearModel.year)\(month)"
-                        print("sectionName = \(sectionName), sectionCount = \(sectionCount)")
-                        self.sectionNameDic[sectionCount] = sectionName
-                        self.cellsectionNumberDic[sectionName] = sectionCount
-                        self.cellsectionNumberDic2[sectionCount] =  diaryYearModel.months?.getMenualCountWithMonth(MM: month) ?? 0
-                        
-                        sectionCount += 1
-                    }
-                }
-
-                print("sectionCount = \(sectionCount)")
-                
-                // sectionCount가 하나도 없다는 것은 아무런 메뉴얼도 없다는 뜻이므로 변수 초기화
-                if sectionCount == 0 {
-                    self.sectionNameDic = [:]
-                    self.cellsectionNumberDic = [:]
-                    self.cellsectionNumberDic2 = [:]
-                }
-                print("cell, for문 끝! sectionCount = \(sectionCount), sectionNameDic = \(self.sectionNameDic), cellSectionNumberDic = \(self.cellsectionNumberDic), cellsectionNumberDic2 = \(self.cellsectionNumberDic2)")
-
-                // self.setEmptyView(isEnabled: false)
-                // self.myMenualTableView.reloadData()
-                self.reloadTableView()
-            })
-            .disposed(by: disposeBag)
-        
         listener?.filteredDiaryMonthSetRelay
             .subscribe(onNext: { [weak self] diaryYearModelArr in
                 guard let self = self else { return }
@@ -502,6 +463,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         guard let sectionIdx = cellsectionNumberDic[yearDateFormatString] else { return }
         myMenualTableView.scrollToRow(at: IndexPath(row: 0, section: sectionIdx), at: .middle, animated: true)
         print("DiaryHome :: scrollToDateFilter = \(sectionIdx)")
+    }
+    
+    func deleteRow(index: Int) {
+        // myMenualTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
     }
 }
 
@@ -672,11 +637,21 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             return monthMenualCount
         } else {
+            /*
             guard let monthMenualCount = cellsectionNumberDic2[section] else { return 0 }
 
             print("monthMenualCount = \(monthMenualCount)")
 
+            
             return monthMenualCount
+             */
+            
+            guard let diaryDictionary = listener?.diaryDictionary else { return 0 }
+            guard let findDict = diaryDictionary.filter({ $0.value.sectionIndex == section }).first else { return 0 }
+            
+            print("DiaryHome :: findDict! = \(findDict)")
+            return findDict.value.diaries.count
+            // return sectionCount
         }
     }
     
@@ -685,76 +660,31 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             print("filteredSectionNameDic.count = \(filteredSectionNameDic.count), \(filteredSectionNameDic)")
             return filteredSectionNameDic.count
         } else {
-            return sectionNameDic.count
+
+            guard let diaryDictionary = listener?.diaryDictionary else { return 0 }
+            return diaryDictionary.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
         let defaultCell = UITableViewCell()
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return defaultCell }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath) as? ListCell,
+              let diaryDictionry: [String: DiaryHomeSectionModel] = listener?.diaryDictionary
+        else { return defaultCell }
         
-
-        cell.backgroundColor = .clear
-
-        // print("cell, ------------------")
         let index: Int = indexPath.row
         let section: Int = indexPath.section
-        // print("cell, section!! = \(section), indexPath = \(indexPath), index = \(index), !!? \(sectionNameDic[section])")
-        // guard let data = myMenualArr[safe: index] else { return UITableViewCell() }
-        var data: DiaryModel?
         
-        var sectionName: String = ""
+        guard let dataDictionary = diaryDictionry.filter ({ $0.value.sectionIndex == section }).first else { return defaultCell }
+        
+        guard let data = dataDictionary.value.diaries[safe: index] else { return defaultCell }
+        
+        print("DiaryHome :: data! = \(data)")
         if self.isFilteredRelay.value {
-            guard let _sectionName = filteredSectionNameDic[section] else { return defaultCell }
-            sectionName = _sectionName
-        } else {
-            guard let _sectionName = sectionNameDic[section] else { return defaultCell }
-            sectionName = _sectionName
-        }
-        // guard let sectionName = sectionNameDic[section] else { return defaultCell }
-        
-        // 연도 찾기
-        // 2022, 2023 등 Year Parsing
-        let yearRange = NSRange(sectionName.startIndex..<sectionName.index(sectionName.startIndex, offsetBy: 4), in: sectionName)
-        let year = (sectionName as NSString).substring(with: yearRange)
-        
-        // 달 찾기
-        // AUG, SEP 등 Month Parsing
-        let monthRange = NSRange(sectionName.index(sectionName.startIndex, offsetBy: 4)..<sectionName.index(sectionName.startIndex, offsetBy: 7), in: sectionName)
-        let month = (sectionName as NSString).substring(with: monthRange)
-        // print("cell, year = \(year), month = \(month)")
-        
-        var diaryYearModelArr: [DiaryYearModel] = []
-        if self.isFilteredRelay.value {
-            diaryYearModelArr = listener?.filteredDiaryMonthSetRelay.value ?? []
-        } else {
-            diaryYearModelArr = listener?.diaryMonthSetRelay.value ?? []
-        }
 
-        for diaryYearModel in diaryYearModelArr {
-            if diaryYearModel.year.description != year { continue }
-            // print("cell, diaryYearmodel과 같은 year을 찾았습니다! = \(year)")
-            guard let diaryModelData: [DiaryModel] = diaryYearModel.months?.getMenualArr(MM: month) else { return defaultCell }
-
-            // print("cell, diaryModelData를 찾았습니다. = \(diaryModelData)")
-            data = diaryModelData[safe: index]
-            
-        }
-        
-        guard let data = data else { return defaultCell }
-        
-        var sectionNumber: Int = 0
-        if self.isFilteredRelay.value {
-            guard let _sectionNumber: Int = filteredCellsectionNumberDic[data.getSectionName()] else { return defaultCell }
-            sectionNumber = _sectionNumber
         } else {
-            guard let _sectionNumber: Int = cellsectionNumberDic[data.getSectionName()] else { return defaultCell }
-            sectionNumber = _sectionNumber
-        }
-        // let sectionNumber: Int = cellsectionNumberDic[data.getSectionName()]
 
-        // print("cell, sectionNumber = \(sectionNumber), section = \(section)")
+        }
         
         if data.isHide {
             cell.listType = .hide
@@ -783,7 +713,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         cell.pageCount = pageCount
         cell.reviewCount = replies
         cell.testModel = data
-
+        
         return cell
     }
     
@@ -805,6 +735,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         momentsCollectionView.reloadData()
     }
     
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let sectionListHeader = SectionListHeaderView()
         sectionListHeader.layer.zPosition = -1
@@ -812,28 +743,11 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         sectionListHeader.backgroundColor = .clear
         sectionListHeader.title = "2022.999"
         
-        // print("section, section = \(section)")
-
-        var sectionNameFormat: String = ""
-        if self.isFilteredRelay.value {
-            guard let _sectionNameFormat = filteredSectionNameDic[section] else { return sectionListHeader }
-            sectionNameFormat = _sectionNameFormat
-        } else {
-            guard let _sectionNameFormat = sectionNameDic[section] else { return sectionListHeader }
-            sectionNameFormat = _sectionNameFormat
-        }
+        guard let diaryDictionary = listener?.diaryDictionary,
+              let sectionName = diaryDictionary.filter ({ $0.value.sectionIndex == section }).first?.value.sectionName
+        else { return sectionListHeader }
         
-        // guard let sectionNameFormat = sectionNameDic[section] else { return sectionListHeader }
-        
-        // 연도 변경
-        let yearRange = NSRange(sectionNameFormat.startIndex..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4), in: sectionNameFormat)
-        let year = (sectionNameFormat as NSString).substring(with: yearRange)
-        
-        // 월로 변경
-        let monthRange = NSRange(sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 4)..<sectionNameFormat.index(sectionNameFormat.startIndex, offsetBy: 7), in: sectionNameFormat)
-        let month = (sectionNameFormat as NSString).substring(with: monthRange).convertMonthName()
-
-        sectionListHeader.title = year + "." + month
+        sectionListHeader.title = sectionName
         
         return sectionListHeader
     }
@@ -979,7 +893,7 @@ extension DiaryHomeViewController {
             self.writeBoxBtn.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
             self.writeFAB.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
             self.filterEmptyView.isHidden = true
-            self.myMenualTableView.reloadData()
+            self.reloadTableView()
         }
     }
 }

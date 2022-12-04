@@ -8,6 +8,7 @@
 import RIBs
 import RxSwift
 import RxRelay
+import RealmSwift
 
 protocol DiaryDetailRouting: ViewableRouting {
     func attachBottomSheet(type: MenualBottomSheetType, menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?)
@@ -70,6 +71,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     // BottomSheet에서 메뉴를 눌렀을때 사용하는 Relay
     var menuComponentRelay = BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>(value: .none)
+    var notificationToken: NotificationToken?
+    var replyNotificationToken: NotificationToken?
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -93,28 +96,84 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         
         pressedIndicatorButton(offset: 0, isInitMode: true)
         
-        Observable.combineLatest(
-            dependency.diaryRepository.diaryString,
-            self.changeCurrentDiarySubject
-        )
-            .subscribe(onNext: { [weak self] diaryArr, isChanged in
-                guard let self = self,
-                      let diaryModel = self.diaryModel else { return }
+//        Observable.combineLatest(
+//            dependency.diaryRepository.diaryString,
+//            self.changeCurrentDiarySubject
+//        )
+//            .subscribe(onNext: { [weak self] diaryArr, isChanged in
+//                guard let self = self,
+//                      let diaryModel = self.diaryModel else { return }
+//                
+//                print("DiaryDetail :: diaryString 구독 중!, isChanged = \(isChanged), diaryModel.uuid = \(diaryModel.pageNum)")
+//                guard let currentDiaryModel = diaryArr.filter({ diaryModel.uuid == $0.uuid }).first else { return }
+//                print("<- reloadTableView")
+//                self.diaryModel = currentDiaryModel
+//                self.diaryReplies = currentDiaryModel.replies
+//                self.currentDiaryPage = currentDiaryModel.pageNum
+//                if let imageData: Data = currentDiaryModel.originalImage {
+//                    self.imageDataRelay.accept(imageData)
+//                }
+//
+//                presenter.loadDiaryDetail(model: currentDiaryModel)
+//            })
+//            .disposed(by: self.disposebag)
+
+        guard let realm = Realm.safeInit() else { return }
+//        notificationToken = realm.objects(DiaryModelRealm.self)
+//            .observe { result in
+//                switch result {
+//                case .initial(let model):
+//                    print("DiaryDetail :: realmObserve = initial! = \(model)")
+//                case .update(let model, let deletions, let insertions, let modifications):
+//                    print("DiaryDetail :: update! = \(model)")
+//                    if deletions.count > 0 {
+//                        print("DiaryDetail :: realmObserve = deleteRow = \(deletions)")
+//                    }
+//
+//                    if insertions.count > 0 {
+//                        print("DiaryDetail :: realmObserve = insertion = \(insertions)")
+//                    }
+//
+//                    if modifications.count > 0 {
+//                        print("DiaryDetail :: realmObserve = modifications = \(modifications)")
+//                    }
+//
+//                case .error(let error):
+//                    fatalError("\(error)")
+//                }
+//            }
+        
+        let diary = realm.object(ofType: DiaryModelRealm.self, forPrimaryKey: diaryModel.id)
+        replyNotificationToken = diary?.replies.observe({ [weak self] changes in
+            guard let self = self else { return }
+
+            switch changes {
+            case .initial(let model):
+                // print("DiaryDetail :: realmObserve2 = initial! = \(model)")
+                break
+
+            case .update(let model, let deletions, let insertions, let modifications):
+                // print("DiaryDetail :: update! = \(model)")
+                if deletions.count > 0 {
+                    guard let deletionRow: Int = deletions.first else { return }
+                    // print("DiaryDetail :: realmObserve2 = deleteRow = \(deletions)")
+                    self.diaryReplies.remove(at: deletionRow)
+                    self.presenter.reloadTableView()
+                }
                 
-                print("DiaryDetail :: diaryString 구독 중!, isChanged = \(isChanged), diaryModel.uuid = \(diaryModel.pageNum)")
-                guard let currentDiaryModel = diaryArr.filter({ diaryModel.uuid == $0.uuid }).first else { return }
-                print("<- reloadTableView")
-                self.diaryModel = currentDiaryModel
-                self.diaryReplies = currentDiaryModel.replies
-                self.currentDiaryPage = currentDiaryModel.pageNum
-                if let imageData: Data = currentDiaryModel.originalImage {
-                    self.imageDataRelay.accept(imageData)
+                if insertions.count > 0 {
+                    guard let insertionRow: Int = insertions.first else { return }
+                    let replyModelRealm = model[insertionRow]
+                    let replyModel = DiaryReplyModel(replyModelRealm)
+                    self.diaryReplies.append(replyModel)
+                    self.presenter.reloadTableView()
+                    // print("DiaryDetail :: realmObserve2 = insertion = \(insertions)")
                 }
 
-                presenter.loadDiaryDetail(model: currentDiaryModel)
-            })
-            .disposed(by: self.disposebag)
-        
+            case .error(let error):
+                fatalError("\(error)")
+            }
+        })
         
         menuComponentRelay
             .subscribe(onNext: { [weak self] comp in
@@ -256,8 +315,10 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                                                  isDeleted: false
         )
         
-        dependency.diaryRepository
-            .addReply(info: newDiaryReplyModel)
+        DispatchQueue.global(qos: .background).async {
+            self.dependency.diaryRepository
+                .addReply(info: newDiaryReplyModel)
+        }
     }
 
     // Diary 이동
@@ -297,6 +358,16 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             self.changeCurrentDiarySubject.onNext(true)
             presenter.setFAB(leftArrowIsEnabled: leftArrowIsEnabled, rightArrowIsEnabled: rightArrowIsEnabled)
             print("pass true!")
+        }
+    }
+    
+    func deleteReply(uuid: String) {
+        print("DiaryDetail :: DeletReply!")
+        guard let diaryUUID: String = diaryModel?.uuid else { return }
+
+        DispatchQueue.global(qos: .background).async {
+            self.dependency.diaryRepository
+                .deleteReply(diaryUUID: diaryUUID, replyUUID: uuid)
         }
     }
     

@@ -11,6 +11,8 @@ import Then
 
 class ReplyCell: UITableViewCell {
     
+    var replyUUID: String = ""
+    
     var replyText: String = " " {
         didSet { setNeedsLayout() }
     }
@@ -57,14 +59,14 @@ class ReplyCell: UITableViewCell {
         $0.isEditable = false
     }
     
-    let testLabel = UILabel().then {
+    let infoLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.text = "test | test"
         $0.textColor = Colors.grey.g600
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
     }
     
-    let moreBtn = UIButton().then {
+    let closeBtn = UIButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._20px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g600
@@ -97,8 +99,8 @@ class ReplyCell: UITableViewCell {
     func setViews() {
         contentView.addSubview(wrapView)
         wrapView.addSubview(replyTextView)
-        wrapView.addSubview(testLabel)
-        wrapView.addSubview(moreBtn)
+        wrapView.addSubview(infoLabel)
+        wrapView.addSubview(closeBtn)
         
         wrapView.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview()
@@ -113,15 +115,15 @@ class ReplyCell: UITableViewCell {
             make.bottom.equalToSuperview().offset(-50)
         }
         
-        testLabel.snp.makeConstraints { make in
+        infoLabel.snp.makeConstraints { make in
             make.top.equalTo(replyTextView.snp.bottom).offset(9)
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.bottom.equalToSuperview().inset(16)
         }
         
-        moreBtn.snp.makeConstraints { make in
-            make.centerY.equalTo(testLabel)
+        closeBtn.snp.makeConstraints { make in
+            make.centerY.equalTo(infoLabel)
             make.trailing.equalToSuperview().inset(20)
             make.width.height.equalTo(20)
             // amake.bottom.equalToSuperview()
@@ -139,6 +141,6 @@ class ReplyCell: UITableViewCell {
         replyTextView.layoutIfNeeded()
         
         print("ReplyCell :: replyTextSize = \(replyTextView.frame.height)")
-        testLabel.text = createdAt.toString() + "  |  " + "P. \(pageNum)-\(String(replyNum))"
+        infoLabel.text = createdAt.toString() + "  |  " + "P. \(pageNum)-\(String(replyNum))"
     }
 }

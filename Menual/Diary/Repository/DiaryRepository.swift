@@ -40,6 +40,7 @@ public protocol DiaryRepository {
     
     // 겹쓰기 로직
     func addReply(info: DiaryReplyModel)
+    func deleteReply(diaryUUID: String, replyUUID: String)
     
     // 최근검색목록 로직
     func addDiarySearch(info: DiaryModel)
@@ -70,35 +71,6 @@ public protocol DiaryRepository {
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
-    
-    
-    
-    
-    
-    
-
-//    public var realmDiaryOb: Observable<[DiaryModel]> {
-//        let realm = try! Realm()
-//
-//        let result = realm.objects(DiaryModelRealm.self)
-//        let ob = Observable.array(from: result)
-//            .map { diaryArr -> [DiaryModel] in
-//                var arr: [DiaryModel] = []
-//                for diary in diaryArr {
-//                    let diaryModel = DiaryModel(uuid: diary.uuid,
-//                                                title: diary.title,
-//                                                weather: diary.weather ?? .none,
-//                                                location: diary.location,
-//                                                description: diary.desc,
-//                                                image: diary.image,
-//                                                readCount: diary.readCount
-//                    )
-//                    arr.append(diaryModel)
-//                }
-//                return arr
-//            }
-//        return ob
-//    }
 
     public var diaryString: BehaviorRelay<[DiaryModel]> { diaryModelSubject }
     public let diaryModelSubject = BehaviorRelay<[DiaryModel]>(value: [])
@@ -120,32 +92,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     public var reminder: BehaviorRelay<[ReminderModel]> { reminderSubject }
     public let reminderSubject = BehaviorRelay<[ReminderModel]>(value: [])
-    
-    /*
-    // public var cardOnFileString: ReadOnlyCurrentValuePublisher<[PaymentMethod]> { paymentMethodsSubject }
-    public func addDiary(info: DiaryModel) throws -> Observable<DiaryModel> {
-        print("addDiary!")
-//        let requset = AddCardRequest(baseURL: baseURL, info: info)
-//        return network.send(requset)
-//            .map(\.output.card)
-//            .handleEvents(receiveSubscription: nil,
-//                          receiveOutput: { [weak self] method in
-//                guard let this = self else {
-//                    return
-//                }
-//                this.paymentMethodsSubject.send(this.paymentMethodsSubject.value + [method])
-//            },
-//                          receiveCompletion: nil,
-//                          receiveCancel: nil,
-//                          receiveRequest: nil)
-//            .eraseToAnyPublisher()
-//
-        let diary = try self.diaryModelSubject.value()
-        self.diaryModelSubject.onNext(diary)
-        
-        return Observable<DiaryModel>
-    }
-     */
     
     public func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void) {
         // 1. 이미지를 저장할 경로를 설정해줘야함 - 도큐먼트 폴더,File 관련된건 Filemanager가 관리함(싱글톤 패턴)
@@ -330,10 +276,10 @@ public final class DiaryRepositoryImp: DiaryRepository {
             // realm.create(DiaryModelRealm.self, value: DiaryModelRealm(info))
         }
         
-        let result: [DiaryModel] = (diaryModelSubject.value + [newInfo]).sorted { $0.createdAt > $1.createdAt }
+        // let result: [DiaryModel] = (diaryModelSubject.value + [newInfo]).sorted { $0.createdAt > $1.createdAt }
         
-        diaryModelSubject.accept(result)
-        self.fetchDiary()
+        // diaryModelSubject.accept(result)
+        // self.fetchDiary()
         print("addDiary! - 3")
     }
     
@@ -457,7 +403,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
 
         diaryModelSubject.accept(arr)
          */
-        fetch()
+        // fetch()
     }
     
     public func hideDiary(isHide: Bool, info: DiaryModel) -> DiaryModel? {
@@ -522,9 +468,40 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         let models = realm.objects(DiaryModelRealm.self).map { DiaryModel($0) }
         let result: [DiaryModel] = models.sorted { $0.createdAt > $1.createdAt }
+//
+//        DispatchQueue.main.async {
+//            self.diaryModelSubject.accept(result)
+//            self.fetchDiary()
+//        }
+    }
+    
+    public func deleteReply(diaryUUID: String, replyUUID: String) {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
         
-        diaryModelSubject.accept(result)
-        fetchDiary()
+        guard let diary = realm.objects(DiaryModelRealm.self).filter("uuid == %@", diaryUUID).first else {
+            return
+        }
+        
+        print("DiaryRepo :: diary = \(diary)")
+        
+        guard let replyRealm = diary.replies.filter({ $0.uuid == replyUUID }).first else { return }
+        
+        print("DiaryRepo :: replyRealm = \(replyRealm)")
+
+        realm.safeWrite {
+            realm.delete(replyRealm)
+        }
+//
+//        let result: [DiaryModel] = realm.objects(DiaryModelRealm.self)
+//            .sorted { $0.createdAt > $1.createdAt}
+//            .map { DiaryModel($0)}
+
+//        DispatchQueue.main.async {
+//            self.diaryModelSubject.accept(result)
+//            self.fetchDiary()
+//        }
     }
 
     // MARK: - 최근검색목록 로직 (SearchModel)

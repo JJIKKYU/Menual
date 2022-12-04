@@ -10,6 +10,7 @@ import RealmSwift
 
 // MARK: - 앱에서 사용하는 DiaryModel
 public struct DiaryModel {
+    let id: ObjectId
     let uuid: String
     var pageNum: Int
     let title: String
@@ -27,6 +28,7 @@ public struct DiaryModel {
     
     // 각 Property를 넣어서 초기화
     init(uuid: String, pageNum: Int, title: String, weather: WeatherModel?, place: PlaceModel?, description: String, image: Data?, originalImage: Data?, readCount: Int, createdAt: Date, replies: [DiaryReplyModel], isDeleted: Bool, isHide: Bool) {
+        self.id = ObjectId()
         self.uuid = uuid
         self.pageNum = pageNum
         self.title = title
@@ -44,6 +46,7 @@ public struct DiaryModel {
     
     // Realm 객체를 넣어서 초기화
     init(_ realm: DiaryModelRealm) {
+        self.id = realm._id
         self.uuid = realm.uuid
         self.pageNum = realm.pageNum
         self.title = realm.title

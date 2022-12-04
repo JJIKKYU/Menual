@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - My Menual에서 달/연도마다 얼마나 썼는지 담는 모델
-public struct DiaryMonthModel {
+public struct DiaryMonthModel: PropertyReflectable {
     var monthCount: Int = 0 {
         didSet {
             print("monthCount! = \(oldValue)")
@@ -278,7 +278,7 @@ public struct DiaryMonthModel {
     
     // 날짜 필터 사용
     mutating func setMenualArr(MM: String, diaryModel: [DiaryModel]) {
-        removeAll()
+        // removeAll()
         let mm: String = MM.lowercased()
         switch mm {
         case "jan":
@@ -332,6 +332,8 @@ public struct DiaryMonthModel {
         default:
             break
         }
+        
+        setMenualAllCount()
     }
     
     mutating func setMenualAllCount() {
