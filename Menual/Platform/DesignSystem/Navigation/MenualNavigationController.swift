@@ -287,7 +287,7 @@ class MenualNaviView: UIView {
             break
         case .myPageCancel:
             break
-        case .write:
+        case .write, .edit:
             if rightButton1IsActive {
                 rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
                 rightButton1.tintColor = Colors.tint.sub.n400
@@ -305,15 +305,6 @@ class MenualNaviView: UIView {
             } else {
                 rightButton2.tintColor = Colors.grey.g100
                 rightButton2.setImage(Asset._24px.Alert.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)
-            }
-            break
-        case .edit:
-            if rightButton1IsActive {
-                rightButton1.tintColor = Colors.grey.g100
-                rightButton1.isUserInteractionEnabled = true
-            } else {
-                rightButton1.tintColor = Colors.grey.g600
-                rightButton1.isUserInteractionEnabled = false
             }
             break
         case .temporarySave:

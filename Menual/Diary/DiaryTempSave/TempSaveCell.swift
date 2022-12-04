@@ -111,6 +111,7 @@ class TempSaveCell: UITableViewCell {
             listInfoView.infoType = .timeWriting
             
         case false:
+            print("TempSave :: listInfoView.infoType에 .time을 대입했습니다.")
             listInfoView.infoType = .time
         }
         

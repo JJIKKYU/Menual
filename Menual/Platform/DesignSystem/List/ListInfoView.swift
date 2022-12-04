@@ -178,6 +178,8 @@ class ListInfoView: UIView {
         case .time:
             dateLabel.isHidden = false
             timeLabel.isHidden = false
+            verticalDivider1.isHidden = true
+            writingLabel.isHidden = true
             
         case .timeWriting:
             dateLabel.isHidden = false

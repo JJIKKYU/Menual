@@ -137,6 +137,7 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
                     self.naviView.rightButton1.isEnabled = true
                     self.emptyView.isHidden = true
                 }
+                print("TempSave :: tempSveRelay! reloadData!")
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
@@ -187,6 +188,7 @@ extension DiaryTempSaveViewController {
             if tempSaveDiaryModel.uuid == willDeleteTempSaveDiaryModel {
                 print("TempSave :: 삭제하려고 하는 메뉴얼 중에 작성중인 메뉴얼이 있습니다.")
                 listener?.tempSaveResetRelay.accept(true)
+                listener?.tempSaveDiaryModelRelay.accept(nil)
             }
         }
         
@@ -219,13 +221,12 @@ extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSourc
         else { return UITableViewCell() }
         
         let currentTempSaveUUID: String = listener?.tempSaveDiaryModelRelay.value?.uuid ?? ""
-        
+
+        cell.isWriting = false
         // 이전에 선택했던 UUID가 같다면 작성중으로 표현
         if model.uuid == currentTempSaveUUID {
             cell.isWriting = true
             print("TempSave :: 작성중아!")
-        } else {
-            cell.isWriting = false
         }
         
         if let _ = model.image {

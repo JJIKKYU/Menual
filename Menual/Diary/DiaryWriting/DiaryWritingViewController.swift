@@ -872,12 +872,14 @@ extension DiaryWritingViewController {
     func pressedPlaceViewDeleteBtn() {
         print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - locationView")
         locationSelectView.selectTextView.text = ""
+        isEditBeginRelay.accept(true)
     }
     
     @objc
     func pressedWeatherViewDeleteBtn() {
         print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - weatherView")
         weatherSelectView.selectTextView.text = ""
+        isEditBeginRelay.accept(true)
     }
 }
 
@@ -1291,6 +1293,7 @@ extension DiaryWritingViewController: DialogDelegate {
             imageUploadView.image = nil
             selectedImage = nil
             selectedOriginalImage = nil
+            isEditBeginRelay.accept(true)
             break
             
         default:
