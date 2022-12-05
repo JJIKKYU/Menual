@@ -148,9 +148,7 @@ class ListTitleView: UIView {
 
     
     public func highlightText(keyword: String) {
-        print("keyword = \(keyword)")
         // 타이틀
-        
         switch listTitleType {
         case .titlePicture, .title:
             let titleAtrString = NSMutableAttributedString(string: titleText)

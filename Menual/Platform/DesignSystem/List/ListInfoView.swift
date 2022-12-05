@@ -169,7 +169,6 @@ class ListInfoView: UIView {
         super.layoutSubviews()
         
         dateLabel.text = date
-        print("time = \(time)")
         timeLabel.text = time
         pageLabel.text = "P. \(pageCount)"
         reviewLabel.text = "+\(reviewCount)"

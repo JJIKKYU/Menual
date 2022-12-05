@@ -139,7 +139,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     arraySerction.enumerated().forEach { (index: Int, sectioName: String) in
                         self.diaryDictionary[sectioName] = DiaryHomeSectionModel(sectionName: sectioName, sectionIndex: index, diaries: [])
                     }
-                    for diary in model {
+                    let sortedModel: [DiaryModelRealm] = model.sorted(by: { $0.createdAt > $1.createdAt })
+                    for diary in sortedModel {
                         let sectionName: String = diary.createdAt.toStringWithYYYYMM()
                         self.diaryDictionary[sectionName]?.diaries.append(DiaryModel(diary))
                     }
@@ -152,16 +153,34 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     print("DiaryHome :: update! = \(model)")
                     if deletions.count > 0 {
                         guard let deletionsRow: Int = deletions.first else { return }
+                        
+                        print("DiaryHome :: deletions! = \(model[deletionsRow])")
                     }
                     
                     if insertions.count > 0 {
                         guard let insertionsRow: Int = insertions.first else { return }
                         print("DiaryHome :: realmObserve = insertion = \(insertions)")
+                        
+                        print("DiaryHome :: insertion! = \(model[insertionsRow])")
+                        let diary: DiaryModelRealm = model[insertionsRow]
+                        let sectionName: String = diary.createdAt.toStringWithYYYYMM()
+                        self.diaryDictionary[sectionName]?.diaries.insert(DiaryModel(diary), at: 0)
+                        self.presenter.reloadTableView()
                     }
                         
                     if modifications.count > 0 {
                         guard let modificationsRow: Int = modifications.first else { return }
                         print("DiaryHome :: realmObserve = modifications = \(modifications)")
+                        let diary: DiaryModelRealm = model[modificationsRow]
+                        let sectionName: String = diary.createdAt.toStringWithYYYYMM()
+
+                        guard let diaries: [DiaryModel] = self.diaryDictionary[sectionName]?.diaries,
+                              let index: Int = diaries.indices.filter ({ diaries[$0].uuid == diary.uuid }).first
+                        else { return }
+                        
+                        print("DiaryHome :: modifications Index = \(index)")
+                        self.diaryDictionary[sectionName]?.diaries[index] = DiaryModel(diary)
+                        self.presenter.reloadTableView()
                     }
                         
                     case .error(let error):

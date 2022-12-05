@@ -679,7 +679,6 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         guard let data = dataDictionary.value.diaries[safe: index] else { return defaultCell }
         
-        print("DiaryHome :: data! = \(data)")
         if self.isFilteredRelay.value {
 
         } else {
