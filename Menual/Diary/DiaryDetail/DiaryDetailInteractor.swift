@@ -296,6 +296,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+        print("DiaryDetail :: WillResignActive")
+        self.replyNotificationToken = nil
     }
     
     func pressedBackBtn(isOnlyDetach: Bool) {

@@ -37,7 +37,6 @@ protocol DiaryHomePresentableListener: AnyObject {
     func pressedDateFilterBtn()
     
     var lastPageNumRelay: BehaviorRelay<Int> { get }
-    var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> { get }
     var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> { get }
     var diaryDictionary: [String: DiaryHomeSectionModel] { get }
 }
@@ -465,8 +464,36 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         print("DiaryHome :: scrollToDateFilter = \(sectionIdx)")
     }
     
-    func deleteRow(index: Int) {
-        // myMenualTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    func deleteTableViewSection(section: Int) {
+        myMenualTableView.beginUpdates()
+        let indexSet = IndexSet(integer: section)
+        myMenualTableView.deleteSections(indexSet, with: .automatic)
+        myMenualTableView.endUpdates()
+    }
+    
+    func deleteTableViewRow(section: Int, row: Int) {
+        myMenualTableView.beginUpdates()
+        myMenualTableView.deleteRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        myMenualTableView.endUpdates()
+    }
+    
+    func reloadTableViewRow(section: Int, row: Int) {
+        myMenualTableView.beginUpdates()
+        myMenualTableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        myMenualTableView.endUpdates()
+    }
+    
+    func insertTableViewSection() {
+        myMenualTableView.beginUpdates()
+        let indexSet = IndexSet(integer: myMenualTableView.numberOfSections )
+        myMenualTableView.insertSections(indexSet, with: .automatic)
+        myMenualTableView.endUpdates()
+    }
+    
+    func insertTableViewRow(section: Int, row: Int) {
+        myMenualTableView.beginUpdates()
+        myMenualTableView.insertRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        myMenualTableView.endUpdates()
     }
 }
 
@@ -649,7 +676,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard let diaryDictionary = listener?.diaryDictionary else { return 0 }
             guard let findDict = diaryDictionary.filter({ $0.value.sectionIndex == section }).first else { return 0 }
             
-            print("DiaryHome :: findDict! = \(findDict)")
+            // print("DiaryHome :: findDict! = \(findDict)")
             return findDict.value.diaries.count
             // return sectionCount
         }

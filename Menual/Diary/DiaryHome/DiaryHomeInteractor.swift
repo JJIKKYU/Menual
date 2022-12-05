@@ -34,7 +34,13 @@ protocol DiaryHomePresentable: Presentable {
     
     func reloadTableView()
     func scrollToDateFilter(yearDateFormatString: String)
-    func deleteRow(index: Int)
+
+    func reloadTableViewRow(section: Int, row: Int)
+    func insertTableViewRow(section: Int, row: Int)
+    func deleteTableViewRow(section: Int, row: Int)
+    
+    func insertTableViewSection()
+    func deleteTableViewSection(section: Int)
 }
 
 protocol DiaryHomeListener: AnyObject {
@@ -55,7 +61,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     private var disposebag: DisposeBag
 
     var lastPageNumRelay = BehaviorRelay<Int>(value: 0)
-    var diaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> = BehaviorRelay<[DiaryYearModel]>(value: [])
     var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
     let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
     
@@ -63,12 +68,10 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     let filteredPlaceArrRelay = BehaviorRelay<[Place]>(value: [])
     
     var notificationToken: NotificationToken?
+    
+    var diaryRealmArr: Results<DiaryModelRealm>?
     var diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
-//    var filteredWeatherArr: [Weather] = []
-//    var filteredPlaceArr: [Place] = []
 
-    // TODO: Add additional dependencies to constructor. Do not perform any logic
-    // in constructor.
     init(
         presenter: DiaryHomePresentable,
         dependency: DiaryHomeInteractorDependency
@@ -76,7 +79,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         self.dependency = dependency
         self.disposebag = DisposeBag()
         self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
-        // self.diaryMonthSetRelay = dependency.diaryRepository.diaryMonthDic
         self.filteredDiaryMonthSetRelay = dependency.diaryRepository.filteredMonthDic
         super.init(presenter: presenter)
         presenter.listener = self
@@ -124,7 +126,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     self.diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
                     
                     // 전체 PageNum 추려내기
-                    let lastPageNum = model.sorted { $0.createdAt > $1.createdAt }.first?.pageNum ?? 0
+                    let lastPageNum = model.filter { $0.isDeleted == false }
+                        .sorted { $0.createdAt > $1.createdAt }
+                        .first?.pageNum ?? 0
                     self.lastPageNumRelay.accept(lastPageNum)
                     
                     // 초기에는 필터 적용이 아니므로 false 전달
@@ -132,14 +136,15 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
                     // Set로 중복되지 않도록, Section Header Name 추가 (2022.12, 2022.11 등)
                     var section = Set<String>()
-                    model.forEach { section.insert($0.createdAt.toStringWithYYYYMM()) }
+                    let newModel = model.filter{ $0.isDeleted == false }
+                    newModel.forEach { section.insert($0.createdAt.toStringWithYYYYMM()) }
                     //
                     var arraySerction = Array(section)
                     arraySerction.sort { $0 > $1 }
                     arraySerction.enumerated().forEach { (index: Int, sectioName: String) in
                         self.diaryDictionary[sectioName] = DiaryHomeSectionModel(sectionName: sectioName, sectionIndex: index, diaries: [])
                     }
-                    let sortedModel: [DiaryModelRealm] = model.sorted(by: { $0.createdAt > $1.createdAt })
+                    let sortedModel: [DiaryModelRealm] = newModel.sorted(by: { $0.createdAt > $1.createdAt })
                     for diary in sortedModel {
                         let sectionName: String = diary.createdAt.toStringWithYYYYMM()
                         self.diaryDictionary[sectionName]?.diaries.append(DiaryModel(diary))
@@ -149,23 +154,36 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
                     self.presenter.reloadTableView()
                     
-                case .update(let model, let deletions, let insertions, let modifications):
+                case .update(let model, _, let insertions, let modifications):
                     print("DiaryHome :: update! = \(model)")
-                    if deletions.count > 0 {
-                        guard let deletionsRow: Int = deletions.first else { return }
-                        
-                        print("DiaryHome :: deletions! = \(model[deletionsRow])")
-                    }
-                    
                     if insertions.count > 0 {
                         guard let insertionsRow: Int = insertions.first else { return }
                         print("DiaryHome :: realmObserve = insertion = \(insertions)")
-                        
-                        print("DiaryHome :: insertion! = \(model[insertionsRow])")
                         let diary: DiaryModelRealm = model[insertionsRow]
                         let sectionName: String = diary.createdAt.toStringWithYYYYMM()
+
+                        // 글이 하나도 없을 경우에는 sectionIndex 0에 작성될 수 있도록
+                        let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex ?? 0
+                        if self.diaryDictionary[sectionName] == nil {
+                            print("DiaryHome :: test! = nil입니다!")
+                            self.diaryDictionary[sectionName] = DiaryHomeSectionModel(sectionName: sectionName, sectionIndex: 0, diaries: [])
+                            self.presenter.insertTableViewSection()
+                        }
+
+                        // 전체 PageNum 추려내기
+                        let lastPageNum = model.filter { $0.isDeleted == false }
+                            .sorted { $0.createdAt > $1.createdAt }
+                            .first?.pageNum ?? 0
+                        
+                        let lastPageNumTest = self.diaryDictionary[sectionName]?.diaries.filter { $0.isDeleted == false }.first?.pageNum
+                        
+                        print("DiaryHome :: test! = \(lastPageNum), \(lastPageNumTest)")
+                        self.lastPageNumRelay.accept(lastPageNum)
+                        
+
                         self.diaryDictionary[sectionName]?.diaries.insert(DiaryModel(diary), at: 0)
-                        self.presenter.reloadTableView()
+                        print("DiaryHome :: test! = \(self.diaryDictionary[sectionName]?.diaries)")
+                        self.presenter.insertTableViewRow(section: sectionIndex, row: 0)
                     }
                         
                     if modifications.count > 0 {
@@ -175,146 +193,41 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         let sectionName: String = diary.createdAt.toStringWithYYYYMM()
 
                         guard let diaries: [DiaryModel] = self.diaryDictionary[sectionName]?.diaries,
-                              let index: Int = diaries.indices.filter ({ diaries[$0].uuid == diary.uuid }).first
+                              let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex,
+                              let row: Int = diaries.indices.filter ({ diaries[$0].uuid == diary.uuid }).first
                         else { return }
                         
-                        print("DiaryHome :: modifications Index = \(index)")
-                        self.diaryDictionary[sectionName]?.diaries[index] = DiaryModel(diary)
-                        self.presenter.reloadTableView()
+                        // 삭제일때
+                        if diary.isDeleted == true {
+                            // 전체 PageNum 추려내기
+                            let lastPageNum = model.filter { $0.isDeleted == false }
+                                .sorted { $0.createdAt > $1.createdAt }
+                                .first?.pageNum ?? 0
+
+                            self.lastPageNumRelay.accept(lastPageNum)
+                            self.diaryDictionary[sectionName]?.diaries.remove(at: row)
+                            print("DiaryHome :: delete! = \(self.diaryDictionary)")
+                            self.presenter.deleteTableViewRow(section: sectionIndex, row: row)
+                            
+                            if let diaryCount: Int = self.diaryDictionary[sectionName]?.diaries.count,
+                               diaryCount == 0 {
+                                print("DiaryHome :: 지워야할 것 같은걸")
+                                let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex ?? 0
+                                self.diaryDictionary[sectionName] = nil
+                                self.presenter.deleteTableViewSection(section: sectionIndex)
+                            }
+                        }
+                        // 수정일때
+                        else {
+                            self.diaryDictionary[sectionName]?.diaries[row] = DiaryModel(diary)
+                            self.presenter.reloadTableViewRow(section: sectionIndex, row: row)
+                        }
                     }
                         
                     case .error(let error):
                         fatalError("\(error)")
                 }
             }
-        
-        /*
-        notificationToken = realm.objects(DiaryModelRealm.self)
-            .observe { result in
-                switch result {
-                case .initial(let model):
-                    print("DiaryHome :: realmObserve = initial! = \(model)")
-                    var diaryYearModels: [DiaryYearModel] = []
-                    
-                    // 연도별 Diary 세팅
-                    var beforeYear: String = "0"
-                    for diary in model {
-                        let curYear = diary.createdAt.toStringWithYYYY() // 2021, 2022 등으로 변경
-                        if beforeYear == curYear { continue }
-                        beforeYear = curYear
-                        
-                        diaryYearModels.append(DiaryYearModel(year: Int(curYear) ?? 0, months: DiaryMonthModel()))
-                    }
-                    
-                    // 달별 Diary 세팅
-                    for index in diaryYearModels.indices {
-                        // 같은 연도인 Diary만 Filter
-                        let sortedDiaryModelResults = model.filter { $0.createdAt.toStringWithYYYY() == diaryYearModels[index].year.description }
-                        
-                        for diary in sortedDiaryModelResults {
-                            let diaryMM = diary.createdAt.toStringWithMM() // 01, 02 등으로 변경
-                            let diaryModel = DiaryModel(diary)
-
-                            diaryYearModels[index].months?.updateCount(MM: diaryMM, diary: diaryModel)
-                            // diaryYearModels[index].months?.addDiary(diary: diary)
-                            diaryYearModels[index].months?.updateAllCount()
-                        }
-
-                        diaryYearModels[index].months?.sortDiary()
-                    }
-                    
-                    let diaryYearSortedModels = diaryYearModels.sorted { $0.year > $1.year }
-                    
-                    print("DiaryHome :: \(diaryYearModels)")
-                    self.diaryMonthSetRelay.accept(diaryYearSortedModels)
-                    self.presenter.isFilteredRelay.accept(false)
-                    self.presenter.reloadTableView()
-
-                case .update(let model, let deletions, let insertions, let modifications):
-                    print("DiaryHome :: update! = \(model)")
-                    if deletions.count > 0 {
-                        guard let deletionsRow: Int = deletions.first else { return }
-                        self.presenter.deleteRow(index: deletionsRow)
-                        let count = self.dependency.diaryRepository.diaryString.value.count
-                        let t = self.dependency.diaryRepository.diaryString.value[count - (deletionsRow + 1)]
-                        print("DiaryHome :: realmObserve = t.title = \(t.title)")
-                        print("DiaryHome :: realmObserve = deleteRow = \(deletions)")
-                    }
-
-                    if insertions.count > 0 {
-                        guard let insertionsRow: Int = insertions.first else { return }
-                        let diaryModelRealm: DiaryModelRealm = model[insertionsRow]
-                        let diaryModel: DiaryModel = DiaryModel(diaryModelRealm)
-                        print("DiaryHome :: realmObserve = insertion = \(insertions)")
-                        
-                        let year: Int = Int(diaryModel.createdAt.toStringWithYYYY()) ?? 0
-                        let month: String = diaryModel.createdAt.toStringWithMonthEngName().lowercased()
-                        
-                        var findYearIndex: Int = 0
-                        guard let yearModel = self.diaryMonthSetRelay.value.enumerated().filter({ (index: Int, element: DiaryYearModel) -> Bool in
-                            findYearIndex = index
-                            return element.year == year
-                        }).first else { return }
-                        
-                        guard let diaryModelArr: [DiaryModel] = yearModel.element.months?["\(month)Diary"] as? [DiaryModel] else { return }
-                        
-                        var newDiaryModelArr: [DiaryModel] = diaryModelArr
-                        newDiaryModelArr.append(diaryModel)
-                        newDiaryModelArr.sort { $0.createdAt > $1.createdAt }
-                        
-                        var monthSetRelayValue = self.diaryMonthSetRelay.value
-                        monthSetRelayValue[findYearIndex].months?.setMenualArr(MM: month, diaryModel: newDiaryModelArr)
-                        
-                        self.diaryMonthSetRelay.accept(monthSetRelayValue)
-                        DispatchQueue.main.async {
-                            self.presenter.reloadTableView()
-                        }
-                    }
-
-                    if modifications.count > 0 {
-                        guard let modificationsRow: Int = modifications.first else { return }
-                        let diaryModelRealm: DiaryModelRealm = model[modificationsRow]
-                        let diaryModel: DiaryModel = DiaryModel(diaryModelRealm)
-                        
-                        let year: Int = Int(diaryModel.createdAt.toStringWithYYYY()) ?? 0
-                        let month: String = diaryModel.createdAt.toStringWithMonthEngName().lowercased()
-                        
-                        var findYearIndex: Int = 0
-                        guard let yearModel = self.diaryMonthSetRelay.value.enumerated().filter({ (index: Int, element: DiaryYearModel) -> Bool in
-                            findYearIndex = index
-                            return element.year == year
-                        }).first else { return }
-
-                        
-                        guard let diaryModelArr: [DiaryModel] = yearModel.element.months?["\(month)Diary"] as? [DiaryModel] else { return }
-                        
-                        var findIndex: Int = 0
-                        let _ = diaryModelArr.enumerated().filter { (index: Int, element: DiaryModel) -> Bool in
-                            findIndex = index
-                            return element.uuid == diaryModel.uuid
-                        }
-                        
-                        guard let diaryModelArr: [DiaryModel] = self.diaryMonthSetRelay.value[safe: findYearIndex]?.months?["\(month)Diary"] as? [DiaryModel] else { return }
-                        
-                        var newDiaryModelArr = diaryModelArr
-                        newDiaryModelArr[findIndex] = diaryModel
-                        
-                        var monthSetRelayValue = self.diaryMonthSetRelay.value
-                        monthSetRelayValue[findYearIndex].months?.setMenualArr(MM: month, diaryModel: newDiaryModelArr)
-                        
-                        self.diaryMonthSetRelay.accept(monthSetRelayValue)
-                        DispatchQueue.main.async {
-                            self.presenter.reloadTableView()
-                        }
-                         
-                        print("DiaryHome :: realmObserve = modifications = \(modifications)")
-                    }
-
-                case .error(let error):
-                    fatalError("\(error)")
-                }
-            }
-         */
     }
     
     func getMyMenualCount() -> Int {
