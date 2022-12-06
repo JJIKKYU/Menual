@@ -13,19 +13,19 @@ public struct DiaryModel {
     let id: ObjectId
     let uuid: String
     var pageNum: Int
-    let title: String
-    let weather: WeatherModel?
-    let place: PlaceModel? // TODO: 위치 타입 추가
-    let description: String
-    let image: Data? // TODO: 이미지 타입 추가
-    let originalImage: Data?
-    let readCount: Int
+    var title: String
+    var weather: WeatherModel?
+    var place: PlaceModel? // TODO: 위치 타입 추가
+    var description: String
+    var image: Data? // TODO: 이미지 타입 추가
+    var originalImage: Data?
+    var readCount: Int
     let createdAt: Date
-    let replies: [DiaryReplyModel]
-    let isDeleted: Bool
-    let isHide: Bool
+    var replies: [DiaryReplyModel]
+    var isDeleted: Bool
+    var isHide: Bool
     // let createdAt: Date
-    
+
     // 각 Property를 넣어서 초기화
     init(uuid: String, pageNum: Int, title: String, weather: WeatherModel?, place: PlaceModel?, description: String, image: Data?, originalImage: Data?, readCount: Int, createdAt: Date, replies: [DiaryReplyModel], isDeleted: Bool, isHide: Bool) {
         self.id = ObjectId()

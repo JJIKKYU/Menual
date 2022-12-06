@@ -25,7 +25,7 @@ protocol DiaryDetailPresentableListener: AnyObject {
     func hideDiary()
     func deleteReply(uuid: String)
     
-    var diaryReplyArr: List<DiaryReplyModelRealm> { get }
+    var diaryReplyArr: [DiaryReplyModelRealm] { get }
     var currentDiaryPage: Int { get }
 }
 
@@ -415,7 +415,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         spaceRequiredFAB.rightArrowIsEnabled = rightArrowIsEnabled
     }
     
-    func loadDiaryDetail(model: DiaryModel) {
+    func loadDiaryDetail(model: DiaryModel?) {
+        guard let model = model else { return }
         print("DiaryDetail :: loadDiaryDetail!")
         print("DiaryDetail :: model.isHide = \(model.isHide)")
         // FAB Button
@@ -472,7 +473,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         createdAtPageView.page = String(model.pageNum)
         
         replyTableView.reloadData()
-        
     }
     
     func isHideMenual(isHide: Bool) {

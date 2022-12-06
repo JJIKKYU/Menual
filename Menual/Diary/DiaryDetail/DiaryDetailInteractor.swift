@@ -27,7 +27,7 @@ protocol DiaryDetailPresentable: Presentable {
     var listener: DiaryDetailPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     func reloadTableView()
-    func loadDiaryDetail(model: DiaryModel)
+    func loadDiaryDetail(model: DiaryModel?)
     func reminderCompViewshowToast(isEding: Bool)
     func setReminderIconEnabled(isEnabled: Bool)
     func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool)
@@ -44,7 +44,7 @@ protocol DiaryDetailListener: AnyObject {
 
 final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>, DiaryDetailInteractable, DiaryDetailPresentableListener, AdaptivePresentationControllerDelegate {
     
-    var diaryReplyArr = List<DiaryReplyModelRealm>()
+    var diaryReplyArr: [DiaryReplyModelRealm] = []
     var currentDiaryPage: Int
     var diaryModel: DiaryModel?
     
@@ -89,10 +89,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         presenter.listener = self
         
         self.presentationDelegateProxy.delegate = self
-        
-        print("interactor = \(diaryModel)")
         presenter.loadDiaryDetail(model: diaryModel)
-        
         pressedIndicatorButton(offset: 0, isInitMode: true)
         
 //        Observable.combineLatest(
@@ -116,43 +113,77 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 //                presenter.loadDiaryDetail(model: currentDiaryModel)
 //            })
 //            .disposed(by: self.disposebag)
-
+    }
+    
+    func setDiaryModelRealmOb() {
         guard let realm = Realm.safeInit() else { return }
-//        notificationToken = realm.objects(DiaryModelRealm.self)
-//            .observe { result in
-//                switch result {
-//                case .initial(let model):
-//                    print("DiaryDetail :: realmObserve = initial! = \(model)")
-//                case .update(let model, let deletions, let insertions, let modifications):
-//                    print("DiaryDetail :: update! = \(model)")
-//                    if deletions.count > 0 {
-//                        print("DiaryDetail :: realmObserve = deleteRow = \(deletions)")
-//                    }
-//
-//                    if insertions.count > 0 {
-//                        print("DiaryDetail :: realmObserve = insertion = \(insertions)")
-//                    }
-//
-//                    if modifications.count > 0 {
-//                        print("DiaryDetail :: realmObserve = modifications = \(modifications)")
-//                    }
-//
-//                case .error(let error):
-//                    fatalError("\(error)")
-//                }
-//            }
-        
+        guard let diaryModel = self.diaryModel else { return }
         let diary = realm.object(ofType: DiaryModelRealm.self, forPrimaryKey: diaryModel.id)
-        replyNotificationToken = diary?.replies.observe({ [weak self] changes in
+        if let imageData: Data = DiaryModel(diary!).originalImage {
+            self.imageDataRelay.accept(imageData)
+        }
+
+        self.notificationToken = diary?.observe({ changes in
+            switch changes {
+            case .change(let model, let proertyChanges):
+                for property in proertyChanges {
+                    switch property.name {
+                    case "title":
+                        print("DiaryDetail :: title 변화감지!")
+                        guard let title: String = property.newValue as? String else { return }
+                        self.diaryModel?.title = title
+                        self.presenter.loadDiaryDetail(model: self.diaryModel)
+                        
+                    case "desc":
+                        guard let desc: String = property.newValue as? String else { return }
+                        self.diaryModel?.description = desc
+                        self.presenter.loadDiaryDetail(model: self.diaryModel)
+                        
+                    case "weather":
+                        guard let weatherModeRealm: WeatherModelRealm = property.newValue as? WeatherModelRealm else { return }
+                        self.diaryModel?.weather = WeatherModel(weatherModeRealm)
+                        self.presenter.loadDiaryDetail(model: self.diaryModel)
+                        
+                    case "place":
+                        guard let placeModelRealm: PlaceModelRealm = property.newValue as? PlaceModelRealm else { return }
+                        self.diaryModel?.place = PlaceModel(placeModelRealm)
+                        self.presenter.loadDiaryDetail(model: self.diaryModel)
+                        
+                    case "image":
+                        guard let needUpdateIamge: Bool = property.newValue as? Bool else { return }
+                        switch needUpdateIamge {
+                        case true:
+                            break
+
+                        case false:
+                            break
+                        }
+                        break
+
+                    default:
+                        break
+                    }
+                }
+                print("DiaryDetail :: change -> model -> \(model)")
+                print("DiaryDetail :: change -> propertyChanges -> \(proertyChanges)")
+            case .error(let error):
+                fatalError("\(error)")
+            case .deleted:
+                break
+            }
+        })
+        
+        
+        self.replyNotificationToken = diary?.replies.observe({ [weak self] changes in
             guard let self = self else { return }
 
             switch changes {
             case .initial(let model):
                 // print("DiaryDetail :: realmObserve2 = initial! = \(model)")
-                self.diaryReplyArr = model
+                self.diaryReplyArr = Array(model)
                 self.presenter.reloadTableView()
 
-            case .update(let model, let deletions, let insertions, let modifications):
+            case .update(let model, let deletions, let insertions, _):
                 // print("DiaryDetail :: update! = \(model)")
                 if deletions.count > 0 {
                     guard let deletionRow: Int = deletions.first else { return }
@@ -173,7 +204,9 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 fatalError("\(error)")
             }
         })
-        
+    }
+    
+    func bind() {
         menuComponentRelay
             .subscribe(onNext: { [weak self] comp in
                 guard let self = self else { return }
@@ -189,7 +222,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                     
                 case .delete:
                     guard let diaryModel = self.diaryModel else { return }
-                    dependency.diaryRepository
+                    self.dependency.diaryRepository
                         .deleteDiary(info: diaryModel)
                     self.listener?.diaryDeleteNeedToast(isNeedToast: true)
                     self.router?.detachBottomSheet(isWithDiaryDetatil: true)
@@ -290,6 +323,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     override func didBecomeActive() {
         super.didBecomeActive()
         // TODO: Implement business logic here.
+        bind()
+        setDiaryModelRealmOb()
     }
 
     override func willResignActive() {
@@ -297,6 +332,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         // TODO: Pause any business logic.
         print("DiaryDetail :: WillResignActive")
         self.replyNotificationToken = nil
+        self.notificationToken = nil
     }
     
     func pressedBackBtn(isOnlyDetach: Bool) {
