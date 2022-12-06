@@ -25,7 +25,7 @@ protocol DiaryDetailPresentableListener: AnyObject {
     func hideDiary()
     func deleteReply(uuid: String)
     
-    var diaryReplies: [DiaryReplyModel] { get }
+    var diaryReplyArr: List<DiaryReplyModelRealm> { get }
     var currentDiaryPage: Int { get }
 }
 
@@ -666,9 +666,8 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let index = indexPath.row
         
-        guard let replies = listener?.diaryReplies,
-              let desc = replies[safe: index]?.desc else { return 0 }
-
+        guard let replies = listener?.diaryReplyArr else { return 0 }
+        let desc = replies[index].desc
         let lblDescLong = UITextView()
         lblDescLong.textContainerInset = UIEdgeInsets(top: 17, left: 16, bottom: 19, right: 16)
         lblDescLong.textAlignment = .left
@@ -687,7 +686,7 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listener?.diaryReplies.count ?? 0
+        return listener?.diaryReplyArr.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -696,12 +695,12 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
         
         let index = indexPath.row
         
-        guard let replies = listener?.diaryReplies,
-              let desc = replies[safe: index]?.desc,
-              let createdAt = replies[safe: index]?.createdAt,
-              let replyNum = replies[safe: index]?.replyNum,
-              let uuid = replies[safe: index]?.uuid
-        else { return UITableViewCell() }
+        guard let replies = listener?.diaryReplyArr else { return UITableViewCell() }
+        
+        let desc = replies[index].desc
+        let createdAt = replies[index].createdAt
+        let replyNum = replies[index].replyNum
+        let uuid = replies[index].uuid
 
         cell.backgroundColor = .clear
         // cell이 클릭되지 않도록

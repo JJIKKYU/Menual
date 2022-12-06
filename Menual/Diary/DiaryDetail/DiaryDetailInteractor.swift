@@ -44,7 +44,7 @@ protocol DiaryDetailListener: AnyObject {
 
 final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>, DiaryDetailInteractable, DiaryDetailPresentableListener, AdaptivePresentationControllerDelegate {
     
-    var diaryReplies: [DiaryReplyModel]
+    var diaryReplyArr = List<DiaryReplyModelRealm>()
     var currentDiaryPage: Int
     var diaryModel: DiaryModel?
     
@@ -84,7 +84,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
         self.diaryModel = diaryModel
         self.dependency = dependency
-        self.diaryReplies = diaryModel.replies
         self.currentDiaryPage = diaryModel.pageNum
         super.init(presenter: presenter)
         presenter.listener = self
@@ -150,22 +149,22 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             switch changes {
             case .initial(let model):
                 // print("DiaryDetail :: realmObserve2 = initial! = \(model)")
-                break
+                self.diaryReplyArr = model
+                self.presenter.reloadTableView()
 
             case .update(let model, let deletions, let insertions, let modifications):
                 // print("DiaryDetail :: update! = \(model)")
                 if deletions.count > 0 {
                     guard let deletionRow: Int = deletions.first else { return }
                     // print("DiaryDetail :: realmObserve2 = deleteRow = \(deletions)")
-                    self.diaryReplies.remove(at: deletionRow)
+                    self.diaryReplyArr.remove(at: deletionRow)
                     self.presenter.reloadTableView()
                 }
                 
                 if insertions.count > 0 {
                     guard let insertionRow: Int = insertions.first else { return }
                     let replyModelRealm = model[insertionRow]
-                    let replyModel = DiaryReplyModel(replyModelRealm)
-                    self.diaryReplies.append(replyModel)
+                    self.diaryReplyArr.append(replyModelRealm)
                     self.presenter.reloadTableView()
                     // print("DiaryDetail :: realmObserve2 = insertion = \(insertions)")
                 }
