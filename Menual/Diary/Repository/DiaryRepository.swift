@@ -27,9 +27,9 @@ public protocol DiaryRepository {
     // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
     func fetch()
     func fetchTempSave()
-    func addDiary(info: DiaryModel)
+    func addDiary(info: DiaryModelRealm)
     func updateDiary(info: DiaryModel)
-    func hideDiary(isHide: Bool, info: DiaryModel) -> DiaryModel?
+    func hideDiary(isHide: Bool, info: DiaryModelRealm)
     func removeAllDiary()
     func deleteDiary(info: DiaryModel)
     
@@ -43,7 +43,7 @@ public protocol DiaryRepository {
     func deleteReply(diaryUUID: String, replyUUID: String)
     
     // 최근검색목록 로직
-    func addDiarySearch(info: DiaryModel)
+    func addDiarySearch(info: DiaryModelRealm)
     func fetchRecntDiarySearch() // 최근검색어
     func deleteAllRecentDiarySearch()
     func deleteRecentDiarySearch(uuid: String)
@@ -194,7 +194,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
         
         let diaryModelResults = realm.objects(DiaryModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
-        diaryModelSubject.accept(diaryModelResults.map { DiaryModel($0) })
+        diaryModelSubject.accept(diaryModelResults.map { DiaryModelRealm(value: $0) })
         
         self.fetchDiary()
         self.fetchRecntDiarySearch()
@@ -249,7 +249,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
     
     // MARK: - Diary CRUD
-    public func addDiary(info: DiaryModel) {
+    public func addDiary(info: DiaryModelRealm) {
         // 1. 추가할 Diary를 info로 받는다
         // 2. Realm에다가 새로운 Diary를 add 한다.
         // 3. add한 diary를 담고 있는 Realm의 Observable를 반환한다.
@@ -272,7 +272,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         
         realm.safeWrite {
-             realm.add(DiaryModelRealm(newInfo))
+            realm.add(newInfo)
             // realm.create(DiaryModelRealm.self, value: DiaryModelRealm(info))
         }
         
@@ -437,47 +437,47 @@ public final class DiaryRepositoryImp: DiaryRepository {
         // fetch()
     }
     
-    public func hideDiary(isHide: Bool, info: DiaryModel) -> DiaryModel? {
+    public func hideDiary(isHide: Bool, info: DiaryModelRealm) {
         print("DiaryRepository :: hideDiary")
         // Realm에서 DiaryModelRealm Array를 받아온다.
         guard let realm = Realm.safeInit() else {
-            return nil
+            return
         }
         
         guard let data = realm.objects(DiaryModelRealm.self).filter({ $0.uuid == info.uuid }).first
-        else { return nil }
+        else { return }
         
         realm.safeWrite {
             data.isHide = isHide
         }
         
-        var idx: Int = 0
-        for (index, value) in diaryModelSubject.value.enumerated() {
-            if value.uuid == info.uuid {
-                idx = index
-            }
-        }
-
-        var arr = diaryModelSubject.value
-        let newDiary = DiaryModel(uuid: info.uuid,
-                                  pageNum: info.pageNum,
-                                  title: info.title,
-                                  weather: info.weather,
-                                  place: info.place,
-                                  description: info.description,
-                                  image: info.image,
-                                  originalImage: info.originalImage,
-                                  readCount: info.readCount,
-                                  createdAt: info.createdAt,
-                                  replies: info.replies,
-                                  isDeleted: info.isDeleted,
-                                  isHide: isHide
-            )
-        arr[idx] = newDiary
-
-        diaryModelSubject.accept(arr)
-        fetchDiary()
-        return newDiary
+//        var idx: Int = 0
+//        for (index, value) in diaryModelSubject.value.enumerated() {
+//            if value.uuid == info.uuid {
+//                idx = index
+//            }
+//        }
+//
+//        var arr = diaryModelSubject.value
+//        let newDiary = DiaryModel(uuid: info.uuid,
+//                                  pageNum: info.pageNum,
+//                                  title: info.title,
+//                                  weather: info.weather,
+//                                  place: info.place,
+//                                  description: info.description,
+//                                  image: info.image,
+//                                  originalImage: info.originalImage,
+//                                  readCount: info.readCount,
+//                                  createdAt: info.createdAt,
+//                                  replies: info.replies,
+//                                  isDeleted: info.isDeleted,
+//                                  isHide: isHide
+//            )
+//        arr[idx] = newDiary
+//
+//        diaryModelSubject.accept(arr)
+//        fetchDiary()
+        // return newDiary
     }
     
     // MARK: - 겹쓰기 로직
@@ -579,29 +579,29 @@ public final class DiaryRepositoryImp: DiaryRepository {
         fetchRecntDiarySearch()
     }
     
-    public func addDiarySearch(info: DiaryModel) {
+    public func addDiarySearch(info: DiaryModelRealm) {
         print("Search :: DiaryRepository :: addDiarySearch!")
         guard let realm = Realm.safeInit() else {
             return
         }
         
         guard let diary = realm.objects(DiaryModelRealm.self).filter("uuid == %@", info.uuid).first else { return }
-        let diarySearchModel = DiarySearchModel(uuid: UUID().uuidString,
-                                                diaryUuid: info.uuid,
-                                                diary: diary,
-                                                createdAt: Date(),
-                                                isDeleted: false
+        let diarySearchModel = DiarySearchModelRealm(uuid: UUID().uuidString,
+                                                     diaryUuid: info.uuid,
+                                                     diary: diary,
+                                                     createdAt: Date(),
+                                                     isDeleted: false
         )
         
         realm.safeWrite {
-             realm.add(DiarySearchModelRealm(diarySearchModel))
+             realm.add(diarySearchModel)
         }
 
         print("Search :: DiaryRepository :: diarySearchModel = \(diarySearchModel)")
         
-        let result: [DiarySearchModel] = (diarySearchSubject.value + [diarySearchModel]).sorted { $0.createdAt > $1.createdAt }
-
-        diarySearchSubject.accept(result)
+//        let result: [DiarySearchModel] = (diarySearchSubject.value + [diarySearchModel]).sorted { $0.createdAt > $1.createdAt }
+//
+//        diarySearchSubject.accept(result)
     }
     
     // MARK: - Filter 로직

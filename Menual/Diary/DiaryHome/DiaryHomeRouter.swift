@@ -213,7 +213,7 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     
     // MARK: - Diary detaill 관련 함수
     
-    func attachDiaryDetail(model: DiaryModel) {
+    func attachDiaryDetail(model: DiaryModelRealm) {
         if diaryDetailRouting != nil {
             return
         }

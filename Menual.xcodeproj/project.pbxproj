@@ -78,6 +78,7 @@
 		985BFFA2293B52E600D86106 /* DiaryDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD9B280A833000C1FB92 /* DiaryDetailInteractor.swift */; };
 		985BFFA4293CA0EC00D86106 /* DiaryHomeIndexPathModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFFA3293CA0EC00D86106 /* DiaryHomeIndexPathModel.swift */; };
 		985BFFA6293CBA3A00D86106 /* DiaryHomeSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFFA5293CBA3A00D86106 /* DiaryHomeSectionModel.swift */; };
+		985BFFE829458D7A00D86106 /* Realm+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFFE729458D7A00D86106 /* Realm+Util.swift */; };
 		985E0F1327C2750D00057951 /* AdaptivePresentationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
@@ -343,6 +344,7 @@
 		985BFFA0293B512200D86106 /* MomentsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsRepository.swift; sourceTree = "<group>"; };
 		985BFFA3293CA0EC00D86106 /* DiaryHomeIndexPathModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeIndexPathModel.swift; sourceTree = "<group>"; };
 		985BFFA5293CBA3A00D86106 /* DiaryHomeSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeSectionModel.swift; sourceTree = "<group>"; };
+		985BFFE729458D7A00D86106 /* Realm+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Realm+Util.swift"; sourceTree = "<group>"; };
 		985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptivePresentationControllerDelegate.swift; sourceTree = "<group>"; };
 		9888DDD927646EFF0091918F /* Menual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9888DDDC27646EFF0091918F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -1291,6 +1293,7 @@
 				985BFF7E29323DC400D86106 /* UIScrollView+Util.swift */,
 				985BFF8029335AE900D86106 /* UINavigationController+Util.swift */,
 				985BFF8B2935ED6100D86106 /* String+Util.swift */,
+				985BFFE729458D7A00D86106 /* Realm+Util.swift */,
 			);
 			path = MenualUtil;
 			sourceTree = "<group>";
@@ -1747,6 +1750,7 @@
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				985BFF7529290E9A00D86106 /* MomentsEmptyView.swift in Sources */,
 				98A2BDA1280A87E300C1FB92 /* Swift+Util.swift in Sources */,
+				985BFFE829458D7A00D86106 /* Realm+Util.swift in Sources */,
 				985BFF712924C36500D86106 /* ProfileDeveloperInteractor.swift in Sources */,
 				98B55749281E426300F8CA3E /* WeatherModel.swift in Sources */,
 				985BFF8129335AE900D86106 /* UINavigationController+Util.swift in Sources */,

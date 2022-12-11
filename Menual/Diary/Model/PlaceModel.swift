@@ -52,7 +52,7 @@ public struct PlaceModel {
     }
     
     init(_ realm: PlaceModelRealm) {
-        self.uuid = realm.uuid
+        self.uuid = ""
         self.place = realm.place
         self.detailText = realm.detailText
     }
@@ -60,20 +60,18 @@ public struct PlaceModel {
 
 class PlaceModelRealm: EmbeddedObject {
     // @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var uuid: String = ""
+    // @Persisted var uuid: String = ""
     @Persisted var place: Place?
     @Persisted var detailText: String = ""
     
-    convenience init(uuid: String, place: Place?, detailText: String) {
+    convenience init(place: Place?, detailText: String) {
         self.init()
-        self.uuid = uuid
         self.place = place
         self.detailText = detailText
     }
     
     convenience init(_ placeModel: PlaceModel) {
         self.init()
-        self.uuid = placeModel.uuid
         self.place = placeModel.place
         self.detailText = placeModel.detailText
     }

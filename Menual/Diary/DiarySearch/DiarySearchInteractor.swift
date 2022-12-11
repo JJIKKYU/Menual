@@ -13,7 +13,7 @@ import RealmSwift
 
 protocol DiarySearchRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
-    func attachDiaryDetailVC(diaryModel: DiaryModel)
+    func attachDiaryDetailVC(diaryModel: DiaryModelRealm)
     func detachDiaryDetailVC(isOnlyDetach: Bool)
 }
 
@@ -39,7 +39,7 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     private let dependency: DiarySearchInteractorDependency
     var disposeBag = DisposeBag()
     
-    var searchResultsRelay = BehaviorRelay<[DiaryModel]>(value: [])
+    var searchResultsRelay = BehaviorRelay<[DiaryModelRealm]>(value: [])
     var recentSearchResultsRelay = BehaviorRelay<[DiarySearchModel]>(value: [])
     // var recentSearchResultList: [SearchModel] = []
 
@@ -92,17 +92,10 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
            //  .filter("title CONTAINS %@", "\(keyword)")
         
         let results = realm.objects(DiaryModelRealm.self)
-            .filter("title CONTAINS %@ OR desc CONTAINS %@", "\(keyword)", "\(keyword)")
+            .filter("title CONTAINS %@ OR desc CONTAINS %@", "\(keyword)", "\(keyword)").toArray()
         
         print("reuslt = \(results)")
-        
-        var searchResultList = [DiaryModel]()
-        for result in results {
-            let diary = DiaryModel(result)
-            searchResultList.append(diary)
-        }
-        
-        self.searchResultsRelay.accept(searchResultList)
+        self.searchResultsRelay.accept(results)
         
         // presenter.reloadSearchTableView()
     }
@@ -129,16 +122,15 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     }
     
     // 검색해서 나온 Cell을 터치했을 경우 -> DiaryDetailVC로 보내줘야함
-    func pressedSearchCell(diaryModel: DiaryModel) {
+    func pressedSearchCell(diaryModel: DiaryModelRealm) {
         print("Search :: pressedSearchCell!")
         router?.attachDiaryDetailVC(diaryModel: diaryModel)
         dependency.diaryRepository
             .addDiarySearch(info: diaryModel)
     }
     
-    func pressedRecentSearchCell(diaryModelRealm: DiaryModelRealm) {
+    func pressedRecentSearchCell(diaryModel: DiaryModelRealm) {
         print("Search :: pressedRecentSearchCell!")
-        let diaryModel: DiaryModel = DiaryModel(diaryModelRealm)
         router?.attachDiaryDetailVC(diaryModel: diaryModel)
     }
     

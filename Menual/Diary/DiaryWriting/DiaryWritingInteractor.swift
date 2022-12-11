@@ -211,26 +211,10 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     }
     
     // 글 작성할 때
-    func writeDiary(info: DiaryModel) {
+    func writeDiary(info: DiaryModelRealm) {
         // print("DiaryWritingInteractor :: writeDiary! info = \(info)")
-        
-        let newDiaryModel = DiaryModel(uuid: info.uuid,
-                                       pageNum: info.pageNum,
-                                       title: info.title,
-                                       weather: info.weather,
-                                       place: info.place,
-                                       description: info.description,
-                                       image: info.image,
-                                       originalImage: info.originalImage,
-                                       readCount: info.readCount,
-                                       createdAt: info.createdAt,
-                                       replies: info.replies,
-                                       isDeleted: info.isDeleted,
-                                       isHide: info.isHide
-        )
-        
         dependency.diaryRepository
-            .addDiary(info: newDiaryModel)
+            .addDiary(info: info)
         
         // 임시 저장된 메뉴얼이 있을 경우 삭제하고 업로드
         
@@ -250,9 +234,10 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     }
     
     // 글 수정할 때
-    func updateDiary(info: DiaryModel, edittedImage: Bool) {
+    func updateDiary(info: DiaryModelRealm, edittedImage: Bool) {
         print("DiaryWriting :: interactor! updateDiary!")
 
+        /*
         // 수정하기 당시에 들어왔던 오리지널 메뉴얼
         guard let originalDiaryModel = diaryModelRelay.value else { return }
 
@@ -278,6 +263,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         if edittedImage == false {
             imageSaveRelay.accept((true, true))
         }
+        */
         
 //        dependency.diaryRepository
 //            .updateDiary(info: newDiaryModel)
@@ -340,7 +326,8 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     }
     
     // tempSaveRealm에 저장
-    func saveTempSave(diaryModel: DiaryModel) {
+    func saveTempSave(diaryModel: DiaryModelRealm) {
+        /*
         // 임시저장 이미지를 위해서 uuid를 미리 알고 있어야함
         let uuid: String = UUID().uuidString
         if let cropImageData = diaryModel.image {
@@ -362,6 +349,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                 .addTempSave(diaryModel: diaryModel, tempSaveUUID: uuid)
         }
         
+        */
     }
 }
 

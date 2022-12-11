@@ -14,14 +14,14 @@ import RxRelay
 
 protocol DiarySearchPresentableListener: AnyObject {
     var recentSearchResultsRelay: BehaviorRelay<[DiarySearchModel]> { get }
-    var searchResultsRelay: BehaviorRelay<[DiaryModel]> { get }
+    var searchResultsRelay: BehaviorRelay<[DiaryModelRealm]> { get }
     
     func pressedBackBtn(isOnlyDetach: Bool)
     func searchTest(keyword: String)
     func searchDataTest(keyword: String)
     func fetchRecentSearchList()
-    func pressedSearchCell(diaryModel: DiaryModel)
-    func pressedRecentSearchCell(diaryModelRealm: DiaryModelRealm)
+    func pressedSearchCell(diaryModel: DiaryModelRealm)
+    func pressedRecentSearchCell(diaryModel: DiaryModelRealm)
     func deleteAllRecentSearchData()
     func deleteRecentSearchData(uuid: String)
 }
@@ -531,12 +531,12 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
             
             guard let model = listener?.recentSearchResultsRelay.value[safe: index],
-                  let diaryModelRealm: DiaryModelRealm = model.diary
+                  let diaryModel: DiaryModelRealm = model.diary
             else { return }
             
             print("Search :: 이거 = \(model.uuid), \(cell.uuid)")
             
-            listener?.pressedRecentSearchCell(diaryModelRealm: diaryModelRealm)
+            listener?.pressedRecentSearchCell(diaryModel: diaryModel)
         }
     }
     

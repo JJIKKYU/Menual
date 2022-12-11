@@ -106,6 +106,40 @@ public class DiaryModelRealm: Object {
     @Persisted var place: PlaceModelRealm?
     @Persisted var desc: String = ""
     @Persisted var image: Bool = false
+    var originalImage: Data? {
+        get {
+            if image == false { return nil }
+            // 1. 도큐먼트 폴더 경로가져오기
+            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+
+            if let directoryPath = path.first {
+            // 2. 이미지 URL 찾기
+                let originalImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Original")
+                // 3. UIImage로 불러오고 Data로 Return
+                return UIImage(contentsOfFile: originalImageURL.path)?.jpegData(compressionQuality: 0.5)
+            }
+            return nil
+        }
+    }
+    var cropImage: Data? {
+        get {
+            if image == false { return nil }
+            // 1. 도큐먼트 폴더 경로가져오기
+            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+            
+            if let directoryPath = path.first {
+            // 2. 이미지 URL 찾기
+                let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid)
+                // 3. UIImage로 불러오고 Data로 Return
+                return UIImage(contentsOfFile: imageURL.path)?.jpegData(compressionQuality: 0.5)
+            }
+            return nil
+        }
+    }
     @Persisted var readCount: Int
     @Persisted var createdAt: Date
     // @Persisted var createdAt: Date = Date()
@@ -137,6 +171,10 @@ public class DiaryModelRealm: Object {
         self.repliesArr = replies
         // self.replies.append(objectsIn: replies)
         self.isHide = isHide
+    }
+    
+    func updatePageNum(pageNum: Int) {
+        self.pageNum = pageNum + 1
     }
     
     convenience init(_ diaryModel: DiaryModel) {

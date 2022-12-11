@@ -52,7 +52,7 @@ public struct WeatherModel {
     }
     
     init(_ realm: WeatherModelRealm) {
-        self.uuid = realm.uuid
+        self.uuid = ""
         self.weather = realm.weather
         self.detailText = realm.detailText
     }
@@ -60,20 +60,18 @@ public struct WeatherModel {
 
 class WeatherModelRealm: EmbeddedObject {
     // @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var uuid: String = ""
+    // @Persisted var uuid: String = ""
     @Persisted var weather: Weather?
     @Persisted var detailText: String = ""
     
-    convenience init(uuid: String, weather: Weather?, detailText: String) {
+    convenience init(weather: Weather?, detailText: String) {
         self.init()
-        self.uuid = uuid
         self.weather = weather
         self.detailText = detailText
     }
     
     convenience init(_ weatherModel: WeatherModel) {
         self.init()
-        self.uuid = weatherModel.uuid
         self.weather = weatherModel.weather
         self.detailText = weatherModel.detailText
     }

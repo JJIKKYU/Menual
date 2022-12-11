@@ -415,14 +415,14 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         spaceRequiredFAB.rightArrowIsEnabled = rightArrowIsEnabled
     }
     
-    func loadDiaryDetail(model: DiaryModel?) {
+    func loadDiaryDetail(model: DiaryModelRealm?) {
         guard let model = model else { return }
         print("DiaryDetail :: loadDiaryDetail!")
         print("DiaryDetail :: model.isHide = \(model.isHide)")
         // FAB Button
         spaceRequiredFAB.spaceRequiredCurrentPage = String(model.pageNum)
         
-        setImageConstraint(image: model.image)
+        setImageConstraint(image: model.cropImage)
         
         // cell 생성에 필요한 정보 임시 저장
         pageNum = model.pageNum
@@ -440,7 +440,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         titleLabel.sizeToFit()
         
         // DiaryModel에서 WeatherModel을 UnWerapping해서 세팅
-        if let weatherModel: WeatherModel = model.weather {
+        if let weatherModel: WeatherModelRealm = model.weather {
             weatherSelectView.selected = true
             weatherSelectView.selectedWeatherType = weatherModel.weather
             weatherSelectView.selectTitle = weatherModel.detailText
@@ -452,7 +452,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         }
 
         // DiaryModel에서 PlaceModel을 UnWerapping해서 세팅
-        if let placeModel: PlaceModel = model.place {
+        if let placeModel: PlaceModelRealm = model.place {
             locationSelectView.selected = true
             locationSelectView.selectedPlaceType = placeModel.place
             locationSelectView.selectTitle = placeModel.detailText
@@ -463,10 +463,9 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             }
         }
         
-        // descriptionTextLabel.text = model.description
         descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
                                                                      Colors.grey.g100,
-                                                                     text: model.description)
+                                                                     text: model.desc)
         descriptionTextView.sizeToFit()
         
         createdAtPageView.createdAt = model.createdAt.toString()

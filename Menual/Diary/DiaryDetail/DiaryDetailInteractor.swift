@@ -27,7 +27,7 @@ protocol DiaryDetailPresentable: Presentable {
     var listener: DiaryDetailPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     func reloadTableView()
-    func loadDiaryDetail(model: DiaryModel?)
+    func loadDiaryDetail(model: DiaryModelRealm?)
     func reminderCompViewshowToast(isEding: Bool)
     func setReminderIconEnabled(isEnabled: Bool)
     func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool)
@@ -46,7 +46,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     var diaryReplyArr: [DiaryReplyModelRealm] = []
     var currentDiaryPage: Int
-    var diaryModel: DiaryModel?
+    var diaryModel: DiaryModelRealm?
     
     let presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
     
@@ -78,7 +78,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     // in constructor.
     init(
         presenter: DiaryDetailPresentable,
-        diaryModel: DiaryModel,
+        diaryModel: DiaryModelRealm,
         dependency: DiaryDetailInteractorDependency
     ) {
         self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
@@ -118,7 +118,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     func setDiaryModelRealmOb() {
         guard let realm = Realm.safeInit() else { return }
         guard let diaryModel = self.diaryModel else { return }
-        let diary = realm.object(ofType: DiaryModelRealm.self, forPrimaryKey: diaryModel.id)
+        let diary = realm.object(ofType: DiaryModelRealm.self, forPrimaryKey: diaryModel._id)
         if let imageData: Data = DiaryModel(diary!).originalImage {
             self.imageDataRelay.accept(imageData)
         }
@@ -136,17 +136,17 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                         
                     case "desc":
                         guard let desc: String = property.newValue as? String else { return }
-                        self.diaryModel?.description = desc
+                        self.diaryModel?.desc = desc
                         self.presenter.loadDiaryDetail(model: self.diaryModel)
                         
                     case "weather":
                         guard let weatherModeRealm: WeatherModelRealm = property.newValue as? WeatherModelRealm else { return }
-                        self.diaryModel?.weather = WeatherModel(weatherModeRealm)
+                        self.diaryModel?.weather = weatherModeRealm
                         self.presenter.loadDiaryDetail(model: self.diaryModel)
                         
                     case "place":
                         guard let placeModelRealm: PlaceModelRealm = property.newValue as? PlaceModelRealm else { return }
-                        self.diaryModel?.place = PlaceModel(placeModelRealm)
+                        self.diaryModel?.place = placeModelRealm
                         self.presenter.loadDiaryDetail(model: self.diaryModel)
                         
                     case "image":
@@ -218,12 +218,12 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 case .edit:
                     self.router?.detachBottomSheet(isWithDiaryDetatil: false)
                     guard let diaryModel = self.diaryModel else { return }
-                    self.router?.attachDiaryWriting(diaryModel: diaryModel, page: diaryModel.pageNum)
+                    // self.router?.attachDiaryWriting(diaryModel: diaryModel, page: diaryModel.pageNum)
                     
                 case .delete:
                     guard let diaryModel = self.diaryModel else { return }
-                    self.dependency.diaryRepository
-                        .deleteDiary(info: diaryModel)
+//                    self.dependency.diaryRepository
+//                        .deleteDiary(info: diaryModel)
                     self.listener?.diaryDeleteNeedToast(isNeedToast: true)
                     self.router?.detachBottomSheet(isWithDiaryDetatil: true)
                     
@@ -360,6 +360,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 
     // Diary 이동
     func pressedIndicatorButton(offset: Int, isInitMode: Bool) {
+        /*
         // 1. 현재 diaryNum을 기준으로
         // 2. 왼쪽 or 오른쪽으로 이동 (pageNum이 현재 diaryNum기준 -1, +1)
         // 3. 삭제된 놈이면 건너뛰고 (isDeleted가 true일 경우)
@@ -396,6 +397,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             presenter.setFAB(leftArrowIsEnabled: leftArrowIsEnabled, rightArrowIsEnabled: rightArrowIsEnabled)
             print("pass true!")
         }
+        */
     }
     
     func deleteReply(uuid: String) {
@@ -430,6 +432,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     // 유저가 바텀싯을 통해서 숨기기를 눌렀을 경우
     func hideDiary() {
+        /*
         print("DiaryDetail :: hideDiary! 1")
         guard let diaryModel = diaryModel else { return }
         var isHide: Bool = false
@@ -449,6 +452,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         self.diaryModel = hideDiary
         // presenter.loadDiaryDetail(model: hideDiary)
         // self.presenter.reloadTableView()
+        */
     }
     
     func reminderCompViewshowToast(isEding: Bool) {

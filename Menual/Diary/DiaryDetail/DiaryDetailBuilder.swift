@@ -32,7 +32,7 @@ final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailI
 protocol DiaryDetailBuildable: Buildable {
     func build(
         withListener listener: DiaryDetailListener,
-        diaryModel: DiaryModel
+        diaryModel: DiaryModelRealm
     ) -> DiaryDetailRouting
 }
 
@@ -42,7 +42,7 @@ final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDetailBuild
         super.init(dependency: dependency)
     }
     
-    func build(withListener listener: DiaryDetailListener, diaryModel: DiaryModel) -> DiaryDetailRouting {
+    func build(withListener listener: DiaryDetailListener, diaryModel: DiaryModelRealm) -> DiaryDetailRouting {
         let component = DiaryDetailComponent(
             dependency: dependency
         )

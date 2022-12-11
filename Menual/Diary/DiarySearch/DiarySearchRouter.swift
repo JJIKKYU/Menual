@@ -32,7 +32,7 @@ final class DiarySearchRouter: ViewableRouter<DiarySearchInteractable, DiarySear
         interactor.router = self
     }
     
-    func attachDiaryDetailVC(diaryModel: DiaryModel) {
+    func attachDiaryDetailVC(diaryModel: DiaryModelRealm) {
         if diaryDetailRouting != nil {
             return
         }

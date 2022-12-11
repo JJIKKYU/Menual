@@ -115,7 +115,7 @@ final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeveloperPr
                                                 isHide: false
                     )
                     print("Dev :: \(idx)개 게시글 추가 - \(diaryModel.createdAt)")
-                    self.dependency.diaryRepository.addDiary(info: diaryModel)
+                    // self.dependency.diaryRepository.addDiary(info: diaryModel)
 
                 }
                 

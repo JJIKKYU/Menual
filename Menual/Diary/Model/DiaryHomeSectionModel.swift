@@ -10,5 +10,5 @@ import Foundation
 struct DiaryHomeSectionModel {
     var sectionName: String
     var sectionIndex: Int
-    var diaries: [DiaryModel]
+    var diaries: [DiaryModelRealm]
 }

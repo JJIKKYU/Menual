@@ -22,16 +22,9 @@ enum TableCollectionViewTag: Int {
 protocol DiaryHomePresentableListener: AnyObject {
     func pressedSearchBtn()
     func pressedMyPageBtn()
-
     func pressedWritingBtn()
-    
-    func getMyMenualCount() -> Int
-    func getMyMenualArr() -> [DiaryModel]
-    
-    func pressedDiaryCell(diaryModel: DiaryModel)
-    
+    func pressedDiaryCell(diaryModel: DiaryModelRealm)
     func pressedMenualTitleBtn()
-    
     func pressedFilterBtn()
     func pressedFilterResetBtn()
     func pressedDateFilterBtn()

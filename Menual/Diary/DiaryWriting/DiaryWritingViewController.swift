@@ -18,12 +18,12 @@ protocol DiaryWritingPresentableListener: AnyObject {
     // business logic, such as signIn(). This protocol is implemented by the corresponding
     // interactor class.
     func pressedBackBtn(isOnlyDetach: Bool)
-    func writeDiary(info: DiaryModel)
-    func updateDiary(info: DiaryModel, edittedImage: Bool)
+    func writeDiary(info: DiaryModelRealm)
+    func updateDiary(info: DiaryModelRealm, edittedImage: Bool)
     
     func saveCropImage(diaryUUID: String, imageData: Data)
     func saveOriginalImage(diaryUUID: String, imageData: Data)
-    func saveTempSave(diaryModel: DiaryModel)
+    func saveTempSave(diaryModel: DiaryModelRealm)
     func pressedTempSaveBtn()
     func deleteAllImages(diaryUUID: String)
     
@@ -504,19 +504,32 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
               let description = self.descriptionTextView.text
         else { return }
         print("DiaryWriting :: addDiary! - 2")
-        
-        let weatherModel = WeatherModel(uuid: NSUUID().uuidString,
-                                        weather: weatherSelectView.selectedWeatherType ?? nil,
-                                        detailText: weatherSelectView.selectTitle
+
+        let weatherModel = WeatherModelRealm(weather: weatherSelectView.selectedWeatherType ?? nil,
+                                                  detailText: weatherSelectView.selectTitle
         )
 
-        let placeModel = PlaceModel(uuid: NSUUID().uuidString,
-                                    place: locationSelectView.selectedPlaceType ?? nil,
-                                    detailText: locationSelectView.selectTitle
+        let placeModel = PlaceModelRealm(place: locationSelectView.selectedPlaceType ?? nil,
+                                         detailText: locationSelectView.selectTitle
         )
 
         switch writingType {
         case .writing:
+            let diaryModelRealm = DiaryModelRealm(uuid: NSUUID().uuidString,
+                                                  pageNum: 0,
+                                                  title: title,
+                                                  weather: weatherModel,
+                                                  place: placeModel,
+                                                  desc: description,
+                                                  image: true,
+                                                  readCount: 0,
+                                                  createdAt: Date(),
+                                                  replies: [],
+                                                  isDeleted: false,
+                                                  isHide: false
+            )
+
+            /*
             let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
                                         pageNum: 0,
                                         title: title == defaultTitleText ? Date().toString() : title,
@@ -531,23 +544,23 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                                         isDeleted: false,
                                         isHide: false
             )
+            */
 
-
-            print("diaryModel.id = \(diaryModel.uuid)")
             if isEdittedIamge == true,
                let selectedImage = selectedImage,
                let selectedImageData = selectedImage.jpegData(compressionQuality: 0.5),
                let selectedOriginalImage = selectedOriginalImage,
                let selectedOriginalImageData = selectedOriginalImage.jpegData(compressionQuality: 0.5) {
                 print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
-                listener?.saveCropImage(diaryUUID: diaryModel.uuid, imageData: selectedImageData)
-                listener?.saveOriginalImage(diaryUUID: diaryModel.uuid, imageData: selectedOriginalImageData)
+                listener?.saveCropImage(diaryUUID: diaryModelRealm.uuid, imageData: selectedImageData)
+                listener?.saveOriginalImage(diaryUUID: diaryModelRealm.uuid, imageData: selectedOriginalImageData)
             }
-            listener?.writeDiary(info: diaryModel)
+            listener?.writeDiary(info: diaryModelRealm)
             dismiss(animated: true)
 
         case .edit:
             print("PressedCheckBtn! edit!")
+            /*
             let diaryModel = DiaryModel(uuid: "",
                                         pageNum: 0,
                                         title: title == defaultTitleText ? Date().toString() : title,
@@ -563,6 +576,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                                         isHide: false
             )
             
+            
             if let editDiaryModel = editDiaryModel {
                 // 전에는 이미지가 있었으나 수정할 때 이미지를 삭제한 경우
                 if editDiaryModel.image != nil && self.selectedImage == nil {
@@ -571,7 +585,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                 }
             }
             
-            self.listener?.updateDiary(info: diaryModel, edittedImage: self.isEdittedIamge)
+            // self.listener?.updateDiary(info: diaryModel, edittedImage: self.isEdittedIamge)
 
             if isEdittedIamge == true,
                let selectedImage = selectedImage,
@@ -583,7 +597,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                 listener?.saveCropImage(diaryUUID: diaryModelUUID, imageData: selectedImageData)
                 listener?.saveOriginalImage(diaryUUID: diaryModelUUID, imageData: selectedOriginalImageData)
             }
-            print("DiaryWriting :: diaryModel = \(diaryModel)")
+             */
         }
     }
     
@@ -1281,7 +1295,7 @@ extension DiaryWritingViewController: DialogDelegate {
              "메뉴얼 수정을 취소하시겠어요?":
             // TODO: - 임시저장 리스트에 저장하기
             if let diaryModel = zipDiaryModelForTempSave() {
-                listener?.saveTempSave(diaryModel: diaryModel)
+                // listener?.saveTempSave(diaryModel: diaryModel)
             }
             listener?.pressedBackBtn(isOnlyDetach: false)
             

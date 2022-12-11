@@ -19,7 +19,7 @@ protocol DiaryHomeRouting: ViewableRouting {
     func detachDiaryMoments()
     func attachDiaryWriting(page: Int)
     func detachDiaryWriting(isOnlyDetach: Bool)
-    func attachDiaryDetail(model: DiaryModel)
+    func attachDiaryDetail(model: DiaryModelRealm)
     func detachDiaryDetail(isOnlyDetach: Bool)
     func attachDesignSystem()
     func detachDesignSystem(isOnlyDetach: Bool)
@@ -130,7 +130,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         .sorted { $0.createdAt > $1.createdAt }
                         .first?.pageNum ?? 0
                     self.lastPageNumRelay.accept(lastPageNum)
-                    
+
                     // 초기에는 필터 적용이 아니므로 false 전달
                     self.presenter.isFilteredRelay.accept(false)
 
@@ -138,7 +138,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     var section = Set<String>()
                     let newModel = model.filter{ $0.isDeleted == false }
                     newModel.forEach { section.insert($0.createdAt.toStringWithYYYYMM()) }
-                    //
+
+                    // for문으로 체크하기 위해서 Array로 변경
                     var arraySerction = Array(section)
                     arraySerction.sort { $0 > $1 }
                     arraySerction.enumerated().forEach { (index: Int, sectioName: String) in
@@ -147,7 +148,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     let sortedModel: [DiaryModelRealm] = newModel.sorted(by: { $0.createdAt > $1.createdAt })
                     for diary in sortedModel {
                         let sectionName: String = diary.createdAt.toStringWithYYYYMM()
-                        self.diaryDictionary[sectionName]?.diaries.append(DiaryModel(diary))
+                        self.diaryDictionary[sectionName]?.diaries.append(diary)
                     }
                     print("DiaryHome :: diaryDictionary = \(self.diaryDictionary)")
                     print("DiaryHome :: sectionSet = \(section)")
@@ -181,7 +182,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         self.lastPageNumRelay.accept(lastPageNum)
                         
 
-                        self.diaryDictionary[sectionName]?.diaries.insert(DiaryModel(diary), at: 0)
+                        self.diaryDictionary[sectionName]?.diaries.insert(diary, at: 0)
                         print("DiaryHome :: test! = \(self.diaryDictionary[sectionName]?.diaries)")
                         self.presenter.insertTableViewRow(section: sectionIndex, row: 0)
                     }
@@ -192,7 +193,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         let diary: DiaryModelRealm = model[modificationsRow]
                         let sectionName: String = diary.createdAt.toStringWithYYYYMM()
 
-                        guard let diaries: [DiaryModel] = self.diaryDictionary[sectionName]?.diaries,
+                        guard let diaries: [DiaryModelRealm] = self.diaryDictionary[sectionName]?.diaries,
                               let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex,
                               let row: Int = diaries.indices.filter ({ diaries[$0].uuid == diary.uuid }).first
                         else { return }
@@ -219,7 +220,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         }
                         // 수정일때
                         else {
-                            self.diaryDictionary[sectionName]?.diaries[row] = DiaryModel(diary)
+                            self.diaryDictionary[sectionName]?.diaries[row] = diary
                             self.presenter.reloadTableViewRow(section: sectionIndex, row: row)
                         }
                     }
@@ -228,14 +229,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         fatalError("\(error)")
                 }
             }
-    }
-    
-    func getMyMenualCount() -> Int {
-        return dependency.diaryRepository.diaryString.value.count
-    }
-    
-    func getMyMenualArr() -> [DiaryModel] {
-        return dependency.diaryRepository.diaryString.value
     }
     
     // AdaptivePresentationControllerDelegate, Drag로 뷰를 Dismiss 시킬경우에 호출됨
@@ -296,8 +289,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     }
     
     // MARK: - Diary detaill 관련 함수
-    func pressedDiaryCell(diaryModel: DiaryModel) {
-        
+    func pressedDiaryCell(diaryModel: DiaryModelRealm) {
         router?.attachDiaryDetail(model: diaryModel)
 
 //        var updateModel: DiaryModel?
