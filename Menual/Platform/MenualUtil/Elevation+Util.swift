@@ -59,6 +59,9 @@ extension UIView {
         case .shadow_6:
             layer.shadowOffset = CGSize(width: 0, height: 24)
             layer.shadowRadius = 48
+            
+        //메뉴얼의 숨은 베타테스터 : 양수진
+            
         }
     }
 }

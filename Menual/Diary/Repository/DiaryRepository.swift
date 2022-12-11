@@ -15,7 +15,7 @@ public protocol DiaryRepository {
     // func addCard(info: AddPaymentMethodInfo) -> AnyPublisher<PaymentMethod, Error>
     // ReadOnlyCurrentValuePublisher<[PaymentMethod]> { get }
     
-    var diaryString: BehaviorRelay<[DiaryModel]> { get }
+    var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }
     var filteredMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
     var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
     var diarySearch: BehaviorRelay<[DiarySearchModel]> { get }
@@ -72,8 +72,8 @@ public protocol DiaryRepository {
 
 public final class DiaryRepositoryImp: DiaryRepository {
 
-    public var diaryString: BehaviorRelay<[DiaryModel]> { diaryModelSubject }
-    public let diaryModelSubject = BehaviorRelay<[DiaryModel]>(value: [])
+    public var diaryString: BehaviorRelay<[DiaryModelRealm]> { diaryModelSubject }
+    public let diaryModelSubject = BehaviorRelay<[DiaryModelRealm]>(value: [])
     
     public var filteredMonthDic: BehaviorRelay<[DiaryYearModel]> { filteredMonthDicSubject }
     public let filteredMonthDicSubject = BehaviorRelay<[DiaryYearModel]>(value: [])

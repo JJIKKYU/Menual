@@ -96,7 +96,7 @@ public struct DiaryModel {
 }
 
 // MARK: - Realm에 저장하기 위한 Class
-class DiaryModelRealm: Object {
+public class DiaryModelRealm: Object {
     // @objc dynamic var id: ObjectId
     @Persisted(primaryKey: true) var _id: ObjectId
     @Persisted var uuid = ""
@@ -111,6 +111,15 @@ class DiaryModelRealm: Object {
     // @Persisted var createdAt: Date = Date()
     @Persisted var isDeleted: Bool
     @Persisted var replies: List<DiaryReplyModelRealm>
+    var repliesArr: [DiaryReplyModelRealm] {
+        get {
+            return replies.map { $0 }
+        }
+        set {
+            replies.removeAll()
+            replies.append(objectsIn: newValue)
+        }
+    }
     @Persisted var isHide: Bool
     
     convenience init(uuid: String, pageNum: Int, title: String, weather: WeatherModelRealm?, place: PlaceModelRealm?, desc: String, image: Bool, readCount: Int, createdAt: Date, replies: [DiaryReplyModelRealm], isDeleted: Bool, isHide: Bool) {
@@ -125,7 +134,8 @@ class DiaryModelRealm: Object {
         self.readCount = readCount
         self.createdAt = createdAt
         self.isDeleted = isDeleted
-        self.replies.append(objectsIn: replies)
+        self.repliesArr = replies
+        // self.replies.append(objectsIn: replies)
         self.isHide = isHide
     }
     
