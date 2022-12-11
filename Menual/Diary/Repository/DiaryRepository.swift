@@ -19,14 +19,12 @@ public protocol DiaryRepository {
     var filteredMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
     var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
     var diarySearch: BehaviorRelay<[DiarySearchModel]> { get }
-    var tempSave: BehaviorRelay<[TempSaveModel]> { get }
     var password: BehaviorRelay<PasswordModel?> { get }
     var reminder: BehaviorRelay<[ReminderModel]> { get }
     
 //    var realmDiaryOb: Observable<[DiaryModel]> { get }
     // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
     func fetch()
-    func fetchTempSave()
     func addDiary(info: DiaryModelRealm)
     func updateDiary(info: DiaryModelRealm)
     func hideDiary(isHide: Bool, info: DiaryModelRealm)
@@ -82,9 +80,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     public var diarySearch: BehaviorRelay<[DiarySearchModel]> { diarySearchSubject }
     public let diarySearchSubject = BehaviorRelay<[DiarySearchModel]>(value: [])
-    
-    public var tempSave: BehaviorRelay<[TempSaveModel]> { tempSaveSubject }
-    public let tempSaveSubject = BehaviorRelay<[TempSaveModel]>(value: [])
     
     public var password: BehaviorRelay<PasswordModel?> { passwordSubject }
     public let passwordSubject = BehaviorRelay<PasswordModel?>(value: nil)
@@ -541,16 +536,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
     
     // MARK: - TempSave
-    public func fetchTempSave() {
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-
-        let tempSaveModelResults = realm.objects(TempSaveModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
-        tempSaveSubject.accept(tempSaveModelResults.map { TempSaveModel($0) })
-        print("diaryRepo :: fetchTempSave!")
-    }
-
     public func addTempSave(diaryModel: DiaryModelRealm, tempSaveUUID: String) {
         guard let realm = Realm.safeInit() else {
             return
@@ -565,11 +550,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
              realm.add(realmModel)
         }
-        
-//        let result: [TempSaveModel] = (tempSaveSubject.value + [model]).sorted { $0.createdAt > $1.createdAt }
-//
-//        tempSaveSubject.accept(result)
-//        self.fetchTempSave()
     }
     
     public func deleteTempSave(uuidArr: [String]) {
@@ -589,8 +569,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
             realm.delete(willDeleteModelObjects)
         }
-        
-        self.fetchTempSave()
     }
     
     public func updateTempSave(diaryModel: DiaryModelRealm, tempSaveUUID: String) {
@@ -618,8 +596,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
             data.isDeleted = model.isDeleted
             data.desc = model.description
         }
-        
-        // self.fetchTempSave()
     }
     
     // MARK: - Password

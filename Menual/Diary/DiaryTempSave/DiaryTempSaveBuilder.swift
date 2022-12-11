@@ -24,7 +24,7 @@ final class DiaryTempSaveComponent: Component<DiaryTempSaveDependency>, DiaryTem
 protocol DiaryTempSaveBuildable: Buildable {
     func build(
         withListener listener: DiaryTempSaveListener,
-        tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>,
+        tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModelRealm?>,
         tempSaveResetRelay: BehaviorRelay<Bool>
     ) -> DiaryTempSaveRouting
 }
@@ -37,7 +37,7 @@ final class DiaryTempSaveBuilder: Builder<DiaryTempSaveDependency>, DiaryTempSav
 
     func build(
         withListener listener: DiaryTempSaveListener,
-        tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>,
+        tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModelRealm?>,
         tempSaveResetRelay: BehaviorRelay<Bool>
     ) -> DiaryTempSaveRouting {
 

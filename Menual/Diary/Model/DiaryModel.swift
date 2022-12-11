@@ -142,7 +142,6 @@ public class DiaryModelRealm: Object {
     }
     @Persisted var readCount: Int
     @Persisted var createdAt: Date
-    // @Persisted var createdAt: Date = Date()
     @Persisted var isDeleted: Bool
     @Persisted var replies: List<DiaryReplyModelRealm>
     var repliesArr: [DiaryReplyModelRealm] {

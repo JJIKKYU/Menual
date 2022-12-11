@@ -17,6 +17,7 @@ protocol DiaryTempSaveRouting: ViewableRouting {
 protocol DiaryTempSavePresentable: Presentable {
     var listener: DiaryTempSavePresentableListener? { get set }
     func reloadTableView()
+    func deleteRow(at indexs: [Int])
 }
 
 protocol DiaryTempSaveListener: AnyObject {
@@ -33,17 +34,14 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
     weak var router: DiaryTempSaveRouting?
     weak var listener: DiaryTempSaveListener?
     
-    internal let tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>
+    internal let tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModelRealm?>
     internal let tempSaveResetRelay: BehaviorRelay<Bool>
     
     private let dependency: DiaryTempSaveDependency
     private let disposeBag = DisposeBag()
     
     var deleteTempSaveUUIDArrRelay = BehaviorRelay<[String]>(value: [])
-    var tempSaveRelay = BehaviorRelay<[TempSaveModel]>(value: [])
-    
     var tempSaveModel: List<TempSaveModelRealm>?
-    
     var notificationToken: NotificationToken?
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
@@ -51,37 +49,23 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
     init(
         presenter: DiaryTempSavePresentable,
         dependency: DiaryTempSaveDependency,
-        tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>,
+        tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModelRealm?>,
         tempSaveResetRelay: BehaviorRelay<Bool>
     ) {
         self.dependency = dependency
-        dependency.diaryRepository.fetchTempSave()
         self.tempSaveDiaryModelRelay = tempSaveDiaryModelRelay
         self.tempSaveResetRelay = tempSaveResetRelay
         super.init(presenter: presenter)
         presenter.listener = self
-        bind()
     }
 
     override func didBecomeActive() {
         super.didBecomeActive()
-        // TODO: Implement business logic here.
+        realmBind()
     }
 
     override func willResignActive() {
         super.willResignActive()
-        // TODO: Pause any business logic.
-    }
-    
-    func bind() {
-        dependency.diaryRepository
-            .tempSave
-            .subscribe(onNext: { [weak self] tempSave in
-                guard let self = self else { return }
-                print("TempSave :: tempSave구독! = \(tempSave)")
-                self.tempSaveRelay.accept(tempSave)
-            })
-            .disposed(by: disposeBag)
     }
     
     func realmBind() {
@@ -94,17 +78,10 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
                 self.tempSaveModel = model.list
                 self.presenter.reloadTableView()
                 
-            case .update(let model, let deletions, let insertions, let modifications):
+            case .update(let model, let deletions, _, _):
                 if deletions.count > 0 {
-                    
-                }
-                
-                if insertions.count > 0 {
-                    
-                }
-                
-                if modifications.count > 0 {
-                    
+                    self.tempSaveModel = model.list
+                    self.presenter.deleteRow(at: deletions)
                 }
                 
             case .error(let error):
@@ -124,9 +101,11 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
     
     func pressedTempSaveCell(uuid: String) {
         print("TempSave :: pressedTempSaveCell -> uuid - \(uuid)")
-        guard let tempSaveDiaryModel: TempSaveModel = dependency.diaryRepository.tempSave.value.filter({ $0.uuid == uuid }).first else { return }
-        print("TempSaveDiaryModel = \(tempSaveDiaryModel)")
-        tempSaveDiaryModelRelay.accept(tempSaveDiaryModel)
+//        guard let tempSaveDiaryModel: TempSaveModel = dependency.diaryRepository.tempSave.value.filter({ $0.uuid == uuid }).first else { return }
+        
+        guard let model: TempSaveModelRealm = tempSaveModel?.filter ({ $0.uuid == uuid }).first else { return }
+        // print("TempSaveDiaryModel = \(tempSaveDiaryModel)")
+        tempSaveDiaryModelRelay.accept(model)
         listener?.diaryTempSavePressentBackBtn(isOnlyDetach: false)
     }
 }

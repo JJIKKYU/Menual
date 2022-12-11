@@ -729,7 +729,7 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         self.view.layoutIfNeeded()
     }
     
-    func setTempSaveModel(tempSaveModel: TempSaveModel) {
+    func setTempSaveModel(tempSaveModel: TempSaveModelRealm) {
         print("DiaryWriting :: setTempSaveModel")
         self.titleTextField.text = tempSaveModel.title
         self.titleTextField.textColor = Colors.grey.g200
@@ -747,8 +747,8 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
 
         self.locationSelectView.selectedPlaceType = tempSaveModel.place
         self.locationSelectView.selectTextView.centerVerticalText()
-        self.locationSelectView.selectTitle = tempSaveModel.placeDetilText ?? ""
-        if tempSaveModel.placeDetilText ?? "" == defaultPlaceText {
+        self.locationSelectView.selectTitle = tempSaveModel.placeDetailText ?? ""
+        if tempSaveModel.placeDetailText ?? "" == defaultPlaceText {
             self.locationSelectView.selectTextView.textColor = Colors.grey.g600
             self.locationSelectView.selected = false
         } else {
@@ -760,9 +760,10 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
                                                                          text: tempSaveModel.description
         )
         
-        if let tempSaveModelImage = tempSaveModel.image {
-            self.imageUploadView.image = UIImage(data: tempSaveModelImage)
-            self.selectedImage = UIImage(data: tempSaveModelImage)
+        if tempSaveModel.image == true {
+            guard let imageData = tempSaveModel.cropImage else { return }
+            self.imageUploadView.image = UIImage(data: imageData)
+            self.selectedImage = UIImage(data: imageData)
             self.isEdittedIamge = true
         } else {
             self.imageUploadView.image = nil

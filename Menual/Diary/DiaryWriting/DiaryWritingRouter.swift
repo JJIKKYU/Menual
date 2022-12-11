@@ -95,7 +95,7 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
     }
     
     // MARK: - DiaryTempSave
-    func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>, tempSaveResetRelay: BehaviorRelay<Bool>) {
+    func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModelRealm?>, tempSaveResetRelay: BehaviorRelay<Bool>) {
         if diaryTempSaveRouting != nil {
             return
         }

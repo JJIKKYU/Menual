@@ -15,7 +15,7 @@ protocol DiaryWritingRouting: ViewableRouting {
     func attachBottomSheet(weatherModelOb: BehaviorRelay<WeatherModel?>, placeModelOb: BehaviorRelay<PlaceModel?>, bottomSheetType: MenualBottomSheetType)
     func detachBottomSheet()
     
-    func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?>, tempSaveResetRelay: BehaviorRelay<Bool>)
+    func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModelRealm?>, tempSaveResetRelay: BehaviorRelay<Bool>)
     func detachDiaryTempSave(isOnlyDetach: Bool)
 }
 
@@ -28,7 +28,7 @@ protocol DiaryWritingPresentable: Presentable {
     
     // 다이어리 수정 모드로 변경
     func setDiaryEditMode(diaryModel: DiaryModelRealm)
-    func setTempSaveModel(tempSaveModel: TempSaveModel)
+    func setTempSaveModel(tempSaveModel: TempSaveModelRealm)
     
     // 다이어리 초기화
     func resetDiary()
@@ -70,7 +70,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     private let diaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
     
     // TempSave <-> DiaryWrtiting으로 전달하기 위한 Relay
-    private let tempSaveDiaryModelRelay = BehaviorRelay<TempSaveModel?>(value: nil)
+    private let tempSaveDiaryModelRelay = BehaviorRelay<TempSaveModelRealm?>(value: nil)
     // TempSave 적용되었던 메뉴얼을 초기화해야 할 경우
     private let tempSaveResetRelay = BehaviorRelay<Bool>(value: false)
     
@@ -290,7 +290,9 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     // MARK: - diaryTempSave
     
     func pressedTempSaveBtn() {
-        router?.attachDiaryTempSave(tempSaveDiaryModelRelay: tempSaveDiaryModelRelay, tempSaveResetRelay: tempSaveResetRelay)
+        router?.attachDiaryTempSave(tempSaveDiaryModelRelay: tempSaveDiaryModelRelay,
+                                    tempSaveResetRelay: tempSaveResetRelay
+        )
     }
     
     func diaryTempSavePressentBackBtn(isOnlyDetach: Bool) {

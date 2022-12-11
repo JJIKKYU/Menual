@@ -11,16 +11,18 @@ import UIKit
 import SnapKit
 import Then
 import RxRelay
+import RealmSwift
 
 protocol DiaryTempSavePresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
     // business logic, such as signIn(). This protocol is implemented by the corresponding
     // interactor class.
     func pressedBackBtn(isOnlyDetach: Bool)
-    var tempSaveRelay: BehaviorRelay<[TempSaveModel]> { get }
-    var tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModel?> { get }
+    // var tempSaveRelay: BehaviorRelay<[TempSaveModel]> { get }
+    var tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModelRealm?> { get }
     var tempSaveResetRelay: BehaviorRelay<Bool> { get }
     var deleteTempSaveUUIDArrRelay: BehaviorRelay<[String]> { get }
+    var tempSaveModel: List<TempSaveModelRealm>? { get }
     func deleteTempSave()
     func pressedTempSaveCell(uuid: String)
 }
@@ -126,22 +128,6 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSaveViewCont
     }
     
     func bind() {
-        listener?.tempSaveRelay
-            .subscribe(onNext: { [weak self] tempSave in
-                guard let self = self else { return }
-                if tempSave.count == 0 {
-                    self.naviView.rightButton1IsActive = false
-                    self.naviView.rightButton1.isEnabled = false
-                    self.emptyView.isHidden = false
-                } else {
-                    self.naviView.rightButton1.isEnabled = true
-                    self.emptyView.isHidden = true
-                }
-                print("TempSave :: tempSveRelay! reloadData!")
-                self.tableView.reloadData()
-            })
-            .disposed(by: disposeBag)
-        
         listener?.deleteTempSaveUUIDArrRelay
             .subscribe(onNext: { [weak self] tempSaveArr in
                 guard let self = self else { return }
@@ -160,7 +146,25 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSaveViewCont
 
 // MARK: -  DiaryTempSavePresentable
 extension DiaryTempSaveViewController: DiaryTempSavePresentable {
+    func deleteRow(at indexs: [Int]) {
+        tableView.beginUpdates()
+        let indexPaths = indexs.map { IndexPath(item: $0, section: 0) }
+        tableView.deleteRows(at: indexPaths, with: .automatic)
+        tableView.endUpdates()
+    }
+    
     func reloadTableView() {
+        guard let tempSaveModel = listener?.tempSaveModel else { return }
+
+        if tempSaveModel.count == 0 {
+            self.naviView.rightButton1IsActive = false
+            self.naviView.rightButton1.isEnabled = false
+            self.emptyView.isHidden = false
+        } else {
+            self.naviView.rightButton1.isEnabled = true
+            self.emptyView.isHidden = true
+        }
+
         self.tableView.reloadData()
     }
     
@@ -216,7 +220,7 @@ extension DiaryTempSaveViewController {
 // MARK: - UITableViewDelegate
 extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listener?.tempSaveRelay.value.count ?? 0
+        return listener?.tempSaveModel?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -225,10 +229,9 @@ extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSourc
             return UITableViewCell()
         }
         
-        guard let tempSaveArr = listener?.tempSaveRelay.value,
-              let model: TempSaveModel = tempSaveArr[safe: indexPath.row]
-        else { return UITableViewCell() }
+        guard let tempSaveArr = listener?.tempSaveModel else { return UITableViewCell() }
         
+        let model: TempSaveModelRealm = tempSaveArr[indexPath.row]
         let currentTempSaveUUID: String = listener?.tempSaveDiaryModelRelay.value?.uuid ?? ""
 
         cell.isWriting = false
@@ -238,7 +241,7 @@ extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSourc
             print("TempSave :: 작성중아!")
         }
         
-        if let _ = model.image {
+        if model.image == true {
             print("TempSave :: 이미지가 있다면")
             cell.imageEnabled = true
         } else {
@@ -260,7 +263,7 @@ extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSourc
         print("TempSave :: indexPath = \(indexPath)")
         guard let cell = tableView.cellForRow(at: indexPath) as? TempSaveCell else { return }
         
-        guard let uuid: String = listener?.tempSaveRelay.value[safe: indexPath.row]?.uuid,
+        guard let uuid: String = listener?.tempSaveModel?[indexPath.row].uuid,
               let selectedUUIDArr: [String] = listener?.deleteTempSaveUUIDArrRelay.value
         else { return }
         print("TempSave :: didSelectedRow = uuid = \(uuid)")

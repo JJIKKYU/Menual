@@ -441,7 +441,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             cell.title = model.title
             cell.date = model.createdAt.toString()
             cell.time = model.createdAt.toStringHourMin()
-            cell.body = model.description
+            cell.body = model.desc
 
             let pageCount = "\(model.pageNum)"
             var replies = ""
@@ -460,11 +460,9 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
 
             guard let model = listener?.recentSearchModel?[index],
-                  let diary = model.diary else {
+                  let data = model.diary else {
                 return UITableViewCell()
             }
-            
-            let data = DiaryModel(diary)
             
             print("Search :: cell! - 2")
             
@@ -482,11 +480,11 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             cell.title = data.title
             cell.date = data.createdAt.toString()
             cell.time = data.createdAt.toStringHourMin()
-            cell.body = data.description
+            cell.body = data.desc
 
             let pageCount = "\(data.pageNum)"
             var replies = ""
-            if diary.replies.count != 0 {
+            if data.repliesArr.count != 0 {
                 replies = "\(data.replies.count)"
             }
 
