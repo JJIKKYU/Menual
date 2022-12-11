@@ -543,23 +543,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
         case .edit:
             print("PressedCheckBtn! edit!")
-            /*
-            let diaryModel = DiaryModel(uuid: "",
-                                        pageNum: 0,
-                                        title: title == defaultTitleText ? Date().toString() : title,
-                                        weather: weatherModel,
-                                        place: placeModel,
-                                        description: description == defaultDescriptionText ? "" : description,
-                                        image: self.selectedImage?.jpegData(compressionQuality: 0.5),
-                                        originalImage: self.selectedOriginalImage?.jpegData(compressionQuality: 0.5),
-                                        readCount: 0,
-                                        createdAt: Date(),
-                                        replies: [],
-                                        isDeleted: false,
-                                        isHide: false
-            )
-            */
             guard let editDiaryModel = editDiaryModel else { return }
+            print("DiarWriting :: selectedOriginalImage = \(selectedOriginalImage)")
             let diaryModelRealm = DiaryModelRealm(uuid: editDiaryModel.uuid,
                                                   pageNum: editDiaryModel.pageNum,
                                                   title: title == defaultTitleText ? Date().toString() : title,

@@ -18,7 +18,6 @@ public protocol DiaryRepository {
     var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }
     var filteredMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
     var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
-    var diarySearch: BehaviorRelay<[DiarySearchModel]> { get }
     var password: BehaviorRelay<PasswordModel?> { get }
     var reminder: BehaviorRelay<[ReminderModel]> { get }
     
@@ -77,9 +76,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     public var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { diaryMonthDicSubject }
     public let diaryMonthDicSubject = BehaviorRelay<[DiaryYearModel]>(value: [])
-    
-    public var diarySearch: BehaviorRelay<[DiarySearchModel]> { diarySearchSubject }
-    public let diarySearchSubject = BehaviorRelay<[DiarySearchModel]>(value: [])
     
     public var password: BehaviorRelay<PasswordModel?> { passwordSubject }
     public let passwordSubject = BehaviorRelay<PasswordModel?>(value: nil)
@@ -281,9 +277,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
             }
 
             // TODO: - 이미지 생성 시점 체크할 것
-//            if data.image != (info.image != nil) ? true : false {
-//                data.image = info.image != nil ? true : false
-//            }
+            if data.image != info.image {
+                data.image = info.image
+            }
 
             if data.weather?.weather != info.weather?.weather ||
                 data.weather?.detailText != info.weather?.detailText {
@@ -294,36 +290,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 data.place?.detailText != info.place?.detailText {
                 data.place = info.place
             }
-            
-            // data.weather = WeatherModelRealm(info.weather ?? WeatherModel(uuid: "", weather: nil, detailText: ""))
-            // data.place = PlaceModelRealm(info.place ?? PlaceModel(uuid: "", place: nil, detailText: ""))
         }
-        
-//        var idx: Int = 0
-//        for (index, value) in diaryModelSubject.value.enumerated() {
-//            if value.uuid == info.uuid {
-//                idx = index
-//            }
-//        }
-
-//        var arr = diaryModelSubject.value
-//        arr[idx] = DiaryModel(uuid: info.uuid,
-//                              pageNum: info.pageNum,
-//                              title: info.title,
-//                              weather: info.weather,
-//                              place: info.place,
-//                              description: info.description,
-//                              image: info.image,
-//                              originalImage: info.originalImage,
-//                              readCount: info.readCount,
-//                              createdAt: info.createdAt,
-//                              replies: info.replies,
-//                              isDeleted: info.isDeleted,
-//                              isHide: info.isHide
-//        )
-
-        // diaryModelSubject.accept(arr)
-        // self.fetch()
     }
     
     public func removeAllDiary() {

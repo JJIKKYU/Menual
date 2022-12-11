@@ -16,7 +16,7 @@ import RealmSwift
 protocol DiarySearchPresentableListener: AnyObject {
     var searchResultsRelay: BehaviorRelay<[DiaryModelRealm]> { get }
     var recentSearchModel: List<DiarySearchModelRealm>? { get }
-    
+
     func pressedBackBtn(isOnlyDetach: Bool)
     func search(keyword: String)
     func pressedSearchCell(diaryModel: DiaryModelRealm)

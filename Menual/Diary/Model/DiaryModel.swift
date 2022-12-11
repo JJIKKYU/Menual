@@ -105,7 +105,7 @@ public class DiaryModelRealm: Object {
     @Persisted var weather: WeatherModelRealm?
     @Persisted var place: PlaceModelRealm?
     @Persisted var desc: String = ""
-    @Persisted var image: Bool = false
+    @Persisted var image: Bool
     var originalImage: Data? {
         get {
             if image == false { return nil }

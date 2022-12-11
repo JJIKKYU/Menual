@@ -113,9 +113,11 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             self.imageDataRelay.accept(imageData)
         }
 
-        self.notificationToken = diary?.observe({ changes in
+        self.notificationToken = diary?.observe({ [weak self] changes in
+            guard let self = self else { return }
             switch changes {
             case .change(let model, let proertyChanges):
+                print("DiaryDetail :: model = \(model as? DiaryModelRealm)")
                 self.presenter.loadDiaryDetail(model: self.diaryModel)
             case .error(let error):
                 fatalError("\(error)")
