@@ -12,7 +12,6 @@ import RxRealm
 import RealmSwift
 
 protocol DiarySearchRouting: ViewableRouting {
-    // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
     func attachDiaryDetailVC(diaryModel: DiaryModelRealm)
     func detachDiaryDetailVC(isOnlyDetach: Bool)
 }
@@ -32,7 +31,6 @@ protocol DiarySearchInteractorDependency {
 }
 
 protocol DiarySearchListener: AnyObject {
-    // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func diarySearchPressedBackBtn(isOnlyDetach: Bool)
 }
 
@@ -41,11 +39,10 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     weak var router: DiarySearchRouting?
     weak var listener: DiarySearchListener?
     private let dependency: DiarySearchInteractorDependency
-    var disposeBag = DisposeBag()
+    private var disposeBag = DisposeBag()
     
-    var searchResultsRelay = BehaviorRelay<[DiaryModelRealm]>(value: [])
-    var recentSearchResultsRelay = BehaviorRelay<[DiarySearchModel]>(value: [])
-    var recentSearchModel: List<DiarySearchModelRealm>?
+    internal var searchResultsRelay = BehaviorRelay<[DiaryModelRealm]>(value: [])
+    internal var recentSearchModel: List<DiarySearchModelRealm>?
     
     var recentSearchModelNnotificationToken: NotificationToken?
 
@@ -65,8 +62,6 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
 
     override func willResignActive() {
         super.willResignActive()
-        // TODO: Pause any business logic.
-        
         recentSearchModelNnotificationToken = nil
     }
     
@@ -76,19 +71,19 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
         recentSearchModelNnotificationToken = diarySearchModelRealm.observe({ changes in
             switch changes {
             case .initial(let model):
-                print("DiarySearch :: init!")
+                print("Search :: init!")
                 self.recentSearchModel = model.list
                 self.presenter.reloadSearchTableView()
             case .update(let model, let deletions, let insertions, let modifications):
-                print("DiarySearch :: update!")
+                print("Search :: update!")
                 if deletions.count > 0 {
                     self.recentSearchModel = model.list
                     self.presenter.deleteRow(at: deletions, section: .recentSearch)
-                    print("DiarySearch :: deletions!")
+                    print("Search :: deletions!")
                 }
                 
                 if insertions.count > 0 {
-                    print("DiarySearch :: insertions!, insertions = \(insertions)")
+                    print("Search :: insertions!, insertions = \(insertions)")
                     self.recentSearchModel = model.list
                     self.presenter.insertRow(at: insertions, section: .recentSearch)
                 }
@@ -96,10 +91,10 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
                 if modifications.count > 0 {
                     self.recentSearchModel = model.list
                     self.presenter.updateRow(at: modifications, section: .recentSearch)
-                    print("DiarySearch :: modifications!")
+                    print("Search :: modifications!")
                 }
             case .error(let error):
-                print("DiarySearch :: error!")
+                print("Search :: error!, \(error)")
             }
         })
     }
