@@ -36,8 +36,8 @@ public protocol DiaryRepository {
     func deleteImageFromDocumentDirectory(diaryUUID: String, completionHandler: @escaping (Bool) -> Void)
     
     // 겹쓰기 로직
-    func addReply(info: DiaryReplyModel)
-    func deleteReply(diaryUUID: String, replyUUID: String)
+    func addReply(info: DiaryReplyModelRealm, diaryModel: DiaryModelRealm)
+    func deleteReply(diaryModel: DiaryModelRealm, replyModel: DiaryReplyModelRealm)
     
     // 최근검색목록 로직
     func addDiarySearch(info: DiaryModelRealm)
@@ -338,50 +338,33 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-        
-        guard let data = realm.objects(DiaryModelRealm.self).filter({ $0.uuid == info.uuid }).first
-        else { return }
-        
+
         realm.safeWrite {
-            data.isHide = isHide
+            info.isHide = isHide
         }
     }
     
     // MARK: - 겹쓰기 로직
-    public func addReply(info: DiaryReplyModel) {
+    public func addReply(info: DiaryReplyModelRealm, diaryModel: DiaryModelRealm) {
         guard let realm = Realm.safeInit() else {
             return
         }
-        
-        guard let diary = realm.objects(DiaryModelRealm.self).filter("uuid == %@", info.diaryUuid).first else { return }
-        
-        let repliesCount = diary.replies.count
-        
-        var newInfo = info
-        newInfo.updateReplyNum(replyNum: repliesCount)
+
+        let repliesCount = diaryModel.repliesArr.count
+        info.updateReplyNum(replyNum: repliesCount)
         
         realm.safeWrite {
-            diary.replies.append(DiaryReplyModelRealm(newInfo))
+            diaryModel.replies.append(info)
         }
     }
     
-    public func deleteReply(diaryUUID: String, replyUUID: String) {
+    public func deleteReply(diaryModel: DiaryModelRealm, replyModel: DiaryReplyModelRealm) {
         guard let realm = Realm.safeInit() else {
             return
         }
-        
-        guard let diary = realm.objects(DiaryModelRealm.self).filter("uuid == %@", diaryUUID).first else {
-            return
-        }
-        
-        print("DiaryRepo :: diary = \(diary)")
-        
-        guard let replyRealm = diary.replies.filter({ $0.uuid == replyUUID }).first else { return }
-        
-        print("DiaryRepo :: replyRealm = \(replyRealm)")
 
         realm.safeWrite {
-            realm.delete(replyRealm)
+            realm.delete(replyModel)
         }
     }
 

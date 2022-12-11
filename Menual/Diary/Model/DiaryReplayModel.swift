@@ -41,8 +41,7 @@ public struct DiaryReplyModel {
 }
 
 // MARK: - Realm에 저장하기 위한 Class
-class DiaryReplyModelRealm: EmbeddedObject {
-//    @Persisted(primaryKey: true) var _id: ObjectId
+public class DiaryReplyModelRealm: EmbeddedObject {
     @Persisted var uuid: String = ""
     @Persisted var replyNum: Int
     @Persisted var diaryUuid: String
@@ -58,6 +57,10 @@ class DiaryReplyModelRealm: EmbeddedObject {
         self.desc = desc
         self.createdAt = createdAt
         self.isDeleted = isDeleted
+    }
+    
+    func updateReplyNum(replyNum: Int) {
+        self.replyNum = replyNum + 1
     }
     
     convenience init(_ diaryReplyModel: DiaryReplyModel) {

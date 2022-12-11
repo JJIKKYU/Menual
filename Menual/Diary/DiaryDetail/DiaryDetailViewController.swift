@@ -23,7 +23,7 @@ protocol DiaryDetailPresentableListener: AnyObject {
     func pressedImageView()
     
     func hideDiary()
-    func deleteReply(uuid: String)
+    func deleteReply(replyModel: DiaryReplyModelRealm)
     
     var diaryReplyArr: [DiaryReplyModelRealm] { get }
     var currentDiaryPage: Int { get }
@@ -42,6 +42,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     private var isShowKeboard: Bool = false
     private var willDeleteReplyUUID: String?
+    private var willDeleteReplyModel: DiaryReplyModelRealm?
     
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -647,10 +648,11 @@ extension DiaryDetailViewController {
     @objc
     func pressedReplyCloseBtn(sender: UIButton) {
         print("DiaryDetail :: pressedRelyCloseBtn!, sender.tag = \(sender.tag)")
-        guard let cell = replyTableView.cellForRow(at: IndexPath(row: sender.tag, section: 0)) as? ReplyCell else { return }
+        guard let willDeleteReply = listener?.diaryReplyArr[safe: sender.tag] else { return }
+        self.willDeleteReplyModel = willDeleteReply
+        // print("DiaryDetail :: uuid = \(cell.replyUUID)")
+        // self.willDeleteReplyUUID = cell.replyUUID
         
-        print("DiaryDetail :: uuid = \(cell.replyUUID)")
-        self.willDeleteReplyUUID = cell.replyUUID
         show(size: .small,
              buttonType: .twoBtn,
              titleText: "겹쓰기를 삭제할까요?",
@@ -824,6 +826,7 @@ extension DiaryDetailViewController: UITextViewDelegate {
             guard let text = textView.text else { return false }
             if text == replyTextPlcaeHolder {
                 textView.text = nil
+                textView.textColor = Colors.grey.g100
             }
 
             return true
@@ -839,6 +842,7 @@ extension DiaryDetailViewController: UITextViewDelegate {
             guard let text = textView.text else { return }
             if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 textView.text = replyTextPlcaeHolder
+                textView.textColor = Colors.grey.g500
             }
 
         default:
@@ -865,10 +869,11 @@ extension DiaryDetailViewController: DialogDelegate {
             textViewDidChange(replyBottomView.replyTextView)
             replyBottomView.replyTextView.layoutIfNeeded()
             replyBottomView.setNeedsLayout()
+            view.endEditing(true)
 
         case "겹쓰기를 삭제할까요?":
-            guard let willDeleteReplyUUID = willDeleteReplyUUID else { return }
-            listener?.deleteReply(uuid: willDeleteReplyUUID)
+            guard let willDeleteReplyModel = willDeleteReplyModel else { return }
+            listener?.deleteReply(replyModel: willDeleteReplyModel)
 
         default:
             break

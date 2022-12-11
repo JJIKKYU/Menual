@@ -279,19 +279,17 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         guard let diaryModel = diaryModel else {
             return
         }
-
-        let newDiaryReplyModel = DiaryReplyModel(uuid: UUID().uuidString,
-                                                 replyNum: 0,
-                                                 diaryUuid: diaryModel.uuid,
-                                                 desc: desc,
-                                                 createdAt: Date(),
-                                                 isDeleted: false
-        )
         
-        DispatchQueue.global(qos: .background).async {
-            self.dependency.diaryRepository
-                .addReply(info: newDiaryReplyModel)
-        }
+        let diaryReplyModelRealm = DiaryReplyModelRealm(uuid: UUID().uuidString,
+                                                        replyNum: 0,
+                                                        diaryUuid: diaryModel.uuid,
+                                                        desc: desc,
+                                                        createdAt: Date(),
+                                                        isDeleted: false
+        )
+
+        self.dependency.diaryRepository
+            .addReply(info: diaryReplyModelRealm, diaryModel: diaryModel)
     }
 
     // Diary 이동
@@ -343,14 +341,11 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         
     }
     
-    func deleteReply(uuid: String) {
+    func deleteReply(replyModel: DiaryReplyModelRealm) {
         print("DiaryDetail :: DeletReply!")
-        guard let diaryUUID: String = diaryModel?.uuid else { return }
-
-        DispatchQueue.global(qos: .background).async {
-            self.dependency.diaryRepository
-                .deleteReply(diaryUUID: diaryUUID, replyUUID: uuid)
-        }
+        guard let diaryModel = self.diaryModel else { return }
+        self.dependency.diaryRepository
+            .deleteReply(diaryModel: diaryModel, replyModel: replyModel)
     }
     
     func diaryBottomSheetPressedCloseBtn() {
@@ -375,7 +370,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     // 유저가 바텀싯을 통해서 숨기기를 눌렀을 경우
     func hideDiary() {
-        /*
         print("DiaryDetail :: hideDiary! 1")
         guard let diaryModel = diaryModel else { return }
         var isHide: Bool = false
@@ -387,15 +381,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             print("DiaryDetail :: 숨깁니다!")
         }
 
-        guard let hideDiary = dependency.diaryRepository
-            .hideDiary(isHide: isHide, info: diaryModel) else { return }
-        // dependency.diaryRepository.updateDiary(info: <#T##DiaryModel#>)
-
-        print("DiaryDetail :: hideDiary! 2 -> \(hideDiary.isHide)")
-        self.diaryModel = hideDiary
-        // presenter.loadDiaryDetail(model: hideDiary)
-        // self.presenter.reloadTableView()
-        */
+        dependency.diaryRepository
+            .hideDiary(isHide: isHide, info: diaryModel)
     }
     
     func reminderCompViewshowToast(isEding: Bool) {
