@@ -28,7 +28,7 @@ public protocol DiaryRepository {
     func fetch()
     func fetchTempSave()
     func addDiary(info: DiaryModelRealm)
-    func updateDiary(info: DiaryModel)
+    func updateDiary(info: DiaryModelRealm)
     func hideDiary(isHide: Bool, info: DiaryModelRealm)
     func removeAllDiary()
     func deleteDiary(info: DiaryModel)
@@ -250,40 +250,24 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     // MARK: - Diary CRUD
     public func addDiary(info: DiaryModelRealm) {
-        // 1. 추가할 Diary를 info로 받는다
-        // 2. Realm에다가 새로운 Diary를 add 한다.
-        // 3. add한 diary를 담고 있는 Realm의 Observable를 반환한다.
-        
-        print("addDiary!")
-        // Realm에서 DiaryModelRealm Array를 받아온다.
         guard let realm = Realm.safeInit() else {
             return
         }
-        
-        let diariesCount = realm.objects(DiaryModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false).first?.pageNum ?? 0
-        
-        print("diariesCount = \(diariesCount + 1)")
-        
-        print("addDiary! - 2")
-        
-        var newInfo = info
-        newInfo.updatePageNum(pageNum: diariesCount)
-        print("newInfo's pageNum = \(newInfo.pageNum)")
-        
-        
+
+        let diariesCount = realm.objects(DiaryModelRealm.self)
+            .sorted(byKeyPath: "createdAt", ascending: false)
+            .filter({ $0.isDeleted == false })
+            .first?
+            .pageNum ?? 0
+
+        info.updatePageNum(pageNum: diariesCount)
+
         realm.safeWrite {
-            realm.add(newInfo)
-            // realm.create(DiaryModelRealm.self, value: DiaryModelRealm(info))
+            realm.add(info)
         }
-        
-        // let result: [DiaryModel] = (diaryModelSubject.value + [newInfo]).sorted { $0.createdAt > $1.createdAt }
-        
-        // diaryModelSubject.accept(result)
-        // self.fetchDiary()
-        print("addDiary! - 3")
     }
-    
-    public func updateDiary(info: DiaryModel) {
+
+    public func updateDiary(info: DiaryModelRealm) {
         print("update Diary!")
         // Realm에서 DiaryModelRealm Array를 받아온다.
         guard let realm = Realm.safeInit() else {
@@ -299,29 +283,23 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 data.title = info.title
             }
             
-            if data.desc != info.description {
-                data.desc = info.description
+            if data.desc != info.desc {
+                data.desc = info.desc
             }
-            
-//            if data.image != info.image {
-//                data.image = info.image
+
+            // TODO: - 이미지 생성 시점 체크할 것
+//            if data.image != (info.image != nil) ? true : false {
+//                data.image = info.image != nil ? true : false
 //            }
-            // data.title = info.title
-            // data.image = info.image
-            if data.image != (info.image != nil) ? true : false {
-                data.image = info.image != nil ? true : false
-            }
-            
-            // data.desc = info.description
-            
+
             if data.weather?.weather != info.weather?.weather ||
                 data.weather?.detailText != info.weather?.detailText {
-                data.weather = WeatherModelRealm(info.weather ?? WeatherModel(uuid: "", weather: nil, detailText: ""))
+                data.weather = info.weather
             }
             
             if data.place?.place != info.place?.place ||
                 data.place?.detailText != info.place?.detailText {
-                data.place = PlaceModelRealm(info.place ?? PlaceModel(uuid: "", place: nil, detailText: ""))
+                data.place = info.place
             }
             
             // data.weather = WeatherModelRealm(info.weather ?? WeatherModel(uuid: "", weather: nil, detailText: ""))

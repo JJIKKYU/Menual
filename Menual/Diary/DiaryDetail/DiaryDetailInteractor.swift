@@ -15,7 +15,7 @@ protocol DiaryDetailRouting: ViewableRouting {
     func detachBottomSheet(isWithDiaryDetatil: Bool)
     
     // 수정하기
-    func attachDiaryWriting(diaryModel: DiaryModel, page: Int)
+    func attachDiaryWriting(diaryModel: DiaryModelRealm, page: Int)
     func detachDiaryWriting(isOnlyDetach: Bool)
     
     // 이미지 자세히 보기
@@ -91,28 +91,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         self.presentationDelegateProxy.delegate = self
         presenter.loadDiaryDetail(model: diaryModel)
         pressedIndicatorButton(offset: 0, isInitMode: true)
-        
-//        Observable.combineLatest(
-//            dependency.diaryRepository.diaryString,
-//            self.changeCurrentDiarySubject
-//        )
-//            .subscribe(onNext: { [weak self] diaryArr, isChanged in
-//                guard let self = self,
-//                      let diaryModel = self.diaryModel else { return }
-//                
-//                print("DiaryDetail :: diaryString 구독 중!, isChanged = \(isChanged), diaryModel.uuid = \(diaryModel.pageNum)")
-//                guard let currentDiaryModel = diaryArr.filter({ diaryModel.uuid == $0.uuid }).first else { return }
-//                print("<- reloadTableView")
-//                self.diaryModel = currentDiaryModel
-//                self.diaryReplies = currentDiaryModel.replies
-//                self.currentDiaryPage = currentDiaryModel.pageNum
-//                if let imageData: Data = currentDiaryModel.originalImage {
-//                    self.imageDataRelay.accept(imageData)
-//                }
-//
-//                presenter.loadDiaryDetail(model: currentDiaryModel)
-//            })
-//            .disposed(by: self.disposebag)
     }
     
     func setDiaryModelRealmOb() {
@@ -131,22 +109,22 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                     case "title":
                         print("DiaryDetail :: title 변화감지!")
                         guard let title: String = property.newValue as? String else { return }
-                        self.diaryModel?.title = title
+                        // self.diaryModel?.title = title
                         self.presenter.loadDiaryDetail(model: self.diaryModel)
                         
                     case "desc":
                         guard let desc: String = property.newValue as? String else { return }
-                        self.diaryModel?.desc = desc
+                        // self.diaryModel?.desc = desc
                         self.presenter.loadDiaryDetail(model: self.diaryModel)
                         
                     case "weather":
                         guard let weatherModeRealm: WeatherModelRealm = property.newValue as? WeatherModelRealm else { return }
-                        self.diaryModel?.weather = weatherModeRealm
+                        // self.diaryModel?.weather = weatherModeRealm
                         self.presenter.loadDiaryDetail(model: self.diaryModel)
                         
                     case "place":
                         guard let placeModelRealm: PlaceModelRealm = property.newValue as? PlaceModelRealm else { return }
-                        self.diaryModel?.place = placeModelRealm
+                        // self.diaryModel?.place = placeModelRealm
                         self.presenter.loadDiaryDetail(model: self.diaryModel)
                         
                     case "image":
@@ -218,7 +196,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 case .edit:
                     self.router?.detachBottomSheet(isWithDiaryDetatil: false)
                     guard let diaryModel = self.diaryModel else { return }
-                    // self.router?.attachDiaryWriting(diaryModel: diaryModel, page: diaryModel.pageNum)
+                    self.router?.attachDiaryWriting(diaryModel: diaryModel, page: diaryModel.pageNum)
                     
                 case .delete:
                     guard let diaryModel = self.diaryModel else { return }

@@ -112,7 +112,7 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
     }
     
     // 바텀싯 수정하기
-    func attachDiaryWriting(diaryModel: DiaryModel, page: Int) {
+    func attachDiaryWriting(diaryModel: DiaryModelRealm, page: Int) {
         if diaryWritingRouting != nil {
             return
         }

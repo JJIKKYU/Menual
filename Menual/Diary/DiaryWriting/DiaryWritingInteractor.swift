@@ -27,7 +27,7 @@ protocol DiaryWritingPresentable: Presentable {
     func setPlaceView(model: PlaceModel)
     
     // 다이어리 수정 모드로 변경
-    func setDiaryEditMode(diaryModel: DiaryModel)
+    func setDiaryEditMode(diaryModel: DiaryModelRealm)
     func setTempSaveModel(tempSaveModel: TempSaveModel)
     
     // 다이어리 초기화
@@ -79,7 +79,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     private let placeModelRelay = BehaviorRelay<PlaceModel?>(value: nil)
     
     // 수정하기일 경우에는 내용을 세팅해야하기 때문에 릴레이에 작접 accept 해줌
-    private let diaryModelRelay = BehaviorRelay<DiaryModel?>(value: nil)
+    private let diaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
     
     // TempSave <-> DiaryWrtiting으로 전달하기 위한 Relay
     private let tempSaveDiaryModelRelay = BehaviorRelay<TempSaveModel?>(value: nil)
@@ -87,7 +87,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     private let tempSaveResetRelay = BehaviorRelay<Bool>(value: false)
     
     // 이미지 업로드 후 updateDiary 하기 위해 관리하는 Relay
-    private let updateDiaryModelRelay = BehaviorRelay<DiaryModel?>(value: nil)
+    private let updateDiaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
     
     // 이미지를 저장할 경우 모두 저장이 되었는지 확인하는 Relay
     // 1. croppedImage, 2. originalImage
@@ -99,7 +99,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     init(
         presenter: DiaryWritingPresentable,
         dependency: DiaryWritingInteractorDependency,
-        diaryModel: DiaryModel?,
+        diaryModel: DiaryModelRealm?,
         page: Int
     ) {
         self.dependency = dependency
@@ -237,25 +237,22 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     func updateDiary(info: DiaryModelRealm, edittedImage: Bool) {
         print("DiaryWriting :: interactor! updateDiary!")
 
-        /*
+        
         // 수정하기 당시에 들어왔던 오리지널 메뉴얼
         guard let originalDiaryModel = diaryModelRelay.value else { return }
-
-        let newDiaryModel = DiaryModel(uuid: originalDiaryModel.uuid,
-                                       pageNum: originalDiaryModel.pageNum,
-                                       title: info.title,
-                                       weather: info.weather,
-                                       place: info.place,
-                                       description: info.description,
-                                       image: info.image,
-                                       originalImage: info.originalImage,
-                                       readCount: originalDiaryModel.readCount,
-                                       createdAt: originalDiaryModel.createdAt,
-                                       replies: originalDiaryModel.replies,
-                                       isDeleted: originalDiaryModel.isDeleted,
-                                       isHide: originalDiaryModel.isHide
+        let newDiaryModel = DiaryModelRealm(uuid: originalDiaryModel.uuid,
+                                            pageNum: originalDiaryModel.pageNum,
+                                            title: info.title,
+                                            weather: info.weather,
+                                            place: info.place,
+                                            desc: info.desc,
+                                            image: info.image,
+                                            readCount: originalDiaryModel.readCount,
+                                            createdAt: originalDiaryModel.createdAt,
+                                            replies: originalDiaryModel.repliesArr,
+                                            isDeleted: originalDiaryModel.isDeleted,
+                                            isHide: originalDiaryModel.isHide
         )
-        print("newDiaryModel = \(newDiaryModel)")
         
         updateDiaryModelRelay.accept(newDiaryModel)
         
@@ -263,10 +260,10 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         if edittedImage == false {
             imageSaveRelay.accept((true, true))
         }
-        */
+    
         
 //        dependency.diaryRepository
-//            .updateDiary(info: newDiaryModel)
+//            .updateDiary(info: info)
 //
 //        diaryModelRelay.accept(newDiaryModel)
 //

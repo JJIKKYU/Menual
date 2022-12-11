@@ -26,7 +26,7 @@ final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWriti
 protocol DiaryWritingBuildable: Buildable {
     func build(
         withListener listener: DiaryWritingListener,
-        diaryModel: DiaryModel?,
+        diaryModel: DiaryModelRealm?,
         page: Int
     ) -> DiaryWritingRouting
 }
@@ -39,7 +39,7 @@ final class DiaryWritingBuilder: Builder<DiaryWritingDependency>, DiaryWritingBu
 
     func build(
         withListener listener: DiaryWritingListener,
-        diaryModel: DiaryModel?,
+        diaryModel: DiaryModelRealm?,
         page: Int
     ) -> DiaryWritingRouting {
         let component = DiaryWritingComponent(dependency: dependency)

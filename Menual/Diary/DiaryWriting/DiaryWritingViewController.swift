@@ -49,7 +49,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
     weak var listener: DiaryWritingPresentableListener?
     private let isEditBeginRelay = BehaviorRelay<Bool>(value: false)
-    private var editDiaryModel: DiaryModel?
+    private var editDiaryModel: DiaryModelRealm?
     
     // 유저가 선택 후 기본 선택 되어있도록
     private var selectedWeatherType: Weather?
@@ -517,34 +517,17 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         case .writing:
             let diaryModelRealm = DiaryModelRealm(uuid: NSUUID().uuidString,
                                                   pageNum: 0,
-                                                  title: title,
+                                                  title: title == defaultTitleText ? Date().toString() : title,
                                                   weather: weatherModel,
                                                   place: placeModel,
-                                                  desc: description,
-                                                  image: true,
+                                                  desc: description == defaultDescriptionText ? "" : description,
+                                                  image: selectedOriginalImage == nil ? false : true,
                                                   readCount: 0,
                                                   createdAt: Date(),
                                                   replies: [],
                                                   isDeleted: false,
                                                   isHide: false
             )
-
-            /*
-            let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
-                                        pageNum: 0,
-                                        title: title == defaultTitleText ? Date().toString() : title,
-                                        weather: weatherModel,
-                                        place: placeModel,
-                                        description: description == defaultDescriptionText ? "" : description,
-                                        image: self.selectedImage?.jpegData(compressionQuality: 0.5),
-                                        originalImage: self.selectedOriginalImage?.jpegData(compressionQuality: 0.5),
-                                        readCount: 0,
-                                        createdAt: Date(),
-                                        replies: [],
-                                        isDeleted: false,
-                                        isHide: false
-            )
-            */
 
             if isEdittedIamge == true,
                let selectedImage = selectedImage,
@@ -575,17 +558,29 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                                         isDeleted: false,
                                         isHide: false
             )
-            
-            
-            if let editDiaryModel = editDiaryModel {
-                // 전에는 이미지가 있었으나 수정할 때 이미지를 삭제한 경우
-                if editDiaryModel.image != nil && self.selectedImage == nil {
-                    print("DiaryWriting :: 전에는 이미지가 있었으나 수정할 때 이미지를 삭제한 경우")
-                    self.listener?.deleteAllImages(diaryUUID: editDiaryModel.uuid)
-                }
+            */
+            guard let editDiaryModel = editDiaryModel else { return }
+            let diaryModelRealm = DiaryModelRealm(uuid: editDiaryModel.uuid,
+                                                  pageNum: editDiaryModel.pageNum,
+                                                  title: title == defaultTitleText ? Date().toString() : title,
+                                                  weather: weatherModel,
+                                                  place: placeModel,
+                                                  desc: description == defaultDescriptionText ? "" : description,
+                                                  image: selectedOriginalImage == nil ? false : true,
+                                                  readCount: editDiaryModel.readCount,
+                                                  createdAt: editDiaryModel.createdAt,
+                                                  replies: [],
+                                                  isDeleted: false,
+                                                  isHide: false
+            )
+
+            // 전에는 이미지가 있었으나 수정할 때 이미지를 삭제한 경우
+            if editDiaryModel.image == true && self.selectedImage == nil {
+                print("DiaryWriting :: 전에는 이미지가 있었으나 수정할 때 이미지를 삭제한 경우")
+                self.listener?.deleteAllImages(diaryUUID: editDiaryModel.uuid)
             }
             
-            // self.listener?.updateDiary(info: diaryModel, edittedImage: self.isEdittedIamge)
+            self.listener?.updateDiary(info: diaryModelRealm, edittedImage: self.isEdittedIamge)
 
             if isEdittedIamge == true,
                let selectedImage = selectedImage,
@@ -597,7 +592,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                 listener?.saveCropImage(diaryUUID: diaryModelUUID, imageData: selectedImageData)
                 listener?.saveOriginalImage(diaryUUID: diaryModelUUID, imageData: selectedOriginalImageData)
             }
-             */
         }
     }
     
@@ -689,7 +683,7 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
     }
     
     // 수정하기일때만 사용!
-    func setDiaryEditMode(diaryModel: DiaryModel) {
+    func setDiaryEditMode(diaryModel: DiaryModelRealm) {
         self.editDiaryModel = diaryModel
         self.diaryModelUUID = diaryModel.uuid
         self.writingType = .edit
@@ -721,11 +715,13 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         
         self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
                                                                          Colors.grey.g100,
-                                                                         text: diaryModel.description)
+                                                                         text: diaryModel.desc)
         
         
-        if let image = diaryModel.image {
-            self.imageUploadView.image = UIImage(data: image)
+        // TODO: - 이미지 세팅 관련 수정 할 것
+        if diaryModel.image == true,
+           let imageData = diaryModel.cropImage {
+            self.imageUploadView.image = UIImage(data: imageData)
         } else {
             self.imageUploadView.image = nil
         }
