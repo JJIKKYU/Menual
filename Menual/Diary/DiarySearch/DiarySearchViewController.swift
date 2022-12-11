@@ -18,9 +18,7 @@ protocol DiarySearchPresentableListener: AnyObject {
     var recentSearchModel: List<DiarySearchModelRealm>? { get }
     
     func pressedBackBtn(isOnlyDetach: Bool)
-    func searchTest(keyword: String)
-    func searchDataTest(keyword: String)
-    func fetchRecentSearchList()
+    func search(keyword: String)
     func pressedSearchCell(diaryModel: DiaryModelRealm)
     func pressedRecentSearchCell(diaryModel: DiaryModelRealm)
     func deleteAllRecentSearchData()
@@ -139,7 +137,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchViewControll
             .subscribe(onNext: { [weak self] keyword in
                 guard let self = self else { return }
                 
-                self.listener?.searchTest(keyword: keyword)
+                self.listener?.search(keyword: keyword)
                 self.searchText = keyword
             })
             .disposed(by: disposeBag)
@@ -206,6 +204,7 @@ extension DiarySearchViewController: DiarySearchPresentable {
     func updateRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType) {
         let indexPaths = indexs.map { IndexPath(item: $0, section: section.rawValue) }
         tableView.reloadRows(at: indexPaths, with: .automatic)
+        reloadSearchTableView()
     }
     
     func insertRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType) {
@@ -213,6 +212,7 @@ extension DiarySearchViewController: DiarySearchPresentable {
         let indexPaths = indexs.map { IndexPath(item: $0, section: section.rawValue) }
         tableView.insertRows(at: indexPaths, with: .automatic)
         tableView.endUpdates()
+        reloadSearchTableView()
     }
     
     func deleteRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType) {
@@ -220,6 +220,7 @@ extension DiarySearchViewController: DiarySearchPresentable {
         let indexPaths = indexs.map { IndexPath(item: $0, section: section.rawValue) }
         tableView.deleteRows(at: indexPaths, with: .automatic)
         tableView.endUpdates()
+        reloadSearchTableView()
     }
 }
 
@@ -249,7 +250,7 @@ extension DiarySearchViewController {
         self.searchTextField.deleteBtn.isHidden = true
         self.searchText = ""
         self.searchTextField.layoutIfNeeded()
-        self.listener?.searchTest(keyword: "")
+        self.listener?.search(keyword: "")
     }
 }
 
@@ -268,7 +269,12 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             }
 
         case .recentSearch:
-            return 36
+            guard let count = listener?.recentSearchModel?.count else { return 0 }
+            if count == 0 {
+                return .leastNonzeroMagnitude
+            } else {
+                return 36
+            }
         }
     }
     

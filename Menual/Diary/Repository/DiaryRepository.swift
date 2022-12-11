@@ -44,7 +44,6 @@ public protocol DiaryRepository {
     
     // 최근검색목록 로직
     func addDiarySearch(info: DiaryModelRealm)
-    func fetchRecntDiarySearch() // 최근검색어
     func deleteAllRecentDiarySearch()
     func deleteRecentDiarySearch(uuid: String)
     
@@ -197,7 +196,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         diaryModelSubject.accept(diaryModelResults.map { DiaryModelRealm(value: $0) })
         
         self.fetchDiary()
-        self.fetchRecntDiarySearch()
         self.fetchReminder()
     }
     
@@ -428,34 +426,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
             data.isHide = isHide
         }
-        
-//        var idx: Int = 0
-//        for (index, value) in diaryModelSubject.value.enumerated() {
-//            if value.uuid == info.uuid {
-//                idx = index
-//            }
-//        }
-//
-//        var arr = diaryModelSubject.value
-//        let newDiary = DiaryModel(uuid: info.uuid,
-//                                  pageNum: info.pageNum,
-//                                  title: info.title,
-//                                  weather: info.weather,
-//                                  place: info.place,
-//                                  description: info.description,
-//                                  image: info.image,
-//                                  originalImage: info.originalImage,
-//                                  readCount: info.readCount,
-//                                  createdAt: info.createdAt,
-//                                  replies: info.replies,
-//                                  isDeleted: info.isDeleted,
-//                                  isHide: isHide
-//            )
-//        arr[idx] = newDiary
-//
-//        diaryModelSubject.accept(arr)
-//        fetchDiary()
-        // return newDiary
     }
     
     // MARK: - 겹쓰기 로직
@@ -474,14 +444,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
             diary.replies.append(DiaryReplyModelRealm(newInfo))
         }
-        
-        let models = realm.objects(DiaryModelRealm.self).map { DiaryModel($0) }
-        let result: [DiaryModel] = models.sorted { $0.createdAt > $1.createdAt }
-//
-//        DispatchQueue.main.async {
-//            self.diaryModelSubject.accept(result)
-//            self.fetchDiary()
-//        }
     }
     
     public func deleteReply(diaryUUID: String, replyUUID: String) {
@@ -502,31 +464,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
             realm.delete(replyRealm)
         }
-//
-//        let result: [DiaryModel] = realm.objects(DiaryModelRealm.self)
-//            .sorted { $0.createdAt > $1.createdAt}
-//            .map { DiaryModel($0)}
-
-//        DispatchQueue.main.async {
-//            self.diaryModelSubject.accept(result)
-//            self.fetchDiary()
-//        }
     }
 
     // MARK: - 최근검색목록 로직 (SearchModel)
-    public func fetchRecntDiarySearch() {
-        print("Search :: DiaryRepository :: fetchRecentDiarySearch!")
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-//        let diaryModelResults = realm.objects(DiaryModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
-//        diaryModelSubject.accept(diaryModelResults.map { DiaryModel($0) })
-        
-        let diaryRecentSearchResults = realm.objects(DiarySearchModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
-        diarySearchSubject.accept(diaryRecentSearchResults.map { DiarySearchModel($0) })
-    }
-    
     public func deleteAllRecentDiarySearch() {
         print("Search :: DiaryRepository :: deleteAllRecentDiarySearch!")
         guard let realm = Realm.safeInit() else {
@@ -536,8 +476,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
             realm.delete(realm.objects(DiarySearchModelRealm.self))
         }
-        
-        // fetchRecntDiarySearch()
     }
     
     public func deleteRecentDiarySearch(uuid: String) {
@@ -553,8 +491,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
             realm.delete(data)
         }
-        
-        // fetchRecntDiarySearch()
     }
     
     public func addDiarySearch(info: DiaryModelRealm) {

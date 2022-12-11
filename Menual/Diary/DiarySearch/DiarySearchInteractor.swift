@@ -60,8 +60,6 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
 
     override func didBecomeActive() {
         super.didBecomeActive()
-        // TODO: Implement business logic here.
-        fetchRecentSearchList()
         bind()
     }
 
@@ -111,44 +109,18 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     }
     
     // Realm에서 검색해서 결과값 뿌려주는 함수
-    func searchTest(keyword: String) {
+    func search(keyword: String) {
         guard let realm = Realm.safeInit() else {
             return
         }
-        
-        // let results = realm.objects(DiaryModelRealm.self)
-           //  .filter("title CONTAINS %@", "\(keyword)")
-        
+
         let results = realm.objects(DiaryModelRealm.self)
             .filter("title CONTAINS %@ OR desc CONTAINS %@", "\(keyword)", "\(keyword)").toArray()
         
         print("reuslt = \(results)")
         self.searchResultsRelay.accept(results)
-        
-        // presenter.reloadSearchTableView()
     }
-    
-    func searchDataTest(keyword: String) {
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-        let model = SearchModel(uuid: NSUUID().uuidString,
-                                keyword: keyword,
-                                createdAt: Date(),
-                                isDeleted: false
-        )
-        
-        realm.safeWrite {
-            realm.add(SearchModelRealm(model))
-        }
-    }
-    
-    func fetchRecentSearchList() {
-        dependency.diaryRepository
-            .fetchRecntDiarySearch()
-    }
-    
+
     // 검색해서 나온 Cell을 터치했을 경우 -> DiaryDetailVC로 보내줘야함
     func pressedSearchCell(diaryModel: DiaryModelRealm) {
         print("Search :: pressedSearchCell!")
