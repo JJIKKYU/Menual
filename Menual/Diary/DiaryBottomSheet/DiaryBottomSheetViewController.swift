@@ -179,7 +179,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setViews()
+        // setViews()
         bottomSheetView.backgroundColor = Colors.background
         
         isModalInPresentation = true
@@ -212,8 +212,6 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     }
     
     func setViews() {
-        // super.delegate = self
-        
         // 기본 컴포넌트 SetViews
         view.addSubview(dimmedView)
         view.addSubview(bottomSheetView)
@@ -253,46 +251,6 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             make.top.equalTo(titleLabel.snp.bottom).offset(16)
             make.height.equalTo(2)
         }
-        
-        // 타입별 컴포넌트 SetViews
-//        bottomSheetView.addSubview(weatherPlaceSelectView)
-        bottomSheetView.addSubview(menuComponentView)
-        bottomSheetView.addSubview(filterComponentView)
-        bottomSheetView.addSubview(dateFilterComponentView)
-        bottomSheetView.addSubview(reminderComponentView)
-
-//        weatherPlaceSelectView.snp.makeConstraints { make in
-//            make.leading.width.equalToSuperview()
-//            make.height.equalTo(32)
-//            make.top.equalTo(self.divider.snp.bottom).offset(16)
-//        }
-
-        menuComponentView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(self.divider.snp.bottom).offset(20)
-        }
-//
-        filterComponentView.snp.makeConstraints { make in
-            make.leading.width.equalToSuperview()
-            make.top.equalTo(self.divider.snp.bottom).offset(27)
-            make.height.equalTo(260)
-        }
-
-        dateFilterComponentView.snp.makeConstraints { make in
-            make.top.equalTo(self.divider.snp.bottom).offset(64)
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.height.equalTo(260)
-        }
-        
-        reminderComponentView.snp.makeConstraints { make in
-            make.top.equalTo(self.divider.snp.bottom).offset(16)
-            make.leading.equalToSuperview().offset(24)
-            make.width.equalToSuperview().inset(24)
-            make.height.equalTo(488)
-            // make.bottom.equalToSuperview().inset(35)
-        }
     }
 
     
@@ -303,17 +261,34 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     }
     
     func setViews(type: MenualBottomSheetType) {
+        setViews()
         print("DiaryBottomSheet :: menualBottomSheetType = \(type)")
         menualBottomSheetType = type
         
         switch menualBottomSheetType {
         case .reminder:
+            bottomSheetView.addSubview(reminderComponentView)
+            reminderComponentView.snp.makeConstraints { make in
+                make.top.equalTo(self.divider.snp.bottom).offset(16)
+                make.leading.equalToSuperview().offset(24)
+                make.width.equalToSuperview().inset(24)
+                make.height.equalTo(488)
+                // make.bottom.equalToSuperview().inset(35)
+            }
+            
             bottomSheetTitle = "리마인더 알림"
             reminderComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .menu:
+            bottomSheetView.addSubview(menuComponentView)
+            menuComponentView.snp.makeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.width.equalToSuperview().inset(20)
+                make.top.equalTo(self.divider.snp.bottom).offset(20)
+            }
+
             bottomSheetTitle = "메뉴"
             print("DiaryBottomSheet :: 메뉴입니다.")
             menuComponentView.isHidden = false
@@ -321,12 +296,27 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .filter:
+            bottomSheetView.addSubview(filterComponentView)
+            filterComponentView.snp.makeConstraints { make in
+                make.leading.width.equalToSuperview()
+                make.top.equalTo(self.divider.snp.bottom).offset(27)
+                make.height.equalTo(260)
+            }
+
             bottomSheetTitle = "필터"
             filterComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .dateFilter:
+            bottomSheetView.addSubview(dateFilterComponentView)
+            dateFilterComponentView.snp.makeConstraints { make in
+                make.top.equalTo(self.divider.snp.bottom).offset(64)
+                make.leading.equalToSuperview().offset(20)
+                make.width.equalToSuperview().inset(20)
+                make.height.equalTo(260)
+            }
+
             bottomSheetTitle = "날짜"
             dateFilterComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close

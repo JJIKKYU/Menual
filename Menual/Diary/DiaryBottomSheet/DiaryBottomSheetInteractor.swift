@@ -123,11 +123,6 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
                 
                 let isEnabled: Bool = model == nil ? false : true
                 self.presenter.setCurrentReminderData(isEnabled: isEnabled, dateComponets: model?.requestDateComponents)
-                
-                /*
-                let isEnabled: Bool = date == nil ? false : true
-                self.presenter.setCurrentReminderData(isEnabled: isEnabled, dateComponets: date)
-                 */
             })
             .disposed(by: disposeBag)
         
