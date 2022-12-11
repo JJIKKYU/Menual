@@ -11,10 +11,12 @@ import Then
 import SnapKit
 import UIKit
 import RxRelay
+import RealmSwift
 
 protocol DiarySearchPresentableListener: AnyObject {
     var recentSearchResultsRelay: BehaviorRelay<[DiarySearchModel]> { get }
     var searchResultsRelay: BehaviorRelay<[DiaryModelRealm]> { get }
+    var recentSearchModel: List<DiarySearchModelRealm>? { get }
     
     func pressedBackBtn(isOnlyDetach: Bool)
     func searchTest(keyword: String)
@@ -26,7 +28,12 @@ protocol DiarySearchPresentableListener: AnyObject {
     func deleteRecentSearchData(uuid: String)
 }
 
-final class DiarySearchViewController: UIViewController, DiarySearchPresentable, DiarySearchViewControllable {
+final class DiarySearchViewController: UIViewController, DiarySearchViewControllable {
+    
+    public enum DiarySearchSectionType: Int {
+        case search = 0
+        case recentSearch = 1
+    }
 
     weak var listener: DiarySearchPresentableListener?
     var disposeBag = DisposeBag()
@@ -79,27 +86,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
         $0.title = "TOTAL \(menualCount)"
     }
     let divider = Divider(type: ._2px)
-    
-    /*
-    private let searchMenualCountLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.font = UIFont.AppHead(.head_4)
-        $0.textColor = .white
-        $0.text = "총 N개의 메뉴얼"
-    }
-     
-    
-    private let searchView = UIView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .red
-        $0.frame = CGRect(x: 0, y: 0, width: 200, height: 80)
-    }
-    
-    private let searchViewDivider = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-     */
-    
+
     init() {
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
@@ -173,21 +160,21 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             })
             .disposed(by: disposeBag)
         
-        listener?.recentSearchResultsRelay
-            .subscribe(onNext: { [weak self] results in
-                guard let self = self else { return }
-                print("Search :: recentSearchResultsRelay! = \(results)")
-                if results.count == 0 {
-                    print("Search :: 최근에 검색한 메뉴얼이 없습니다.")
-                    self.recentSearchEmptyView.isHidden = false
-                    
-                } else {
-                    print("Search :: 최근에 검색한 메뉴얼의 개수입니다. = \(results.count)")
-                    self.recentSearchEmptyView.isHidden = true
-                }
-                self.tableView.reloadData()
-            })
-            .disposed(by: disposeBag)
+//        listener?.recentSearchResultsRelay
+//            .subscribe(onNext: { [weak self] results in
+//                guard let self = self else { return }
+//                print("Search :: recentSearchResultsRelay! = \(results)")
+//                if results.count == 0 {
+//                    print("Search :: 최근에 검색한 메뉴얼이 없습니다.")
+//                    self.recentSearchEmptyView.isHidden = false
+//
+//                } else {
+//                    print("Search :: 최근에 검색한 메뉴얼의 개수입니다. = \(results.count)")
+//                    self.recentSearchEmptyView.isHidden = true
+//                }
+//                self.tableView.reloadData()
+//            })
+//            .disposed(by: disposeBag)
     }
     
     func setViews() {
@@ -216,10 +203,33 @@ final class DiarySearchViewController: UIViewController, DiarySearchPresentable,
             make.width.equalToSuperview()
         }
     }
+}
 
-    
+// MARK: - DiarySearchPresentable
+extension DiarySearchViewController: DiarySearchPresentable {
     func reloadSearchTableView() {
+        // 최근검색결과 Section
+        if let count = listener?.recentSearchModel?.count {
+            if count == 0 {
+                self.recentSearchEmptyView.isHidden = false
+            } else {
+                self.recentSearchEmptyView.isHidden = true
+            }
+        }
+        
         tableView.reloadData()
+    }
+    
+    func updateRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType) {
+        let indexPaths = indexs.map { IndexPath(item: $0, section: section.rawValue) }
+        tableView.reloadRows(at: indexPaths, with: .automatic)
+    }
+    
+    func insertRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType) {
+        tableView.beginUpdates()
+        let indexPaths = indexs.map { IndexPath(item: $0, section: section.rawValue) }
+        tableView.insertRows(at: indexPaths, with: .automatic)
+        tableView.endUpdates()
     }
 }
 
@@ -256,8 +266,9 @@ extension DiarySearchViewController {
 // MARK: - UITableView
 extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch section {
-        case 0:
+        guard let sectionType = DiarySearchSectionType(rawValue: section) else { return 0 }
+        switch sectionType {
+        case .search:
             if menualCount == 0 && searchText.count > 0 {
                 return 317
             } else if menualCount == 0 && searchText.count == 0 {
@@ -265,10 +276,9 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             } else {
                 return 36
             }
-        case 1:
+
+        case .recentSearch:
             return 36
-        default:
-            return 0
         }
     }
     
@@ -278,11 +288,9 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         print("DiarySearch :: indexPath = \(indexPath)")
-        
-        let section = indexPath.section
-        switch section {
-        // 검색 결과 TableView
-        case 0:
+        guard let sectionType = DiarySearchSectionType(rawValue: indexPath.section) else { return 98 }
+        switch sectionType {
+        case .search:
             guard let model = listener?.searchResultsRelay.value[safe: indexPath.row] else {
                 return 98
             }
@@ -290,9 +298,18 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             if model.isHide {
                 return 75
             }
+
+        case .recentSearch:
+            guard let model = listener?.recentSearchModel?[indexPath.row],
+                  let diary = model.diary else {
+                return 98
+            }
             
-        // 최근 검색 키워드 TableView
-        case 1:
+            if diary.isHide {
+                return 75
+            }
+            
+            /*
             guard let model = listener?.recentSearchResultsRelay.value[safe: indexPath.row],
                   let diary = model.diary else {
                 print("DiarySearch :: 여기서 팅귀나?")
@@ -303,11 +320,9 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             if diary.isHide {
                 return 75
             }
-            
-        default:
-            break
+            */
         }
-
+        
         return 98
     }
     
@@ -317,17 +332,21 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
     
     func numberOfSections(in tableView: UITableView) -> Int {
         // 검색할 경우에는 두 section 모두 나타냄
+        /*
         if menualCount == 0 {
             return 2
         } else {
             return 1
         }
+        */
+        
+        return 2
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        switch section {
-        case 0:
+        guard let sectionType = DiarySearchSectionType(rawValue: section) else { return UIView() }
+        switch sectionType {
+        case .search:
             if menualCount == 0 && searchText.count == 0 {
                 return UIView()
             }
@@ -357,13 +376,14 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             }
             
             return headerView
-            
-        case 1:
+
+        case .recentSearch:
             print("Search :: listener?.recentSearchResultsRelay = \(listener?.recentSearchResultsRelay.value)")
             let headerView = ListHeader(type: .search, rightIconType: .searchDelete)
             headerView.rightTextBtn.addTarget(self, action: #selector(pressedRecentSearchCellDeleteBtn), for: .touchUpInside)
             
-            if let recentSearchCount: Int = listener?.recentSearchResultsRelay.value.count {
+            // if let recentSearchCount: Int = listener?.recentSearchResultsRelay.value.count {
+            if let recentSearchCount: Int = listener?.recentSearchModel?.count {
                 
                 // 최근 검색 결과가 없으면 해당 Section도 나타나지 않도록
                 if recentSearchCount == 0 {
@@ -392,21 +412,21 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             
             headerView.title = "RECENT"
             return headerView
-            
-        default:
-            return UIView()
+
         }
+        return UIView()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        switch section {
-        case 0:
+        guard let sectionType = DiarySearchSectionType(rawValue: section) else { return 0 }
+        switch sectionType {
+        case .search:
             return listener?.searchResultsRelay.value.count ?? 0
-            
-        case 1:
+
+        case .recentSearch:
             print("Search :: cellCount = \(listener?.recentSearchResultsRelay.value.count ?? 0)")
-            guard let count = listener?.recentSearchResultsRelay.value.count else { return 0 }
+            // guard let count = listener?.recentSearchResultsRelay.value.count else { return 0 }
+            guard let count = listener?.recentSearchModel?.count else { return 0 }
             
             // 총 5개까지만 노출되록 (UX)
             if count > 5 {
@@ -414,18 +434,14 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             } else {
                 return count
             }
-            
-        default:
-            return 0
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("Search :: cell IndexPath = \(indexPath)")
+        guard let sectionType = DiarySearchSectionType(rawValue: indexPath.section) else { return UITableViewCell() }
         let index = indexPath.row
-        print("Search :: \(tableView.tag)")
-        // 검색 결과 TableView
-        if indexPath.section == 0 {
+        switch sectionType {
+        case .search:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
             
             guard let model = listener?.searchResultsRelay.value[safe: index],
@@ -460,15 +476,13 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             cell.reviewCount = replies
             
             return cell
-        }
-        // 최근 검색 키워드 TableView
-        else if indexPath.section == 1 {
+
+        case .recentSearch:
             print("Search :: cell!")
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell") as? ListCell else { return UITableViewCell() }
 
-            guard let model = listener?.recentSearchResultsRelay.value[safe: index],
+            guard let model = listener?.recentSearchModel?[index],
                   let diary = model.diary else {
-                print("Search :: 여기서 팅귀나?")
                 return UITableViewCell()
             }
             
@@ -504,16 +518,14 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             
             return cell
         }
-        
-        return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Search :: 선택! = \(indexPath)")
+        guard let sectionType = DiarySearchSectionType(rawValue: indexPath.section) else { return }
         let index = indexPath.row
-        let section = indexPath.section
-        // 검색 결과 TableView
-        if section == 0 {
+
+        switch sectionType {
+        case .search:
             guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
             print("Search :: tag = 0 - \(cell.uuid)")
             
@@ -524,26 +536,31 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             print("Search :: 이거 = \(model.uuid), \(cell.uuid)")
             
             listener?.pressedSearchCell(diaryModel: model)
-        }
-        // 최근 검색 결과
-        else if section == 1 {
+
+        case .recentSearch:
             print("Search :: 최근검색결과 touch! = \(indexPath.row)")
             guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
             
-            guard let model = listener?.recentSearchResultsRelay.value[safe: index],
+            guard let model = listener?.recentSearchModel?[index],
                   let diaryModel: DiaryModelRealm = model.diary
             else { return }
             
             print("Search :: 이거 = \(model.uuid), \(cell.uuid)")
             
             listener?.pressedRecentSearchCell(diaryModel: diaryModel)
+
         }
+        print("Search :: 선택! = \(indexPath)")
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard let sectionType = DiarySearchSectionType(rawValue: indexPath.section) else { return nil }
+        switch sectionType {
+        case .search:
+            return nil
 
         // 최근 검색어만 지원
-        if indexPath.section == 1 {
+        case .recentSearch:
             guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return nil }
             let modifyAction = UIContextualAction(style: .normal, title:  "", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
                     self.listener?.deleteRecentSearchData(uuid: cell.uuid)
@@ -556,8 +573,6 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             
             return UISwipeActionsConfiguration(actions: [modifyAction])
         }
-        
-        return nil
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

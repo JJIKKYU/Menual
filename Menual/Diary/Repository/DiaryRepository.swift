@@ -537,7 +537,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             realm.delete(realm.objects(DiarySearchModelRealm.self))
         }
         
-        fetchRecntDiarySearch()
+        // fetchRecntDiarySearch()
     }
     
     public func deleteRecentDiarySearch(uuid: String) {
@@ -554,7 +554,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             realm.delete(data)
         }
         
-        fetchRecntDiarySearch()
+        // fetchRecntDiarySearch()
     }
     
     public func addDiarySearch(info: DiaryModelRealm) {

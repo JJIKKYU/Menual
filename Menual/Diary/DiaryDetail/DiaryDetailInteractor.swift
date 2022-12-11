@@ -104,57 +104,16 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         self.notificationToken = diary?.observe({ changes in
             switch changes {
             case .change(let model, let proertyChanges):
-                for property in proertyChanges {
-                    switch property.name {
-                    case "title":
-                        print("DiaryDetail :: title 변화감지!")
-                        guard let title: String = property.newValue as? String else { return }
-                        // self.diaryModel?.title = title
-                        self.presenter.loadDiaryDetail(model: self.diaryModel)
-                        
-                    case "desc":
-                        guard let desc: String = property.newValue as? String else { return }
-                        // self.diaryModel?.desc = desc
-                        self.presenter.loadDiaryDetail(model: self.diaryModel)
-                        
-                    case "weather":
-                        guard let weatherModeRealm: WeatherModelRealm = property.newValue as? WeatherModelRealm else { return }
-                        // self.diaryModel?.weather = weatherModeRealm
-                        self.presenter.loadDiaryDetail(model: self.diaryModel)
-                        
-                    case "place":
-                        guard let placeModelRealm: PlaceModelRealm = property.newValue as? PlaceModelRealm else { return }
-                        // self.diaryModel?.place = placeModelRealm
-                        self.presenter.loadDiaryDetail(model: self.diaryModel)
-                        
-                    case "image":
-                        guard let needUpdateIamge: Bool = property.newValue as? Bool else { return }
-                        switch needUpdateIamge {
-                        case true:
-                            break
-
-                        case false:
-                            break
-                        }
-                        break
-
-                    default:
-                        break
-                    }
-                }
-                print("DiaryDetail :: change -> model -> \(model)")
-                print("DiaryDetail :: change -> propertyChanges -> \(proertyChanges)")
+                self.presenter.loadDiaryDetail(model: self.diaryModel)
             case .error(let error):
                 fatalError("\(error)")
             case .deleted:
                 break
             }
         })
-        
-        
+
         self.replyNotificationToken = diary?.replies.observe({ [weak self] changes in
             guard let self = self else { return }
-
             switch changes {
             case .initial(let model):
                 // print("DiaryDetail :: realmObserve2 = initial! = \(model)")

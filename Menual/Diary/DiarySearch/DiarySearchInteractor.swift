@@ -21,6 +21,9 @@ protocol DiarySearchPresentable: Presentable {
     var listener: DiarySearchPresentableListener? { get set }
     
     func reloadSearchTableView()
+    
+    func updateRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType)
+    func insertRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType)
 }
 
 protocol DiarySearchInteractorDependency {
@@ -41,10 +44,10 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     
     var searchResultsRelay = BehaviorRelay<[DiaryModelRealm]>(value: [])
     var recentSearchResultsRelay = BehaviorRelay<[DiarySearchModel]>(value: [])
-    // var recentSearchResultList: [SearchModel] = []
+    var recentSearchModel: List<DiarySearchModelRealm>?
+    
+    var recentSearchModelNnotificationToken: NotificationToken?
 
-    // TODO: Add additional dependencies to constructor. Do not perform any logic
-    // in constructor.
     init(
         presenter: DiarySearchPresentable,
         dependency: DiarySearchInteractorDependency
@@ -64,9 +67,42 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+        
+        recentSearchModelNnotificationToken = nil
     }
     
     func bind() {
+        guard let realm = Realm.safeInit() else { return }
+        let diarySearchModelRealm = realm.objects(DiarySearchModelRealm.self)
+        // self.recentSearchModel = diarySearchModelRealm.toArray()
+        recentSearchModelNnotificationToken = diarySearchModelRealm.observe({ changes in
+            switch changes {
+            case .initial(let model):
+                print("DiarySearch :: init!")
+                self.recentSearchModel = model.list
+                self.presenter.reloadSearchTableView()
+            case .update(let model, let deletions, let insertions, let modifications):
+                print("DiarySearch :: update!")
+                if deletions.count > 0 {
+                    print("DiarySearch :: deletions!")
+                }
+                
+                if insertions.count > 0 {
+                    print("DiarySearch :: insertions!, insertions = \(insertions)")
+                    self.recentSearchModel = model.list
+                    self.presenter.insertRow(at: insertions, section: .recentSearch)
+                }
+                
+                if modifications.count > 0 {
+                    self.recentSearchModel = model.list
+                    self.presenter.updateRow(at: modifications, section: .recentSearch)
+                    print("DiarySearch :: modifications!")
+                }
+            case .error(let error):
+                print("DiarySearch :: error!")
+            }
+        })
+        /*
         dependency.diaryRepository
             .diarySearch
             .subscribe(onNext: { [weak self] diarySearch in
@@ -76,6 +112,7 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
                 self.recentSearchResultsRelay.accept(diarySearch)
             })
             .disposed(by: disposeBag)
+        */
     }
     
     func pressedBackBtn(isOnlyDetach: Bool) {
@@ -137,25 +174,7 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     func diaryDetailPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachDiaryDetailVC(isOnlyDetach: isOnlyDetach)
     }
-    
-    func tempSaveSearchModel(diaryModel: DiaryModel) {
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-        let searchRealm: DiarySearchModelRealm = DiarySearchModelRealm(
-            uuid: UUID().uuidString,
-            diaryUuid: diaryModel.uuid,
-            diary: DiaryModelRealm(diaryModel),
-            createdAt: Date(),
-            isDeleted: false
-        )
-        
-        realm.safeWrite {
-            realm.add(searchRealm)
-        }
-    }
-    
+
     // 최근 검색어 전체 삭제
     func deleteAllRecentSearchData() {
         print("Search :: deleteAllRecentSearchData!")
