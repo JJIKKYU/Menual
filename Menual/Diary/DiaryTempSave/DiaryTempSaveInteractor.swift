@@ -8,6 +8,7 @@
 import RIBs
 import RxSwift
 import RxRelay
+import RealmSwift
 
 protocol DiaryTempSaveRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
@@ -15,7 +16,7 @@ protocol DiaryTempSaveRouting: ViewableRouting {
 
 protocol DiaryTempSavePresentable: Presentable {
     var listener: DiaryTempSavePresentableListener? { get set }
-    // TODO: Declare methods the interactor can invoke the presenter to present data.
+    func reloadTableView()
 }
 
 protocol DiaryTempSaveListener: AnyObject {
@@ -40,6 +41,10 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
     
     var deleteTempSaveUUIDArrRelay = BehaviorRelay<[String]>(value: [])
     var tempSaveRelay = BehaviorRelay<[TempSaveModel]>(value: [])
+    
+    var tempSaveModel: List<TempSaveModelRealm>?
+    
+    var notificationToken: NotificationToken?
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -77,6 +82,35 @@ final class DiaryTempSaveInteractor: PresentableInteractor<DiaryTempSavePresenta
                 self.tempSaveRelay.accept(tempSave)
             })
             .disposed(by: disposeBag)
+    }
+    
+    func realmBind() {
+        guard let realm = Realm.safeInit() else { return }
+        let tempSaveModel = realm.objects(TempSaveModelRealm.self)
+        notificationToken = tempSaveModel.observe({ [weak self] changes in
+            guard let self = self else { return }
+            switch changes {
+            case .initial(let model):
+                self.tempSaveModel = model.list
+                self.presenter.reloadTableView()
+                
+            case .update(let model, let deletions, let insertions, let modifications):
+                if deletions.count > 0 {
+                    
+                }
+                
+                if insertions.count > 0 {
+                    
+                }
+                
+                if modifications.count > 0 {
+                    
+                }
+                
+            case .error(let error):
+                print("TempSave :: error! = \(error)")
+            }
+        })
     }
     
     func pressedBackBtn(isOnlyDetach: Bool) {

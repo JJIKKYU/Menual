@@ -23,7 +23,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
     
     func saveCropImage(diaryUUID: String, imageData: Data)
     func saveOriginalImage(diaryUUID: String, imageData: Data)
-    func saveTempSave(diaryModel: DiaryModelRealm)
+    func saveTempSave(diaryModel: DiaryModelRealm, originalImageData: Data?, cropImageData: Data?)
     func pressedTempSaveBtn()
     func deleteAllImages(diaryUUID: String)
     
@@ -612,20 +612,18 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     }
     
     // tempSaveModel로 만들기 위해서 오물락조물락
-    func zipDiaryModelForTempSave() -> DiaryModel? {
+    func zipDiaryModelForTempSave() -> DiaryModelRealm? {
         guard let title = self.titleTextField.text,
               let description = self.descriptionTextView.text
         else { return nil }
         print("DiaryWriting :: zipDiaryModelForTempSave!")
         
-        let weatherModel = WeatherModel(uuid: NSUUID().uuidString,
-                                        weather: weatherSelectView.selectedWeatherType ?? nil,
-                                        detailText: weatherSelectView.selectTitle
+        let weatherModel = WeatherModelRealm(weather: weatherSelectView.selectedWeatherType ?? nil,
+                                            detailText: weatherSelectView.selectTitle
         )
 
-        let placeModel = PlaceModel(uuid: NSUUID().uuidString,
-                                    place: locationSelectView.selectedPlaceType ?? nil,
-                                    detailText: locationSelectView.selectTitle
+        let placeModel = PlaceModelRealm(place: locationSelectView.selectedPlaceType ?? nil,
+                                         detailText: locationSelectView.selectTitle
         )
         
         // 만약 타이틀을 하나도 안썼을 경우, 쓰려고 했다가 모두 지워서 하나도 안쓴 것처럼 되었을 경우
@@ -635,21 +633,19 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
             fixedTitle = Date().toString()
         }
         
-        let diaryModel = DiaryModel(uuid: NSUUID().uuidString,
-                                    pageNum: 0,
-                                    title: fixedTitle,
-                                    weather: weatherModel,
-                                    place: placeModel,
-                                    description: description,
-                                    image: self.selectedImage?.jpegData(compressionQuality: 0.5),
-                                    originalImage: self.selectedOriginalImage?.jpegData(compressionQuality: 0.5),
-                                    readCount: 0,
-                                    createdAt: Date(),
-                                    replies: [],
-                                    isDeleted: false,
-                                    isHide: false
+        let diaryModel = DiaryModelRealm(uuid: NSUUID().uuidString,
+                                         pageNum: 0,
+                                         title: fixedTitle,
+                                         weather: weatherModel,
+                                         place: placeModel,
+                                         desc: description,
+                                         image: self.selectedOriginalImage != nil ? true : false,
+                                         readCount: 0,
+                                         createdAt: Date(),
+                                         replies: [],
+                                         isDeleted: false,
+                                         isHide: false
         )
-        
         return diaryModel
     }
 }
@@ -1291,7 +1287,10 @@ extension DiaryWritingViewController: DialogDelegate {
              "메뉴얼 수정을 취소하시겠어요?":
             // TODO: - 임시저장 리스트에 저장하기
             if let diaryModel = zipDiaryModelForTempSave() {
-                // listener?.saveTempSave(diaryModel: diaryModel)
+                listener?.saveTempSave(diaryModel: diaryModel,
+                                       originalImageData: selectedOriginalImage?.jpegData(compressionQuality: 0.5),
+                                       cropImageData: selectedImage?.jpegData(compressionQuality: 0.5)
+                )
             }
             listener?.pressedBackBtn(isOnlyDetach: false)
             

@@ -31,7 +31,7 @@ public protocol DiaryRepository {
     func updateDiary(info: DiaryModelRealm)
     func hideDiary(isHide: Bool, info: DiaryModelRealm)
     func removeAllDiary()
-    func deleteDiary(info: DiaryModel)
+    func deleteDiary(info: DiaryModelRealm)
     
     // Image
     func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void)
@@ -48,8 +48,8 @@ public protocol DiaryRepository {
     func deleteRecentDiarySearch(uuid: String)
     
     // tempSave 로직
-    func addTempSave(diaryModel: DiaryModel, tempSaveUUID: String)
-    func updateTempSave(diaryModel: DiaryModel, tempSaveUUID: String)
+    func addTempSave(diaryModel: DiaryModelRealm, tempSaveUUID: String)
+    func updateTempSave(diaryModel: DiaryModelRealm, tempSaveUUID: String)
     func deleteTempSave(uuidArr: [String])
     
     // Filter 로직
@@ -347,20 +347,13 @@ public final class DiaryRepositoryImp: DiaryRepository {
         self.fetch()
     }
     
-    public func deleteDiary(info: DiaryModel) {
+    public func deleteDiary(info: DiaryModelRealm) {
         guard let realm = Realm.safeInit() else {
             return
         }
-        
-        guard let data = realm.objects(DiaryModelRealm.self).filter({ $0.uuid == info.uuid }).first
-        else { return }
-        
-//        realm.safeWrite {
-//            realm.delete(data)
-//        }
-        
+
         realm.safeWrite {
-            data.isDeleted = true
+            info.isDeleted = true
         }
         
         // 검색된 결과가 있으면 함께 삭제
@@ -375,42 +368,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         if let reminderData: ReminderModelRealm = realm.objects(ReminderModelRealm.self).filter({ $0.diaryUUID == info.uuid }).first {
             deleteReminder(reminderUUID: reminderData.uuid)
         }
-        
-        // deleteRecentDiarySearch(uuid: )
-        
-        
-
-        /*
-        realm.safeWrite {
-            data.isDeleted = true
-        }
-        
-        var idx: Int = 0
-        for (index, value) in diaryModelSubject.value.enumerated() {
-            if value.uuid == info.uuid {
-                idx = index
-            }
-        }
-
-        var arr = diaryModelSubject.value
-        arr[idx] = DiaryModel(uuid: info.uuid,
-                              pageNum: info.pageNum,
-                              title: info.title,
-                              weather: info.weather,
-                              place: info.place,
-                              description: info.description,
-                              image: info.image,
-                              originalImage: info.originalImage,
-                              readCount: info.readCount,
-                              createdAt: info.createdAt,
-                              replies: info.replies,
-                              isDeleted: true,
-                              isHide: info.isHide
-        )
-
-        diaryModelSubject.accept(arr)
-         */
-        // fetch()
     }
     
     public func hideDiary(isHide: Bool, info: DiaryModelRealm) {
@@ -594,31 +551,25 @@ public final class DiaryRepositoryImp: DiaryRepository {
         print("diaryRepo :: fetchTempSave!")
     }
 
-    public func addTempSave(diaryModel: DiaryModel, tempSaveUUID: String) {
-        let model: TempSaveModel = TempSaveModel(uuid: tempSaveUUID,
-                                                 diaryModel: diaryModel,
-                                                 createAt: Date(),
-                                                 isDeleted: false
-        )
-        
-        let realmModel: TempSaveModelRealm = TempSaveModelRealm(model)
-        
-        print("diaryRepo :: addTempSave!")
-        // Realm에서 DiaryModelRealm Array를 받아온다.
+    public func addTempSave(diaryModel: DiaryModelRealm, tempSaveUUID: String) {
         guard let realm = Realm.safeInit() else {
             return
         }
         
+        let realmModel: TempSaveModelRealm = TempSaveModelRealm(uuid: tempSaveUUID,
+                                                                diaryModel: diaryModel,
+                                                                createdAt: Date(),
+                                                                isDeleted: false
+        )
+
         realm.safeWrite {
              realm.add(realmModel)
-            // realm.create(DiaryModelRealm.self, value: DiaryModelRealm(info))
         }
         
-        let result: [TempSaveModel] = (tempSaveSubject.value + [model]).sorted { $0.createdAt > $1.createdAt }
-        
-        tempSaveSubject.accept(result)
-        self.fetchTempSave()
-
+//        let result: [TempSaveModel] = (tempSaveSubject.value + [model]).sorted { $0.createdAt > $1.createdAt }
+//
+//        tempSaveSubject.accept(result)
+//        self.fetchTempSave()
     }
     
     public func deleteTempSave(uuidArr: [String]) {
@@ -642,16 +593,16 @@ public final class DiaryRepositoryImp: DiaryRepository {
         self.fetchTempSave()
     }
     
-    public func updateTempSave(diaryModel: DiaryModel, tempSaveUUID: String) {
+    public func updateTempSave(diaryModel: DiaryModelRealm, tempSaveUUID: String) {
         print("DiaryRepo :: updateTempSave!")
         guard let realm = Realm.safeInit() else {
             return
         }
-        
-        let model: TempSaveModel = TempSaveModel(uuid: tempSaveUUID,
-                                                 diaryModel: diaryModel,
-                                                 createAt: Date(),
-                                                 isDeleted: false
+
+        let model = TempSaveModelRealm(uuid: tempSaveUUID,
+                                       diaryModel: diaryModel,
+                                       createdAt: Date(),
+                                       isDeleted: false
         )
         
         guard let data = realm.objects(TempSaveModelRealm.self).filter({ $0.uuid == tempSaveUUID }).first else { return }
@@ -660,15 +611,15 @@ public final class DiaryRepositoryImp: DiaryRepository {
             data.title = model.title
             data.weatherDetailText = model.weatherDetailText
             data.weather = model.weather
-            data.placeDetailText = model.placeDetilText
+            data.placeDetailText = model.placeDetailText
             data.place = model.place
-            data.image = model.image != nil ? true : false
+            data.image = model.image
             data.createdAt = model.createdAt
             data.isDeleted = model.isDeleted
             data.desc = model.description
         }
         
-        self.fetchTempSave()
+        // self.fetchTempSave()
     }
     
     // MARK: - Password

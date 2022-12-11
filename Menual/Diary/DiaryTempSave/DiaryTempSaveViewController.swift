@@ -25,7 +25,7 @@ protocol DiaryTempSavePresentableListener: AnyObject {
     func pressedTempSaveCell(uuid: String)
 }
 
-final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresentable, DiaryTempSaveViewControllable {
+final class DiaryTempSaveViewController: UIViewController, DiaryTempSaveViewControllable {
 
     weak var listener: DiaryTempSavePresentableListener?
     private let disposeBag = DisposeBag()
@@ -156,6 +156,15 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSavePresenta
             })
             .disposed(by: disposeBag)
     }
+}
+
+// MARK: -  DiaryTempSavePresentable
+extension DiaryTempSaveViewController: DiaryTempSavePresentable {
+    func reloadTableView() {
+        self.tableView.reloadData()
+    }
+    
+    
 }
 
 // MARK: - IBAction

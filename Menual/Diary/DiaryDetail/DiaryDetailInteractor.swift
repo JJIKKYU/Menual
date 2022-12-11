@@ -25,7 +25,7 @@ protocol DiaryDetailRouting: ViewableRouting {
 
 protocol DiaryDetailPresentable: Presentable {
     var listener: DiaryDetailPresentableListener? { get set }
-    // TODO: Declare methods the interactor can invoke the presenter to present data.
+
     func reloadTableView()
     func loadDiaryDetail(model: DiaryModelRealm?)
     func reminderCompViewshowToast(isEding: Bool)
@@ -37,7 +37,6 @@ protocol DiaryDetailInteractorDependency {
 }
 
 protocol DiaryDetailListener: AnyObject {
-    // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func diaryDetailPressedBackBtn(isOnlyDetach: Bool)
     func diaryDeleteNeedToast(isNeedToast: Bool)
 }
@@ -74,8 +73,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     var notificationToken: NotificationToken?
     var replyNotificationToken: NotificationToken?
 
-    // TODO: Add additional dependencies to constructor. Do not perform any logic
-    // in constructor.
     init(
         presenter: DiaryDetailPresentable,
         diaryModel: DiaryModelRealm,
@@ -91,6 +88,21 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         self.presentationDelegateProxy.delegate = self
         presenter.loadDiaryDetail(model: diaryModel)
         pressedIndicatorButton(offset: 0, isInitMode: true)
+    }
+    
+    override func didBecomeActive() {
+        super.didBecomeActive()
+        // TODO: Implement business logic here.
+        bind()
+        setDiaryModelRealmOb()
+    }
+
+    override func willResignActive() {
+        super.willResignActive()
+        // TODO: Pause any business logic.
+        print("DiaryDetail :: WillResignActive")
+        self.replyNotificationToken = nil
+        self.notificationToken = nil
     }
     
     func setDiaryModelRealmOb() {
@@ -159,8 +171,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                     
                 case .delete:
                     guard let diaryModel = self.diaryModel else { return }
-//                    self.dependency.diaryRepository
-//                        .deleteDiary(info: diaryModel)
+                    self.dependency.diaryRepository
+                        .deleteDiary(info: diaryModel)
                     self.listener?.diaryDeleteNeedToast(isNeedToast: true)
                     self.router?.detachBottomSheet(isWithDiaryDetatil: true)
                     
@@ -255,21 +267,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 self.presenter.setReminderIconEnabled(isEnabled: isEnabled)
             })
             .disposed(by: disposebag)
-    }
-
-    override func didBecomeActive() {
-        super.didBecomeActive()
-        // TODO: Implement business logic here.
-        bind()
-        setDiaryModelRealmOb()
-    }
-
-    override func willResignActive() {
-        super.willResignActive()
-        // TODO: Pause any business logic.
-        print("DiaryDetail :: WillResignActive")
-        self.replyNotificationToken = nil
-        self.notificationToken = nil
     }
     
     func pressedBackBtn(isOnlyDetach: Bool) {
