@@ -296,13 +296,15 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 
     // Diary 이동
     func pressedIndicatorButton(offset: Int, isInitMode: Bool) {
-        /*
+        
         // 1. 현재 diaryNum을 기준으로
         // 2. 왼쪽 or 오른쪽으로 이동 (pageNum이 현재 diaryNum기준 -1, +1)
         // 3. 삭제된 놈이면 건너뛰고 (isDeleted가 true일 경우)
-        let diaries = dependency.diaryRepository.diaryString.value
+        guard let realm = Realm.safeInit() else { return }
+        let diaries = realm.objects(DiaryModelRealm.self)
+            .toArray()
             .filter { $0.isDeleted != true }
-            .sorted { $0.createdAt < $1.createdAt }
+            .sorted(by: { $0.createdAt < $1.createdAt })
 
         let willChangedIdx = (currentDiaryPage - 1) + offset
         print("willChangedIdx = \(willChangedIdx)")
@@ -327,13 +329,18 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             presenter.setFAB(leftArrowIsEnabled: leftArrowIsEnabled, rightArrowIsEnabled: rightArrowIsEnabled)
         } else {
             self.diaryModel = willChangedDiaryModel
+            self.currentDiaryPage = willChangedDiaryModel?.pageNum ?? 0
+            presenter.loadDiaryDetail(model: self.diaryModel)
+            notificationToken = nil
+            replyNotificationToken = nil
+            self.setDiaryModelRealmOb()
             print("willChangedDiaryModel = \(willChangedDiaryModel?.pageNum)")
             
-            self.changeCurrentDiarySubject.onNext(true)
+            // self.changeCurrentDiarySubject.onNext(true)
             presenter.setFAB(leftArrowIsEnabled: leftArrowIsEnabled, rightArrowIsEnabled: rightArrowIsEnabled)
             print("pass true!")
         }
-        */
+        
     }
     
     func deleteReply(uuid: String) {

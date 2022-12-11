@@ -429,12 +429,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
              realm.add(diarySearchModel)
         }
-
-        print("Search :: DiaryRepository :: diarySearchModel = \(diarySearchModel)")
-        
-//        let result: [DiarySearchModel] = (diarySearchSubject.value + [diarySearchModel]).sorted { $0.createdAt > $1.createdAt }
-//
-//        diarySearchSubject.accept(result)
     }
     
     // MARK: - Filter 로직

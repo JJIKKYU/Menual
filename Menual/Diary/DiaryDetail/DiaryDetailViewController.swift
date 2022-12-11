@@ -785,7 +785,9 @@ extension DiaryDetailViewController: UITextViewDelegate {
             textView.constraints.forEach { (constraint) in
               /// 40 이하일때는 더 이상 줄어들지 않게하기
                 if estimatedSize.height <= 43 {
-
+                    replyBottomView.replyTextView.snp.updateConstraints { make in
+                        make.height.equalTo(43)
+                    }
                 }
                 else if line < 5 {
                     print("DiaryDetail :: line < 5")
@@ -860,7 +862,9 @@ extension DiaryDetailViewController: DialogDelegate {
             let text = replyBottomView.writedText
             listener?.pressedReplySubmitBtn(desc: text)
             replyBottomView.replyTextView.text = ""
+            textViewDidChange(replyBottomView.replyTextView)
             replyBottomView.replyTextView.layoutIfNeeded()
+            replyBottomView.setNeedsLayout()
 
         case "겹쓰기를 삭제할까요?":
             guard let willDeleteReplyUUID = willDeleteReplyUUID else { return }

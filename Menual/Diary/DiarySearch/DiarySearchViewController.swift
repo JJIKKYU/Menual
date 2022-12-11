@@ -218,7 +218,7 @@ extension DiarySearchViewController: DiarySearchPresentable {
     func deleteRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType) {
         tableView.beginUpdates()
         let indexPaths = indexs.map { IndexPath(item: $0, section: section.rawValue) }
-        tableView.deleteRows(at: indexPaths, with: .automatic)
+        tableView.deleteRows(at: indexPaths, with: .fade)
         tableView.endUpdates()
         reloadSearchTableView()
     }

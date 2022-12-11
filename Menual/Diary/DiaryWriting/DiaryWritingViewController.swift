@@ -699,11 +699,15 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
                                                                          text: diaryModel.desc)
         
         
-        // TODO: - 이미지 세팅 관련 수정 할 것
         if diaryModel.image == true,
-           let imageData = diaryModel.cropImage {
+           let imageData = diaryModel.cropImage,
+           let originalImageData = diaryModel.originalImage {
+            self.selectedOriginalImage = UIImage(data: originalImageData)
+            self.selectedImage = UIImage(data: imageData)
             self.imageUploadView.image = UIImage(data: imageData)
         } else {
+            self.selectedOriginalImage = nil
+            self.selectedImage = nil
             self.imageUploadView.image = nil
         }
         

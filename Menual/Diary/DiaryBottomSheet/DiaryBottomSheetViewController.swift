@@ -23,8 +23,6 @@ enum MenualBottomSheetRightBtnIsActivate {
 }
 
 enum MenualBottomSheetType {
-//    case weather
-//    case place
     case menu
     case calender
     case reminder
@@ -131,12 +129,6 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         $0.clipsToBounds = true
         $0.isUserInteractionEnabled = true
     }
-    
-//    private lazy var weatherPlaceSelectView = WeatherPlaceSelectView(type: .place).then {
-//        $0.translatesAutoresizingMaskIntoConstraints = false
-//        $0.delegate = self
-//        $0.isHidden = true
-//    }
     
     // 메뉴 컴포넌트
     private lazy var menuComponentView = MenualBottomSheetMenuComponentView().then {
@@ -625,18 +617,6 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
     }
     
     func pressedSelectBtn(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date) {
-//        switch isEditing {
-//        case true:
-//            showToast(message: "리마인더 알림이 수정되었어요.")
-//            hideBottomSheetAndGoBack()
-//
-//
-//        case false:
-//            showToast(message: "리마인더 알림이 설정되었어요.")
-//            hideBottomSheetAndGoBack()
-//        }
-//
-        
         switch isEditing {
         case true:
             print("DiaryBottomSheet :: 수정모드 이므로 팝업 띄웁니다")
@@ -652,7 +632,6 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
                                          requestDate: requestDate
         )
         listener?.reminderRequestDateRelay?.accept(model)
-        // listener?.reminderCompViewSetReminder(isEditing: isEditing, requestDateComponents: requestDateComponents, requestDate: requestDate)
         hideBottomSheetAndGoBack()
     }
     
