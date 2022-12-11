@@ -24,6 +24,7 @@ protocol DiarySearchPresentable: Presentable {
     
     func updateRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType)
     func insertRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType)
+    func deleteRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType)
 }
 
 protocol DiarySearchInteractorDependency {
@@ -74,7 +75,6 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     func bind() {
         guard let realm = Realm.safeInit() else { return }
         let diarySearchModelRealm = realm.objects(DiarySearchModelRealm.self)
-        // self.recentSearchModel = diarySearchModelRealm.toArray()
         recentSearchModelNnotificationToken = diarySearchModelRealm.observe({ changes in
             switch changes {
             case .initial(let model):
@@ -84,6 +84,8 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
             case .update(let model, let deletions, let insertions, let modifications):
                 print("DiarySearch :: update!")
                 if deletions.count > 0 {
+                    self.recentSearchModel = model.list
+                    self.presenter.deleteRow(at: deletions, section: .recentSearch)
                     print("DiarySearch :: deletions!")
                 }
                 
@@ -102,17 +104,6 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
                 print("DiarySearch :: error!")
             }
         })
-        /*
-        dependency.diaryRepository
-            .diarySearch
-            .subscribe(onNext: { [weak self] diarySearch in
-                guard let self = self else { return }
-                print("Search :: -> DiarySearch 구독중!!!")
-                print("Search :: = \(diarySearch)")
-                self.recentSearchResultsRelay.accept(diarySearch)
-            })
-            .disposed(by: disposeBag)
-        */
     }
     
     func pressedBackBtn(isOnlyDetach: Bool) {

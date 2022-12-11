@@ -14,7 +14,6 @@ import RxRelay
 import RealmSwift
 
 protocol DiarySearchPresentableListener: AnyObject {
-    var recentSearchResultsRelay: BehaviorRelay<[DiarySearchModel]> { get }
     var searchResultsRelay: BehaviorRelay<[DiaryModelRealm]> { get }
     var recentSearchModel: List<DiarySearchModelRealm>? { get }
     
@@ -159,22 +158,6 @@ final class DiarySearchViewController: UIViewController, DiarySearchViewControll
                 self.tableView.reloadData()
             })
             .disposed(by: disposeBag)
-        
-//        listener?.recentSearchResultsRelay
-//            .subscribe(onNext: { [weak self] results in
-//                guard let self = self else { return }
-//                print("Search :: recentSearchResultsRelay! = \(results)")
-//                if results.count == 0 {
-//                    print("Search :: 최근에 검색한 메뉴얼이 없습니다.")
-//                    self.recentSearchEmptyView.isHidden = false
-//
-//                } else {
-//                    print("Search :: 최근에 검색한 메뉴얼의 개수입니다. = \(results.count)")
-//                    self.recentSearchEmptyView.isHidden = true
-//                }
-//                self.tableView.reloadData()
-//            })
-//            .disposed(by: disposeBag)
     }
     
     func setViews() {
@@ -229,6 +212,13 @@ extension DiarySearchViewController: DiarySearchPresentable {
         tableView.beginUpdates()
         let indexPaths = indexs.map { IndexPath(item: $0, section: section.rawValue) }
         tableView.insertRows(at: indexPaths, with: .automatic)
+        tableView.endUpdates()
+    }
+    
+    func deleteRow(at indexs: [Int], section: DiarySearchViewController.DiarySearchSectionType) {
+        tableView.beginUpdates()
+        let indexPaths = indexs.map { IndexPath(item: $0, section: section.rawValue) }
+        tableView.deleteRows(at: indexPaths, with: .automatic)
         tableView.endUpdates()
     }
 }
@@ -308,19 +298,6 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             if diary.isHide {
                 return 75
             }
-            
-            /*
-            guard let model = listener?.recentSearchResultsRelay.value[safe: indexPath.row],
-                  let diary = model.diary else {
-                print("DiarySearch :: 여기서 팅귀나?")
-                return 98
-            }
-            
-            print("DiarySearch :: diary.isHide = \(diary.isHide)")
-            if diary.isHide {
-                return 75
-            }
-            */
         }
         
         return 98
@@ -378,11 +355,9 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             return headerView
 
         case .recentSearch:
-            print("Search :: listener?.recentSearchResultsRelay = \(listener?.recentSearchResultsRelay.value)")
             let headerView = ListHeader(type: .search, rightIconType: .searchDelete)
             headerView.rightTextBtn.addTarget(self, action: #selector(pressedRecentSearchCellDeleteBtn), for: .touchUpInside)
             
-            // if let recentSearchCount: Int = listener?.recentSearchResultsRelay.value.count {
             if let recentSearchCount: Int = listener?.recentSearchModel?.count {
                 
                 // 최근 검색 결과가 없으면 해당 Section도 나타나지 않도록
@@ -414,7 +389,6 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             return headerView
 
         }
-        return UIView()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -424,8 +398,6 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             return listener?.searchResultsRelay.value.count ?? 0
 
         case .recentSearch:
-            print("Search :: cellCount = \(listener?.recentSearchResultsRelay.value.count ?? 0)")
-            // guard let count = listener?.recentSearchResultsRelay.value.count else { return 0 }
             guard let count = listener?.recentSearchModel?.count else { return 0 }
             
             // 총 5개까지만 노출되록 (UX)
