@@ -7,6 +7,8 @@
 
 import Foundation
 
+/*
+ 
 // MARK: - My Menual에서 달/연도마다 얼마나 썼는지 담는 모델
 public struct DiaryMonthModel: PropertyReflectable {
     var monthCount: Int = 0 {
@@ -480,3 +482,5 @@ public struct DiaryYearModel {
     let year: Int
     var months: DiaryMonthModel?
 }
+
+*/

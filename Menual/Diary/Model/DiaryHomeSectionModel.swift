@@ -7,7 +7,12 @@
 
 import Foundation
 
-struct DiaryHomeSectionModel {
+public struct DiaryHomeFilteredSectionModel {
+    var allCount: Int
+    var diarySectionModelDic: [String: DiaryHomeSectionModel]
+}
+
+public struct DiaryHomeSectionModel {
     var sectionName: String
     var sectionIndex: Int
     var diaries: [DiaryModelRealm]

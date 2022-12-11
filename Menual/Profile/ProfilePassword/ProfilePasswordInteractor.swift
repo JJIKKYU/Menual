@@ -113,9 +113,9 @@ final class ProfilePasswordInteractor: PresentableInteractor<ProfilePasswordPres
             print("ProfilePassword :: password \(password)")
         }
         
-        let passwordModel = PasswordModel(uuid: UUID().uuidString,
-                                          password: password,
-                                          isEnabled: true
+        let passwordModel = PasswordModelRealm(uuid: UUID().uuidString,
+                                               password: password,
+                                               isEnabled: true
         )
         
         // 이미 password를 설정한 적이 있다면

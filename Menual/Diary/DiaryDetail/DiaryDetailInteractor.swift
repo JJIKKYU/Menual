@@ -109,7 +109,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         guard let realm = Realm.safeInit() else { return }
         guard let diaryModel = self.diaryModel else { return }
         let diary = realm.object(ofType: DiaryModelRealm.self, forPrimaryKey: diaryModel._id)
-        if let imageData: Data = DiaryModel(diary!).originalImage {
+        if let imageData: Data = diaryModel.originalImage {
             self.imageDataRelay.accept(imageData)
         }
 

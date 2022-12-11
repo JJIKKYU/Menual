@@ -61,7 +61,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     private var disposebag: DisposeBag
 
     var lastPageNumRelay = BehaviorRelay<Int>(value: 0)
-    var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
+    // var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
+    var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?>
     let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
     
     let filteredWeatherArrRelay = BehaviorRelay<[Weather]>(value: [])
@@ -79,7 +80,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         self.dependency = dependency
         self.disposebag = DisposeBag()
         self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
-        self.filteredDiaryMonthSetRelay = dependency.diaryRepository.filteredMonthDic
+        // self.filteredDiaryMonthSetRelay = dependency.diaryRepository.filteredMonthDic
+        self.filteredDiaryDic = dependency.diaryRepository.filteredDiaryDic
         super.init(presenter: presenter)
         presenter.listener = self
         self.presentationDelegateProxy.delegate = self
@@ -98,6 +100,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func bind() {
         print("DiaryHomeInteractor :: Bind!")
+        /*
         dependency.diaryRepository
             .filteredMonthDic
             .filter { !$0.isEmpty }
@@ -116,7 +119,19 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 self.presenter.reloadTableView()
             })
             .disposed(by: disposebag)
-        
+        */
+        dependency.diaryRepository
+            .filteredDiaryDic
+            .subscribe(onNext: { [weak self] diarySectionModel in
+                guard let self = self else { return }
+                guard let diarySectionModel = diarySectionModel else { return }
+                
+                self.lastPageNumRelay.accept(diarySectionModel.allCount)
+                self.presenter.isFilteredRelay.accept(true)
+                self.presenter.reloadTableView()
+            })
+            .disposed(by: disposebag)
+
         guard let realm = Realm.safeInit() else { return }
         notificationToken = realm.objects(DiaryModelRealm.self)
             .observe { result in
@@ -136,8 +151,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
                     // Set로 중복되지 않도록, Section Header Name 추가 (2022.12, 2022.11 등)
                     var section = Set<String>()
-                    let newModel = model.filter{ $0.isDeleted == false }
-                    newModel.forEach { section.insert($0.createdAt.toStringWithYYYYMM()) }
+                    model.forEach { section.insert($0.createdAt.toStringWithYYYYMM()) }
 
                     // for문으로 체크하기 위해서 Array로 변경
                     var arraySerction = Array(section)
@@ -145,7 +159,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     arraySerction.enumerated().forEach { (index: Int, sectioName: String) in
                         self.diaryDictionary[sectioName] = DiaryHomeSectionModel(sectionName: sectioName, sectionIndex: index, diaries: [])
                     }
-                    let sortedModel: [DiaryModelRealm] = newModel.sorted(by: { $0.createdAt > $1.createdAt })
+                    let sortedModel: [DiaryModelRealm] = model.sorted(by: { $0.createdAt > $1.createdAt })
                     for diary in sortedModel {
                         let sectionName: String = diary.createdAt.toStringWithYYYYMM()
                         self.diaryDictionary[sectionName]?.diaries.append(diary)
@@ -325,6 +339,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 //        router?.attachDiaryDetail(model: updateModel)
     }
     //ㅅㅏㄹㅏㅇㅎㅐ i luv u ㅅㅏㄹㅏㅇㅅㅏㄹㅏㅇㅎㅐ ㅅㅏㄹ6ㅎㅐ jjikkyu
+    //22.12.12 월요일 진균이가 아직도 위에 사랑해 주석을 제거하지 않아서 기분이 좋은 수진이어따!
     func diaryDetailPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachDiaryDetail(isOnlyDetach: isOnlyDetach)
     }

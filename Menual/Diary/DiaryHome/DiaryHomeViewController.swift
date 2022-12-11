@@ -30,7 +30,8 @@ protocol DiaryHomePresentableListener: AnyObject {
     func pressedDateFilterBtn()
     
     var lastPageNumRelay: BehaviorRelay<Int> { get }
-    var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> { get }
+    // var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> { get }
+    var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var diaryDictionary: [String: DiaryHomeSectionModel] { get }
 }
 
@@ -367,44 +368,18 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             })
             .disposed(by: self.disposeBag)
         
-        listener?.filteredDiaryMonthSetRelay
-            .subscribe(onNext: { [weak self] diaryYearModelArr in
+        listener?.filteredDiaryDic
+            .subscribe(onNext: { [weak self] diarySectionModel in
                 guard let self = self else { return }
+                guard let diarySectionModel = diarySectionModel else { return }
                 if self.isFilteredRelay.value == false { return }
-                print("DiaryHome :: filteredDiaryMonthSetRelay, count = \(diaryYearModelArr.count)")
                 
-                // 필터는 계속 변형되므로 Relay가 업데이트 될때마다 담은 정보 초기화
-                self.filteredSectionNameDic = [:]
-                self.filteredCellsectionNumberDic = [:]
-                self.filteredCellsectionNumberDic2 = [:]
-                
-                var sectionCount: Int = 0
-                var allCount: Int = 0
-                for diaryYearModel in diaryYearModelArr {
-                    // ["2022JUL", "2022JUM"]
-                    guard let monthArr = diaryYearModel.months?.getMonthArr() else { return }
-                    
-                    for month in monthArr {
-                        let sectionName: String = "\(diaryYearModel.year)\(month)"
-                        print("sectionName = \(sectionName), sectionCount = \(sectionCount)")
-                        self.filteredSectionNameDic[sectionCount] = sectionName
-                        self.filteredCellsectionNumberDic[sectionName] = sectionCount
-                        self.filteredCellsectionNumberDic2[sectionCount] =  diaryYearModel.months?.getMenualCountWithMonth(MM: month) ?? 0
-                        
-                        sectionCount += 1
-                    }
-                    
-                    allCount += diaryYearModel.months?.allCount ?? 0
-                }
-
-                // 필터 결과 하나도 없을 경우
-                if allCount == 0 {
+                if diarySectionModel.allCount == 0 {
                     self.filterEmptyView.isHidden = false
                 } else {
                     self.filterEmptyView.isHidden = true
                 }
-
-                print("DiaryHome :: filter 후 sectionCount = \(sectionCount), allCount = \(allCount)")
+                
                 self.reloadTableView()
             })
             .disposed(by: disposeBag)
@@ -652,33 +627,25 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.isFilteredRelay.value {
-            guard let monthMenualCount = filteredCellsectionNumberDic2[section] else { return 0 }
-            print("monthMenualCount = \(monthMenualCount)")
+            // guard let monthMenualCount = filteredCellsectionNumberDic2[section] else { return 0 }\
+            guard let diaryDictionary = listener?.filteredDiaryDic.value?.diarySectionModelDic else { return 0 }
+            guard let findDict = diaryDictionary.filter ({ $0.value.sectionIndex == section }).first
+            else { return 0 }
 
-            return monthMenualCount
+            return findDict.value.diaries.count
         } else {
-            /*
-            guard let monthMenualCount = cellsectionNumberDic2[section] else { return 0 }
-
-            print("monthMenualCount = \(monthMenualCount)")
-
-            
-            return monthMenualCount
-             */
-            
             guard let diaryDictionary = listener?.diaryDictionary else { return 0 }
             guard let findDict = diaryDictionary.filter({ $0.value.sectionIndex == section }).first else { return 0 }
             
-            // print("DiaryHome :: findDict! = \(findDict)")
             return findDict.value.diaries.count
-            // return sectionCount
         }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         if self.isFilteredRelay.value {
+            guard let diaryDictionary = listener?.filteredDiaryDic.value?.diarySectionModelDic else { return 0 }
             print("filteredSectionNameDic.count = \(filteredSectionNameDic.count), \(filteredSectionNameDic)")
-            return filteredSectionNameDic.count
+            return diaryDictionary.count
         } else {
 
             guard let diaryDictionary = listener?.diaryDictionary else { return 0 }
@@ -687,28 +654,32 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let defaultCell = UITableViewCell()
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath) as? ListCell,
-              let diaryDictionry: [String: DiaryHomeSectionModel] = listener?.diaryDictionary
-        else { return defaultCell }
-        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath) as? ListCell else { return UITableViewCell() }
         let index: Int = indexPath.row
         let section: Int = indexPath.section
-        
-        guard let dataDictionary = diaryDictionry.filter ({ $0.value.sectionIndex == section }).first else { return defaultCell }
-        
-        guard let data = dataDictionary.value.diaries[safe: index] else { return defaultCell }
-        
-        if self.isFilteredRelay.value {
 
-        } else {
+        var dataModel: DiaryModelRealm?
+        let defaultCell = UITableViewCell()
+        switch self.isFilteredRelay.value {
+        case true:
+            guard let diaryDictionry: [String: DiaryHomeSectionModel] = listener?.filteredDiaryDic.value?.diarySectionModelDic else { return defaultCell }
+            guard let dataDictionary = diaryDictionry.filter ({ $0.value.sectionIndex == section }).first else { return defaultCell }
+            guard let data = dataDictionary.value.diaries[safe: index] else { return defaultCell }
+            dataModel = data
 
+        case false:
+            guard let diaryDictionry: [String: DiaryHomeSectionModel] = listener?.diaryDictionary else { return defaultCell }
+            guard let dataDictionary = diaryDictionry.filter ({ $0.value.sectionIndex == section }).first else { return defaultCell }
+            guard let data = dataDictionary.value.diaries[safe: index] else { return defaultCell }
+            dataModel = data
         }
+        guard let dataModel = dataModel else { return UITableViewCell() }
         
-        if data.isHide {
+              
+        if dataModel.isHide {
             cell.listType = .hide
         } else {
-            if let image = data.originalImage {
+            if let image = dataModel.originalImage {
                 cell.listType = .textAndImage
                 DispatchQueue.main.async {
                     cell.image = UIImage(data: image)
@@ -719,19 +690,19 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
         
-        cell.title = data.title
-        cell.date = data.createdAt.toString()
-        cell.time = data.createdAt.toStringHourMin()
+        cell.title = dataModel.title
+        cell.date = dataModel.createdAt.toString()
+        cell.time = dataModel.createdAt.toStringHourMin()
         
-        let pageCount = "\(data.pageNum)"
+        let pageCount = "\(dataModel.pageNum)"
         var replies = ""
-        if data.replies.count != 0 {
-            replies = "\(data.replies.count)"
+        if dataModel.replies.count != 0 {
+            replies = "\(dataModel.replies.count)"
         }
 
         cell.pageCount = pageCount
         cell.reviewCount = replies
-        cell.testModel = data
+        cell.testModel = dataModel
         
         return cell
     }
@@ -840,7 +811,6 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         switch collectionView.tag {
         // MomentsCollectionView
         case 0:

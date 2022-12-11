@@ -134,9 +134,9 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         else {
             guard let model = dependency.diaryRepository.password.value else { return }
 
-            let newModel = PasswordModel(uuid: model.uuid,
-                                         password: model.password,
-                                         isEnabled: false
+            let newModel = PasswordModelRealm(uuid: model.uuid,
+                                              password: model.password,
+                                              isEnabled: false
             )
 
             dependency.diaryRepository

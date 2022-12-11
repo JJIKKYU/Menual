@@ -12,17 +12,11 @@ import RealmSwift
 import RxRealm
 
 public protocol DiaryRepository {
-    // func addCard(info: AddPaymentMethodInfo) -> AnyPublisher<PaymentMethod, Error>
-    // ReadOnlyCurrentValuePublisher<[PaymentMethod]> { get }
-    
     var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }
-    var filteredMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
-    var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { get }
-    var password: BehaviorRelay<PasswordModel?> { get }
+    var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
+    var password: BehaviorRelay<PasswordModelRealm?> { get }
     var reminder: BehaviorRelay<[ReminderModel]> { get }
-    
-//    var realmDiaryOb: Observable<[DiaryModel]> { get }
-    // func addDiary(info: DiaryModel) throws -> Observable<DiaryModel>
+
     func fetch()
     func addDiary(info: DiaryModelRealm)
     func updateDiary(info: DiaryModelRealm)
@@ -51,12 +45,11 @@ public protocol DiaryRepository {
     
     // Filter 로직
     func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int
-    func filterDiary(date: Date, isOnlyFilterCount: Bool) -> Int
     
     // Password 로직
     func fetchPassword()
-    func addPassword(model: PasswordModel)
-    func updatePassword(model: PasswordModel)
+    func addPassword(model: PasswordModelRealm)
+    func updatePassword(model: PasswordModelRealm)
     
     // Reminder 로직
     func fetchReminder()
@@ -71,14 +64,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
     public var diaryString: BehaviorRelay<[DiaryModelRealm]> { diaryModelSubject }
     public let diaryModelSubject = BehaviorRelay<[DiaryModelRealm]>(value: [])
     
-    public var filteredMonthDic: BehaviorRelay<[DiaryYearModel]> { filteredMonthDicSubject }
-    public let filteredMonthDicSubject = BehaviorRelay<[DiaryYearModel]>(value: [])
+    public var filteredDiaryDic = BehaviorRelay<DiaryHomeFilteredSectionModel?>(value: nil)
     
-    public var diaryMonthDic: BehaviorRelay<[DiaryYearModel]> { diaryMonthDicSubject }
-    public let diaryMonthDicSubject = BehaviorRelay<[DiaryYearModel]>(value: [])
-    
-    public var password: BehaviorRelay<PasswordModel?> { passwordSubject }
-    public let passwordSubject = BehaviorRelay<PasswordModel?>(value: nil)
+    public var password = BehaviorRelay<PasswordModelRealm?>(value: nil)
     
     public var reminder: BehaviorRelay<[ReminderModel]> { reminderSubject }
     public let reminderSubject = BehaviorRelay<[ReminderModel]>(value: [])
@@ -183,58 +171,14 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         
-        let diaryModelResults = realm.objects(DiaryModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
+        let diaryModelResults = realm
+            .objects(DiaryModelRealm.self)
+            .sorted(byKeyPath: "createdAt", ascending: false)
+            .filter { $0.isDeleted == false }
+
         diaryModelSubject.accept(diaryModelResults.map { DiaryModelRealm(value: $0) })
         
-        self.fetchDiary()
         self.fetchReminder()
-    }
-    
-    // MARK: - Diary Fetch
-    public func fetchDiary() {
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-        let diaryModelResults = realm.objects(DiaryModelRealm.self).filter { $0.isDeleted != true }
-        
-        var diaryYearModels: [DiaryYearModel] = []
-        
-        // 연도별 Diary 세팅
-        var beforeYear: String = "0"
-        for diary in diaryModelResults {
-            let curYear = diary.createdAt.toStringWithYYYY() // 2021, 2022 등으로 변경
-            if beforeYear == curYear { continue }
-            beforeYear = curYear
-
-            diaryYearModels.append(DiaryYearModel(year: Int(curYear) ?? 0, months: DiaryMonthModel()))
-        }
-
-        print("diaryYearModels = \(diaryYearModels)")
-        
-        // 달별 Diary 세팅
-        for index in diaryYearModels.indices {
-            // 같은 연도인 Diary만 Filter
-            let sortedDiaryModelResults = diaryModelResults.filter { $0.createdAt.toStringWithYYYY() == diaryYearModels[index].year.description }
-            
-            for diary in sortedDiaryModelResults {
-                let diaryMM = diary.createdAt.toStringWithMM() // 01, 02 등으로 변경
-                let diaryModel = DiaryModel(diary)
-
-                diaryYearModels[index].months?.updateCount(MM: diaryMM, diary: diaryModel)
-                // diaryYearModels[index].months?.addDiary(diary: diary)
-                diaryYearModels[index].months?.updateAllCount()
-            }
-
-            diaryYearModels[index].months?.sortDiary()
-        }
-        
-
-        let diaryYearSortedModels = diaryYearModels.sorted { $0.year > $1.year }
-        
-        print("diaryMonthModels = \(diaryYearModels)")
-        
-        self.diaryMonthDicSubject.accept(diaryYearSortedModels)
     }
     
     // MARK: - Diary CRUD
@@ -302,9 +246,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
             realm.delete(realm.objects(DiaryModelRealm.self))
         }
         
-        self.diaryMonthDic.accept([])
-        self.diaryMonthDicSubject.accept([])
-        self.filteredMonthDicSubject.accept([])
+        // self.diaryMonthDic.accept([])
+        // self.diaryMonthDicSubject.accept([])
+        // self.filteredMonthDicSubject.accept([])
         self.diaryModelSubject.accept([])
         self.fetch()
     }
@@ -417,66 +361,55 @@ public final class DiaryRepositoryImp: DiaryRepository {
     // MARK: - Filter 로직
     public func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int {
         print("diaryRepo :: filterDiary -> 날짜/장소")
-        // fetchDiary 후 얻은 결과 원본
-        var diaryMonthDic: [DiaryYearModel] = diaryMonthDicSubject.value
+        guard let realm = Realm.safeInit() else { return 0 }
 
-        for (index, _) in diaryMonthDic.enumerated() {
-            diaryMonthDic[index].months?.filterDiary(weatherTypes: weatherTypes, placeTypes: placeTypes)
-        }
-        
-        // print("filterDiary! \(diaryMonthDic)")
-        var allCount: Int = 0
-        for model in diaryMonthDic {
-            print("= \(model.year) -> \(String(describing: model.months?.allCount))")
-            print("1월, \(model.months?.jan ?? 0)")
-            print("2월, \(model.months?.fab ?? 0)")
-            print("3월, \(model.months?.mar ?? 0)")
-            print("4월, \(model.months?.apr ?? 0)")
-            print("5월, \(model.months?.may ?? 0)")
-            print("6월, \(model.months?.jul ?? 0)")
-            print("7월, \(model.months?.jul ?? 0)")
-            print("8월, \(model.months?.aug ?? 0)")
-            print("9월, \(model.months?.sep ?? 0)")
-            print("10월, \(model.months?.oct ?? 0)")
-            print("11월, \(model.months?.nov ?? 0)")
-            print("12월, \(model.months?.dec ?? 0)")
-            
-            if let count = model.months?.allCount {
-                allCount += count
+        var diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
+
+        var section = Set<String>()
+        let model = realm.objects(DiaryModelRealm.self)
+            .filter { diary in
+                var isContainWeather: Bool = true
+                if let weather = diary.weather?.weather {
+                    isContainWeather = weatherTypes.contains(weather)
+                } else {
+                    isContainWeather = false
+                }
+                
+                var isContainPlace: Bool = true
+                if let place = diary.place?.place {
+                    isContainPlace = placeTypes.contains(place)
+                } else {
+                    isContainPlace = false
+                }
+                
+                return diary.isDeleted == false && isContainWeather || isContainPlace
             }
-        }
-        if isOnlyFilterCount == true {
-            print("필터 결과 총 개수 = \(allCount)")
-            return allCount
-        }
-        
-        // filteredDiaryStringSubject.accept(diaryMonthDic)
-        filteredMonthDicSubject.accept(diaryMonthDic)
-        return allCount
-    }
-    
-    public func filterDiary(date: Date, isOnlyFilterCount: Bool) -> Int {
-        print("diaryRepo :: filterDiary! -> 날짜")
-        
-        let diarymonthDic: [DiaryYearModel] = diaryMonthDicSubject.value
-        
-        guard let filteredDiaryYearModel = diarymonthDic.filter({ String($0.year) == date.toStringWithYYYY() }).last else {
-            filteredMonthDicSubject.accept([])
-            return 0
-        }
-        var diaryYearModel = filteredDiaryYearModel
-        let count = diaryYearModel.months?.filterDiary(date: date)
-        
-        print("diaryRepo :: filter! = \(filteredDiaryYearModel)")
+            .sorted(by: ({ $0.createdAt > $1.createdAt }))
         
         if isOnlyFilterCount == true {
-            print("diaryRepo :: 필터 결과 총 개수 = \(count)")
-            return count ?? 0
+            return model.count
+        }
+
+        model.forEach { section.insert($0.createdAt.toStringWithYYYYMM())}
+
+        var arraySection = Array(section)
+        arraySection.sort { $0 > $1 }
+        arraySection.enumerated().forEach { (index: Int, sectionName: String) in
+            diaryDictionary[sectionName] = DiaryHomeSectionModel(sectionName: sectionName,
+                                                                 sectionIndex: index,
+                                                                 diaries: []
+            )
+        }
+        for diary in model {
+            let sectionName: String = diary.createdAt.toStringWithYYYYMM()
+            diaryDictionary[sectionName]?.diaries.append(diary)
         }
         
-        filteredMonthDicSubject.accept([diaryYearModel])
-        return count ?? 0
-        // fetchDiary 후 얻은 결과 원본
+        let filteredSectionModel = DiaryHomeFilteredSectionModel(allCount: model.count,
+                                                                 diarySectionModelDic: diaryDictionary
+        )
+        filteredDiaryDic.accept(filteredSectionModel)
+        return model.count
     }
     
     // MARK: - TempSave
@@ -551,21 +484,18 @@ public final class DiaryRepositoryImp: DiaryRepository {
 
         guard let passwordModelRealm = realm.objects(PasswordModelRealm.self).first
         else { return }
-        let passwordModel = PasswordModel(passwordModelRealm)
-        passwordSubject.accept(passwordModel)
+        password.accept(passwordModelRealm)
         print("diaryRepo :: passwordFetch! - 2")
     }
     
-    public func addPassword(model: PasswordModel) {
+    public func addPassword(model: PasswordModelRealm) {
         guard let realm = Realm.safeInit() else {
             return
         }
         print("diaryRepo :: addPassword! - 1")
-
-        let realmModel: PasswordModelRealm = PasswordModelRealm(model)
     
         realm.safeWrite {
-             realm.add(realmModel)
+             realm.add(model)
     
         }
         
@@ -573,7 +503,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         fetchPassword()
     }
     
-    public func updatePassword(model: PasswordModel) {
+    public func updatePassword(model: PasswordModelRealm) {
         guard let realm = Realm.safeInit() else {
             return
         }

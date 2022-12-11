@@ -74,49 +74,51 @@ final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeveloperPr
                 // var date = Date(timeIntervalSince1970: unixTime)
                 
                 for idx in 0..<30  {
-                    var weatherModel = WeatherModel(uuid: "", weather: nil, detailText: "")
-                    var placeModel = PlaceModel(uuid: "", place: nil, detailText: "")
+                    var weatherModel = WeatherModelRealm(weather: nil, detailText: "")
+                    var placeModel = PlaceModelRealm(place: nil, detailText: "")
                     let weatherValue = idx % Weather().getVariation().count
                     switch weatherValue {
                     case 0:
-                        weatherModel = WeatherModel(uuid: UUID().uuidString, weather: .sun, detailText: "디테일 텍스트입니다.")
-                        placeModel = PlaceModel(uuid: UUID().uuidString, place: .car, detailText: "디테일 디테일 텍스트입니다.")
+                        weatherModel = WeatherModelRealm(weather: .sun, detailText: "디테일 텍스트입니다.")
+                        placeModel = PlaceModelRealm(place: .car, detailText: "디테일 디테일 텍스트입니다.")
                     case 1:
-                        weatherModel = WeatherModel(uuid: UUID().uuidString, weather: .thunder, detailText: "디테일 텍스트입니다.")
-                        placeModel = PlaceModel(uuid: UUID().uuidString, place: .company, detailText: "디테일 디테일 텍스트입니다.")
+                        weatherModel = WeatherModelRealm(weather: .thunder, detailText: "디테일 텍스트입니다.")
+                        placeModel = PlaceModelRealm(place: .company, detailText: "디테일 디테일 텍스트입니다.")
                     case 2:
-                        weatherModel = WeatherModel(uuid: UUID().uuidString, weather: .snow, detailText: "디테일 텍스트입니다.")
-                        placeModel = PlaceModel(uuid: UUID().uuidString, place: .home, detailText: "디테일 디테일 텍스트입니다.")
+                        weatherModel = WeatherModelRealm(weather: .snow, detailText: "디테일 텍스트입니다.")
+                        placeModel = PlaceModelRealm(place: .home, detailText: "디테일 디테일 텍스트입니다.")
                     case 3:
-                        weatherModel = WeatherModel(uuid: UUID().uuidString, weather: .rain, detailText: "디테일 텍스트입니다.")
-                        placeModel = PlaceModel(uuid: UUID().uuidString, place: .place, detailText: "디테일 디테일 텍스트입니다.")
+                        weatherModel = WeatherModelRealm(weather: .rain, detailText: "디테일 텍스트입니다.")
+                        placeModel = PlaceModelRealm(place: .place, detailText: "디테일 디테일 텍스트입니다.")
                     case 4:
-                        placeModel = PlaceModel(uuid: UUID().uuidString, place: .school, detailText: "디테일 디테일 텍스트입니다.")
-                        weatherModel = WeatherModel(uuid: UUID().uuidString, weather: .cloud, detailText: "디테일 텍스트입니다.")
+                        placeModel = PlaceModelRealm(place: .school, detailText: "디테일 디테일 텍스트입니다.")
+                        weatherModel = WeatherModelRealm(weather: .cloud, detailText: "디테일 텍스트입니다.")
                     default:
-                        placeModel = PlaceModel(uuid: UUID().uuidString, place: .place, detailText: "디테일 디테일 텍스트입니다.")
-                        weatherModel = WeatherModel(uuid: UUID().uuidString, weather: .sun, detailText: "디테일 텍스트입니다.")
+                        placeModel = PlaceModelRealm(place: .place, detailText: "디테일 디테일 텍스트입니다.")
+                        weatherModel = WeatherModelRealm(weather: .sun, detailText: "디테일 텍스트입니다.")
                     }
                     
                     unixTime += intervale
                     
-                    let diaryModel = DiaryModel(uuid: UUID().uuidString,
+                    let diaryModel = DiaryModelRealm(uuid: UUID().uuidString,
                                                 pageNum: 0,
                                                 title: "테스트용 게시글입니다 \(idx)",
                                                 weather: weatherModel,
                                                 place: placeModel,
-                                                description: "테스트용 디테일 텍스트입니다.",
-                                                image: nil,
-                                                originalImage: nil,
+                                                 desc: "테스트용 디테일 텍스트입니다.",
+                                                image: false,
                                                 readCount: 0,
                                                 createdAt: Date(timeIntervalSinceNow: unixTime),
                                                 replies: [],
                                                 isDeleted: false,
                                                 isHide: false
                     )
-                    print("Dev :: \(idx)개 게시글 추가 - \(diaryModel.createdAt)")
-                    // self.dependency.diaryRepository.addDiary(info: diaryModel)
+                     print("Dev :: \(idx)개 게시글 추가 - \(diaryModel.createdAt)")
 
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                        print("ProfileDevelper :: !!")
+                        self.dependency.diaryRepository.addDiary(info: diaryModel)
+                    }
                 }
                 
                 self.tempMenualSetRelay.accept(false)

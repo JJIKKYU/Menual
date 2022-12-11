@@ -16,3 +16,6 @@ struct DateFilterMonthsModel {
     var month: Int
     var diaryCount: Int
 }
+
+// [2022.11] = [다이어리1, 다이어리2]
+// [2022.12] = [다이어리1, 다이어리2, 다이어리3]
