@@ -66,9 +66,23 @@ public class DiaryModelRealm: Object {
             replies.append(objectsIn: newValue)
         }
     }
+    @Persisted var lastMomentsDate: Date?
     @Persisted var isHide: Bool
     
-    convenience init(uuid: String, pageNum: Int, title: String, weather: WeatherModelRealm?, place: PlaceModelRealm?, desc: String, image: Bool, readCount: Int, createdAt: Date, replies: [DiaryReplyModelRealm], isDeleted: Bool, isHide: Bool) {
+    convenience init(uuid: String,
+                     pageNum: Int,
+                     title: String,
+                     weather: WeatherModelRealm?,
+                     place: PlaceModelRealm?,
+                     desc: String,
+                     image: Bool,
+                     readCount: Int = 0,
+                     createdAt: Date,
+                     replies: [DiaryReplyModelRealm] = [],
+                     isDeleted: Bool = false,
+                     lastMomentsDate: Date? = nil,
+                     isHide: Bool = false
+    ) {
         self.init()
         self.uuid = uuid
         self.pageNum = pageNum
@@ -81,6 +95,7 @@ public class DiaryModelRealm: Object {
         self.createdAt = createdAt
         self.isDeleted = isDeleted
         self.repliesArr = replies
+        self.lastMomentsDate = lastMomentsDate
         // self.replies.append(objectsIn: replies)
         self.isHide = isHide
     }
