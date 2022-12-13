@@ -112,6 +112,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
                 
                 print("DiaryBottomSheet :: !!! \(weatherArr), \(placeArr)")
                 self.listener?.filterWithWeatherPlace(weatherArr: weatherArr, placeArr: placeArr)
+                self.presenter.setCurrentFilteredBtn(weatherArr: weatherArr, placeArr: placeArr)
             })
             .disposed(by: disposeBag)
         }
@@ -153,7 +154,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
                         if monthSet[year]![month] == nil {
                             monthSet[year]![month] = 0
                         }
-                        
+
                         monthSet[year]![month]! += 1
                     }
                 
