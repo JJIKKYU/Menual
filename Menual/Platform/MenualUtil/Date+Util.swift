@@ -50,6 +50,13 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
+    func toStringWithMMdd() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM.dd"
+        dateFormatter.timeZone = TimeZone(identifier: "KST")
+        return dateFormatter.string(from: self)
+    }
+    
     func toStringWithMonthEngName() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM"

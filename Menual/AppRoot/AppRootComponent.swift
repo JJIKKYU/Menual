@@ -12,6 +12,7 @@ final class AppRootComponent: Component<AppRootDependency> {
 
     private let rootViewController: ViewControllable
     var diaryRepository: DiaryRepository
+    var momentsRepository: MomentsRepository
     
     init(
         dependency: AppRootDependency,
@@ -19,6 +20,8 @@ final class AppRootComponent: Component<AppRootDependency> {
     ) {
         self.rootViewController = rootViewController
         self.diaryRepository = DiaryRepositoryImp()
+        self.momentsRepository = MomentsRepositoryImp()
+        self.momentsRepository.fetch()
         self.diaryRepository.fetch()
         super.init(dependency: dependency)
     }
