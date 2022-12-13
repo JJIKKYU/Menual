@@ -853,6 +853,7 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
 // MARK: - Filter
 extension DiaryHomeViewController {
     func setFilterStatus(isFiltered: Bool) {
+        print("diaryHome :: setFilterStatus = \(isFiltered)")
         // 이미 적용된 target 제거
         self.writeBoxBtn.removeTarget(nil, action: nil, for: .allEvents)
         self.writeFAB.removeTarget(nil, action: nil, for: .allEvents)
@@ -878,6 +879,10 @@ extension DiaryHomeViewController {
             self.myMenualTitleView.rightFilterBtnIsEnabled = false
             self.writeBoxBtn.isFiltered = .disabled
             self.writeFAB.isFiltered = .disabled
+            
+            let lastPageNum: Int = self.listener?.lastPageNumRelay.value ?? 0
+            self.writeBoxBtn.title = String(lastPageNum + 1) + "번째 메뉴얼 작성하기"
+            self.myMenualTitleView.pageNumber = lastPageNum
 
             self.writeBoxBtn.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
             self.writeFAB.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
