@@ -632,6 +632,8 @@
 		98281EBF278AC14700736D59 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				988A2D66280166A00046C43A /* Model */,
+				988A2D69280167B80046C43A /* Repository */,
 				9843928E2903A8C000EF526E /* SystemView */,
 				98B557622838968D00F8CA3E /* DesignSystemRIB */,
 				98239BE127E3234F00E216F1 /* DesignSystem */,
@@ -869,10 +871,8 @@
 		988A186D278ACA7A00DF81DA /* Diary */ = {
 			isa = PBXGroup;
 			children = (
-				988A2D69280167B80046C43A /* Repository */,
 				9843929429053C8100EF526E /* DiaryDetailImage */,
 				98F3A27928150034000851F0 /* DiaryBottomSheet */,
-				988A2D66280166A00046C43A /* Model */,
 				98A2BD97280A831E00C1FB92 /* DiaryDetail */,
 				988A2D5327F979ED0046C43A /* DiaryMoments */,
 				989AE03E27F08FF000177573 /* DiarySearch */,
