@@ -100,26 +100,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func bind() {
         print("DiaryHomeInteractor :: Bind!")
-        /*
-        dependency.diaryRepository
-            .filteredMonthDic
-            .filter { !$0.isEmpty }
-            .subscribe(onNext: { [weak self] diaryArr in
-                guard let self = self else { return }
-                print("filteredDiaryString 구독 중!, diary = \(diaryArr)")
-                print("<- reloadTableView")
 
-                var menualCount: Int = 0
-                for month in diaryArr {
-                    menualCount += month.months?.allCount ?? 0
-                }
-                
-                self.lastPageNumRelay.accept(menualCount)
-                self.presenter.isFilteredRelay.accept(true)
-                self.presenter.reloadTableView()
-            })
-            .disposed(by: disposebag)
-        */
         dependency.diaryRepository
             .filteredDiaryDic
             .subscribe(onNext: { [weak self] diarySectionModel in
