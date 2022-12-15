@@ -21,8 +21,8 @@ final class AppRootComponent: Component<AppRootDependency> {
         self.rootViewController = rootViewController
         self.diaryRepository = DiaryRepositoryImp()
         self.momentsRepository = MomentsRepositoryImp()
-        self.momentsRepository.fetch()
         self.diaryRepository.fetch()
+        self.momentsRepository.fetch()
         super.init(dependency: dependency)
     }
 }

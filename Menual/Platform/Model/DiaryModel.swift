@@ -12,7 +12,11 @@ import RealmSwift
 public class DiaryModelRealm: Object {
     // @objc dynamic var id: ObjectId
     @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var uuid = ""
+    var uuid: String {
+        get {
+            return _id.stringValue
+        }
+    }
     @Persisted var pageNum: Int
     @Persisted var title = ""
     @Persisted var weather: WeatherModelRealm?
@@ -69,8 +73,7 @@ public class DiaryModelRealm: Object {
     @Persisted var lastMomentsDate: Date?
     @Persisted var isHide: Bool
     
-    convenience init(uuid: String,
-                     pageNum: Int,
+    convenience init(pageNum: Int,
                      title: String,
                      weather: WeatherModelRealm?,
                      place: PlaceModelRealm?,
@@ -84,7 +87,6 @@ public class DiaryModelRealm: Object {
                      isHide: Bool = false
     ) {
         self.init()
-        self.uuid = uuid
         self.pageNum = pageNum
         self.title = title
         self.weather = weather

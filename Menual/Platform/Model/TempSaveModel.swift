@@ -11,7 +11,11 @@ import RealmSwift
 // MARK: - Realm에 저장하기 위한 Class
 public class TempSaveModelRealm: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var uuid: String = ""
+    var uuid: String {
+        get {
+            _id.stringValue
+        }
+    }
     @Persisted var title: String = ""
     @Persisted var desc: String = ""
     @Persisted var image: Bool
@@ -56,9 +60,8 @@ public class TempSaveModelRealm: Object {
     @Persisted var createdAt: Date
     @Persisted var isDeleted: Bool
     
-    convenience init(uuid: String, diaryModel: DiaryModelRealm, createdAt: Date, isDeleted: Bool) {
+    convenience init(diaryModel: DiaryModelRealm, createdAt: Date, isDeleted: Bool) {
         self.init()
-        self.uuid = uuid
         self.title = diaryModel.title
         self.desc = diaryModel.description
         self.image = diaryModel.image

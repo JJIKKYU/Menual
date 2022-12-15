@@ -225,8 +225,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
 
         // 수정하기 당시에 들어왔던 오리지널 메뉴얼
         guard let originalDiaryModel = diaryModelRelay.value else { return }
-        let newDiaryModel = DiaryModelRealm(uuid: originalDiaryModel.uuid,
-                                            pageNum: originalDiaryModel.pageNum,
+        let newDiaryModel = DiaryModelRealm(pageNum: originalDiaryModel.pageNum,
                                             title: info.title,
                                             weather: info.weather,
                                             place: info.place,

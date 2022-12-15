@@ -100,7 +100,7 @@ final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeveloperPr
                     
                     unixTime += intervale
                     
-                    let diaryModel = DiaryModelRealm(uuid: UUID().uuidString,
+                    let diaryModel = DiaryModelRealm(
                                                 pageNum: 0,
                                                 title: "테스트용 게시글입니다 \(idx)",
                                                 weather: weatherModel,

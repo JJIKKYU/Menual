@@ -346,8 +346,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
         
         guard let diary = realm.objects(DiaryModelRealm.self).filter("uuid == %@", info.uuid).first else { return }
-        let diarySearchModel = DiarySearchModelRealm(uuid: UUID().uuidString,
-                                                     diaryUuid: info.uuid,
+        let diarySearchModel = DiarySearchModelRealm(diaryUuid: info.uuid,
                                                      diary: diary,
                                                      createdAt: Date(),
                                                      isDeleted: false
@@ -418,8 +417,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         
-        let realmModel: TempSaveModelRealm = TempSaveModelRealm(uuid: tempSaveUUID,
-                                                                diaryModel: diaryModel,
+        let realmModel: TempSaveModelRealm = TempSaveModelRealm(diaryModel: diaryModel,
                                                                 createdAt: Date(),
                                                                 isDeleted: false
         )
@@ -454,8 +452,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
 
-        let model = TempSaveModelRealm(uuid: tempSaveUUID,
-                                       diaryModel: diaryModel,
+        let model = TempSaveModelRealm(diaryModel: diaryModel,
                                        createdAt: Date(),
                                        isDeleted: false
         )

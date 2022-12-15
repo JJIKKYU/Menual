@@ -11,56 +11,56 @@ extension Date {
     func toString() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
-        dateFormatter.timeZone = TimeZone(identifier: "KST")
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
     func toStringHourMin() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
-        dateFormatter.timeZone = TimeZone(identifier: "KST")
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
     func toStringWithHourMin() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd HH:mm"
-        dateFormatter.timeZone = TimeZone(identifier: "KST")
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
     func toStringWithMM() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM"
-        dateFormatter.timeZone = TimeZone(identifier: "KST")
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
     func toStringWithYYYY() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy"
-        dateFormatter.timeZone = TimeZone(identifier: "KST")
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
     func toStringWithYYYYMM() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM"
-        dateFormatter.timeZone = TimeZone(identifier: "KST")
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
     func toStringWithMMdd() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM.dd"
-        dateFormatter.timeZone = TimeZone(identifier: "KST")
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
     func toStringWithMonthEngName() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM"
-        dateFormatter.timeZone = TimeZone(identifier: "KST")
+        dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         
         switch dateFormatter.string(from: self) {
         case "01":

@@ -19,35 +19,43 @@ public final class MomentsRepositoryImp: MomentsRepository {
     // private var moments: MomentsRealm?
     private let disposeBag = DisposeBag()
     
-//    init() {
-//        guard let realm = Realm.safeInit(),
-//              let moments = realm.objects(MomentsRealm.self).first
-//        else { return }
-//        self.moments = moments
-//    }
+    init() {
+        guard let realm = Realm.safeInit() else { return }
+
+        // moments를 한 번도 세팅하지 않은 경우
+        let momentsRealm = realm.objects(MomentsRealm.self).first
+        if momentsRealm == nil {
+            let momentsRealm = MomentsRealm(lastUpdatedDate: Date(), items: [])
+            print("MomentsRepo :: momentsRealm을 한 번도 세팅하지 않았습니다.")
+            realm.safeWrite {
+                realm.add(momentsRealm)
+            }
+        } else {
+            print("MomentsRepo :: momentsRealm이 세팅되어 있습니다.")
+        }
+    }
     
     public func fetch() {
         print("MomentsRepo :: fetch!")
-        // guard let realm = Realm.safeInit() else { return }
-//        
-//        // moments를 한 번도 세팅하지 않은 경우
-//        if momentRealm == nil {
-//            realm.safeWrite {
-//                
-//            }
-//        }
+        guard let realm = Realm.safeInit(),
+              let momentsRealm = realm.objects(MomentsRealm.self).first as? MomentsRealm
+        else { return }
+
+        let format = DateFormatter()
+        format.dateFormat = "yyyy-MM-dd HH:mm"
+
+        let lastUpdateDate = momentsRealm.lastUpdatedDate.toStringWithHourMin()
+        guard let updateDate = Calendar.current.date(bySettingHour: 03, minute: 00, second: 0, of: Date())?.toStringWithHourMin(),
+              let startTime = format.date(from: updateDate),
+              let endTime = format.date(from: lastUpdateDate)
+        else { return }
+
+        var diffTime = Int(endTime.timeIntervalSince(startTime) / 3600)
         
-        // guard let momentsRealm = realm.objects(MomentsRealm.self).first as? MomentsRealm else { return }
-        let updateDate = Calendar.current.date(bySettingHour: 03, minute: 00, second: 0, of: Date())
-        print("MomentsRepo :: updateDate = \(updateDate), now = \(Date())")
-        /*
-        let
-        let offsetComps = Calendar.current.dateComponents([.year,.month,.day], from: startDate, to: Date())
-       
-       if case let (y?, m?, d?) = (offsetComps.year, offsetComps.month, offsetComps.day) {
-         print("\(y)년 \(m)월 \(d)일 만큼 차이남")
-       }
-        */
+        // 업데이트 시간 차이가 24시간 이상이면 업데이트 진행
+        if diffTime < 24 { return }
+
+        
         
         Observable.combineLatest(
             setNumberDiaryMomentsItem().compactMap { $0 },
@@ -74,6 +82,21 @@ public final class MomentsRepositoryImp: MomentsRepository {
         
         guard let realm = Realm.safeInit() else { return .just(nil) }
         let diaryArr = realm.objects(DiaryModelRealm.self).toArray()
+        var title: String = ""
+        var diaryUUID: String = ""
+        if diaryArr.count >= 109 {
+            guard let diary = diaryArr[safe: 100] else { return .just(nil) }
+            if diary.lastMomentsDate != nil { return .just(nil) }
+            title = "내가 100번째로 적은 메뉴얼"
+            diaryUUID = diary.uuid
+        } else if diaryArr.count >= 59 {
+            
+        } else if diaryArr.count >= 19 {
+            
+        } else if diaryArr.count >= 1 {
+            
+        }
+        
         for (index, diary) in diaryArr.enumerated() {
             if (index + 9) % 10 == 9 {
                 // 이미 모먼츠로 추천된 이력이 있으면 넘기기 (일회성이므로)

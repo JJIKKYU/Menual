@@ -515,7 +515,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
         switch writingType {
         case .writing:
-            let diaryModelRealm = DiaryModelRealm(uuid: NSUUID().uuidString,
+            let diaryModelRealm = DiaryModelRealm(
                                                   pageNum: 0,
                                                   title: title == defaultTitleText ? Date().toString() : title,
                                                   weather: weatherModel,
@@ -545,7 +545,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
             print("PressedCheckBtn! edit!")
             guard let editDiaryModel = editDiaryModel else { return }
             print("DiarWriting :: selectedOriginalImage = \(selectedOriginalImage)")
-            let diaryModelRealm = DiaryModelRealm(uuid: editDiaryModel.uuid,
+            let diaryModelRealm = DiaryModelRealm(
                                                   pageNum: editDiaryModel.pageNum,
                                                   title: title == defaultTitleText ? Date().toString() : title,
                                                   weather: weatherModel,
@@ -618,7 +618,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
             fixedTitle = Date().toString()
         }
         
-        let diaryModel = DiaryModelRealm(uuid: NSUUID().uuidString,
+        let diaryModel = DiaryModelRealm(
                                          pageNum: 0,
                                          title: fixedTitle,
                                          weather: weatherModel,
