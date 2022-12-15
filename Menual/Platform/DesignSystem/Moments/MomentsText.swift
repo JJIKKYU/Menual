@@ -27,6 +27,7 @@ class MomentsText: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.numberOfLines = 2
         $0.font = UIFont.AppTitle(.title_3)
+        $0.textColor = Colors.grey.g100
         $0.text = momentsTitle
         $0.adjustsFontSizeToFitWidth = false
     }

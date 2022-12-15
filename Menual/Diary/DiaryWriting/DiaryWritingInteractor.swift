@@ -11,10 +11,6 @@ import RealmSwift
 import RxRelay
 
 protocol DiaryWritingRouting: ViewableRouting {
-    // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
-    func attachBottomSheet(weatherModelOb: BehaviorRelay<WeatherModel?>, placeModelOb: BehaviorRelay<PlaceModel?>, bottomSheetType: MenualBottomSheetType)
-    func detachBottomSheet()
-    
     func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModelRealm?>, tempSaveResetRelay: BehaviorRelay<Bool>)
     func detachDiaryTempSave(isOnlyDetach: Bool)
 }
@@ -23,8 +19,8 @@ protocol DiaryWritingPresentable: Presentable {
     var listener: DiaryWritingPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     func pressedBackBtn()
-    func setWeatherView(model: WeatherModel)
-    func setPlaceView(model: PlaceModel)
+    func setWeatherView(model: WeatherModelRealm)
+    func setPlaceView(model: PlaceModelRealm)
     
     // 다이어리 수정 모드로 변경
     func setDiaryEditMode(diaryModel: DiaryModelRealm)
@@ -63,8 +59,8 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     private let dependency: DiaryWritingInteractorDependency
     private var disposebag: DisposeBag
     
-    private let weatherModelRelay = BehaviorRelay<WeatherModel?>(value: nil)
-    private let placeModelRelay = BehaviorRelay<PlaceModel?>(value: nil)
+    private let weatherModelRelay = BehaviorRelay<WeatherModelRealm?>(value: nil)
+    private let placeModelRelay = BehaviorRelay<PlaceModelRealm?>(value: nil)
     
     // 수정하기일 경우에는 내용을 세팅해야하기 때문에 릴레이에 작접 accept 해줌
     private let diaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
@@ -280,14 +276,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             }
     }
     
-    // MARK: - DiaryBottomSheet
-    func diaryBottomSheetPressedCloseBtn() {
-        print("diaryBottomSheetPressedCloseBtn")
-        router?.detachBottomSheet()
-    }
-    
     // MARK: - diaryTempSave
-    
     func pressedTempSaveBtn() {
         router?.attachDiaryTempSave(tempSaveDiaryModelRelay: tempSaveDiaryModelRelay,
                                     tempSaveResetRelay: tempSaveResetRelay

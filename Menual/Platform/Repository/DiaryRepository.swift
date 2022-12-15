@@ -367,20 +367,35 @@ public final class DiaryRepositoryImp: DiaryRepository {
         var section = Set<String>()
         let model = realm.objects(DiaryModelRealm.self)
             .filter { diary in
-                var isContainWeather: Bool = true
+                // 필터가 하나일 경우는 OR, 두 개 일 경우에는 AND로 체크하므로, 필터 체크 개수 계산
+                var checkedFilterCount: Int = 0
+                if weatherTypes.count != 0 {
+                    checkedFilterCount += 1
+                }
+                if placeTypes.count != 0 {
+                    checkedFilterCount += 1
+                }
+
+                var isContainWeather: Bool = false
                 if let weather = diary.weather?.weather {
                     isContainWeather = weatherTypes.contains(weather)
                 } else {
                     isContainWeather = false
                 }
                 
-                var isContainPlace: Bool = true
+                var isContainPlace: Bool = false
                 if let place = diary.place?.place {
                     isContainPlace = placeTypes.contains(place)
                 } else {
                     isContainPlace = false
                 }
-                
+
+                if checkedFilterCount == 2 {
+                    return diary.isDeleted == false && isContainWeather && isContainPlace
+                } else if checkedFilterCount == 1 {
+                    return diary.isDeleted == false && isContainWeather || isContainPlace
+                }
+
                 return diary.isDeleted == false && isContainWeather || isContainPlace
             }
             .sorted(by: ({ $0.createdAt > $1.createdAt }))

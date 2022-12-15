@@ -13,6 +13,7 @@ import SnapKit
 import Then
 import FirebaseAnalytics
 import RxViewController
+import RealmSwift
 
 enum TableCollectionViewTag: Int {
     case MomentsCollectionView = 0
@@ -24,6 +25,7 @@ protocol DiaryHomePresentableListener: AnyObject {
     func pressedMyPageBtn()
     func pressedWritingBtn()
     func pressedDiaryCell(diaryModel: DiaryModelRealm)
+    func pressedMomentsCell(momentsItem: MomentsItemRealm)
     func pressedMenualTitleBtn()
     func pressedFilterBtn()
     func pressedFilterResetBtn()
@@ -33,6 +35,7 @@ protocol DiaryHomePresentableListener: AnyObject {
     // var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var diaryDictionary: [String: DiaryHomeSectionModel] { get }
+    var momentsRealm: MomentsRealm? { get }
 }
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
@@ -745,6 +748,11 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: - UICollectionView Delegate, Datasource
 extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+
+    func reloadCollectionView() {
+        print("DiaryHome :: reloadCollectionView!")
+        self.momentsCollectionView.reloadData()
+    }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
@@ -790,9 +798,26 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         switch collectionView.tag {
         // MomentsCollectionView
         case 0:
-            self.momentsEmptyView.isHidden = false
-            self.momentsCollectionViewPagination.numberOfPages = 0
-            return 0
+//            self.momentsEmptyView.isHidden = false
+//            self.momentsCollectionViewPagination.numberOfPages = 0
+//            return 0
+            
+            // 초기에는 Realm도 설정되어 있지 않으므로 따로 설정
+            guard let moments = listener?.momentsRealm else {
+                self.momentsEmptyView.isHidden = false
+                self.momentsCollectionViewPagination.numberOfPages = 0
+                return  0
+            }
+
+            if moments.itemsArr.count == 0 {
+                self.momentsEmptyView.isHidden = false
+                self.momentsCollectionViewPagination.numberOfPages = 0
+                return 0
+            } else {
+                self.momentsEmptyView.isHidden = true
+                self.momentsCollectionViewPagination.numberOfPages = moments.itemsArr.count
+                return moments.itemsArr.count
+            }
             /*
             if listener?.diaryMonthSetRelay.value.count ?? 0 == 0 {
                 self.momentsEmptyView.isHidden = false
@@ -815,9 +840,10 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         // MomentsCollectionView
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MomentsCell", for: indexPath) as? MomentsCell else { return UICollectionViewCell() }
+            guard let data = listener?.momentsRealm?.itemsArr[safe: indexPath.row] else { return UICollectionViewCell() }
             
-            cell.tagTitle = "TEXT AREA"
-            cell.momentsTitle = "타이틀은 최대 20자를 작성할 수 있습니다. 그 이상일 경우 우오아우아"
+            cell.tagTitle = "MENUAL TIPS"
+            cell.momentsTitle = data.title
             
             return cell
         default:
@@ -843,6 +869,8 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         // MomentsCollectionView
         case 0:
             print("MomentsCollectionView Selected!")
+            guard let data = listener?.momentsRealm?.itemsArr[safe: indexPath.row] else { return }
+            listener?.pressedMomentsCell(momentsItem: data)
             
         default:
             return

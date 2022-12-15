@@ -9,7 +9,7 @@ import RIBs
 import RxSwift
 import RxRelay
 
-protocol DiaryWritingInteractable: Interactable, DiaryBottomSheetListener, DiaryTempSaveListener {
+protocol DiaryWritingInteractable: Interactable, DiaryTempSaveListener {
     var router: DiaryWritingRouting? { get set }
     var listener: DiaryWritingListener? { get set }
 }
@@ -22,9 +22,6 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
     
     private var navigationControllable: NavigationControllerable?
     
-    private let diaryBottomSheetBuildable: DiaryBottomSheetBuildable
-    private var diaryBottomSheetRouting: Routing?
-    
     private let diaryTempSaveBuildable: DiaryTempSaveBuildable
     private var diaryTempSaveRouting: Routing?
 
@@ -32,10 +29,8 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
     init(
         interactor: DiaryWritingInteractable,
         viewController: DiaryWritingViewControllable,
-        diaryBottomSheetBuildable: DiaryBottomSheetBuildable,
         diaryTempSaveBuildable: DiaryTempSaveBuildable
     ) {
-        self.diaryBottomSheetBuildable = diaryBottomSheetBuildable
         self.diaryTempSaveBuildable = diaryTempSaveBuildable
         
         super.init(interactor: interactor, viewController: viewController)
@@ -59,39 +54,6 @@ final class DiaryWritingRouter: ViewableRouter<DiaryWritingInteractable, DiaryWr
         
         viewController.dismiss(completion: nil)
         self.navigationControllable = nil
-    }
-    
-    // MARK: - DiaryBottomSheet
-    
-    func attachBottomSheet(weatherModelOb: BehaviorRelay<WeatherModel?>, placeModelOb: BehaviorRelay<PlaceModel?>, bottomSheetType: MenualBottomSheetType) {
-        if diaryBottomSheetRouting != nil {
-            return
-        }
-        
-        let router = diaryBottomSheetBuildable.build(
-            withListener: interactor,
-            bottomSheetType: bottomSheetType,
-            menuComponentRelay: nil
-        )
-         viewController.present(router.viewControllable, animated: false, completion: nil)
-        router.viewControllable.uiviewController.modalPresentationStyle = .overFullScreen
-        // presentInsideNavigation(router.viewControllable)
-        
-        diaryBottomSheetRouting = router
-        attachChild(router)
-    }
-    
-    func detachBottomSheet() {
-        guard let router = diaryBottomSheetRouting,
-              let diaryBottomSheetRouter = diaryBottomSheetRouting as? DiaryBottomSheetRouting else {
-            return
-        }
-        print("detachBottomSheet")
-        
-        // CustomUI Transition 보장
-        diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
-        self.detachChild(router)
-        self.diaryBottomSheetRouting = nil
     }
     
     // MARK: - DiaryTempSave

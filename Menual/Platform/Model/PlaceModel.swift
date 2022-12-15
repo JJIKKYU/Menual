@@ -39,28 +39,7 @@ public enum Place: String, PersistableEnum {
     }
 }
 
-// MARK: - PlaceModel
-public struct PlaceModel {
-    let uuid: String
-    let place: Place?
-    let detailText: String
-    
-    init(uuid: String, place: Place?, detailText: String) {
-        self.uuid = uuid
-        self.place = place
-        self.detailText = detailText
-    }
-    
-    init(_ realm: PlaceModelRealm) {
-        self.uuid = ""
-        self.place = realm.place
-        self.detailText = realm.detailText
-    }
-}
-
 class PlaceModelRealm: EmbeddedObject {
-    // @Persisted(primaryKey: true) var _id: ObjectId
-    // @Persisted var uuid: String = ""
     @Persisted var place: Place?
     @Persisted var detailText: String = ""
     
@@ -68,11 +47,5 @@ class PlaceModelRealm: EmbeddedObject {
         self.init()
         self.place = place
         self.detailText = detailText
-    }
-    
-    convenience init(_ placeModel: PlaceModel) {
-        self.init()
-        self.place = placeModel.place
-        self.detailText = placeModel.detailText
     }
 }

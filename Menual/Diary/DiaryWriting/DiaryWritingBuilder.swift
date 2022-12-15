@@ -12,7 +12,7 @@ protocol DiaryWritingDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
 }
 
-final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWritingInteractorDependency, DiaryBottomSheetDependency, DiaryTempSaveDependency {
+final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWritingInteractorDependency, DiaryTempSaveDependency {
     
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
@@ -43,9 +43,7 @@ final class DiaryWritingBuilder: Builder<DiaryWritingDependency>, DiaryWritingBu
         page: Int
     ) -> DiaryWritingRouting {
         let component = DiaryWritingComponent(dependency: dependency)
-        
-        let diaryBottomSheetBuildable = DiaryBottomSheetBuilder(dependency: component)
-        
+
         let diaryTempSaveBuildable = DiaryTempSaveBuilder(dependency: component)
         
         let viewController = DiaryWritingViewController()
@@ -59,7 +57,6 @@ final class DiaryWritingBuilder: Builder<DiaryWritingDependency>, DiaryWritingBu
         return DiaryWritingRouter(
             interactor: interactor,
             viewController: viewController,
-            diaryBottomSheetBuildable: diaryBottomSheetBuildable,
             diaryTempSaveBuildable: diaryTempSaveBuildable
         )
     }

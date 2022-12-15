@@ -767,7 +767,7 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         self.selectedWeatherType = tempSaveModel.weather
     }
     
-    func setWeatherView(model: WeatherModel) {
+    func setWeatherView(model: WeatherModelRealm) {
         // 날씨를 선택하지 않았으면 뷰를 변경할 필요 없음
         guard let weather = model.weather else {
             return
@@ -777,7 +777,7 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         weatherSelectView.selectedWeatherType = weather
     }
 
-    func setPlaceView(model: PlaceModel) {
+    func setPlaceView(model: PlaceModelRealm) {
         guard let place = model.place else {
             return
         }

@@ -113,8 +113,7 @@ final class ProfilePasswordInteractor: PresentableInteractor<ProfilePasswordPres
             print("ProfilePassword :: password \(password)")
         }
         
-        let passwordModel = PasswordModelRealm(uuid: UUID().uuidString,
-                                               password: password,
+        let passwordModel = PasswordModelRealm(password: password,
                                                isEnabled: true
         )
         

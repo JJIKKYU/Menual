@@ -33,6 +33,7 @@ protocol DiaryHomePresentable: Presentable {
     var isShowToastDiaryResultRelay: BehaviorRelay<DiaryHomeViewController.ShowToastType?> { get }
     
     func reloadTableView()
+    func reloadCollectionView()
     func scrollToDateFilter(yearDateFormatString: String)
 
     func reloadTableViewRow(section: Int, row: Int)
@@ -68,10 +69,14 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     let filteredWeatherArrRelay = BehaviorRelay<[Weather]>(value: [])
     let filteredPlaceArrRelay = BehaviorRelay<[Place]>(value: [])
     
-    var notificationToken: NotificationToken?
+    var notificationToken: NotificationToken? // DiaryModelRealm Noti
+    var notificationTokenMoments: NotificationToken? // MomentsRealm Noti
     
     var diaryRealmArr: Results<DiaryModelRealm>?
     var diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
+    
+    // Moments
+    var momentsRealm: MomentsRealm?
 
     init(
         presenter: DiaryHomePresentable,
@@ -80,7 +85,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         self.dependency = dependency
         self.disposebag = DisposeBag()
         self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
-        // self.filteredDiaryMonthSetRelay = dependency.diaryRepository.filteredMonthDic
         self.filteredDiaryDic = dependency.diaryRepository.filteredDiaryDic
         super.init(presenter: presenter)
         presenter.listener = self
@@ -89,13 +93,12 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
     override func didBecomeActive() {
         super.didBecomeActive()
-        // TODO: Implement business logic here.
         bind()
+        bindMoments()
     }
 
     override func willResignActive() {
         super.willResignActive()
-        // TODO: Pause any business logic.
     }
     
     func bind() {
@@ -226,6 +229,26 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             }
     }
     
+    func bindMoments() {
+        guard let realm = Realm.safeInit() else { return }
+        notificationTokenMoments = realm.objects(MomentsRealm.self)
+            .observe({ [weak self] changes in
+                guard let self = self else { return }
+                switch changes {
+                case .initial(let model):
+                    print("DiaryHome :: Moments :: init! = \(model)")
+                    self.momentsRealm = model.toArray().first
+                    self.presenter.reloadCollectionView()
+                    
+                case .update(let model, let deletions, let insertions, let modifications):
+                    break
+                    
+                case .error(let error):
+                    print("DiaryHome :: MomentsError! = \(error)")
+                }
+            })
+    }
+    
     // AdaptivePresentationControllerDelegate, Drag로 뷰를 Dismiss 시킬경우에 호출됨
     func presentationControllerDidDismiss() {
         print("!!")
@@ -254,16 +277,26 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     }
     
     // MARK: - Moments 관련 함수
+    func pressedMomentsCell(momentsItem: MomentsItemRealm) {
+        guard let realm = Realm.safeInit() else { return }
+        guard let diaryModel = realm.objects(DiaryModelRealm.self).filter ({ $0.uuid == momentsItem.diaryUUID }).first else { return }
+
+        router?.attachDiaryDetail(model: diaryModel)
+    }
+
+    // 페이즈1에서는 미사용
     func pressedMomentsTitleBtn() {
         print("DiaryHomeInteractor :: pressedMomentsTitleBtn!")
         router?.attachDiaryMoments()
     }
-    
+
+    // 페이즈1에서는 미사용
     func pressedMomentsMoreBtn() {
         print("DiaryHomeInteractor :: pressedMomentsMoreBtn!")
         router?.attachDiaryMoments()
     }
-    
+
+    // 페이즈1에서는 미사용
     func diaryMomentsPressedBackBtn() {
         print("DiaryHomeInteractor :: diaryMomentsPressedBackBtn!")
         router?.detachDiaryMoments()
@@ -286,39 +319,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     // MARK: - Diary detaill 관련 함수
     func pressedDiaryCell(diaryModel: DiaryModelRealm) {
         router?.attachDiaryDetail(model: diaryModel)
-
-//        var updateModel: DiaryModel?
-        
-//        if isFiltered {
-//            print("필터 클릭하면 작동되도록 하자")
-//
-//        } else {
-//            guard let model = dependency.diaryRepository
-//                .diaryString.value[safe: index] else { return }
-//
-//            updateModel = DiaryModel(uuid: model.uuid,
-//                                         pageNum: model.pageNum,
-//                                         title: model.title,
-//                                         weather: model.weather,
-//                                         place: model.place,
-//                                         description: model.description,
-//                                         image: model.image,
-//                                         readCount: model.readCount + 1,
-//                                         createdAt: model.createdAt,
-//                                         replies: model.replies,
-//                                         isDeleted: model.isDeleted,
-//                                         isHide: model.isHide
-//            )
-//        }
-//
-//        guard let updateModel = updateModel else {
-//            return
-//        }
-//
-//        dependency.diaryRepository
-//            .updateDiary(info: updateModel)
-//        router?.attachDiaryDetail(model: updateModel)
     }
+
     //ㅅㅏㄹㅏㅇㅎㅐ i luv u ㅅㅏㄹㅏㅇㅅㅏㄹㅏㅇㅎㅐ ㅅㅏㄹ6ㅎㅐ jjikkyu
     //22.12.12 월요일 진균이가 아직도 위에 사랑해 주석을 제거하지 않아서 기분이 좋은 수진이어따!
     func diaryDetailPressedBackBtn(isOnlyDetach: Bool) {

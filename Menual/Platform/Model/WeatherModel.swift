@@ -39,28 +39,7 @@ public enum Weather: String, PersistableEnum {
     }
 }
 
-// MARK: - WeatherModel
-public struct WeatherModel {
-    let uuid: String
-    let weather: Weather?
-    let detailText: String
-    
-    init(uuid: String, weather: Weather?, detailText: String) {
-        self.uuid = uuid
-        self.weather = weather
-        self.detailText = detailText
-    }
-    
-    init(_ realm: WeatherModelRealm) {
-        self.uuid = ""
-        self.weather = realm.weather
-        self.detailText = realm.detailText
-    }
-}
-
 class WeatherModelRealm: EmbeddedObject {
-    // @Persisted(primaryKey: true) var _id: ObjectId
-    // @Persisted var uuid: String = ""
     @Persisted var weather: Weather?
     @Persisted var detailText: String = ""
     
@@ -68,11 +47,5 @@ class WeatherModelRealm: EmbeddedObject {
         self.init()
         self.weather = weather
         self.detailText = detailText
-    }
-    
-    convenience init(_ weatherModel: WeatherModel) {
-        self.init()
-        self.weather = weatherModel.weather
-        self.detailText = weatherModel.detailText
     }
 }

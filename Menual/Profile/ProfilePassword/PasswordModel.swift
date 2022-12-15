@@ -11,13 +11,14 @@ import RealmSwift
 // MARK: - Realm에 저장하기위한 Class
 public class PasswordModelRealm: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var uuid: String
+    var uuid: String {
+        get { _id.stringValue }
+    }
     @Persisted var password: Int
     @Persisted var isEnabled: Bool
     
-    convenience init(uuid: String, password: Int, isEnabled: Bool) {
+    convenience init(password: Int, isEnabled: Bool) {
         self.init()
-        self.uuid = uuid
         self.password = password
         self.isEnabled = isEnabled
     }
