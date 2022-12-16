@@ -241,6 +241,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     self.presenter.reloadCollectionView()
                     
                 case .update(let model, let deletions, let insertions, let modifications):
+                    print("DiaryHome :: Moments! update! = \(model)")
                     break
                     
                 case .error(let error):

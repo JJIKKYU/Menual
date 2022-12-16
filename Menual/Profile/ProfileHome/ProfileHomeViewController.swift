@@ -225,7 +225,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 listener?.pressedProfilePasswordCell()
             } else if data.title == "메뉴얼 가이드 보기" {
                 //사파리로 링크열기
-                if let url = URL(string: "http://naver.com") {
+                if let url = URL(string: "https://hill-license-fb3.notion.site/589e7606d7f642378d11a94ea0344cfd") {
                     UIApplication.shared.open(url, options: [:])
                 }
             }

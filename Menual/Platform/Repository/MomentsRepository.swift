@@ -57,21 +57,27 @@ public final class MomentsRepositoryImp: MomentsRepository {
 
         
         print("MomentsRepo :: fetch! - 2")
-        Observable.combineLatest(
-            setNumberDiaryMomentsItem().compactMap { $0 },
-            setSpecialDayMomentsItem().compactMap { $0 }
+        Observable.zip(
+            setNumberDiaryMomentsItem(),
+            setSpecialDayMomentsItem()
         )
+//        setNumberDiaryMomentsItem()
+//            .compactMap { $0 }
         .subscribe(onNext: { [weak self] numberDiary, specialDiary in
             guard let self = self else { return }
-            
-            print("MomentsRepo :: numberDiary = \(numberDiary), specialDiary = \(specialDiary)")
-            // 초기화
-            realm.safeWrite {
-                realm.delete(momentsRealm.items)
+
+            print("MomentsRepo :: numberDiary = \(numberDiary), = \(specialDiary)")
+            var items: [MomentsItemRealm] = []
+            if let numberDiary = numberDiary {
+                items.append(numberDiary)
             }
             
+            if let specialDiary = specialDiary {
+                items.append(specialDiary)
+            }
             realm.safeWrite {
-                momentsRealm.items.append(numberDiary)
+                realm.delete(momentsRealm.items)
+                momentsRealm.items.append(objectsIn: items)
             }
         })
         .disposed(by: disposeBag)
@@ -122,30 +128,36 @@ public final class MomentsRepositoryImp: MomentsRepository {
 
         print("MomentsRepo :: diaryUUID = \(diaryUUID), title = \(title)")
         // 찾은 메뉴얼이 있을 경우에는 lastMomentsDate에, 추천된 이력이 있음을 체크
-//        if let findDiary = findDiary {
-//            realm.safeWrite {
-//                findDiary.lastMomentsDate = Date()
-//            }
-//        }
+        if let findDiary = findDiary {
+            realm.safeWrite {
+                findDiary.lastMomentsDate = Date()
+            }
+        }
 
-        return .just(MomentsItemRealm(order: 0,
-                                      title: title,
-                                      uuid: UUID().uuidString,
-                                      diaryUUID: diaryUUID,
-                                      userChecked: false,
-                                      createdAt: Date())
-        )
+        if findDiary == nil {
+            print("MomentsRepo :: findDiary == nil")
+            return .just(nil)
+        } else {
+            print("MomentsRepo :: findDiary != nil")
+            return .just(MomentsItemRealm(order: 0,
+                                          title: title,
+                                          uuid: UUID().uuidString,
+                                          diaryUUID: diaryUUID,
+                                          userChecked: false,
+                                          createdAt: Date())
+            )
+        }
     }
     
     // 특정 년도, 특정 날짜에 작성한 메뉴얼
     func setSpecialDayMomentsItem() -> Observable<MomentsItemRealm?> {
-        return .just(MomentsItemRealm(order: 0,
-                                      title: "내가 크리스마스에 적은 메뉴얼",
-                                      uuid: UUID().uuidString,
-                                      diaryUUID: "TESTUUID",
-                                      userChecked: false,
-                                      createdAt: Date())
-        )
+//        return .just(MomentsItemRealm(order: 0,
+//                                      title: "내가 크리스마스에 적은 메뉴얼",
+//                                      uuid: UUID().uuidString,
+//                                      diaryUUID: "TESTUUID",
+//                                      userChecked: false,
+//                                      createdAt: Date())
+//        )
 
         guard let realm = Realm.safeInit() else { return .just(nil) }
         let diaryArr = realm.objects(DiaryModelRealm.self).toArray()

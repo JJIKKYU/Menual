@@ -794,42 +794,28 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("DiaryHome :: collectionView numberOfItemsInSection! = \(listener?.lastPageNumRelay.value)")
         switch collectionView.tag {
         // MomentsCollectionView
         case 0:
-//            self.momentsEmptyView.isHidden = false
-//            self.momentsCollectionViewPagination.numberOfPages = 0
-//            return 0
-            
             // 초기에는 Realm도 설정되어 있지 않으므로 따로 설정
-            guard let moments = listener?.momentsRealm else {
+            guard let momentsCount = listener?.momentsRealm?.itemsArr.count else {
+                print("DiaryHome :: 여기!?")
                 self.momentsEmptyView.isHidden = false
                 self.momentsCollectionViewPagination.numberOfPages = 0
                 return  0
             }
+            print("DiaryHome :: momentsCount = \(momentsCount)")
 
-            if moments.itemsArr.count == 0 {
+            if momentsCount == 0 {
                 self.momentsEmptyView.isHidden = false
                 self.momentsCollectionViewPagination.numberOfPages = 0
                 return 0
             } else {
                 self.momentsEmptyView.isHidden = true
-                self.momentsCollectionViewPagination.numberOfPages = moments.itemsArr.count
-                return moments.itemsArr.count
+                self.momentsCollectionViewPagination.numberOfPages = momentsCount
+                return momentsCount
             }
-            /*
-            if listener?.diaryMonthSetRelay.value.count ?? 0 == 0 {
-                self.momentsEmptyView.isHidden = false
-                self.momentsCollectionViewPagination.numberOfPages = 0
-                return 0
-            } else {
-                let momentsCollectionViewCount: Int = 5
-                self.momentsCollectionViewPagination.numberOfPages = momentsCollectionViewCount
-                return momentsCollectionViewCount
-            }
-             */
-        
+
         default:
             return 5
         }
