@@ -856,7 +856,7 @@ extension DiaryDetailViewController: DialogDelegate {
     func action(titleText: String) {
         print("DiaryDetail :: action!")
         switch titleText {
-        case "정말 해제허싈?":
+        case "숨김을 해제 하시겠어요?":
             listener?.hideDiary()
             
         case "겹쓰기를 취소하고 돌아가시겠어요?":
@@ -883,7 +883,7 @@ extension DiaryDetailViewController: DialogDelegate {
     func exit(titleText: String) {
         print("DiaryDetail :: exit")
         switch titleText {
-        case "정말 해제허싈?":
+        case "숨김을 해제 하시겠어요?":
             break
             
         case "겹쓰기를 취소하고 돌아가시겠어요?":
