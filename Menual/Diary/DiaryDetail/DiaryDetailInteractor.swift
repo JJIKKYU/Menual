@@ -101,8 +101,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         super.willResignActive()
         // TODO: Pause any business logic.
         print("DiaryDetail :: WillResignActive")
-        self.replyNotificationToken = nil
-        self.notificationToken = nil
+        notificationToken?.invalidate()
+        replyNotificationToken?.invalidate()
     }
     
     func setDiaryModelRealmOb() {
@@ -112,12 +112,19 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         if let imageData: Data = diaryModel.originalImage {
             self.imageDataRelay.accept(imageData)
         }
+        
+        print("DiaryDetail :: diary = \(diary)")
 
         self.notificationToken = diary?.observe({ [weak self] changes in
+            print("DiaryDetail :: changes = \(changes)")
             guard let self = self else { return }
             switch changes {
             case .change(let model, let proertyChanges):
                 print("DiaryDetail :: model = \(model as? DiaryModelRealm)")
+                if let imageData: Data = self.diaryModel?.originalImage {
+                    self.imageDataRelay.accept(imageData)
+                }
+
                 self.presenter.loadDiaryDetail(model: self.diaryModel)
             case .error(let error):
                 fatalError("\(error)")

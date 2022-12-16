@@ -19,7 +19,7 @@ public protocol DiaryRepository {
 
     func fetch()
     func addDiary(info: DiaryModelRealm)
-    func updateDiary(info: DiaryModelRealm)
+    func updateDiary(info: DiaryModelRealm, uuid: String)
     func hideDiary(isHide: Bool, info: DiaryModelRealm)
     func removeAllDiary()
     func deleteDiary(info: DiaryModelRealm)
@@ -200,16 +200,18 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
     }
 
-    public func updateDiary(info: DiaryModelRealm) {
-        print("update Diary!")
+    public func updateDiary(info: DiaryModelRealm, uuid: String) {
+        print("Repo :: update Diary!")
         // Realm에서 DiaryModelRealm Array를 받아온다.
         guard let realm = Realm.safeInit() else {
             return
         }
         
-        guard let data = realm.objects(DiaryModelRealm.self).filter({ $0.uuid == info.uuid }).first
+        guard let data = realm.objects(DiaryModelRealm.self).filter({ $0.uuid == uuid }).first
         else { return }
         
+        print("Repo :: update Diary! - 2")
+
         realm.safeWrite {
             data.readCount = info.readCount + 1
             if data.title != info.title {
@@ -345,7 +347,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         
-        guard let diary = realm.objects(DiaryModelRealm.self).filter("uuid == %@", info.uuid).first else { return }
+        guard let diary = realm.objects(DiaryModelRealm.self).filter ({ $0.uuid == info.uuid}).first else { return }
         let diarySearchModel = DiarySearchModelRealm(diaryUuid: info.uuid,
                                                      diary: diary,
                                                      createdAt: Date(),

@@ -209,6 +209,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                             print("DiaryHome :: delete! = \(self.diaryDictionary)")
                             self.presenter.deleteTableViewRow(section: sectionIndex, row: row)
                             
+                            
                             if let diaryCount: Int = self.diaryDictionary[sectionName]?.diaries.count,
                                diaryCount == 0 {
                                 print("DiaryHome :: 지워야할 것 같은걸")
@@ -337,7 +338,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
     // MARK: - Menual Title Btn을 눌렀을때 Action
     func pressedMenualTitleBtn() {
-        router?.attachDesignSystem()
+        // router?.attachDesignSystem()
     }
     
     func designSystemPressedBackBtn(isOnlyDetach: Bool) {

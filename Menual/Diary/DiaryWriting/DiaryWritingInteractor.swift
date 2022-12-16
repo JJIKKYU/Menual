@@ -155,7 +155,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                     print("DiaryWriting :: 모두 저장이 완료되었습니다.")
                     self.listener?.diaryWritingPressedBackBtn(isOnlyDetach: false, isNeedToast: true, mode: .edit)
                     self.dependency.diaryRepository
-                                .updateDiary(info: newDiary)
+                        .updateDiary(info: newDiary, uuid: self.diaryModelRelay.value?.uuid ?? "")
                 }
                 else if croppedImageIsSaved || originalImageIsSaved {
                     print("DiaryWriting :: 둘 중 하나가 저장이 안되었습니다.")

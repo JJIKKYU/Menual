@@ -632,9 +632,9 @@ extension DiaryDetailViewController {
         print("DiaryDetail :: 숨김 해제하기 버튼 클릭!")
         show(size: .small,
              buttonType: .twoBtn,
-             titleText: "정말 해제허싈?",
-             cancelButtonText: "노",
-             confirmButtonText: "숨김 해제하기"
+             titleText: "숨김을 해제 하시겠어요?",
+             cancelButtonText: "취소",
+             confirmButtonText: "확인"
         )
         
     }
@@ -655,9 +655,9 @@ extension DiaryDetailViewController {
         
         show(size: .small,
              buttonType: .twoBtn,
-             titleText: "겹쓰기를 삭제할까요?",
-             cancelButtonText: "아녀",
-             confirmButtonText: "넹"
+             titleText: "겹쓰기를 삭제 하시겠어요?",
+             cancelButtonText: "취소",
+             confirmButtonText: "확인"
         )
     }
 }

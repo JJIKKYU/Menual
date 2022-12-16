@@ -63,7 +63,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
         var diffTime = Int(endTime.timeIntervalSince(startTime) / 3600)
         
         // 업데이트 시간 차이가 24시간 이상이면 업데이트 진행
-        // if diffTime < 24 { return }
+        if diffTime < 24 { return }
 
         
         print("MomentsRepo :: fetch! - 2")
