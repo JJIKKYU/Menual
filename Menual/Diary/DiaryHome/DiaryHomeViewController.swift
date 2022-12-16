@@ -393,6 +393,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 self.setFilterStatus(isFiltered: isFiltered)
                 if isFiltered {
                     self.setEmptyView(isEnabled: false)
+                } else {
+                    if self.myMenualTitleView.pageNumber == 0 {
+                        self.setEmptyView(isEnabled: true)
+                    }
                 }
             })
             .disposed(by: disposeBag)

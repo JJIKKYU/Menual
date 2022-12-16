@@ -412,8 +412,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         presenter.isFilteredRelay.accept(false)
         // filteredDateRelay.accept(nil)
         filteredDiaryCountRelay.accept(-1)
-        dependency.diaryRepository
-            .fetch()
+        self.presenter.reloadTableView()
     }
     
     // DateFilter
