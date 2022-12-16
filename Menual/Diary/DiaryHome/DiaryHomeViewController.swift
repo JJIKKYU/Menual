@@ -716,7 +716,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         else { return }
 
         // print("select! model = \(cell.testModel)")
-        
+        Analytics.logEvent("Home_Cell_MenualDetail", parameters: nil)
         listener?.pressedDiaryCell(diaryModel: data)
     }
     //reloadJJIKKYU() -> JJIKKYU Love YangSSuz <3 진균이는 내가 아는 사람중에 제일 멋져!!! ~v~
@@ -856,6 +856,7 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         case 0:
             print("MomentsCollectionView Selected!")
             guard let data = listener?.momentsRealm?.itemsArr[safe: indexPath.row] else { return }
+            Analytics.logEvent("Home_Cell_Moments", parameters: nil)
             listener?.pressedMomentsCell(momentsItem: data)
             
         default:
