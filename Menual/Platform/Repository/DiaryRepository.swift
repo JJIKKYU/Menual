@@ -49,7 +49,7 @@ public protocol DiaryRepository {
     // Password 로직
     func fetchPassword()
     func addPassword(model: PasswordModelRealm)
-    func updatePassword(model: PasswordModelRealm)
+    func updatePassword(password: Int, isEnabled: Bool)
     
     // Reminder 로직
     func fetchReminder()
@@ -507,15 +507,15 @@ public final class DiaryRepositoryImp: DiaryRepository {
         print("diaryRepo :: addPassword! - 1")
     
         realm.safeWrite {
-             realm.add(model)
-    
+            realm.delete(realm.objects(PasswordModelRealm.self))
+            realm.add(model)
         }
         
         print("diaryRepo :: addPassword! - 2")
         fetchPassword()
     }
     
-    public func updatePassword(model: PasswordModelRealm) {
+    public func updatePassword(password: Int, isEnabled: Bool) {
         guard let realm = Realm.safeInit() else {
             return
         }
@@ -524,8 +524,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let data = realm.objects(PasswordModelRealm.self).first else { return }
         
         realm.safeWrite {
-            data.password = model.password
-            data.isEnabled = model.isEnabled
+            data.password = password
+            data.isEnabled = isEnabled
         }
         
         print("diaryRepo :: updatePassword! - 2")
@@ -533,6 +533,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
         fetchPassword()
     }
     
+    
+    // MARK: - REMinder
     public func fetchReminder() {
         guard let realm = Realm.safeInit() else {
             return

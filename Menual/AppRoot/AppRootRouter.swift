@@ -131,7 +131,9 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
         
         let profilePasswordRouting = profilePassword.build(
             withListener: interactor,
-            isMainScreen: true
+            isMainScreen: true,
+            isPasswordChange: false,
+            isPaswwordDisabled: false
         )
         self.profilePasswordRouting = profilePasswordRouting
         attachChild(profilePasswordRouting)

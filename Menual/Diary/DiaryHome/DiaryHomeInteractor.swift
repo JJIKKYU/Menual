@@ -50,6 +50,7 @@ protocol DiaryHomeListener: AnyObject {
 
 protocol DiaryHomeInteractorDependency {
     var diaryRepository: DiaryRepository { get }
+    var momentsRepository: MomentsRepository { get }
 }
 
 final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, DiaryHomeInteractable, DiaryHomePresentableListener, AdaptivePresentationControllerDelegate {
@@ -282,6 +283,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         guard let realm = Realm.safeInit() else { return }
         guard let diaryModel = realm.objects(DiaryModelRealm.self).filter ({ $0.uuid == momentsItem.diaryUUID }).first else { return }
 
+        dependency.momentsRepository.visitMoments(momentsItem: momentsItem)
         router?.attachDiaryDetail(model: diaryModel)
     }
 

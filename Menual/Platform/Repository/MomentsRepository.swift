@@ -13,6 +13,7 @@ import RxRealm
 
 public protocol MomentsRepository {
     func fetch()
+    func visitMoments(momentsItem: MomentsItemRealm)
 }
 
 public final class MomentsRepositoryImp: MomentsRepository {
@@ -32,6 +33,15 @@ public final class MomentsRepositoryImp: MomentsRepository {
             }
         } else {
             print("MomentsRepo :: momentsRealm이 세팅되어 있습니다.")
+        }
+    }
+    
+    // 유저의 Moments 방문 유무 체크
+    public func visitMoments(momentsItem: MomentsItemRealm) {
+        guard let realm = Realm.safeInit() else { return }
+        
+        realm.safeWrite {
+            momentsItem.userChecked = true
         }
     }
     

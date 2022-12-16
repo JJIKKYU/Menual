@@ -65,7 +65,7 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
     }
     
     // MARK: - ProfilePassword
-    func attachProfilePassword() {
+    func attachProfilePassword(isPasswordChange: Bool, isPaswwordDisabled: Bool) {
         print("ProfileHome :: attachProfilePassword!")
         if profilePasswordRouting != nil {
             return
@@ -73,7 +73,9 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
         
         let router = profilePasswordBuildable.build(
             withListener: interactor,
-            isMainScreen: false
+            isMainScreen: false,
+            isPasswordChange: isPasswordChange,
+            isPaswwordDisabled: isPaswwordDisabled
         )
         // viewController.pushViewController(router.viewControllable, animated: true)
         presentInsideNavigation(router.viewControllable)

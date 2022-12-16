@@ -21,6 +21,9 @@ protocol ProfilePasswordPresentableListener: AnyObject {
     var userTypedPasswordRelay: BehaviorRelay<[Int]> { get }
     var userTypedPasswordCurrectRelay: BehaviorRelay<Bool?> { get }
     var isMainScreen: BehaviorRelay<Bool> { get }
+    var isPasswordChange: Bool { get }
+    var isPaswwordDisabled: Bool { get }
+    func checkPassword(passwordArr: [Int]) -> Bool
 }
 
 final class ProfilePasswordViewController: UIViewController, ProfilePasswordPresentable, ProfilePasswordViewControllable {
@@ -58,6 +61,14 @@ final class ProfilePasswordViewController: UIViewController, ProfilePasswordPres
         view.backgroundColor = Colors.background
         setViews()
         bind()
+
+        if listener?.isPasswordChange ?? false {
+            passwordView.type = .check
+            passwordView.screenType = .change
+        } else if listener?.isPaswwordDisabled ?? false {
+            passwordView.type = .check
+            passwordView.screenType = .change
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -143,38 +154,14 @@ extension ProfilePasswordViewController: NumberPadDelegate {
         if passwordView.numberArr.count == 4 { return }
         passwordView.numberArr.append(number)
         
-        guard let isMainScreen = listener?.isMainScreen.value else { return }
-        
-        if !isMainScreen {
-            print("ProfilePassword :: isMainScreen = \(isMainScreen)")
-            if passwordView.type == .error {
-                passwordView.type = .first
-            }
+        guard let isMainScreen = listener?.isMainScreen.value,
+              let isPasswordChange = listener?.isPasswordChange,
+              let isPaswwordDisabled = listener?.isPaswwordDisabled
+        else { return }
+        print("ProfilePassword :: isMainScreen = \(isMainScreen), isPasswordChange = \(isPasswordChange)")
 
-            // 4번째 입력했을 경우
-            if passwordView.numberArr.count == 4 && passwordView.type == .first {
-                print("ProfilePassword :: 입력한 비밀번호 = \(passwordView.numberArr)")
-                listener?.prevPassword = passwordView.numberArr
-                passwordView.numberArr = []
-                passwordView.type = .second
-            } else if passwordView.numberArr.count == 4 && passwordView.type == .second {
-                guard let prevPassword = listener?.prevPassword else { return }
-                let currentPassword = passwordView.numberArr
-                
-                for index in 0..<4 {
-                    if prevPassword[index] != currentPassword[index] {
-                        passwordView.numberArr = []
-                        passwordView.type = .error
-                        print("ProfilePassword :: 비밀번호가 올바르지 않습니다")
-                        return
-                    }
-                }
-
-                print("ProfilePassword :: 비밀번호가 올바르게 입력 되었습니다.")
-                listener?.setPassword(passwordArr: currentPassword)
-            }
-        } else {
-            print("ProfilePassword :: isMainScreen = \(isMainScreen)")
+        switch isMainScreen {
+        case true:
             if passwordView.type == .error {
                 passwordView.type = .first
             }
@@ -182,8 +169,106 @@ extension ProfilePasswordViewController: NumberPadDelegate {
             if passwordView.numberArr.count == 4 {
                 listener?.userTypedPasswordRelay.accept(passwordView.numberArr)
             }
+
+        case false:
+            print("ProfilePassword :: isMainScreen = \(isMainScreen)")
+            
+            // 패스워드 변경
+            switch isPasswordChange {
+            case true:
+                if passwordView.type == .error {
+                    passwordView.type = .check
+                }
+                
+                // 4번째 입력했을 경우
+                if passwordView.numberArr.count == 4 && passwordView.type == .check {
+                    print("ProfilePassword :: 입력한 비밀번호 = \(passwordView.numberArr)")
+                    guard let isCorrectPassword: Bool = listener?.checkPassword(passwordArr: passwordView.numberArr) else { return }
+                    
+                    switch isCorrectPassword {
+                    case true:
+                        passwordView.numberArr = []
+                        passwordView.type = .first
+                    case false:
+                        passwordView.numberArr = []
+                        passwordView.type = .error
+                    }
+                } else if passwordView.numberArr.count == 4 && passwordView.type == .first {
+                    print("ProfilePassword :: 입력한 비밀번호 = \(passwordView.numberArr)")
+                    listener?.prevPassword = passwordView.numberArr
+                    passwordView.numberArr = []
+                    passwordView.type = .second
+                }
+                else if passwordView.numberArr.count == 4 && passwordView.type == .second {
+                    guard let prevPassword = listener?.prevPassword else { return }
+                    let currentPassword = passwordView.numberArr
+                    
+                    for index in 0..<4 {
+                        if prevPassword[index] != currentPassword[index] {
+                            passwordView.numberArr = []
+                            passwordView.type = .error
+                            print("ProfilePassword :: 비밀번호가 올바르지 않습니다")
+                            return
+                        }
+                    }
+
+                    print("ProfilePassword :: 비밀번호가 올바르게 입력 되었습니다.")
+                    listener?.setPassword(passwordArr: currentPassword)
+                }
+
+            case false:
+                switch isPaswwordDisabled {
+                // 비밀번호 비활성화
+                case true:
+                    if passwordView.type == .error {
+                        passwordView.type = .first
+                    }
+
+                    // 4번째 입력했을 경우
+                    if passwordView.numberArr.count == 4 && passwordView.type == .check {
+                        guard let isCorrectPassword: Bool = listener?.checkPassword(passwordArr: passwordView.numberArr) else { return }
+                        
+                        switch isCorrectPassword {
+                        case true:
+                            listener?.setPassword(passwordArr: passwordView.numberArr)
+                        case false:
+                            passwordView.numberArr = []
+                            passwordView.type = .error
+                        }
+                    }
+
+                // 비밀번호 최초설정
+                case false:
+                    if passwordView.type == .error {
+                        passwordView.type = .first
+                    }
+
+                    // 4번째 입력했을 경우
+                    if passwordView.numberArr.count == 4 && passwordView.type == .first {
+                        print("ProfilePassword :: 입력한 비밀번호 = \(passwordView.numberArr)")
+                        listener?.prevPassword = passwordView.numberArr
+                        passwordView.numberArr = []
+                        passwordView.type = .second
+                    } else if passwordView.numberArr.count == 4 && passwordView.type == .second {
+                        guard let prevPassword = listener?.prevPassword else { return }
+                        let currentPassword = passwordView.numberArr
+                        
+                        for index in 0..<4 {
+                            if prevPassword[index] != currentPassword[index] {
+                                passwordView.numberArr = []
+                                passwordView.type = .error
+                                print("ProfilePassword :: 비밀번호가 올바르지 않습니다")
+                                return
+                            }
+                        }
+
+                        print("ProfilePassword :: 비밀번호가 올바르게 입력 되었습니다.")
+                        listener?.setPassword(passwordArr: currentPassword)
+                    }
+                }
+                
+
+            }
         }
-        
-        
     }
 }

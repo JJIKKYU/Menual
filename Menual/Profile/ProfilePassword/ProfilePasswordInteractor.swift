@@ -7,7 +7,9 @@
 
 import RIBs
 import RxSwift
+import RealmSwift
 import RxRelay
+import RxRealm
 
 protocol ProfilePasswordRouting: ViewableRouting {
 
@@ -30,7 +32,6 @@ protocol ProfilePasswordInteractorDependency {
 
 final class ProfilePasswordInteractor: PresentableInteractor<ProfilePasswordPresentable>, ProfilePasswordInteractable, ProfilePasswordPresentableListener {
     
-    
     weak var router: ProfilePasswordRouting?
     weak var listener: ProfilePasswordListener?
     private let disposeBag = DisposeBag()
@@ -38,6 +39,8 @@ final class ProfilePasswordInteractor: PresentableInteractor<ProfilePasswordPres
     var isMainScreen: BehaviorRelay<Bool>
     var userTypedPasswordRelay: BehaviorRelay<[Int]>
     var userTypedPasswordCurrectRelay: BehaviorRelay<Bool?>
+    var isPasswordChange: Bool
+    var isPaswwordDisabled: Bool
     
     var prevPassword: [Int] = []
     var currentPassword: [Int] = []
@@ -47,8 +50,12 @@ final class ProfilePasswordInteractor: PresentableInteractor<ProfilePasswordPres
     init(
         presenter: ProfilePasswordPresentable,
         dependency: ProfilePasswordInteractorDependency,
-        isMainScreen: Bool
+        isMainScreen: Bool,
+        isPasswordChange: Bool,
+        isPaswwordDisabled: Bool
     ) {
+        self.isPasswordChange = isPasswordChange
+        self.isPaswwordDisabled = isPaswwordDisabled
         self.userTypedPasswordRelay = BehaviorRelay<[Int]>(value: [])
         self.isMainScreen = BehaviorRelay<Bool>(value: false)
         self.userTypedPasswordCurrectRelay = BehaviorRelay<Bool?>(value: nil)
@@ -82,6 +89,14 @@ final class ProfilePasswordInteractor: PresentableInteractor<ProfilePasswordPres
                 if !self.isMainScreen.value { return }
                 print("ProfilePassword :: relay! = \(passwordArr)")
                 
+                switch self.checkPassword(passwordArr: passwordArr) {
+                case true:
+                    self.listener?.goDiaryHome()
+                case false:
+                    self.userTypedPasswordCurrectRelay.accept(false)
+                }
+                
+                /*
                 guard let realmPassword = self.dependency.diaryRepository.password.value else { return }
                 print("ProfilePassword :: 유저 비밀번호! = \(realmPassword.password)")
                 
@@ -99,10 +114,31 @@ final class ProfilePasswordInteractor: PresentableInteractor<ProfilePasswordPres
                 } else {
                     self.userTypedPasswordCurrectRelay.accept(false)
                 }
-                
+                */
                 
             })
             .disposed(by: disposeBag)
+    }
+    
+    func checkPassword(passwordArr: [Int]) -> Bool {
+        print("ProfilePassword :: checkPassword!")
+        guard let realmPassword = self.dependency.diaryRepository.password.value else { return false }
+        print("ProfilePassword :: 유저 비밀번호! = \(realmPassword.password)")
+        
+        var typedPassword: Int = 0
+        for (index, val) in passwordArr.enumerated() {
+            typedPassword += val * Int(pow(10.0, 3.0 - Double(index)))
+        }
+        print("ProfilePassword :: 입력한 비밀번호! = \(typedPassword)")
+
+        
+        if typedPassword == realmPassword.password {
+            print("ProfilePassword :: 됐다!")
+            return true
+            
+        } else {
+            return false
+        }
     }
     
     func setPassword(passwordArr: [Int]) {
@@ -118,14 +154,19 @@ final class ProfilePasswordInteractor: PresentableInteractor<ProfilePasswordPres
         )
         
         // 이미 password를 설정한 적이 있다면
-        if dependency.diaryRepository.password.value != nil {
+        if isPasswordChange {
             print("ProfilePassword :: 이미 패스워드를 설정하셨군요!")
             dependency.diaryRepository
-                .updatePassword(model: passwordModel)
+                .updatePassword(password: password, isEnabled: true)
         } else {
             print("ProfilePassword :: 처음 패스워드입니다!")
-            dependency.diaryRepository
-                .addPassword(model: passwordModel)
+            if isPaswwordDisabled {
+                dependency.diaryRepository
+                    .updatePassword(password: password, isEnabled: false)
+            } else {
+                dependency.diaryRepository
+                    .addPassword(model: passwordModel)
+            }
         }
         
         

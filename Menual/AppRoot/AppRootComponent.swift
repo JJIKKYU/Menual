@@ -31,6 +31,4 @@ extension AppRootComponent: DiaryHomeDependency,
                             ProfilePasswordDependency,
                             AppRootInteractorDependency
 {
-    
-    var registerHomeBaseController: ViewControllable { rootViewController.topViewControllable }
 }

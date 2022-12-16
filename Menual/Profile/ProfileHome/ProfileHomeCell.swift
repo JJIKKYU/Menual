@@ -46,6 +46,7 @@ class ProfileHomeCell: UITableViewCell {
         $0.addTarget(self, action: #selector(selectedSwitchBtn), for: .touchUpInside)
         $0.onTintColor = Colors.tint.main.v400
         $0.tintColor = Colors.grey.g700
+        $0.transform = CGAffineTransform(scaleX: 0.78, y: 0.78)
     }
     
     override func awakeFromNib() {

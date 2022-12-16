@@ -11,6 +11,7 @@ import RxRelay
 protocol DiaryHomeDependency: Dependency {
     // AppRootComponent에서 생성해서, 부모(AppRoot RIBs)로부터 받아옴
     var diaryRepository: DiaryRepository { get }
+    var momentsRepository: MomentsRepository { get }
 }
 
 final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency, DiaryBottomSheetDependency {
@@ -21,6 +22,7 @@ final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDepen
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
 
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    var momentsRepository: MomentsRepository { dependency.momentsRepository }
     
     override init(
         dependency: DiaryHomeDependency

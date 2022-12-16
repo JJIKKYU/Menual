@@ -13,7 +13,7 @@ import RealmSwift
 import SSZipArchive
 
 protocol ProfileHomeRouting: ViewableRouting {
-    func attachProfilePassword()
+    func attachProfilePassword(isPasswordChange: Bool, isPaswwordDisabled: Bool)
     func detachProfilePassword(isOnlyDetach: Bool)
     
     func attachProfileDeveloper()
@@ -54,12 +54,12 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     var profileHomeDataArr_Setting2: [ProfileHomeModel] {
         let arr: [ProfileHomeModel] = [
-            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "iCloud 동기화하기"),
-            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 백업하기"),
-            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 내보내기"),
+            // profileHomeModel(section: .SETTING2, type: .arrow, title: "iCloud 동기화하기"),
+            // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 백업하기"),
+            // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 내보내기"),
             ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자에게 문의하기"),
             ProfileHomeModel(section: .SETTING2, type: .arrow, title: "오픈 소스 라이브러리 보기"),
-            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자 도구"),
+            // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자 도구"),
         ]
 
         return arr
@@ -69,9 +69,9 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     weak var listener: ProfileHomeListener?
     private let disposeBag = DisposeBag()
     private let dependency: ProfileHomeInteractorDependency
+    
+    var passwordNotificationToken: NotificationToken? // passwordRealm Noti
 
-    // TODO: Add additional dependencies to constructor. Do not perform any logic
-    // in constructor.
     init(
         presenter: ProfileHomePresentable,
         dependency: ProfileHomeInteractorDependency
@@ -85,12 +85,13 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     override func didBecomeActive() {
         super.didBecomeActive()
         bind()
+        bindRealm()
         setEnabledPassword()
     }
 
     override func willResignActive() {
         super.willResignActive()
-        // TODO: Pause any business logic.
+        passwordNotificationToken = nil
     }
     
     // VC에서 뒤로가기 버튼을 눌렀을경우
@@ -100,14 +101,55 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     }
     
     func bind() {
-        dependency.diaryRepository
-            .password
-            .subscribe(onNext: { [weak self] passwordModel in
-                guard let self = self else { return }
-                let isEnabled: Bool = passwordModel?.isEnabled ?? false
-                self.isEnabledPasswordRelay.accept(isEnabled)
+//        dependency.diaryRepository
+//            .password
+//            .subscribe(onNext: { [weak self] passwordModel in
+//                guard let self = self else { return }
+//                let isEnabled: Bool = passwordModel?.isEnabled ?? false
+//                self.isEnabledPasswordRelay.accept(isEnabled)
+//            })
+//            .disposed(by: disposeBag)
+    }
+
+    func bindRealm() {
+        guard let realm = Realm.safeInit() else { return }
+        let passwordModel = realm.objects(PasswordModelRealm.self)
+        passwordNotificationToken = passwordModel
+            .observe({ changes in
+                switch changes {
+                case .initial(let model):
+                    // 패스워드가 있을 경우
+                    if let model = model.first {
+                        self.isEnabledPasswordRelay.accept(model.isEnabled)
+                    } else {
+                        self.isEnabledPasswordRelay.accept(false)
+                    }
+
+                case .update(let model, _, _, let modifications):
+                    print("ProfileHome :: modifications = \(modifications), \(model)")
+                    guard let model = model.first else { return }
+                    self.isEnabledPasswordRelay.accept(model.isEnabled)
+
+                case .error(let error):
+                    print("ProfileHome :: PasswordError! = \(error)")
+                }
             })
-            .disposed(by: disposeBag)
+//            .observe({ [weak self] changes in
+//                guard let self = self else { return }
+//                switch changes {
+//                case .change(let model, let propertyChanges):
+//                    print("ProfileHome :: change! = \(model), \(propertyChanges) - 1")
+//                    guard let model = model as? PasswordModelRealm else { return }
+//                    print("ProfileHome :: change! = \(model), \(propertyChanges) - 2")
+//                    self.isEnabledPasswordRelay.accept(model.isEnabled)
+//                case .deleted:
+//                    self.isEnabledPasswordRelay.accept(false)
+//                case .error(let error):
+//                    print("ProfileHome :: error! = \(error)")
+//                }
+//            })
+            
+            
     }
     
     // MARK: - ProfilePassword
@@ -128,10 +170,13 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         print("ProfileHome :: pressedProfilePasswordCell")
         // 비밀번호 설정을 안했으면 설정할 수 있도록 설정창 띄우기
         if isEnabledPasswordRelay.value == false {
-            router?.attachProfilePassword()
+            router?.attachProfilePassword(isPasswordChange: false, isPaswwordDisabled: false)
         }
         // 비밀번호 설정 했으면 비밀번호 설정 Disabled로 변경
         else {
+            router?.attachProfilePassword(isPasswordChange: false, isPaswwordDisabled: true)
+
+            /*
             guard let model = dependency.diaryRepository.password.value else { return }
 
             let newModel = PasswordModelRealm(password: model.password,
@@ -140,7 +185,12 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
 
             dependency.diaryRepository
                 .updatePassword(model: newModel)
+             */
         }
+    }
+    
+    func pressedProfilePasswordChangeCell() {
+        router?.attachProfilePassword(isPasswordChange: true, isPaswwordDisabled: false)
     }
     
     // MARK: - ProfileDeveloper (개발자 도구)

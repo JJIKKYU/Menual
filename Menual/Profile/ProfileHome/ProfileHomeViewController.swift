@@ -19,6 +19,7 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // ProfilePassword
     func pressedProfilePasswordCell()
+    func pressedProfilePasswordChangeCell()
     
     // ProfileDeveloper
     func pressedProfileDeveloperCell()
@@ -99,7 +100,10 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         listener?.isEnabledPasswordRelay
             .subscribe(onNext: { [weak self] isEnabledPassword in
                 guard let self = self else { return }
-                self.settingTableView.reloadData()
+                print("ProfileHome :: isEnabledPasswordRelay = \(isEnabledPassword)")
+                DispatchQueue.main.async {
+                    self.settingTableView.reloadData()
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -222,7 +226,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 // cell.switchBtn.isOn = listener?.isEnabledPasswordRelay.value ?? false
                 listener?.pressedProfilePasswordCell()
             } else if data.title == "비밀번호 변경하기" {
-                listener?.pressedProfilePasswordCell()
+                listener?.pressedProfilePasswordChangeCell()
             } else if data.title == "메뉴얼 가이드 보기" {
                 //사파리로 링크열기
                 if let url = URL(string: "https://hill-license-fb3.notion.site/589e7606d7f642378d11a94ea0344cfd") {

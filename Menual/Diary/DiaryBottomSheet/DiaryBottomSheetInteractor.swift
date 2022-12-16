@@ -11,7 +11,7 @@ import RxRelay
 import RealmSwift
 
 protocol DiaryBottomSheetRouting: ViewableRouting {
-    // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
+    
 }
 
 protocol DiaryBottomSheetPresentable: Presentable {
@@ -178,57 +178,13 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
                 self.presenter.setHideBtnTitle(isHide: isHide)
             })
             .disposed(by: disposeBag)
-
-        dependency.diaryRepository
-            .diaryString
-            .subscribe(onNext: { [weak self] diaryArr in
-                guard let self = self else { return }
-                
-                /*
-                // 월을 세팅해보자
-                var monthSet = [Int: [Int: Int]]()
-                var yearDateFilterMonthsModel = [Int: [DateFilterMonthsModel]]()
-                diaryArr
-                    .sorted(by: { $0.createdAt < $1.createdAt })
-                    .forEach { diary in
-                        let year: Int = Int(diary.createdAt.toStringWithYYYY()) ?? 0
-                        let month: Int = Int(diary.createdAt.toStringWithMM()) ?? 0
-                        if monthSet[year] == nil {
-                            monthSet[year] = [:]
-                        }
-                        if monthSet[year]![month] == nil {
-                            monthSet[year]![month] = 0
-                        }
-
-                        monthSet[year]![month]! += 1
-                    }
-                
-                for data in monthSet {
-                    let year = data.key
-                    let monthDic = data.value
-                    if yearDateFilterMonthsModel[year] == nil {
-                        yearDateFilterMonthsModel[year] = []
-                    }
-                    for value in monthDic {
-                        let month = value.key
-                        let monthCount = value.value
-                        yearDateFilterMonthsModel[year]?.append(DateFilterMonthsModel(month: month, diaryCount: monthCount))
-                    }
-                }
-                
-                var dateFilterModelArr = [DateFilterModel]()
-                for value in Array(yearDateFilterMonthsModel) {
-                    dateFilterModelArr.insert(DateFilterModel(year: value.key, months: value.value), at: 0)
-                }
-                self.dateFilterModelRelay?.accept(dateFilterModelArr)
-                */
-            })
-            .disposed(by: disposeBag)
     }
     
     func pressedCloseBtn() {
         print("pressedCloseBtn")
         listener?.diaryBottomSheetPressedCloseBtn()
+        filteredPlaceArrRelay?.accept([])
+        filteredWeatherArrRelay?.accept([])
     }
     
     func pressedWriteBtn() {
@@ -264,6 +220,5 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
 // MARK: - 미사용
 extension DiaryBottomSheetInteractor {
     func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: DiaryHomeViewController.ShowToastType) {
-        
     }
 }

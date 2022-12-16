@@ -12,6 +12,7 @@ import SnapKit
 class PasswordView: UIView {
     
     enum PasswordViewType {
+        case check // 비밀번호 변경시에 사용
         case first
         case second
         case error
@@ -20,6 +21,7 @@ class PasswordView: UIView {
     enum ScreenType {
         case setting
         case main
+        case change
     }
     
     public var type: PasswordViewType = .first {
@@ -44,6 +46,7 @@ class PasswordView: UIView {
     private let subTitleLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.text = "비밀번호를 분실 시 찾을 수 없으니 신중하게 입력해 주세요!"
+        $0.setLineHeight(lineHeight: 1.14)
         $0.font = UIFont.AppBodyOnlyFont(.body_3)
         $0.textColor = Colors.tint.main.v400
         $0.numberOfLines = 2
@@ -128,10 +131,17 @@ class PasswordView: UIView {
         super.layoutSubviews()
         
         switch type {
+        case .check:
+            titleLabel.text = "비밀번호를 입력해 주세요"
+            subTitleLabel.isHidden = true
         case .first:
             subTitleLabel.textColor = Colors.tint.main.v400
             subTitleLabel.text = "비밀번호를 분실 시 찾을 수 없으니 신중하게 입력해 주세요!"
             titleLabel.text = "비밀번호를 입력해 주세요"
+            if screenType == .change {
+                titleLabel.text = "변경할 비밀번호를 입력해 주세요"
+                subTitleLabel.isHidden = false
+            }
         case .second:
             subTitleLabel.textColor = Colors.tint.main.v400
             subTitleLabel.text = "비밀번호를 분실 시 찾을 수 없으니 신중하게 입력해 주세요!"
@@ -139,7 +149,6 @@ class PasswordView: UIView {
         case .error:
             subTitleLabel.textColor = Colors.tint.system.red.r200
             subTitleLabel.text = "비밀번호가 올바르지 않습니다"
-            
         }
         
         switch screenType {
@@ -152,6 +161,8 @@ class PasswordView: UIView {
                 subTitleLabel.textColor = Colors.tint.system.red.r200
                 subTitleLabel.text = "비밀번호가 맞지 않아요."
             }
+        case .change:
+            break
         }
         
         print("PasswordView :: numberArr = \(numberArr)")
