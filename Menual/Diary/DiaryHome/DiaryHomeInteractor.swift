@@ -196,11 +196,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                             .sorted { $0.createdAt > $1.createdAt }
                             .first?.pageNum ?? 0
                         
-                        let lastPageNumTest = self.diaryDictionary[sectionName]?.diaries.filter { $0.isDeleted == false }.first?.pageNum
-                        
-                        print("DiaryHome :: test! = \(lastPageNum), \(lastPageNumTest)")
+                        print("DiaryHome :: test! = \(lastPageNum)")
                         self.lastPageNumRelay.accept(lastPageNum)
-                        
 
                         self.diaryDictionary[sectionName]?.diaries.insert(diary, at: 0)
                         print("DiaryHome :: test! = \(self.diaryDictionary[sectionName]?.diaries)")

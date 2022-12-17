@@ -16,6 +16,7 @@
 		980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B3279BCD670034D0CC /* DiaryHomeViewController.swift */; };
 		980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */; };
 		980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */; };
+		980A974D294DDB1100B8CBA5 /* BaseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980A974C294DDB1100B8CBA5 /* BaseButton.swift */; };
 		98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98239BE527E323CB00E216F1 /* MomentsRoundView.swift */; };
 		98239BE927E43AB700E216F1 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98239BE827E43AB700E216F1 /* Icons.xcassets */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
@@ -284,6 +285,7 @@
 		980924B3279BCD670034D0CC /* DiaryHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeViewController.swift; sourceTree = "<group>"; };
 		980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeBuilder.swift; sourceTree = "<group>"; };
 		980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeInteractor.swift; sourceTree = "<group>"; };
+		980A974C294DDB1100B8CBA5 /* BaseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseButton.swift; sourceTree = "<group>"; };
 		98239BE527E323CB00E216F1 /* MomentsRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsRoundView.swift; sourceTree = "<group>"; };
 		98239BE827E43AB700E216F1 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -1300,6 +1302,7 @@
 				985BFF8029335AE900D86106 /* UINavigationController+Util.swift */,
 				985BFF8B2935ED6100D86106 /* String+Util.swift */,
 				985BFFE729458D7A00D86106 /* Realm+Util.swift */,
+				980A974C294DDB1100B8CBA5 /* BaseButton.swift */,
 			);
 			path = MenualUtil;
 			sourceTree = "<group>";
@@ -1839,6 +1842,7 @@
 				9843929A29053CEC00EF526E /* DiaryDetailImageViewController.swift in Sources */,
 				98B5575E2830F0FF00F8CA3E /* TempSaveCell.swift in Sources */,
 				9838574D28FA77FF007378EC /* SectionListHeaderView.swift in Sources */,
+				980A974D294DDB1100B8CBA5 /* BaseButton.swift in Sources */,
 				984392C329179A6600EF526E /* NumberPadInteractor.swift in Sources */,
 				988A2D68280166AA0046C43A /* DiaryModel.swift in Sources */,
 				98F3A27E28150052000851F0 /* DiaryBottomSheetRouter.swift in Sources */,

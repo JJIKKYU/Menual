@@ -27,6 +27,7 @@ enum FABIsFilltered {
 }
 
 class FAB: UIButton {
+
     var fabType: FABType = .primary {
         didSet { setNeedsLayout() }
     }
@@ -59,7 +60,7 @@ class FAB: UIButton {
         $0.isHidden = true
     }
     
-    var spaceRequiredLeftArrowBtn = UIButton().then {
+    var spaceRequiredLeftArrowBtn = BaseButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.contentMode = .scaleAspectFit
         $0.contentHorizontalAlignment = .fill
@@ -70,7 +71,7 @@ class FAB: UIButton {
         $0.tag = -1
     }
     
-    var spaceRequiredRightArrowBtn = UIButton().then {
+    var spaceRequiredRightArrowBtn = BaseButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.contentMode = .scaleAspectFit
         $0.contentHorizontalAlignment = .fill
@@ -206,7 +207,8 @@ class FAB: UIButton {
             case .default_:
                 backgroundColor = Colors.background
             case .pressed:
-                backgroundColor = Colors.grey.g800
+                backgroundColor = Colors.background
+                // backgroundColor = Colors.grey.g800
             }
             
         }
