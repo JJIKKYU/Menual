@@ -446,7 +446,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         
-        let realmModel: TempSaveModelRealm = TempSaveModelRealm(diaryModel: diaryModel,
+        let realmModel: TempSaveModelRealm = TempSaveModelRealm(uuid: tempSaveUUID,
+                                                                diaryModel: diaryModel,
                                                                 createdAt: Date(),
                                                                 isDeleted: false
         )
@@ -481,7 +482,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
 
-        let model = TempSaveModelRealm(diaryModel: diaryModel,
+        let model = TempSaveModelRealm(uuid: tempSaveUUID,
+                                       diaryModel: diaryModel,
                                        createdAt: Date(),
                                        isDeleted: false
         )

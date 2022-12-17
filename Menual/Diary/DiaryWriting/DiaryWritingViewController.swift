@@ -747,7 +747,7 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         
         self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
                                                                          Colors.grey.g100,
-                                                                         text: tempSaveModel.description
+                                                                         text: tempSaveModel.desc
         )
         
         if tempSaveModel.image == true {

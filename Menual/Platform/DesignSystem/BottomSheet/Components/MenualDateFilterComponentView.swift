@@ -261,6 +261,9 @@ class MenualDateFilterComponentView: UIView {
             self.year = String(dateFilterModelArr[safe: yearIdx]?.year ?? self.currentYear)
             
             self.month = String(dateFilterModelArr[safe: yearIdx]?.months[safe: monthIdx]?.month ?? self.currentMonth)
+            if self.month.count == 1 {
+                self.month = "0" + self.month
+            }
             // let engMonth = String(self.month).convertEngMonthName()
             // self.yearEngMonth = self.year + engMonth
             self.yearEngMonth = self.year + "." + self.month
