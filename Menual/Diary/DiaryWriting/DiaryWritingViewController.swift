@@ -1028,15 +1028,15 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
 
         switch textView.tag {
         case TextViewType.title.rawValue:
-            textView.attributedText = UIFont.AppTitleWithText(.title_5,
-                                                             Colors.grey.g100,
-                                                             text: textView.text
-            )
-            
-            let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
-            textView.frame.size = CGSize(width: max(newSize.width, fixedWidth),
-                                         height: max(50.3, newSize.height))
-            print("JJIKKYU :: newSizeHeight = \(newSize.height), \(textView.frame.height)")
+//            textView.attributedText = UIFont.AppTitleWithText(.title_5,
+//                                                             Colors.grey.g100,
+//                                                             text: textView.text
+//            )
+//
+//            let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+//            textView.frame.size = CGSize(width: max(newSize.width, fixedWidth),
+//                                         height: max(50.3, newSize.height))
+            // print("JJIKKYU :: newSizeHeight = \(newSize.height), \(textView.frame.height)")
             // textView.centerVerticalText()
             isEditBeginRelay.accept(true)
             
@@ -1049,10 +1049,10 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             isEditBeginRelay.accept(true)
             
         case TextViewType.description.rawValue:
-            textView.attributedText = UIFont.AppBodyWithText(.body_4,
-                                                             Colors.grey.g100,
-                                                             text: textView.text
-            )
+//            textView.attributedText = UIFont.AppBodyWithText(.body_4,
+//                                                             Colors.grey.g100,
+//                                                             text: textView.text
+//            )
 
             let size = CGSize(width: view.frame.width, height: .infinity)
             let estimatedSize = textView.sizeThatFits(size)
