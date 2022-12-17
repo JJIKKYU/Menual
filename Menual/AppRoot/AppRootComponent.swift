@@ -7,17 +7,21 @@
 
 import Foundation
 import RIBs
+import RxRelay
 
 final class AppRootComponent: Component<AppRootDependency> {
 
     private let rootViewController: ViewControllable
     var diaryRepository: DiaryRepository
     var momentsRepository: MomentsRepository
+    var diaryUUIDRelay: BehaviorRelay<String>
     
     init(
         dependency: AppRootDependency,
-        rootViewController: ViewControllable
+        rootViewController: ViewControllable,
+        diaryUUIDRelay: BehaviorRelay<String>
     ) {
+        self.diaryUUIDRelay = diaryUUIDRelay
         self.rootViewController = rootViewController
         self.diaryRepository = DiaryRepositoryImp()
         self.momentsRepository = MomentsRepositoryImp()
@@ -31,4 +35,6 @@ extension AppRootComponent: DiaryHomeDependency,
                             ProfilePasswordDependency,
                             AppRootInteractorDependency
 {
+
+    
 }

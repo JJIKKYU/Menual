@@ -7,11 +7,17 @@
 
 import Foundation
 import RIBs
+import RxRelay
 
 final class AppComponent: Component<EmptyDependency>, AppRootDependency {
+    
+    var diaryUUIDRelay: BehaviorRelay<String>
   
-  init() {
-    super.init(dependency: EmptyComponent())
+    init(
+        diaryUUIDRelay: BehaviorRelay<String>
+    ) {
+        self.diaryUUIDRelay = diaryUUIDRelay
+        super.init(dependency: EmptyComponent())
   }
   
 }

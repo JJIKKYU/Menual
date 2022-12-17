@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import RxRelay
 
 protocol AppRootInteractable: Interactable,
                               DiaryHomeListener,
@@ -30,13 +31,16 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
     private var loginHomeRouting: ViewableRouting?
     private var diaryHomeRouting: ViewableRouting?
     private var profilePasswordRouting: ViewableRouting?
+    private let diaryUUIDRelay: BehaviorRelay<String>
     
     init(
         interactor: AppRootInteractable,
         viewController: AppRootViewControllable,
         diaryHome: DiaryHomeBuildable,
-        profilePassword: ProfilePasswordBuildable
+        profilePassword: ProfilePasswordBuildable,
+        diaryUUIDRelay: BehaviorRelay<String>
     ) {
+        self.diaryUUIDRelay = diaryUUIDRelay
         self.diaryHome = diaryHome
         self.profilePassword = profilePassword
         
@@ -71,7 +75,10 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
     
     func attachMainHome() {
         // let registerIDRouting = registerID.build(withListener: interactor)
-        let diaryHomeRouting = diaryHome.build(withListener: interactor)
+        let diaryHomeRouting = diaryHome.build(
+            withListener: interactor,
+            diaryUUIDRelay: nil
+        )
         
         // attachChild(diaryWritingRouting)
         // attachChild(registerHomeRouting)
@@ -138,7 +145,10 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
         self.profilePasswordRouting = profilePasswordRouting
         attachChild(profilePasswordRouting)
         
-        let diaryHomeRouting = diaryHome.build(withListener: interactor)
+        let diaryHomeRouting = diaryHome.build(
+            withListener: interactor,
+            diaryUUIDRelay: self.diaryUUIDRelay
+        )
         attachChild(diaryHomeRouting)
         
         let navigation = NavigationControllerable(root: diaryHomeRouting.viewControllable)

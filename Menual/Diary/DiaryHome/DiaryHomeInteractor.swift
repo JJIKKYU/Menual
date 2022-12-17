@@ -49,6 +49,7 @@ protocol DiaryHomeListener: AnyObject {
 }
 
 protocol DiaryHomeInteractorDependency {
+    var diaryUUIDRelay: BehaviorRelay<String> { get }
     var diaryRepository: DiaryRepository { get }
     var momentsRepository: MomentsRepository { get }
 }
@@ -104,6 +105,17 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func bind() {
         print("DiaryHomeInteractor :: Bind!")
+        dependency.diaryUUIDRelay
+            .filter ({ $0.count != 0 })
+            .subscribe(onNext: { [weak self] uuid in
+                guard let self = self else { return }
+                
+                print("DiaryHome :: uuid 받았어요! = \(uuid)")
+                guard let realm = Realm.safeInit() else { return }
+                guard let diaryModel = realm.objects(DiaryModelRealm.self).filter ({ $0.uuid == uuid }).first else { return }
+                self.router?.attachDiaryDetail(model: diaryModel)
+            })
+            .disposed(by: disposebag)
 
         dependency.diaryRepository
             .filteredDiaryDic
