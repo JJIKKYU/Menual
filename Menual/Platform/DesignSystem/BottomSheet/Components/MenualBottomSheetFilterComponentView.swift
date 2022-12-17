@@ -11,7 +11,7 @@ import Then
 import RxSwift
 import RxRelay
 
-protocol MenualBottomSheetFilterComponentDelegate {
+protocol MenualBottomSheetFilterComponentDelegate: AnyObject {
     var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]>? { get }
     var filterPlaceSelectedArrRelay: BehaviorRelay<[Place]>? { get }
     var filteredMenaulCountsObservable: Observable<Int> { get }
@@ -22,7 +22,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     
     // var placeSelectedArr: [Place] = []
     
-    var delegate: MenualBottomSheetFilterComponentDelegate? {
+    weak var delegate: MenualBottomSheetFilterComponentDelegate? {
         didSet {
             print("델리게이트 불림!")
         }

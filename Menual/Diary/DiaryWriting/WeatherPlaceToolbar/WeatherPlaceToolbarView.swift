@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-protocol WeatherPlaceToolbarViewDelegate {
+protocol WeatherPlaceToolbarViewDelegate: AnyObject {
     func weatherSendData(weatherType: Weather)
     func placeSendData(placeType: Place)
     func close()
@@ -17,7 +17,7 @@ protocol WeatherPlaceToolbarViewDelegate {
 
 class WeatherPlaceToolbarView: UIView {
     
-    var delegate: WeatherPlaceToolbarViewDelegate?
+    weak var delegate: WeatherPlaceToolbarViewDelegate?
     
     var menualBottomSheetRightBtnIsActivate: MenualBottomSheetRightBtnIsActivate = .unActivate {
         didSet { setNeedsLayout() }

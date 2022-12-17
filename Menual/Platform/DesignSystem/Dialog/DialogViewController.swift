@@ -21,7 +21,7 @@ enum DialogButtonType {
 }
 
 // Dialog의 버튼의 액션을 처리하는 Delegate입니다.
-protocol DialogDelegate {
+protocol DialogDelegate: AnyObject {
     func action(titleText: String)   // confirm button event
     func exit(titleText: String)     // cancel button event
 }
@@ -29,7 +29,7 @@ protocol DialogDelegate {
 
 class DialogViewController: UIViewController {
     
-    var delegate: DialogDelegate?
+    weak var delegate: DialogDelegate?
     
     public var titleText: String = "타이틀입니다" {
         didSet { setText() }

@@ -9,7 +9,7 @@ import UIKit
 import Then
 import SnapKit
 
-protocol WeatherPlaceSelectViewDelegate {
+protocol WeatherPlaceSelectViewDelegate: AnyObject {
     // 체크표시 등 활성화
     func isSelected(_ isSelected: Bool)
     func weatherSendData(weatherType: Weather, isSelected: Bool)
@@ -38,7 +38,7 @@ class WeatherPlaceSelectView: UIView {
     
     var selectedPlaceTypes: [Place]?
     
-    var delegate: WeatherPlaceSelectViewDelegate?
+    weak var delegate: WeatherPlaceSelectViewDelegate?
     
     var selectionLimit: Int = 1 {
         didSet { setNeedsLayout() }

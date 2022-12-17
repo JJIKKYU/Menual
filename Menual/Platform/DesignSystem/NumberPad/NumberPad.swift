@@ -9,14 +9,14 @@ import UIKit
 import Then
 import SnapKit
 
-protocol NumberPadDelegate {
+protocol NumberPadDelegate: AnyObject {
     func deleteNumber()
     func selectNumber(number: Int)
 }
 
 class NumberPad: UIView {
     
-    public var delegate: NumberPadDelegate?
+    public weak var delegate: NumberPadDelegate?
     
     private let numberPadData: [String] = ["1","2","3","4","5","6","7","8","9","","0","←"]
     

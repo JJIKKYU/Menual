@@ -9,7 +9,7 @@ import UIKit
 import Then
 import SnapKit
 
-protocol MonthViewDelegate {
+protocol MonthViewDelegate: AnyObject {
     func pressedLeftBtn()
     func pressedRightBtn()
 }
@@ -27,7 +27,7 @@ class MonthView: UIView {
         didSet { setNeedsLayout() }
     }
     
-    var delegate: MonthViewDelegate?
+    weak var delegate: MonthViewDelegate?
     
     private let monthLabel = UILabel().then {
         $0.font = UIFont.AppTitle(.title_3)

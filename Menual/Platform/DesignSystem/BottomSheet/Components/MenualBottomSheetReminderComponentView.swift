@@ -12,7 +12,7 @@ import RxSwift
 import RxRelay
 import RxViewController
 
-protocol MenualBottomSheetReminderComponentViewDelegate {
+protocol MenualBottomSheetReminderComponentViewDelegate: AnyObject {
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
     func pressedQuestionBtn()
     func pressedIsEnabledSwitchBtn(isEnabled: Bool)
@@ -23,7 +23,7 @@ protocol MenualBottomSheetReminderComponentViewDelegate {
 
 class MenualBottomSheetReminderComponentView: UIView {
     
-    var delegate: MenualBottomSheetReminderComponentViewDelegate?
+    weak var delegate: MenualBottomSheetReminderComponentViewDelegate?
     
     // 윤달 처리를 위해서
     private var numOfDaysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31]

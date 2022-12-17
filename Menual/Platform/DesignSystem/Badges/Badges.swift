@@ -10,7 +10,7 @@ import SnapKit
 import Then
 
 // 외부에서 Bages를 사용할 때 쓰이는 Delegate
-protocol BadgesDelegate {
+protocol BadgesDelegate: AnyObject {
     func show(digit: String?, type: Badges.type)
     func hide()
 }
@@ -23,7 +23,7 @@ class Badges: UIView {
         case dot
     }
     
-    var delegate: BadgesDelegate?
+    weak var delegate: BadgesDelegate?
     
     public var badgeType: Badges.type = .dot {
         didSet { setNeedsLayout() }

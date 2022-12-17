@@ -11,13 +11,13 @@ import Then
 import RxSwift
 import RxRelay
 
-protocol MenualDateFilterComponentDelegate {
+protocol MenualDateFilterComponentDelegate: AnyObject {
     var dateFilterModelRelay: BehaviorRelay<[DateFilterModel]?>? { get }
 }
 
 class MenualDateFilterComponentView: UIView {
     
-    public var delegate: MenualDateFilterComponentDelegate?
+    public weak var delegate: MenualDateFilterComponentDelegate?
 
     var disposeBag = DisposeBag()
 

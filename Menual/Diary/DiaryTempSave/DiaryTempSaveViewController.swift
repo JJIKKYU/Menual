@@ -210,9 +210,7 @@ extension DiaryTempSaveViewController {
         isDeleteMode = !isDeleteMode
         deleteBtn.isHidden = !isDeleteMode
         naviView.rightButton1IsActive = false
-        tableView.reloadData()
         
-        // TODO: - 현재 작성중인 메뉴얼도 삭제가 되었다면
         showToast(message: "임시저장된 메뉴얼이 삭제되었습니다.")
     }
 }

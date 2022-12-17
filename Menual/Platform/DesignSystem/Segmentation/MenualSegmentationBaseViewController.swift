@@ -9,7 +9,7 @@ import UIKit
 import Then
 import SnapKit
 
-protocol MenualSegmentationDelegate {
+protocol MenualSegmentationDelegate: AnyObject {
     func changeToIdx(index: Int)
 }
 
@@ -19,7 +19,7 @@ class MenualSegmentationBaseViewController: UIView {
     private var buttons: [UIButton] = []
     private var selectorView: UIView!
     
-    var delegate: MenualSegmentationDelegate?
+    weak var delegate: MenualSegmentationDelegate?
     
     private var _selectedIndex: Int = 0
     public var selectedIndex: Int {
