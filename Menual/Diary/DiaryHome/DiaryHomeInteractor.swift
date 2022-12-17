@@ -77,6 +77,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     var diaryRealmArr: Results<DiaryModelRealm>?
     var diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
     
+    // filter 적용할 때, 원래 PageNum을 저장해놓고 필터가 끝났을때 다시 쓸 수 있도록
+    var prevLastPageNum: Int = 0
+    
     // Moments
     var momentsRealm: MomentsRealm?
 
@@ -123,7 +126,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             .subscribe(onNext: { [weak self] diarySectionModel in
                 guard let self = self else { return }
                 guard let diarySectionModel = diarySectionModel else { return }
-                
+
+                self.prevLastPageNum = self.lastPageNumRelay.value
                 self.lastPageNumRelay.accept(diarySectionModel.allCount)
                 self.presenter.isFilteredRelay.accept(true)
                 self.presenter.reloadTableView()
@@ -421,10 +425,11 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         print("diaryHome :: Inetactor -> filterReset!")
         filteredWeatherArrRelay.accept([])
         filteredPlaceArrRelay.accept([])
-        
         presenter.isFilteredRelay.accept(false)
         // filteredDateRelay.accept(nil)
         filteredDiaryCountRelay.accept(-1)
+        
+        self.lastPageNumRelay.accept(prevLastPageNum)
         self.presenter.reloadTableView()
     }
     

@@ -40,7 +40,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     private var isHide: Bool = false
     private var replyTextPlcaeHolder: String = "겹쓸내용을 입력해 주세요"
     
-    private var isShowKeboard: Bool = false
+    private var isShowKeboard: Bool  = false
     private var willDeleteReplyUUID: String?
     private var willDeleteReplyModel: DiaryReplyModelRealm?
     
@@ -871,7 +871,7 @@ extension DiaryDetailViewController: DialogDelegate {
             replyBottomView.setNeedsLayout()
             view.endEditing(true)
 
-        case "겹쓰기를 삭제할까요?":
+        case "겹쓰기를 삭제 하시겠어요?":
             guard let willDeleteReplyModel = willDeleteReplyModel else { return }
             listener?.deleteReply(replyModel: willDeleteReplyModel)
 
@@ -892,7 +892,7 @@ extension DiaryDetailViewController: DialogDelegate {
         case "겹쓰기 작성을 완료하시겠어요?":
             break
             
-        case "겹쓰기를 삭제할까요?":
+        case "겹쓰기를 삭제 하시겠어요?":
             self.willDeleteReplyUUID = nil
 
         default:

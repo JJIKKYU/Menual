@@ -349,7 +349,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 if self.isFilteredRelay.value {
                     self.myMenualTitleView.pageNumber = num
                 } else {
-
                     if num == 0 {
                         print("DiaryHome :: EmptyView")
                         self.setEmptyView(isEnabled: true)
