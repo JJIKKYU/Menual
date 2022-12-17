@@ -117,17 +117,17 @@ final class DiarySearchViewController: UIViewController, DiarySearchViewControll
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         searchTextField.textField.becomeFirstResponder()
-        (navigationController as? NavigationController)?.isDisabledFullWidthBackGesture = true
+        // (navigationController as? NavigationController)?.isDisabledFullWidthBackGesture = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        (navigationController as? NavigationController)?.isDisabledFullWidthBackGesture = false
+        // (navigationController as? NavigationController)?.isDisabledFullWidthBackGesture = false
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        dch_checkDeallocation()
+        // dch_checkDeallocation()
         if isMovingFromParent || isBeingDismissed {
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
@@ -571,7 +571,8 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
         // 최근 검색어만 지원
         case .recentSearch:
             guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return nil }
-            let modifyAction = UIContextualAction(style: .normal, title:  "", handler: { (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+            let modifyAction = UIContextualAction(style: .normal, title:  "", handler: { [weak self] (ac:UIContextualAction, view:UIView, success:(Bool) -> Void) in
+                    guard let self = self else { return success(false) }
                     self.listener?.deleteRecentSearchData(uuid: cell.uuid)
                     print("Search :: Update action ...")
                     success(true)

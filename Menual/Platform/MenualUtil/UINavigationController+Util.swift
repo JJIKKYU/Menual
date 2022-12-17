@@ -58,13 +58,33 @@ public class NavigationController: UINavigationController {
         fullWidthBackGestureRecognizer.setValue(targets, forKey: "targets")
         fullWidthBackGestureRecognizer.delegate = self
         view.addGestureRecognizer(fullWidthBackGestureRecognizer)
+        
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture(_:)))
+        swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
+        view.addGestureRecognizer(swipeLeft)
     }
 }
 
 extension NavigationController: UIGestureRecognizerDelegate {
+    // 한 손가락 스와이프 제스쳐를 행했을 때 실행할 액션 메서드
+        @objc func respondToSwipeGesture(_ gesture: UIGestureRecognizer) {
+            // 만일 제스쳐가 있다면
+            print("Navi :: gesture! = \(gesture)")
+            if let swipeGesture = gesture as? UISwipeGestureRecognizer{
+                print("Navi :: \(swipeGesture.direction)")
+            }
+            
+        }
+
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        print("Navi :: \(isDisabledFullWidthBackGesture)")
-        if isDisabledFullWidthBackGesture { return false }
+        print("Navi :: \(isDisabledFullWidthBackGesture), gesture = \(gestureRecognizer)")
+        if let gesture = gestureRecognizer as? UIPanGestureRecognizer {
+            print("Navi :: Pangesture = \(gesture.velocity(in: view))")
+            let velocity = gesture.velocity(in: view).x
+            if velocity < 100.0 { return false }
+        }
+
+//         if isDisabledFullWidthBackGesture { return false }
         let isSystemSwipeToBackEnabled = interactivePopGestureRecognizer?.isEnabled == true
         let isThereStackedViewControllers = viewControllers.count > 1
         return isSystemSwipeToBackEnabled && isThereStackedViewControllers
