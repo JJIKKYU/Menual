@@ -16,7 +16,8 @@ public final class NavigationControllerable: ViewControllable {
     public let navigationController: UINavigationController
   
     public init(root: ViewControllable) {
-        let navigation = UINavigationController(rootViewController: root.uiviewController)
+        // let navigation = UINavigationController(rootViewController: root.uiviewController)
+        let navigation = NavigationController(rootViewController: root.uiviewController)
 //        navigation.navigationBar.isTranslucent = false
 //        navigation.navigationBar.backgroundColor = .white
 //        navigation.navigationBar.scrollEdgeAppearance = navigation.navigationBar.standardAppearance

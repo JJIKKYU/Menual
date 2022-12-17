@@ -32,3 +32,4 @@ class BaseButton: UIButton {
     func configure() {}
     func bind() {}
 }
+
