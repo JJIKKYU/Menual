@@ -81,6 +81,7 @@
 		985BFFE829458D7A00D86106 /* Realm+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFFE729458D7A00D86106 /* Realm+Util.swift */; };
 		985E0F1327C2750D00057951 /* AdaptivePresentationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */; };
 		987684A32948B4F400811387 /* MomentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987684A22948B4F400811387 /* MomentsModel.swift */; };
+		987684A5294D76F800811387 /* PushModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987684A4294D76F800811387 /* PushModel.swift */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
 		9888DDE927646F000091918F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE727646F000091918F /* LaunchScreen.storyboard */; };
@@ -348,6 +349,7 @@
 		985BFFE729458D7A00D86106 /* Realm+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Realm+Util.swift"; sourceTree = "<group>"; };
 		985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptivePresentationControllerDelegate.swift; sourceTree = "<group>"; };
 		987684A22948B4F400811387 /* MomentsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsModel.swift; sourceTree = "<group>"; };
+		987684A4294D76F800811387 /* PushModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushModel.swift; sourceTree = "<group>"; };
 		9888DDD927646EFF0091918F /* Menual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9888DDDC27646EFF0091918F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9888DDE527646F000091918F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1004,6 +1006,7 @@
 				985BFFA3293CA0EC00D86106 /* DiaryHomeIndexPathModel.swift */,
 				985BFFA5293CBA3A00D86106 /* DiaryHomeSectionModel.swift */,
 				987684A22948B4F400811387 /* MomentsModel.swift */,
+				987684A4294D76F800811387 /* PushModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1808,6 +1811,7 @@
 				988A2D5A27F97A000046C43A /* DiaryMomentsBuilder.swift in Sources */,
 				984392B52917601C00EF526E /* ProfilePasswordViewController.swift in Sources */,
 				98F31DC828CC782B00EE1C8A /* MenualBottomSheetFilterComponentView.swift in Sources */,
+				987684A5294D76F800811387 /* PushModel.swift in Sources */,
 				98B557762838A4ED00F8CA3E /* BoxButtonBuilder.swift in Sources */,
 				98B55769283896AA00F8CA3E /* DesignSystemBuilder.swift in Sources */,
 				98A2BD912802B43E00C1FB92 /* MyMenualCell.swift in Sources */,
