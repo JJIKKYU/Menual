@@ -137,9 +137,25 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 if let imageData: Data = self.diaryModel?.originalImage {
                     self.imageDataRelay.accept(imageData)
                 }
+                
+                print("DiaryDetail :: propertyChanges = \(proertyChanges)")
 
+                let reminderIsEnabled: Bool = diaryModel.reminder?.isEnabled ?? false
                 // reminder가 있을 경우 true/ false로 활성화
-                self.presenter.setReminderIconEnabled(isEnabled: model.reminder?.isEnabled ?? false)
+                self.presenter.setReminderIconEnabled(isEnabled: reminderIsEnabled)
+
+                for property in proertyChanges {
+                    // 타이틀이 변경되고 reminder가 있을 경우에는 reminder도 함께 변경 해주어야함
+                    if property.name == "title" {
+                        if reminderIsEnabled == true,
+                           let reminderRequestDate = model.reminder?.requestDate {
+                            let dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: reminderRequestDate)
+                            self.setReminderDate(isEditing: true, requestDateComponents: dateComponents)
+                        }
+                    }
+                }
+
+
 
                 self.presenter.loadDiaryDetail(model: self.diaryModel)
             case .error(let error):
@@ -361,8 +377,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     func deleteReminderDate() {
         print("DiaryDetail :: deleteReminderDate!")
         
-        guard let diaryModel = self.diaryModel,
-              let reminderUUID: String = diaryModel.reminder?.uuid else {
+        guard let diaryModel = self.diaryModel else {
             print("DiaryDetail :: 삭제할 reminder UUID가 없습니다.")
             return
         }
@@ -381,6 +396,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 
         let content = UNMutableNotificationContent()
         content.title = "오늘 읽기로 한 메뉴얼이 있어요."
+        print("DiaryDetail :: diarymodel.title = \(diaryModel.title)")
         content.body = "\(diaryModel.title)"
         content.userInfo = ["diaryUUID": diaryModel.uuid]
         

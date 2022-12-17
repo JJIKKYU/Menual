@@ -15,11 +15,11 @@ public protocol DiaryRepository {
     var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var password: BehaviorRelay<PasswordModelRealm?> { get }
-    // var reminder: BehaviorRelay<[ReminderModel]> { get }
 
     func fetch()
     func addDiary(info: DiaryModelRealm)
     func updateDiary(info: DiaryModelRealm, uuid: String)
+    func updateDiary(DiaryModel: DiaryModelRealm ,reminder: ReminderModelRealm?)
     func hideDiary(isHide: Bool, info: DiaryModelRealm)
     func removeAllDiary()
     func deleteDiary(info: DiaryModelRealm)
@@ -50,14 +50,6 @@ public protocol DiaryRepository {
     func fetchPassword()
     func addPassword(model: PasswordModelRealm)
     func updatePassword(password: Int, isEnabled: Bool)
-    
-    // Reminder 로직
-    func updateDiary(DiaryModel: DiaryModelRealm ,reminder: ReminderModelRealm?)
-    // func fetchReminder()
-    // func fetchDiaryReminder(diaryUUID: String) -> Observable<ReminderModel?>
-    // func addReminder(model: ReminderModel)
-    // func updateReminder(model: ReminderModel)
-    // func deleteReminder(reminderUUID: String)
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
@@ -68,9 +60,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
     public var filteredDiaryDic = BehaviorRelay<DiaryHomeFilteredSectionModel?>(value: nil)
     
     public var password = BehaviorRelay<PasswordModelRealm?>(value: nil)
-    
-    // public var reminder: BehaviorRelay<[ReminderModel]> { reminderSubject }
-    // public let reminderSubject = BehaviorRelay<[ReminderModel]>(value: [])
     
     public func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void) {
         // 1. 이미지를 저장할 경로를 설정해줘야함 - 도큐먼트 폴더,File 관련된건 Filemanager가 관리함(싱글톤 패턴)
@@ -214,6 +203,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
             data.readCount = info.readCount + 1
             if data.title != info.title {
+                print("Repo :: Diary Title이 변경되었다면 Reminder도 함께 변경해야 합니다.")
                 data.title = info.title
             }
             
@@ -551,85 +541,4 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         fetchPassword()
     }
-    
-    
-    // MARK: - REMinder
-    /*
-    public func fetchReminder() {
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-        let reminderModelRealmResults = realm.objects(ReminderModelRealm.self).sorted(byKeyPath: "createdAt", ascending: false)
-        
-        self.reminderSubject.accept(reminderModelRealmResults.map { ReminderModel($0) })
-    }
-
-    // 한 개의 Reminder만 얻고자 할 경우
-    public func fetchDiaryReminder(diaryUUID: String) -> Observable<ReminderModel?> {
-        guard let realm = Realm.safeInit() else {
-            return Observable.just(nil)
-        }
-        print("diaryRepo :: fetchDiaryReminder! - 1")
-
-//        guard let reminderModelRealm = realm.objects(ReminderModelRealm.self).filter { $0.diaryUUID == diaryUUID }
-//        else { return Observable.just(nil) }
-        
-        guard let reminderModelRealm = realm.objects(ReminderModelRealm.self).filter({ $0.diaryUUID == diaryUUID }).first else { return Observable.just(nil) }
-
-        let reminderModel = ReminderModel(reminderModelRealm)
-        // reminder.accept(reminderModel)
-        print("diaryRepo :: fetchDiaryReminder! - 2")
-        return Observable.just(reminderModel)
-    }
-    
-    public func addReminder(model: ReminderModel) {
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-        let realmModel = ReminderModelRealm(model)
-
-        realm.safeWrite {
-            realm.add(realmModel)
-        }
-        
-        print("diaryRepo :: addReminder!!")
-        self.fetchReminder()
-    }
-    
-    public func updateReminder(model: ReminderModel) {
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-        guard let data = realm.objects(ReminderModelRealm.self).filter ({ $0.uuid == model.uuid }).first else { return }
-        
-        realm.safeWrite {
-            data.isEnabled = model.isEnabled
-            data.createdAt = model.createdAt
-            data.requestUUID = model.requestUUID
-            data.requestDate = model.requestDate
-        }
-        
-        self.fetchReminder()
-    }
-    
-    public func deleteReminder(reminderUUID: String) {
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-        guard let data = realm.objects(ReminderModelRealm.self).filter({ $0.uuid == reminderUUID }).first
-        else { return }
-        
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [data.requestUUID])
-        
-        realm.safeWrite {
-            realm.delete(data)
-        }
-        
-        self.fetchReminder()
-    }
-     */
 }
