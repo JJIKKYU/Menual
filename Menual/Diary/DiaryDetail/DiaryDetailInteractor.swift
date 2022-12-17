@@ -116,7 +116,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             let reminderRequestModel = ReminderRequsetModel(isEditing: false, requestDateComponents: dateComponets, requestDate: reminder.requestDate)
 
             self.reminderRequestDateRelay.accept(reminderRequestModel)
-            
             print("DiaryDetail :: Reminder가 있습니다!")
             
             self.presenter.setReminderIconEnabled(isEnabled: true)
@@ -127,6 +126,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         
         print("DiaryDetail :: diary = \(diary)")
 
+        // MARK: - DiaryModel 업데이트되었을경우
         self.notificationToken = diary?.observe({ [weak self] changes in
             print("DiaryDetail :: changes = \(changes)")
             guard let self = self else { return }
@@ -138,11 +138,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                     self.imageDataRelay.accept(imageData)
                 }
 
-                if let _ = model.reminder {
-                    self.presenter.setReminderIconEnabled(isEnabled: true)
-                } else {
-                    self.presenter.setReminderIconEnabled(isEnabled: false)
-                }
+                // reminder가 있을 경우 true/ false로 활성화
+                self.presenter.setReminderIconEnabled(isEnabled: model.reminder?.isEnabled ?? false)
 
                 self.presenter.loadDiaryDetail(model: self.diaryModel)
             case .error(let error):
@@ -151,7 +148,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 break
             }
         })
-
+        // MARK: - DiaryModel의 Reply(겹쓰기)가 업데이트되었을경우
         self.replyNotificationToken = diary?.replies.observe({ [weak self] changes in
             guard let self = self else { return }
             switch changes {
@@ -213,27 +210,11 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         reminderRequestDateRelay
             .subscribe(onNext: { [weak self] model in
                 guard let self = self,
-                      let model = model
-                else { return }
-
-                print("DiaryDetail :: reminderRequestDateRelay! \(model)")
-                
-                guard let diaryModel = self.diaryModel,
-                      let isEnabledReminder = diaryModel.reminder?.isEnabled,
+                      let model = model,
                       let requestDateComponents = model.requestDateComponents,
                       let isEditing = model.isEditing
                 else { return }
-
-                switch isEnabledReminder {
-                case true:
-                    print("DiaryDetail :: self.isEnabledReminder = \(isEnabledReminder) -> 수정")
-                    self.setReminderDate(isEditing: isEditing, requestDateComponents: requestDateComponents)
-
-
-                case false:
-                    print("DiaryDetail :: self.isEnabledReminder = \(isEnabledReminder) -> 세팅")
-                    self.setReminderDate(isEditing: isEditing, requestDateComponents: requestDateComponents)
-                }
+                self.setReminderDate(isEditing: isEditing, requestDateComponents: requestDateComponents)
                 
             })
             .disposed(by: disposebag)
