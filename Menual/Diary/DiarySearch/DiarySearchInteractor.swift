@@ -42,7 +42,7 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
     private var disposeBag = DisposeBag()
     
     internal var searchResultsRelay = BehaviorRelay<[DiaryModelRealm]>(value: [])
-    internal var recentSearchModel: List<DiarySearchModelRealm>?
+    internal var recentSearchModel: [DiarySearchModelRealm]?
     
     var recentSearchModelNnotificationToken: NotificationToken?
 
@@ -72,24 +72,33 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
             switch changes {
             case .initial(let model):
                 print("Search :: init!")
-                self.recentSearchModel = model.list
+                let filteredModel = model
+                    .toArray()
+                    .filter ({ $0.isDeleted == false })
+                    .sorted(by: { $0.createdAt > $1.createdAt })
+
+                self.recentSearchModel = filteredModel
                 self.presenter.reloadSearchTableView()
             case .update(let model, let deletions, let insertions, let modifications):
                 print("Search :: update!")
+                let filteredModel = model
+                    .toArray()
+                    .filter ({ $0.isDeleted == false })
+                    .sorted(by: { $0.createdAt > $1.createdAt })
+
+                self.recentSearchModel = filteredModel
+                
                 if deletions.count > 0 {
-                    self.recentSearchModel = model.list
                     self.presenter.deleteRow(at: deletions, section: .recentSearch)
                     print("Search :: deletions!")
                 }
                 
                 if insertions.count > 0 {
                     print("Search :: insertions!, insertions = \(insertions)")
-                    self.recentSearchModel = model.list
                     self.presenter.insertRow(at: insertions, section: .recentSearch)
                 }
                 
                 if modifications.count > 0 {
-                    self.recentSearchModel = model.list
                     self.presenter.updateRow(at: modifications, section: .recentSearch)
                     print("Search :: modifications!")
                 }
@@ -110,7 +119,8 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
         }
 
         let results = realm.objects(DiaryModelRealm.self)
-            .filter("title CONTAINS %@ OR desc CONTAINS %@", "\(keyword)", "\(keyword)").toArray()
+            .filter("isDeleted == false AND (title CONTAINS %@ OR desc CONTAINS %@)", "\(keyword)", "\(keyword)")
+            .toArray()
         
         print("reuslt = \(results)")
         self.searchResultsRelay.accept(results)

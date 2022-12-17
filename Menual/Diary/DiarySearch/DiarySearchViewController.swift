@@ -15,7 +15,7 @@ import RealmSwift
 
 protocol DiarySearchPresentableListener: AnyObject {
     var searchResultsRelay: BehaviorRelay<[DiaryModelRealm]> { get }
-    var recentSearchModel: List<DiarySearchModelRealm>? { get }
+    var recentSearchModel: [DiarySearchModelRealm]? { get }
 
     func pressedBackBtn(isOnlyDetach: Bool)
     func search(keyword: String)
@@ -408,11 +408,14 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             guard let count = listener?.recentSearchModel?.count else { return 0 }
             
             // 총 5개까지만 노출되록 (UX)
+            return count
+            /*
             if count > 5 {
                 return 5
             } else {
                 return count
             }
+             */
         }
     }
     
@@ -465,9 +468,17 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
                 return UITableViewCell()
             }
             
+            // 현재 검색중일 경우에는 숨김처리
             if listener?.searchResultsRelay.value.count ?? 0 > 0 {
                 cell.isHidden = true
                 return cell
+            } else {
+                cell.isHidden = false
+            }
+
+            // 5개가 넘어갔을 경우에는 숨김처리
+            if index >= 5 {
+                cell.isHidden = true
             } else {
                 cell.isHidden = false
             }

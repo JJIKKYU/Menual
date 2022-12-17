@@ -359,6 +359,15 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         
+        let diarySearchRealmArr = realm.objects(DiarySearchModelRealm.self)
+        if diarySearchRealmArr.count >= 5 {
+            print("Search :: DiaryRepository :: 5개입니다!")
+            guard let diarySearchRealm = diarySearchRealmArr.first else { return }
+            realm.safeWrite {
+                realm.delete(diarySearchRealm)
+            }
+        }
+
         guard let diary = realm.objects(DiaryModelRealm.self).filter ({ $0.uuid == info.uuid}).first else { return }
         let diarySearchModel = DiarySearchModelRealm(diaryUuid: info.uuid,
                                                      diary: diary,
