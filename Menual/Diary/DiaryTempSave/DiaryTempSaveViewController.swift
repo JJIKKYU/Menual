@@ -46,6 +46,7 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSaveViewCont
         $0.rowHeight = 80
         $0.backgroundColor = .clear
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 80, right: 0)
+        $0.separatorStyle = .none
     }
     
     private lazy var deleteBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .xLarge).then {

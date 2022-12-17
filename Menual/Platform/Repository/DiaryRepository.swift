@@ -508,7 +508,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             data.image = model.image
             data.createdAt = model.createdAt
             data.isDeleted = model.isDeleted
-            data.desc = model.description
+            data.desc = model.desc
         }
     }
     

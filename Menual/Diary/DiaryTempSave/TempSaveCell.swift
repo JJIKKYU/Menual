@@ -61,6 +61,11 @@ class TempSaveCell: UITableViewCell {
         $0.setImage(Asset._24px.Circle.Check.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.setImage(Asset._24px.Circle.Check.active.image.withRenderingMode(.alwaysTemplate), for: .selected)
     }
+    
+    public let divider = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = Colors.grey.g800
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -104,6 +109,15 @@ class TempSaveCell: UITableViewCell {
         case false:
             delCheckBtn.isSelected = false
             delCheckBtn.isHidden = true
+            
+            switch listStatus {
+            case .default_:
+                contentView.backgroundColor = Colors.background
+            case .pressed:
+                contentView.backgroundColor = Colors.grey.g700
+            case .highlighed:
+                contentView.backgroundColor = Colors.grey.g800
+            }
         }
         
         switch isWriting {
@@ -123,14 +137,7 @@ class TempSaveCell: UITableViewCell {
             listTitleView.listTitleType = .title
         }
         
-        switch listStatus {
-        case .default_:
-            contentView.backgroundColor = Colors.background
-        case .pressed:
-            contentView.backgroundColor = Colors.grey.g700
-        case .highlighed:
-            contentView.backgroundColor = Colors.grey.g800
-        }
+        
         print("TempSave :: listStatus = \(listStatus)")
     }
     
@@ -138,9 +145,11 @@ class TempSaveCell: UITableViewCell {
         contentView.addSubview(listTitleView)
         contentView.addSubview(listInfoView)
         contentView.addSubview(delCheckBtn)
+        contentView.addSubview(divider)
         
         listTitleView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
+            make.trailing.equalTo(delCheckBtn.snp.leading).inset(-10)
             make.top.equalToSuperview().offset(14)
             make.height.equalTo(24)
         }
@@ -156,6 +165,13 @@ class TempSaveCell: UITableViewCell {
             make.centerY.equalToSuperview()
             make.trailing.equalToSuperview().inset(20)
             make.width.height.equalTo(24)
+        }
+        
+        divider.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(1)
         }
     }
 }

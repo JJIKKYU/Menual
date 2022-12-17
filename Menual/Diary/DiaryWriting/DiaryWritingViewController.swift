@@ -697,7 +697,22 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
                                                                          Colors.grey.g100,
                                                                          text: diaryModel.desc)
-        
+        let size = CGSize(width: UIScreen.main.bounds.width - 40, height: .infinity)
+        let estimatedSize = descriptionTextView.sizeThatFits(size)
+        self.view.layoutIfNeeded()
+        descriptionTextView.constraints.forEach { (constraint) in
+          /// 180 이하일때는 더 이상 줄어들지 않게하기
+            if estimatedSize.height <= 185 {
+                if constraint.firstAttribute == .height {
+                    constraint.constant = 185
+                }
+            }
+            else {
+                if constraint.firstAttribute == .height {
+                    constraint.constant = estimatedSize.height
+                }
+            }
+        }
         
         if diaryModel.image == true,
            let imageData = diaryModel.cropImage,
@@ -720,8 +735,9 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
     
     func setTempSaveModel(tempSaveModel: TempSaveModelRealm) {
         print("DiaryWriting :: setTempSaveModel")
-        self.titleTextField.text = tempSaveModel.title
-        self.titleTextField.textColor = Colors.grey.g200
+        self.titleTextField.attributedText = UIFont.AppTitleWithText(.title_5,
+                                                                     Colors.grey.g200,
+                                                                   text: tempSaveModel.title)
         
         self.weatherSelectView.selectTitle = tempSaveModel.weatherDetailText ?? ""
         self.weatherSelectView.selectTextView.centerVerticalText()
@@ -748,6 +764,25 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
                                                                          Colors.grey.g100,
                                                                          text: tempSaveModel.desc
         )
+        let size = CGSize(width: UIScreen.main.bounds.width - 40, height: .infinity)
+        let estimatedSize = descriptionTextView.sizeThatFits(size)
+        
+        descriptionTextView.constraints.forEach { (constraint) in
+          /// 180 이하일때는 더 이상 줄어들지 않게하기
+            if estimatedSize.height <= 185 {
+                if constraint.firstAttribute == .height {
+                    constraint.constant = 185
+                }
+            }
+            else {
+                if constraint.firstAttribute == .height {
+                    constraint.constant = estimatedSize.height
+                }
+            }
+        }
+
+        self.descriptionTextView.sizeToFit()
+        self.descriptionTextView.layoutIfNeeded()
         
         if tempSaveModel.image == true {
             guard let imageData = tempSaveModel.cropImage else { return }
@@ -934,8 +969,11 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             print("Title TextView")
             weatherPlaceToolbarView.isHidden = true
             if textView.text == defaultTitleText {
+                textView.attributedText = UIFont.AppTitleWithText(.title_5,
+                                                                 Colors.grey.g200,
+                                                                 text: textView.text)
                 textView.text = nil
-                textView.textColor = Colors.grey.g200
+                // textView.textColor = Colors.grey.g200
             }
             
         case TextViewType.weather.rawValue:
@@ -967,8 +1005,11 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             print("Description TextView")
             weatherPlaceToolbarView.isHidden = true
             if textView.text == defaultDescriptionText {
+                textView.attributedText = UIFont.AppBodyWithText(.body_4,
+                                                                 Colors.grey.g200,
+                                                                 text: textView.text)
                 textView.text = nil
-                textView.textColor = Colors.grey.g200
+                // textView.textColor = Colors.grey.g200
             }
             
         default:
@@ -1051,12 +1092,13 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             isEditBeginRelay.accept(true)
             
         case TextViewType.description.rawValue:
+            print("DiaryWriting :: TextView DidChagne!")
 //            textView.attributedText = UIFont.AppBodyWithText(.body_4,
 //                                                             Colors.grey.g100,
 //                                                             text: textView.text
 //            )
 
-            let size = CGSize(width: view.frame.width, height: .infinity)
+            let size = CGSize(width: UIScreen.main.bounds.width - 40, height: .infinity)
             let estimatedSize = textView.sizeThatFits(size)
             
             textView.constraints.forEach { (constraint) in
