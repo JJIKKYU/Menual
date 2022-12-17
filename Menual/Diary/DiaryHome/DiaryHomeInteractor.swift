@@ -141,11 +141,15 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 case .initial(let model):
                     print("DiaryHome :: realmObserve = initial! = \(model)")
                     self.diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
-                    
+                    let filteredModel = model
+                        .toArray()
+                        .filter ({ $0.isDeleted == false })
+                        .sorted(by: { $0.createdAt > $1.createdAt })
+
                     // 전체 PageNum 추려내기
-                    let lastPageNum = model.filter { $0.isDeleted == false }
-                        .sorted { $0.createdAt > $1.createdAt }
+                    let lastPageNum = filteredModel
                         .first?.pageNum ?? 0
+                    print("DiaryHome :: lastPageNumRelay = \(self.lastPageNumRelay.value)")
                     self.lastPageNumRelay.accept(lastPageNum)
 
                     // 초기에는 필터 적용이 아니므로 false 전달
@@ -153,7 +157,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
                     // Set로 중복되지 않도록, Section Header Name 추가 (2022.12, 2022.11 등)
                     var section = Set<String>()
-                    model.forEach { section.insert($0.createdAt.toStringWithYYYYMM()) }
+                    filteredModel.forEach { section.insert($0.createdAt.toStringWithYYYYMM()) }
 
                     // for문으로 체크하기 위해서 Array로 변경
                     var arraySerction = Array(section)
@@ -161,8 +165,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     arraySerction.enumerated().forEach { (index: Int, sectioName: String) in
                         self.diaryDictionary[sectioName] = DiaryHomeSectionModel(sectionName: sectioName, sectionIndex: index, diaries: [])
                     }
-                    let sortedModel: [DiaryModelRealm] = model.sorted(by: { $0.createdAt > $1.createdAt })
-                    for diary in sortedModel {
+                    // let sortedModel: [DiaryModelRealm] = model.sorted(by: { $0.createdAt > $1.createdAt })
+                    for diary in filteredModel {
                         let sectionName: String = diary.createdAt.toStringWithYYYYMM()
                         self.diaryDictionary[sectionName]?.diaries.append(diary)
                     }
@@ -225,7 +229,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                             self.diaryDictionary[sectionName]?.diaries.remove(at: row)
                             print("DiaryHome :: delete! = \(self.diaryDictionary)")
                             self.presenter.deleteTableViewRow(section: sectionIndex, row: row)
-                            
                             
                             if let diaryCount: Int = self.diaryDictionary[sectionName]?.diaries.count,
                                diaryCount == 0 {
