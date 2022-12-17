@@ -13,6 +13,7 @@ import RealmSwift
 // 언제 알람이 오게 했는지
 
 // MARK: - 앱에서 사용하는 ReminderModel
+/*
 public struct ReminderModel {
     let uuid: String
     let diaryUUID: String
@@ -39,7 +40,24 @@ public struct ReminderModel {
         self.isEnabled = realm.isEnabled
     }
 }
+*/
 
+public class ReminderModelRealm: EmbeddedObject {
+    @Persisted var uuid: String
+    @Persisted var requestDate: Date
+    @Persisted var createdAt: Date
+    @Persisted var isEnabled: Bool
+    
+    convenience init(uuid: String, requestDate: Date, createdAt: Date, isEnabled: Bool) {
+        self.init()
+        self.uuid = uuid
+        self.requestDate = requestDate
+        self.createdAt = createdAt
+        self.isEnabled = isEnabled
+    }
+}
+
+/*
 // MARK: - Realm에 저장하기 위한 Class
 public class ReminderModelRealm: Object {
     @Persisted(primaryKey: true) var _id: ObjectId
@@ -70,3 +88,4 @@ public class ReminderModelRealm: Object {
         self.isEnabled = model.isEnabled
     }
 }
+*/
