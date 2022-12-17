@@ -107,7 +107,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         $0.AppCorner(.tiny)
     }
     
-    var rightBtn = UIButton().then {
+    var rightBtn = BaseButton().then {
         $0.contentMode = .scaleAspectFit
         $0.contentHorizontalAlignment = .fill
         $0.contentVerticalAlignment = .fill

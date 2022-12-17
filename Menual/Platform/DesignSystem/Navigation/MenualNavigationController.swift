@@ -43,7 +43,7 @@ class MenualNaviView: UIView {
         $0.isHidden = true
     }
     
-    var backButton = UIButton().then {
+    var backButton = BaseButton().then {
         $0.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = .white
         $0.contentMode = .scaleAspectFit
@@ -60,7 +60,7 @@ class MenualNaviView: UIView {
     }
     
     // 가장 오른쪽
-    var rightButton1 = UIButton().then {
+    var rightButton1 = BaseButton().then {
         $0.setImage(Asset._24px.profile.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.tint.main.v700
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -79,7 +79,7 @@ class MenualNaviView: UIView {
     }
     
     // 오른쪽에서 2번째
-    var rightButton2 = UIButton().then {
+    var rightButton2 = BaseButton().then {
         $0.setImage(Asset._24px.search.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.tint.main.v700
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -89,7 +89,7 @@ class MenualNaviView: UIView {
         $0.isHidden = true
     }
     
-    var leftButton1 = UIButton().then {
+    var leftButton1 = BaseButton().then {
         $0.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = .white
         $0.translatesAutoresizingMaskIntoConstraints = false

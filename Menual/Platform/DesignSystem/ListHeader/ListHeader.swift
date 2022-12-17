@@ -60,7 +60,7 @@ class ListHeader: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    let rightArrowBtn = UIButton().then {
+    let rightArrowBtn = BaseButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.right.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g400
@@ -72,7 +72,7 @@ class ListHeader: UIView {
     let rightFilterBtnBadge = Badges().then {
         $0.badgeType = .dot
     }
-    let rightFilterBtn = UIButton().then {
+    let rightFilterBtn = BaseButton().then {
         $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.filter.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -82,7 +82,7 @@ class ListHeader: UIView {
         $0.contentVerticalAlignment = .fill
     }
     
-    let rightTextBtn = UIButton().then {
+    let rightTextBtn = BaseButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("기록 삭제", for: .normal)
         $0.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
@@ -92,7 +92,7 @@ class ListHeader: UIView {
     let rightCalenderBtnBadge = Badges().then {
         $0.badgeType = .dot
     }
-    let rightCalenderBtn = UIButton().then {
+    let rightCalenderBtn = BaseButton().then {
         $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.calendar.image.withRenderingMode(.alwaysTemplate), for: .normal)
