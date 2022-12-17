@@ -12,10 +12,12 @@ protocol DiaryHomeDependency: Dependency {
     // AppRootComponent에서 생성해서, 부모(AppRoot RIBs)로부터 받아옴
     var diaryRepository: DiaryRepository { get }
     var momentsRepository: MomentsRepository { get }
+    var diaryUUIDRelay: BehaviorRelay<String> { get }
 }
 
 final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryMomentsDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency, DiaryBottomSheetDependency {
-
+    
+    var diaryUUIDRelay: BehaviorRelay<String> { dependency.diaryUUIDRelay }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
@@ -34,7 +36,10 @@ final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDepen
 // MARK: - Builder
 
 protocol DiaryHomeBuildable: Buildable {
-    func build(withListener listener: DiaryHomeListener) -> DiaryHomeRouting
+    func build(
+        withListener listener: DiaryHomeListener,
+        diaryUUIDRelay: BehaviorRelay<String>?
+    ) -> DiaryHomeRouting
 }
 
 final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
@@ -43,7 +48,10 @@ final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
         super.init(dependency: dependency)
     }
 
-    func build(withListener listener: DiaryHomeListener) -> DiaryHomeRouting {
+    func build(
+        withListener listener: DiaryHomeListener,
+        diaryUUIDRelay: BehaviorRelay<String>?
+    ) -> DiaryHomeRouting {
         let component = DiaryHomeComponent(dependency: dependency)
         
         let profileHomeBuildable = ProfileHomeBuilder(dependency: component)
