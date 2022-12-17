@@ -77,13 +77,19 @@ protocol URLHandler: AnyObject {
 // MARK: - Notification
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // 앱이 foreground에 있을 때 push 알림이 오면 이 메서드가 호출된다.
         completionHandler([.list, .banner])
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-        
+        // 사용자가 push 알림을 터치하면 이 메서드가 호출된다.
+
         // deep link 처리
-        let url = response.notification.request.content.userInfo
-        print("Reminder :: url! = \(url)")
+        let userInfo = response.notification.request.content.userInfo
+        print("Reminder :: url! = \(userInfo), \(userInfo["diaryUUID"])")
+
+        guard let pushModel = try? PushModel(decoding: userInfo) else { return }
+        
+        print("Reminder :: pushModel = \(pushModel)")
     }
 }

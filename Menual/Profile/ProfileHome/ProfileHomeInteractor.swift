@@ -59,7 +59,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
             // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 내보내기"),
             ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자에게 문의하기"),
             ProfileHomeModel(section: .SETTING2, type: .arrow, title: "오픈 소스 라이브러리 보기"),
-            // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자 도구"),
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자 도구"),
         ]
 
         return arr
