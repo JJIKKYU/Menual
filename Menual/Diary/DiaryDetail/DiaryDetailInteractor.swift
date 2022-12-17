@@ -155,8 +155,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                     }
                 }
 
-
-
                 self.presenter.loadDiaryDetail(model: self.diaryModel)
             case .error(let error):
                 fatalError("\(error)")
