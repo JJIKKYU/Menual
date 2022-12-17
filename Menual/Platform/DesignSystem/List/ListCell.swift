@@ -104,6 +104,11 @@ class ListCell: UITableViewCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isHidden = true
     }
+    
+    private let divider = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = Colors.grey.g800
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -125,6 +130,7 @@ class ListCell: UITableViewCell {
         addSubview(menualImageView)
         addSubview(listInfoView)
         addSubview(listBodyView)
+        addSubview(divider)
 
         menualImageView.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
@@ -151,6 +157,13 @@ class ListCell: UITableViewCell {
             make.top.equalTo(listBodyView.snp.bottom).offset(6)
             make.width.equalToSuperview().inset(20)
             make.height.equalTo(15)
+        }
+        
+        divider.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(1)
         }
     }
     

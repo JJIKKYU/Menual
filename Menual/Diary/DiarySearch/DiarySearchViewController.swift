@@ -56,7 +56,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchViewControll
         $0.showsVerticalScrollIndicator = false
         $0.contentInset = .zero
         $0.contentInsetAdjustmentBehavior = .never
-        $0.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        $0.separatorStyle = .none
     }
     
     private let recentSearchEmptyView = Empty().then {

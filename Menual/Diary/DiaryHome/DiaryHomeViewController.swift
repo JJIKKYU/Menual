@@ -128,9 +128,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     lazy var myMenualTitleView = ListHeader(type: .main, rightIconType: .filterAndCalender).then {
+        $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "MY MENUAL"
-        $0.layer.zPosition = 1
+        // $0.layer.zPosition = 1
         $0.rightCalenderBtn.addTarget(self, action: #selector(pressedDateFilterBtn), for: .touchUpInside)
         $0.rightFilterBtn.addTarget(self, action: #selector(pressedFilterBtn), for: .touchUpInside)
     }
@@ -146,8 +147,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.showsVerticalScrollIndicator = true
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 72, right: 0)
         $0.tag = TableCollectionViewTag.MyMenualTableView.rawValue
-        $0.separatorStyle = .singleLine
-        $0.separatorColor = Colors.grey.g700
+        $0.separatorStyle = .none
     }
     
     private let filterEmptyView = UIView().then {
@@ -249,11 +249,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.addSubview(scrollToTopFAB)
         self.view.addSubview(emptyView)
         self.view.addSubview(momentsEmptyView)
+        self.view.addSubview(myMenualTitleView)
         myMenualTableView.tableHeaderView = tableViewHeaderView
         
         tableViewHeaderView.addSubview(momentsCollectionView)
         tableViewHeaderView.addSubview(momentsCollectionViewPagination)
-        tableViewHeaderView.addSubview(myMenualTitleView)
         
         naviView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -551,7 +551,7 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
             // print("DiaryHome :: contents offset = \(scrollView.contentOffset.y)")
             let offset = scrollView.contentOffset.y
             // TitleView를 넘어서 스크롤할 경우
-            if offset > 155 {
+            if offset > 165 {
                 // print("DiaryHome :: contents > 155")
                 setFABMode(isEnabled: true)
                 myMenualTitleView.AppShadow(.shadow_6)
