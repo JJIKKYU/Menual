@@ -132,7 +132,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     lazy var imageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
-        $0.backgroundColor = .gray
+        $0.backgroundColor = Colors.background
         $0.AppCorner(._4pt)
     }
     
