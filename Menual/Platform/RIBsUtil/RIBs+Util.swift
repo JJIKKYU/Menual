@@ -13,7 +13,7 @@ import SnapKit
 public final class NavigationControllerable: ViewControllable {
   
     public var uiviewController: UIViewController { self.navigationController }
-    public let navigationController: UINavigationController
+    public let navigationController: NavigationController
   
     public init(root: ViewControllable) {
         // let navigation = UINavigationController(rootViewController: root.uiviewController)

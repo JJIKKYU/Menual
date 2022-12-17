@@ -78,7 +78,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     let notificationIdentifier: String = "StartCamera"
     
     // delegate 저장 후 VC 삭제시 해제 용도
-    private var cropVC: CustomCropViewController?
+    private weak var cropVC: CustomCropViewController?
     
     private lazy var naviView = MenualNaviView(type: .write).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -208,9 +208,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
      */
     
     var phpickerConfiguration = PHPickerConfiguration()
-    lazy var imagePicker = PHPickerViewController(configuration: phpickerConfiguration).then {
-        $0.delegate = self
-    }
+    weak var weakImagePicker: PHPickerViewController?
+    // (configuration: phpickerConfiguration)
     
     lazy var testImagePicker = UIImagePickerController().then {
         $0.delegate = self
@@ -893,7 +892,10 @@ extension DiaryWritingViewController {
         Analytics.logEvent("Detail_Button_ImageUpload", parameters: nil)
         phpickerConfiguration.filter = .images
         phpickerConfiguration.selectionLimit = 1
+        let imagePicker = PHPickerViewController(configuration: phpickerConfiguration)
+        weakImagePicker = imagePicker
         imagePicker.isEditing = true
+        imagePicker.delegate = self
         // present(imagePicker, animated: true, completion: nil)
 //        testImagePicker.modalPresentationStyle = .fullScreen
         
@@ -1131,28 +1133,24 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
         
         if let itemProvider = itemProvider {
             if itemProvider.canLoadObject(ofClass: UIImage.self) {
-                itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
+                    guard let self = self, let image = image as? UIImage else { return }
                     DispatchQueue.main.async {
-                        // self.imageView.image = image as? UIImage
-                        // self.imageUploadView.image = image as? UIImage
+                        let cropVC = CustomCropViewController(image: image)
+                        cropVC.cropVCNaviViewType = .backArrow
                         
-                        if let image = image as? UIImage {
-                            let cropVC = CustomCropViewController(image: image)
-                            cropVC.cropVCNaviViewType = .backArrow
-                            
-                            switch self.writingType {
-                            case .writing:
-                                cropVC.cropVCButtonType = .add
-                            case .edit:
-                                cropVC.cropVCButtonType = .edit
-                            }
-                            
-                            self.cropVC = cropVC
-                            cropVC.delegate = self
-                            print("DiaryWriting :: selectedOriginalImage = \(image)")
-                            self.selectedOriginalImage = self.fixImageOrientation(image)
-                            picker.navigationController?.pushViewController(cropVC, animated: true)
+                        switch self.writingType {
+                        case .writing:
+                            cropVC.cropVCButtonType = .add
+                        case .edit:
+                            cropVC.cropVCButtonType = .edit
                         }
+                        
+                        self.cropVC = cropVC
+                        cropVC.delegate = self
+                        print("DiaryWriting :: selectedOriginalImage = \(image)")
+                        self.selectedOriginalImage = self.fixImageOrientation(image)
+                        picker.navigationController?.pushViewController(cropVC, animated: true)
                     }
                 }
             }

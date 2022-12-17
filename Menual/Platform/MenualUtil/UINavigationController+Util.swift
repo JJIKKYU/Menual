@@ -35,13 +35,14 @@ extension UINavigationController {
 }
 
 // MARK: - BackSwipeGesture FullWidth
-class NavigationController: UINavigationController {
-    override func viewDidLoad() {
+public class NavigationController: UINavigationController {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         setupFullWidthBackGesture()
     }
-
-    private lazy var fullWidthBackGestureRecognizer = UIPanGestureRecognizer()
+    
+    public var isDisabledFullWidthBackGesture: Bool = false
+    public lazy var fullWidthBackGestureRecognizer = UIPanGestureRecognizer()
 
     private func setupFullWidthBackGesture() {
         // The trick here is to wire up our full-width `fullWidthBackGestureRecognizer` to execute the same handler as
@@ -61,7 +62,9 @@ class NavigationController: UINavigationController {
 }
 
 extension NavigationController: UIGestureRecognizerDelegate {
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        print("Navi :: \(isDisabledFullWidthBackGesture)")
+        if isDisabledFullWidthBackGesture { return false }
         let isSystemSwipeToBackEnabled = interactivePopGestureRecognizer?.isEnabled == true
         let isThereStackedViewControllers = viewControllers.count > 1
         return isSystemSwipeToBackEnabled && isThereStackedViewControllers

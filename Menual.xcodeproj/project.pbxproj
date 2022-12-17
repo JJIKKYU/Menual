@@ -17,6 +17,7 @@
 		980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */; };
 		980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */; };
 		980A974D294DDB1100B8CBA5 /* BaseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980A974C294DDB1100B8CBA5 /* BaseButton.swift */; };
+		980A9751294DF24600B8CBA5 /* UIViewController+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980A9750294DF24600B8CBA5 /* UIViewController+Util.swift */; };
 		98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98239BE527E323CB00E216F1 /* MomentsRoundView.swift */; };
 		98239BE927E43AB700E216F1 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98239BE827E43AB700E216F1 /* Icons.xcassets */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
@@ -286,6 +287,7 @@
 		980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeBuilder.swift; sourceTree = "<group>"; };
 		980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeInteractor.swift; sourceTree = "<group>"; };
 		980A974C294DDB1100B8CBA5 /* BaseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseButton.swift; sourceTree = "<group>"; };
+		980A9750294DF24600B8CBA5 /* UIViewController+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Util.swift"; sourceTree = "<group>"; };
 		98239BE527E323CB00E216F1 /* MomentsRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsRoundView.swift; sourceTree = "<group>"; };
 		98239BE827E43AB700E216F1 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -1303,6 +1305,7 @@
 				985BFF8B2935ED6100D86106 /* String+Util.swift */,
 				985BFFE729458D7A00D86106 /* Realm+Util.swift */,
 				980A974C294DDB1100B8CBA5 /* BaseButton.swift */,
+				980A9750294DF24600B8CBA5 /* UIViewController+Util.swift */,
 			);
 			path = MenualUtil;
 			sourceTree = "<group>";
@@ -1862,6 +1865,7 @@
 				984392CA2917A96A00EF526E /* PasswordView.swift in Sources */,
 				98B55743281CFF5B00F8CA3E /* DiarySearchCell.swift in Sources */,
 				98F3A28028150052000851F0 /* DiaryBottomSheetBuilder.swift in Sources */,
+				980A9751294DF24600B8CBA5 /* UIViewController+Util.swift in Sources */,
 				985BFF702924C36500D86106 /* ProfileDeveloperBuilder.swift in Sources */,
 				98F3A2762813C9D8000851F0 /* MenualSegmentationBaseViewController.swift in Sources */,
 				98B5577F283A031400F8CA3E /* GNBHeaderBuilder.swift in Sources */,

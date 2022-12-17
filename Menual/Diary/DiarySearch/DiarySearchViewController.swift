@@ -99,35 +99,49 @@ final class DiarySearchViewController: UIViewController, DiarySearchViewControll
         view.backgroundColor = Colors.background
         setViews()
         bind()
-
-        // 뒤로가기 제스쳐 가능하도록
-        navigationController?.interactivePopGestureRecognizer?.delegate = nil
-
-        // keyboard observer등록
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-                
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
            self.view.endEditing(true)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // keyboard observer등록
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+                
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         searchTextField.textField.becomeFirstResponder()
+        (navigationController as? NavigationController)?.isDisabledFullWidthBackGesture = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        (navigationController as? NavigationController)?.isDisabledFullWidthBackGesture = false
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        dch_checkDeallocation()
         if isMovingFromParent || isBeingDismissed {
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
-        
+    }
+    
+    deinit {
+        tableView.delegate = nil
+        searchTextField.textField.delegate = nil
+
         // Keyboard observer해제
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-                
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+
+        print("deinit!")
     }
     
     func bind() {
@@ -593,8 +607,8 @@ extension DiarySearchViewController: UITextFieldDelegate {
 extension DiarySearchViewController {
     @objc
     func keyboardWillShow(_ notification: NSNotification) {
+        print("keyboardWillShow!")
         guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
-        print("keyboardWillShow! - \(keyboardHeight)")
         tableView.snp.updateConstraints { make in
             make.bottom.equalToSuperview().inset(keyboardHeight)
         }
