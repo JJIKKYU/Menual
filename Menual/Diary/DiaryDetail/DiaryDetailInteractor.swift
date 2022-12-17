@@ -100,6 +100,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     }
     
     func setDiaryModelRealmOb() {
+        // MARK: - DiaryModel Init 세팅
         guard let realm = Realm.safeInit() else { return }
         guard let diaryModel = self.diaryModel else { return }
         let diary = realm.object(ofType: DiaryModelRealm.self, forPrimaryKey: diaryModel._id)
@@ -107,18 +108,24 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             self.imageDataRelay.accept(imageData)
         }
 
+        // Reminder가 있을 경우 처리하는 로직
         if let reminder = diaryModel.reminder {
-            var dateComponets = DateComponents()
-            dateComponets.year = Calendar.current.component(.year, from: reminder.requestDate)
-            dateComponets.month = Calendar.current.component(.month, from: reminder.requestDate)
-            dateComponets.day = Calendar.current.component(.day, from: reminder.requestDate)
+            // reminder를 선택한 날짜보다 시간이 지났을 경우 비활성화
+            let diffTime = Int(Date().timeIntervalSince(reminder.requestDate))
+            print("DiaryDetail :: diffTime = \(diffTime)")
+            if diffTime > 0 {
+                dependency.diaryRepository
+                    .updateDiary(DiaryModel: diaryModel, reminder: nil)
+            } else {
+                let dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: reminder.requestDate)
 
-            let reminderRequestModel = ReminderRequsetModel(isEditing: false, requestDateComponents: dateComponets, requestDate: reminder.requestDate)
+                let reminderRequestModel = ReminderRequsetModel(isEditing: false, requestDateComponents: dateComponents, requestDate: reminder.requestDate)
 
-            self.reminderRequestDateRelay.accept(reminderRequestModel)
-            print("DiaryDetail :: Reminder가 있습니다!")
-            
-            self.presenter.setReminderIconEnabled(isEnabled: true)
+                self.reminderRequestDateRelay.accept(reminderRequestModel)
+                print("DiaryDetail :: Reminder가 있습니다!")
+                
+                self.presenter.setReminderIconEnabled(isEnabled: true)
+            }
         } else {
             self.reminderRequestDateRelay.accept(nil)
             self.presenter.setReminderIconEnabled(isEnabled: false)

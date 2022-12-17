@@ -239,6 +239,11 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
         // reminder가 없을 경우 삭제
         else {
+            // 리마인더가 있다면 로컬에 등록된 Notification과 함께 삭제
+            if let reminder = DiaryModel.reminder {
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder.uuid])
+            }
+
             realm.safeWrite {
                 DiaryModel.reminder = nil
             }
