@@ -71,8 +71,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     
     private let defaultTitleText: String = "제목을 입력할 수 있어요"
     private let defaultDescriptionText: String = "오늘의 메뉴얼을 작성해주세요."
-    private let defaultWeatherText: String = "오늘 날씨는 어땠나요?"
-    private let defaultPlaceText: String = "지금 장소는 어디신가요?"
+    private let defaultWeatherText: String = "날씨를 선택해주세요"
+    private let defaultPlaceText: String = "장소를 선택해주세요"
     
     // Camera Delegate
     let notificationIdentifier: String = "StartCamera"

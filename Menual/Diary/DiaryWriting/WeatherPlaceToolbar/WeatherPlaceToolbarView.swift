@@ -130,7 +130,7 @@ class WeatherPlaceToolbarView: UIView {
         case .weather:
             print("WeatherPlcaeToolbarView :: .weather")
             weatherPlaceSelectView.weatherPlaceType = .weather
-            titleLabel.text = "날씨는 어땠나요?"
+            titleLabel.text = "날씨를 선택해주세요"
             if let selectedWeatherType = selectedWeatherType {
                 print("WeatherPlcaeToolbarView :: weather를 선택한 적이 있습니다.")
                 weatherPlaceSelectView.selectedWeatherType = selectedWeatherType
@@ -138,7 +138,7 @@ class WeatherPlaceToolbarView: UIView {
         case .place:
             print("WeatherPlcaeToolbarView :: .place")
             weatherPlaceSelectView.weatherPlaceType = .place
-            titleLabel.text = "지금 장소는 어디신가요?"
+            titleLabel.text = "장소를 선택해주세요"
             if let selectedPlaceType = selectedPlaceType {
                 print("WeatherPlcaeToolbarView :: place를 선택한 적이 있습니다.")
                 weatherPlaceSelectView.selectedPlaceType = selectedPlaceType

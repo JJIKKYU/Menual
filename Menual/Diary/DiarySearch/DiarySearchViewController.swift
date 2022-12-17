@@ -367,7 +367,8 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             if let recentSearchCount: Int = listener?.recentSearchModel?.count {
                 
                 // 최근 검색 결과가 없으면 해당 Section도 나타나지 않도록
-                if recentSearchCount == 0 {
+                // 현재 검색 중이고, 검색 결과가 있으면 노출되지 않도록
+                if recentSearchCount == 0 || listener?.searchResultsRelay.value.count ?? 0 > 0 {
                     return UIView()
                 } else {
                     headerView.rightTextBtn.isEnabled = true
@@ -462,6 +463,13 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             guard let model = listener?.recentSearchModel?[index],
                   let data = model.diary else {
                 return UITableViewCell()
+            }
+            
+            if listener?.searchResultsRelay.value.count ?? 0 > 0 {
+                cell.isHidden = true
+                return cell
+            } else {
+                cell.isHidden = false
             }
             
             print("Search :: cell! - 2")
