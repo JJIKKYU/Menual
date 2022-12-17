@@ -105,6 +105,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func bind() {
         print("DiaryHomeInteractor :: Bind!")
+        // PushNotification을 누르고 UUID가 들어올 경우 Detail 페이지로 넘겨줌
         dependency.diaryUUIDRelay
             .filter ({ $0.count != 0 })
             .subscribe(onNext: { [weak self] uuid in

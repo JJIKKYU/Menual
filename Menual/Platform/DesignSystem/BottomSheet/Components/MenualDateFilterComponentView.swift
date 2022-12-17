@@ -261,8 +261,9 @@ class MenualDateFilterComponentView: UIView {
             self.year = String(dateFilterModelArr[safe: yearIdx]?.year ?? self.currentYear)
             
             self.month = String(dateFilterModelArr[safe: yearIdx]?.months[safe: monthIdx]?.month ?? self.currentMonth)
-            let engMonth = String(self.month).convertEngMonthName()
-            self.yearEngMonth = self.year + engMonth
+            // let engMonth = String(self.month).convertEngMonthName()
+            // self.yearEngMonth = self.year + engMonth
+            self.yearEngMonth = self.year + "." + self.month
             print("DiaryBottomSheet :: EngMonthFormat = \(self.yearEngMonth)")
             self.count = dateFilterModelArr[safe: yearIdx]?.months[safe: monthIdx]?.diaryCount ?? 0
         })

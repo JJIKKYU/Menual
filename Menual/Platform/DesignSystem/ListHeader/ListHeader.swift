@@ -73,6 +73,7 @@ class ListHeader: UIView {
         $0.badgeType = .dot
     }
     let rightFilterBtn = UIButton().then {
+        $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.filter.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g600
@@ -92,6 +93,7 @@ class ListHeader: UIView {
         $0.badgeType = .dot
     }
     let rightCalenderBtn = UIButton().then {
+        $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.calendar.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g600
@@ -104,6 +106,7 @@ class ListHeader: UIView {
         self.type = type
         self.detailType = rightIconType
         super.init(frame: CGRect.zero)
+        isUserInteractionEnabled = true
         setViews()
     }
     

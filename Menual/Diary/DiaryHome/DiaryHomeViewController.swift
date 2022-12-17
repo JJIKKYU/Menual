@@ -51,15 +51,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     // 스크롤 위치 저장하는 Dictionary
     var disposeBag = DisposeBag()
     
-    var sectionNameDic: [Int: String] = [:]
-    
-    var filteredSectionNameDic: [Int: String] = [:]
-    
     var cellsectionNumberDic: [String: Int] = [:]
     var cellsectionNumberDic2: [Int: Int] = [:]
-    
-    var filteredCellsectionNumberDic: [String: Int] = [:]
-    var filteredCellsectionNumberDic2: [Int: Int] = [:]
     
     let isFilteredRelay = BehaviorRelay<Bool>(value: false)
     var isShowToastDiaryResultRelay = BehaviorRelay<DiaryHomeViewController.ShowToastType?>(value: nil)
@@ -434,9 +427,19 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     func scrollToDateFilter(yearDateFormatString: String) {
-        guard let sectionIdx = cellsectionNumberDic[yearDateFormatString] else { return }
-        myMenualTableView.scrollToRow(at: IndexPath(row: 0, section: sectionIdx), at: .middle, animated: true)
-        print("DiaryHome :: scrollToDateFilter = \(sectionIdx)")
+        let isFiltered: Bool = isFilteredRelay.value
+        switch isFiltered {
+        case true:
+            guard let diaryDictionary = listener?.filteredDiaryDic.value?.diarySectionModelDic else { return }
+            guard let data = diaryDictionary.filter ({ $0.value.sectionName == yearDateFormatString }).first else { return }
+            myMenualTableView.scrollToRow(at: IndexPath(row: 0, section: data.value.sectionIndex), at: .middle, animated: true)
+
+        case false:
+            guard let diaryDictionary = listener?.diaryDictionary else { return }
+            guard let data = diaryDictionary.filter ({ $0.value.sectionName == yearDateFormatString }).first else { return }
+            print("DiaryHome :: data = \(data)")
+            myMenualTableView.scrollToRow(at: IndexPath(row: 0, section: data.value.sectionIndex), at: .middle, animated: true)
+        }
     }
     
     func deleteTableViewSection(section: Int) {
@@ -629,7 +632,11 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
 // MARK: - UITableView Deleagte, Datasource
 extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 34
+        // 첫번재 섹션일 경우에는 넓게 안띄움
+        if section == 0 {
+            return 44
+        }
+        return 60
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -651,7 +658,6 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         if self.isFilteredRelay.value {
             guard let diaryDictionary = listener?.filteredDiaryDic.value?.diarySectionModelDic else { return 0 }
-            print("filteredSectionNameDic.count = \(filteredSectionNameDic.count), \(filteredSectionNameDic)")
             return diaryDictionary.count
         } else {
 
@@ -663,6 +669,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath) as? ListCell else { return UITableViewCell() }
         let index: Int = indexPath.row
+        var lastIndex: Int = 0
         let section: Int = indexPath.section
 
         var dataModel: DiaryModelRealm?
@@ -672,12 +679,14 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard let diaryDictionry: [String: DiaryHomeSectionModel] = listener?.filteredDiaryDic.value?.diarySectionModelDic else { return defaultCell }
             guard let dataDictionary = diaryDictionry.filter ({ $0.value.sectionIndex == section }).first else { return defaultCell }
             guard let data = dataDictionary.value.diaries[safe: index] else { return defaultCell }
+            lastIndex = dataDictionary.value.diaries.count
             dataModel = data
 
         case false:
             guard let diaryDictionry: [String: DiaryHomeSectionModel] = listener?.diaryDictionary else { return defaultCell }
             guard let dataDictionary = diaryDictionry.filter ({ $0.value.sectionIndex == section }).first else { return defaultCell }
             guard let data = dataDictionary.value.diaries[safe: index] else { return defaultCell }
+            lastIndex = dataDictionary.value.diaries.count
             dataModel = data
         }
         guard let dataModel = dataModel else { return UITableViewCell() }
@@ -710,6 +719,13 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         cell.pageCount = pageCount
         cell.reviewCount = replies
         cell.testModel = dataModel
+        
+        // 마지막 셀일 경우에는 divider 제거
+        if index == lastIndex - 1 {
+            cell.divider.isHidden = true
+        } else {
+            cell.divider.isHidden = false
+        }
         
         return cell
     }

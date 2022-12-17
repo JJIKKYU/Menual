@@ -105,7 +105,7 @@ class ListCell: UITableViewCell {
         $0.isHidden = true
     }
     
-    private let divider = UIView().then {
+    public let divider = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = Colors.grey.g800
     }

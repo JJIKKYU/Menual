@@ -92,18 +92,21 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         super.willResignActive()
     }
 
-    // DateFilter일 경우 메뉴얼 갯수 세티이 필요
+    // DateFilter일 경우 메뉴얼 갯수 세팅 필요
     func setDateFilter() {
         if bottomSheetType != .dateFilter { return }
         guard let realm = Realm.safeInit() else { return }
-        let diaryArr = realm.objects(DiaryModelRealm.self).toArray()
+        let diaryArr = realm.objects(DiaryModelRealm.self)
+            .toArray()
+            .sorted(by: ({ $0.createdAt < $1.createdAt }))
+        
         
         // 월을 세팅해보자
         var monthSet: [Int: [Int: Int]] = [:]
         var yearDateFilterMonthsModel = [Int: [DateFilterMonthsModel]]()
         diaryArr
-            .sorted(by: { $0.createdAt < $1.createdAt })
             .forEach { diary in
+                print("diary :: diary! = \(diary)")
                 let year: Int = Int(diary.createdAt.toStringWithYYYY()) ?? 0
                 let month: Int = Int(diary.createdAt.toStringWithMM()) ?? 0
                 if monthSet[year] == nil {
@@ -122,13 +125,18 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
             if yearDateFilterMonthsModel[year] == nil {
                 yearDateFilterMonthsModel[year] = []
             }
+
+            var dateFilterMonthsModelArr: [DateFilterMonthsModel] = []
             for value in monthDic {
                 let month = value.key
                 let monthCount = value.value
-                yearDateFilterMonthsModel[year]?.append(DateFilterMonthsModel(month: month, diaryCount: monthCount))
+                dateFilterMonthsModelArr.append(DateFilterMonthsModel(month: month, diaryCount: monthCount))
+                // yearDateFilterMonthsModel[year]?.append(DateFilterMonthsModel(month: month, diaryCount: monthCount))
             }
+            
+            let result = dateFilterMonthsModelArr.sorted(by: ({ $0.month < $1.month }))
+            yearDateFilterMonthsModel[year] = result
         }
-        
         var dateFilterModelArr = [DateFilterModel]()
         for value in Array(yearDateFilterMonthsModel) {
             dateFilterModelArr.insert(DateFilterModel(year: value.key, months: value.value), at: 0)

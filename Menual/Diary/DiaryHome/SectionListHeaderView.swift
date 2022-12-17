@@ -43,11 +43,12 @@ class SectionListHeaderView: UIView {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.top.equalToSuperview()
+            make.bottom.equalToSuperview().inset(15)
         }
         
         divider.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(8)
+            // make.top.equalTo(titleLabel.snp.bottom).offset(8)
+            make.bottom.equalToSuperview()
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.height.equalTo(2)
