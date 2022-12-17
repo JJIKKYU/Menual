@@ -15,7 +15,7 @@ public protocol DiaryRepository {
     var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var password: BehaviorRelay<PasswordModelRealm?> { get }
-    var reminder: BehaviorRelay<[ReminderModel]> { get }
+    // var reminder: BehaviorRelay<[ReminderModel]> { get }
 
     func fetch()
     func addDiary(info: DiaryModelRealm)
@@ -52,11 +52,12 @@ public protocol DiaryRepository {
     func updatePassword(password: Int, isEnabled: Bool)
     
     // Reminder 로직
-    func fetchReminder()
-    func fetchDiaryReminder(diaryUUID: String) -> Observable<ReminderModel?>
-    func addReminder(model: ReminderModel)
-    func updateReminder(model: ReminderModel)
-    func deleteReminder(reminderUUID: String)
+    func updateDiary(DiaryModel: DiaryModelRealm ,reminder: ReminderModelRealm?)
+    // func fetchReminder()
+    // func fetchDiaryReminder(diaryUUID: String) -> Observable<ReminderModel?>
+    // func addReminder(model: ReminderModel)
+    // func updateReminder(model: ReminderModel)
+    // func deleteReminder(reminderUUID: String)
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
@@ -68,8 +69,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     public var password = BehaviorRelay<PasswordModelRealm?>(value: nil)
     
-    public var reminder: BehaviorRelay<[ReminderModel]> { reminderSubject }
-    public let reminderSubject = BehaviorRelay<[ReminderModel]>(value: [])
+    // public var reminder: BehaviorRelay<[ReminderModel]> { reminderSubject }
+    // public let reminderSubject = BehaviorRelay<[ReminderModel]>(value: [])
     
     public func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void) {
         // 1. 이미지를 저장할 경로를 설정해줘야함 - 도큐먼트 폴더,File 관련된건 Filemanager가 관리함(싱글톤 패턴)
@@ -177,8 +178,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
             .filter { $0.isDeleted == false }
 
         diaryModelSubject.accept(diaryModelResults.map { DiaryModelRealm(value: $0) })
-        
-        self.fetchReminder()
     }
     
     // MARK: - Diary CRUD
@@ -239,6 +238,24 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
     }
     
+    public func updateDiary(DiaryModel: DiaryModelRealm ,reminder: ReminderModelRealm?) {
+        guard let realm = Realm.safeInit() else { return }
+        
+        // reminder가 있을 경우 업데이트
+        if let reminder = reminder {
+            realm.safeWrite {
+                DiaryModel.reminder = reminder
+            }
+        }
+        // reminder가 없을 경우 삭제
+        else {
+            realm.safeWrite {
+                DiaryModel.reminder = nil
+            }
+        }
+        
+    }
+    
     public func removeAllDiary() {
         guard let realm = Realm.safeInit() else {
             return
@@ -273,8 +290,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
 
         // 리마인더가 있따면 함께 삭제
-        if let reminderData: ReminderModelRealm = realm.objects(ReminderModelRealm.self).filter({ $0.diaryUUID == info.uuid }).first {
-            deleteReminder(reminderUUID: reminderData.uuid)
+        if let reminder = info.reminder {
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder.uuid])
         }
     }
     
@@ -537,6 +554,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
     
     
     // MARK: - REMinder
+    /*
     public func fetchReminder() {
         guard let realm = Realm.safeInit() else {
             return
@@ -613,4 +631,5 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         self.fetchReminder()
     }
+     */
 }

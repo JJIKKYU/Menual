@@ -72,6 +72,7 @@ public class DiaryModelRealm: Object {
     }
     @Persisted var lastMomentsDate: Date?
     @Persisted var isHide: Bool
+    @Persisted var reminder: ReminderModelRealm?
     
     convenience init(pageNum: Int,
                      title: String,
@@ -84,7 +85,8 @@ public class DiaryModelRealm: Object {
                      replies: [DiaryReplyModelRealm] = [],
                      isDeleted: Bool = false,
                      lastMomentsDate: Date? = nil,
-                     isHide: Bool = false
+                     isHide: Bool = false,
+                     reminder: ReminderModelRealm? = nil
     ) {
         self.init()
         self.pageNum = pageNum
@@ -100,6 +102,7 @@ public class DiaryModelRealm: Object {
         self.lastMomentsDate = lastMomentsDate
         // self.replies.append(objectsIn: replies)
         self.isHide = isHide
+        self.reminder = reminder
     }
     
     func updatePageNum(pageNum: Int) {
