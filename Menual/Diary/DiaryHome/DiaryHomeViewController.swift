@@ -226,7 +226,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
         Analytics.logEvent("Home_Appear", parameters: nil)
     }
     
@@ -948,5 +948,12 @@ extension DiaryHomeViewController {
         }
 
         isShowToastDiaryResultRelay.accept(nil)
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate / BackSwipe Bug
+extension DiaryHomeViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return navigationController?.viewControllers.count ?? 0 > 1
     }
 }
