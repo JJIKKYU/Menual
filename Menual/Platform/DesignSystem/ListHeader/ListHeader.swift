@@ -73,6 +73,7 @@ class ListHeader: UIView {
         $0.badgeType = .dot
     }
     let rightFilterBtn = BaseButton().then {
+        $0.actionName = "filter"
         $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.filter.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -93,6 +94,7 @@ class ListHeader: UIView {
         $0.badgeType = .dot
     }
     let rightCalenderBtn = BaseButton().then {
+        $0.actionName = "calanderFilter"
         $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.calendar.image.withRenderingMode(.alwaysTemplate), for: .normal)

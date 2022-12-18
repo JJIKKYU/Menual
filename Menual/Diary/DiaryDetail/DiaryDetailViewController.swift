@@ -580,16 +580,19 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
 extension DiaryDetailViewController {
     @objc
     func pressedMenuMoreBtn() {
+        MenualLog.logEventAction(responder: naviView.rightButton1)
         listener?.pressedMenuMoreBtn()
     }
     
     @objc
     func pressedReminderBtn() {
+        MenualLog.logEventAction(responder: naviView.rightButton2)
         listener?.pressedReminderBtn()
     }
     
     @objc
     func pressedBackBtn() {
+        MenualLog.logEventAction(responder: naviView.backButton)
         print("DiaryDetail :: pressedBackBtn!")
         guard let replyText: String = replyBottomView.replyTextView.text else { return }
         

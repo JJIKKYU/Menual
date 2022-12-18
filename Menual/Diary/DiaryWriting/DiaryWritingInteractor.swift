@@ -18,7 +18,6 @@ protocol DiaryWritingRouting: ViewableRouting {
 protocol DiaryWritingPresentable: Presentable {
     var listener: DiaryWritingPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
-    func pressedBackBtn()
     func setWeatherView(model: WeatherModelRealm)
     func setPlaceView(model: PlaceModelRealm)
     

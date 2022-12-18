@@ -47,6 +47,7 @@ final class DiaryWritingBuilder: Builder<DiaryWritingDependency>, DiaryWritingBu
         let diaryTempSaveBuildable = DiaryTempSaveBuilder(dependency: component)
         
         let viewController = DiaryWritingViewController()
+        viewController.screenName = "writing"
         let interactor = DiaryWritingInteractor(
             presenter: viewController,
             dependency: component,

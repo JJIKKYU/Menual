@@ -44,6 +44,7 @@ class MenualNaviView: UIView {
     }
     
     var backButton = BaseButton().then {
+        $0.actionName = "back"
         $0.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = .white
         $0.contentMode = .scaleAspectFit
@@ -102,6 +103,7 @@ class MenualNaviView: UIView {
     init(type: NaviViewType) {
         self.naviViewType = type
         super.init(frame: CGRect.zero)
+        categoryName = "navi"
         setViews()
     }
     
@@ -163,7 +165,9 @@ class MenualNaviView: UIView {
     func setNaviViewType() {
         switch naviViewType {
         case .main:
+            rightButton1.actionName = "profile"
             rightButton1.isHidden = false
+            rightButton2.actionName = "search"
             rightButton2.isHidden = false
             menualTitleImage.isHidden = false
         case .moments:
@@ -205,9 +209,11 @@ class MenualNaviView: UIView {
             rightButton2.isHidden = false
             rightButton2.setImage(Asset._24px.storage.image.withRenderingMode(.alwaysTemplate), for: .normal)
             rightButton2.tintColor = Colors.grey.g100
+            rightButton2.actionName = "tempSave"
             rightButton1.isHidden = false
             rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
             rightButton1.tintColor = Colors.grey.g600
+            rightButton1.actionName = "upload"
         case .menualDetail:
             titleLabel.isHidden = false
             titleLabel.text = "메뉴얼 상세"
@@ -215,9 +221,11 @@ class MenualNaviView: UIView {
             backButton.isHidden = false
             backButton.tintColor = Colors.grey.g100
             backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton1.actionName = "more"
             rightButton1.isHidden = false
             rightButton1.tintColor = Colors.grey.g100
             rightButton1.setImage(Asset._24px.more.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton2.actionName = "reminder"
             rightButton2.isHidden = false
             rightButton2.tintColor = Colors.grey.g100
             rightButton2.setImage(Asset._24px.Alert.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)

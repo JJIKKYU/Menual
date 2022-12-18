@@ -52,6 +52,7 @@ final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDetailBuild
         let diaryDetailImageBuildable = DiaryDetailImageBuilder(dependency: component)
 
         let viewController = DiaryDetailViewController()
+        viewController.screenName = "detail"
         let interactor = DiaryDetailInteractor(
             presenter: viewController,
             diaryModel: diaryModel,

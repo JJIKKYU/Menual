@@ -174,8 +174,11 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     }
     
     private lazy var imageUploadView = ImageUploadView().then {
+        $0.categoryName = "imageUplad"
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.deleteBtn.actionName = "delete"
         $0.deleteBtn.addTarget(self, action: #selector(pressedImageUploadViewDeleteBtn), for: .touchUpInside)
+        $0.editBtn.actionName = "edit"
         $0.editBtn.addTarget(self, action: #selector(pressedImageUploadViewEditBtn), for: .touchUpInside)
     }
     
@@ -825,9 +828,8 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
 // MARK: - IBACtion
 extension DiaryWritingViewController {
     @objc
-    func pressedBackBtn() {
-        Analytics.logEvent("Detil_Button_Close", parameters: nil)
-        print("pressedBackBtn!")
+    func pressedBackBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         var titleText: String = ""
         var isShowDialog: Bool = false
         switch writingType {
@@ -859,8 +861,8 @@ extension DiaryWritingViewController {
     }
     
     @objc
-    func pressedCheckBtn() {
-        Analytics.logEvent("Detil_Button_Upload", parameters: nil)
+    func pressedCheckBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         var titleText: String = ""
         switch writingType {
         case .writing:
@@ -878,22 +880,21 @@ extension DiaryWritingViewController {
     }
     
     @objc
-    func pressedTempSaveBtn() {
-        Analytics.logEvent("Detil_Button_TempSave", parameters: nil)
-        print("DiaryWriting :: pressedTempSaveBtn")
+    func pressedTempSaveBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         listener?.pressedTempSaveBtn()
     }
     
     @objc
-    func pressedImageUploadViewEditBtn() {
+    func pressedImageUploadViewEditBtn(_ button: UIButton) {
         print("DiaryWriting :: pressedImageUploadViewEditBtn")
         // 따로 추가 기능이 없으므로 그대로 랜딩
         // pressedImageUploadView()
     }
     
     @objc
-    func pressedImageUploadViewDeleteBtn() {
-        Analytics.logEvent("Writing_Button_ImageDelete", parameters: nil)
+    func pressedImageUploadViewDeleteBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         print("DiaryWriting :: pressedImageUploadViewDeleteBtn")
         show(size: .small,
              buttonType: .twoBtn,
@@ -904,16 +905,16 @@ extension DiaryWritingViewController {
     }
     
     @objc
-    func pressedPlaceViewDeleteBtn() {
-        Analytics.logEvent("Writing_Button_PlaceTextDelete", parameters: nil)
+    func pressedPlaceViewDeleteBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - locationView")
         locationSelectView.selectTextView.text = ""
         isEditBeginRelay.accept(true)
     }
     
     @objc
-    func pressedWeatherViewDeleteBtn() {
-        Analytics.logEvent("Writing_Button_WeatherTextDelete", parameters: nil)
+    func pressedWeatherViewDeleteBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - weatherView")
         weatherSelectView.selectTextView.text = ""
         isEditBeginRelay.accept(true)

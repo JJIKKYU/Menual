@@ -77,20 +77,22 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.menualTitleImage.addGestureRecognizer(gesture)
         // #endif
     }
-    
-    // TODO: CustomView로 만들기
+
     lazy var writeBoxBtn = BoxButton(frame: CGRect.zero, btnStatus: .active, btnSize: .xLarge).then {
+        $0.actionName = "write"
         $0.title = "N번째 메뉴얼 작성하기"
         $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
     }
     
     lazy var writeFAB = FAB(fabType: .primary, fabStatus: .default_).then {
+        $0.actionName = "write"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
         $0.isHidden = true
     }
     
     lazy var scrollToTopFAB = FAB(fabType: .secondary, fabStatus: .default_).then {
+        $0.actionName = "scrollToTop"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.addTarget(self, action: #selector(pressedScrollToTopFAB), for: .touchUpInside)
         $0.isHidden = true
@@ -121,6 +123,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     lazy var myMenualTitleView = ListHeader(type: .main, rightIconType: .filterAndCalender).then {
+        $0.categoryName = "menualTitle"
         $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "MY MENUAL"
@@ -130,6 +133,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     lazy var myMenualTableView = UITableView(frame: CGRect.zero, style: .grouped).then {
+        $0.categoryName = "menual"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
         $0.dataSource = self
@@ -481,60 +485,62 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
 // MARK: - IBAction
 extension DiaryHomeViewController {
     @objc
-    func pressedSearchBtn() {
+    func pressedSearchBtn(_ button: UIButton) {
         listener?.pressedSearchBtn()
-        Analytics.logEvent("Home_Button_Search", parameters: nil)
-        Analytics.logEvent(AnalyticsEventSelectItem, parameters: ["button" : "search"])
+        MenualLog.logEventAction(responder: button)
     }
     
     @objc
-    func pressedMyPageBtn() {
+    func pressedMyPageBtn(_ button: UIButton) {
         listener?.pressedMyPageBtn()
-        Analytics.logEvent("Home_Button_Profile", parameters: nil)
-        Analytics.logEvent(AnalyticsEventSelectItem, parameters: ["button" : "profile"])
+        MenualLog.logEventAction(responder: button)
     }
     
     @objc
-    func pressedFABWritingBtn() {
-        print("FABWritingBtn Pressed!")
+    func pressedFABWritingBtn(_ button: UIButton) {
+        print("FABWritingBtn Pressed!, button = \(button)")
         listener?.pressedWritingBtn()
-        Analytics.logEvent("Home_Button_Writing", parameters: nil)
-        Analytics.logEvent(AnalyticsEventSelectItem, parameters: ["button" : "writing"])
+
+        if button == writeBoxBtn {
+            MenualLog.logEventAction(responder: button, parameter: ["type" : "box"])
+        } else if button == writeFAB {
+            MenualLog.logEventAction(responder: button, parameter: ["type" : "fab"])
+        }
     }
     
     @objc
-    func pressedMenualBtn() {
+    func pressedMenualBtn(_ button: UIButton) {
         print("메뉴얼 버튼 눌렀니?")
         listener?.pressedMenualTitleBtn()
         Analytics.logEvent("Home_Button_MenualTitle", parameters: nil)
     }
     
     @objc
-    func pressedDateFilterBtn() {
+    func pressedDateFilterBtn(_ button: UIButton) {
         print("pressedLightCalenderBtn")
         listener?.pressedDateFilterBtn()
-        Analytics.logEvent("Home_Button_DateFilter", parameters: nil)
+        MenualLog.logEventAction(responder: button)
     }
     
     @objc
-    func pressedFilterBtn() {
+    func pressedFilterBtn(_ button: UIButton) {
         print("pressedFilterBtn")
         listener?.pressedFilterBtn()
-        Analytics.logEvent("Home_Button_Filter", parameters: nil)
+        MenualLog.logEventAction(responder: button)
     }
     
     @objc
-    func pressedFilterResetBtn() {
+    func pressedFilterResetBtn(_ button: UIButton) {
         print("DiaryHome :: filterReset!!")
         listener?.pressedFilterResetBtn()
-        Analytics.logEvent("Home-Button-FilterReset", parameters: nil)
+        MenualLog.logEventAction(responder: button)
     }
     
     @objc
-    func pressedScrollToTopFAB() {
+    func pressedScrollToTopFAB(_ button: UIButton) {
         print("DiaryHome :: pressedScrollToTopFAB!!")
         myMenualTableView.setContentOffset(.zero, animated: true)
-        Analytics.logEvent("Home-Button-ScrollToTop", parameters: nil)
+        MenualLog.logEventAction(responder: button)
     }
 }
 
@@ -733,6 +739,8 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.divider.isHidden = false
         }
         
+        cell.actionName = "cell"
+        
         return cell
     }
     
@@ -741,8 +749,16 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
               let data = cell.testModel
         else { return }
 
-        // print("select! model = \(cell.testModel)")
-        Analytics.logEvent("Home_Cell_MenualDetail", parameters: nil)
+        let parameter: [String: Any] = [
+            "page" : data.pageNum,
+            "createdAt" : data.createdAt,
+            "replyCount" : data.repliesArr.count,
+            "readCount" : data.readCount,
+            "iamge" : data.image,
+            "reminder" : data.reminder?.isEnabled ?? false
+        ]
+
+        MenualLog.logEventAction(responder: cell, parameter: parameter)
         listener?.pressedDiaryCell(diaryModel: data)
     }
     //reloadJJIKKYU() -> JJIKKYU Love YangSSuz <3 진균이는 내가 아는 사람중에 제일 멋져!!! ~v~
