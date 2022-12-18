@@ -223,11 +223,15 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         setViews()
         bind()
     }
+    
+    convenience init(screenName3: String) {
+        self.init()
+        
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.delegate = self
-        Analytics.logEvent("Home_Appear", parameters: nil)
+        navigationController?.interactivePopGestureRecognizer?.delegate = self        
     }
     
     func setViews() {
@@ -480,12 +484,14 @@ extension DiaryHomeViewController {
     func pressedSearchBtn() {
         listener?.pressedSearchBtn()
         Analytics.logEvent("Home_Button_Search", parameters: nil)
+        Analytics.logEvent(AnalyticsEventSelectItem, parameters: ["button" : "search"])
     }
     
     @objc
     func pressedMyPageBtn() {
         listener?.pressedMyPageBtn()
         Analytics.logEvent("Home_Button_Profile", parameters: nil)
+        Analytics.logEvent(AnalyticsEventSelectItem, parameters: ["button" : "profile"])
     }
     
     @objc
@@ -493,6 +499,7 @@ extension DiaryHomeViewController {
         print("FABWritingBtn Pressed!")
         listener?.pressedWritingBtn()
         Analytics.logEvent("Home_Button_Writing", parameters: nil)
+        Analytics.logEvent(AnalyticsEventSelectItem, parameters: ["button" : "writing"])
     }
     
     @objc

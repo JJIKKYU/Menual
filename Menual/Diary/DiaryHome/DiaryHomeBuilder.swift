@@ -63,6 +63,7 @@ final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
         let diaryBottomSheetBuildable = DiaryBottomSheetBuilder(dependency: component)
         
         let viewController = DiaryHomeViewController()
+        viewController.screenName = "DiaryHome"
         let interactor = DiaryHomeInteractor(
             presenter: viewController,
             dependency: component
