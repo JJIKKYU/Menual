@@ -11,6 +11,7 @@ import SnapKit
 import RxSwift
 import RxRelay
 import RxViewController
+import FirebaseAnalytics
 
 protocol MenualBottomSheetReminderComponentViewDelegate: AnyObject {
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
@@ -362,6 +363,7 @@ class MenualBottomSheetReminderComponentView: UIView {
 extension MenualBottomSheetReminderComponentView {
     @objc
     func pressedQuestionBtn() {
+        Analytics.logEvent("BottomSheet_Reminder_Button_QNA", parameters: nil)
         delegate?.pressedQuestionBtn()
         // calendarCollectionView.reloadData()
     }
@@ -369,6 +371,7 @@ extension MenualBottomSheetReminderComponentView {
     @objc
     func selectedSwitchBtn() {
         print("Reminder :: isOn = \(switchBtn.isOn)")
+        Analytics.logEvent("BottomSheet_Reminder_Button", parameters: ["isOn":"\(switchBtn.isOn)"])
 
         // 연결되어 있을 경우 연결 해제 팝업
         if switchBtn.isOn == true {
@@ -428,6 +431,13 @@ extension MenualBottomSheetReminderComponentView {
         delegate?.pressedSelectBtn(isEditing: isEditingMode,
                                    requestDateComponents: dateComponents,
                                    requestDate: requestDate
+        )
+        Analytics.logEvent("BottomSheet_Reminder_Button_Confirm",
+                           parameters: [
+                            "year": "\(self.currentYear)",
+                            "month": "\(self.currentMonthIndex)",
+                            "day": "\(isSelectedReminderDayIndexRelay.value ?? 0)"
+                                       ]
         )
     }
 }
@@ -525,6 +535,7 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
 
         print("Reminder :: Selected! cell = \(cell.index), date = \(cell.date)")
         isSelectedReminderDayIndexRelay.accept(Int(cell.date))
+        Analytics.logEvent("BottomSheet_Reminder_Button_Date ", parameters: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -552,7 +563,7 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
 extension MenualBottomSheetReminderComponentView: MonthViewDelegate {
     func pressedLeftBtn() {
         print("Reminder :: left!")
-        
+        Analytics.logEvent("BottomSheet_Reminder_Button_prevYear", parameters: nil)
         if presentYear == currentYear {
             if presentMonthIndex == currentMonthIndex {
                 print("Reminder :: 이전 달 이동 불가능")
@@ -575,7 +586,7 @@ extension MenualBottomSheetReminderComponentView: MonthViewDelegate {
     
     func pressedRightBtn() {
         print("Reminder :: right!")
-
+        Analytics.logEvent("BottomSheet_Reminder_Button_nextYear", parameters: nil)
         // 다음 달 이동이 가능하면
 //        if let presentMonth = numOfDaysInMonth[safe: presentMonthIndex] {
 //            print("Reminder :: presentMonth = \(presentMonth)")

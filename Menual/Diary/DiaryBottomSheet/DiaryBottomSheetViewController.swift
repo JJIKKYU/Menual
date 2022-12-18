@@ -10,6 +10,7 @@ import RxSwift
 import SnapKit
 import RxRelay
 import UIKit
+import FirebaseAnalytics
 
 enum MenualBottomSheetRightBtnType {
     case close
@@ -404,6 +405,7 @@ extension DiaryBottomSheetViewController {
     
     @objc
     func closeBottomSheet() {
+        Analytics.logEvent("BottomSheet_Button_Close", parameters: nil)
         hideBottomSheetAndGoBack()
     }
 }
@@ -495,6 +497,7 @@ extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelega
     
     @objc
     func pressedFilterBtn() {
+        Analytics.logEvent("BottomSheet_Filter_Button_Confirm", parameters: nil)
         listener?.filterWithWeatherPlacePressedFilterBtn()
     }
     
@@ -524,18 +527,21 @@ extension DiaryBottomSheetViewController: MenualDateFilterComponentDelegate {
 
     @objc
     func pressedPrevMonthBtn() {
+        Analytics.logEvent("BottomSheet_DateFilter_PrevMonth", parameters: nil)
         let currentIdx = dateFilterComponentView.monthArrowIdxRelay.value
         dateFilterComponentView.monthArrowIdxRelay.accept(currentIdx - 1)
     }
     
     @objc
     func pressedNextMonthBtn() {
+        Analytics.logEvent("BottomSheet_DateFilter_NextMonth", parameters: nil)
         let currentIdx = dateFilterComponentView.monthArrowIdxRelay.value
         dateFilterComponentView.monthArrowIdxRelay.accept(currentIdx + 1)
     }
     
     @objc
     func pressedPrevYearBtn() {
+        Analytics.logEvent("BottomSheet_DateFilter_PrevYear", parameters: nil)
         print("DiaryBottomSheet :: pressedPrevYearBtn!")
         let currentIdx = dateFilterComponentView.yearArrowIdxRelay.value
         dateFilterComponentView.yearArrowIdxRelay.accept(currentIdx - 1)
@@ -544,6 +550,7 @@ extension DiaryBottomSheetViewController: MenualDateFilterComponentDelegate {
     
     @objc
     func pressedNextYearBtn() {
+        Analytics.logEvent("BottomSheet_DateFilter_NextYear", parameters: nil)
         print("DiaryBottomSheet :: pressedNextYearBtn!")
         let currentIdx = dateFilterComponentView.yearArrowIdxRelay.value
         dateFilterComponentView.yearArrowIdxRelay.accept(currentIdx + 1)
@@ -552,6 +559,7 @@ extension DiaryBottomSheetViewController: MenualDateFilterComponentDelegate {
     
     @objc
     func pressedDateFilterBtn() {
+        Analytics.logEvent("BottomSheet_DateFilter_Button_Confirm", parameters: nil)
         print("DiaryBottomSheet :: pressedDateFilterBtn!")
         // let month = dateFilterComponentView.month
         // let filteredDate =
@@ -704,6 +712,9 @@ extension DiaryBottomSheetViewController: DialogDelegate {
         case "리마인더 알림을 해제하시겠어요?":
             listener?.isEnabledReminderRelay?.accept(false)
             break
+            
+        case "날짜를 선택해 보세요":
+            Analytics.logEvent("BottomSheet_Reminder_Popup_Confirm", parameters: nil)
 
         default:
             break

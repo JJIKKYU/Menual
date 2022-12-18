@@ -10,6 +10,7 @@ import SnapKit
 import Then
 import RxSwift
 import RxRelay
+import FirebaseAnalytics
 
 protocol MenualBottomSheetFilterComponentDelegate: AnyObject {
     var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]>? { get }
@@ -300,6 +301,7 @@ class MenualBottomSheetFilterComponentView: UIView {
 extension MenualBottomSheetFilterComponentView {
     @objc
     func pressedWeatherTitleBtn() {
+        Analytics.logEvent("BottomSheet_Filter_Button_AllSelectWeather", parameters: nil)
         print("bottomSheet :: pressedWeatherTitleBtn!")
         delegate?.filterWeatherSelectedArrRelay?.accept([])
         weatherSelectView.selctAllCells()
@@ -308,6 +310,7 @@ extension MenualBottomSheetFilterComponentView {
     
     @objc
     func pressedPlaceTitleBtn() {
+        Analytics.logEvent("BottomSheet_Filter_Button_AllSelectPlace", parameters: nil)
         print("bottomSheet :: pressedPlaceTitleBtn!")
         delegate?.filterPlaceSelectedArrRelay?.accept([])
         placeSelectView.selctAllCells()
@@ -316,6 +319,7 @@ extension MenualBottomSheetFilterComponentView {
     
     @objc
     func pressedResetFilterBtn() {
+        Analytics.logEvent("BottomSheet_Filter_Button_Reset", parameters: nil)
         print("bottomSheet :: pressedResetFilterBtn!")
         delegate?.filterWeatherSelectedArrRelay?.accept([])
         delegate?.filterPlaceSelectedArrRelay?.accept([])
@@ -352,6 +356,7 @@ extension MenualBottomSheetFilterComponentView: WeatherPlaceSelectViewDelegate {
             }
         }
 
+        Analytics.logEvent("BottomSheet_Filter_Button_Weather", parameters: ["weather":"\(weatherType.rawValue)"])
         delegate?.filterWeatherSelectedArrRelay?.accept(weatherSelectedArr)
         setNeedsLayout()
     }
@@ -377,6 +382,7 @@ extension MenualBottomSheetFilterComponentView: WeatherPlaceSelectViewDelegate {
             }
         }
         
+        Analytics.logEvent("BottomSheet_Filter_Button_Place", parameters: ["place":"\(placeType.rawValue)"])
         delegate?.filterPlaceSelectedArrRelay?.accept(placeSelectedArr)
         setNeedsLayout()
     }
