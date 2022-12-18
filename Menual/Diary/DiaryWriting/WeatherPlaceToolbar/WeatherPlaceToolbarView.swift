@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import Then
+import FirebaseAnalytics
 
 protocol WeatherPlaceToolbarViewDelegate: AnyObject {
     func weatherSendData(weatherType: Weather)
@@ -159,11 +160,13 @@ extension WeatherPlaceToolbarView: WeatherPlaceSelectViewDelegate {
     }
     
     func weatherSendData(weatherType: Weather, isSelected: Bool) {
+        Analytics.logEvent("Writing_Weather_Button", parameters: ["weather" : "\(weatherType.rawValue)"])
         print("weatherSendData! - \(weatherType)")
         delegate?.weatherSendData(weatherType: weatherType)
     }
     
     func placeSendData(placeType: Place, isSelected: Bool) {
+        Analytics.logEvent("Writing_Place_Button", parameters: ["place" : "\(placeType.rawValue)"])
         print("placeSendData! - \(placeType)")
         delegate?.placeSendData(placeType: placeType)
     }

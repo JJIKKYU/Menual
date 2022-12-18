@@ -893,7 +893,7 @@ extension DiaryWritingViewController {
     
     @objc
     func pressedImageUploadViewDeleteBtn() {
-        Analytics.logEvent("Detail_Button_ImageDelete", parameters: nil)
+        Analytics.logEvent("Writing_Button_ImageDelete", parameters: nil)
         print("DiaryWriting :: pressedImageUploadViewDeleteBtn")
         show(size: .small,
              buttonType: .twoBtn,
@@ -905,7 +905,7 @@ extension DiaryWritingViewController {
     
     @objc
     func pressedPlaceViewDeleteBtn() {
-        Analytics.logEvent("Detail_Button_PlaceTextDelete", parameters: nil)
+        Analytics.logEvent("Writing_Button_PlaceTextDelete", parameters: nil)
         print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - locationView")
         locationSelectView.selectTextView.text = ""
         isEditBeginRelay.accept(true)
@@ -913,7 +913,7 @@ extension DiaryWritingViewController {
     
     @objc
     func pressedWeatherViewDeleteBtn() {
-        Analytics.logEvent("Detail_Button_WeatherTextDelete", parameters: nil)
+        Analytics.logEvent("Writing_Button_WeatherTextDelete", parameters: nil)
         print("DiaryWriting :: pressedPlaceLocationViewDeleteBtn! - weatherView")
         weatherSelectView.selectTextView.text = ""
         isEditBeginRelay.accept(true)
@@ -924,7 +924,7 @@ extension DiaryWritingViewController {
 extension DiaryWritingViewController {
     // 앨범
     func pressedImageUploadPullDownBtn() {
-        Analytics.logEvent("Detail_Button_ImageUpload", parameters: nil)
+        Analytics.logEvent("Writing_Button_ImageUpload", parameters: nil)
         phpickerConfiguration.filter = .images
         phpickerConfiguration.selectionLimit = 1
         let imagePicker = PHPickerViewController(configuration: phpickerConfiguration)
@@ -945,7 +945,7 @@ extension DiaryWritingViewController {
     
     // 카메라 호출
     @objc func pressedTakeImagePullDownBtn() {
-        Analytics.logEvent("Detail_Button_ImageSelect", parameters: nil)
+        Analytics.logEvent("Writing_Button_ImageSelect", parameters: nil)
         print("DiaryWriting :: TakeImage!")
         // phpickerConfiguration.filter = .images
         testImagePicker.sourceType = .camera
@@ -965,7 +965,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
         
         switch textView.tag {
         case TextViewType.title.rawValue:
-            Analytics.logEvent("Detail_Foucs_Title", parameters: nil)
+            Analytics.logEvent("Writing_Foucs_Title", parameters: nil)
             print("Title TextView")
             weatherPlaceToolbarView.isHidden = true
             if textView.text == defaultTitleText {
@@ -977,7 +977,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             }
             
         case TextViewType.weather.rawValue:
-            Analytics.logEvent("Detail_Foucs_Weather", parameters: nil)
+            Analytics.logEvent("Writing_Foucs_Weather", parameters: nil)
             print("Weather TextView")
             weatherPlaceToolbarView.isHidden = false
             weatherPlaceToolbarView.weatherPlaceType = .weather
@@ -989,7 +989,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             }
             
         case TextViewType.location.rawValue:
-            Analytics.logEvent("Detail_Foucs_Place", parameters: nil)
+            Analytics.logEvent("Writing_Foucs_Place", parameters: nil)
             print("Location TextView")
             weatherPlaceToolbarView.isHidden = false
             weatherPlaceToolbarView.weatherPlaceType = .place
@@ -1001,7 +1001,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             }
             
         case TextViewType.description.rawValue:
-            Analytics.logEvent("Detail_Foucs_Description", parameters: nil)
+            Analytics.logEvent("Writing_Foucs_Description", parameters: nil)
             print("Description TextView")
             weatherPlaceToolbarView.isHidden = true
             if textView.text == defaultDescriptionText {
@@ -1328,7 +1328,7 @@ extension DiaryWritingViewController: DialogDelegate {
         switch titleText {
         case "메뉴얼 작성을 취소하시겠어요?",
              "메뉴얼 수정을 취소하시겠어요?":
-            Analytics.logEvent("Detail_Popup_Confirm", parameters: ["Event" : "MenualWritingBack"])
+            Analytics.logEvent("Writing_Popup_Confirm", parameters: ["Event" : "MenualWritingBack"])
             if let diaryModel = zipDiaryModelForTempSave() {
                 listener?.saveTempSave(diaryModel: diaryModel,
                                        originalImageData: selectedOriginalImage?.jpegData(compressionQuality: 0.5),
@@ -1339,11 +1339,11 @@ extension DiaryWritingViewController: DialogDelegate {
             
         case "메뉴얼을 등록하시겠어요?",
              "메뉴얼을 수정하시겠어요?":
-            Analytics.logEvent("Detail_Popup_Confirm", parameters: ["Event" : "MenualWriting"])
+            Analytics.logEvent("Writing_Popup_Confirm", parameters: ["Event" : "MenualWriting"])
             addDiary()
             
         case "사진을 삭제하시겠어요?":
-            Analytics.logEvent("Detail_Popup_Confirm", parameters: ["Event" : "ImageDelete"])
+            Analytics.logEvent("Writing_Popup_Confirm", parameters: ["Event" : "ImageDelete"])
             imageUploadView.image = nil
             selectedImage = nil
             selectedOriginalImage = nil
@@ -1360,14 +1360,14 @@ extension DiaryWritingViewController: DialogDelegate {
         switch titleText {
         case "메뉴얼 작성을 취소하시겠어요?",
              "메뉴얼 수정을 취소하시겠어요?":
-            Analytics.logEvent("Detail_Popup_Cancel", parameters: ["Event" : "MenualWritingBack"])
+            Analytics.logEvent("Writing_Popup_Cancel", parameters: ["Event" : "MenualWritingBack"])
             
         case "메뉴얼을 등록하시겠어요?",
              "메뉴얼을 수정하시겠어요?":
-            Analytics.logEvent("Detail_Popup_Cancel", parameters: ["Event" : "MenualWriting"])
+            Analytics.logEvent("Writing_Popup_Cancel", parameters: ["Event" : "MenualWriting"])
             
         case "사진을 삭제하시겠어요?":
-            Analytics.logEvent("Detail_Popup_Cancel", parameters: ["Event" : "ImageDelete"])
+            Analytics.logEvent("Writing_Popup_Cancel", parameters: ["Event" : "ImageDelete"])
             
         default:
             break
