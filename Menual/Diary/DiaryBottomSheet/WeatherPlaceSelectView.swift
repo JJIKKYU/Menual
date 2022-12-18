@@ -286,12 +286,13 @@ extension WeatherPlaceSelectView: UICollectionViewDelegate, UICollectionViewData
         switch weatherPlaceType {
         case .place:
             guard let placeType = Place().getVariation()[safe: index] else { return }
+            MenualLog.logEventAction("writing_place", parameter: ["place" : "\(placeType)"])
             delegate?.placeSendData(placeType: placeType, isSelected: cell.isSelected)
         case .weather:
             guard let weatherType = Weather().getVariation()[safe: index] else { return }
+            MenualLog.logEventAction("writing_weather", parameter: ["weather" : "\(weatherType)"])
             delegate?.weatherSendData(weatherType: weatherType, isSelected: cell.isSelected)
         }
-        
         delegate?.isSelected(cell.isSelected)
         cell.isSelected = !cell.isSelected
     }

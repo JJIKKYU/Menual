@@ -79,6 +79,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     
     // delegate 저장 후 VC 삭제시 해제 용도
     private weak var cropVC: CustomCropViewController?
+    private weak var uploadImageAction: UIAction?
+    private weak var takeImageAction: UIAction?
     
     private lazy var naviView = MenualNaviView(type: .write).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -90,6 +92,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     }
     
     private lazy var weatherPlaceToolbarView = WeatherPlaceToolbarView().then {
+        $0.categoryName = "weatherPlace"
         $0.clipsToBounds = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
@@ -105,6 +108,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     }
     
     private lazy var titleTextField = UITextView().then {
+        $0.categoryName = "title"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
         $0.text = defaultTitleText
@@ -121,6 +125,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     }
     
     private lazy var weatherSelectView = WeatherLocationSelectView(type: .weather).then {
+        $0.categoryName = "weather"
         $0.translatesAutoresizingMaskIntoConstraints = false
         
         $0.selectTextView.delegate = self
@@ -136,6 +141,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     }
     
     private lazy var locationSelectView = WeatherLocationSelectView(type: .location).then {
+        $0.categoryName = "place"
         $0.translatesAutoresizingMaskIntoConstraints = false
 
         $0.selectTextView.delegate = self
@@ -151,6 +157,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     }
     
     lazy var descriptionTextView = UITextView().then {
+        $0.categoryName = "description"
         $0.delegate = self
         $0.translatesAutoresizingMaskIntoConstraints = false
         // $0.typingAttributes = UIFont.AppBody(.body_4, .lightGray)
@@ -174,7 +181,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     }
     
     private lazy var imageUploadView = ImageUploadView().then {
-        $0.categoryName = "imageUplad"
+        $0.categoryName = "image"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.deleteBtn.actionName = "delete"
         $0.deleteBtn.addTarget(self, action: #selector(pressedImageUploadViewDeleteBtn), for: .touchUpInside)
@@ -595,6 +602,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
              print("DiaryWriting :: action! = \(action)")
             self.pressedTakeImagePullDownBtn()
         }
+
         pullDownImageButton.menu = UIMenu(children: [takeImage, uploadImage])
         pullDownImageButtonEditBtn.menu = UIMenu(children: [takeImage, uploadImage])
     }
@@ -925,7 +933,8 @@ extension DiaryWritingViewController {
 extension DiaryWritingViewController {
     // 앨범
     func pressedImageUploadPullDownBtn() {
-        Analytics.logEvent("Writing_Button_ImageUpload", parameters: nil)
+        MenualLog.logEventAction("writing_image_upload")
+
         phpickerConfiguration.filter = .images
         phpickerConfiguration.selectionLimit = 1
         let imagePicker = PHPickerViewController(configuration: phpickerConfiguration)
@@ -946,7 +955,7 @@ extension DiaryWritingViewController {
     
     // 카메라 호출
     @objc func pressedTakeImagePullDownBtn() {
-        Analytics.logEvent("Writing_Button_ImageSelect", parameters: nil)
+        MenualLog.logEventAction("writing_image_take")
         print("DiaryWriting :: TakeImage!")
         // phpickerConfiguration.filter = .images
         testImagePicker.sourceType = .camera
@@ -963,10 +972,9 @@ extension DiaryWritingViewController {
 extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         print("DiaryWriting :: textViewShouldBeginEditing")
-        
+        MenualLog.logEventAction(responder: textView)
         switch textView.tag {
         case TextViewType.title.rawValue:
-            Analytics.logEvent("Writing_Foucs_Title", parameters: nil)
             print("Title TextView")
             weatherPlaceToolbarView.isHidden = true
             if textView.text == defaultTitleText {
@@ -978,7 +986,6 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             }
             
         case TextViewType.weather.rawValue:
-            Analytics.logEvent("Writing_Foucs_Weather", parameters: nil)
             print("Weather TextView")
             weatherPlaceToolbarView.isHidden = false
             weatherPlaceToolbarView.weatherPlaceType = .weather
@@ -990,7 +997,6 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             }
             
         case TextViewType.location.rawValue:
-            Analytics.logEvent("Writing_Foucs_Place", parameters: nil)
             print("Location TextView")
             weatherPlaceToolbarView.isHidden = false
             weatherPlaceToolbarView.weatherPlaceType = .place

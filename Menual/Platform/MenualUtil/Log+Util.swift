@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseAnalytics
 
+// MARK: - UIButton
 extension UIButton {
     private struct AssociatedKeys {
         static var actionName = "action"
@@ -31,6 +32,26 @@ extension UIButton {
     }
 }
 
+// MARK: - UIAction
+extension UIAction {
+    private struct AssociatedKeys {
+        static var actionName = "action"
+    }
+    
+    var actionName: String? {
+        get {
+            return (objc_getAssociatedObject(self, &AssociatedKeys.actionName) as? String)
+        }
+        set(newValue) {
+            objc_setAssociatedObject(self,
+                                     &AssociatedKeys.actionName,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
+
+// MARK: - UITableViewCell
 extension UITableViewCell {
     private struct AssociatedKeys {
         static var actionName = "action"
@@ -54,6 +75,26 @@ extension UITableViewCell {
     }
 }
 
+// MARK: - UICollectionViewCell
+extension UICollectionViewCell {
+    private struct AssociatedKeys {
+        static var actionName = "action"
+    }
+    
+    var actionName: String? {
+        get {
+            return (objc_getAssociatedObject(self, &AssociatedKeys.actionName) as? String)
+        }
+        set(newValue) {
+            objc_setAssociatedObject(self,
+                                     &AssociatedKeys.actionName,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
+
+// MARK: - UIViewController
 extension UIViewController {
     private struct AssociatedKeys {
         static var screenName = "screenName"
@@ -85,6 +126,7 @@ extension UIViewController {
     }
 }
 
+// MARK: - UIView
 extension UIView {
     private struct AssociatedKeys {
         static var categoryName = "categoryName"
@@ -104,7 +146,13 @@ extension UIView {
     }
 }
 
+// MARK: - MenualLog
 class MenualLog {
+    class func logEventAction(_ log: String, parameter: [String: Any]? = nil) {
+        print("Log :: logName = \(log), parameter = \(parameter)")
+        Analytics.logEvent(log, parameters: parameter)
+    }
+    
     class func logEventAction(responder: UIResponder, parameter: [String: Any]? = nil) {
         var responder: UIResponder? = responder
 
@@ -116,11 +164,16 @@ class MenualLog {
         if let responder = responder as? UITableViewCell {
             actioName = responder.actionName ?? ""
         }
+        
+        if let responder = responder as? UICollectionViewCell {
+            actioName = responder.actionName ?? ""
+        }
 
         var screenName: String?
         var categoryName: String?
         
         while(screenName == nil) {
+            print("Log :: responder = \(responder)")
             if let responder = responder as? UIViewController {
                 screenName = responder.screenName
             }
