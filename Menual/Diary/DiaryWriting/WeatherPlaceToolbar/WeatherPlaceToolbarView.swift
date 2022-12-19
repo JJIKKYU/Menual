@@ -161,11 +161,13 @@ extension WeatherPlaceToolbarView: WeatherPlaceSelectViewDelegate {
     
     func weatherSendData(weatherType: Weather, isSelected: Bool) {
         print("weatherSendData! - \(weatherType)")
+        MenualLog.logEventAction("writing_weather", parameter: ["weather" : "\(weatherType)"])
         delegate?.weatherSendData(weatherType: weatherType)
     }
     
     func placeSendData(placeType: Place, isSelected: Bool) {
         print("placeSendData! - \(placeType)")
+        MenualLog.logEventAction("writing_place", parameter: ["place" : "\(placeType)"])
         delegate?.placeSendData(placeType: placeType)
     }
 }

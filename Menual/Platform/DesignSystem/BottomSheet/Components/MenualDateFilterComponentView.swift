@@ -44,6 +44,7 @@ class MenualDateFilterComponentView: UIView {
    
     // Year
     public lazy var prevYearArrowBtn = UIButton().then {
+        $0.actionName = "prevYear"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g200
@@ -54,6 +55,7 @@ class MenualDateFilterComponentView: UIView {
     }
     
     public lazy var nextYearArrowBtn = UIButton().then {
+        $0.actionName = "nextYear"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.front.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g700
@@ -72,6 +74,7 @@ class MenualDateFilterComponentView: UIView {
     
     // Month
     lazy var prevMonthArrowBtn = UIButton().then {
+        $0.actionName = "prevMonth"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g200
@@ -81,6 +84,7 @@ class MenualDateFilterComponentView: UIView {
     }
     
     public lazy var nextMonthArrowBtn = UIButton().then {
+        $0.actionName = "nextMonth"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.front.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g700
@@ -97,6 +101,7 @@ class MenualDateFilterComponentView: UIView {
     }
     
     public let filterBtn = BoxButton(frame: .zero, btnStatus: .active, btnSize: .large).then {
+        $0.actionName = "confirm"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "텍스트"
     }

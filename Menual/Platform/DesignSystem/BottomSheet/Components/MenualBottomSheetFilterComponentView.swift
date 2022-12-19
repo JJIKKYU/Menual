@@ -104,6 +104,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     }
     
     public lazy var filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
+        $0.actionName = "confirm"
         $0.title = "필터를 선택해 주세요."
         $0.isEnabled = false
     }
@@ -359,7 +360,7 @@ extension MenualBottomSheetFilterComponentView: WeatherPlaceSelectViewDelegate {
             }
         }
 
-        Analytics.logEvent("BottomSheet_Filter_Button_Weather", parameters: ["weather":"\(weatherType.rawValue)"])
+        MenualLog.logEventAction("bottomSheet_filter_weather", parameter: ["weather" : "\(weatherType)"])
         delegate?.filterWeatherSelectedArrRelay?.accept(weatherSelectedArr)
         setNeedsLayout()
     }
@@ -384,8 +385,8 @@ extension MenualBottomSheetFilterComponentView: WeatherPlaceSelectViewDelegate {
                 placeSelectedArr.remove(at: idx)
             }
         }
-        
-        Analytics.logEvent("BottomSheet_Filter_Button_Place", parameters: ["place":"\(placeType.rawValue)"])
+
+        MenualLog.logEventAction("bottomSheet_filter_place", parameter: ["place" : "\(placeType)"])
         delegate?.filterPlaceSelectedArrRelay?.accept(placeSelectedArr)
         setNeedsLayout()
     }

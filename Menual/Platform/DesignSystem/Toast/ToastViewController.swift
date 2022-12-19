@@ -90,7 +90,7 @@ func showToast(message : String) -> ToastView {
             make.top.equalToSuperview().inset(-UIApplication.topSafeAreaHeight - 36)
         }
         self.view.layoutIfNeeded()
-    }, completion: {(isCompleted) in
+    }, completion: { [weak self] isCompleted in
         toastView.removeFromSuperview()
     })
     return toastView

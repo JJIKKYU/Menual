@@ -501,7 +501,7 @@ extension DiaryHomeViewController {
     func pressedFABWritingBtn(_ button: UIButton) {
         print("FABWritingBtn Pressed!, button = \(button)")
         listener?.pressedWritingBtn()
-
+        button.actionName = "write"
         if button == writeBoxBtn {
             MenualLog.logEventAction(responder: button, parameter: ["type" : "box"])
         } else if button == writeFAB {
@@ -532,6 +532,7 @@ extension DiaryHomeViewController {
     @objc
     func pressedFilterResetBtn(_ button: UIButton) {
         print("DiaryHome :: filterReset!!")
+        button.actionName = "filterReset"
         listener?.pressedFilterResetBtn()
         MenualLog.logEventAction(responder: button)
     }
