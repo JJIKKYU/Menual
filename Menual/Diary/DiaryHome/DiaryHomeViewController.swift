@@ -56,6 +56,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     let isFilteredRelay = BehaviorRelay<Bool>(value: false)
     var isShowToastDiaryResultRelay = BehaviorRelay<DiaryHomeViewController.ShowToastType?>(value: nil)
+    private weak var weakToastView: ToastView?
     
     // MARK: - UI 코드
     private let tableViewHeaderView = UIView().then {
@@ -512,7 +513,6 @@ extension DiaryHomeViewController {
     func pressedMenualBtn(_ button: UIButton) {
         print("메뉴얼 버튼 눌렀니?")
         listener?.pressedMenualTitleBtn()
-        Analytics.logEvent("Home_Button_MenualTitle", parameters: nil)
     }
     
     @objc
@@ -754,7 +754,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             "createdAt" : data.createdAt,
             "replyCount" : data.repliesArr.count,
             "readCount" : data.readCount,
-            "iamge" : data.image,
+            "image" : data.image,
             "reminder" : data.reminder?.isEnabled ?? false
         ]
 
@@ -773,7 +773,6 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let sectionListHeader = SectionListHeaderView()
-        sectionListHeader.layer.zPosition = -1
 
         sectionListHeader.backgroundColor = .clear
         sectionListHeader.title = "2022.999"
@@ -898,7 +897,6 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         case 0:
             print("MomentsCollectionView Selected!")
             guard let data = listener?.momentsRealm?.itemsArr[safe: indexPath.row] else { return }
-            Analytics.logEvent("Home_Cell_Moments", parameters: nil)
             listener?.pressedMomentsCell(momentsItem: data)
             
         default:
@@ -955,16 +953,19 @@ extension DiaryHomeViewController {
         print("DiaryHome :: showToastDiaryResult!")
         switch mode {
         case .writing:
-            showToast(message: "메뉴얼 등록이 완료되었습니다.")
-            Analytics.logEvent("Home_Toast_Writing", parameters: nil)
+            let toastView = showToast(message: "메뉴얼 등록이 완료되었습니다.")
+            self.weakToastView = toastView
+            MenualLog.logEventAction(responder: toastView, parameter: ["type": "write"])
 
         case .edit:
-            showToast(message: "메뉴얼 등록이 수정되었습니다.")
-            Analytics.logEvent("Home_Toast_Edit", parameters: nil)
+            let toastView = showToast(message: "메뉴얼 등록이 수정되었습니다.")
+            self.weakToastView = toastView
+            MenualLog.logEventAction(responder: toastView, parameter: ["type": "edit"])
             
         case .delete:
-            showToast(message: "메뉴얼 삭제를 완료했어요.")
-            Analytics.logEvent("Home_Toast_Delete", parameters: nil)
+            let toastView = showToast(message: "메뉴얼 삭제를 완료했어요.")
+            self.weakToastView = toastView
+            MenualLog.logEventAction(responder: toastView, parameter: ["type": "delete"])
             
         case .none:
             break

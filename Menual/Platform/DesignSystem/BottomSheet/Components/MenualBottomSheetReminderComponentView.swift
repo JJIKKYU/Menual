@@ -62,6 +62,7 @@ class MenualBottomSheetReminderComponentView: UIView {
     }
     
     private lazy var reminderTitleQuestionBtn = UIButton().then {
+        $0.actionName = "q&a"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.question.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g500
@@ -81,6 +82,7 @@ class MenualBottomSheetReminderComponentView: UIView {
     }
     
     lazy var switchBtnImp = UIButton().then {
+        $0.actionName = "switch"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.addTarget(self, action: #selector(selectedSwitchBtn), for: .touchUpInside)
     }
@@ -90,12 +92,14 @@ class MenualBottomSheetReminderComponentView: UIView {
     }
     
     private lazy var monthView = MonthView().then { (view: MonthView) in
+        view.categoryName = "yearMonth"
         view.yearAndMonth = "2022.12"
         view.translatesAutoresizingMaskIntoConstraints = false
         view.delegate = self
     }
     
     private lazy var calendarCollectionView = UICollectionView(frame: .zero, collectionViewLayout: .init()).then {
+        $0.categoryName = "calander"
 //        $0.register(DateCell.self, forCellWithReuseIdentifier: "DateCell")
 //        $0.translatesAutoresizingMaskIntoConstraints = false
 //        $0.delegate = self
@@ -115,6 +119,7 @@ class MenualBottomSheetReminderComponentView: UIView {
     }
     
     private lazy var selectBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then { (btn: BoxButton) in
+        btn.actionName = "confirm"
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.title = "선택 완료"
         btn.addTarget(self, action: #selector(pressedSelectBtn), for: .touchUpInside)
@@ -122,6 +127,7 @@ class MenualBottomSheetReminderComponentView: UIView {
 
     init() {
         super.init(frame: CGRect.zero)
+        categoryName = "reminder"
         setInitCalendar()
         setLeapYear()
         setViews()
@@ -362,16 +368,15 @@ class MenualBottomSheetReminderComponentView: UIView {
 // MARK: - IBAction
 extension MenualBottomSheetReminderComponentView {
     @objc
-    func pressedQuestionBtn() {
-        Analytics.logEvent("BottomSheet_Reminder_Button_QNA", parameters: nil)
+    func pressedQuestionBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         delegate?.pressedQuestionBtn()
-        // calendarCollectionView.reloadData()
     }
     
     @objc
-    func selectedSwitchBtn() {
+    func selectedSwitchBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button, parameter: ["isOn":"\(switchBtn.isOn)"])
         print("Reminder :: isOn = \(switchBtn.isOn)")
-        Analytics.logEvent("BottomSheet_Reminder_Button", parameters: ["isOn":"\(switchBtn.isOn)"])
 
         // 연결되어 있을 경우 연결 해제 팝업
         if switchBtn.isOn == true {
@@ -412,7 +417,7 @@ extension MenualBottomSheetReminderComponentView {
     }
     
     @objc
-    func pressedSelectBtn() {
+    func pressedSelectBtn(_ button: UIButton) {
         guard let selectedDate = isSelectedReminderDayIndexRelay.value else { return }
         
         var dateComponents = DateComponents()
@@ -432,13 +437,11 @@ extension MenualBottomSheetReminderComponentView {
                                    requestDateComponents: dateComponents,
                                    requestDate: requestDate
         )
-        Analytics.logEvent("BottomSheet_Reminder_Button_Confirm",
-                           parameters: [
-                            "year": "\(self.currentYear)",
-                            "month": "\(self.currentMonthIndex)",
-                            "day": "\(isSelectedReminderDayIndexRelay.value ?? 0)"
-                                       ]
-        )
+        MenualLog.logEventAction(responder: button, parameter: [
+            "year": self.currentYear,
+            "month": self.currentMonthIndex,
+            "day": isSelectedReminderDayIndexRelay.value ?? 0
+                       ])
     }
 }
 
@@ -502,6 +505,7 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         }
         
         cell.index = indexPath.row
+        cell.actionName = "day"
         // cell.layoutIfNeeded()
         
         if delegate?.isEnabledReminderRelay?.value ?? false == false {
@@ -535,7 +539,7 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
 
         print("Reminder :: Selected! cell = \(cell.index), date = \(cell.date)")
         isSelectedReminderDayIndexRelay.accept(Int(cell.date))
-        Analytics.logEvent("BottomSheet_Reminder_Button_Date ", parameters: nil)
+        MenualLog.logEventAction(responder: cell)
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -563,7 +567,6 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
 extension MenualBottomSheetReminderComponentView: MonthViewDelegate {
     func pressedLeftBtn() {
         print("Reminder :: left!")
-        Analytics.logEvent("BottomSheet_Reminder_Button_prevYear", parameters: nil)
         if presentYear == currentYear {
             if presentMonthIndex == currentMonthIndex {
                 print("Reminder :: 이전 달 이동 불가능")
@@ -586,7 +589,6 @@ extension MenualBottomSheetReminderComponentView: MonthViewDelegate {
     
     func pressedRightBtn() {
         print("Reminder :: right!")
-        Analytics.logEvent("BottomSheet_Reminder_Button_nextYear", parameters: nil)
         // 다음 달 이동이 가능하면
 //        if let presentMonth = numOfDaysInMonth[safe: presentMonthIndex] {
 //            print("Reminder :: presentMonth = \(presentMonth)")

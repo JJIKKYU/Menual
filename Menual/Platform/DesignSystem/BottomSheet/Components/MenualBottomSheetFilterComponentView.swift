@@ -35,6 +35,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     }
     
     public lazy var weatherTitleBtn = UIButton().then {
+        $0.actionName = "weatherTitle"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("날씨", for: .normal)
         $0.titleLabel?.font = UIFont.AppTitle(.title_2)
@@ -60,6 +61,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     }
     
     private lazy var placeTitleBtn = UIButton().then {
+        $0.actionName = "placeTitle"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("장소", for: .normal)
         $0.titleLabel?.font = UIFont.AppTitle(.title_2)
@@ -85,6 +87,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     }
     
     private lazy var resetBtn = UIButton().then {
+        $0.actionName = "reset"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("초기화", for: .normal)
         $0.titleLabel?.font = UIFont.AppTitle(.title_2)
@@ -300,8 +303,8 @@ class MenualBottomSheetFilterComponentView: UIView {
 // MARK: - IBAction
 extension MenualBottomSheetFilterComponentView {
     @objc
-    func pressedWeatherTitleBtn() {
-        Analytics.logEvent("BottomSheet_Filter_Button_AllSelectWeather", parameters: nil)
+    func pressedWeatherTitleBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         print("bottomSheet :: pressedWeatherTitleBtn!")
         delegate?.filterWeatherSelectedArrRelay?.accept([])
         weatherSelectView.selctAllCells()
@@ -309,8 +312,8 @@ extension MenualBottomSheetFilterComponentView {
     }
     
     @objc
-    func pressedPlaceTitleBtn() {
-        Analytics.logEvent("BottomSheet_Filter_Button_AllSelectPlace", parameters: nil)
+    func pressedPlaceTitleBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         print("bottomSheet :: pressedPlaceTitleBtn!")
         delegate?.filterPlaceSelectedArrRelay?.accept([])
         placeSelectView.selctAllCells()
@@ -318,8 +321,8 @@ extension MenualBottomSheetFilterComponentView {
     }
     
     @objc
-    func pressedResetFilterBtn() {
-        Analytics.logEvent("BottomSheet_Filter_Button_Reset", parameters: nil)
+    func pressedResetFilterBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         print("bottomSheet :: pressedResetFilterBtn!")
         delegate?.filterWeatherSelectedArrRelay?.accept([])
         delegate?.filterPlaceSelectedArrRelay?.accept([])

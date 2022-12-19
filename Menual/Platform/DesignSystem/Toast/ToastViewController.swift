@@ -29,6 +29,7 @@ class ToastView: UIView {
     
     init() {
         super.init(frame: CGRect.zero)
+        categoryName = "toast"
         setViews()
     }
     
@@ -60,7 +61,7 @@ class ToastView: UIView {
 
 extension UIViewController {
 
-func showToast(message : String) {
+func showToast(message : String) -> ToastView {
     let toastView = ToastView()
 
     toastView.titleText = message
@@ -92,5 +93,6 @@ func showToast(message : String) {
     }, completion: {(isCompleted) in
         toastView.removeFromSuperview()
     })
+    return toastView
     }
 }

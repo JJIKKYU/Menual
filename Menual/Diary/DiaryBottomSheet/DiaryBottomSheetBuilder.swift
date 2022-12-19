@@ -71,6 +71,7 @@ final class DiaryBottomSheetBuilder: Builder<DiaryBottomSheetDependency>, DiaryB
         print("ddddd!! =\(dependency.filteredDiaryCountRelay?.value)")
         
         let viewController = DiaryBottomSheetViewController()
+        viewController.screenName = "bottomSheet"
         let diaryWritingBuildable = DiaryWritingBuilder(dependency: component)
         
         let interactor = DiaryBottomSheetInteractor(

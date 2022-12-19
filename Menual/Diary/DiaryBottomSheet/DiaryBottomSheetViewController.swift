@@ -142,6 +142,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     
     // 필터 컴포넌트
     private lazy var filterComponentView = MenualBottomSheetFilterComponentView().then {
+        $0.categoryName = "filter"
         $0.translatesAutoresizingMaskIntoConstraints = false
 //        $0.isUserInteractionEnabled = false
         $0.delegate = self

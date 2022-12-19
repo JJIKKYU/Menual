@@ -37,6 +37,7 @@ class MonthView: UIView {
     }
     
     private lazy var leftBtn = UIButton().then { (btn: UIButton) in
+        btn.actionName = "prev"
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
         btn.tintColor = Colors.grey.g600
@@ -47,6 +48,7 @@ class MonthView: UIView {
     }
     
     private lazy var rightBtn = UIButton().then { (btn: UIButton) in
+        btn.actionName = "next"
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.setImage(Asset._24px.Arrow.front.image.withRenderingMode(.alwaysTemplate), for: .normal)
         btn.tintColor = Colors.grey.g200
@@ -126,12 +128,14 @@ class MonthView: UIView {
 // MARK: - IBAction
 extension MonthView {
     @objc
-    func pressedLeftBtn() {
+    func pressedLeftBtn(_ button: UIButton) {
         delegate?.pressedLeftBtn()
+        MenualLog.logEventAction(responder: button)
     }
     
     @objc
-    func pressedRightBtn() {
+    func pressedRightBtn(_ button: UIButton) {
         delegate?.pressedRightBtn()
+        MenualLog.logEventAction(responder: button)
     }
 }

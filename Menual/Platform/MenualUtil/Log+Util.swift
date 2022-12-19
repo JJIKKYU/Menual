@@ -149,7 +149,7 @@ extension UIView {
 // MARK: - MenualLog
 class MenualLog {
     class func logEventAction(_ log: String, parameter: [String: Any]? = nil) {
-        print("Log :: logName = \(log), parameter = \(parameter)")
+        print("Log :: 🍎 \(log), parameter = \(parameter)")
         Analytics.logEvent(log, parameters: parameter)
     }
     
@@ -170,7 +170,7 @@ class MenualLog {
         }
 
         var screenName: String?
-        var categoryName: String?
+        var categoryName: String = ""
         
         while(screenName == nil) {
             print("Log :: responder = \(responder)")
@@ -180,10 +180,13 @@ class MenualLog {
             
             if let responder = responder as? UIView,
                let _categoryName = responder.categoryName {
-                categoryName = _categoryName
+                categoryName = "_" + _categoryName + categoryName
                 print("Log :: categoryName = \(categoryName)")
             }
             responder = responder?.next
+            if responder == nil {
+                break
+            }
         }
         
         var logName: String = ""
@@ -191,15 +194,15 @@ class MenualLog {
             logName += screenName
         }
         
-        if let categoryName = categoryName {
-            logName += "_\(categoryName)"
+        if !categoryName.isEmpty {
+            logName += "\(categoryName)"
         }
         
         if let actioName = actioName {
             logName += "_\(actioName)"
         }
         
-        print("Log :: logName = \(logName), parameter = \(parameter)")
+        print("Log :: 🍎 \(logName), parameter = \(parameter)")
         
         Analytics.logEvent(logName, parameters: parameter)
     }
