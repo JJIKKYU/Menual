@@ -1008,7 +1008,6 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             }
             
         case TextViewType.description.rawValue:
-            Analytics.logEvent("Writing_Foucs_Description", parameters: nil)
             print("Description TextView")
             weatherPlaceToolbarView.isHidden = true
             if textView.text == defaultDescriptionText {
