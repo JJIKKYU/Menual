@@ -308,7 +308,11 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
 
-        let repliesCount = diaryModel.repliesArr.count
+        let repliesCount = diaryModel
+            .repliesArr
+            .filter ({ $0.isDeleted == false })
+            .count
+
         info.updateReplyNum(replyNum: repliesCount)
         
         realm.safeWrite {
