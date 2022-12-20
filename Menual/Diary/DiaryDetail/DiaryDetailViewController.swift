@@ -567,7 +567,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         case false:
             message = "리마인더 알림이 설정되었어요."
         }
-        showToast(message: message)
+        let toast = showToast(message: message)
+        MenualLog.logEventAction(responder: toast)
     }
     
     func setReminderIconEnabled(isEnabled: Bool) {
