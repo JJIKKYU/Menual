@@ -82,6 +82,7 @@ class DialogViewController: UIViewController {
     
     // buttonType이 oneButton일때만 쓰이는 버튼
     private lazy var oneButton = UIButton().then {
+        $0.actionName = "confirm"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = Colors.tint.main.v300
         
@@ -101,6 +102,7 @@ class DialogViewController: UIViewController {
     
     // buttonType이 twoButton일때만 쓰이는 버튼
     private lazy var leftButton = UIButton().then {
+        $0.actionName = "cancel"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = Colors.tint.main.v300
         
@@ -118,6 +120,7 @@ class DialogViewController: UIViewController {
     
     // buttonType이 twoButton일때만 쓰이는 버튼
     private lazy var rightButton = UIButton().then {
+        $0.actionName = "confirm"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = Colors.tint.main.v300
         
@@ -146,7 +149,7 @@ class DialogViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        screenName = "dialog"
         setViews()
     }
     
@@ -269,7 +272,8 @@ class DialogViewController: UIViewController {
 // MARK: - Action 처리
 extension DialogViewController {
     @objc
-    func pressedConfirmBtn() {
+    func pressedConfirmBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         self.dismiss(animated: true) {
             self.delegate?.action(titleText: self.titleText)
             self.delegate = nil
@@ -277,7 +281,8 @@ extension DialogViewController {
     }
     
     @objc
-    func pressedCancelBtn() {
+    func pressedCancelBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         self.dismiss(animated: true) {
             self.delegate?.exit(titleText: self.titleText)
             self.delegate = nil
