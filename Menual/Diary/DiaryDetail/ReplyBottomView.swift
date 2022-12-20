@@ -17,6 +17,7 @@ class ReplyBottomView: UIView {
     var writedText: String = ""
     
     var replyTextView = UITextView().then {
+        $0.categoryName = "reply"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isScrollEnabled = false
         $0.scrollIndicatorInsets = UIEdgeInsets(top: 6, left: 0, bottom: 6, right: 40)
@@ -39,6 +40,7 @@ class ReplyBottomView: UIView {
     }
     
     let writeBtn = UIButton().then {
+        $0.actionName = "write"
         $0.backgroundColor = Colors.tint.sub.n400
         $0.setImage(Asset._20px.write.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g500

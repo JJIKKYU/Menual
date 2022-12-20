@@ -67,6 +67,7 @@ class ReplyCell: UITableViewCell {
     }
     
     let closeBtn = UIButton().then {
+        $0.actionName = "delete"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._20px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g600

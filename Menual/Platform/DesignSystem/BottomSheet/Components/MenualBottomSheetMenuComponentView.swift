@@ -41,6 +41,7 @@ class MenualBottomSheetMenuComponentView: UIView {
     }
     
     public var hideMenuBtn = UIButton().then {
+        $0.actionName = "hide"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("메뉴얼 숨기기", for: .normal)
         $0.setTitleColor(Colors.grey.g200, for: .normal)
@@ -56,6 +57,7 @@ class MenualBottomSheetMenuComponentView: UIView {
     }
     
     public var editMenuBtn = UIButton().then {
+        $0.actionName = "edit"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("수정하기", for: .normal)
         $0.setTitleColor(Colors.grey.g200, for: .normal)
@@ -72,6 +74,7 @@ class MenualBottomSheetMenuComponentView: UIView {
     }
     
     public var deleteMenuBtn = UIButton().then {
+        $0.actionName = "delete"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("삭제하기", for: .normal)
         $0.setTitleColor(Colors.grey.g200, for: .normal)

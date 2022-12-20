@@ -43,6 +43,7 @@ final class DiaryTempSaveBuilder: Builder<DiaryTempSaveDependency>, DiaryTempSav
 
         let component = DiaryTempSaveComponent(dependency: dependency)
         let viewController = DiaryTempSaveViewController()
+        viewController.screenName = "tempSave"
         let interactor = DiaryTempSaveInteractor(
             presenter: viewController,
             dependency: component,

@@ -133,6 +133,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     
     // 메뉴 컴포넌트
     private lazy var menuComponentView = MenualBottomSheetMenuComponentView().then {
+        $0.categoryName = "menu"
         $0.translatesAutoresizingMaskIntoConstraints = true
         $0.isHidden = true
         $0.editMenuBtn.addTarget(self, action: #selector(pressedEditBtn), for: .touchUpInside)
@@ -583,8 +584,8 @@ extension DiaryBottomSheetViewController {
 // MARK: - MenualBottomSheetMenuComponentView
 extension DiaryBottomSheetViewController {
     @objc
-    func pressedHideMenuBtn() {
-        Analytics.logEvent("BottomSheet_Menu_Hide", parameters: nil)
+    func pressedHideMenuBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         print("DiaryBottomSheet :: pressedHideMenuBtn")
         let isHide = listener?.isHideMenualRelay?.value ?? false
         var titleText: String = ""
@@ -604,15 +605,15 @@ extension DiaryBottomSheetViewController {
     }
     
     @objc
-    func pressedEditBtn() {
-        Analytics.logEvent("BottomSheet_Menu_Edit", parameters: nil)
+    func pressedEditBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         print("DiaryBottomSheet :: pressedEditBtn")
         listener?.menuComponentRelay?.accept(.edit)
     }
     
     @objc
-    func pressedDeleteBtn() {
-        Analytics.logEvent("BottomSheet_Menu_Delete", parameters: nil)
+    func pressedDeleteBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         print("DiaryBottomSheet :: pressedDeleteBtn")
         show(size: .small,
              buttonType: .twoBtn,
@@ -705,10 +706,8 @@ extension DiaryBottomSheetViewController: DialogDelegate {
             print("DiaryBottomSheet :: 숨기기 action!")
             listener?.menuComponentRelay?.accept(.hide)
             hideBottomSheetAndGoBack()
-            Analytics.logEvent("BottomSheet_Menu_Hide_Popup_Confirm", parameters: nil)
             
         case "해당 메뉴얼을 삭제하시겠어요?":
-            Analytics.logEvent("BottomSheet_Menu_Delete_Popup_Confirm", parameters: nil)
             listener?.menuComponentRelay?.accept(.delete)
             hideBottomSheetAndGoBack()
             
@@ -721,12 +720,11 @@ extension DiaryBottomSheetViewController: DialogDelegate {
             break
             
         case "리마인더 알림을 해제하시겠어요?":
-            Analytics.logEvent("BottomSheet_Reminder_Button_Popup_Confirm", parameters: nil)
             listener?.isEnabledReminderRelay?.accept(false)
             break
             
         case "날짜를 선택해 보세요":
-            Analytics.logEvent("BottomSheet_Reminder_QNA_Popup_Confirm", parameters: nil)
+            break
 
         default:
             break
@@ -739,17 +737,17 @@ extension DiaryBottomSheetViewController: DialogDelegate {
         case "이 메뉴얼을 숨기시겠어요?", "숨긴 메뉴얼을 보시겠어요?":
             print("DiaryBottomSheet :: 숨기기 exit!")
             hideBottomSheetAndGoBack()
-            Analytics.logEvent("BottomSheet_Menu_Hide_Popup_Cancel", parameters: nil)
+            break
             
         case "해당 메뉴얼을 삭제하시겠어요?":
-            Analytics.logEvent("BottomSheet_Menu_Delete_Popup_Cancel", parameters: nil)
             hideBottomSheetAndGoBack()
+            break
             
         case "설정에서 Menual의 알림을 활성화 해주세요.":
             break
             
         case "리마인더 알림을 해제하시겠어요?":
-            Analytics.logEvent("BottomSheet_Reminder_Button_Popup_Cancel", parameters: nil)
+            break
 
         default:
             break

@@ -36,6 +36,7 @@ class DiarySearchView: UIView {
     }
     
     lazy var deleteBtn = UIButton().then {
+        $0.actionName = "delete"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._20px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.tint.main.v400

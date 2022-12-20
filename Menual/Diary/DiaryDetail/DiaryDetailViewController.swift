@@ -51,6 +51,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     }
     
     private lazy var replyBottomView = ReplyBottomView().then {
+        $0.categoryName = "reply"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.writeBtn.addTarget(self, action: #selector(pressedSubmitReplyBtn), for: .touchUpInside)
         $0.replyTextView.delegate = self
@@ -139,6 +140,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     private lazy var imageViewGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(pressedImageView))
     
     lazy var replyTableView = UITableView(frame: .zero, style: .grouped).then {
+        $0.categoryName = "replyList"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
         $0.dataSource = self
@@ -159,18 +161,21 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     }
     
     lazy var spaceRequiredFAB = FAB(fabType: .spacRequired, fabStatus: .default_).then {
+        $0.categoryName = "inddicator"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.spaceRequiredRightArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
         $0.spaceRequiredLeftArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
     }
     
     lazy var hideView = UIView().then {
+        $0.categoryName = "hide"
         $0.translatesAutoresizingMaskIntoConstraints = false
         let lockEmptyView = Empty().then {
             $0.screenType = .writing
             $0.writingType = .lock
         }
         lazy var btn = CapsuleButton(frame: .zero, includeType: .iconText).then {
+            $0.actionName = "unhide"
             $0.title = "숨김 해제하기"
             $0.image = Asset._16px.Circle.front.image.withRenderingMode(.alwaysTemplate)
         }
@@ -250,7 +255,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        
         print("DiaryDetail :: ViewWillLayoutSubviews!")
         
         var changedHeight: CGFloat = 0
@@ -579,14 +583,14 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
 // MARK: - IBAction
 extension DiaryDetailViewController {
     @objc
-    func pressedMenuMoreBtn() {
-        MenualLog.logEventAction(responder: naviView.rightButton1)
+    func pressedMenuMoreBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         listener?.pressedMenuMoreBtn()
     }
     
     @objc
-    func pressedReminderBtn() {
-        MenualLog.logEventAction(responder: naviView.rightButton2)
+    func pressedReminderBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         listener?.pressedReminderBtn()
     }
     
@@ -610,7 +614,11 @@ extension DiaryDetailViewController {
     }
     
     @objc
-    func pressedSubmitReplyBtn() {
+    func pressedSubmitReplyBtn(_ button: UIButton) {
+        let parameter: [String: Any] = [
+            "replyStringCount": replyBottomView.replyTextView.text.count
+        ]
+        MenualLog.logEventAction(responder: button, parameter: parameter)
         print("DiaryDetail :: pressedSubmitReplyBtn")
         show(size: .small,
              buttonType: .twoBtn,
@@ -622,6 +630,7 @@ extension DiaryDetailViewController {
     
     @objc
     func pressedIndicatorBtn(sender: UIButton) {
+        MenualLog.logEventAction(responder: sender)
         print("DiaryDetail :: sender.s tag = \(sender.tag)")
         listener?.pressedIndicatorButton(offset: sender.tag, isInitMode: false)
         DispatchQueue.main.async {
@@ -631,7 +640,8 @@ extension DiaryDetailViewController {
     
     // 숨김 해제하기 버튼
     @objc
-    func pressedLockBtn() {
+    func pressedLockBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         print("DiaryDetail :: 숨김 해제하기 버튼 클릭!")
         show(size: .small,
              buttonType: .twoBtn,
@@ -643,13 +653,15 @@ extension DiaryDetailViewController {
     }
     
     @objc
-    func pressedImageView() {
+    func pressedImageView(_ button: UIButton) {
+        MenualLog.logEventAction("detail_image")
         print("DiaryDetail :: pressedImageView!")
         listener?.pressedImageView()
     }
     
     @objc
     func pressedReplyCloseBtn(sender: UIButton) {
+        MenualLog.logEventAction(responder: sender)
         print("DiaryDetail :: pressedRelyCloseBtn!, sender.tag = \(sender.tag)")
         guard let willDeleteReply = listener?.diaryReplyArr[safe: sender.tag] else { return }
         self.willDeleteReplyModel = willDeleteReply
@@ -717,6 +729,7 @@ extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource 
         cell.replyUUID = uuid
         cell.closeBtn.tag = indexPath.row
         cell.closeBtn.addTarget(self, action: #selector(pressedReplyCloseBtn(sender:)), for: .touchUpInside)
+        cell.actionName = "reply"
         // cell.replyTextView.sizeToFit()
         
 //        if let currentDiaryPage = listener?.currentDiaryPage {

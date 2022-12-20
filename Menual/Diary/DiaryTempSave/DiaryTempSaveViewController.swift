@@ -39,6 +39,7 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSaveViewCont
     }
     
     lazy var tableView = UITableView().then {
+        $0.categoryName = "list"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.dataSource = self
         $0.delegate = self
@@ -50,6 +51,7 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSaveViewCont
     }
     
     private lazy var deleteBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .xLarge).then {
+        $0.actionName = "delete"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "삭제하기"
         $0.isHidden = true
@@ -181,7 +183,12 @@ extension DiaryTempSaveViewController {
     }
     
     @objc
-    func pressedDeleteBtn() {
+    func pressedDeleteBtn(_ button: UIButton) {
+        let parameter: [String: Any] = [
+            "isDeleteMode": isDeleteMode
+        ]
+        MenualLog.logEventAction(responder: button, parameter: parameter)
+
         listener?.deleteTempSaveUUIDArrRelay.accept([])
         isDeleteMode = !isDeleteMode
         deleteBtn.isHidden = !isDeleteMode
@@ -191,8 +198,13 @@ extension DiaryTempSaveViewController {
     }
     
     @objc
-    func pressedBottomDeleteBtn() {
+    func pressedBottomDeleteBtn(_ button: UIButton) {
         print("TempSave :: pressedBottomDeleteBtn")
+        let count: Int = listener?.deleteTempSaveUUIDArrRelay.value.count ?? 0
+        let parameter: [String: Any] = [
+            "count": count
+        ]
+        MenualLog.logEventAction(responder: button, parameter: parameter)
 
         // 임시저장된 메뉴얼을 '작성중' 상태로 만들었는데 삭제할 경우
         if let tempSaveDiaryModel = listener?.tempSaveDiaryModelRelay.value {
@@ -212,7 +224,8 @@ extension DiaryTempSaveViewController {
         deleteBtn.isHidden = !isDeleteMode
         naviView.rightButton1IsActive = false
         
-        showToast(message: "임시저장된 메뉴얼이 삭제되었습니다.")
+        let toast = showToast(message: "임시저장된 메뉴얼이 삭제되었습니다.")
+        MenualLog.logEventAction(responder: toast)
     }
 }
 
@@ -252,6 +265,7 @@ extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSourc
         cell.title = model.title
         cell.date = model.createdAt.toString()
         cell.time = model.createdAt.toStringHourMin()
+        cell.actionName = "cell"
 
         print("여기!")
         
@@ -276,9 +290,17 @@ extension DiaryTempSaveViewController: UITableViewDelegate, UITableViewDataSourc
             } else {
                 listener?.deleteTempSaveUUIDArrRelay.accept(selectedUUIDArr.filter { $0 != uuid })
             }
+            let parameter: [String: Any] = [
+                "isDeleteMode": true
+            ]
+            MenualLog.logEventAction(responder: cell, parameter: parameter)
 
         case false:
             listener?.pressedTempSaveCell(uuid: uuid)
+            let parameter: [String: Any] = [
+                "isDeleteMode": false
+            ]
+            MenualLog.logEventAction(responder: cell, parameter: parameter)
         }
     }
 }

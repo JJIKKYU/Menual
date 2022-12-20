@@ -249,6 +249,7 @@ class MenualNaviView: UIView {
             backButton.isHidden = false
             backButton.tintColor = Colors.grey.g100
             backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            rightButton1.actionName = "delete"
             rightButton1.isHidden = false
             rightButton1.setImage(Asset._24px.delete.image.withRenderingMode(.alwaysTemplate), for: .normal)
             rightButton1.tintColor = Colors.grey.g100

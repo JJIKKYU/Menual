@@ -61,6 +61,7 @@ class FAB: UIButton {
     }
     
     var spaceRequiredLeftArrowBtn = BaseButton().then {
+        $0.actionName = "left"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.contentMode = .scaleAspectFit
         $0.contentHorizontalAlignment = .fill
@@ -72,6 +73,7 @@ class FAB: UIButton {
     }
     
     var spaceRequiredRightArrowBtn = BaseButton().then {
+        $0.actionName = "right"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.contentMode = .scaleAspectFit
         $0.contentHorizontalAlignment = .fill

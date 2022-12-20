@@ -73,6 +73,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchViewControll
     }
     
     lazy var searchTextField = DiarySearchView().then {
+        $0.categoryName = "bar"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textField.delegate = self
         $0.deleteBtn.addTarget(self, action: #selector(pressedTextFieldDeleteBtn), for: .touchUpInside)
@@ -259,7 +260,8 @@ extension DiarySearchViewController {
     }
     
     @objc
-    func pressedTextFieldDeleteBtn() {
+    func pressedTextFieldDeleteBtn(_ button: UIButton) {
+        MenualLog.logEventAction(responder: button)
         self.searchTextField.textField.text = ""
         self.searchTextField.deleteBtn.isHidden = true
         self.searchText = ""
@@ -470,6 +472,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             cell.searchKeyword = searchKeyword
             cell.pageCount = pageCount
             cell.reviewCount = replies
+            cell.actionName = "resultCell"
             
             return cell
 
@@ -524,6 +527,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             cell.searchKeyword = ""
             cell.pageCount = pageCount
             cell.reviewCount = replies
+            cell.actionName = "recentCell"
             
             return cell
         }
@@ -544,6 +548,17 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             
             print("Search :: 이거 = \(model.uuid), \(cell.uuid)")
             
+            let parameter: [String: Any] =
+            [
+                "keyword": searchText,
+                "page" : model.pageNum,
+                "createdAt" : model.createdAt,
+                "replyCount" : model.createdAt,
+                "readCount" : model.readCount,
+                "image" : model.image,
+                "reminder" : model.reminder?.isEnabled ?? false
+            ]
+            MenualLog.logEventAction(responder: cell, parameter: parameter)
             listener?.pressedSearchCell(diaryModel: model)
 
         case .recentSearch:
@@ -556,6 +571,17 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             
             print("Search :: 이거 = \(model.uuid), \(cell.uuid)")
             
+            let parameter: [String: Any] =
+            [
+                "keyword": searchText,
+                "page" : diaryModel.pageNum,
+                "createdAt" : diaryModel.createdAt,
+                "replyCount" : diaryModel.createdAt,
+                "readCount" : diaryModel.readCount,
+                "image" : diaryModel.image,
+                "reminder" : diaryModel.reminder?.isEnabled ?? false
+            ]
+            MenualLog.logEventAction(responder: cell, parameter: parameter)
             listener?.pressedRecentSearchCell(diaryModel: diaryModel)
 
         }

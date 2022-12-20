@@ -35,6 +35,7 @@ final class DiarySearchBuilder: Builder<DiarySearchDependency>, DiarySearchBuild
     func build(withListener listener: DiarySearchListener) -> DiarySearchRouting {
         let component = DiarySearchComponent(dependency: dependency)
         let viewController = DiarySearchViewController()
+        viewController.screenName = "search"
         let interactor = DiarySearchInteractor(
             presenter: viewController,
             dependency: component

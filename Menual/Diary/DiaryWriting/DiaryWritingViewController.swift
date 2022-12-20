@@ -1334,7 +1334,6 @@ extension DiaryWritingViewController: DialogDelegate {
         switch titleText {
         case "메뉴얼 작성을 취소하시겠어요?",
              "메뉴얼 수정을 취소하시겠어요?":
-            Analytics.logEvent("Writing_Popup_Confirm", parameters: ["Event" : "MenualWritingBack"])
             if let diaryModel = zipDiaryModelForTempSave() {
                 listener?.saveTempSave(diaryModel: diaryModel,
                                        originalImageData: selectedOriginalImage?.jpegData(compressionQuality: 0.5),
@@ -1345,11 +1344,9 @@ extension DiaryWritingViewController: DialogDelegate {
             
         case "메뉴얼을 등록하시겠어요?",
              "메뉴얼을 수정하시겠어요?":
-            Analytics.logEvent("Writing_Popup_Confirm", parameters: ["Event" : "MenualWriting"])
             addDiary()
             
         case "사진을 삭제하시겠어요?":
-            Analytics.logEvent("Writing_Popup_Confirm", parameters: ["Event" : "ImageDelete"])
             imageUploadView.image = nil
             selectedImage = nil
             selectedOriginalImage = nil
@@ -1366,14 +1363,14 @@ extension DiaryWritingViewController: DialogDelegate {
         switch titleText {
         case "메뉴얼 작성을 취소하시겠어요?",
              "메뉴얼 수정을 취소하시겠어요?":
-            Analytics.logEvent("Writing_Popup_Cancel", parameters: ["Event" : "MenualWritingBack"])
+            break
             
         case "메뉴얼을 등록하시겠어요?",
              "메뉴얼을 수정하시겠어요?":
-            Analytics.logEvent("Writing_Popup_Cancel", parameters: ["Event" : "MenualWriting"])
+            break
             
         case "사진을 삭제하시겠어요?":
-            Analytics.logEvent("Writing_Popup_Cancel", parameters: ["Event" : "ImageDelete"])
+            break
             
         default:
             break

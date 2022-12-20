@@ -160,37 +160,38 @@ class MenualLog {
         if let responder = responder as? UIButton {
             actioName = responder.actionName ?? ""
         }
-
-        if let responder = responder as? UITableViewCell {
+        else if let responder = responder as? UITableViewCell {
             actioName = responder.actionName ?? ""
         }
         
-        if let responder = responder as? UICollectionViewCell {
+        else if let responder = responder as? UICollectionViewCell {
             actioName = responder.actionName ?? ""
         }
+        
+        
+    
 
-        var screenName: String?
+        var screenName: String = ""
         var categoryName: String = ""
         
-        while(screenName == nil) {
+        while(responder != nil) {
             print("Log :: responder = \(responder)")
-            if let responder = responder as? UIViewController {
-                screenName = responder.screenName
+            if let responder = responder as? UIViewController,
+               let _screenName = responder.screenName,
+               !_screenName.isEmpty
+            {
+                screenName =  _screenName + (screenName.isEmpty ? "" : "_") + screenName
             }
             
             if let responder = responder as? UIView,
                let _categoryName = responder.categoryName {
                 categoryName = "_" + _categoryName + categoryName
-                print("Log :: categoryName = \(categoryName)")
             }
             responder = responder?.next
-            if responder == nil {
-                break
-            }
         }
         
         var logName: String = ""
-        if let screenName = screenName {
+        if !screenName.isEmpty {
             logName += screenName
         }
         

@@ -758,7 +758,6 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             "image" : data.image,
             "reminder" : data.reminder?.isEnabled ?? false
         ]
-
         MenualLog.logEventAction(responder: cell, parameter: parameter)
         listener?.pressedDiaryCell(diaryModel: data)
     }
