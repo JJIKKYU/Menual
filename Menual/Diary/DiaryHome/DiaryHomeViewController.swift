@@ -708,10 +708,12 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         if dataModel.isHide {
             cell.listType = .hide
         } else {
-            if let image = dataModel.originalImage {
+            if let imageData = dataModel.originalImage,
+               let image = UIImage(data:  imageData) {
+                let reSizeImage = UIImage().imageWithImage(sourceImage: image, scaledToWidth: 50)
                 cell.listType = .textAndImage
                 DispatchQueue.main.async {
-                    cell.image = UIImage(data: image)
+                    cell.image = reSizeImage
                 }
             } else {
                 cell.image = nil

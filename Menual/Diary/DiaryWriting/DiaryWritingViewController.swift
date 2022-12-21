@@ -1316,8 +1316,9 @@ extension DiaryWritingViewController: WeatherPlaceToolbarViewDelegate {
 extension DiaryWritingViewController: CropViewControllerDelegate {
     func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
         print("image! = \(image)")
-        self.selectedImage = image
-        self.imageUploadView.image = image
+        let resizeImage = UIImage().imageWithImage(sourceImage: image, scaledToWidth: UIScreen.main.bounds.width)
+        self.selectedImage = resizeImage
+        self.imageUploadView.image = resizeImage
         self.isEdittedIamge = true
 
         // 텍스트는 기본 텍스트고 이미지만 변경했을 경우에는 업로드 불가능
@@ -1328,6 +1329,20 @@ extension DiaryWritingViewController: CropViewControllerDelegate {
         }
 
         dismiss(animated: true)
+    }
+    
+    func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage {
+        let oldWidth = sourceImage.size.width
+        let scaleFactor = scaledToWidth / oldWidth
+
+        let newHeight = sourceImage.size.height * scaleFactor
+        let newWidth = oldWidth * scaleFactor
+
+        UIGraphicsBeginImageContext(CGSize(width:newWidth, height:newHeight))
+        sourceImage.draw(in: CGRect(x:0, y:0, width:newWidth, height:newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage!
     }
 }
 
