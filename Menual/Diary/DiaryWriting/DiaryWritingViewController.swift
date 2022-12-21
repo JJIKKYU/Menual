@@ -441,16 +441,18 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                     return
                 }
                 
+                self.datePageTextCountView.textCount = String(text.count)
                 switch self.writingType {
                 case .writing:
-                    self.datePageTextCountView.textCount = String(text.count)
                     if text.count > 0 {
                         self.naviView.rightButton1IsActive = true
                     } else {
                         self.naviView.rightButton1IsActive = false
                     }
                 case .edit:
-                    break
+                    if text.count == 0 {
+                        self.naviView.rightButton1IsActive = false
+                    }
 
                 }
             })
