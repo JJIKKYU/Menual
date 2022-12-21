@@ -655,9 +655,13 @@ extension DiaryDetailViewController {
     
     @objc
     func pressedImageView(_ button: UIButton) {
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         MenualLog.logEventAction("detail_image")
         print("DiaryDetail :: pressedImageView!")
         listener?.pressedImageView()
+    }
+    func enableBackSwipe() {
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
     
     @objc

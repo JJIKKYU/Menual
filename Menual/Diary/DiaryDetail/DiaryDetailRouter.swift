@@ -155,9 +155,9 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
             imageDataRelay: imageDataRelay
         )
 
-        let navigation = NavigationControllerable(root: router.viewControllable)
-        navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
-        viewControllable.present(navigation, animated: true, completion: nil)
+//        let navigation = NavigationControllerable(root: router.viewControllable)
+//        navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
+        viewControllable.present(router.viewControllable, animated: true, completion: nil)
         // presentInsideNavigation(navigation, style: .popover)
         
         diaryDetailImageRouting = router

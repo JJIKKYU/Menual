@@ -57,11 +57,17 @@ final class DiaryDetailImageViewController: UIViewController, DiaryDetailImagePr
         setViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
         if isMovingFromParent || isBeingDismissed {
-            print("!!?")
+            print("Navi :: !!?")
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
         

@@ -31,6 +31,7 @@ protocol DiaryDetailPresentable: Presentable {
     func reminderCompViewshowToast(isEding: Bool)
     func setReminderIconEnabled(isEnabled: Bool)
     func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool)
+    func enableBackSwipe()
 }
 protocol DiaryDetailInteractorDependency {
     var diaryRepository: DiaryRepository { get }
@@ -456,6 +457,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     func diaryDetailImagePressedBackBtn(isOnlyDetach: Bool) {
         print("DiaryDetail :: diaryDetailImagePressedBackBtn!")
         router?.detachDiaryDetailImage(isOnlyDetach: isOnlyDetach)
+        presenter.enableBackSwipe()
     }
     
     func pressedImageView() {
