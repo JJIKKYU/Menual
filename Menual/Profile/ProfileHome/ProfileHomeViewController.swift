@@ -190,34 +190,38 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         cell.selectionStyle = .none
         cell.isUserInteractionEnabled = true
         let section = indexPath.section
-        switch section {
-        case ProfileHomeSection.SETTING1.rawValue:
+        
+        guard let sections = ProfileHomeSection(rawValue: section) else { return UITableViewCell() }
+        switch sections {
+        case .SETTING1:
             guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.profileHomeCellType = data.type
             cell.switchIsOn = listener?.isEnabledPasswordRelay.value ?? false
+            cell.actionName = data.actionName
             return cell
-        case ProfileHomeSection.SETTING2.rawValue:
+
+        case .SETTING2:
             guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.profileHomeCellType = data.type
+            cell.actionName = data.actionName
             return cell
-            
-        default:
-            return UITableViewCell()
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         guard let cell = tableView.cellForRow(at: indexPath) as? ProfileHomeCell else { return }
+        MenualLog.logEventAction(responder: cell)
+
         let section = indexPath.section
         let index = indexPath.row
         print("ProfileHome :: indexpath = \(indexPath)")
 
-        // TODO: - 실제 데이터 기반으로 변경
-        switch section {
-        case ProfileHomeSection.SETTING1.rawValue:
+        guard let sections = ProfileHomeSection(rawValue: section) else { return }
+        switch sections {
+        case .SETTING1:
             guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return }
 
             if data.title == "비밀번호 설정하기" {
@@ -233,11 +237,8 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                     UIApplication.shared.open(url, options: [:])
                 }
             }
-//            if data.type == .toggle {
-//                cell.switchBtn.isOn = !cell.switchBtn.isOn
-//            }
-            break
-        case ProfileHomeSection.SETTING2.rawValue:
+
+        case .SETTING2:
             guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return }
             if data.title == "개발자 도구" {
                 print("ProfileHome :: 개발자 도구 호출!")
@@ -251,9 +252,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 print("ProfileHome :: iCloud 동기화하기!")
                 self.listener?.saveiCloud()
             }
-            break
-        default:
-            break
+            
         }
     }
 }

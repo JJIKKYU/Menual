@@ -11,4 +11,5 @@ struct ProfileHomeModel {
     let section: ProfileHomeSection
     let type: ProfileHomeCellType
     let title: String
+    let actionName: String
 }

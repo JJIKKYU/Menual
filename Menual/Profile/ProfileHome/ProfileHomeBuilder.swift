@@ -40,6 +40,7 @@ final class ProfileHomeBuilder: Builder<ProfileHomeDependency>, ProfileHomeBuild
         let profileOpensourceBuildable = ProfileOpensourceBuilder(dependency: component)
         
         let viewController = ProfileHomeViewController()
+        viewController.screenName = "profile"
         let interactor = ProfileHomeInteractor(
             presenter: viewController,
             dependency: component
