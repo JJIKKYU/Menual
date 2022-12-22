@@ -362,34 +362,39 @@ public final class MomentsRepositoryImp: MomentsRepository {
     func setSpecificTimeMomentsItem() -> Observable<[MomentsItemRealm]?> {
         guard let diaryArr = diaryArr else { return .just(nil) }
 
-        let momentsDiaryArr: [DiaryModelRealm] = diaryArr
+        guard let momentsDiary: DiaryModelRealm = diaryArr
             .filter ({
+                // 1. 30일이 지나 유저에게 추천 가능한지 체크
                 let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
                 
+                // 2. 실제로 새벽에 작성했는지  체크
                 let hour = Calendar.current.component(.hour, from: $0.createdAt)
-                if hour >= 0 && hour <= 4 {
-                    
-                }
                 let isSpecificHour = hour >= 0 && hour <= 4 ? true : false
+                
+                // 3. 이 모먼츠가 추천된 후 유저가 터치한 이력이 있는지 체크
+                if let lastMomentsDate = $0.lastMomentsDate {
+                    // 터치한 이력이 있지만, 30일이 지나서 다시 한 번 추천이 가능한지 확인
+                    let isAvailableContent: Bool = checkAvailableDiaryContents(lastMomentsDate, targetDay: 30)
+                    print("MomentsRepo :: 추천된 후 유저가 터치한 이력이 있습니다., 경과된 시간 = \(isAvailableContent)")
+                    if isAvailableContent == false { return false }
+                }
                 
                 return isAvailableContent && isSpecificHour
             })
+            .first
+        else { return .just(nil) }
+
+        let title: String = specificTimeTitleData.randomElement() ?? ""
+        let item = MomentsItemRealm(order: 0,
+                                    title: title,
+                                    uuid: UUID().uuidString,
+                                    icon: "120px/lamp/round",
+                                    diaryUUID: momentsDiary.uuid,
+                                    userChecked: false,
+                                    createdAt: Date()
+        )
         
-        var momentsItems: [MomentsItemRealm] = []
-        for diary in momentsDiaryArr {
-            let title: String = specificTimeTitleData.randomElement() ?? ""
-            let item = MomentsItemRealm(order: 0,
-                                        title: title,
-                                        uuid: UUID().uuidString,
-                                        icon: "120px/lamp/round",
-                                        diaryUUID: diary.uuid,
-                                        userChecked: false,
-                                        createdAt: Date()
-            )
-            momentsItems.append(item)
-        }
-        
-        return .just(momentsItems)
+        return .just([item])
     }
     
     //MARK: - 계절
@@ -412,8 +417,16 @@ public final class MomentsRepositoryImp: MomentsRepository {
         guard let diaryArr = diaryArr else { return .just(nil) }
 
         var seasonTitle: String = ""
-        let momentsDiaryArr: [DiaryModelRealm] = diaryArr
+        guard let momentsDiary: DiaryModelRealm = diaryArr
             .filter ({
+                // 1. 이 모먼츠가 추천된 후 유저가 터치한 이력이 있는지 체크
+                if let lastMomentsDate = $0.lastMomentsDate {
+                    // 터치한 이력이 있지만, 30일이 지나서 다시 한 번 추천이 가능한지 확인
+                    let isAvailableContent: Bool = checkAvailableDiaryContents(lastMomentsDate, targetDay: 30)
+                    print("MomentsRepo :: 추천된 후 유저가 터치한 이력이 있습니다., 경과된 시간 = \(isAvailableContent)")
+                    if isAvailableContent == false { return false }
+                }
+
                 let currentMonth = Calendar.current.component(.month, from: Date())
                 let season: Season = getSeason(currentMonth)
                 var isAvailableContent: Bool = false
@@ -441,21 +454,19 @@ public final class MomentsRepositoryImp: MomentsRepository {
                 
                 return isAvailableContent
             })
+            .first
+        else { return .just(nil) }
 
         
-        var momentsItems: [MomentsItemRealm] = []
-        for diary in momentsDiaryArr {
-            let item = MomentsItemRealm(order: 0,
-                                        title: String(format: "%@에 작성한 메뉴얼", seasonTitle),
-                                        uuid: UUID().uuidString,
-                                        icon: "120px/tea",
-                                        diaryUUID: diary.uuid,
-                                        userChecked: false,
-                                        createdAt: Date()
-            )
-            momentsItems.append(item)
-        }
-        
-        return .just(momentsItems)
+        let item = MomentsItemRealm(order: 0,
+                                    title: String(format: "%@에 작성한 메뉴얼", seasonTitle),
+                                    uuid: UUID().uuidString,
+                                    icon: "120px/tea",
+                                    diaryUUID: momentsDiary.uuid,
+                                    userChecked: false,
+                                    createdAt: Date()
+        )
+
+        return .just([item])
     }
 }
