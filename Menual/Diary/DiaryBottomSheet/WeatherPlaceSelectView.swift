@@ -55,7 +55,7 @@ class WeatherPlaceSelectView: UIView {
         $0.showsHorizontalScrollIndicator = false
         $0.backgroundColor = .clear
         
-        let flowlayout = CustomCollectionViewFlowLayout.init()
+        let flowlayout = UICollectionViewFlowLayout()
         flowlayout.itemSize = CGSize(width: 56, height: 32)
         flowlayout.scrollDirection = .horizontal
         flowlayout.minimumLineSpacing = 8
