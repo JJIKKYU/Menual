@@ -19,6 +19,10 @@ class MomentsCell: UICollectionViewCell {
         didSet { setNeedsLayout() }
     }
     
+    var icon: String = "" {
+        didSet { setNeedsLayout() }
+    }
+    
     private let momentsView = Moments().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -53,5 +57,6 @@ class MomentsCell: UICollectionViewCell {
         
         momentsView.tagTitle = tagTitle
         momentsView.momentsTitle = momentsTitle
+        momentsView.icon = icon
     }
 }

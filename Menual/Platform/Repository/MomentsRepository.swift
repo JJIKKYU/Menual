@@ -200,6 +200,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
             return .just(MomentsItemRealm(order: 0,
                                           title: title,
                                           uuid: UUID().uuidString,
+                                          icon: "120px/clip/bulldog",
                                           diaryUUID: diaryUUID,
                                           userChecked: false,
                                           createdAt: Date())
@@ -242,6 +243,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
                     let item = MomentsItemRealm(order: 0,
                                                 title: String(format: title, arguments: [argument]),
                                                 uuid: UUID().uuidString,
+                                                icon: "120px/calender/table",
                                                 diaryUUID: diary.uuid,
                                                 userChecked: false,
                                                 createdAt: Date()
@@ -308,6 +310,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
             let item = MomentsItemRealm(order: 0,
                                         title: "작년 오늘, 내가 보내는 메뉴얼\n365일 전에 적었어요",
                                         uuid: UUID().uuidString,
+                                        icon: "120px/calender/wall",
                                         diaryUUID: diary.uuid,
                                         userChecked: false,
                                         createdAt: Date()
@@ -339,6 +342,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
             let item = MomentsItemRealm(order: 0,
                                         title: title,
                                         uuid: UUID().uuidString,
+                                        icon: "120px/book/close",
                                         diaryUUID: diary.uuid,
                                         userChecked: false,
                                         createdAt: Date()
@@ -377,6 +381,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
             let item = MomentsItemRealm(order: 0,
                                         title: title,
                                         uuid: UUID().uuidString,
+                                        icon: "120px/lamp/round",
                                         diaryUUID: diary.uuid,
                                         userChecked: false,
                                         createdAt: Date()
@@ -443,6 +448,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
             let item = MomentsItemRealm(order: 0,
                                         title: String(format: "%@에 작성한 메뉴얼", seasonTitle),
                                         uuid: UUID().uuidString,
+                                        icon: "120px/tea",
                                         diaryUUID: diary.uuid,
                                         userChecked: false,
                                         createdAt: Date()

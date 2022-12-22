@@ -99,7 +99,7 @@ class MenualBottomSheetReminderComponentView: UIView {
     }
     
     private lazy var calendarCollectionView = UICollectionView(frame: .zero, collectionViewLayout: .init()).then {
-        $0.categoryName = "calander"
+        $0.categoryName = "calendar"
 //        $0.register(DateCell.self, forCellWithReuseIdentifier: "DateCell")
 //        $0.translatesAutoresizingMaskIntoConstraints = false
 //        $0.delegate = self

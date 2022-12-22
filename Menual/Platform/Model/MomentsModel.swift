@@ -35,15 +35,17 @@ public class MomentsItemRealm: EmbeddedObject {
     @Persisted var order: Int
     @Persisted var title: String
     @Persisted var uuid: String
+    @Persisted var icon: String
     @Persisted var diaryUUID: String
     @Persisted var userChecked: Bool
     @Persisted var createdAt: Date
     
-    convenience init(order: Int, title: String, uuid: String, diaryUUID: String, userChecked: Bool, createdAt: Date) {
+    convenience init(order: Int, title: String, uuid: String, icon: String, diaryUUID: String, userChecked: Bool, createdAt: Date) {
         self.init()
         self.order = order
         self.title = title
         self.uuid = uuid
+        self.icon = icon
         self.diaryUUID = diaryUUID
         self.userChecked = userChecked
         self.createdAt = createdAt

@@ -19,6 +19,10 @@ class Moments: UIView {
         didSet { setNeedsLayout() }
     }
     
+    var icon: String = "" {
+        didSet { setNeedsLayout() }
+    }
+    
     private let momentsText = MomentsText().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -64,6 +68,11 @@ class Moments: UIView {
         
         momentsText.tagTitle = tagTitle
         momentsText.momentsTitle = momentsTitle
+        if icon.isEmpty {
+            momentsImageView.image = ImageAsset(name: "120px/book/open").image
+        } else {
+            momentsImageView.image = ImageAsset(name: "\(icon)").image
+        }
     }
 
 }

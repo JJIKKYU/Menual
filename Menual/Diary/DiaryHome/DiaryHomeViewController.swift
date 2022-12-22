@@ -873,6 +873,7 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
             
             cell.tagTitle = "MENUAL TIPS"
             cell.momentsTitle = data.title
+            cell.icon = data.icon
             
             return cell
         default:
