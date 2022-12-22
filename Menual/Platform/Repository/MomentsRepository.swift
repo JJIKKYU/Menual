@@ -19,9 +19,13 @@ public protocol MomentsRepository {
 public final class MomentsRepositoryImp: MomentsRepository {
     // private var moments: MomentsRealm?
     private let disposeBag = DisposeBag()
+    private var diaryArr: [DiaryModelRealm]? = nil
     
     init() {
         guard let realm = Realm.safeInit() else { return }
+        self.diaryArr = realm.objects(DiaryModelRealm.self)
+            .toArray()
+            .filter ({ $0.isDeleted == false })
 
         // moments를 한 번도 세팅하지 않은 경우
         let momentsRealm = realm.objects(MomentsRealm.self).first
@@ -70,6 +74,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
         if lastUpdateDiffTime < 24 {
             print("MomentsRepo :: 업데이트 한지 새벽 3시 기준 24시간이 지나지 않아 업데이트 할 필요가 없습니다.")
             // return
+            // return
         }
         
         // 지금 새벽 3시가 넘었을까?
@@ -77,6 +82,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
         print("MomentsRepo :: currentTimeDiff = \(currentTimeDiff)")
         if currentTimeDiff < 24 {
             print("MomentsRepo :: 새벽 3시가 지나지 않아서 업데이트 할 필요가 없습니다.")
+            // return
         }
 
         
@@ -91,22 +97,42 @@ public final class MomentsRepositoryImp: MomentsRepository {
         print("MomentsRepo :: fetch! - 2")
         Observable.zip(
             setNumberDiaryMomentsItem(),
-            setSpecialDayMomentsItem()
+            setSpecialDayMomentsItem(),
+            setlastYearDiaryMomentsItem(),
+            setReadCountZeroMomentsItem(),
+            setSpecificTimeMomentsItem(),
+            setSeasonMomentsItem()
         )
 //        setNumberDiaryMomentsItem()
 //            .compactMap { $0 }
-        .subscribe(onNext: { [weak self] numberDiary, specialDiaryArr in
+        .subscribe(onNext: { [weak self] number, special, lastYear, readCount, specificTime, season in
             guard let self = self else { return }
 
-            print("MomentsRepo :: numberDiary = \(numberDiary), = \(specialDiaryArr)")
             var items: [MomentsItemRealm] = []
-            if let numberDiary = numberDiary {
-                items.append(numberDiary)
+            if let number = number {
+                items.append(number)
             }
             
-            if let specialDiaryArr = specialDiaryArr {
-                items.append(contentsOf: specialDiaryArr)
+            if let special = special {
+                items.append(contentsOf: special)
             }
+            
+            if let lastYear = lastYear {
+                items.append(contentsOf: lastYear)
+            }
+            
+            if let readCount = readCount {
+                items.append(contentsOf: readCount)
+            }
+            
+            if let specificTime = specificTime {
+                items.append(contentsOf: specificTime)
+            }
+            
+            if let season = season {
+                items.append(contentsOf: season)
+            }
+
             realm.safeWrite {
                 realm.delete(momentsRealm.items)
                 momentsRealm.items.append(objectsIn: items)
@@ -127,8 +153,8 @@ public final class MomentsRepositoryImp: MomentsRepository {
 //                                      createdAt: Date())
 //        )
         
+        guard let diaryArr = diaryArr else { return .just(nil) }
         guard let realm = Realm.safeInit() else { return .just(nil) }
-        let diaryArr = realm.objects(DiaryModelRealm.self).toArray()
         var findDiary: DiaryModelRealm?
         var title: String = ""
         var diaryUUID: String = ""
@@ -230,40 +256,200 @@ public final class MomentsRepositoryImp: MomentsRepository {
         return .just(momentsItems)
     }
     
-    func checkAvailableDiaryContents(_ diaryDate: Date) -> Bool {
+    func checkAvailableDiaryContents(_ diaryDate: Date, targetDay: Int) -> Bool {
         let diffDay = Int(Date().timeIntervalSince(diaryDate) / 86400)
         print("MomentsRepo :: checkAvailableDiaryContents! = diffTime = \(diffDay)")
         // 작성한지 60일이 지았을 경우부터 추천
-        return diffDay >= 60 ? true : false
+        return diffDay >= targetDay ? true : false
     }
     
     func getSpecificDayDiary(MMdd: String) -> [DiaryModelRealm]? {
         print("MomentsRepo :: getSpecificDayDiary!")
         // 1. 12.25 등 특정 날짜로 값이 들어옵니다.
-        guard let realm = Realm.safeInit() else { return nil }
-        let diaryArr: [DiaryModelRealm] = realm.objects(DiaryModelRealm.self)
-            .toArray()
+        guard let diaryArr = diaryArr else { return nil }
+
+        let momentsDiaryArr: [DiaryModelRealm] = diaryArr
             .filter({
                 // 2. 일치하는 날짜가 없거나, 삭제된 경우제외
                 print("MomentsRepo :: $0.createdAt.toStringWithMMdd() = \($0.createdAt.toStringWithMMdd())")
                 if $0.createdAt.toStringWithMMdd() != MMdd || $0.isDeleted != false { return false }
                 
-                // 3. 이 모먼츠가 추천된 후 유저가 터치한 이력이 있는지 체크
+                // 3-1. 이 모먼츠가 추천된 후 유저가 터치한 이력이 있는지 체크
                 if let lastMomentsDate = $0.lastMomentsDate {
-                    // 3-1. 터치한 이력이 있지만, 60일이 지나서 다시 한 번 추천이 가능한지 확인
-                    let isAvailableContent: Bool = checkAvailableDiaryContents(lastMomentsDate)
+                    // 3-1-1. 터치한 이력이 있지만, 60일이 지나서 다시 한 번 추천이 가능한지 확인
+                    let isAvailableContent: Bool = checkAvailableDiaryContents(lastMomentsDate, targetDay: 60)
                     print("MomentsRepo :: 추천된 후 유저가 터치한 이력이 있습니다., 경과된 시간 = \(isAvailableContent)")
                     if isAvailableContent == false { return false }
                 }
-
-                // 4. 30일이 지난 콘텐츠인지 확인
-                let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt)
                 
-                // 5. Moments로 추천된 이력이 있는지 체크
+                // 4. 30일이 지난 콘텐츠인지 확인
+                let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
+                
                 return isAvailableContent
             })
 
         print("MomentsRepo :: getSpecificDayDiary = \(diaryArr)")
-        return diaryArr
+        return momentsDiaryArr
+    }
+    
+    //MARK: - 작년 오늘 적은 메뉴얼
+    func setlastYearDiaryMomentsItem() -> Observable<[MomentsItemRealm]?> {
+        guard let diaryArr = diaryArr else { return .just(nil) }
+        
+        let momentsDiaryArr: [DiaryModelRealm] = diaryArr
+            .filter ({
+                let diffDay = Int(Date().timeIntervalSince($0.createdAt) / 86400)
+                
+                return diffDay == 365 ? true : false
+            })
+
+        var momentsItems: [MomentsItemRealm] = []
+        for diary in momentsDiaryArr {
+            let item = MomentsItemRealm(order: 0,
+                                        title: "작년 오늘, 내가 보내는 메뉴얼\n365일 전에 적었어요",
+                                        uuid: UUID().uuidString,
+                                        diaryUUID: diary.uuid,
+                                        userChecked: false,
+                                        createdAt: Date()
+            )
+            momentsItems.append(item)
+        }
+        
+        return .just(momentsItems)
+    }
+    
+    //MARK: - 한 번도 읽지 않은 메뉴얼
+    var readCountZeroTitleData: [String] = [
+        "아직 한번도 보지 않은 메뉴얼",
+        "먼지가 빼곡히 쌓인 메뉴얼"
+    ]
+    func setReadCountZeroMomentsItem() -> Observable<[MomentsItemRealm]?> {
+        guard let diaryArr = diaryArr else { return .just(nil) }
+
+        let momentsDiaryArr: [DiaryModelRealm] = diaryArr
+            .filter({
+                let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
+                let isReadCountZero: Bool = ($0.readCount == 0)
+                return isAvailableContent && isReadCountZero
+            })
+        
+        var momentsItems: [MomentsItemRealm] = []
+        for diary in momentsDiaryArr {
+            let title: String = readCountZeroTitleData.randomElement() ?? ""
+            let item = MomentsItemRealm(order: 0,
+                                        title: title,
+                                        uuid: UUID().uuidString,
+                                        diaryUUID: diary.uuid,
+                                        userChecked: false,
+                                        createdAt: Date()
+            )
+            momentsItems.append(item)
+        }
+        
+        return .just(momentsItems)
+    }
+
+    //MARK: - 새벽감석 터지는 메뉴얼
+    var specificTimeTitleData: [String] = [
+        "새벽 감성 터지는 메뉴얼",
+        "나혼자 깨있는 밤에 적은 메뉴얼",
+        "모두가 잠든 밤 적은 메뉴얼"
+    ]
+    func setSpecificTimeMomentsItem() -> Observable<[MomentsItemRealm]?> {
+        guard let diaryArr = diaryArr else { return .just(nil) }
+
+        let momentsDiaryArr: [DiaryModelRealm] = diaryArr
+            .filter ({
+                let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
+                
+                let hour = Calendar.current.component(.hour, from: $0.createdAt)
+                if hour >= 0 && hour <= 4 {
+                    
+                }
+                let isSpecificHour = hour >= 0 && hour <= 4 ? true : false
+                
+                return isAvailableContent && isSpecificHour
+            })
+        
+        var momentsItems: [MomentsItemRealm] = []
+        for diary in momentsDiaryArr {
+            let title: String = specificTimeTitleData.randomElement() ?? ""
+            let item = MomentsItemRealm(order: 0,
+                                        title: title,
+                                        uuid: UUID().uuidString,
+                                        diaryUUID: diary.uuid,
+                                        userChecked: false,
+                                        createdAt: Date()
+            )
+            momentsItems.append(item)
+        }
+        
+        return .just(momentsItems)
+    }
+    
+    //MARK: - 계절
+//    var seasonDiaryData: [String] = [
+//        "%@에 작성한 메뉴얼",
+//    ]
+    func getSeason(_ month: Int) -> Season {
+        if month >= 3 && month <= 5 {
+            return .spring
+        } else if month >= 6 && month <= 8 {
+            return .summer
+        } else if month >= 9 && month <= 11 {
+            return .autumn
+        } else {
+            return .winter
+        }
+    }
+    
+    func setSeasonMomentsItem() -> Observable<[MomentsItemRealm]?> {
+        guard let diaryArr = diaryArr else { return .just(nil) }
+
+        var seasonTitle: String = ""
+        let momentsDiaryArr: [DiaryModelRealm] = diaryArr
+            .filter ({
+                let currentMonth = Calendar.current.component(.month, from: Date())
+                let season: Season = getSeason(currentMonth)
+                var isAvailableContent: Bool = false
+                let month = Calendar.current.component(.month, from: $0.createdAt)
+
+                // 2분기 전 메뉴얼부터 추천 가능
+                switch season {
+                // 봄이면 가을
+                case .spring:
+                    isAvailableContent = getSeason(month) == .autumn
+                    seasonTitle = "가을"
+                // 여름이면 겨울
+                case .summer:
+                    isAvailableContent = getSeason(month) == .winter
+                    seasonTitle = "겨울"
+                // 가을이면 봄
+                case .autumn:
+                    isAvailableContent = getSeason(month) == .spring
+                    seasonTitle = "봄"
+                // 겨울이면 여름
+                case .winter:
+                    isAvailableContent = getSeason(month) == .summer
+                    seasonTitle = "여름"
+                }
+                
+                return isAvailableContent
+            })
+
+        
+        var momentsItems: [MomentsItemRealm] = []
+        for diary in momentsDiaryArr {
+            let item = MomentsItemRealm(order: 0,
+                                        title: String(format: "%@에 작성한 메뉴얼", seasonTitle),
+                                        uuid: UUID().uuidString,
+                                        diaryUUID: diary.uuid,
+                                        userChecked: false,
+                                        createdAt: Date()
+            )
+            momentsItems.append(item)
+        }
+        
+        return .just(momentsItems)
     }
 }

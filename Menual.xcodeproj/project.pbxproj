@@ -253,6 +253,7 @@
 		CF2E3885995019FCA544D463 /* Pods_Menual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8D44F726D679789A808A0A2 /* Pods_Menual.framework */; };
 		D5B61C69B910C05E841002DE /* Pods_Menual_MenualUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9CD7E0AB3888F2D9A84D1A /* Pods_Menual_MenualUITests.framework */; };
 		FC1E2C572953EDE9008CA0F7 /* SpecificDayMomentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC1E2C562953EDE9008CA0F7 /* SpecificDayMomentsModel.swift */; };
+		FC1E2C5C29543C3F008CA0F7 /* SeasonMomentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC1E2C5B29543C3F008CA0F7 /* SeasonMomentsModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -530,6 +531,7 @@
 		D7269AD9C20C0E21C6E935F5 /* Pods-Menual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.release.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.release.xcconfig"; sourceTree = "<group>"; };
 		D8D44F726D679789A808A0A2 /* Pods_Menual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC1E2C562953EDE9008CA0F7 /* SpecificDayMomentsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecificDayMomentsModel.swift; sourceTree = "<group>"; };
+		FC1E2C5B29543C3F008CA0F7 /* SeasonMomentsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonMomentsModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -999,6 +1001,7 @@
 		988A2D66280166A00046C43A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FC1E2C5A29543C32008CA0F7 /* Moments */,
 				9843929229045BF400EF526E /* TempSaveModel.swift */,
 				988A2D67280166AA0046C43A /* DiaryModel.swift */,
 				98B55744281D0FEE00F8CA3E /* SearchModel.swift */,
@@ -1015,7 +1018,6 @@
 				985BFFA5293CBA3A00D86106 /* DiaryHomeSectionModel.swift */,
 				987684A22948B4F400811387 /* MomentsModel.swift */,
 				987684A4294D76F800811387 /* PushModel.swift */,
-				FC1E2C562953EDE9008CA0F7 /* SpecificDayMomentsModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1455,6 +1457,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		FC1E2C5A29543C32008CA0F7 /* Moments */ = {
+			isa = PBXGroup;
+			children = (
+				FC1E2C562953EDE9008CA0F7 /* SpecificDayMomentsModel.swift */,
+				FC1E2C5B29543C3F008CA0F7 /* SeasonMomentsModel.swift */,
+			);
+			path = Moments;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1846,6 +1857,7 @@
 				98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */,
 				984392CE2917C34000EF526E /* PasswordModel.swift in Sources */,
 				985BFF8C2935ED6100D86106 /* String+Util.swift in Sources */,
+				FC1E2C5C29543C3F008CA0F7 /* SeasonMomentsModel.swift in Sources */,
 				98B55787283A0F3300F8CA3E /* ListHeaderViewController.swift in Sources */,
 				983CDF4128FBDD9B001E2A2D /* Badges.swift in Sources */,
 				9843929A29053CEC00EF526E /* DiaryDetailImageViewController.swift in Sources */,
