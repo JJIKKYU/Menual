@@ -252,6 +252,7 @@
 		98F3A28128150052000851F0 /* DiaryBottomSheetInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */; };
 		CF2E3885995019FCA544D463 /* Pods_Menual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8D44F726D679789A808A0A2 /* Pods_Menual.framework */; };
 		D5B61C69B910C05E841002DE /* Pods_Menual_MenualUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9CD7E0AB3888F2D9A84D1A /* Pods_Menual_MenualUITests.framework */; };
+		FC1E2C572953EDE9008CA0F7 /* SpecificDayMomentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC1E2C562953EDE9008CA0F7 /* SpecificDayMomentsModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -528,6 +529,7 @@
 		98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryBottomSheetInteractor.swift; sourceTree = "<group>"; };
 		D7269AD9C20C0E21C6E935F5 /* Pods-Menual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.release.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.release.xcconfig"; sourceTree = "<group>"; };
 		D8D44F726D679789A808A0A2 /* Pods_Menual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC1E2C562953EDE9008CA0F7 /* SpecificDayMomentsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecificDayMomentsModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1013,6 +1015,7 @@
 				985BFFA5293CBA3A00D86106 /* DiaryHomeSectionModel.swift */,
 				987684A22948B4F400811387 /* MomentsModel.swift */,
 				987684A4294D76F800811387 /* PushModel.swift */,
+				FC1E2C562953EDE9008CA0F7 /* SpecificDayMomentsModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1887,6 +1890,7 @@
 				98F3A2782813E561000851F0 /* MenualBottomSheetCell.swift in Sources */,
 				98B5578C283A116D00F8CA3E /* ListHeader.swift in Sources */,
 				98B5574B281E426900F8CA3E /* PlaceModel.swift in Sources */,
+				FC1E2C572953EDE9008CA0F7 /* SpecificDayMomentsModel.swift in Sources */,
 				98B5579A283A179900F8CA3E /* MomentsTag.swift in Sources */,
 				98B55793283A151D00F8CA3E /* MomentsViewController.swift in Sources */,
 				98EADBA6284C6F1E007C298C /* DiaryReplayModel.swift in Sources */,

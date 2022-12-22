@@ -256,6 +256,7 @@ extension UILabel {
         paragraphStyle.lineHeightMultiple = lineHeight
         paragraphStyle.alignment = self.textAlignment
         paragraphStyle.lineBreakMode = .byTruncatingTail
+        paragraphStyle.lineBreakStrategy = .hangulWordPriority
 
         let attrString = NSMutableAttributedString()
         if (self.attributedText != nil) {

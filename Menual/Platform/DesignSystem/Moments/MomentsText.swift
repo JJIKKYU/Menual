@@ -24,6 +24,8 @@ class MomentsText: UIView {
     }
     
     lazy var momentsTitleLabel = UILabel().then {
+        // $0.lineBreakStrategy = .hangulWordPriority
+        $0.lineBreakMode = .byWordWrapping
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.numberOfLines = 2
         $0.font = UIFont.AppTitle(.title_3)

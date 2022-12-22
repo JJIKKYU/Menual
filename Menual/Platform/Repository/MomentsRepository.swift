@@ -56,16 +56,36 @@ public final class MomentsRepositoryImp: MomentsRepository {
 
         let lastUpdateDate = momentsRealm.lastUpdatedDate.toStringWithHourMin()
         guard let updateDate = Calendar.current.date(bySettingHour: 03, minute: 00, second: 0, of: Date())?.toStringWithHourMin(),
-              let startTime = format.date(from: updateDate),
-              let endTime = format.date(from: lastUpdateDate)
+              let updateTime = format.date(from: updateDate),
+              let lastUpdateTime = format.date(from: lastUpdateDate)
         else { return }
 
-        var diffTime = Int(endTime.timeIntervalSince(startTime) / 3600)
-        var diffTime2 = Int(startTime.timeIntervalSince(Date()) / 3600)
+        // var diffTime = Int(endTime.timeIntervalSince(startTime) / 3600)
+        // var diffTime2 = Int(startTime.timeIntervalSince(Date()) / 3600)
+        // let diffTime3 = Int(Date().timeIntervalSince(endTime) / 3600)
+        
+        // 새벽 3시 기준 얼마나 차이가 날까
+        let lastUpdateDiffTime = Int(updateTime.timeIntervalSince(lastUpdateTime) / 3600)
+        print("MomentsRepo :: updateTime = \(updateTime), lastUpdateTime = \(lastUpdateTime), lastUpdateDiffTime = \(lastUpdateDiffTime)")
+        if lastUpdateDiffTime < 24 {
+            print("MomentsRepo :: 업데이트 한지 새벽 3시 기준 24시간이 지나지 않아 업데이트 할 필요가 없습니다.")
+            // return
+        }
+        
+        // 지금 새벽 3시가 넘었을까?
+        let currentTimeDiff = Int(Date().timeIntervalSince(updateTime) / 3600)
+        print("MomentsRepo :: currentTimeDiff = \(currentTimeDiff)")
+        if currentTimeDiff < 24 {
+            print("MomentsRepo :: 새벽 3시가 지나지 않아서 업데이트 할 필요가 없습니다.")
+        }
+
+        
+        // 이전 업데이트가 오늘 새벽 3시 기준 전 날일 경우,
+        // 현재 시간이 새벽 3시 이후일 경우
         
         // 업데이트 시간 차이가 24시간 이상이면 업데이트 진행
-        print("MomentsRepo :: diffTime = \(diffTime), diffTime2 = \(diffTime2)")
-        if diffTime2 > 24 { return }
+        // print("MomentsRepo :: diffTime = \(diffTime), diffTime2 = \(diffTime2)")
+        // if diffTime2 > 24 { return }
 
         
         print("MomentsRepo :: fetch! - 2")
@@ -75,17 +95,17 @@ public final class MomentsRepositoryImp: MomentsRepository {
         )
 //        setNumberDiaryMomentsItem()
 //            .compactMap { $0 }
-        .subscribe(onNext: { [weak self] numberDiary, specialDiary in
+        .subscribe(onNext: { [weak self] numberDiary, specialDiaryArr in
             guard let self = self else { return }
 
-            print("MomentsRepo :: numberDiary = \(numberDiary), = \(specialDiary)")
+            print("MomentsRepo :: numberDiary = \(numberDiary), = \(specialDiaryArr)")
             var items: [MomentsItemRealm] = []
             if let numberDiary = numberDiary {
                 items.append(numberDiary)
             }
             
-            if let specialDiary = specialDiary {
-                items.append(specialDiary)
+            if let specialDiaryArr = specialDiaryArr {
+                items.append(contentsOf: specialDiaryArr)
             }
             realm.safeWrite {
                 realm.delete(momentsRealm.items)
@@ -161,23 +181,89 @@ public final class MomentsRepositoryImp: MomentsRepository {
         }
     }
     
-    // 특정 년도, 특정 날짜에 작성한 메뉴얼
-    func setSpecialDayMomentsItem() -> Observable<MomentsItemRealm?> {
-//        return .just(MomentsItemRealm(order: 0,
-//                                      title: "내가 크리스마스에 적은 메뉴얼",
-//                                      uuid: UUID().uuidString,
-//                                      diaryUUID: "TESTUUID",
-//                                      userChecked: false,
-//                                      createdAt: Date())
-//        )
+    // MARK: - 특정 년도, 특정 날짜에 작성한 메뉴얼
+    var specificDayMomentsData: [SpecificDayMomentsModel] = [
+        .init(monthDay: "12.31", title: ["%@년의 마지막 날 적었어요.",
+                                         "%@년 전 마지막 날 적었어요."]),
+        .init(monthDay: "12.25", title: ["%@년 크리스마스에는 산타할아버지가 오셨을까요?",
+                                         "%@년 전 크리스마스를 기억해볼까요?",
+                                         "%@년 전 크리스마스는 화이트 크리스마스였을까요?"])
+    ]
 
-        guard let realm = Realm.safeInit() else { return .just(nil) }
-        let diaryArr = realm.objects(DiaryModelRealm.self).toArray()
+    // 특정 년도, 특정 날짜에 작성한 메뉴얼
+    func setSpecialDayMomentsItem() -> Observable<[MomentsItemRealm]?> {
+        var momentsItems: [MomentsItemRealm] = []
+        let currentYear = Int(Date().toStringWithYYYY()) ?? 0
+
+        for data in specificDayMomentsData {
+            if let diaryArr = getSpecificDayDiary(MMdd: data.monthDay) {
+                for diary in diaryArr {
+                    let year = Int(diary.createdAt.toStringWithYYYY()) ?? 0
+                    var argument: String = ""
+                    var title: String = ""
+                    
+                    // 1년 전일 경우에는, '작년'으로 나타날 수 있도록 사용
+                    if currentYear - year == 1 {
+                        argument = "작"
+                        title = data.title[0]
+                    } else {
+                        let random = (1..<data.title.count).randomElement() ?? 1
+                        guard let randomTitle = data.title[safe: random] else { return .just(nil)}
+                        argument = String(currentYear - year)
+                        title = randomTitle
+                    }
+
+                    let item = MomentsItemRealm(order: 0,
+                                                title: String(format: title, arguments: [argument]),
+                                                uuid: UUID().uuidString,
+                                                diaryUUID: diary.uuid,
+                                                userChecked: false,
+                                                createdAt: Date()
+                    )
+                    
+                    momentsItems.append(item)
+                }
+            }
+        }
+        print("MomentsRepo :: momentsItem = \(momentsItems)")
         
-        let lastDayDiaryArr = diaryArr.filter ({ $0.createdAt.toStringWithMMdd() == "12.31" })
-        
-        let christmasDiaryArr = diaryArr.filter ({ $0.createdAt.toStringWithMMdd() == "12.25" })
-        
-        return .just(nil)
+        return .just(momentsItems)
+    }
+    
+    func checkAvailableDiaryContents(_ diaryDate: Date) -> Bool {
+        let diffDay = Int(Date().timeIntervalSince(diaryDate) / 86400)
+        print("MomentsRepo :: checkAvailableDiaryContents! = diffTime = \(diffDay)")
+        // 작성한지 60일이 지았을 경우부터 추천
+        return diffDay >= 60 ? true : false
+    }
+    
+    func getSpecificDayDiary(MMdd: String) -> [DiaryModelRealm]? {
+        print("MomentsRepo :: getSpecificDayDiary!")
+        // 1. 12.25 등 특정 날짜로 값이 들어옵니다.
+        guard let realm = Realm.safeInit() else { return nil }
+        let diaryArr: [DiaryModelRealm] = realm.objects(DiaryModelRealm.self)
+            .toArray()
+            .filter({
+                // 2. 일치하는 날짜가 없거나, 삭제된 경우제외
+                print("MomentsRepo :: $0.createdAt.toStringWithMMdd() = \($0.createdAt.toStringWithMMdd())")
+                if $0.createdAt.toStringWithMMdd() != MMdd || $0.isDeleted != false { return false }
+                
+                // 3. 이 모먼츠가 추천된 후 유저가 터치한 이력이 있는지 체크
+                if let lastMomentsDate = $0.lastMomentsDate {
+                    // 3-1. 터치한 이력이 있지만, 60일이 지나서 다시 한 번 추천이 가능한지 확인
+                    let isAvailableContent: Bool = checkAvailableDiaryContents(lastMomentsDate)
+                    print("MomentsRepo :: 추천된 후 유저가 터치한 이력이 있습니다., 경과된 시간 = \(isAvailableContent)")
+                    if isAvailableContent == false { return false }
+                }
+
+                // 4. 30일이 지난 콘텐츠인지 확인
+                let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt)
+                
+                // 5. Moments로 추천된 이력이 있는지 체크
+                return isAvailableContent
+            })
+
+        print("MomentsRepo :: getSpecificDayDiary = \(diaryArr)")
+        return diaryArr
     }
 }

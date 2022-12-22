@@ -581,7 +581,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
             if isEdittedIamge == true,
                let selectedImage = selectedImage,
-               let selectedImageData = selectedImage.jpegData(compressionQuality: 0.5),
+               let selectedImageData = selectedImage.jpegData(compressionQuality: 0.8),
                let selectedOriginalImage = selectedOriginalImage,
                let selectedOriginalImageData = selectedOriginalImage.jpegData(compressionQuality: 0.5),
                let diaryModelUUID = diaryModelUUID {
@@ -1330,20 +1330,6 @@ extension DiaryWritingViewController: CropViewControllerDelegate {
 
         dismiss(animated: true)
     }
-    
-    func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage {
-        let oldWidth = sourceImage.size.width
-        let scaleFactor = scaledToWidth / oldWidth
-
-        let newHeight = sourceImage.size.height * scaleFactor
-        let newWidth = oldWidth * scaleFactor
-
-        UIGraphicsBeginImageContext(CGSize(width:newWidth, height:newHeight))
-        sourceImage.draw(in: CGRect(x:0, y:0, width:newWidth, height:newHeight))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage!
-    }
 }
 
 extension DiaryWritingViewController: DialogDelegate {
@@ -1354,7 +1340,7 @@ extension DiaryWritingViewController: DialogDelegate {
             if let diaryModel = zipDiaryModelForTempSave() {
                 listener?.saveTempSave(diaryModel: diaryModel,
                                        originalImageData: selectedOriginalImage?.jpegData(compressionQuality: 0.5),
-                                       cropImageData: selectedImage?.jpegData(compressionQuality: 0.5)
+                                       cropImageData: selectedImage?.jpegData(compressionQuality: 0.8)
                 )
             }
             listener?.pressedBackBtn(isOnlyDetach: false)

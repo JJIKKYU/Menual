@@ -302,6 +302,11 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         guard let diaryModel = realm.objects(DiaryModelRealm.self).filter ({ $0.uuid == momentsItem.diaryUUID }).first else { return }
 
         dependency.momentsRepository.visitMoments(momentsItem: momentsItem)
+        
+        // 방문 기록 +1
+        realm.safeWrite {
+            diaryModel.readCount += diaryModel.readCount + 1
+        }
         router?.attachDiaryDetail(model: diaryModel)
     }
 

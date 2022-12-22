@@ -312,6 +312,13 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             }
 
         case .recentSearch:
+            // 숨김처리 되어있을때는 0으로
+            if let cell = tableView.cellForRow(at: indexPath) as? RecentSearchCell {
+                if cell.isHidden == true {
+                    return 0
+                }
+            }
+            
             guard let model = listener?.recentSearchModel?[indexPath.row],
                   let diary = model.diary else {
                 return 98
