@@ -10,32 +10,35 @@ import RealmSwift
 
 // MARK: - Enum
 public enum Weather: String, PersistableEnum {
-    case sun = "썬"
-    case rain = "레인"
-    case cloud = "클라우드"
-    case thunder = "썬더"
-    case snow = "스노우"
+    case sun = "맑음"
+    case rain = "비"
+    case cloud = "흐림"
+    case thunder = "천둥번개"
+    case snow = "눈"
+    case wind = "바람"
     
     func getWeatherText(weather: Weather) -> String {
         var text = ""
         switch weather {
         case .sun:
-            text = "썬"
+            text = "맑음"
         case .thunder:
-            text = "썬더"
+            text = "천둥번개"
         case .cloud:
-            text = "클라우드"
+            text = "흐림"
         case .rain:
-            text = "레인"
+            text = "비"
         case .snow:
-            text = "스노우"
+            text = "눈"
+        case .wind:
+            text = "바람"
         }
         
        return text
     }
     
     func getVariation() -> [Weather] {
-        return [.sun, .rain, .cloud, .thunder, .snow]
+        return [.sun, .cloud, .rain, .snow, .wind, .thunder]
     }
 }
 

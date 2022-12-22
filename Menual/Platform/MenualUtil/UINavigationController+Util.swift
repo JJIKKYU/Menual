@@ -77,11 +77,18 @@ extension NavigationController: UIGestureRecognizerDelegate {
         }
 
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
         // if let viewController = presentedViewController
         if let imageDetailVC = topViewController as? DiaryDetailImageViewController {
             print("Navi :: ImageDetailVC = \(imageDetailVC)")
             return false
         }
+        
+        if let diaryHomeVC = topViewController as? DiaryHomeViewController {
+            print("Navi :: ImageDetailVC = \(diaryHomeVC)")
+            return false
+        }
+        
         if let navigationController = presentingViewController as? UINavigationController {
             print("Navi :: presentingViewController = \(navigationController.classForCoder),,,, \(navigationController.viewControllers[safe: 0]), \(navigationController.viewControllers[safe: 1])")
         }

@@ -209,6 +209,14 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.image = Asset._24px.Place.home.image.withRenderingMode(.alwaysTemplate)
             case .school:
                 selectImageView.image = Asset._24px.Place.school.image.withRenderingMode(.alwaysTemplate)
+            case .bus:
+                selectImageView.image = Asset._20px.Place.bus.image.withRenderingMode(.alwaysTemplate)
+            case .subway:
+                selectImageView.image = Asset._20px.Place.subway.image.withRenderingMode(.alwaysTemplate)
+            case .store:
+                selectImageView.image = Asset._20px.Place.store.image.withRenderingMode(.alwaysTemplate)
+            case .travel:
+                selectImageView.image = Asset._20px.Place.luggage.image.withRenderingMode(.alwaysTemplate)
             }
         } else {
             if selectedWeatherLocationType == .location {
@@ -230,6 +238,8 @@ class WeatherLocationSelectView: UIView {
                 selectImageView.image = Asset._24px.Weather.snow.image.withRenderingMode(.alwaysTemplate)
             case .thunder:
                 selectImageView.image = Asset._24px.Weather.thunder.image.withRenderingMode(.alwaysTemplate)
+            case .wind:
+                selectImageView.image = Asset._24px.Weather.wind.image.withRenderingMode(.alwaysTemplate)
             }
         } else {
             if selectedWeatherLocationType == .weather {

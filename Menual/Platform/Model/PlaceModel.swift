@@ -10,32 +10,44 @@ import RealmSwift
 
 // MARK: - Enum
 public enum Place: String, PersistableEnum {
-    case home = "홈"
-    case school = "스쿨"
-    case company = "컴퍼니"
-    case car = "카"
-    case place = "플레이스"
+    case place = ""
+    case home = "집"
+    case bus = "버스"
+    case subway = "지하철"
+    case store = "가게"
+    case travel = "여행"
+    case school = "학교"
+    case company = "회사"
+    case car = "차 안"
     
     func getPlaceText(place: Place) -> String {
         var text = ""
         switch place {
         case .place:
-            text = "플레이스"
-        case .school:
-            text = "스쿨"
-        case .company:
-            text = "컴퍼니"
+            text = ""
         case .home:
-            text = "홈"
+            text = "집"
+        case .bus:
+            text = "버스"
+        case .subway:
+            text = "지하철"
+        case .store:
+            text = "가게"
+        case .travel:
+            text = "여행"
+        case .school:
+            text = "학교"
+        case .company:
+            text = "회사"
         case .car:
-            text = "카"
+            text = "차 안"
         }
         
        return text
     }
     
     func getVariation() -> [Place] {
-        return [.home, .car, .company, .school, .place]
+        return [.place, .home, .company, .school, .bus, .subway, .store, .travel, .car]
     }
 }
 

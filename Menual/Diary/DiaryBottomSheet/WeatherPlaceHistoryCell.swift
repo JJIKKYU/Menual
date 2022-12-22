@@ -101,6 +101,8 @@ class WeatherPlaceHistoryCell: UITableViewCell {
                 iconimageView.image = Asset._20px.Weather.snow.image.withRenderingMode(.alwaysTemplate)
             case .thunder:
                 iconimageView.image = Asset._20px.Weather.thunder.image.withRenderingMode(.alwaysTemplate)
+            case .wind:
+                iconimageView.image = Asset._20px.Weather.wind.image.withRenderingMode(.alwaysTemplate)
             }
         }
         
@@ -116,6 +118,14 @@ class WeatherPlaceHistoryCell: UITableViewCell {
                 iconimageView.image = Asset._20px.Place.home.image.withRenderingMode(.alwaysTemplate)
             case .school:
                 iconimageView.image = Asset._20px.Place.school.image.withRenderingMode(.alwaysTemplate)
+            case .bus:
+                iconimageView.image = Asset._20px.Place.bus.image.withRenderingMode(.alwaysTemplate)
+            case .subway:
+                iconimageView.image = Asset._20px.Place.subway.image.withRenderingMode(.alwaysTemplate)
+            case .store:
+                iconimageView.image = Asset._20px.Place.store.image.withRenderingMode(.alwaysTemplate)
+            case .travel:
+                iconimageView.image = Asset._20px.Place.luggage.image.withRenderingMode(.alwaysTemplate)
             }
         }
     }

@@ -113,6 +113,8 @@ class MenualBottomSheetCell: UICollectionViewCell {
                 iconView.image = Asset._24px.Weather.thunder.image.withRenderingMode(.alwaysTemplate)
             case .sun:
                 iconView.image = Asset._24px.Weather.sun.image.withRenderingMode(.alwaysTemplate)
+            case .wind:
+                iconView.image = Asset._24px.Weather.wind.image.withRenderingMode(.alwaysTemplate)
             }
         }
         
@@ -133,6 +135,18 @@ class MenualBottomSheetCell: UICollectionViewCell {
                 
             case .school:
                 iconView.image = Asset._24px.Place.school.image.withRenderingMode(.alwaysTemplate)
+                
+            case .bus:
+                iconView.image = Asset._20px.Place.bus.image.withRenderingMode(.alwaysTemplate)
+                
+            case .subway:
+                iconView.image = Asset._20px.Place.subway.image.withRenderingMode(.alwaysTemplate)
+                
+            case .store:
+                iconView.image = Asset._20px.Place.store.image.withRenderingMode(.alwaysTemplate)
+                
+            case .travel:
+                iconView.image = Asset._20px.Place.luggage.image.withRenderingMode(.alwaysTemplate)
             }
         }
         
