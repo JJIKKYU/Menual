@@ -156,7 +156,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         if FileManager.default.fileExists(atPath: thumblURL.path) {
             // 4. 이미지가 존재한다면 기존 경로에 있는 이미지 삭제
             do {
-                try FileManager.default.removeItem(at: originalURL)
+                try FileManager.default.removeItem(at: thumblURL)
                 print("DiaryWriting :: DiaryRepository :: 이미지 삭제 완료 -> Thumb")
             } catch {
                 print("DiaryWriting :: DiaryRepository :: 이미지를 삭제하지 못했습니다.")
