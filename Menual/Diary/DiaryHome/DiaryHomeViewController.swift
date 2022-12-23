@@ -364,9 +364,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                     } else {
                         self.setEmptyView(isEnabled: false)
                     }
-                    
-                    self.writeBoxBtn.title = String(num + 1) + "번째 메뉴얼 작성하기"
-                    self.myMenualTitleView.pageNumber = num
+
+                    let realNumber: Int = num == -1 ? 0 : num
+                    self.writeBoxBtn.title = String(realNumber + 1) + "번째 메뉴얼 작성하기"
+                    self.myMenualTitleView.pageNumber = realNumber
                     self.reloadTableView()
                 }
             })

@@ -45,6 +45,10 @@ class MenualBottomSheetReminderComponentView: UIView {
     
     var isEditingMode: Bool = false
     
+    // 처음 오픈했을때 리마인더 날짜 세팅했는지 여부
+    var isSetInitialCalendar: Bool = false
+    
+    
     public var dateComponets: DateComponents? {
         didSet { setNeedsLayout() }
     }
@@ -320,16 +324,29 @@ class MenualBottomSheetReminderComponentView: UIView {
                 // if self.isInitSetting == true { return }
                 
                 print("Reminder :: requestDate = \(requestDate), currentYear = \(self.currentYear), currentMonth = \(self.currentMonthIndex)")
+
+                guard let selectedDate = requestDate.day else { return }
+                let calcDate = (selectedDate - 1) + (self.firstWeekDayOfMonth - 1)
                 
+                // 처음 오픈할 경우에는 리마인더 작성한 날짜에서부터 시작
+                if self.isSetInitialCalendar == false {
+                    self.currentMonthIndex = requestDate.month ?? 0
+                    self.currentYear = requestDate.year ?? 0
+                    self.firstWeekDayOfMonth = self.getFirstWeekDay()
+                    self.monthView.yearAndMonth = "\(self.currentYear).\(self.currentMonthIndex)"
+
+                    self.calendarCollectionView.selectItem(at: IndexPath(row: calcDate, section: 0), animated: false, scrollPosition: .top)
+                    self.collectionView(self.calendarCollectionView, didSelectItemAt: IndexPath(row: calcDate, section: 0))
+                    self.isSetInitialCalendar = true
+                    return
+                }
+                
+                // 다른 날짜일 경우에는 세팅하지 않음
                 if self.currentYear != requestDate.year ?? 0 || self.currentMonthIndex != requestDate.month ?? 0 {
                     print("Reminder :: 다른 곳은 세팅 안해요!")
                     return
                 }
 
-                guard let selectedDate = requestDate.day else { return }
-                let calcDate = (selectedDate - 1) + (self.firstWeekDayOfMonth - 1)
-
-                // print("Reminder :: Size! = \(size)")
                 self.calendarCollectionView.selectItem(at: IndexPath(row: calcDate, section: 0), animated: false, scrollPosition: .top)
                 self.collectionView(self.calendarCollectionView, didSelectItemAt: IndexPath(row: calcDate, section: 0))
                 
@@ -534,9 +551,6 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
 
         guard let cell = collectionView.cellForItem(at: indexPath) as? DateCell else { return }
         
-        let selectedIndex = cell.index
-        let date = cell.date
-
         print("Reminder :: Selected! cell = \(cell.index), date = \(cell.date)")
         isSelectedReminderDayIndexRelay.accept(Int(cell.date))
         MenualLog.logEventAction(responder: cell)

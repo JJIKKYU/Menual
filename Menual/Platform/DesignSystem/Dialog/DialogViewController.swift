@@ -261,6 +261,7 @@ class DialogViewController: UIViewController {
     func setText() {
         dialogTitle.text = titleText
         subDialogTitle.text = subTitleText
+        subDialogTitle.setLineHeight(lineHeight: 1.14)
         leftButton.setTitle(cancleText, for: .normal)
         rightButton.setTitle(confirmText, for: .normal)
         oneButton.setTitle(confirmText, for: .normal)

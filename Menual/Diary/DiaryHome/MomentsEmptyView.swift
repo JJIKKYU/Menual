@@ -15,7 +15,7 @@ class MomentsEmptyView: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppTitle(.title_2)
         $0.textColor = Colors.grey.g200
-        $0.text = "메뉴얼을 작성하면\n추천 컨텐츠가 나타납니다."
+        $0.text = "메뉴얼을 작성하시면\n다양한 컨텐츠를 확인할 수 있어요."
         $0.setLineSpacing(lineSpacing: 3)
         $0.numberOfLines = 2
         $0.textAlignment = .center
