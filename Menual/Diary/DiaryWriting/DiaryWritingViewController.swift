@@ -24,6 +24,7 @@ protocol DiaryWritingPresentableListener: AnyObject {
     
     func saveCropImage(diaryUUID: String, imageData: Data)
     func saveOriginalImage(diaryUUID: String, imageData: Data)
+    func saveThumbImage(diaryUUID: String, imageData: Data)
     func saveTempSave(diaryModel: DiaryModelRealm, originalImageData: Data?, cropImageData: Data?)
     func pressedTempSaveBtn()
     func deleteAllImages(diaryUUID: String)
@@ -545,10 +546,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                let selectedImage = selectedImage,
                let selectedImageData = selectedImage.jpegData(compressionQuality: 0.5),
                let selectedOriginalImage = selectedOriginalImage,
-               let selectedOriginalImageData = selectedOriginalImage.jpegData(compressionQuality: 0.5) {
+               let selectedOriginalImageData = selectedOriginalImage.jpegData(compressionQuality: 0.5),
+               let thumbImageData = UIImage().imageWithImage(sourceImage: selectedOriginalImage, scaledToWidth: 100).jpegData(compressionQuality: 0.8) {
                 print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
                 listener?.saveCropImage(diaryUUID: diaryModelRealm.uuid, imageData: selectedImageData)
                 listener?.saveOriginalImage(diaryUUID: diaryModelRealm.uuid, imageData: selectedOriginalImageData)
+                listener?.saveThumbImage(diaryUUID: diaryModelRealm.uuid, imageData: thumbImageData)
             }
             listener?.writeDiary(info: diaryModelRealm)
             dismiss(animated: true)
@@ -584,10 +587,12 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                let selectedImageData = selectedImage.jpegData(compressionQuality: 0.8),
                let selectedOriginalImage = selectedOriginalImage,
                let selectedOriginalImageData = selectedOriginalImage.jpegData(compressionQuality: 0.5),
+               let thumbImageData = UIImage().imageWithImage(sourceImage: selectedOriginalImage, scaledToWidth: 50).jpegData(compressionQuality: 0.2),
                let diaryModelUUID = diaryModelUUID {
                 print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
                 listener?.saveCropImage(diaryUUID: diaryModelUUID, imageData: selectedImageData)
                 listener?.saveOriginalImage(diaryUUID: diaryModelUUID, imageData: selectedOriginalImageData)
+                listener?.saveThumbImage(diaryUUID: diaryModelRealm.uuid, imageData: thumbImageData)
             }
         }
     }

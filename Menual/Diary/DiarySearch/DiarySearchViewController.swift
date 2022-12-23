@@ -458,10 +458,13 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             if model.isHide {
                 cell.listType = .hide
             } else {
-                if let image = model.originalImage {
-                    cell.listType = .bodyTextImage
-                    cell.image = UIImage(data: image)
-                } else {
+                if let imageData = model.thumbImage {
+                    cell.listType = .textAndImage
+                    DispatchQueue.main.async {
+                        cell.image = UIImage(data: imageData)
+                    }
+                }
+                else {
                     cell.listType = .bodyText
                 }
             }

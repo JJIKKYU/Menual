@@ -40,6 +40,23 @@ public class DiaryModelRealm: Object {
             return nil
         }
     }
+    var thumbImage: Data? {
+        get {
+            if image == false { return nil }
+            // 1. 도큐먼트 폴더 경로가져오기
+            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+
+            if let directoryPath = path.first {
+            // 2. 이미지 URL 찾기
+                let originalImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Thumb")
+                // 3. UIImage로 불러오고 Data로 Return
+                return UIImage(contentsOfFile: originalImageURL.path)?.jpegData(compressionQuality: 0.8)
+            }
+            return nil
+        }
+    }
     var cropImage: Data? {
         get {
             if image == false { return nil }

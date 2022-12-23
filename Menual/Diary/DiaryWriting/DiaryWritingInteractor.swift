@@ -75,7 +75,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     // 이미지를 저장할 경우 모두 저장이 되었는지 확인하는 Relay
     // 1. croppedImage, 2. originalImage
     // 저장이 모두 완료되었을 경우 true
-    private let imageSaveRelay = BehaviorRelay<(Bool, Bool)>(value: (false, false))
+    private let imageSaveRelay = BehaviorRelay<(Bool, Bool, Bool)>(value: (false, false, false))
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -148,15 +148,16 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                       let newDiary = newDiary else { return }
                 let croppedImageIsSaved = imageSaveFlags.0
                 let originalImageIsSaved = imageSaveFlags.1
+                let thumbImageIsSaved = imageSaveFlags.2
                 print("DiaryWriting :: 최종 저장 로직")
 
-                if croppedImageIsSaved && originalImageIsSaved {
+                if croppedImageIsSaved && originalImageIsSaved && thumbImageIsSaved {
                     print("DiaryWriting :: 모두 저장이 완료되었습니다.")
                     self.listener?.diaryWritingPressedBackBtn(isOnlyDetach: false, isNeedToast: true, mode: .edit)
                     self.dependency.diaryRepository
                         .updateDiary(info: newDiary, uuid: self.diaryModelRelay.value?.uuid ?? "")
                 }
-                else if croppedImageIsSaved || originalImageIsSaved {
+                else if croppedImageIsSaved || originalImageIsSaved || thumbImageIsSaved {
                     print("DiaryWriting :: 둘 중 하나가 저장이 안되었습니다.")
                 }
             })
@@ -237,7 +238,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         
         // 이미지 저장을 할 필요가 없으므로, true를 보내줌
         if edittedImage == false {
-            imageSaveRelay.accept((true, true))
+            imageSaveRelay.accept((true, true, true))
         }
     }
 
@@ -250,7 +251,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         dependency.diaryRepository
             .saveImageToDocumentDirectory(imageName: imageName, imageData: imageData) { isSaved in
                 print("DiaryWriting :: interactor -> 저장완료! \(isSaved)")
-                self.imageSaveRelay.accept((isSaved, self.imageSaveRelay.value.1))
+                self.imageSaveRelay.accept((isSaved, self.imageSaveRelay.value.1, self.imageSaveRelay.value.2))
             }
     }
 
@@ -263,7 +264,17 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         dependency.diaryRepository
             .saveImageToDocumentDirectory(imageName: imageName, imageData: imageData) { isSaved in
                 print("DiaryWriting :: interactor -> 저장완료! \(isSaved)")
-                self.imageSaveRelay.accept((self.imageSaveRelay.value.0, isSaved))
+                self.imageSaveRelay.accept((self.imageSaveRelay.value.0, isSaved, self.imageSaveRelay.value.2))
+            }
+    }
+    
+    func saveThumbImage(diaryUUID: String, imageData: Data) {
+        print("DiaryWriting :: interactor -> saveThumbImage!")
+        let imageName: String = diaryUUID + "Thumb"
+        dependency.diaryRepository
+            .saveImageToDocumentDirectory(imageName: imageName, imageData: imageData) { isSaved in
+                print("DiaryWriting :: interactor -> 저장완료! \(isSaved)")
+                self.imageSaveRelay.accept((self.imageSaveRelay.value.0, self.imageSaveRelay.value.1 ,isSaved))
             }
     }
     
