@@ -64,7 +64,7 @@ class CustomCropViewController: CropViewController {
     
     func setViews() {
         aspectRatioPreset = .presetCustom
-        customAspectRatio = CGSize(width: 335, height: 80)
+        customAspectRatio = CGSize(width: 335, height: 90)
         resetButtonHidden = true
         rotateButtonsHidden = true
         aspectRatioPickerButtonHidden = true

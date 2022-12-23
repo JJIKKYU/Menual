@@ -35,7 +35,7 @@ public class DiaryModelRealm: Object {
             // 2. 이미지 URL 찾기
                 let originalImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Original")
                 // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: originalImageURL.path)?.jpegData(compressionQuality: 0.5)
+                return UIImage(contentsOfFile: originalImageURL.path)?.jpegData(compressionQuality: 0.9)
             }
             return nil
         }
@@ -50,9 +50,9 @@ public class DiaryModelRealm: Object {
 
             if let directoryPath = path.first {
             // 2. 이미지 URL 찾기
-                let originalImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Thumb")
+                let thumbImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Thumb")
                 // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: originalImageURL.path)?.jpegData(compressionQuality: 0.8)
+                return UIImage(contentsOfFile: thumbImageURL.path)?.jpegData(compressionQuality: 0.9)
             }
             return nil
         }
@@ -69,7 +69,7 @@ public class DiaryModelRealm: Object {
             // 2. 이미지 URL 찾기
                 let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid)
                 // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: imageURL.path)?.jpegData(compressionQuality: 0.8)
+                return UIImage(contentsOfFile: imageURL.path)?.jpegData(compressionQuality: 1.0)
             }
             return nil
         }

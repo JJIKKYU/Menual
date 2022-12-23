@@ -20,6 +20,7 @@ class ImageUploadView: UIView {
         $0.isHidden = true
         $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
+        $0.AppCorner(._4pt)
     }
     
     let uploadBtn = UIButton().then {
@@ -37,6 +38,7 @@ class ImageUploadView: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.image = Asset._24px.picture.image.withRenderingMode(.alwaysTemplate)
         $0.tintColor = Colors.grey.g700
+        $0.AppCorner(._4pt)
     }
     
     private let placeHolderTextLabel = UILabel().then {

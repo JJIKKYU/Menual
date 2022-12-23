@@ -39,6 +39,7 @@ public class NavigationController: UINavigationController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupFullWidthBackGesture()
+        print("Navi :: viewDidLoad!")
     }
     
     public var isDisabledFullWidthBackGesture: Bool = false
@@ -77,15 +78,9 @@ extension NavigationController: UIGestureRecognizerDelegate {
         }
 
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return false
         // if let viewController = presentedViewController
         if let imageDetailVC = topViewController as? DiaryDetailImageViewController {
             print("Navi :: ImageDetailVC = \(imageDetailVC)")
-            return false
-        }
-        
-        if let diaryHomeVC = topViewController as? DiaryHomeViewController {
-            print("Navi :: ImageDetailVC = \(diaryHomeVC)")
             return false
         }
         

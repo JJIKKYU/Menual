@@ -44,7 +44,7 @@ public class TempSaveModelRealm: Object {
             // 2. 이미지 URL 찾기
                 let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid)
                 // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: imageURL.path)?.jpegData(compressionQuality: 0.5)
+                return UIImage(contentsOfFile: imageURL.path)?.jpegData(compressionQuality: 0.8)
             }
             return nil
         }

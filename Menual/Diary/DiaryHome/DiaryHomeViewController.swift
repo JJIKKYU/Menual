@@ -128,7 +128,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.title = "MY MENUAL"
-        // $0.layer.zPosition = 1
+        // $0.layer.zPosition = -1
         $0.rightCalenderBtn.addTarget(self, action: #selector(pressedDateFilterBtn), for: .touchUpInside)
         $0.rightFilterBtn.addTarget(self, action: #selector(pressedFilterBtn), for: .touchUpInside)
     }
@@ -264,12 +264,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
         }
         
-        self.view.bringSubviewToFront(naviView)
         self.view.bringSubviewToFront(writeBoxBtn)
         self.view.bringSubviewToFront(tableViewHeaderView)
         self.view.bringSubviewToFront(writeFAB)
         self.view.bringSubviewToFront(scrollToTopFAB)
         self.view.bringSubviewToFront(myMenualTitleView)
+        self.view.bringSubviewToFront(naviView)
         
         myMenualTableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()

@@ -544,10 +544,10 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
             if isEdittedIamge == true,
                let selectedImage = selectedImage,
-               let selectedImageData = selectedImage.jpegData(compressionQuality: 0.5),
+               let selectedImageData = selectedImage.jpegData(compressionQuality: 1.0),
                let selectedOriginalImage = selectedOriginalImage,
                let selectedOriginalImageData = selectedOriginalImage.jpegData(compressionQuality: 0.5),
-               let thumbImageData = UIImage().imageWithImage(sourceImage: selectedOriginalImage, scaledToWidth: 100).jpegData(compressionQuality: 0.8) {
+               let thumbImageData = UIImage().imageWithImage(sourceImage: selectedOriginalImage, scaledToWidth: 150).jpegData(compressionQuality: 0.8) {
                 print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
                 listener?.saveCropImage(diaryUUID: diaryModelRealm.uuid, imageData: selectedImageData)
                 listener?.saveOriginalImage(diaryUUID: diaryModelRealm.uuid, imageData: selectedOriginalImageData)
@@ -584,10 +584,10 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
             if isEdittedIamge == true,
                let selectedImage = selectedImage,
-               let selectedImageData = selectedImage.jpegData(compressionQuality: 0.8),
+               let selectedImageData = selectedImage.jpegData(compressionQuality: 1.0),
                let selectedOriginalImage = selectedOriginalImage,
                let selectedOriginalImageData = selectedOriginalImage.jpegData(compressionQuality: 0.5),
-               let thumbImageData = UIImage().imageWithImage(sourceImage: selectedOriginalImage, scaledToWidth: 50).jpegData(compressionQuality: 0.2),
+               let thumbImageData = UIImage().imageWithImage(sourceImage: selectedOriginalImage, scaledToWidth: 150).jpegData(compressionQuality: 0.8),
                let diaryModelUUID = diaryModelUUID {
                 print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
                 listener?.saveCropImage(diaryUUID: diaryModelUUID, imageData: selectedImageData)
@@ -1321,7 +1321,7 @@ extension DiaryWritingViewController: WeatherPlaceToolbarViewDelegate {
 extension DiaryWritingViewController: CropViewControllerDelegate {
     func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
         print("image! = \(image)")
-        let resizeImage = UIImage().imageWithImage(sourceImage: image, scaledToWidth: UIScreen.main.bounds.width)
+        let resizeImage = UIImage().imageWithImage(sourceImage: image, scaledToWidth: UIScreen.main.bounds.width * 2)
         self.selectedImage = resizeImage
         self.imageUploadView.image = resizeImage
         self.isEdittedIamge = true
@@ -1345,7 +1345,7 @@ extension DiaryWritingViewController: DialogDelegate {
             if let diaryModel = zipDiaryModelForTempSave() {
                 listener?.saveTempSave(diaryModel: diaryModel,
                                        originalImageData: selectedOriginalImage?.jpegData(compressionQuality: 0.5),
-                                       cropImageData: selectedImage?.jpegData(compressionQuality: 0.8)
+                                       cropImageData: selectedImage?.jpegData(compressionQuality: 1.0)
                 )
             }
             listener?.pressedBackBtn(isOnlyDetach: false)

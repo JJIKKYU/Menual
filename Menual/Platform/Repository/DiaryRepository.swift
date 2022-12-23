@@ -128,6 +128,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         // 2. 이미지 파일 이름 & 최종 경로 설정
         let imageURL = documentDirectory.appendingPathComponent(diaryUUID)
         let originalURL = documentDirectory.appendingPathComponent(diaryUUID + "Original")
+        let thumblURL = documentDirectory.appendingPathComponent(diaryUUID + "Thumb")
         
         // 3. 이미지 삭제
         if FileManager.default.fileExists(atPath: imageURL.path) {
@@ -151,6 +152,18 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 completionHandler(false)
             }
         }
+        
+        if FileManager.default.fileExists(atPath: thumblURL.path) {
+            // 4. 이미지가 존재한다면 기존 경로에 있는 이미지 삭제
+            do {
+                try FileManager.default.removeItem(at: originalURL)
+                print("DiaryWriting :: DiaryRepository :: 이미지 삭제 완료 -> Thumb")
+            } catch {
+                print("DiaryWriting :: DiaryRepository :: 이미지를 삭제하지 못했습니다.")
+                completionHandler(false)
+            }
+        }
+        
         
         completionHandler(true)
     }
