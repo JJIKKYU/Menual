@@ -191,8 +191,9 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     func pressedCloseBtn() {
         print("pressedCloseBtn")
         listener?.diaryBottomSheetPressedCloseBtn()
-        filteredPlaceArrRelay?.accept([])
-        filteredWeatherArrRelay?.accept([])
+        // filteredPlaceArrRelay?.accept([])
+        // filteredWeatherArrRelay?.accept([])
+        isEnabledReminderRelay?.accept(nil)
     }
     
     func pressedWriteBtn() {

@@ -85,6 +85,12 @@ final class DiaryTempSaveViewController: UIViewController, DiaryTempSaveViewCont
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        MenualLog.logEventAction("tempSave_appear")
+    }
+    
     lazy var naviView = MenualNaviView(type: .temporarySave).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)

@@ -236,7 +236,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        navigationController?.interactivePopGestureRecognizer?.delegate = self        
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        MenualLog.logEventAction("writing_appear")
     }
     
     func setViews() {

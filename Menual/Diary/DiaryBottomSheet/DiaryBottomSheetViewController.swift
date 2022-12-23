@@ -664,9 +664,10 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
     }
     
     func isNeedReminderAuthorization() {
-        show(size: .small,
+        show(size: .large,
              buttonType: .oneBtn,
-             titleText: "설정에서 Menual의 알림을 활성화 해주세요.",
+             titleText: "알림 권한이 필요합니다",
+             subTitleText: "설정에서 Menual의\n알림을 활성화 해주세요.",
              confirmButtonText: "네"
         )
     }

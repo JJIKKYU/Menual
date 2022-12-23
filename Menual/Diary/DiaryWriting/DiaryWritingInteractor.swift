@@ -271,6 +271,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     func saveThumbImage(diaryUUID: String, imageData: Data) {
         print("DiaryWriting :: interactor -> saveThumbImage!")
         let imageName: String = diaryUUID + "Thumb"
+        print("DiaryWriting :: interactor -> imageName = \(imageName)")
         dependency.diaryRepository
             .saveImageToDocumentDirectory(imageName: imageName, imageData: imageData) { isSaved in
                 print("DiaryWriting :: interactor -> 저장완료! \(isSaved)")

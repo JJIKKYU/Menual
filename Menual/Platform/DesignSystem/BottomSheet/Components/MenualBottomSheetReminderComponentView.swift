@@ -528,7 +528,6 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         if delegate?.isEnabledReminderRelay?.value ?? false == false {
             cell.isUserInteractionEnabled = false
         }
-        
 
         return cell
     }

@@ -216,6 +216,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        MenualLog.logEventAction("detail_appear")
         
         replyTableView.delegate = self
         replyBottomView.replyTextView.delegate = self

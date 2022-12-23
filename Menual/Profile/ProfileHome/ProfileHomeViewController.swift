@@ -115,6 +115,12 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        MenualLog.logEventAction("profile_appear")
+    }
+    
     @objc
     func pressedBackBtn() {
         print("ProfileHomeVC :: pressedBackBtn!")

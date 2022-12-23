@@ -118,6 +118,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchViewControll
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         searchTextField.textField.becomeFirstResponder()
+        MenualLog.logEventAction("search_appear")
         // (navigationController as? NavigationController)?.isDisabledFullWidthBackGesture = true
     }
     

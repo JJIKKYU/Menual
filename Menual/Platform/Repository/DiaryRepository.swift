@@ -84,7 +84,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             // 4-2. 이미지가 존재한다면 기존 경로에 있는 이미지 삭제
             do {
                 try FileManager.default.removeItem(at: imageURL)
-                print("DiaryWriting :: DiaryRepository :: 이미지 삭제 완료")
+                print("DiaryWriting :: DiaryRepository :: 이미지 삭제 완료 -> \(imageURL)")
             } catch {
                 print("DiaryWriting :: DiaryRepository :: 이미지를 삭제하지 못했습니다.")
                 completionHandler(false)
@@ -95,7 +95,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         // 파일을 저장하는 등의 행위는 조심스러워야하기 때문에 do try catch 문을 사용하는 편임
         do {
             try data.write(to: imageURL)
-            print("DiaryWriting :: DiaryRepository :: 이미지 저장완료")
+            print("DiaryWriting :: DiaryRepository :: 이미지 저장완료 -> \(imageURL)")
             completionHandler(true)
         } catch {
             print("DiaryWriting :: DiaryRepository :: 이미지를 저장하지 못했습니다.")
@@ -287,6 +287,13 @@ public final class DiaryRepositoryImp: DiaryRepository {
 
         realm.safeWrite {
             info.isDeleted = true
+        }
+        
+        // 이미지가 있다면 함께 삭제
+        if info.image {
+            deleteImageFromDocumentDirectory(diaryUUID: info.uuid) { isDeleted in
+                print("DiaryRepo :: deleteDiary! 이미지를 함께 삭제합니다 = \(isDeleted)")
+            }
         }
         
         // 검색된 결과가 있으면 함께 삭제

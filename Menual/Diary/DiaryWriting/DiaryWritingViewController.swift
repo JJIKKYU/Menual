@@ -249,6 +249,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        MenualLog.logEventAction("writing_appear")
         print("DiaryWriting :: viewWillAppear")
 
         // keyboard observer등록
@@ -592,7 +593,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                 print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
                 listener?.saveCropImage(diaryUUID: diaryModelUUID, imageData: selectedImageData)
                 listener?.saveOriginalImage(diaryUUID: diaryModelUUID, imageData: selectedOriginalImageData)
-                listener?.saveThumbImage(diaryUUID: diaryModelRealm.uuid, imageData: thumbImageData)
+                listener?.saveThumbImage(diaryUUID: diaryModelUUID, imageData: thumbImageData)
             }
         }
     }
@@ -963,15 +964,32 @@ extension DiaryWritingViewController {
     // 카메라 호출
     @objc func pressedTakeImagePullDownBtn() {
         MenualLog.logEventAction("writing_image_take")
-        print("DiaryWriting :: TakeImage!")
-        // phpickerConfiguration.filter = .images
-        testImagePicker.sourceType = .camera
+        // Privacy - Camera Usage Description
+        AVCaptureDevice.requestAccess(for: .video) { [weak self] isAuthorized in
+            guard let self = self else { return }
+            guard isAuthorized else {
+                print("DiaryWriting :: 노권한!, \(isAuthorized)")
+                DispatchQueue.main.async {
+                    self.show(size: .large,
+                         buttonType: .oneBtn,
+                         titleText: "카메라 권한이 필요합니다",
+                         subTitleText: "설정에서 Menual의\n카메라 권한을 활성화 해주세요",
+                         confirmButtonText: "네"
+                    )
+                }
+                return
+            }
+            
+            if isAuthorized == true {
+                print("DiaryWriting :: TakeImage!")
+                self.testImagePicker.sourceType = .camera
+                DispatchQueue.main.async {
+                    self.present(self.testImagePicker, animated: true, completion: nil)
+                }
+            }
+        }
+
         
-//        let navigationController = UINavigationController(rootViewController: testImagePicker)
-//        navigationController.modalPresentationStyle = .overFullScreen
-//        navigationController.navigationBar.isHidden = true
-//        navigationController.isNavigationBarHidden = true
-        present(testImagePicker, animated: true, completion: nil)
     }
 }
 
