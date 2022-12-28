@@ -474,6 +474,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     func insertTableViewSection() {
         myMenualTableView.beginUpdates()
         let indexSet = IndexSet(integer: myMenualTableView.numberOfSections )
+        print("DiaryHome :: indexSet = \(indexSet), myMenualTableView.numberOfSections = \(myMenualTableView.numberOfSections)")
         myMenualTableView.insertSections(indexSet, with: .automatic)
         myMenualTableView.endUpdates()
     }
@@ -677,6 +678,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
 
             guard let diaryDictionary = listener?.diaryDictionary else { return 0 }
+            print("DiaryHome :: diaryDictionary.count = \(diaryDictionary.count)")
             return diaryDictionary.count
         }
     }

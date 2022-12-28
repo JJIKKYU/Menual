@@ -76,6 +76,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     var diaryRealmArr: Results<DiaryModelRealm>?
     var diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
+    var arraySerction: [String] = []
     
     // filter 적용할 때, 원래 PageNum을 저장해놓고 필터가 끝났을때 다시 쓸 수 있도록
     var prevLastPageNum: Int = 0
@@ -160,9 +161,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     filteredModel.forEach { section.insert($0.createdAt.toStringWithYYYYMM()) }
 
                     // for문으로 체크하기 위해서 Array로 변경
-                    var arraySerction = Array(section)
-                    arraySerction.sort { $0 > $1 }
-                    arraySerction.enumerated().forEach { (index: Int, sectioName: String) in
+                    self.arraySerction = Array(section)
+                    self.arraySerction.sort { $0 > $1 }
+                    self.arraySerction.enumerated().forEach { (index: Int, sectioName: String) in
                         self.diaryDictionary[sectioName] = DiaryHomeSectionModel(sectionName: sectioName, sectionIndex: index, diaries: [])
                     }
                     // let sortedModel: [DiaryModelRealm] = model.sorted(by: { $0.createdAt > $1.createdAt })
@@ -185,10 +186,16 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
                         // 글이 하나도 없을 경우에는 sectionIndex 0에 작성될 수 있도록
                         let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex ?? 0
+                        var needInsertSection: Bool = false
                         if self.diaryDictionary[sectionName] == nil {
                             print("DiaryHome :: test! = nil입니다!")
+                            
+                            for secName in self.arraySerction {
+                                self.diaryDictionary["\(secName)"]?.sectionIndex += 1
+                            }
+
                             self.diaryDictionary[sectionName] = DiaryHomeSectionModel(sectionName: sectionName, sectionIndex: 0, diaries: [])
-                            self.presenter.insertTableViewSection()
+                            needInsertSection = true
                         }
 
                         // 전체 PageNum 추려내기
@@ -201,6 +208,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
                         self.diaryDictionary[sectionName]?.diaries.insert(diary, at: 0)
                         print("DiaryHome :: test! = \(self.diaryDictionary[sectionName]?.diaries)")
+                        if needInsertSection {
+                            // self.presenter.insertTableViewSection()
+                        }
                         self.presenter.insertTableViewRow(section: sectionIndex, row: 0)
                     }
                         
@@ -224,14 +234,18 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
                             self.lastPageNumRelay.accept(lastPageNum)
                             self.diaryDictionary[sectionName]?.diaries.remove(at: row)
-                            print("DiaryHome :: delete! = \(self.diaryDictionary)")
                             self.presenter.deleteTableViewRow(section: sectionIndex, row: row)
+                            print("DiaryHome :: delete! = \(self.diaryDictionary)")
                             
                             if let diaryCount: Int = self.diaryDictionary[sectionName]?.diaries.count,
                                diaryCount == 0 {
                                 print("DiaryHome :: 지워야할 것 같은걸")
                                 let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex ?? 0
+                                print("DiaryHome :: sectionIndex = \(sectionIndex)")
                                 self.diaryDictionary[sectionName] = nil
+                                for secName in self.arraySerction {
+                                    self.diaryDictionary[secName]?.sectionIndex -= 1
+                                }
                                 self.presenter.deleteTableViewSection(section: sectionIndex)
                             }
                         }
