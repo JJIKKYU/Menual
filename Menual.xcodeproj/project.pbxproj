@@ -252,6 +252,7 @@
 		98F3A28128150052000851F0 /* DiaryBottomSheetInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */; };
 		CF2E3885995019FCA544D463 /* Pods_Menual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8D44F726D679789A808A0A2 /* Pods_Menual.framework */; };
 		D5B61C69B910C05E841002DE /* Pods_Menual_MenualUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9CD7E0AB3888F2D9A84D1A /* Pods_Menual_MenualUITests.framework */; };
+		FC148D8A295C380700ACB18E /* MenuComponentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC148D89295C380600ACB18E /* MenuComponentButton.swift */; };
 		FC1E2C572953EDE9008CA0F7 /* SpecificDayMomentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC1E2C562953EDE9008CA0F7 /* SpecificDayMomentsModel.swift */; };
 		FC1E2C5C29543C3F008CA0F7 /* SeasonMomentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC1E2C5B29543C3F008CA0F7 /* SeasonMomentsModel.swift */; };
 /* End PBXBuildFile section */
@@ -530,6 +531,7 @@
 		98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryBottomSheetInteractor.swift; sourceTree = "<group>"; };
 		D7269AD9C20C0E21C6E935F5 /* Pods-Menual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menual.release.xcconfig"; path = "Target Support Files/Pods-Menual/Pods-Menual.release.xcconfig"; sourceTree = "<group>"; };
 		D8D44F726D679789A808A0A2 /* Pods_Menual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Menual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC148D89295C380600ACB18E /* MenuComponentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuComponentButton.swift; sourceTree = "<group>"; };
 		FC1E2C562953EDE9008CA0F7 /* SpecificDayMomentsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecificDayMomentsModel.swift; sourceTree = "<group>"; };
 		FC1E2C5B29543C3F008CA0F7 /* SeasonMomentsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonMomentsModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1388,6 +1390,7 @@
 				98F31DC728CC782B00EE1C8A /* MenualBottomSheetFilterComponentView.swift */,
 				98F31DC928CC7F2000EE1C8A /* MenualDateFilterComponentView.swift */,
 				988C10A82920BA0100C80937 /* MenualBottomSheetReminderComponentView.swift */,
+				FC148D89295C380600ACB18E /* MenuComponentButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1822,6 +1825,7 @@
 				98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */,
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
 				98B5579D283A198F00F8CA3E /* UILabelExtension.swift in Sources */,
+				FC148D8A295C380700ACB18E /* MenuComponentButton.swift in Sources */,
 				98B557B4283A4A8300F8CA3E /* CapsuleButtonInteractor.swift in Sources */,
 				98B557B2283A4A8300F8CA3E /* CapsuleButtonViewController.swift in Sources */,
 				985BFF7B293239A000D86106 /* CGRect+Util.swift in Sources */,

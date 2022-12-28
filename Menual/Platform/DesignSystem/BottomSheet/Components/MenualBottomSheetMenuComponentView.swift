@@ -25,7 +25,7 @@ class MenualBottomSheetMenuComponentView: UIView {
     private let stackView = UIStackView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.axis = .vertical
-        $0.alignment = .leading
+        $0.alignment = .fill
         $0.distribution = .fill
         $0.spacing = 20
     }
@@ -40,53 +40,25 @@ class MenualBottomSheetMenuComponentView: UIView {
         $0.backgroundColor = Colors.grey.g700
     }
     
-    public var hideMenuBtn = UIButton().then {
+    public var hideMenuBtn = MenuComponentButton(frame: .zero).then {
         $0.actionName = "hide"
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setTitle("메뉴얼 숨기기", for: .normal)
-        $0.setTitleColor(Colors.grey.g200, for: .normal)
-        $0.setImage(Asset._24px.lock.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = Colors.grey.g600
-        $0.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_3)
-        
-        $0.contentMode = .scaleAspectFit
-        $0.contentHorizontalAlignment = .fill
-        $0.contentVerticalAlignment = .fill
-        
-        $0.marginImageWithText(margin: 8)
+        $0.title = "메뉴얼 숨기기"
+        $0.leftUIImage = Asset._24px.lock.image.withRenderingMode(.alwaysTemplate)
     }
     
-    public var editMenuBtn = UIButton().then {
+    public var editMenuBtn = MenuComponentButton(frame: .zero).then {
         $0.actionName = "edit"
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setTitle("수정하기", for: .normal)
-        $0.setTitleColor(Colors.grey.g200, for: .normal)
-        $0.setImage(Asset._24px.modify.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = Colors.grey.g600
-        $0.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_3)
-        
-        $0.contentMode = .scaleAspectFit
-        $0.contentHorizontalAlignment = .fill
-        $0.contentVerticalAlignment = .fill
-        
-        $0.marginImageWithText(margin: 8)
-        
+        $0.title = "수정하기"
+        $0.leftUIImage = Asset._24px.modify.image.withRenderingMode(.alwaysTemplate)
     }
     
-    public var deleteMenuBtn = UIButton().then {
+    public var deleteMenuBtn = MenuComponentButton(frame: .zero).then {
         $0.actionName = "delete"
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setTitle("삭제하기", for: .normal)
-        $0.setTitleColor(Colors.grey.g200, for: .normal)
-        $0.setImage(Asset._24px.delete.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = Colors.grey.g600
-        $0.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_3)
-        
-        $0.contentMode = .scaleAspectFit
-        $0.contentHorizontalAlignment = .fill
-        $0.contentVerticalAlignment = .fill
-        
-        $0.marginImageWithText(margin: 8)
+        $0.title = "삭제하기"
+        $0.leftUIImage = Asset._24px.delete.image.withRenderingMode(.alwaysTemplate)
     }
 
     init() {
@@ -111,6 +83,13 @@ class MenualBottomSheetMenuComponentView: UIView {
             make.leading.top.width.bottom.equalToSuperview()
         }
         
+        deleteMenuBtn.imageView?.snp.makeConstraints { make in
+            make.width.height.equalTo(24)
+        }
+        deleteMenuBtn.titleLabel?.snp.makeConstraints({ make in
+            make.leading.equalToSuperview()
+        })
+        
         divider1.snp.makeConstraints { make in
             make.width.equalToSuperview()
             make.height.equalTo(1)
@@ -128,11 +107,14 @@ class MenualBottomSheetMenuComponentView: UIView {
         
         switch isHide {
         case false:
-            hideMenuBtn.setImage(Asset._24px.lock.image.withRenderingMode(.alwaysTemplate), for: .normal)
-            hideMenuBtn.setTitle("메뉴얼 숨기기", for: .normal)
+            hideMenuBtn.title = "메뉴얼 숨기기"
+            hideMenuBtn.leftUIImage = Asset._24px.lock.image.withRenderingMode(.alwaysTemplate)
+            break
+
         case true:
-            hideMenuBtn.setImage(Asset._24px.unlock.image.withRenderingMode(.alwaysTemplate), for: .normal)
-            hideMenuBtn.setTitle("숨긴 메뉴얼 보기", for: .normal)
+            hideMenuBtn.title = "숨긴 메뉴얼 보기"
+            hideMenuBtn.leftUIImage = Asset._24px.unlock.image.withRenderingMode(.alwaysTemplate)
+            break
         }
     }
 }
