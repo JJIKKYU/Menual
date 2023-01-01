@@ -55,90 +55,55 @@ public final class MomentsRepositoryImp: MomentsRepository {
               let momentsRealm = realm.objects(MomentsRealm.self).first
         else { return }
 
-        let format = DateFormatter()
-        format.dateFormat = "yyyy-MM-dd HH:mm"
+        RefreshManager.shared.loadDataIfNeeded() { success in
+            print("MomentsRepo :: \(success)")
+            if success == false { return }
+            
+            print("MomentsRepo :: fetch! - 2")
+            Observable.zip(
+                setNumberDiaryMomentsItem(),
+                setSpecialDayMomentsItem(),
+                setlastYearDiaryMomentsItem(),
+                setReadCountZeroMomentsItem(),
+                setSpecificTimeMomentsItem(),
+                setSeasonMomentsItem()
+            )
+            .subscribe(onNext: { [weak self] number, special, lastYear, readCount, specificTime, season in
+                guard let self = self else { return }
 
-        let lastUpdateDate = momentsRealm.lastUpdatedDate.toStringWithHourMin()
-        guard let updateDate = Calendar.current.date(bySettingHour: 03, minute: 00, second: 0, of: Date())?.toStringWithHourMin(),
-              let updateTime = format.date(from: updateDate),
-              let lastUpdateTime = format.date(from: lastUpdateDate)
-        else { return }
+                var items: [MomentsItemRealm] = []
+                if let number = number {
+                    items.append(number)
+                }
+                
+                if let special = special {
+                    items.append(contentsOf: special)
+                }
+                
+                if let lastYear = lastYear {
+                    items.append(contentsOf: lastYear)
+                }
+                
+                if let readCount = readCount {
+                    items.append(contentsOf: readCount)
+                }
+                
+                if let specificTime = specificTime {
+                    items.append(contentsOf: specificTime)
+                }
+                
+                if let season = season {
+                    items.append(contentsOf: season)
+                }
 
-        // var diffTime = Int(endTime.timeIntervalSince(startTime) / 3600)
-        // var diffTime2 = Int(startTime.timeIntervalSince(Date()) / 3600)
-        // let diffTime3 = Int(Date().timeIntervalSince(endTime) / 3600)
-        
-        // 새벽 3시 기준 얼마나 차이가 날까
-        let lastUpdateDiffTime = Int(updateTime.timeIntervalSince(lastUpdateTime) / 3600)
-        print("MomentsRepo :: updateTime = \(updateTime), lastUpdateTime = \(lastUpdateTime), lastUpdateDiffTime = \(lastUpdateDiffTime)")
-        if lastUpdateDiffTime < 24 {
-            print("MomentsRepo :: 업데이트 한지 새벽 3시 기준 24시간이 지나지 않아 업데이트 할 필요가 없습니다.")
-            // return
-            // return
+                realm.safeWrite {
+                    realm.delete(momentsRealm.items)
+                    momentsRealm.items.append(objectsIn: items)
+                    momentsRealm.lastUpdatedDate = Date()
+                }
+            })
+            .disposed(by: disposeBag)
         }
-        
-        // 지금 새벽 3시가 넘었을까?
-        let currentTimeDiff = Int(Date().timeIntervalSince(updateTime) / 3600)
-        print("MomentsRepo :: currentTimeDiff = \(currentTimeDiff)")
-        if currentTimeDiff < 24 {
-            print("MomentsRepo :: 새벽 3시가 지나지 않아서 업데이트 할 필요가 없습니다.")
-            // return
-        }
-
-        
-        // 이전 업데이트가 오늘 새벽 3시 기준 전 날일 경우,
-        // 현재 시간이 새벽 3시 이후일 경우
-        
-        // 업데이트 시간 차이가 24시간 이상이면 업데이트 진행
-        // print("MomentsRepo :: diffTime = \(diffTime), diffTime2 = \(diffTime2)")
-        // if diffTime2 > 24 { return }
-
-        
-        print("MomentsRepo :: fetch! - 2")
-        Observable.zip(
-            setNumberDiaryMomentsItem(),
-            setSpecialDayMomentsItem(),
-            setlastYearDiaryMomentsItem(),
-            setReadCountZeroMomentsItem(),
-            setSpecificTimeMomentsItem(),
-            setSeasonMomentsItem()
-        )
-//        setNumberDiaryMomentsItem()
-//            .compactMap { $0 }
-        .subscribe(onNext: { [weak self] number, special, lastYear, readCount, specificTime, season in
-            guard let self = self else { return }
-
-            var items: [MomentsItemRealm] = []
-            if let number = number {
-                items.append(number)
-            }
-            
-            if let special = special {
-                items.append(contentsOf: special)
-            }
-            
-            if let lastYear = lastYear {
-                items.append(contentsOf: lastYear)
-            }
-            
-            if let readCount = readCount {
-                items.append(contentsOf: readCount)
-            }
-            
-            if let specificTime = specificTime {
-                items.append(contentsOf: specificTime)
-            }
-            
-            if let season = season {
-                items.append(contentsOf: season)
-            }
-
-            realm.safeWrite {
-                realm.delete(momentsRealm.items)
-                momentsRealm.items.append(objectsIn: items)
-            }
-        })
-        .disposed(by: disposeBag)
     }
 
     // 내가 적은 N번째 메뉴얼
@@ -468,5 +433,55 @@ public final class MomentsRepositoryImp: MomentsRepository {
         )
 
         return .just([item])
+    }
+}
+
+// MARK: - MomentsRefrshManager
+class RefreshManager: NSObject {
+
+    static let shared = RefreshManager()
+    private let calender = Calendar.current
+
+    func loadDataIfNeeded(completion: (Bool) -> Void) {
+        guard let realm = Realm.safeInit(),
+              let momentsRealm = realm.objects(MomentsRealm.self).first
+        else {
+            completion(false)
+            return
+        }
+
+        if isRefreshRequired() {
+            // load the data
+            // defaults.set(Date(), forKey: defaultsKey)
+            realm.safeWrite {
+                momentsRealm.lastUpdatedDate = Date()
+            }
+            completion(true)
+        } else {
+            completion(false)
+        }
+    }
+
+    private func isRefreshRequired() -> Bool {
+        guard let realm = Realm.safeInit(),
+              let momentsRealm = realm.objects(MomentsRealm.self).first
+        else { return false }
+        
+        let lastUpdateDate = momentsRealm.lastUpdatedDate
+        let updateTime = 3
+        
+        let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour
+        let currentHour =  calender.dateComponents([.hour], from: Date()).hour
+        
+        print("MomentsRepo :: isRefreshRequired -> diff = \(diff), \(currentHour)")
+        
+        
+        if let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour,
+            let currentHour =  calender.dateComponents([.hour], from: Date()).hour,
+            diff >= 24, updateTime <= currentHour {
+            return true
+        } else {
+            return false
+        }
     }
 }

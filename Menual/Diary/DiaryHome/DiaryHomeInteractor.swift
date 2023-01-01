@@ -63,7 +63,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     private let dependency: DiaryHomeInteractorDependency
     private var disposebag: DisposeBag
 
-    var lastPageNumRelay = BehaviorRelay<Int>(value: -1)
+    var lastPageNumRelay = BehaviorRelay<Int>(value: 0)
     // var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?>
     let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
@@ -448,7 +448,19 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         // filteredDateRelay.accept(nil)
         filteredDiaryCountRelay.accept(-1)
         
-        self.lastPageNumRelay.accept(prevLastPageNum)
+        // double check
+        if prevLastPageNum == 0 {
+            let pageNum = self.diaryRealmArr?
+                .toArray()
+                .filter ({ $0.isDeleted == false })
+                .sorted(by: { $0.createdAt > $1.createdAt })
+                .first?.pageNum ?? 0
+
+            self.lastPageNumRelay.accept(pageNum)
+        } else {
+            self.lastPageNumRelay.accept(prevLastPageNum)
+        }
+
         self.presenter.reloadTableView()
     }
     

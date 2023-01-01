@@ -359,14 +359,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 if self.isFilteredRelay.value {
                     self.myMenualTitleView.pageNumber = num
                 } else {
-                    if num == 0 {
+                    if num == -1 || num == 0 {
                         print("DiaryHome :: EmptyView")
                         self.setEmptyView(isEnabled: true)
                     } else {
                         self.setEmptyView(isEnabled: false)
                     }
 
-                    let realNumber: Int = num == -1 ? 0 : num
+                    let realNumber: Int = num == -1 || num == 0 ? 0 : num
                     self.writeBoxBtn.title = String(realNumber + 1) + "번째 메뉴얼 작성하기"
                     self.myMenualTitleView.pageNumber = realNumber
                     self.reloadTableView()
