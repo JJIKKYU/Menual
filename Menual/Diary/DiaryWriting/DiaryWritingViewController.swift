@@ -879,6 +879,7 @@ extension DiaryWritingViewController {
     @objc
     func pressedCheckBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
+        view.endEditing(true) // 키보드가 내려가도록
         var titleText: String = ""
         switch writingType {
         case .writing:
