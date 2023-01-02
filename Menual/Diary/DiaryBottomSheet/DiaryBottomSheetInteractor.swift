@@ -138,9 +138,14 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
             yearDateFilterMonthsModel[year] = result
         }
         var dateFilterModelArr = [DateFilterModel]()
-        for value in Array(yearDateFilterMonthsModel) {
+        print("DiaryBottomSheet :: yearDateFilterMonthsModel \(yearDateFilterMonthsModel)")
+        
+        // 2023년, 2022년.. 순서대로 들어갈 수 있도록 소팅
+        let sortedYearDateFilterMonthsModel = Array(yearDateFilterMonthsModel).sorted(by: { $0.key > $1.key })
+        for value in sortedYearDateFilterMonthsModel {
             dateFilterModelArr.insert(DateFilterModel(year: value.key, months: value.value), at: 0)
         }
+        print("DiaryBottomSheet :: dateFilterModelArr = \(dateFilterModelArr)")
         self.dateFilterModelRelay?.accept(dateFilterModelArr)
     }
     
