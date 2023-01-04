@@ -95,8 +95,7 @@ class MonthView: UIView {
         
         let year = yearAndMonth.split(separator: ".")[0]
         var month = yearAndMonth.split(separator: ".")[1]
-        if let monthInt = Int(month),
-           monthInt < 10 {
+        if month.count == 1 {
             month = "0" + month
         }
         
