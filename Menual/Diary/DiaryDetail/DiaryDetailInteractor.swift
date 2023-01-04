@@ -237,12 +237,13 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                       let isEditing = model.isEditing
                 else { return }
                 
-                guard let diaryModelRequestDate = self.diaryModel?.reminder?.requestDate else { return }
-                
-                if diaryModelRequestDate == model.requestDate {
-                    print("DiaryDetail :: reminder가 다이어리모델과 동일하므로 세팅하지 않습니다.")
-                    return
+                if let diaryModelRequestDate = self.diaryModel?.reminder?.requestDate {
+                    if diaryModelRequestDate == model.requestDate {
+                        print("DiaryDetail :: reminder가 다이어리모델과 동일하므로 세팅하지 않습니다.")
+                        return
+                    }
                 }
+                
                 print("DiaryDetail :: reminderRequestDateRelay! = \(isEditing), \(requestDateComponents)")
                 self.setReminderDate(isEditing: isEditing, requestDateComponents: requestDateComponents)
                 
