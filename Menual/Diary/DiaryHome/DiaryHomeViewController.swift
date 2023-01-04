@@ -238,6 +238,23 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         super.viewDidAppear(animated)
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         MenualLog.logEventAction("writing_appear")
+        
+        print("DiaryHome :: PushList!")
+        
+        let center = UNUserNotificationCenter.current()
+        var localPushCount: Int = 0
+        var text: String = ""
+        center.getPendingNotificationRequests { (notifications) in
+            print("DiaryDetail :: LocalPush :: Count: \(notifications.count)")
+            localPushCount = notifications.count
+            text += "현재 적용된 푸쉬 = \(localPushCount)\n\n\n"
+            for item in notifications {
+                text += "고유ID = \(item.identifier)\n트리거 = \(item.trigger.debugDescription)\n타이틀 =  \(item.content.title)\n바디 = \(item.content.body)\n담긴정보 =  \(item.content.userInfo)\n\n"
+                print("DiaryHome :: text = \(item.content), --! \(text)")
+            }
+        }
+        
+        print("DiaryHome :: text = \(text)")
     }
     
     func setViews() {

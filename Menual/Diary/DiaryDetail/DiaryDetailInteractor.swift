@@ -236,6 +236,14 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                       let requestDateComponents = model.requestDateComponents,
                       let isEditing = model.isEditing
                 else { return }
+                
+                guard let diaryModelRequestDate = self.diaryModel?.reminder?.requestDate else { return }
+                
+                if diaryModelRequestDate == model.requestDate {
+                    print("DiaryDetail :: reminder가 다이어리모델과 동일하므로 세팅하지 않습니다.")
+                    return
+                }
+                print("DiaryDetail :: reminderRequestDateRelay! = \(isEditing), \(requestDateComponents)")
                 self.setReminderDate(isEditing: isEditing, requestDateComponents: requestDateComponents)
                 
             })
@@ -412,8 +420,16 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         let trigger = UNCalendarNotificationTrigger(dateMatching: requestDateComponents, repeats: false)
         
         // Create the request
-        requestUUID = UUID().uuidString
-        let request = UNNotificationRequest(identifier: requestUUID, content: content, trigger: trigger)
+        var uuid: String = ""
+        if let isEnabledReminder: Bool = diaryModel.reminder?.isEnabled,
+            isEnabledReminder == true {
+            uuid = diaryModel.reminder?.uuid ?? ""
+        } else {
+            uuid = UUID().uuidString
+        }
+        print("DiaryDetail :: reminder UUID = \(uuid)")
+
+        let request = UNNotificationRequest(identifier: uuid, content: content, trigger: trigger)
         
         // Schedule the request with the system
         let notificationCenter = UNUserNotificationCenter.current()
@@ -423,6 +439,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             print("DiaryDetail :: Editing이 true이므로 Reminder를 삭제하고, 새로 등록합니다.")
             guard let reminderRequestUUID = diaryModel.reminder?.uuid else { return }
             notificationCenter.removePendingNotificationRequests(withIdentifiers: [reminderRequestUUID])
+            print("DiaryDetail :: Editing이 true이므로 Reminder를 삭제하고, 새로 등록합니다. - 삭제완료 \(reminderRequestUUID)")
         }
         
         notificationCenter.add(request) { error in
@@ -433,14 +450,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         }
         
         guard let requestDate = Calendar.current.date(from: requestDateComponents) else { return }
-        
-        var uuid: String = ""
-        if let isEnabledReminder: Bool = diaryModel.reminder?.isEnabled,
-            isEnabledReminder == true {
-            uuid = diaryModel.reminder?.uuid ?? ""
-        } else {
-            uuid = UUID().uuidString
-        }
 
         let reminderModel = ReminderModelRealm(uuid: uuid,
                                                      requestDate: requestDate,

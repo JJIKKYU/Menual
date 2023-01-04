@@ -242,6 +242,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
     
     public func updateDiary(DiaryModel: DiaryModelRealm ,reminder: ReminderModelRealm?) {
+        print("DiaryDetail :: repo :: uuid-1 \(DiaryModel.reminder?.uuid), uuid-2 \(reminder?.uuid)")
         guard let realm = Realm.safeInit() else { return }
         
         // reminder가 있을 경우 업데이트
@@ -253,7 +254,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         // reminder가 없을 경우 삭제
         else {
             // 리마인더가 있다면 로컬에 등록된 Notification과 함께 삭제
-            if let reminder = DiaryModel.reminder {
+            if let reminder = reminder {
                 UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder.uuid])
             }
 
