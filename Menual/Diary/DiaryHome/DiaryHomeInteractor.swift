@@ -374,7 +374,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
     // MARK: - Menual Title Btn을 눌렀을때 Action
     func pressedMenualTitleBtn() {
-        // router?.attachDesignSystem()
+        #if DEBUG
+        router?.attachDesignSystem()
+        #endif
     }
     
     func designSystemPressedBackBtn(isOnlyDetach: Bool) {

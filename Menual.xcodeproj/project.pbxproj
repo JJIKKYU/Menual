@@ -22,6 +22,10 @@
 		98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98239BE527E323CB00E216F1 /* MomentsRoundView.swift */; };
 		98239BE927E43AB700E216F1 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98239BE827E43AB700E216F1 /* Icons.xcassets */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
+		983175D5296679BD0008AF51 /* MomentsNoStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983175D4296679BD0008AF51 /* MomentsNoStartView.swift */; };
+		983175D729667E6A0008AF51 /* MomentsNoStartCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983175D629667E6A0008AF51 /* MomentsNoStartCircleView.swift */; };
+		983175D92966B1360008AF51 /* MomentsNoStartStampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983175D82966B1360008AF51 /* MomentsNoStartStampView.swift */; };
+		983175DB2966B1FD0008AF51 /* MomentsNoStartStampCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983175DA2966B1FD0008AF51 /* MomentsNoStartStampCell.swift */; };
 		983783F4287A951400EAD78C /* ReplyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983783F3287A951400EAD78C /* ReplyCell.swift */; };
 		983783F6287AB0F300EAD78C /* ReplyBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983783F5287AB0F300EAD78C /* ReplyBottomView.swift */; };
 		9838574D28FA77FF007378EC /* SectionListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9838574C28FA77FF007378EC /* SectionListHeaderView.swift */; };
@@ -296,6 +300,10 @@
 		98239BE527E323CB00E216F1 /* MomentsRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsRoundView.swift; sourceTree = "<group>"; };
 		98239BE827E43AB700E216F1 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		983175D4296679BD0008AF51 /* MomentsNoStartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsNoStartView.swift; sourceTree = "<group>"; };
+		983175D629667E6A0008AF51 /* MomentsNoStartCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsNoStartCircleView.swift; sourceTree = "<group>"; };
+		983175D82966B1360008AF51 /* MomentsNoStartStampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsNoStartStampView.swift; sourceTree = "<group>"; };
+		983175DA2966B1FD0008AF51 /* MomentsNoStartStampCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsNoStartStampCell.swift; sourceTree = "<group>"; };
 		983783F3287A951400EAD78C /* ReplyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyCell.swift; sourceTree = "<group>"; };
 		983783F5287AB0F300EAD78C /* ReplyBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyBottomView.swift; sourceTree = "<group>"; };
 		9838574C28FA77FF007378EC /* SectionListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionListHeaderView.swift; sourceTree = "<group>"; };
@@ -628,6 +636,7 @@
 		98239BE227E3236100E216F1 /* Moments */ = {
 			isa = PBXGroup;
 			children = (
+				983175D3296679A40008AF51 /* noStart */,
 				98239BE527E323CB00E216F1 /* MomentsRoundView.swift */,
 				98B55797283A177700F8CA3E /* Moments.swift */,
 				98B55799283A179900F8CA3E /* MomentsTag.swift */,
@@ -658,6 +667,17 @@
 				980924AE279BC83D0034D0CC /* RIBsUtil */,
 			);
 			path = Platform;
+			sourceTree = "<group>";
+		};
+		983175D3296679A40008AF51 /* noStart */ = {
+			isa = PBXGroup;
+			children = (
+				983175D4296679BD0008AF51 /* MomentsNoStartView.swift */,
+				983175D629667E6A0008AF51 /* MomentsNoStartCircleView.swift */,
+				983175D82966B1360008AF51 /* MomentsNoStartStampView.swift */,
+				983175DA2966B1FD0008AF51 /* MomentsNoStartStampCell.swift */,
+			);
+			path = noStart;
 			sourceTree = "<group>";
 		};
 		983CDF3F28FBDD85001E2A2D /* Badges */ = {
@@ -1758,6 +1778,7 @@
 				98B557BF2841D11900F8CA3E /* ListBuilder.swift in Sources */,
 				98A56C6128676AC2000AC4FF /* WeatherLocationSelectView.swift in Sources */,
 				98B55786283A0F3300F8CA3E /* ListHeaderRouter.swift in Sources */,
+				983175D92966B1360008AF51 /* MomentsNoStartStampView.swift in Sources */,
 				98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */,
 				984392C72917A18B00EF526E /* NumberPadCell.swift in Sources */,
 				980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */,
@@ -1853,6 +1874,7 @@
 				988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */,
 				98EADBAC284E475C007C298C /* DividerView.swift in Sources */,
 				98F3A27F28150052000851F0 /* DiaryBottomSheetViewController.swift in Sources */,
+				983175D729667E6A0008AF51 /* MomentsNoStartCircleView.swift in Sources */,
 				9888DE142764825F0091918F /* AppRootRouter.swift in Sources */,
 				985BFF8A2933721700D86106 /* ProfileOpensourceInteractor.swift in Sources */,
 				985BFF892933721700D86106 /* ProfileOpensourceBuilder.swift in Sources */,
@@ -1866,10 +1888,12 @@
 				983CDF4128FBDD9B001E2A2D /* Badges.swift in Sources */,
 				9843929A29053CEC00EF526E /* DiaryDetailImageViewController.swift in Sources */,
 				98B5575E2830F0FF00F8CA3E /* TempSaveCell.swift in Sources */,
+				983175DB2966B1FD0008AF51 /* MomentsNoStartStampCell.swift in Sources */,
 				9838574D28FA77FF007378EC /* SectionListHeaderView.swift in Sources */,
 				980A974D294DDB1100B8CBA5 /* BaseButton.swift in Sources */,
 				984392C329179A6600EF526E /* NumberPadInteractor.swift in Sources */,
 				988A2D68280166AA0046C43A /* DiaryModel.swift in Sources */,
+				983175D5296679BD0008AF51 /* MomentsNoStartView.swift in Sources */,
 				98F3A27E28150052000851F0 /* DiaryBottomSheetRouter.swift in Sources */,
 				988A2D5B27F97A000046C43A /* DiaryMomentsInteractor.swift in Sources */,
 				98B557B1283A4A8300F8CA3E /* CapsuleButtonRouter.swift in Sources */,
@@ -2169,7 +2193,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -2184,6 +2208,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.904.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menual;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2206,7 +2231,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -2221,7 +2246,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.904.2;
+				MARKETING_VERSION = 1.904.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menual;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2241,7 +2266,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -2267,7 +2292,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -2292,7 +2317,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2316,7 +2341,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

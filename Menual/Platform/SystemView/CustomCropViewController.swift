@@ -63,12 +63,15 @@ class CustomCropViewController: CropViewController {
     }
     
     func setViews() {
+        // cropOverlayView.isUserInteractionEnabled = false
+        
         aspectRatioPreset = .presetCustom
         customAspectRatio = CGSize(width: 335, height: 90)
         resetButtonHidden = true
         rotateButtonsHidden = true
         aspectRatioPickerButtonHidden = true
         aspectRatioLockEnabled = true
+        // cropView.isUserInteractionEnabled = false
         doneButtonHidden = true
         cancelButtonHidden = true
         modalTransitionStyle = .coverVertical

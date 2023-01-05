@@ -88,6 +88,10 @@ final class MomentsViewController: UIViewController, MomentsPresentable, Moments
         $0.momentsTitle = "타이틀은 최대 20자를 작성할 수 있습니다. 그 이상일경우는 어떻게 될까요?"
     }
     
+    private let momentsNostart = MomentsNoStartView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
     lazy var momentsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout()).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         let flowlayout = CustomCollectionViewFlowLayout.init()
@@ -115,6 +119,7 @@ final class MomentsViewController: UIViewController, MomentsPresentable, Moments
         self.scrollView.addSubview(momentsShort)
         self.scrollView.addSubview(moments)
         self.scrollView.addSubview(momentsCollectionView)
+        self.scrollView.addSubview(momentsNostart)
         self.view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
@@ -172,6 +177,14 @@ final class MomentsViewController: UIViewController, MomentsPresentable, Moments
             make.width.equalToSuperview()
             make.top.equalTo(moments.snp.bottom).offset(20)
             make.height.equalTo(120)
+        }
+        
+        momentsNostart.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(momentsCollectionView.snp.bottom).offset(40)
+            make.height.equalTo(196)
+            make.bottom.equalTo(scrollView).inset(100)
         }
     }
     
