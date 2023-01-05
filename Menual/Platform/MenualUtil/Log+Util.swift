@@ -149,11 +149,17 @@ extension UIView {
 // MARK: - MenualLog
 class MenualLog {
     class func logEventAction(_ log: String, parameter: [String: Any]? = nil) {
+        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
+        if isDebugMode { return }
+
         print("Log :: 🍎 \(log), parameter = \(parameter)")
         Analytics.logEvent(log, parameters: parameter)
     }
     
     class func logEventAction(responder: UIResponder, parameter: [String: Any]? = nil) {
+        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
+        if isDebugMode { return }
+
         var responder: UIResponder? = responder
 
         var actioName: String?
