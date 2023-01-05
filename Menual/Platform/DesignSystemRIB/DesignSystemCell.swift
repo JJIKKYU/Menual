@@ -20,7 +20,7 @@ class DesignSystemCell: UITableViewCell {
     let titleLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppTitle(.title_1)
-        $0.tintColor = .black
+        $0.textColor = Colors.grey.g100
     }
 
     override func awakeFromNib() {

@@ -153,6 +153,13 @@ final class DiarySearchViewController: UIViewController, DiarySearchViewControll
             .subscribe(onNext: { [weak self] keyword in
                 guard let self = self else { return }
                 
+                if keyword == "#debug" {
+                    let value = UserDefaults.standard.bool(forKey: "debug")
+                    print("Debug :: value = \(value)")
+                    UserDefaults.standard.setValue(!value, forKey: "debug")
+                    let _ = self.showToast(message: "Debug Mode가 \(!value == true ? "켜졌습니다" : "꺼졌습니다")")
+                }
+
                 self.listener?.search(keyword: keyword)
                 self.searchText = keyword
             })
