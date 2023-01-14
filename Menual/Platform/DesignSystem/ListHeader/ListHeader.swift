@@ -85,7 +85,7 @@ class ListHeader: UIView {
     
     let rightTextBtn = BaseButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setTitle("기록 삭제", for: .normal)
+        $0.setTitle(MenualString.search_button_delete_all_search_menual, for: .normal)
         $0.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
         $0.setTitleColor(Colors.grey.g500, for: .normal)
     }

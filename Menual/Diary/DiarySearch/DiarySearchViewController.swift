@@ -423,7 +423,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
                 make.height.equalTo(180)
             }
             
-            headerView.title = "RECENT"
+            headerView.title = MenualString.search_title_recent
             return headerView
 
         }

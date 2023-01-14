@@ -132,23 +132,23 @@ class PasswordView: UIView {
         
         switch type {
         case .check:
-            titleLabel.text = "비밀번호를 입력해 주세요"
+            titleLabel.text = MenualString.password_title_type
             subTitleLabel.isHidden = true
         case .first:
             subTitleLabel.textColor = Colors.tint.main.v400
-            subTitleLabel.text = "비밀번호를 분실 시 찾을 수 없으니 신중하게 입력해 주세요!"
-            titleLabel.text = "비밀번호를 입력해 주세요"
+            subTitleLabel.text = MenualString.password_desc_help
+            titleLabel.text = MenualString.password_title_type
             if screenType == .change {
-                titleLabel.text = "변경할 비밀번호를 입력해 주세요"
+                titleLabel.text = MenualString.password_title_change
                 subTitleLabel.isHidden = false
             }
         case .second:
             subTitleLabel.textColor = Colors.tint.main.v400
-            subTitleLabel.text = "비밀번호를 분실 시 찾을 수 없으니 신중하게 입력해 주세요!"
-            titleLabel.text = "한 번 더 입력해 주세요"
+            subTitleLabel.text = MenualString.password_desc_help
+            titleLabel.text = MenualString.password_title_more
         case .error:
             subTitleLabel.textColor = Colors.tint.system.red.r200
-            subTitleLabel.text = "비밀번호가 올바르지 않습니다"
+            subTitleLabel.text = MenualString.password_desc_notcorrect
         }
         
         switch screenType {
@@ -159,7 +159,7 @@ class PasswordView: UIView {
             if type == .error {
                 subTitleLabel.isHidden = false
                 subTitleLabel.textColor = Colors.tint.system.red.r200
-                subTitleLabel.text = "비밀번호가 맞지 않아요."
+                subTitleLabel.text = MenualString.password_desc_notcorrect
             }
         case .change:
             break

@@ -43,21 +43,21 @@ class MenualBottomSheetMenuComponentView: UIView {
     public var hideMenuBtn = MenuComponentButton(frame: .zero).then {
         $0.actionName = "hide"
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = "메뉴얼 숨기기"
+        $0.title = MenualString.menu_button_lock
         $0.leftUIImage = Asset._24px.lock.image.withRenderingMode(.alwaysTemplate)
     }
     
     public var editMenuBtn = MenuComponentButton(frame: .zero).then {
         $0.actionName = "edit"
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = "수정하기"
+        $0.title = MenualString.menu_button_edit
         $0.leftUIImage = Asset._24px.modify.image.withRenderingMode(.alwaysTemplate)
     }
     
     public var deleteMenuBtn = MenuComponentButton(frame: .zero).then {
         $0.actionName = "delete"
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = "삭제하기"
+        $0.title = MenualString.menu_button_delete
         $0.leftUIImage = Asset._24px.delete.image.withRenderingMode(.alwaysTemplate)
     }
 
@@ -107,12 +107,12 @@ class MenualBottomSheetMenuComponentView: UIView {
         
         switch isHide {
         case false:
-            hideMenuBtn.title = "메뉴얼 숨기기"
+            hideMenuBtn.title = MenualString.menu_button_lock
             hideMenuBtn.leftUIImage = Asset._24px.lock.image.withRenderingMode(.alwaysTemplate)
             break
 
         case true:
-            hideMenuBtn.title = "숨긴 메뉴얼 보기"
+            hideMenuBtn.title = MenualString.menu_button_unlock
             hideMenuBtn.leftUIImage = Asset._24px.unlock.image.withRenderingMode(.alwaysTemplate)
             break
         }
