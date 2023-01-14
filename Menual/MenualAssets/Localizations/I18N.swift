@@ -89,4 +89,7 @@ struct MenualString {
     static let home_title_total_page = "home_title_total_page".localized
     static let uploadimage_button_select = "uploadimage_button_select".localized
     static let writing_title = "writing_title".localized
+    static let home_desc_nonexistent_fiflter_menual = "home_desc_nonexistent_fiflter_menual".localized
+    static let home_desc_nonexistent_writing_menual = "home_desc_nonexistent_writing_menual".localized
+    static let password_title_change = "password_title_change".localized
 }

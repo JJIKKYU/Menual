@@ -38,14 +38,14 @@ class PasswordView: UIView {
     
     private let titleLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = "비밀번호를 입력해 주세요"
+        $0.text = MenualString.password_title_type
         $0.font = UIFont.AppTitle(.title_5)
         $0.textColor = Colors.grey.g200
     }
     
     private let subTitleLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = "비밀번호를 분실 시 찾을 수 없으니 신중하게 입력해 주세요!"
+        $0.text = MenualString.password_desc_help
         $0.setLineHeight(lineHeight: 1.14)
         $0.font = UIFont.AppBodyOnlyFont(.body_3)
         $0.textColor = Colors.tint.main.v400

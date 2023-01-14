@@ -939,10 +939,10 @@ extension DiaryHomeViewController {
         switch isFiltered {
         case true:
             print("diaryHome :: isFiltered! = true")
-            self.myMenualTitleView.title = "TOTAL PAGE"
+            self.myMenualTitleView.title = MenualString.home_title_total_page
             self.myMenualTitleView.rightFilterBtnIsEnabled = true
             
-            self.writeBoxBtn.title = "필터 초기화"
+            self.writeBoxBtn.title = MenualString.home_button_filter_reset
             self.writeBoxBtn.isFiltered = .enabled
             
             self.writeFAB.isFiltered = .enabled

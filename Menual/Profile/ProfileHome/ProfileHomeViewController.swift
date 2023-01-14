@@ -230,14 +230,14 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         case .SETTING1:
             guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return }
 
-            if data.title == "비밀번호 설정하기" {
+            if data.title == MenualString.profile_button_set_password {
                 print("ProfileHome :: 비밀번호 설정하기")
                 // cell.switchIsOn = !cell.switchIsOn
                 // cell.switchBtn.isOn = listener?.isEnabledPasswordRelay.value ?? false
                 listener?.pressedProfilePasswordCell()
-            } else if data.title == "비밀번호 변경하기" {
+            } else if data.title == MenualString.profile_button_change_password {
                 listener?.pressedProfilePasswordChangeCell()
-            } else if data.title == "메뉴얼 가이드 보기" {
+            } else if data.title == MenualString.profile_button_guide {
                 //사파리로 링크열기
                 if let url = URL(string: "https://hill-license-fb3.notion.site/589e7606d7f642378d11a94ea0344cfd") {
                     UIApplication.shared.open(url, options: [:])
@@ -249,10 +249,10 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             if data.title == "개발자 도구" {
                 print("ProfileHome :: 개발자 도구 호출!")
                 listener?.pressedProfileDeveloperCell()
-            } else if data.title == "오픈 소스 라이브러리 보기" {
+            } else if data.title == MenualString.profile_button_openSource {
                 print("ProfileHome :: 오픈 소스 라이브러리 보기 호출!")
                 listener?.pressedProfileOpensourceCell()
-            } else if data.title == "개발자에게 문의하기" {
+            } else if data.title == MenualString.profile_button_mail {
                 self.pressedDeveloperQACell()
             } else if data.title == "iCloud 동기화하기" {
                 print("ProfileHome :: iCloud 동기화하기!")

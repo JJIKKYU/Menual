@@ -14,11 +14,11 @@ class DiarySearchView: UIView {
     
     private var disposeBag = DisposeBag()
     
-    private let defaultPlaceHolderText: String = "찾으려는 메뉴얼의 제목, 내용을 입력해주세요."
+    private let defaultPlaceHolderText: String = MenualString.search_placeholder_search
     
     lazy var textField = UITextField().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.placeholder = "메뉴얼의 제목 또는 내용을 입력해 주세요"
+        $0.placeholder = MenualString.search_placeholder_search
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
         $0.textColor = Colors.grey.g100
         $0.tintColor = Colors.tint.main.v200

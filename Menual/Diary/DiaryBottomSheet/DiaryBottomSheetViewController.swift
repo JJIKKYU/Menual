@@ -461,11 +461,11 @@ extension DiaryBottomSheetViewController {
         print("!!! \(menualBottomSheetType)")
         switch menualBottomSheetType {
         case .calender:
-            bottomSheetTitle = "날짜"
+            bottomSheetTitle = MenualString.filter_title_date
             bottomSheetHeight = 375
             
         case .filter, .dateFilter:
-            bottomSheetTitle = "필터"
+            bottomSheetTitle = MenualString.filter_title
             bottomSheetHeight = 392
             
         case .menu:

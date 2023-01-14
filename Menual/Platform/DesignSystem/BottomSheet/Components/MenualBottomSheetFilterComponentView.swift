@@ -37,7 +37,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     public lazy var weatherTitleBtn = UIButton().then {
         $0.actionName = "weatherTitle"
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setTitle("날씨", for: .normal)
+        $0.setTitle(MenualString.filter_title_weather, for: .normal)
         $0.titleLabel?.font = UIFont.AppTitle(.title_2)
         $0.setTitleColor(Colors.grey.g200, for: .normal)
         $0.setImage(Asset._24px.Circle.Check.active.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -63,7 +63,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     private lazy var placeTitleBtn = UIButton().then {
         $0.actionName = "placeTitle"
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setTitle("장소", for: .normal)
+        $0.setTitle(MenualString.filter_title_place, for: .normal)
         $0.titleLabel?.font = UIFont.AppTitle(.title_2)
         $0.setTitleColor(Colors.grey.g200, for: .normal)
         $0.setImage(Asset._24px.Circle.Check.active.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -89,7 +89,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     private lazy var resetBtn = UIButton().then {
         $0.actionName = "reset"
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setTitle("초기화", for: .normal)
+        $0.setTitle(MenualString.filter_button_reset, for: .normal)
         $0.titleLabel?.font = UIFont.AppTitle(.title_2)
         $0.setTitleColor(Colors.tint.main.v500, for: .normal)
         $0.setTitleColor(Colors.tint.main.v800, for: .highlighted)
@@ -105,7 +105,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     
     public lazy var filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
         $0.actionName = "confirm"
-        $0.title = "필터를 선택해 주세요."
+        $0.title = MenualString.filter_button_select
         $0.isEnabled = false
     }
 
@@ -227,8 +227,8 @@ class MenualBottomSheetFilterComponentView: UIView {
         
         print("DiaryBottomSheet :: layoutSubviews")
 
-        weatherSelectNumTitle.text = "\(weatherSelectedArr.count)개 선택"
-        placeSelectNumTitle.text = "\(placeSelectedArr.count)개 선택"
+        weatherSelectNumTitle.text = String(format: MenualString.filter_button_select_with_count, weatherSelectedArr.count)
+        placeSelectNumTitle.text = String(format: MenualString.filter_button_select_with_count, placeSelectedArr.count)
         
         // 초기화 버튼, 필터 버튼 변환 로직
         // 하나라도 선택될 경우 초기화 버튼 활성화
@@ -266,9 +266,9 @@ class MenualBottomSheetFilterComponentView: UIView {
         
         // 필터버튼 카운트
         if filteredCount == -1 {
-            filterBtn.title = "필터를 선택해 주세요."
+            filterBtn.title = MenualString.filter_button_select
         } else {
-            filterBtn.title = "\(filteredCount)개의 메뉴얼 보기"
+            filterBtn.title = String(format: MenualString.filter_button_watch_with_menaul_count, filteredCount)
         }
     }
 

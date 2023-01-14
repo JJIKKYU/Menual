@@ -97,11 +97,11 @@ class Empty: UIView {
             switch mainType {
             case .main:
                 emptyImageView.image = Asset.Illurstration.emtpySpace.image
-                emptyImageTitleLabel.text = "아직 작성한 메뉴얼이 없어요."
+                emptyImageTitleLabel.text = MenualString.home_desc_nonexistent_writing_menual
                 
             case .filter:
                 emptyImageView.image = Asset.Illurstration.emtpySpace.image
-                emptyImageTitleLabel.text = "필터에 해당하는 메뉴얼이 없어요."
+                emptyImageTitleLabel.text = MenualString.home_desc_nonexistent_fiflter_menual
 
             }
 
@@ -113,11 +113,11 @@ class Empty: UIView {
             switch writingType {
             case .temporarysave:
                 emptyImageView.image = Asset.Illurstration.emtpySpace.image
-                emptyImageTitleLabel.text = "임시저장된 글이 없어요."
+                emptyImageTitleLabel.text = MenualString.tempsave_desc_nonexistent
 
             case .lock:
                 emptyImageView.image = Asset.Illurstration.viewLock.image
-                emptyImageTitleLabel.text = "숨긴 일기에요."
+                emptyImageTitleLabel.text = MenualString.detail_desc_lock
             }
             
             
@@ -128,11 +128,11 @@ class Empty: UIView {
             switch searchType {
             case .search:
                 emptyImageView.image = Asset.Illurstration.emtpySpace.image
-                emptyImageTitleLabel.text = "내가 작성한 메뉴얼을 찾아보세요."
+                emptyImageTitleLabel.text = MenualString.search_desc_find_menual
                 
             case .result:
                 emptyImageView.image = Asset.Illurstration.emtpySpace.image
-                emptyImageTitleLabel.text = "일치하는 메뉴얼이 없어요."
+                emptyImageTitleLabel.text = MenualString.search_desc_inconsistent
             }
 
         }

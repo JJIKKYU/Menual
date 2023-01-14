@@ -44,9 +44,9 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     var profileHomeDataArr_Setting1: [ProfileHomeModel] {
         let arr: [ProfileHomeModel] = [
-            ProfileHomeModel(section: .SETTING1, type: .arrow, title: "메뉴얼 가이드 보기", actionName: "showGuide"),
-            ProfileHomeModel(section: .SETTING1, type: .toggle, title: "비밀번호 설정하기", actionName: "setPassword"),
-            ProfileHomeModel(section: .SETTING1, type: .arrow, title: "비밀번호 변경하기", actionName: "changePassword"),
+            ProfileHomeModel(section: .SETTING1, type: .arrow, title: MenualString.profile_button_guide, actionName: "showGuide"),
+            ProfileHomeModel(section: .SETTING1, type: .toggle, title: MenualString.profile_button_set_password, actionName: "setPassword"),
+            ProfileHomeModel(section: .SETTING1, type: .arrow, title: MenualString.profile_button_change_password, actionName: "changePassword"),
         ]
 
         return arr
@@ -57,8 +57,8 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
             // profileHomeModel(section: .SETTING2, type: .arrow, title: "iCloud 동기화하기"),
             // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 백업하기"),
             // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 내보내기"),
-            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자에게 문의하기", actionName: "mail"),
-            ProfileHomeModel(section: .SETTING2, type: .arrow, title: "오픈 소스 라이브러리 보기", actionName: "openSource"),
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_mail, actionName: "mail"),
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_openSource, actionName: "openSource"),
             // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자 도구"),
         ]
 

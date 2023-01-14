@@ -81,7 +81,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchViewControll
     
     private lazy var headerView = ListHeader(type: .search, rightIconType: .none).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = "TOTAL \(menualCount)"
+        $0.title = "\(MenualString.home_title_total_page) \(menualCount)"
     }
     let divider = Divider(type: ._2px)
 
@@ -170,7 +170,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchViewControll
                 guard let self = self else { return }
                 let count = results.count
                 self.menualCount = count
-                self.headerView.title = "TOTAL \(count)"
+                self.headerView.title = "\(MenualString.home_title_total_page) \(count)"
                 if count == 0 {
                     self.searchEmptyView.isHidden = false
                 } else {
