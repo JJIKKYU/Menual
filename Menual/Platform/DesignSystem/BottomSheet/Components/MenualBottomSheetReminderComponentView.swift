@@ -62,7 +62,7 @@ class MenualBottomSheetReminderComponentView: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = Colors.grey.g200
         $0.font = UIFont.AppBodyOnlyFont(.body_3)
-        $0.text = "선택한 날짜에 알람 받기"
+        $0.text = MenualString.reminder_desc_qna
     }
     
     private lazy var reminderTitleQuestionBtn = UIButton().then {
@@ -125,7 +125,7 @@ class MenualBottomSheetReminderComponentView: UIView {
     private lazy var selectBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then { (btn: BoxButton) in
         btn.actionName = "confirm"
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.title = "선택 완료"
+        btn.title = MenualString.reminder_button_confirm
         btn.addTarget(self, action: #selector(pressedSelectBtn), for: .touchUpInside)
     }
 

@@ -97,4 +97,10 @@ struct MenualString {
     static let menu_button_edit = "menu_button_edit".localized
     static let menu_button_delete = "menu_button_delete".localized
     static let menu_button_unlock = "menu_button_unlock".localized
+    static let reminder_title = "reminder_title".localized
+    static let reminder_desc_qna = "reminder_desc_qna".localized
+    static let reminder_alert_title_qna = "reminder_alert_title_qna".localized
+    static let reminder_alert_desc_qna = "reminder_alert_desc_qna".localized
+    static let reminder_alert_confirm_qna = "reminder_alert_confirm_qna".localized
+    static let reminder_button_confirm = "reminder_button_confirm".localized
 }

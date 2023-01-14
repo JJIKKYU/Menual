@@ -272,7 +272,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
                 // make.bottom.equalToSuperview().inset(35)
             }
             
-            bottomSheetTitle = "리마인더 알림"
+            bottomSheetTitle = MenualString.reminder_title
             reminderComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
             rightBtn.actionName = "close"
@@ -286,7 +286,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
                 make.top.equalTo(self.divider.snp.bottom).offset(20)
             }
 
-            bottomSheetTitle = "메뉴"
+            bottomSheetTitle = MenualString.menu_title
             print("DiaryBottomSheet :: 메뉴입니다.")
             menuComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
@@ -301,7 +301,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
                 make.height.equalTo(260)
             }
 
-            bottomSheetTitle = "필터"
+            bottomSheetTitle = MenualString.filter_title
             filterComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
             rightBtn.actionName = "close"
@@ -316,14 +316,14 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
                 make.height.equalTo(260)
             }
 
-            bottomSheetTitle = "날짜"
+            bottomSheetTitle = MenualString.filter_title_date
             dateFilterComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
             rightBtn.actionName = "close"
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .calender:
-            bottomSheetTitle = "날짜"
+            bottomSheetTitle = MenualString.filter_title_date
             
         
         }
@@ -658,9 +658,9 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
 
         show(size: .large,
              buttonType: .oneBtn,
-             titleText: "날짜를 선택해 보세요",
-             subTitleText: "오늘 쓴 일기 알림을 보내드려요.\n과거의 내가 어떻게 달라졌는지 확인해 보세요",
-             confirmButtonText: "좋아요")
+             titleText: MenualString.reminder_alert_title_qna,
+             subTitleText: MenualString.reminder_alert_desc_qna,
+             confirmButtonText: MenualString.reminder_alert_confirm_qna)
     }
     
     func isNeedReminderAuthorization() {
