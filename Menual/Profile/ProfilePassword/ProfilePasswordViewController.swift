@@ -221,7 +221,7 @@ extension ProfilePasswordViewController: NumberPadDelegate {
                 // 비밀번호 비활성화
                 case true:
                     if passwordView.type == .error {
-                        passwordView.type = .first
+                        passwordView.type = .check
                     }
 
                     // 4번째 입력했을 경우
