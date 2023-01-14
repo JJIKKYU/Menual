@@ -45,13 +45,13 @@ class CustomCropViewController: CropViewController {
     
     public lazy var customDoneButton = BoxButton(frame: .zero, btnStatus: .active, btnSize: .large).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = "사진 추가하기"
+        $0.title = MenualString.uploadimage_title_add
         $0.addTarget(self, action: #selector(pressedDoneBtn), for: .touchUpInside)
     }
     
     private let toolbarLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = "썸네일 부분을 선택해 주세요"
+        $0.text = MenualString.uploadimage_desc_thumb
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
         $0.textColor = Colors.grey.g200
     }
@@ -130,9 +130,9 @@ class CustomCropViewController: CropViewController {
         DispatchQueue.main.async {
             switch self.cropVCButtonType {
             case .add:
-                self.customDoneButton.title = "사진 추가하기"
+                self.customDoneButton.title = MenualString.uploadimage_button_select
             case .edit:
-                self.customDoneButton.title = "사진 수정하기"
+                self.customDoneButton.title = MenualString.uploadimage_button_edit
             }
         }
         

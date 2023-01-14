@@ -179,7 +179,7 @@ class MenualNaviView: UIView {
             backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
             titleLabel.isHidden = false
         case .myPage:
-            titleLabel.text = "MY PAGE"
+            titleLabel.text = MenualString.profile_title_myPage
             titleLabel.font = UIFont.AppHead(.head_4)
             backButton.isHidden = false
             backButton.isHidden = false
@@ -193,7 +193,7 @@ class MenualNaviView: UIView {
             rightButton1.tintColor = Colors.grey.g100
             rightButton1.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         case .search:
-            titleLabel.text = "SEARCH"
+            titleLabel.text = MenualString.search_title
             titleLabel.font = UIFont.AppHead(.head_4)
             backButton.isHidden = false
             backButton.isHidden = false
@@ -203,7 +203,7 @@ class MenualNaviView: UIView {
         case .write:
             titleLabel.isHidden = false
             titleLabel.font = UIFont.AppTitle(.title_3)
-            titleLabel.text = "메뉴얼 작성"
+            titleLabel.text = MenualString.writing_title
             backButton.isHidden = false
             backButton.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
             rightButton2.isHidden = false
@@ -216,7 +216,7 @@ class MenualNaviView: UIView {
             rightButton1.actionName = "upload"
         case .menualDetail:
             titleLabel.isHidden = false
-            titleLabel.text = "메뉴얼 상세"
+            titleLabel.text = MenualString.detail_title
             titleLabel.font = UIFont.AppTitle(.title_3)
             backButton.isHidden = false
             backButton.tintColor = Colors.grey.g100
@@ -232,7 +232,7 @@ class MenualNaviView: UIView {
             break
         case .edit:
             titleLabel.isHidden = false
-            titleLabel.text = "메뉴얼 수정"
+            titleLabel.text = MenualString.writing_title_edit
             titleLabel.font = UIFont.AppTitle(.title_3)
             backButton.isHidden = false
             backButton.tintColor = Colors.grey.g100
@@ -244,7 +244,7 @@ class MenualNaviView: UIView {
             break
         case .temporarySave:
             titleLabel.isHidden = false
-            titleLabel.text = "임시저장"
+            titleLabel.text = MenualString.tempsave_title
             titleLabel.font = UIFont.AppTitle(.title_3)
             backButton.isHidden = false
             backButton.tintColor = Colors.grey.g100
@@ -256,7 +256,7 @@ class MenualNaviView: UIView {
 
         case .writePicture:
             titleLabel.isHidden = false
-            titleLabel.text = "사진추가"
+            titleLabel.text = MenualString.uploadimage_title_add
             titleLabel.font = UIFont.AppTitle(.title_3)
             backButton.isHidden = false
             backButton.tintColor = Colors.grey.g100
@@ -264,7 +264,7 @@ class MenualNaviView: UIView {
             
         case .writePictureClose:
             titleLabel.isHidden = false
-            titleLabel.text = "사진추가"
+            titleLabel.text = MenualString.uploadimage_title_add
             titleLabel.font = UIFont.AppTitle(.title_3)
             backButton.isHidden = true
             rightButton1.isHidden = false

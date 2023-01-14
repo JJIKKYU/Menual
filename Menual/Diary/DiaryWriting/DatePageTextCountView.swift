@@ -91,7 +91,7 @@ class DatePageTextCountView: UIView {
         
         dateLabel.text = date
         pageLabel.text = "P.\(page)"
-        textCountLabel.text = "\(textCount)자 작성"
+        textCountLabel.text = String(format: MenualString.writing_desc_menual_desc_with_count, Int(textCount) ?? 0)
     }
 
 }

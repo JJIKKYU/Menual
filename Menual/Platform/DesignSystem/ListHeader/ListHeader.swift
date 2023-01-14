@@ -223,9 +223,9 @@ class ListHeader: UIView {
 
                 var range = 0
                 switch title {
-                case "MY MENUAL":
+                case MenualString.home_title_my_menual:
                     range = text.count - 10
-                case "TOTAL PAGE":
+                case MenualString.home_title_total_page:
                     range = text.count - 10
                 default:
                     range = text.count

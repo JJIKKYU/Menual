@@ -45,7 +45,7 @@ class ImageUploadView: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = Colors.grey.g600
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
-        $0.text = "사진 추가"
+        $0.text = MenualString.writing_button_add_image
     }
     
     public lazy var deleteBtn = UIButton().then {

@@ -24,7 +24,7 @@ final class DiaryMomentsViewController: UIViewController, DiaryMomentsPresentabl
     lazy var naviView = MenualNaviView(type: .moments).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
-        $0.titleLabel.text = MenualString.title_moments
+        $0.titleLabel.text = "Moments"
     }
     
     init() {

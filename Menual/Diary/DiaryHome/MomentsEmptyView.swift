@@ -15,7 +15,7 @@ class MomentsEmptyView: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppTitle(.title_2)
         $0.textColor = Colors.grey.g200
-        $0.text = "메뉴얼을 작성하시면\n다양한 컨텐츠를 확인할 수 있어요."
+        $0.text = MenualString.home_title_temp_moments
         $0.setLineSpacing(lineSpacing: 3)
         $0.numberOfLines = 2
         $0.textAlignment = .center
@@ -23,7 +23,7 @@ class MomentsEmptyView: UIView {
     
     let writingBtn = UIButton().then { (btn: UIButton) in
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitle("메뉴얼 작성하기", for: .normal)
+        btn.setTitle(MenualString.home_title_writing, for: .normal)
         btn.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_2)
         btn.layer.borderColor = Colors.grey.g200.cgColor
         btn.layer.cornerRadius = 4

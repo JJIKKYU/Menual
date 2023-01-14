@@ -127,7 +127,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.categoryName = "menualTitle"
         $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = "MY MENUAL"
+        $0.title = MenualString.home_title_myMenual
         // $0.layer.zPosition = -1
         $0.rightCalenderBtn.addTarget(self, action: #selector(pressedDateFilterBtn), for: .touchUpInside)
         $0.rightFilterBtn.addTarget(self, action: #selector(pressedFilterBtn), for: .touchUpInside)
@@ -384,7 +384,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                     }
 
                     let realNumber: Int = num == -1 || num == 0 ? 0 : num
-                    self.writeBoxBtn.title = String(realNumber + 1) + "번째 메뉴얼 작성하기"
+                    self.writeBoxBtn.title = String(format: MenualString.home_button_writing, realNumber + 1)
+
                     self.myMenualTitleView.pageNumber = realNumber
                     self.reloadTableView()
                 }
@@ -952,13 +953,13 @@ extension DiaryHomeViewController {
             
         case false:
             print("diaryHome :: isFiltered! = false")
-            self.myMenualTitleView.title = "MY MENUAL"
+            self.myMenualTitleView.title = MenualString.home_title_myMenual
             self.myMenualTitleView.rightFilterBtnIsEnabled = false
             self.writeBoxBtn.isFiltered = .disabled
             self.writeFAB.isFiltered = .disabled
             
             let lastPageNum: Int = self.listener?.lastPageNumRelay.value ?? 0
-            self.writeBoxBtn.title = String(lastPageNum + 1) + "번째 메뉴얼 작성하기"
+            self.writeBoxBtn.title = String(format: MenualString.home_button_writing, lastPageNum + 1)
             self.myMenualTitleView.pageNumber = lastPageNum
 
             self.writeBoxBtn.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)

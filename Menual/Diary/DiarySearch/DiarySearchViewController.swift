@@ -40,7 +40,7 @@ final class DiarySearchViewController: UIViewController, DiarySearchViewControll
     lazy var naviView = MenualNaviView(type: .moments).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
-        $0.titleLabel.text = MenualString.title_search
+        $0.titleLabel.text = MenualString.search_title
     }
     
     lazy var tableView = UITableView(frame: CGRect.zero, style: .grouped).then {

@@ -70,10 +70,10 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     // 업로드할 오리지날 이미지
     private var selectedOriginalImage: UIImage?
     
-    private let defaultTitleText: String = "제목을 입력할 수 있어요"
-    private let defaultDescriptionText: String = "오늘의 메뉴얼을 작성해주세요."
-    private let defaultWeatherText: String = "날씨를 선택해주세요"
-    private let defaultPlaceText: String = "장소를 선택해주세요"
+    private let defaultTitleText: String = MenualString.writing_placeholder_title
+    private let defaultDescriptionText: String = MenualString.writing_placeholder_desc
+    private let defaultWeatherText: String = MenualString.writing_placeholder_weather
+    private let defaultPlaceText: String = MenualString.writing_placeholder_place
     
     // Camera Delegate
     let notificationIdentifier: String = "StartCamera"
