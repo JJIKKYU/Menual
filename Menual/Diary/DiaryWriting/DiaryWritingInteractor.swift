@@ -9,6 +9,7 @@ import RIBs
 import RxSwift
 import RealmSwift
 import RxRelay
+import Foundation
 
 protocol DiaryWritingRouting: ViewableRouting {
     func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModelRealm?>, tempSaveResetRelay: BehaviorRelay<Bool>)

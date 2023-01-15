@@ -15,8 +15,8 @@ target 'Menual' do
 #  pod 'RxSwift', '~> 5'
 #  pod 'RxCocoa', '~> 5'
 #  pod 'RxRealm'
-  pod 'Realm', '10.20.1'
-  pod 'RealmSwift', '10.20.1'
+#  pod 'Realm', '10.20.1'
+#  pod 'RealmSwift', '10.20.1'
 #  pod 'RxViewController'
   
   # Google

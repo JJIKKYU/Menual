@@ -9,6 +9,8 @@ import RIBs
 import RxSwift
 import RxRelay
 import RealmSwift
+import Foundation
+import UserNotifications
 
 protocol DiaryDetailRouting: ViewableRouting {
     func attachBottomSheet(type: MenualBottomSheetType, menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?)

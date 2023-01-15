@@ -7,6 +7,7 @@
 
 import Foundation
 import RealmSwift
+import UIKit
 
 // MARK: - Realm에 저장하기 위한 Class
 public class DiaryModelRealm: Object {

@@ -9,6 +9,7 @@ import RIBs
 import RxSwift
 import RealmSwift
 import RxRelay
+import Foundation
 
 protocol DiaryHomeRouting: ViewableRouting {
     func attachMyPage()

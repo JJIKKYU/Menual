@@ -9,6 +9,7 @@ import RIBs
 import RxSwift
 import RxRelay
 import RealmSwift
+import Foundation
 
 protocol DiaryBottomSheetRouting: ViewableRouting {
     
