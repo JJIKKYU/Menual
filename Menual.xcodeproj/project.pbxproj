@@ -268,7 +268,6 @@
 		98F3A27F28150052000851F0 /* DiaryBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A27B28150052000851F0 /* DiaryBottomSheetViewController.swift */; };
 		98F3A28028150052000851F0 /* DiaryBottomSheetBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A27C28150052000851F0 /* DiaryBottomSheetBuilder.swift */; };
 		98F3A28128150052000851F0 /* DiaryBottomSheetInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A27D28150052000851F0 /* DiaryBottomSheetInteractor.swift */; };
-		CF2E3885995019FCA544D463 /* Pods_Menual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8D44F726D679789A808A0A2 /* Pods_Menual.framework */; };
 		D5B61C69B910C05E841002DE /* Pods_Menual_MenualUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9CD7E0AB3888F2D9A84D1A /* Pods_Menual_MenualUITests.framework */; };
 		FC148D8A295C380700ACB18E /* MenuComponentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC148D89295C380600ACB18E /* MenuComponentButton.swift */; };
 		FC1E2C572953EDE9008CA0F7 /* SpecificDayMomentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC1E2C562953EDE9008CA0F7 /* SpecificDayMomentsModel.swift */; };
@@ -578,7 +577,6 @@
 				985DE9772974036800F9E7AD /* FirebaseAnalyticsSwift in Frameworks */,
 				98A6E1F32974005C008CF101 /* RxAppState in Frameworks */,
 				98A6E1FB29740099008CF101 /* TOCropViewController in Frameworks */,
-				CF2E3885995019FCA544D463 /* Pods_Menual.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2208,7 +2206,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3462AED064B4D86982C6EA35 /* Pods-Menual.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
@@ -2248,7 +2245,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D7269AD9C20C0E21C6E935F5 /* Pods-Menual.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
