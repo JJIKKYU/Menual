@@ -147,3 +147,7 @@ Gemfile.lock
 fastlane/Appfile
 fastlane/Fastfile
 fastlane/README.md
+Fastlane BackUp/*
+fastlane/*
+Scripts/*
+Menual/info.plist.bak

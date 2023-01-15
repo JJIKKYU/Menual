@@ -38,7 +38,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     private var replyBottomViewPlusHeight: CGFloat = 0
     // 숨김처리일 경우 사용되는 변수
     private var isHide: Bool = false
-    private var replyTextPlcaeHolder: String = "겹쓸내용을 입력해 주세요"
+    private var replyTextPlcaeHolder: String = MenualString.reply_placeholder
     
     private var isShowKeboard: Bool  = false
     private var willDeleteReplyUUID: String?
@@ -95,7 +95,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.isUserInteractionEnabled = false
         $0.selected = true
         $0.selectedWeatherType = .rain
-        $0.selectTitle = "레잉아"
+        $0.selectTitle = ""
         $0.isDeleteBtnEnabled = false
     }
     
@@ -108,7 +108,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.isUserInteractionEnabled = false
         $0.selected = true
         $0.selectedPlaceType = .company
-        $0.selectTitle = "컴퍼닝아"
+        $0.selectTitle = ""
         $0.isDeleteBtnEnabled = false
     }
     
@@ -118,7 +118,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     lazy var descriptionTextView = UITextView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = "123"
+        $0.text = ""
         $0.isScrollEnabled = false
         $0.isEditable = false
         $0.backgroundColor = .clear
@@ -564,9 +564,9 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         var message: String = ""
         switch isEding {
         case true:
-            message = "리마인더 알림이 수정되었어요."
+            message = MenualString.reminder_toast_edit
         case false:
-            message = "리마인더 알림이 설정되었어요."
+            message = MenualString.reminder_toast_set
         }
         let toast = showToast(message: message)
         MenualLog.logEventAction(responder: toast)

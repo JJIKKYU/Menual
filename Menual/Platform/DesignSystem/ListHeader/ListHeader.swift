@@ -154,7 +154,7 @@ class ListHeader: UIView {
         rightTextBtn.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.centerY.equalTo(titleLabel)
-            make.width.equalTo(47)
+            make.width.equalTo(90)
             make.height.equalTo(15)
         }
         rightTextBtn.sizeToFit()

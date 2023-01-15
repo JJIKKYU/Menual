@@ -230,7 +230,7 @@ extension DiaryTempSaveViewController {
         deleteBtn.isHidden = !isDeleteMode
         naviView.rightButton1IsActive = false
         
-        let toast = showToast(message: "임시저장된 메뉴얼이 삭제되었습니다.")
+        let toast = showToast(message: MenualString.tempsave_toast_delete)
         MenualLog.logEventAction(responder: toast)
     }
 }

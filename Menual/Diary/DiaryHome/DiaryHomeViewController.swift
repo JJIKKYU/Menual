@@ -976,7 +976,7 @@ extension DiaryHomeViewController {
         print("DiaryHome :: showToastDiaryResult!")
         switch mode {
         case .writing:
-            let toastView = showToast(message: "메뉴얼 등록이 완료되었습니다.")
+            let toastView = showToast(message: MenualString.home_toast_writing)
             self.weakToastView = toastView
             MenualLog.logEventAction(responder: toastView, parameter: ["type": "write"])
 
@@ -986,7 +986,7 @@ extension DiaryHomeViewController {
             MenualLog.logEventAction(responder: toastView, parameter: ["type": "edit"])
             
         case .delete:
-            let toastView = showToast(message: "메뉴얼 삭제를 완료했어요.")
+            let toastView = showToast(message: MenualString.home_toast_delete)
             self.weakToastView = toastView
             MenualLog.logEventAction(responder: toastView, parameter: ["type": "delete"])
             

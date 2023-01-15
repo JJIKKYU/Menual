@@ -103,4 +103,20 @@ struct MenualString {
     static let reminder_alert_desc_qna = "reminder_alert_desc_qna".localized
     static let reminder_alert_confirm_qna = "reminder_alert_confirm_qna".localized
     static let reminder_button_confirm = "reminder_button_confirm".localized
+    static let reminder_alert_title_reminder_auth = "reminder_alert_title_reminder_auth".localized
+    static let reminder_alert_desc_reminder = "reminder_alert_desc_reminder".localized
+    static let reminder_alert_confirm_reminder = "reminder_alert_confirm_reminder".localized
+    static let menu_alert_title_delete = "menu_alert_title_delete".localized
+    static let reminder_alert_title_reminder_clear = "reminder_alert_title_reminder_clear".localized
+    static let menu_alert_title_lock = "menu_alert_title_lock".localized
+    static let menu_alert_title_unlock = "menu_alert_title_unlock".localized
+    static let reminder_alert_cancel = "reminder_alert_cancel".localized
+    static let home_toast_writing = "home_toast_writing".localized
+    static let home_toast_delete = "home_toast_delete".localized
+    static let tempsave_toast_delete = "tempsave_toast_delete".localized
+    static let reminder_toast_edit = "reminder_toast_edit".localized
+    static let reminder_toast_set = "reminder_toast_set".localized
+    static let reply_placeholder = "reply_placeholder".localized
+    static let writing_button_take_picture = "writing_button_take_picture".localized
+    static let writing_button_select_picture = "writing_button_select_picture".localized
 }

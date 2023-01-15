@@ -469,11 +469,11 @@ extension DiaryBottomSheetViewController {
             bottomSheetHeight = 392
             
         case .menu:
-            bottomSheetTitle = "메뉴"
+            bottomSheetTitle = MenualString.menu_title
             bottomSheetHeight = 328
             
         case .reminder:
-            bottomSheetTitle = "리마인더 알림"
+            bottomSheetTitle = MenualString.reminder_title
             bottomSheetHeight = 622
         }
     }
@@ -666,9 +666,9 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
     func isNeedReminderAuthorization() {
         show(size: .large,
              buttonType: .oneBtn,
-             titleText: "알림 권한이 필요합니다",
-             subTitleText: "설정에서 Menual의\n알림을 활성화 해주세요.",
-             confirmButtonText: "네"
+             titleText: MenualString.reminder_alert_title_reminder_auth,
+             subTitleText: MenualString.reminder_alert_desc_reminder,
+             confirmButtonText: MenualString.reminder_alert_confirm_reminder
         )
     }
     
@@ -691,9 +691,9 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
     func pressedIsEnabledSwitchBtn(isEnabled: Bool) {
         show(size: .small,
              buttonType: .twoBtn,
-             titleText: "리마인더 알림을 해제하시겠어요?",
-             cancelButtonText: "아니요",
-             confirmButtonText: "네"
+             titleText: MenualString.reminder_alert_title_reminder_clear,
+             cancelButtonText: MenualString.reminder_alert_cancel,
+             confirmButtonText: MenualString.reminder_alert_confirm_reminder
         )
     }
 }
@@ -703,16 +703,17 @@ extension DiaryBottomSheetViewController: DialogDelegate {
     func action(titleText: String) {
         print("DiaryBottomSheet :: action! -> \(titleText)")
         switch titleText {
-        case "이 메뉴얼을 숨기시겠어요?", "숨긴 메뉴얼을 보시겠어요?":
+        case MenualString.menu_alert_title_lock,
+            MenualString.menu_alert_title_unlock:
             print("DiaryBottomSheet :: 숨기기 action!")
             listener?.menuComponentRelay?.accept(.hide)
             hideBottomSheetAndGoBack()
             
-        case "해당 메뉴얼을 삭제하시겠어요?":
+        case MenualString.menu_alert_title_delete:
             listener?.menuComponentRelay?.accept(.delete)
             hideBottomSheetAndGoBack()
             
-        case "설정에서 Menual의 알림을 활성화 해주세요.":
+        case MenualString.reminder_alert_desc_reminder:
             guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
 
             if UIApplication.shared.canOpenURL(url) {
@@ -720,11 +721,11 @@ extension DiaryBottomSheetViewController: DialogDelegate {
             }
             break
             
-        case "리마인더 알림을 해제하시겠어요?":
+        case MenualString.reminder_alert_title_reminder_clear:
             listener?.isEnabledReminderRelay?.accept(false)
             break
             
-        case "날짜를 선택해 보세요":
+        case MenualString.reminder_alert_title_qna:
             break
 
         default:
@@ -735,21 +736,23 @@ extension DiaryBottomSheetViewController: DialogDelegate {
     func exit(titleText: String) {
         print("DiaryBottomSheet :: exit!")
         switch titleText {
-        case "이 메뉴얼을 숨기시겠어요?", "숨긴 메뉴얼을 보시겠어요?":
+        case MenualString.menu_alert_title_lock,
+            MenualString.menu_alert_title_unlock:
             print("DiaryBottomSheet :: 숨기기 exit!")
             hideBottomSheetAndGoBack()
             break
             
-        case "해당 메뉴얼을 삭제하시겠어요?":
+        case MenualString.menu_alert_title_delete:
             hideBottomSheetAndGoBack()
             break
             
-        case "설정에서 Menual의 알림을 활성화 해주세요.":
+        case MenualString.reminder_alert_desc_reminder:
             break
             
-        case "리마인더 알림을 해제하시겠어요?":
+        case MenualString.reminder_alert_title_reminder_clear:
             break
 
+            
         default:
             break
         }

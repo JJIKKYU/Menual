@@ -599,13 +599,13 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     }
     
     func setImageButtonUIActionMenu() {
-        let uploadImage = UIAction(title: "이미지 선택",
+        let uploadImage = UIAction(title: MenualString.writing_button_select_picture,
                                    image: Asset._24px.album.image.withRenderingMode(.alwaysTemplate)) { action in
             print("DiaryWriting :: action! = \(action)")
             self.pressedImageUploadPullDownBtn()
         }
 
-        let takeImage = UIAction(title: "사진 촬영",
+        let takeImage = UIAction(title: MenualString.writing_button_take_picture,
                                  image: Asset._24px.camera.image.withRenderingMode(.alwaysTemplate)) { action in
              print("DiaryWriting :: action! = \(action)")
             self.pressedTakeImagePullDownBtn()
