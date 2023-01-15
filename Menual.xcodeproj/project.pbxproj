@@ -8,16 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		9803132C28F11ECA005CBD01 /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9803132B28F11ECA005CBD01 /* DialogViewController.swift */; };
-		9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9805D4D527E1B6C40035FB49 /* Elevation+Util.swift */; };
-		9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9805D4D727E1BB010035FB49 /* Corner+Util.swift */; };
 		980924B0279BC84D0034D0CC /* RIBs+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924AF279BC84D0034D0CC /* RIBs+Util.swift */; };
 		980924B6279BCD670034D0CC /* DiaryHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B2279BCD670034D0CC /* DiaryHomeRouter.swift */; };
 		980924B7279BCD670034D0CC /* DiaryHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B3279BCD670034D0CC /* DiaryHomeViewController.swift */; };
 		980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */; };
 		980924B9279BCD670034D0CC /* DiaryHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */; };
-		980A974D294DDB1100B8CBA5 /* BaseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980A974C294DDB1100B8CBA5 /* BaseButton.swift */; };
-		980A9751294DF24600B8CBA5 /* UIViewController+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980A9750294DF24600B8CBA5 /* UIViewController+Util.swift */; };
-		980A9753294ED4EE00B8CBA5 /* Log+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980A9752294ED4EE00B8CBA5 /* Log+Util.swift */; };
 		98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98239BE527E323CB00E216F1 /* MomentsRoundView.swift */; };
 		98239BE927E43AB700E216F1 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98239BE827E43AB700E216F1 /* Icons.xcassets */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
@@ -71,20 +66,10 @@
 		985BFF7529290E9A00D86106 /* MomentsEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7429290E9A00D86106 /* MomentsEmptyView.swift */; };
 		985BFF772930A15400D86106 /* DateFilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF762930A15400D86106 /* DateFilterModel.swift */; };
 		985BFF7929320FDC00D86106 /* ReminderRequsetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7829320FDC00D86106 /* ReminderRequsetModel.swift */; };
-		985BFF7B293239A000D86106 /* CGRect+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7A293239A000D86106 /* CGRect+Util.swift */; };
-		985BFF7D29323AD100D86106 /* Array+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7C29323AD100D86106 /* Array+Util.swift */; };
-		985BFF7F29323DC400D86106 /* UIScrollView+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF7E29323DC400D86106 /* UIScrollView+Util.swift */; };
-		985BFF8129335AE900D86106 /* UINavigationController+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF8029335AE900D86106 /* UINavigationController+Util.swift */; };
-		985BFF872933721700D86106 /* ProfileOpensourceRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF832933721700D86106 /* ProfileOpensourceRouter.swift */; };
-		985BFF882933721700D86106 /* ProfileOpensourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF842933721700D86106 /* ProfileOpensourceViewController.swift */; };
-		985BFF892933721700D86106 /* ProfileOpensourceBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF852933721700D86106 /* ProfileOpensourceBuilder.swift */; };
-		985BFF8A2933721700D86106 /* ProfileOpensourceInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF862933721700D86106 /* ProfileOpensourceInteractor.swift */; };
-		985BFF8C2935ED6100D86106 /* String+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFF8B2935ED6100D86106 /* String+Util.swift */; };
 		985BFFA1293B512200D86106 /* MomentsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFFA0293B512200D86106 /* MomentsRepository.swift */; };
 		985BFFA2293B52E600D86106 /* DiaryDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD9B280A833000C1FB92 /* DiaryDetailInteractor.swift */; };
 		985BFFA4293CA0EC00D86106 /* DiaryHomeIndexPathModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFFA3293CA0EC00D86106 /* DiaryHomeIndexPathModel.swift */; };
 		985BFFA6293CBA3A00D86106 /* DiaryHomeSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFFA5293CBA3A00D86106 /* DiaryHomeSectionModel.swift */; };
-		985BFFE829458D7A00D86106 /* Realm+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFFE729458D7A00D86106 /* Realm+Util.swift */; };
 		985DE96D297401C700F9E7AD /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE96C297401C700F9E7AD /* Realm */; };
 		985DE96F297401C700F9E7AD /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE96E297401C700F9E7AD /* RealmSwift */; };
 		985DE9722974028500F9E7AD /* ZipArchive in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9712974028500F9E7AD /* ZipArchive */; };
@@ -133,6 +118,7 @@
 		98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9627E6F13700178A8E /* ProfileHomeViewController.swift */; };
 		98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9727E6F13700178A8E /* ProfileHomeBuilder.swift */; };
 		98934A9C27E6F13700178A8E /* ProfileHomeInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98934A9827E6F13700178A8E /* ProfileHomeInteractor.swift */; };
+		98935C8129744CA800AA3A29 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 98935C8029744CA800AA3A29 /* DesignSystem */; };
 		989AE04327F0900800177573 /* DiarySearchRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AE03F27F0900800177573 /* DiarySearchRouter.swift */; };
 		989AE04427F0900800177573 /* DiarySearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AE04027F0900800177573 /* DiarySearchViewController.swift */; };
 		989AE04527F0900800177573 /* DiarySearchBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989AE04127F0900800177573 /* DiarySearchBuilder.swift */; };
@@ -143,7 +129,6 @@
 		98A2BD9D280A833000C1FB92 /* DiaryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD99280A833000C1FB92 /* DiaryDetailViewController.swift */; };
 		98A2BD9E280A833000C1FB92 /* DiaryDetailBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD9A280A833000C1FB92 /* DiaryDetailBuilder.swift */; };
 		98A2BD9F280A833000C1FB92 /* DiaryDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD9B280A833000C1FB92 /* DiaryDetailInteractor.swift */; };
-		98A2BDA1280A87E300C1FB92 /* Swift+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BDA0280A87E300C1FB92 /* Swift+Util.swift */; };
 		98A2BDA3280AD96200C1FB92 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98A2BDA2280AD96200C1FB92 /* CloudKit.framework */; };
 		98A56C6128676AC2000AC4FF /* WeatherLocationSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C6028676AC2000AC4FF /* WeatherLocationSelectView.swift */; };
 		98A56C632867734A000AC4FF /* DatePageTextCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C622867734A000AC4FF /* DatePageTextCountView.swift */; };
@@ -223,15 +208,13 @@
 		98B557CC2841EEAC00F8CA3E /* FABInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557C82841EEAC00F8CA3E /* FABInteractor.swift */; };
 		98B557CF2841F05900F8CA3E /* FAB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557CE2841F05900F8CA3E /* FAB.swift */; };
 		98B557D12841F9B600F8CA3E /* UIButton+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B557D02841F9B600F8CA3E /* UIButton+Util.swift */; };
-		98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34627C9FD8F0037CF6D /* Color+Util.swift */; };
-		98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BEF34827CA04830037CF6D /* Text+Util.swift */; };
 		98C24F5427F0264700E6768C /* I18N.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5327F0264700E6768C /* I18N.swift */; };
 		98C24F5827F026B500E6768C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 98C24F5A27F026B500E6768C /* Localizable.strings */; };
 		98C24F5D27F05A0200E6768C /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C24F5C27F05A0200E6768C /* TitleView.swift */; };
+		98C4767429744FC1006634A3 /* MenualUtil in Frameworks */ = {isa = PBXBuildFile; productRef = 98C4767329744FC1006634A3 /* MenualUtil */; };
 		98D0EBEB27CA0AFF0076136E /* Montserrat ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBEA27CA0AFF0076136E /* Montserrat ExtraBold.ttf */; };
 		98D0EBEE27CA0E190076136E /* SpoqaHanSansNeo Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBEC27CA0E190076136E /* SpoqaHanSansNeo Regular.otf */; };
 		98D0EBEF27CA0E190076136E /* SpoqaHanSansNeo Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBED27CA0E190076136E /* SpoqaHanSansNeo Bold.otf */; };
-		98EADB842841FEAA007C298C /* Date+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB832841FEAA007C298C /* Date+Util.swift */; };
 		98EADB8A28432850007C298C /* TabsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8628432850007C298C /* TabsRouter.swift */; };
 		98EADB8B28432850007C298C /* TabsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8728432850007C298C /* TabsViewController.swift */; };
 		98EADB8C28432850007C298C /* TabsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB8828432850007C298C /* TabsBuilder.swift */; };
@@ -240,7 +223,6 @@
 		98EADB9228432FA5007C298C /* TabsIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9128432FA4007C298C /* TabsIconView.swift */; };
 		98EADB9428433BC2007C298C /* TabsText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9328433BC2007C298C /* TabsText.swift */; };
 		98EADB9628437828007C298C /* MomentsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9528437828007C298C /* MomentsCell.swift */; };
-		98EADB9828437D13007C298C /* CollectionView+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9728437D13007C298C /* CollectionView+Util.swift */; };
 		98EADB9E28438039007C298C /* PaginationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9A28438038007C298C /* PaginationRouter.swift */; };
 		98EADB9F28438039007C298C /* PaginationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9B28438038007C298C /* PaginationViewController.swift */; };
 		98EADBA028438039007C298C /* PaginationBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADB9C28438038007C298C /* PaginationBuilder.swift */; };
@@ -254,11 +236,9 @@
 		98EADBB02866D3D4007C298C /* ProfileHomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADBAF2866D3D4007C298C /* ProfileHomeCell.swift */; };
 		98EADBB22866E195007C298C /* ProfileHomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADBB12866E195007C298C /* ProfileHomeModel.swift */; };
 		98EADBB42866E91E007C298C /* DiarySearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADBB32866E91E007C298C /* DiarySearchView.swift */; };
-		98EADBB62866FFAB007C298C /* Cell+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EADBB52866FFAB007C298C /* Cell+Util.swift */; };
 		98F31DC528CC65B900EE1C8A /* MenualBottomSheetMenuComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F31DC428CC65B900EE1C8A /* MenualBottomSheetMenuComponentView.swift */; };
 		98F31DC828CC782B00EE1C8A /* MenualBottomSheetFilterComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F31DC728CC782B00EE1C8A /* MenualBottomSheetFilterComponentView.swift */; };
 		98F31DCA28CC7F2000EE1C8A /* MenualDateFilterComponentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F31DC928CC7F2000EE1C8A /* MenualDateFilterComponentView.swift */; };
-		98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A26D280C536F000851F0 /* MenualNavigationController.swift */; };
 		98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */; };
 		98F3A2732813C7D1000851F0 /* MenualBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */; };
 		98F3A2762813C9D8000851F0 /* MenualSegmentationBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3A2752813C9D8000851F0 /* MenualSegmentationBaseViewController.swift */; };
@@ -291,16 +271,11 @@
 
 /* Begin PBXFileReference section */
 		9803132B28F11ECA005CBD01 /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
-		9805D4D527E1B6C40035FB49 /* Elevation+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Elevation+Util.swift"; sourceTree = "<group>"; };
-		9805D4D727E1BB010035FB49 /* Corner+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Corner+Util.swift"; sourceTree = "<group>"; };
 		980924AF279BC84D0034D0CC /* RIBs+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RIBs+Util.swift"; sourceTree = "<group>"; };
 		980924B2279BCD670034D0CC /* DiaryHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeRouter.swift; sourceTree = "<group>"; };
 		980924B3279BCD670034D0CC /* DiaryHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeViewController.swift; sourceTree = "<group>"; };
 		980924B4279BCD670034D0CC /* DiaryHomeBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeBuilder.swift; sourceTree = "<group>"; };
 		980924B5279BCD670034D0CC /* DiaryHomeInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeInteractor.swift; sourceTree = "<group>"; };
-		980A974C294DDB1100B8CBA5 /* BaseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseButton.swift; sourceTree = "<group>"; };
-		980A9750294DF24600B8CBA5 /* UIViewController+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Util.swift"; sourceTree = "<group>"; };
-		980A9752294ED4EE00B8CBA5 /* Log+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+Util.swift"; sourceTree = "<group>"; };
 		98239BE527E323CB00E216F1 /* MomentsRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsRoundView.swift; sourceTree = "<group>"; };
 		98239BE827E43AB700E216F1 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -355,19 +330,9 @@
 		985BFF7429290E9A00D86106 /* MomentsEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsEmptyView.swift; sourceTree = "<group>"; };
 		985BFF762930A15400D86106 /* DateFilterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFilterModel.swift; sourceTree = "<group>"; };
 		985BFF7829320FDC00D86106 /* ReminderRequsetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderRequsetModel.swift; sourceTree = "<group>"; };
-		985BFF7A293239A000D86106 /* CGRect+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+Util.swift"; sourceTree = "<group>"; };
-		985BFF7C29323AD100D86106 /* Array+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Util.swift"; sourceTree = "<group>"; };
-		985BFF7E29323DC400D86106 /* UIScrollView+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Util.swift"; sourceTree = "<group>"; };
-		985BFF8029335AE900D86106 /* UINavigationController+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Util.swift"; sourceTree = "<group>"; };
-		985BFF832933721700D86106 /* ProfileOpensourceRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceRouter.swift; sourceTree = "<group>"; };
-		985BFF842933721700D86106 /* ProfileOpensourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceViewController.swift; sourceTree = "<group>"; };
-		985BFF852933721700D86106 /* ProfileOpensourceBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceBuilder.swift; sourceTree = "<group>"; };
-		985BFF862933721700D86106 /* ProfileOpensourceInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOpensourceInteractor.swift; sourceTree = "<group>"; };
-		985BFF8B2935ED6100D86106 /* String+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Util.swift"; sourceTree = "<group>"; };
 		985BFFA0293B512200D86106 /* MomentsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsRepository.swift; sourceTree = "<group>"; };
 		985BFFA3293CA0EC00D86106 /* DiaryHomeIndexPathModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeIndexPathModel.swift; sourceTree = "<group>"; };
 		985BFFA5293CBA3A00D86106 /* DiaryHomeSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeSectionModel.swift; sourceTree = "<group>"; };
-		985BFFE729458D7A00D86106 /* Realm+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Realm+Util.swift"; sourceTree = "<group>"; };
 		985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptivePresentationControllerDelegate.swift; sourceTree = "<group>"; };
 		987684A22948B4F400811387 /* MomentsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsModel.swift; sourceTree = "<group>"; };
 		987684A4294D76F800811387 /* PushModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushModel.swift; sourceTree = "<group>"; };
@@ -425,7 +390,6 @@
 		98A2BD99280A833000C1FB92 /* DiaryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailViewController.swift; sourceTree = "<group>"; };
 		98A2BD9A280A833000C1FB92 /* DiaryDetailBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailBuilder.swift; sourceTree = "<group>"; };
 		98A2BD9B280A833000C1FB92 /* DiaryDetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailInteractor.swift; sourceTree = "<group>"; };
-		98A2BDA0280A87E300C1FB92 /* Swift+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Swift+Util.swift"; sourceTree = "<group>"; };
 		98A2BDA2280AD96200C1FB92 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		98A2BDAA280BD52D00C1FB92 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ko; path = ko.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		98A56C6028676AC2000AC4FF /* WeatherLocationSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherLocationSelectView.swift; sourceTree = "<group>"; };
@@ -497,15 +461,14 @@
 		98B557C82841EEAC00F8CA3E /* FABInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FABInteractor.swift; sourceTree = "<group>"; };
 		98B557CE2841F05900F8CA3E /* FAB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FAB.swift; sourceTree = "<group>"; };
 		98B557D02841F9B600F8CA3E /* UIButton+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Util.swift"; sourceTree = "<group>"; };
-		98BEF34627C9FD8F0037CF6D /* Color+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Util.swift"; sourceTree = "<group>"; };
-		98BEF34827CA04830037CF6D /* Text+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Text+Util.swift"; sourceTree = "<group>"; };
 		98C24F5327F0264700E6768C /* I18N.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18N.swift; sourceTree = "<group>"; };
 		98C24F5927F026B500E6768C /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		98C24F5C27F05A0200E6768C /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
+		98C59F3429744366002703C6 /* Profile */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Profile; sourceTree = "<group>"; };
+		98C59F35297443B1002703C6 /* Platform */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Platform; sourceTree = "<group>"; };
 		98D0EBEA27CA0AFF0076136E /* Montserrat ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat ExtraBold.ttf"; sourceTree = "<group>"; };
 		98D0EBEC27CA0E190076136E /* SpoqaHanSansNeo Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo Regular.otf"; sourceTree = "<group>"; };
 		98D0EBED27CA0E190076136E /* SpoqaHanSansNeo Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SpoqaHanSansNeo Bold.otf"; sourceTree = "<group>"; };
-		98EADB832841FEAA007C298C /* Date+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Util.swift"; sourceTree = "<group>"; };
 		98EADB8628432850007C298C /* TabsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsRouter.swift; sourceTree = "<group>"; };
 		98EADB8728432850007C298C /* TabsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsViewController.swift; sourceTree = "<group>"; };
 		98EADB8828432850007C298C /* TabsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsBuilder.swift; sourceTree = "<group>"; };
@@ -514,7 +477,6 @@
 		98EADB9128432FA4007C298C /* TabsIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsIconView.swift; sourceTree = "<group>"; };
 		98EADB9328433BC2007C298C /* TabsText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsText.swift; sourceTree = "<group>"; };
 		98EADB9528437828007C298C /* MomentsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsCell.swift; sourceTree = "<group>"; };
-		98EADB9728437D13007C298C /* CollectionView+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionView+Util.swift"; sourceTree = "<group>"; };
 		98EADB9A28438038007C298C /* PaginationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationRouter.swift; sourceTree = "<group>"; };
 		98EADB9B28438038007C298C /* PaginationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationViewController.swift; sourceTree = "<group>"; };
 		98EADB9C28438038007C298C /* PaginationBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginationBuilder.swift; sourceTree = "<group>"; };
@@ -528,11 +490,9 @@
 		98EADBAF2866D3D4007C298C /* ProfileHomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeCell.swift; sourceTree = "<group>"; };
 		98EADBB12866E195007C298C /* ProfileHomeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeModel.swift; sourceTree = "<group>"; };
 		98EADBB32866E91E007C298C /* DiarySearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchView.swift; sourceTree = "<group>"; };
-		98EADBB52866FFAB007C298C /* Cell+Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cell+Util.swift"; sourceTree = "<group>"; };
 		98F31DC428CC65B900EE1C8A /* MenualBottomSheetMenuComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetMenuComponentView.swift; sourceTree = "<group>"; };
 		98F31DC728CC782B00EE1C8A /* MenualBottomSheetFilterComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetFilterComponentView.swift; sourceTree = "<group>"; };
 		98F31DC928CC7F2000EE1C8A /* MenualDateFilterComponentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualDateFilterComponentView.swift; sourceTree = "<group>"; };
-		98F3A26D280C536F000851F0 /* MenualNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualNavigationController.swift; sourceTree = "<group>"; };
 		98F3A2702813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetBaseViewController.swift; sourceTree = "<group>"; };
 		98F3A2722813C7D1000851F0 /* MenualBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualBottomSheetViewController.swift; sourceTree = "<group>"; };
 		98F3A2752813C9D8000851F0 /* MenualSegmentationBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenualSegmentationBaseViewController.swift; sourceTree = "<group>"; };
@@ -554,6 +514,7 @@
 				98A6E1E82973FDF2008CF101 /* RxSwift in Frameworks */,
 				98A6E1E62973FDF2008CF101 /* RxRelay in Frameworks */,
 				98A6E1F02974003C008CF101 /* RIBs in Frameworks */,
+				98C4767429744FC1006634A3 /* MenualUtil in Frameworks */,
 				985DE96F297401C700F9E7AD /* RealmSwift in Frameworks */,
 				98A6E1F929740099008CF101 /* CropViewController in Frameworks */,
 				985DE9722974028500F9E7AD /* ZipArchive in Frameworks */,
@@ -562,6 +523,7 @@
 				985DE9752974036800F9E7AD /* FirebaseAnalytics in Frameworks */,
 				985DE96D297401C700F9E7AD /* Realm in Frameworks */,
 				98A6E1E42973FDF2008CF101 /* RxCocoa in Frameworks */,
+				98935C8129744CA800AA3A29 /* DesignSystem in Frameworks */,
 				98A6E1F629740075008CF101 /* SnapKit in Frameworks */,
 				985DE9772974036800F9E7AD /* FirebaseAnalyticsSwift in Frameworks */,
 				98A6E1F32974005C008CF101 /* RxAppState in Frameworks */,
@@ -639,7 +601,6 @@
 				98B5575F2838959900F8CA3E /* BoxButton */,
 				98F3A2742813C9C0000851F0 /* Segmentation */,
 				98F3A26F2813BD8F000851F0 /* BottomSheet */,
-				98F3A26C280C534D000851F0 /* Navigation */,
 				98239BE227E3236100E216F1 /* Moments */,
 				98C24F5C27F05A0200E6768C /* TitleView.swift */,
 			);
@@ -676,7 +637,6 @@
 				98B557622838968D00F8CA3E /* DesignSystemRIB */,
 				98239BE127E3234F00E216F1 /* DesignSystem */,
 				988A2D3927F82F220046C43A /* RIBs+TestSupport */,
-				98BEF34527C9FD6E0037CF6D /* MenualUtil */,
 				980924AE279BC83D0034D0CC /* RIBsUtil */,
 			);
 			path = Platform;
@@ -827,20 +787,11 @@
 			path = ProfileDeveloper;
 			sourceTree = "<group>";
 		};
-		985BFF82293371F400D86106 /* ProfileOpensource */ = {
-			isa = PBXGroup;
-			children = (
-				985BFF832933721700D86106 /* ProfileOpensourceRouter.swift */,
-				985BFF842933721700D86106 /* ProfileOpensourceViewController.swift */,
-				985BFF852933721700D86106 /* ProfileOpensourceBuilder.swift */,
-				985BFF862933721700D86106 /* ProfileOpensourceInteractor.swift */,
-			);
-			path = ProfileOpensource;
-			sourceTree = "<group>";
-		};
 		9888DDD027646EFF0091918F = {
 			isa = PBXGroup;
 			children = (
+				98C59F35297443B1002703C6 /* Platform */,
+				98C59F3429744366002703C6 /* Profile */,
 				9888DDDB27646EFF0091918F /* Menual */,
 				9888DDF227646F000091918F /* MenualTests */,
 				9888DDFC27646F000091918F /* MenualUITests */,
@@ -1068,7 +1019,6 @@
 		98934A9327E6F11100178A8E /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				985BFF82293371F400D86106 /* ProfileOpensource */,
 				985BFF692924C35000D86106 /* ProfileDeveloper */,
 				984392AF29175F5800EF526E /* ProfilePassword */,
 				98934A9427E6F11E00178A8E /* ProfileHome */,
@@ -1328,30 +1278,6 @@
 			path = FAB;
 			sourceTree = "<group>";
 		};
-		98BEF34527C9FD6E0037CF6D /* MenualUtil */ = {
-			isa = PBXGroup;
-			children = (
-				98BEF34627C9FD8F0037CF6D /* Color+Util.swift */,
-				98BEF34827CA04830037CF6D /* Text+Util.swift */,
-				9805D4D527E1B6C40035FB49 /* Elevation+Util.swift */,
-				9805D4D727E1BB010035FB49 /* Corner+Util.swift */,
-				98A2BDA0280A87E300C1FB92 /* Swift+Util.swift */,
-				98EADB832841FEAA007C298C /* Date+Util.swift */,
-				98EADB9728437D13007C298C /* CollectionView+Util.swift */,
-				98EADBB52866FFAB007C298C /* Cell+Util.swift */,
-				985BFF7A293239A000D86106 /* CGRect+Util.swift */,
-				985BFF7C29323AD100D86106 /* Array+Util.swift */,
-				985BFF7E29323DC400D86106 /* UIScrollView+Util.swift */,
-				985BFF8029335AE900D86106 /* UINavigationController+Util.swift */,
-				985BFF8B2935ED6100D86106 /* String+Util.swift */,
-				985BFFE729458D7A00D86106 /* Realm+Util.swift */,
-				980A974C294DDB1100B8CBA5 /* BaseButton.swift */,
-				980A9750294DF24600B8CBA5 /* UIViewController+Util.swift */,
-				980A9752294ED4EE00B8CBA5 /* Log+Util.swift */,
-			);
-			path = MenualUtil;
-			sourceTree = "<group>";
-		};
 		98D0EBE627CA09640076136E /* MenualAssets */ = {
 			isa = PBXGroup;
 			children = (
@@ -1425,14 +1351,6 @@
 				FC148D89295C380600ACB18E /* MenuComponentButton.swift */,
 			);
 			path = Components;
-			sourceTree = "<group>";
-		};
-		98F3A26C280C534D000851F0 /* Navigation */ = {
-			isa = PBXGroup;
-			children = (
-				98F3A26D280C536F000851F0 /* MenualNavigationController.swift */,
-			);
-			path = Navigation;
 			sourceTree = "<group>";
 		};
 		98F3A26F2813BD8F000851F0 /* BottomSheet */ = {
@@ -1518,6 +1436,8 @@
 				985DE9712974028500F9E7AD /* ZipArchive */,
 				985DE9742974036800F9E7AD /* FirebaseAnalytics */,
 				985DE9762974036800F9E7AD /* FirebaseAnalyticsSwift */,
+				98935C8029744CA800AA3A29 /* DesignSystem */,
+				98C4767329744FC1006634A3 /* MenualUtil */,
 			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
@@ -1594,14 +1514,14 @@
 			mainGroup = 9888DDD027646EFF0091918F;
 			packageReferences = (
 				98A6E1DF2973FDD4008CF101 /* XCRemoteSwiftPackageReference "Then" */,
-				98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift.git" */,
-				98A6E1EE2974003C008CF101 /* XCRemoteSwiftPackageReference "RIBs.git" */,
+				98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				98A6E1EE2974003C008CF101 /* XCRemoteSwiftPackageReference "RIBs" */,
 				98A6E1F12974005C008CF101 /* XCRemoteSwiftPackageReference "RxAppState" */,
-				98A6E1F429740075008CF101 /* XCRemoteSwiftPackageReference "SnapKit.git" */,
+				98A6E1F429740075008CF101 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				98A6E1F729740099008CF101 /* XCRemoteSwiftPackageReference "TOCropViewController" */,
 				985DE96B297401C700F9E7AD /* XCRemoteSwiftPackageReference "realm-swift" */,
-				985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive.git" */,
-				985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */,
+				985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive" */,
+				985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 9888DDDA27646EFF0091918F /* Products */;
 			projectDirPath = "";
@@ -1691,7 +1611,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				985BFF732927E7D200D86106 /* FilterModel.swift in Sources */,
-				985BFF872933721700D86106 /* ProfileOpensourceRouter.swift in Sources */,
 				988A1877278ACB4B00DF81DA /* DiaryWritingInteractor.swift in Sources */,
 				98B557BF2841D11900F8CA3E /* ListBuilder.swift in Sources */,
 				98A56C6128676AC2000AC4FF /* WeatherLocationSelectView.swift in Sources */,
@@ -1706,10 +1625,8 @@
 				983CDF5328FBF14D001E2A2D /* EmptyViewViewController.swift in Sources */,
 				98EADB9028432A3F007C298C /* TabsCell.swift in Sources */,
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
-				985BFF882933721700D86106 /* ProfileOpensourceViewController.swift in Sources */,
 				98EADBA128438039007C298C /* PaginationInteractor.swift in Sources */,
 				984392902903A8E000EF526E /* CustomCropViewController.swift in Sources */,
-				9805D4D627E1B6C40035FB49 /* Elevation+Util.swift in Sources */,
 				983CDF4428FBEC93001E2A2D /* Empty.swift in Sources */,
 				983CDF5228FBF14D001E2A2D /* EmptyViewRouter.swift in Sources */,
 				98B55794283A151D00F8CA3E /* MomentsBuilder.swift in Sources */,
@@ -1720,11 +1637,8 @@
 				98B557A6283A3E7900F8CA3E /* DividerViewController.swift in Sources */,
 				988A1874278ACB4B00DF81DA /* DiaryWritingRouter.swift in Sources */,
 				985BFF7529290E9A00D86106 /* MomentsEmptyView.swift in Sources */,
-				98A2BDA1280A87E300C1FB92 /* Swift+Util.swift in Sources */,
-				985BFFE829458D7A00D86106 /* Realm+Util.swift in Sources */,
 				985BFF712924C36500D86106 /* ProfileDeveloperInteractor.swift in Sources */,
 				98B55749281E426300F8CA3E /* WeatherModel.swift in Sources */,
-				985BFF8129335AE900D86106 /* UINavigationController+Util.swift in Sources */,
 				9803132C28F11ECA005CBD01 /* DialogViewController.swift in Sources */,
 				98EADBA4284734E4007C298C /* Pagination.swift in Sources */,
 				98B557562830C7B200F8CA3E /* DiaryTempSaveInteractor.swift in Sources */,
@@ -1735,7 +1649,6 @@
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
 				983CDF5428FBF14D001E2A2D /* EmptyViewBuilder.swift in Sources */,
 				98EADB8D28432850007C298C /* TabsInteractor.swift in Sources */,
-				98EADBB62866FFAB007C298C /* Cell+Util.swift in Sources */,
 				984392A6291632DB00EF526E /* MetaDataRouter.swift in Sources */,
 				98EADB9E28438039007C298C /* PaginationRouter.swift in Sources */,
 				98B557742838A4ED00F8CA3E /* BoxButtonRouter.swift in Sources */,
@@ -1760,14 +1673,12 @@
 				98B557CF2841F05900F8CA3E /* FAB.swift in Sources */,
 				98B557A5283A3E7900F8CA3E /* DividerRouter.swift in Sources */,
 				984392B72917601C00EF526E /* ProfilePasswordInteractor.swift in Sources */,
-				98BEF34927CA04830037CF6D /* Text+Util.swift in Sources */,
 				98B55747281D157200F8CA3E /* RecentSearchCell.swift in Sources */,
 				988A1875278ACB4B00DF81DA /* DiaryWritingViewController.swift in Sources */,
 				98B5579D283A198F00F8CA3E /* UILabelExtension.swift in Sources */,
 				FC148D8A295C380700ACB18E /* MenuComponentButton.swift in Sources */,
 				98B557B4283A4A8300F8CA3E /* CapsuleButtonInteractor.swift in Sources */,
 				98B557B2283A4A8300F8CA3E /* CapsuleButtonViewController.swift in Sources */,
-				985BFF7B293239A000D86106 /* CGRect+Util.swift in Sources */,
 				98EADBAA284E45BF007C298C /* DividerCell.swift in Sources */,
 				9843929B29053CEC00EF526E /* DiaryDetailImageBuilder.swift in Sources */,
 				98B557BE2841D11900F8CA3E /* ListViewController.swift in Sources */,
@@ -1794,13 +1705,10 @@
 				98F3A27F28150052000851F0 /* DiaryBottomSheetViewController.swift in Sources */,
 				983175D729667E6A0008AF51 /* MomentsNoStartCircleView.swift in Sources */,
 				9888DE142764825F0091918F /* AppRootRouter.swift in Sources */,
-				985BFF8A2933721700D86106 /* ProfileOpensourceInteractor.swift in Sources */,
-				985BFF892933721700D86106 /* ProfileOpensourceBuilder.swift in Sources */,
 				98536EAD291CB74400A72B8E /* ToastViewController.swift in Sources */,
 				985BFFA1293B512200D86106 /* MomentsRepository.swift in Sources */,
 				98934A9B27E6F13700178A8E /* ProfileHomeBuilder.swift in Sources */,
 				984392CE2917C34000EF526E /* PasswordModel.swift in Sources */,
-				985BFF8C2935ED6100D86106 /* String+Util.swift in Sources */,
 				FC1E2C5C29543C3F008CA0F7 /* SeasonMomentsModel.swift in Sources */,
 				98B55787283A0F3300F8CA3E /* ListHeaderViewController.swift in Sources */,
 				983CDF4128FBDD9B001E2A2D /* Badges.swift in Sources */,
@@ -1808,7 +1716,6 @@
 				98B5575E2830F0FF00F8CA3E /* TempSaveCell.swift in Sources */,
 				983175DB2966B1FD0008AF51 /* MomentsNoStartStampCell.swift in Sources */,
 				9838574D28FA77FF007378EC /* SectionListHeaderView.swift in Sources */,
-				980A974D294DDB1100B8CBA5 /* BaseButton.swift in Sources */,
 				984392C329179A6600EF526E /* NumberPadInteractor.swift in Sources */,
 				988A2D68280166AA0046C43A /* DiaryModel.swift in Sources */,
 				983175D5296679BD0008AF51 /* MomentsNoStartView.swift in Sources */,
@@ -1816,13 +1723,10 @@
 				988A2D5B27F97A000046C43A /* DiaryMomentsInteractor.swift in Sources */,
 				98B557B1283A4A8300F8CA3E /* CapsuleButtonRouter.swift in Sources */,
 				98B5579F283A1AF600F8CA3E /* MomentsText.swift in Sources */,
-				98BEF34727C9FD8F0037CF6D /* Color+Util.swift in Sources */,
-				98F3A26E280C536F000851F0 /* MenualNavigationController.swift in Sources */,
 				98A56C6B28682506000AC4FF /* WeatherPlaceSelectViewCell.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
 				9843929929053CEC00EF526E /* DiaryDetailImageRouter.swift in Sources */,
 				984392B42917601C00EF526E /* ProfilePasswordRouter.swift in Sources */,
-				980A9753294ED4EE00B8CBA5 /* Log+Util.swift in Sources */,
 				98EADBB42866E91E007C298C /* DiarySearchView.swift in Sources */,
 				98A56C632867734A000AC4FF /* DatePageTextCountView.swift in Sources */,
 				98B55761283895B900F8CA3E /* BoxButton.swift in Sources */,
@@ -1830,13 +1734,11 @@
 				984392CA2917A96A00EF526E /* PasswordView.swift in Sources */,
 				98B55743281CFF5B00F8CA3E /* DiarySearchCell.swift in Sources */,
 				98F3A28028150052000851F0 /* DiaryBottomSheetBuilder.swift in Sources */,
-				980A9751294DF24600B8CBA5 /* UIViewController+Util.swift in Sources */,
 				985BFF702924C36500D86106 /* ProfileDeveloperBuilder.swift in Sources */,
 				98F3A2762813C9D8000851F0 /* MenualSegmentationBaseViewController.swift in Sources */,
 				98B5577F283A031400F8CA3E /* GNBHeaderBuilder.swift in Sources */,
 				989AE04427F0900800177573 /* DiarySearchViewController.swift in Sources */,
 				98B55780283A031400F8CA3E /* GNBHeaderInteractor.swift in Sources */,
-				98EADB842841FEAA007C298C /* Date+Util.swift in Sources */,
 				988A2D5027F96BEF0046C43A /* Icons+Generated.swift in Sources */,
 				984392CC2917B43A00EF526E /* PasswordIconView.swift in Sources */,
 				980924B8279BCD670034D0CC /* DiaryHomeBuilder.swift in Sources */,
@@ -1859,7 +1761,6 @@
 				985BFF6829249B8D00D86106 /* ReminderModel.swift in Sources */,
 				98B557532830C7B200F8CA3E /* DiaryTempSaveRouter.swift in Sources */,
 				98B55767283896AA00F8CA3E /* DesignSystemRouter.swift in Sources */,
-				985BFF7F29323DC400D86106 /* UIScrollView+Util.swift in Sources */,
 				98B557C32841D4D600F8CA3E /* ListCell.swift in Sources */,
 				984392A9291632DB00EF526E /* MetaDataInteractor.swift in Sources */,
 				98934A9C27E6F13700178A8E /* ProfileHomeInteractor.swift in Sources */,
@@ -1874,7 +1775,6 @@
 				98F3A28128150052000851F0 /* DiaryBottomSheetInteractor.swift in Sources */,
 				988C10A92920BA0100C80937 /* MenualBottomSheetReminderComponentView.swift in Sources */,
 				98A56C65286775CA000AC4FF /* ImageUploadView.swift in Sources */,
-				985BFF7D29323AD100D86106 /* Array+Util.swift in Sources */,
 				98934A9A27E6F13700178A8E /* ProfileHomeViewController.swift in Sources */,
 				985BFFA6293CBA3A00D86106 /* DiaryHomeSectionModel.swift in Sources */,
 				98B55798283A177700F8CA3E /* Moments.swift in Sources */,
@@ -1887,14 +1787,12 @@
 				984392B62917601C00EF526E /* ProfilePasswordBuilder.swift in Sources */,
 				98F31DCA28CC7F2000EE1C8A /* MenualDateFilterComponentView.swift in Sources */,
 				98A76E692920ED090024CE35 /* MonthView.swift in Sources */,
-				9805D4D827E1BB010035FB49 /* Corner+Util.swift in Sources */,
 				983CDF5528FBF14D001E2A2D /* EmptyViewInteractor.swift in Sources */,
 				98EADBAE2855C1A5007C298C /* DiarySearchModel.swift in Sources */,
 				98B557752838A4ED00F8CA3E /* BoxButtonViewController.swift in Sources */,
 				989AE04627F0900800177573 /* DiarySearchInteractor.swift in Sources */,
 				98EADB9428433BC2007C298C /* TabsText.swift in Sources */,
 				984392AB29163ADB00EF526E /* ListInfoView.swift in Sources */,
-				98EADB9828437D13007C298C /* CollectionView+Util.swift in Sources */,
 				98F3A2712813BDA2000851F0 /* MenualBottomSheetBaseViewController.swift in Sources */,
 				98EADBA028438039007C298C /* PaginationBuilder.swift in Sources */,
 				98B557A7283A3E7900F8CA3E /* DividerBuilder.swift in Sources */,
@@ -2325,7 +2223,7 @@
 				minimumVersion = 10.20.1;
 			};
 		};
-		985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive.git" */ = {
+		985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ZipArchive/ZipArchive.git";
 			requirement = {
@@ -2333,7 +2231,7 @@
 				minimumVersion = 2.5.0;
 			};
 		};
-		985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */ = {
+		985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
@@ -2349,7 +2247,7 @@
 				minimumVersion = 3.0.0;
 			};
 		};
-		98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift.git" */ = {
+		98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
 			requirement = {
@@ -2357,7 +2255,7 @@
 				minimumVersion = 6.0.0;
 			};
 		};
-		98A6E1EE2974003C008CF101 /* XCRemoteSwiftPackageReference "RIBs.git" */ = {
+		98A6E1EE2974003C008CF101 /* XCRemoteSwiftPackageReference "RIBs" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/uber/RIBs.git";
 			requirement = {
@@ -2373,7 +2271,7 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		98A6E1F429740075008CF101 /* XCRemoteSwiftPackageReference "SnapKit.git" */ = {
+		98A6E1F429740075008CF101 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
 			requirement = {
@@ -2404,18 +2302,22 @@
 		};
 		985DE9712974028500F9E7AD /* ZipArchive */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive.git" */;
+			package = 985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive" */;
 			productName = ZipArchive;
 		};
 		985DE9742974036800F9E7AD /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
+			package = 985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalytics;
 		};
 		985DE9762974036800F9E7AD /* FirebaseAnalyticsSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk.git" */;
+			package = 985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalyticsSwift;
+		};
+		98935C8029744CA800AA3A29 /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesignSystem;
 		};
 		98A6E1E02973FDD4008CF101 /* Then */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -2424,22 +2326,22 @@
 		};
 		98A6E1E32973FDF2008CF101 /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift.git" */;
+			package = 98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxCocoa;
 		};
 		98A6E1E52973FDF2008CF101 /* RxRelay */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift.git" */;
+			package = 98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxRelay;
 		};
 		98A6E1E72973FDF2008CF101 /* RxSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift.git" */;
+			package = 98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
 		};
 		98A6E1EF2974003C008CF101 /* RIBs */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 98A6E1EE2974003C008CF101 /* XCRemoteSwiftPackageReference "RIBs.git" */;
+			package = 98A6E1EE2974003C008CF101 /* XCRemoteSwiftPackageReference "RIBs" */;
 			productName = RIBs;
 		};
 		98A6E1F22974005C008CF101 /* RxAppState */ = {
@@ -2449,7 +2351,7 @@
 		};
 		98A6E1F529740075008CF101 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 98A6E1F429740075008CF101 /* XCRemoteSwiftPackageReference "SnapKit.git" */;
+			package = 98A6E1F429740075008CF101 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
 		98A6E1F829740099008CF101 /* CropViewController */ = {
@@ -2461,6 +2363,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 98A6E1F729740099008CF101 /* XCRemoteSwiftPackageReference "TOCropViewController" */;
 			productName = TOCropViewController;
+		};
+		98C4767329744FC1006634A3 /* MenualUtil */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MenualUtil;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

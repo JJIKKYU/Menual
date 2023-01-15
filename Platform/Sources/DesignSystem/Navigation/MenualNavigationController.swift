@@ -8,7 +8,8 @@
 import Foundation
 import UIKit
 import SnapKit
-import RxCocoa
+import Then
+import MenualUtil
 
 public protocol MenualNaviViewProtocol {
     

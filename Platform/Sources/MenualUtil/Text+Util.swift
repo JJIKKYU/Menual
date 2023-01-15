@@ -7,17 +7,18 @@
 
 import Foundation
 import UIKit
+import Then
 
-enum SpoqaHanSansNeoType {
+public enum SpoqaHanSansNeoType {
     case Regular
     case Bold
 }
 
-enum MontserratType {
+public enum MontserratType {
     case ExtraBold
 }
 
-enum TitleType {
+public enum TitleType {
     /// - Spoqa Han Sans Pro
     /// - Bold
     /// - 12pt
@@ -44,7 +45,7 @@ enum TitleType {
     case title_6
 }
 
-enum BodyType {
+public enum BodyType {
     case body_5
     /// - Spoqa Han Sans Pro
     /// - Regular
@@ -68,7 +69,7 @@ enum BodyType {
     case body_1
 }
 
-enum HeadType {
+public enum HeadType {
     /// - Montserrat
     /// - ExtraBold
     /// - 10pt
@@ -96,7 +97,7 @@ var systemLineHeight: CGFloat{ 8.0 }
 extension UIFont {
     
     // SpoqaHanSansNeo의 폰트 타입에 따라 폰트 이름 리턴
-    class func SpoqaHanSansNeo(_ type: SpoqaHanSansNeoType) -> String {
+    public class func SpoqaHanSansNeo(_ type: SpoqaHanSansNeoType) -> String {
         switch type {
         case .Regular:
             return "SpoqaHanSansNeo-Regular"
@@ -106,7 +107,7 @@ extension UIFont {
     }
     
     // Montserrat의 폰트 타입에 따라 폰트 이름 리턴
-    class func Montserrat(_ type: MontserratType) -> String {
+    public class func Montserrat(_ type: MontserratType) -> String {
         switch type {
         case .ExtraBold:
             return "Montserrat-ExtraBold"
@@ -114,7 +115,7 @@ extension UIFont {
     }
     
     // 디자인 시스템에 정의되어 있는 타이틀 리턴
-    class func AppTitle(_ title: TitleType) -> UIFont! {
+    public class func AppTitle(_ title: TitleType) -> UIFont! {
         switch title {
         case .title_1:
             return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 12)
@@ -132,7 +133,7 @@ extension UIFont {
     }
     
     // 디자인 시스템에 정의되어 있는 타이틀 리턴
-    class func AppBodyOnlyFont(_ body: BodyType) -> UIFont! {
+    public class func AppBodyOnlyFont(_ body: BodyType) -> UIFont! {
         switch body {
         case .body_5:
             return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 16)
@@ -148,7 +149,7 @@ extension UIFont {
     }
     
     // 디자인 시스템에 정의되어 있는 바디 리턴
-    class func AppBody(_ body: BodyType, _ color: UIColor) -> [NSAttributedString.Key:Any] {
+    public class func AppBody(_ body: BodyType, _ color: UIColor) -> [NSAttributedString.Key:Any] {
         var font: UIFont?
         
         switch body {
@@ -176,7 +177,7 @@ extension UIFont {
         ]
     }
     
-    class func AppTitleWithText(_ title: TitleType, _ color: UIColor, text: String) -> NSAttributedString {
+    public class func AppTitleWithText(_ title: TitleType, _ color: UIColor, text: String) -> NSAttributedString {
         var font: UIFont?
         
         switch title {
@@ -205,7 +206,7 @@ extension UIFont {
         return NSAttributedString(string: text, attributes: attributes)
     }
     
-    class func AppBodyWithText(_ body: BodyType, _ color: UIColor, text: String) -> NSAttributedString {
+    public class func AppBodyWithText(_ body: BodyType, _ color: UIColor, text: String) -> NSAttributedString {
         var font: UIFont?
         
         switch body {
@@ -233,7 +234,7 @@ extension UIFont {
     }
     
     // 디자인 시스템에 정의되어 있는 헤드 리턴
-    class func AppHead(_ head: HeadType) -> UIFont! {
+    public class func AppHead(_ head: HeadType) -> UIFont! {
         switch head {
         case .head_1:
             return UIFont(name: UIFont.Montserrat(.ExtraBold), size: 10)
@@ -250,7 +251,7 @@ extension UIFont {
 }
 
 extension UILabel {
-    func setLineHeight(lineHeight: CGFloat = systemLineHeight) {
+    public func setLineHeight(lineHeight: CGFloat = systemLineHeight) {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 1.0
         paragraphStyle.lineHeightMultiple = lineHeight
@@ -269,7 +270,7 @@ extension UILabel {
         self.attributedText = attrString
     }
     
-    func setLineHeight2(lineHeight: CGFloat) {
+    public func setLineHeight2(lineHeight: CGFloat) {
         guard let text = self.text else { return }
         
         let attributeString = NSMutableAttributedString(string: text)
@@ -286,7 +287,7 @@ extension UILabel {
 }
 
 extension UITextView {
-    func numberOfLines() -> Int {
+    public func numberOfLines() -> Int {
         let layoutManager = self.layoutManager
         let numberOfGlyphs = layoutManager.numberOfGlyphs
         var lineRange: NSRange = NSMakeRange(0, 1)
