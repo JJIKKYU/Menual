@@ -21,8 +21,8 @@ target 'Menual' do
   
   # Google
   pod 'Firebase/Analytics'
-  pod 'Firebase/Auth'
-  pod 'Firebase/Firestore'
+#  pod 'Firebase/Auth'
+#  pod 'Firebase/Firestore'
   
   # 백업데이터 업로드용
 #  pod 'SSZipArchive'
