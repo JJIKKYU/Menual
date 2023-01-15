@@ -88,6 +88,7 @@
 		985BFFE829458D7A00D86106 /* Realm+Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985BFFE729458D7A00D86106 /* Realm+Util.swift */; };
 		985DE96D297401C700F9E7AD /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE96C297401C700F9E7AD /* Realm */; };
 		985DE96F297401C700F9E7AD /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE96E297401C700F9E7AD /* RealmSwift */; };
+		985DE9722974028500F9E7AD /* ZipArchive in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9712974028500F9E7AD /* ZipArchive */; };
 		985E0F1327C2750D00057951 /* AdaptivePresentationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */; };
 		987684A32948B4F400811387 /* MomentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987684A22948B4F400811387 /* MomentsModel.swift */; };
 		987684A5294D76F800811387 /* PushModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987684A4294D76F800811387 /* PushModel.swift */; };
@@ -565,6 +566,7 @@
 				98A6E1F02974003C008CF101 /* RIBs in Frameworks */,
 				985DE96F297401C700F9E7AD /* RealmSwift in Frameworks */,
 				98A6E1F929740099008CF101 /* CropViewController in Frameworks */,
+				985DE9722974028500F9E7AD /* ZipArchive in Frameworks */,
 				98A2BDA3280AD96200C1FB92 /* CloudKit.framework in Frameworks */,
 				98A6E1E12973FDD4008CF101 /* Then in Frameworks */,
 				985DE96D297401C700F9E7AD /* Realm in Frameworks */,
@@ -1543,6 +1545,7 @@
 				98A6E1FA29740099008CF101 /* TOCropViewController */,
 				985DE96C297401C700F9E7AD /* Realm */,
 				985DE96E297401C700F9E7AD /* RealmSwift */,
+				985DE9712974028500F9E7AD /* ZipArchive */,
 			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
@@ -1628,6 +1631,7 @@
 				98A6E1F429740075008CF101 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				98A6E1F729740099008CF101 /* XCRemoteSwiftPackageReference "TOCropViewController" */,
 				985DE96B297401C700F9E7AD /* XCRemoteSwiftPackageReference "realm-swift" */,
+				985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive" */,
 			);
 			productRefGroup = 9888DDDA27646EFF0091918F /* Products */;
 			projectDirPath = "";
@@ -2457,6 +2461,14 @@
 				minimumVersion = 10.20.1;
 			};
 		};
+		985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ZipArchive/ZipArchive.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 2.5.0;
+			};
+		};
 		98A6E1DF2973FDD4008CF101 /* XCRemoteSwiftPackageReference "Then" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/devxoul/Then";
@@ -2517,6 +2529,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 985DE96B297401C700F9E7AD /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
+		};
+		985DE9712974028500F9E7AD /* ZipArchive */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive" */;
+			productName = ZipArchive;
 		};
 		98A6E1E02973FDD4008CF101 /* Then */ = {
 			isa = XCSwiftPackageProductDependency;

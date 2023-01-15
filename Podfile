@@ -25,7 +25,7 @@ target 'Menual' do
   pod 'Firebase/Firestore'
   
   # 백업데이터 업로드용
-  pod 'SSZipArchive'
+#  pod 'SSZipArchive'
   
   # 이미지 크롭
 #  pod 'CropViewController', :git=> 'https://github.com/JJIKKYU/TOCropViewController', :branch => 'main'
