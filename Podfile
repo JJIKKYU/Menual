@@ -20,7 +20,7 @@ target 'Menual' do
 #  pod 'RxViewController'
   
   # Google
-  pod 'Firebase/Analytics'
+#  pod 'Firebase/Analytics'
 #  pod 'Firebase/Auth'
 #  pod 'Firebase/Firestore'
   

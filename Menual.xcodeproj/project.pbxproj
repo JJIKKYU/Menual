@@ -89,6 +89,8 @@
 		985DE96D297401C700F9E7AD /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE96C297401C700F9E7AD /* Realm */; };
 		985DE96F297401C700F9E7AD /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE96E297401C700F9E7AD /* RealmSwift */; };
 		985DE9722974028500F9E7AD /* ZipArchive in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9712974028500F9E7AD /* ZipArchive */; };
+		985DE9752974036800F9E7AD /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9742974036800F9E7AD /* FirebaseAnalytics */; };
+		985DE9772974036800F9E7AD /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9762974036800F9E7AD /* FirebaseAnalyticsSwift */; };
 		985E0F1327C2750D00057951 /* AdaptivePresentationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985E0F1227C2750D00057951 /* AdaptivePresentationControllerDelegate.swift */; };
 		987684A32948B4F400811387 /* MomentsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987684A22948B4F400811387 /* MomentsModel.swift */; };
 		987684A5294D76F800811387 /* PushModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987684A4294D76F800811387 /* PushModel.swift */; };
@@ -569,9 +571,11 @@
 				985DE9722974028500F9E7AD /* ZipArchive in Frameworks */,
 				98A2BDA3280AD96200C1FB92 /* CloudKit.framework in Frameworks */,
 				98A6E1E12973FDD4008CF101 /* Then in Frameworks */,
+				985DE9752974036800F9E7AD /* FirebaseAnalytics in Frameworks */,
 				985DE96D297401C700F9E7AD /* Realm in Frameworks */,
 				98A6E1E42973FDF2008CF101 /* RxCocoa in Frameworks */,
 				98A6E1F629740075008CF101 /* SnapKit in Frameworks */,
+				985DE9772974036800F9E7AD /* FirebaseAnalyticsSwift in Frameworks */,
 				98A6E1F32974005C008CF101 /* RxAppState in Frameworks */,
 				98A6E1FB29740099008CF101 /* TOCropViewController in Frameworks */,
 				CF2E3885995019FCA544D463 /* Pods_Menual.framework in Frameworks */,
@@ -1526,7 +1530,6 @@
 				9888DDD627646EFF0091918F /* Frameworks */,
 				9888DDD727646EFF0091918F /* Resources */,
 				98239BEA27E43DA500E216F1 /* Run swiftgen */,
-				8B584EB09AC149BA95F6DCF2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1546,6 +1549,8 @@
 				985DE96C297401C700F9E7AD /* Realm */,
 				985DE96E297401C700F9E7AD /* RealmSwift */,
 				985DE9712974028500F9E7AD /* ZipArchive */,
+				985DE9742974036800F9E7AD /* FirebaseAnalytics */,
+				985DE9762974036800F9E7AD /* FirebaseAnalyticsSwift */,
 			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
@@ -1578,7 +1583,6 @@
 				9888DDF527646F000091918F /* Sources */,
 				9888DDF627646F000091918F /* Frameworks */,
 				9888DDF727646F000091918F /* Resources */,
-				20A6106CCC0E0091C6E4958F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1632,6 +1636,7 @@
 				98A6E1F729740099008CF101 /* XCRemoteSwiftPackageReference "TOCropViewController" */,
 				985DE96B297401C700F9E7AD /* XCRemoteSwiftPackageReference "realm-swift" */,
 				985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive" */,
+				985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 9888DDDA27646EFF0091918F /* Products */;
 			projectDirPath = "";
@@ -1697,40 +1702,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		20A6106CCC0E0091C6E4958F /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Menual-MenualUITests/Pods-Menual-MenualUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8B584EB09AC149BA95F6DCF2 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Menual/Pods-Menual-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Menual/Pods-Menual-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Menual/Pods-Menual-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		91F9ED6B3F2F039B363AF945 /* [CP] Check Pods Manifest.lock */ = {
@@ -2169,6 +2140,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2224,6 +2196,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -2469,6 +2442,14 @@
 				minimumVersion = 2.5.0;
 			};
 		};
+		985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		98A6E1DF2973FDD4008CF101 /* XCRemoteSwiftPackageReference "Then" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/devxoul/Then";
@@ -2534,6 +2515,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive" */;
 			productName = ZipArchive;
+		};
+		985DE9742974036800F9E7AD /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		985DE9762974036800F9E7AD /* FirebaseAnalyticsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsSwift;
 		};
 		98A6E1E02973FDD4008CF101 /* Then */ = {
 			isa = XCSwiftPackageProductDependency;
