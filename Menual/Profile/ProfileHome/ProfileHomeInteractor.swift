@@ -10,7 +10,7 @@ import RxSwift
 import RxRelay
 import CloudKit
 import RealmSwift
-import SSZipArchive
+import ZipArchive
 
 protocol ProfileHomeRouting: ViewableRouting {
     func attachProfilePassword(isPasswordChange: Bool, isPaswwordDisabled: Bool)
