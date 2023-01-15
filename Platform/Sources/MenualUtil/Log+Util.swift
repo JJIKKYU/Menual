@@ -14,7 +14,7 @@ extension UIButton {
         static var actionName = "action"
     }
     
-    var actionName: String? {
+    public var actionName: String? {
         get {
             return (objc_getAssociatedObject(self, &AssociatedKeys.actionName) as? String)
         }
@@ -38,7 +38,7 @@ extension UIAction {
         static var actionName = "action"
     }
     
-    var actionName: String? {
+    public var actionName: String? {
         get {
             return (objc_getAssociatedObject(self, &AssociatedKeys.actionName) as? String)
         }
@@ -57,7 +57,7 @@ extension UITableViewCell {
         static var actionName = "action"
     }
     
-    var actionName: String? {
+    public var actionName: String? {
         get {
             return (objc_getAssociatedObject(self, &AssociatedKeys.actionName) as? String)
         }
@@ -81,7 +81,7 @@ extension UICollectionViewCell {
         static var actionName = "action"
     }
     
-    var actionName: String? {
+    public var actionName: String? {
         get {
             return (objc_getAssociatedObject(self, &AssociatedKeys.actionName) as? String)
         }
@@ -100,7 +100,7 @@ extension UIViewController {
         static var screenName = "screenName"
     }
     
-    var screenName: String? {
+    public var screenName: String? {
         get {
             print("Log :: UIVIewController :: get!")
             return (objc_getAssociatedObject(self, &AssociatedKeys.screenName) as? String)
@@ -132,7 +132,7 @@ extension UIView {
         static var categoryName = "categoryName"
     }
 
-    var categoryName: String? {
+    public var categoryName: String? {
         get {
             return (objc_getAssociatedObject(self, &AssociatedKeys.categoryName) as? String)
         }
@@ -147,8 +147,8 @@ extension UIView {
 }
 
 // MARK: - MenualLog
-class MenualLog {
-    class func logEventAction(_ log: String, parameter: [String: Any]? = nil) {
+public class MenualLog {
+    public class func logEventAction(_ log: String, parameter: [String: Any]? = nil) {
         let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
         if isDebugMode { return }
 
@@ -156,7 +156,7 @@ class MenualLog {
         Analytics.logEvent(log, parameters: parameter)
     }
     
-    class func logEventAction(responder: UIResponder, parameter: [String: Any]? = nil) {
+    public class func logEventAction(responder: UIResponder, parameter: [String: Any]? = nil) {
         let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
         if isDebugMode { return }
 

@@ -92,7 +92,7 @@ public enum HeadType {
     case head_5
 }
 
-var systemLineHeight: CGFloat{ 8.0 }
+public var systemLineHeight: CGFloat{ 8.0 }
 
 extension UIFont {
     
