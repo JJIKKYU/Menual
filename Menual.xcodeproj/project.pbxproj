@@ -22,6 +22,7 @@
 		98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98239BE527E323CB00E216F1 /* MomentsRoundView.swift */; };
 		98239BE927E43AB700E216F1 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98239BE827E43AB700E216F1 /* Icons.xcassets */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
+		982F61592973C05C00241A55 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 982F61582973C05C00241A55 /* Then */; };
 		983175D5296679BD0008AF51 /* MomentsNoStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983175D4296679BD0008AF51 /* MomentsNoStartView.swift */; };
 		983175D729667E6A0008AF51 /* MomentsNoStartCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983175D629667E6A0008AF51 /* MomentsNoStartCircleView.swift */; };
 		983175D92966B1360008AF51 /* MomentsNoStartStampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983175D82966B1360008AF51 /* MomentsNoStartStampView.swift */; };
@@ -550,6 +551,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				98A2BDA3280AD96200C1FB92 /* CloudKit.framework in Frameworks */,
+				982F61592973C05C00241A55 /* Then in Frameworks */,
 				CF2E3885995019FCA544D463 /* Pods_Menual.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1496,8 +1498,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9888DE0327646F000091918F /* Build configuration list for PBXNativeTarget "Menual" */;
 			buildPhases = (
-				985A52B227F0244F00B10829 /* Localized */,
 				91F9ED6B3F2F039B363AF945 /* [CP] Check Pods Manifest.lock */,
+				985A52B227F0244F00B10829 /* Localized */,
 				9888DDD527646EFF0091918F /* Sources */,
 				9888DDD627646EFF0091918F /* Frameworks */,
 				9888DDD727646EFF0091918F /* Resources */,
@@ -1509,6 +1511,9 @@
 			dependencies = (
 			);
 			name = Menual;
+			packageProductDependencies = (
+				982F61582973C05C00241A55 /* Then */,
+			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
 			productType = "com.apple.product-type.application";
@@ -1585,6 +1590,9 @@
 				Base,
 			);
 			mainGroup = 9888DDD027646EFF0091918F;
+			packageReferences = (
+				982F61572973C05C00241A55 /* XCRemoteSwiftPackageReference "Then" */,
+			);
 			productRefGroup = 9888DDDA27646EFF0091918F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -2403,6 +2411,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		982F61572973C05C00241A55 /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		982F61582973C05C00241A55 /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 982F61572973C05C00241A55 /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9888DDD127646EFF0091918F /* Project object */;
 }
