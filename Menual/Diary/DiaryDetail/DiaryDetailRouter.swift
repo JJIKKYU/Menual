@@ -7,6 +7,7 @@
 
 import RIBs
 import RxRelay
+import UIKit
 
 protocol DiaryDetailInteractable: Interactable, DiaryBottomSheetListener, DiaryWritingListener, DiaryDetailImageListener {
     var router: DiaryDetailRouting? { get set }

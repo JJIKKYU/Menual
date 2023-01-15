@@ -8,16 +8,16 @@ target 'Menual' do
   # Pods for Menual
 
   inhibit_all_warnings!
-  pod 'RIBs', :git=> 'https://github.com/uber/RIBs', :tag => '0.9.2'
-  pod 'RxRelay'
-  pod 'SnapKit', '~> 5.0.0'
+#  pod 'RIBs', :git=> 'https://github.com/uber/RIBs', :tag => '0.9.2'
+#  pod 'RxRelay'
+#  pod 'SnapKit', '~> 5.0.0'
   
-  pod 'RxSwift', '~> 5'
-  pod 'RxCocoa', '~> 5'
-  pod 'RxRealm'
+#  pod 'RxSwift', '~> 5'
+#  pod 'RxCocoa', '~> 5'
+#  pod 'RxRealm'
   pod 'Realm', '10.20.1'
   pod 'RealmSwift', '10.20.1'
-  pod 'RxViewController'
+#  pod 'RxViewController'
   
   # Google
   pod 'Firebase/Analytics'
@@ -28,7 +28,7 @@ target 'Menual' do
   pod 'SSZipArchive'
   
   # 이미지 크롭
-  pod 'CropViewController', :git=> 'https://github.com/JJIKKYU/TOCropViewController', :branch => 'main'
+#  pod 'CropViewController', :git=> 'https://github.com/JJIKKYU/TOCropViewController', :branch => 'main'
   
 
   target 'MenualTests' do
@@ -38,7 +38,7 @@ target 'Menual' do
 
   target 'MenualUITests' do
     # Pods for testing
-    pod 'RIBs', :git=> 'https://github.com/uber/RIBs', :tag => '0.9.2'
+#    pod 'RIBs', :git=> 'https://github.com/uber/RIBs', :tag => '0.9.2'
   end
   
   # 설치시에 13.0으로 타겟 변경

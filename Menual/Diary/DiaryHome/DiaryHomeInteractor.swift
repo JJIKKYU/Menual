@@ -143,7 +143,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     print("DiaryHome :: realmObserve = initial! = \(model)")
                     self.diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
                     let filteredModel = model
-                        .toArray()
+                        .toArray(type: DiaryModelRealm.self)
                         .filter ({ $0.isDeleted == false })
                         .sorted(by: { $0.createdAt > $1.createdAt })
 
@@ -270,7 +270,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 switch changes {
                 case .initial(let model):
                     print("DiaryHome :: Moments :: init! = \(model)")
-                    self.momentsRealm = model.toArray().first
+                    self.momentsRealm = model.toArray(type: MomentsRealm.self).first
                     self.presenter.reloadCollectionView()
                     
                 case .update(let model, let deletions, let insertions, let modifications):
@@ -454,7 +454,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         // double check
         if prevLastPageNum == 0 {
             let pageNum = self.diaryRealmArr?
-                .toArray()
+                .toArray(type: DiaryModelRealm.self)
                 .filter ({ $0.isDeleted == false })
                 .sorted(by: { $0.createdAt > $1.createdAt })
                 .first?.pageNum ?? 0

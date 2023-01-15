@@ -7,6 +7,7 @@
 
 import RIBs
 import RxRelay
+import Foundation
 
 protocol DiaryDetailImageDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be

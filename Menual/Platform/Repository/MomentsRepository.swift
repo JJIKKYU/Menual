@@ -9,7 +9,6 @@ import Foundation
 import RxSwift
 import RxRelay
 import RealmSwift
-import RxRealm
 
 public protocol MomentsRepository {
     func fetch()
@@ -24,7 +23,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
     init() {
         guard let realm = Realm.safeInit() else { return }
         self.diaryArr = realm.objects(DiaryModelRealm.self)
-            .toArray()
+            .toArray(type: DiaryModelRealm.self)
             .filter ({ $0.isDeleted == false })
 
         // moments를 한 번도 세팅하지 않은 경우

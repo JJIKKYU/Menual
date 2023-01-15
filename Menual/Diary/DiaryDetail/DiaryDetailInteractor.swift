@@ -300,7 +300,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         // 3. 삭제된 놈이면 건너뛰고 (isDeleted가 true일 경우)
         guard let realm = Realm.safeInit() else { return }
         let diaries = realm.objects(DiaryModelRealm.self)
-            .toArray()
+            .toArray(type: DiaryModelRealm.self)
             .filter { $0.isDeleted != true }
             .sorted(by: { $0.createdAt < $1.createdAt })
 

@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import UIKit
 
 protocol AppRootPresentableListener: AnyObject {
 }

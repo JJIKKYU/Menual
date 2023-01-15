@@ -97,7 +97,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         if bottomSheetType != .dateFilter { return }
         guard let realm = Realm.safeInit() else { return }
         let diaryArr = realm.objects(DiaryModelRealm.self)
-            .toArray()
+            .toArray(type: DiaryModelRealm.self)
             .sorted(by: ({ $0.createdAt < $1.createdAt }))
         
         

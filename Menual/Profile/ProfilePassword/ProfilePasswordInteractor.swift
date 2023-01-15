@@ -9,7 +9,6 @@ import RIBs
 import RxSwift
 import RealmSwift
 import RxRelay
-import RxRealm
 
 protocol ProfilePasswordRouting: ViewableRouting {
 

@@ -22,7 +22,6 @@
 		98239BE627E323CB00E216F1 /* MomentsRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98239BE527E323CB00E216F1 /* MomentsRoundView.swift */; };
 		98239BE927E43AB700E216F1 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98239BE827E43AB700E216F1 /* Icons.xcassets */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
-		982F61592973C05C00241A55 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 982F61582973C05C00241A55 /* Then */; };
 		983175D5296679BD0008AF51 /* MomentsNoStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983175D4296679BD0008AF51 /* MomentsNoStartView.swift */; };
 		983175D729667E6A0008AF51 /* MomentsNoStartCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983175D629667E6A0008AF51 /* MomentsNoStartCircleView.swift */; };
 		983175D92966B1360008AF51 /* MomentsNoStartStampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 983175D82966B1360008AF51 /* MomentsNoStartStampView.swift */; };
@@ -149,6 +148,15 @@
 		98A56C692868224B000AC4FF /* WeatherPlaceSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C682868224B000AC4FF /* WeatherPlaceSelectView.swift */; };
 		98A56C6B28682506000AC4FF /* WeatherPlaceSelectViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C6A28682506000AC4FF /* WeatherPlaceSelectViewCell.swift */; };
 		98A56C6E2868426B000AC4FF /* WeatherPlaceToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A56C6D2868426B000AC4FF /* WeatherPlaceToolbarView.swift */; };
+		98A6E1E12973FDD4008CF101 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1E02973FDD4008CF101 /* Then */; };
+		98A6E1E42973FDF2008CF101 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1E32973FDF2008CF101 /* RxCocoa */; };
+		98A6E1E62973FDF2008CF101 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1E52973FDF2008CF101 /* RxRelay */; };
+		98A6E1E82973FDF2008CF101 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1E72973FDF2008CF101 /* RxSwift */; };
+		98A6E1F02974003C008CF101 /* RIBs in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1EF2974003C008CF101 /* RIBs */; };
+		98A6E1F32974005C008CF101 /* RxAppState in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1F22974005C008CF101 /* RxAppState */; };
+		98A6E1F629740075008CF101 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1F529740075008CF101 /* SnapKit */; };
+		98A6E1F929740099008CF101 /* CropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1F829740099008CF101 /* CropViewController */; };
+		98A6E1FB29740099008CF101 /* TOCropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1FA29740099008CF101 /* TOCropViewController */; };
 		98A76E692920ED090024CE35 /* MonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A76E682920ED090024CE35 /* MonthView.swift */; };
 		98A76E6B2920EFD40024CE35 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A76E6A2920EFD40024CE35 /* CalendarView.swift */; };
 		98A76E6D292125410024CE35 /* DateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A76E6C292125410024CE35 /* DateCell.swift */; };
@@ -550,8 +558,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98A6E1E82973FDF2008CF101 /* RxSwift in Frameworks */,
+				98A6E1E62973FDF2008CF101 /* RxRelay in Frameworks */,
+				98A6E1F02974003C008CF101 /* RIBs in Frameworks */,
+				98A6E1F929740099008CF101 /* CropViewController in Frameworks */,
 				98A2BDA3280AD96200C1FB92 /* CloudKit.framework in Frameworks */,
-				982F61592973C05C00241A55 /* Then in Frameworks */,
+				98A6E1E12973FDD4008CF101 /* Then in Frameworks */,
+				98A6E1E42973FDF2008CF101 /* RxCocoa in Frameworks */,
+				98A6E1F629740075008CF101 /* SnapKit in Frameworks */,
+				98A6E1F32974005C008CF101 /* RxAppState in Frameworks */,
+				98A6E1FB29740099008CF101 /* TOCropViewController in Frameworks */,
 				CF2E3885995019FCA544D463 /* Pods_Menual.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1512,7 +1528,15 @@
 			);
 			name = Menual;
 			packageProductDependencies = (
-				982F61582973C05C00241A55 /* Then */,
+				98A6E1E02973FDD4008CF101 /* Then */,
+				98A6E1E32973FDF2008CF101 /* RxCocoa */,
+				98A6E1E52973FDF2008CF101 /* RxRelay */,
+				98A6E1E72973FDF2008CF101 /* RxSwift */,
+				98A6E1EF2974003C008CF101 /* RIBs */,
+				98A6E1F22974005C008CF101 /* RxAppState */,
+				98A6E1F529740075008CF101 /* SnapKit */,
+				98A6E1F829740099008CF101 /* CropViewController */,
+				98A6E1FA29740099008CF101 /* TOCropViewController */,
 			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
@@ -1591,7 +1615,12 @@
 			);
 			mainGroup = 9888DDD027646EFF0091918F;
 			packageReferences = (
-				982F61572973C05C00241A55 /* XCRemoteSwiftPackageReference "Then" */,
+				98A6E1DF2973FDD4008CF101 /* XCRemoteSwiftPackageReference "Then" */,
+				98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				98A6E1EE2974003C008CF101 /* XCRemoteSwiftPackageReference "RIBs" */,
+				98A6E1F12974005C008CF101 /* XCRemoteSwiftPackageReference "RxAppState" */,
+				98A6E1F429740075008CF101 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				98A6E1F729740099008CF101 /* XCRemoteSwiftPackageReference "TOCropViewController" */,
 			);
 			productRefGroup = 9888DDDA27646EFF0091918F /* Products */;
 			projectDirPath = "";
@@ -2413,21 +2442,101 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		982F61572973C05C00241A55 /* XCRemoteSwiftPackageReference "Then" */ = {
+		98A6E1DF2973FDD4008CF101 /* XCRemoteSwiftPackageReference "Then" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/devxoul/Then";
 			requirement = {
-				kind = upToNextMajorVersion;
+				kind = upToNextMinorVersion;
 				minimumVersion = 3.0.0;
+			};
+		};
+		98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		98A6E1EE2974003C008CF101 /* XCRemoteSwiftPackageReference "RIBs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/uber/RIBs.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		98A6E1F12974005C008CF101 /* XCRemoteSwiftPackageReference "RxAppState" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pixeldock/RxAppState";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		98A6E1F429740075008CF101 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		98A6E1F729740099008CF101 /* XCRemoteSwiftPackageReference "TOCropViewController" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JJIKKYU/TOCropViewController";
+			requirement = {
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		982F61582973C05C00241A55 /* Then */ = {
+		98A6E1E02973FDD4008CF101 /* Then */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 982F61572973C05C00241A55 /* XCRemoteSwiftPackageReference "Then" */;
+			package = 98A6E1DF2973FDD4008CF101 /* XCRemoteSwiftPackageReference "Then" */;
 			productName = Then;
+		};
+		98A6E1E32973FDF2008CF101 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		98A6E1E52973FDF2008CF101 /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		98A6E1E72973FDF2008CF101 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98A6E1E22973FDF2008CF101 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		98A6E1EF2974003C008CF101 /* RIBs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98A6E1EE2974003C008CF101 /* XCRemoteSwiftPackageReference "RIBs" */;
+			productName = RIBs;
+		};
+		98A6E1F22974005C008CF101 /* RxAppState */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98A6E1F12974005C008CF101 /* XCRemoteSwiftPackageReference "RxAppState" */;
+			productName = RxAppState;
+		};
+		98A6E1F529740075008CF101 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98A6E1F429740075008CF101 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		98A6E1F829740099008CF101 /* CropViewController */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98A6E1F729740099008CF101 /* XCRemoteSwiftPackageReference "TOCropViewController" */;
+			productName = CropViewController;
+		};
+		98A6E1FA29740099008CF101 /* TOCropViewController */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98A6E1F729740099008CF101 /* XCRemoteSwiftPackageReference "TOCropViewController" */;
+			productName = TOCropViewController;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

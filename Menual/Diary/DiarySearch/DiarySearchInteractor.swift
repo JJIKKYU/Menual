@@ -8,7 +8,6 @@
 import RIBs
 import RxSwift
 import RxRelay
-import RxRealm
 import RealmSwift
 
 protocol DiarySearchRouting: ViewableRouting {
@@ -73,7 +72,7 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
             case .initial(let model):
                 print("Search :: init!")
                 let filteredModel = model
-                    .toArray()
+                    .toArray(type: DiarySearchModelRealm.self)
                     .filter ({ $0.isDeleted == false })
                     .sorted(by: { $0.createdAt > $1.createdAt })
 
@@ -82,7 +81,7 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
             case .update(let model, let deletions, let insertions, let modifications):
                 print("Search :: update!")
                 let filteredModel = model
-                    .toArray()
+                    .toArray(type: DiarySearchModelRealm.self)
                     .filter ({ $0.isDeleted == false })
                     .sorted(by: { $0.createdAt > $1.createdAt })
 
@@ -120,7 +119,7 @@ final class DiarySearchInteractor: PresentableInteractor<DiarySearchPresentable>
 
         let results = realm.objects(DiaryModelRealm.self)
             .filter("isDeleted == false AND (title CONTAINS %@ OR desc CONTAINS %@)", "\(keyword)", "\(keyword)")
-            .toArray()
+            .toArray(type: DiaryModelRealm.self)
         
         print("reuslt = \(results)")
         self.searchResultsRelay.accept(results)

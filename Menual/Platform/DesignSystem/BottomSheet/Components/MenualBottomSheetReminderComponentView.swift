@@ -10,7 +10,7 @@ import Then
 import SnapKit
 import RxSwift
 import RxRelay
-import RxViewController
+import RxAppState
 import FirebaseAnalytics
 
 protocol MenualBottomSheetReminderComponentViewDelegate: AnyObject {

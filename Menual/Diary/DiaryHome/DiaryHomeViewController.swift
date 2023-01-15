@@ -12,7 +12,7 @@ import UIKit
 import SnapKit
 import Then
 import FirebaseAnalytics
-import RxViewController
+import RxAppState
 import RealmSwift
 
 enum TableCollectionViewTag: Int {

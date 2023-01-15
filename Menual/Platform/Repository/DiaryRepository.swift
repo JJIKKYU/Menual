@@ -9,7 +9,6 @@ import Foundation
 import RxSwift
 import RxRelay
 import RealmSwift
-import RxRealm
 
 public protocol DiaryRepository {
     var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }
