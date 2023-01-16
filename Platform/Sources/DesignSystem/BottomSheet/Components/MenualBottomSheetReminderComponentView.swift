@@ -10,8 +10,6 @@ import Then
 import SnapKit
 import RxSwift
 import RxRelay
-import RxAppState
-import FirebaseAnalytics
 
 protocol MenualBottomSheetReminderComponentViewDelegate: AnyObject {
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }

@@ -20,6 +20,8 @@ let package = Package(
         .package(url: "https://github.com/devxoul/Then", exact: Version("3.0.0")),
         .package(url: "https://github.com/realm/realm-swift", exact: Version("10.34.0")),
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", .upToNextMajor(from: "9.0.0")),
+        .package(url: "https://github.com/SnapKit/SnapKit", exact: Version("5.6.0")),
+        .package(url: "https://github.com/ReactiveX/RxSwift", exact: Version("6.0.0")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -28,6 +30,9 @@ let package = Package(
             name: "DesignSystem",
             dependencies: [
                 "MenualUtil",
+                .product(name: "SnapKit", package: "SnapKit"),
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
             ]
         ),
         .target(

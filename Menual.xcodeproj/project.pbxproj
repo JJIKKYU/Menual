@@ -334,6 +334,7 @@
 		98A56C682868224B000AC4FF /* WeatherPlaceSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherPlaceSelectView.swift; sourceTree = "<group>"; };
 		98A56C6A28682506000AC4FF /* WeatherPlaceSelectViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherPlaceSelectViewCell.swift; sourceTree = "<group>"; };
 		98A56C6D2868426B000AC4FF /* WeatherPlaceToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherPlaceToolbarView.swift; sourceTree = "<group>"; };
+		98AD776F2975A878002E5BD8 /* Diary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Diary; sourceTree = "<group>"; };
 		98B55742281CFF5B00F8CA3E /* DiarySearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchCell.swift; sourceTree = "<group>"; };
 		98B55744281D0FEE00F8CA3E /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		98B55746281D157200F8CA3E /* RecentSearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchCell.swift; sourceTree = "<group>"; };
@@ -583,6 +584,7 @@
 		9888DDD027646EFF0091918F = {
 			isa = PBXGroup;
 			children = (
+				98AD776F2975A878002E5BD8 /* Diary */,
 				98C59F35297443B1002703C6 /* Platform */,
 				98C59F3429744366002703C6 /* Profile */,
 				9888DDDB27646EFF0091918F /* Menual */,

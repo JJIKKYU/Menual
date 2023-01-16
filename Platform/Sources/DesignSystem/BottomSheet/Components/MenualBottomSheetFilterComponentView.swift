@@ -10,7 +10,6 @@ import SnapKit
 import Then
 import RxSwift
 import RxRelay
-import FirebaseAnalytics
 
 protocol MenualBottomSheetFilterComponentDelegate: AnyObject {
     var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]>? { get }
