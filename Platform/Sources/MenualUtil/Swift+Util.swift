@@ -5,19 +5,18 @@
 //  Created by 정진균 on 2022/04/16.
 //
 
-import Foundation
+import UIKit
 import RealmSwift
-import Realm
 
 // safe array index 탐색
-public extension Array {
+extension Array {
     public subscript (safe index: Int) -> Element? {
         return self.indices ~= index ? self[index] : nil
     }
 }
 
 extension Realm {
-    static func safeInit() -> Realm? {
+    public static func safeInit() -> Realm? {
         // let keyString: String = "Menual"
         // let key = keyString.data(using: .utf8)!
         
@@ -45,7 +44,7 @@ extension Realm {
         return nil
     }
 
-    func safeWrite(_ block: () -> ()) {
+    public func safeWrite(_ block: () -> ()) {
         do {
             // Async safety, to prevent "Realm already in a write transaction" Exceptions
             if !isInWriteTransaction {
@@ -58,7 +57,7 @@ extension Realm {
 }
 
 extension UIApplication {
-    static var topSafeAreaHeight: CGFloat {
+    public static var topSafeAreaHeight: CGFloat {
         var topSafeAreaHeight: CGFloat = 0
          if #available(iOS 11.0, *) {
                let window = UIApplication.shared.windows[0]
@@ -70,7 +69,7 @@ extension UIApplication {
 }
 
 extension UIView {
-    func applyBlurEffect() {
+    public func applyBlurEffect() {
         let blurEffect = UIBlurEffect(style: .dark)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = bounds
@@ -80,7 +79,7 @@ extension UIView {
 }
 
 extension UITextField {
-  func addLeftPadding() {
+    public func addLeftPadding() {
     let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: self.frame.height))
     self.leftView = paddingView
     self.leftViewMode = ViewMode.always
@@ -90,7 +89,7 @@ extension UITextField {
 // MARK: - UITextView extension
 extension UITextView {
 
-    func centerVerticalText() {
+    public func centerVerticalText() {
         self.textAlignment = .left
         let fitSize = CGSize(width: bounds.width, height: CGFloat.greatestFiniteMagnitude)
         let size = sizeThatFits(fitSize)
@@ -101,7 +100,7 @@ extension UITextView {
 }
 
 extension UIImage {
-    func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage {
+    public func imageWithImage (sourceImage:UIImage, scaledToWidth: CGFloat) -> UIImage {
         let oldWidth = sourceImage.size.width
         let scaleFactor = scaledToWidth / oldWidth
 

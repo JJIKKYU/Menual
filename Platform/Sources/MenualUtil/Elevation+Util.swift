@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-enum ShadowType {
+public enum ShadowType {
     case shadow_0
     case shadow_1
     case shadow_2
@@ -19,7 +19,7 @@ enum ShadowType {
 }
 
 extension UIView {
-    func AppShadow(_ type: ShadowType) {
+    public func AppShadow(_ type: ShadowType) {
         var isDarkMode: Bool = false
         
         if #available(iOS 13.0, *) {

@@ -16,7 +16,7 @@ public protocol MenualNaviViewProtocol {
 }
 
 /// 뷰마다 NavigationType 정의
-enum NaviViewType {
+public enum NaviViewType {
     case main
     case moments
     case search
@@ -32,11 +32,11 @@ enum NaviViewType {
     case detailImage
 }
 
-class MenualNaviView: UIView {
+public class MenualNaviView: UIView {
     
-    var naviViewType: NaviViewType
+    public var naviViewType: NaviViewType
 
-    lazy var menualTitleImage = UIImageView().then {
+    public lazy var menualTitleImage = UIImageView().then {
         let image = Asset._24px.full.image.withRenderingMode(.alwaysTemplate)
         $0.tintColor = Colors.tint.main.v700
         $0.image = image
@@ -44,7 +44,7 @@ class MenualNaviView: UIView {
         $0.isHidden = true
     }
     
-    var backButton = BaseButton().then {
+    public var backButton = BaseButton().then {
         $0.actionName = "back"
         $0.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = .white
@@ -54,7 +54,7 @@ class MenualNaviView: UIView {
         $0.isHidden = true
     }
     
-    var titleLabel = UILabel().then {
+    public var titleLabel = UILabel().then {
         $0.text = "title"
         $0.font = UIFont.AppTitle(.title_3)
         $0.textColor = .white
@@ -62,7 +62,7 @@ class MenualNaviView: UIView {
     }
     
     // 가장 오른쪽
-    var rightButton1 = BaseButton().then {
+    public var rightButton1 = BaseButton().then {
         $0.setImage(Asset._24px.profile.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.tint.main.v700
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -72,16 +72,16 @@ class MenualNaviView: UIView {
         $0.isHidden = true
     }
     
-    var rightButton1IsActive: Bool = false {
+    public var rightButton1IsActive: Bool = false {
         didSet { setNeedsLayout() }
     }
     
-    var rightButton2IsActive: Bool = false {
+    public var rightButton2IsActive: Bool = false {
         didSet { setNeedsLayout() }
     }
     
     // 오른쪽에서 2번째
-    var rightButton2 = BaseButton().then {
+    public var rightButton2 = BaseButton().then {
         $0.setImage(Asset._24px.search.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.tint.main.v700
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +91,7 @@ class MenualNaviView: UIView {
         $0.isHidden = true
     }
     
-    var leftButton1 = BaseButton().then {
+    public var leftButton1 = BaseButton().then {
         $0.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = .white
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -101,7 +101,7 @@ class MenualNaviView: UIView {
         $0.isHidden = true
     }
     
-    init(type: NaviViewType) {
+    public init(type: NaviViewType) {
         self.naviViewType = type
         super.init(frame: CGRect.zero)
         categoryName = "navi"
@@ -283,7 +283,7 @@ class MenualNaviView: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         switch naviViewType {

@@ -10,6 +10,7 @@ import RxSwift
 import Then
 import SnapKit
 import UIKit
+import DesignSystem
 
 protocol MetaDataPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform

@@ -8,6 +8,7 @@
 import UIKit
 import Then
 import SnapKit
+import DesignSystem
 
 class WeatherPlaceSelectViewCell: UICollectionViewCell {
     

@@ -8,6 +8,8 @@
 import UIKit
 import Then
 import SnapKit
+import MenualUtil
+import DesignSystem
 
 class PasswordView: UIView {
     

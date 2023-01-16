@@ -5,10 +5,10 @@
 //  Created by 정진균 on 2023/01/05.
 //
 
-import Foundation
 import SnapKit
 import Then
 import UIKit
+import DesignSystem
 
 class MomentsNoStartView: UIView {
     

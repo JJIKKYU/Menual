@@ -8,6 +8,7 @@
 import UIKit
 import Then
 import SnapKit
+import DesignSystem
 
 class Pagination: UIPageControl {
     override var currentPage: Int {

@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import Then
 import SnapKit
+import DesignSystem
 
 enum BoxButtonStatus {
     case active

@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import Then
+import DesignSystem
 
 enum DividerType {
     case _2px

@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-enum CornerType {
+public enum CornerType {
     case _2pt
     case _4pt
     case tiny
@@ -18,7 +18,7 @@ enum CornerType {
     case large
 }
 
-extension UIView {
+public extension UIView {
     /**
      CornerRadius System
      */

@@ -10,6 +10,7 @@ import RxSwift
 import UIKit
 import Then
 import SnapKit
+import DesignSystem
 
 protocol FABPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform

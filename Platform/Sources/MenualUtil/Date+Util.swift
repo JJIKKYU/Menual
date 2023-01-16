@@ -8,56 +8,56 @@
 import Foundation
 
 extension Date {
-    func toString() -> String {
+    public func toString() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd"
         dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
-    func toStringHourMin() -> String {
+    public func toStringHourMin() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "HH:mm"
         dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
-    func toStringWithHourMin() -> String {
+    public func toStringWithHourMin() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM.dd HH:mm"
         dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
-    func toStringWithMM() -> String {
+    public func toStringWithMM() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM"
         dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
-    func toStringWithYYYY() -> String {
+    public func toStringWithYYYY() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy"
         dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
-    func toStringWithYYYYMM() -> String {
+    public func toStringWithYYYYMM() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy.MM"
         dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
-    func toStringWithMMdd() -> String {
+    public func toStringWithMMdd() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM.dd"
         dateFormatter.timeZone = TimeZone.autoupdatingCurrent
         return dateFormatter.string(from: self)
     }
     
-    func toStringWithMonthEngName() -> String {
+    public func toStringWithMonthEngName() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM"
         dateFormatter.timeZone = TimeZone.autoupdatingCurrent
@@ -94,7 +94,7 @@ extension Date {
 }
 
 extension String {
-    func convertEngMonthName() -> String {
+    public func convertEngMonthName() -> String {
         switch self {
         case "01", "1":
             return "JAN"
@@ -125,7 +125,7 @@ extension String {
         }
     }
     
-    func convertMonthName() -> String {
+    public func convertMonthName() -> String {
         switch self {
         case "JAN":
             return "01"
@@ -159,13 +159,13 @@ extension String {
 
 // MARK: - Custom Calndar 제작을 위한 extension
 extension Date {
-    var weekday: Int {
+    public var weekday: Int {
         get {
             Calendar.current.component(.weekday, from: self)
         }
     }
     
-    var fistDayOfTheMonth: Date {
+    public var fistDayOfTheMonth: Date {
         get {
             Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: self))!
         }
@@ -173,13 +173,13 @@ extension Date {
 }
 
 extension String {
-    static var dateFormatter: DateFormatter = {
+    public static var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }()
     
-    var date: Date? {
+    public var date: Date? {
         String.dateFormatter.date(from: self)
     }
 }

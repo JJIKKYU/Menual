@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 extension UITableViewCell {
-    func removeSectionSeparators() {
+    public func removeSectionSeparators() {
         for subview in subviews {
             if subview != contentView && subview.frame.width == frame.width {
                 subview.removeFromSuperview()

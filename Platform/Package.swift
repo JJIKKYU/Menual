@@ -19,10 +19,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/devxoul/Then", exact: Version("3.0.0")),
         .package(url: "https://github.com/realm/realm-swift", exact: Version("10.34.0")),
-        .package(
-            url: "https://github.com/firebase/firebase-ios-sdk.git",
-            .upToNextMajor(from: "9.0.0")
-          ),
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", .upToNextMajor(from: "9.0.0")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -37,7 +34,9 @@ let package = Package(
             name: "MenualUtil",
             dependencies: [
                 .product(name: "Realm", package: "realm-swift"),
+                .product(name: "RealmSwift", package: "realm-swift"),
                 .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk"),
+                .product(name: "Then", package: "Then"),
             ]
         ),
     ]
