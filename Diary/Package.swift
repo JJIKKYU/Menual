@@ -36,7 +36,8 @@ let package = Package(
         .package(url: "https://github.com/SnapKit/SnapKit", exact: Version("5.6.0")),
         .package(url: "https://github.com/ReactiveX/RxSwift", exact: Version("6.0.0")),
         .package(path: "../Platform"),
-        .package(path: "../Profile")
+        .package(path: "../Profile"),
+        .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3"))
     ],
     targets: [
         .target(
@@ -93,6 +94,7 @@ let package = Package(
                 .product(name: "RxCocoa", package: "RxSwift"),
                 .product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
+                .product(name: "ZipArchive", package: "ZipArchive")
             ]
         ),
         .target(

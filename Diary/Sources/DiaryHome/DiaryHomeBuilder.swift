@@ -10,6 +10,7 @@ import RxRelay
 import MenualEntity
 import MenualRepository
 
+import ZipArchive
 import ProfileDesignSystem
 import DiarySearch
 import DiaryWriting
@@ -17,25 +18,25 @@ import DiaryDetail
 import DiaryBottomSheet
 import ProfileHome
 
-protocol DiaryHomeDependency: Dependency {
+public protocol DiaryHomeDependency: Dependency {
     // AppRootComponent에서 생성해서, 부모(AppRoot RIBs)로부터 받아옴
     var diaryRepository: DiaryRepository { get }
     var momentsRepository: MomentsRepository { get }
     var diaryUUIDRelay: BehaviorRelay<String> { get }
 }
 
-final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency, DiaryBottomSheetDependency {
+public final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency, DiaryBottomSheetDependency {
     
-    var diaryUUIDRelay: BehaviorRelay<String> { dependency.diaryUUIDRelay }
-    var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
-    var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
-    var filteredDiaryCountRelay: BehaviorRelay<Int>?
+    public var diaryUUIDRelay: BehaviorRelay<String> { dependency.diaryUUIDRelay }
+    public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
+    public var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
+    public var filteredDiaryCountRelay: BehaviorRelay<Int>?
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
 
-    var diaryRepository: DiaryRepository { dependency.diaryRepository }
-    var momentsRepository: MomentsRepository { dependency.momentsRepository }
+    public var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    public var momentsRepository: MomentsRepository { dependency.momentsRepository }
     
-    override init(
+    public override init(
         dependency: DiaryHomeDependency
     ) {
         super.init(dependency: dependency)
@@ -44,20 +45,20 @@ final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDepen
 
 // MARK: - Builder
 
-protocol DiaryHomeBuildable: Buildable {
+public protocol DiaryHomeBuildable: Buildable {
     func build(
         withListener listener: DiaryHomeListener,
         diaryUUIDRelay: BehaviorRelay<String>?
     ) -> DiaryHomeRouting
 }
 
-final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
+public final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuildable {
 
-    override init(dependency: DiaryHomeDependency) {
+    public override init(dependency: DiaryHomeDependency) {
         super.init(dependency: dependency)
     }
 
-    func build(
+    public func build(
         withListener listener: DiaryHomeListener,
         diaryUUIDRelay: BehaviorRelay<String>?
     ) -> DiaryHomeRouting {

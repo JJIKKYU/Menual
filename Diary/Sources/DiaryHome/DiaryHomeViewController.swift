@@ -17,12 +17,12 @@ import MenualUtil
 import MenualEntity
 import DesignSystem
 
-enum TableCollectionViewTag: Int {
+public enum TableCollectionViewTag: Int {
     case MomentsCollectionView = 0
     case MyMenualTableView = 1
 }
 
-protocol DiaryHomePresentableListener: AnyObject {
+public protocol DiaryHomePresentableListener: AnyObject {
     func pressedSearchBtn()
     func pressedMyPageBtn()
     func pressedWritingBtn()

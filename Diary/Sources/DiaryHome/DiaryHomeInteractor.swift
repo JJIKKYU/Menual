@@ -15,7 +15,7 @@ import MenualUtil
 import MenualRepository
 import DiaryBottomSheet
 
-protocol DiaryHomeRouting: ViewableRouting {
+public protocol DiaryHomeRouting: ViewableRouting {
     func attachMyPage()
     func detachMyPage(isOnlyDetach: Bool)
     func attachDiarySearch()
@@ -30,7 +30,7 @@ protocol DiaryHomeRouting: ViewableRouting {
     func detachBottomSheet()
 }
 
-protocol DiaryHomePresentable: Presentable {
+public protocol DiaryHomePresentable: Presentable {
     var listener: DiaryHomePresentableListener? { get set }
     var isFilteredRelay: BehaviorRelay<Bool> { get }
     var isShowToastDiaryResultRelay: BehaviorRelay<ShowToastType?> { get }
@@ -47,11 +47,11 @@ protocol DiaryHomePresentable: Presentable {
     func deleteTableViewSection(section: Int)
 }
 
-protocol DiaryHomeListener: AnyObject {
+public protocol DiaryHomeListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
 }
 
-protocol DiaryHomeInteractorDependency {
+public protocol DiaryHomeInteractorDependency {
     var diaryUUIDRelay: BehaviorRelay<String> { get }
     var diaryRepository: DiaryRepository { get }
     var momentsRepository: MomentsRepository { get }

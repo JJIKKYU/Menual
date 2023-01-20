@@ -15,7 +15,7 @@ import DiaryWriting
 import DiaryDetail
 import ProfileHome
 
-protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener DiaryWritingListener, DiaryDetailListener, DesignSystemListener, DiaryBottomSheetListener {
+protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryWritingListener, DiaryDetailListener, DesignSystemListener, DiaryBottomSheetListener {
     var router: DiaryHomeRouting? { get set }
     var listener: DiaryHomeListener? { get set }
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
