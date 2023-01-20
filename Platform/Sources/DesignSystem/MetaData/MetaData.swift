@@ -10,8 +10,8 @@ import UIKit
 import SnapKit
 import Then
 
-class MetaData: UIView {
-    enum MetaDataType {
+public class MetaData: UIView {
+    public enum MetaDataType {
         case writing
         case view
         case image
@@ -83,7 +83,7 @@ class MetaData: UIView {
         $0.isHidden = true
     }
     
-    init(type: MetaDataType) {
+    public init(type: MetaDataType) {
         self.metaDataType = type
         super.init(frame: CGRect.zero)
         setViews()
@@ -143,7 +143,7 @@ class MetaData: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         dateLabel.text = date

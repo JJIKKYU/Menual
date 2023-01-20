@@ -11,12 +11,12 @@ import UIKit
 
 // MARK: - Realm에 저장하기 위한 Class
 public class TempSaveModelRealm: Object {
-    @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var uuid: String
-    @Persisted var title: String = ""
-    @Persisted var desc: String = ""
-    @Persisted var image: Bool
-    var originalImage: Data? {
+    @Persisted(primaryKey: true) public var _id: ObjectId
+    @Persisted public var uuid: String
+    @Persisted public var title: String = ""
+    @Persisted public var desc: String = ""
+    @Persisted public var image: Bool
+    public var originalImage: Data? {
         get {
             if image == false { return nil }
             // 1. 도큐먼트 폴더 경로가져오기
@@ -33,7 +33,7 @@ public class TempSaveModelRealm: Object {
             return nil
         }
     }
-    var cropImage: Data? {
+    public var cropImage: Data? {
         get {
             if image == false { return nil }
             // 1. 도큐먼트 폴더 경로가져오기
@@ -50,14 +50,14 @@ public class TempSaveModelRealm: Object {
             return nil
         }
     }
-    @Persisted var weather: Weather?
-    @Persisted var weatherDetailText: String?
-    @Persisted var place: Place?
-    @Persisted var placeDetailText: String?
-    @Persisted var createdAt: Date
-    @Persisted var isDeleted: Bool
+    @Persisted public var weather: Weather?
+    @Persisted public var weatherDetailText: String?
+    @Persisted public var place: Place?
+    @Persisted public var placeDetailText: String?
+    @Persisted public var createdAt: Date
+    @Persisted public var isDeleted: Bool
     
-    convenience init(uuid: String, diaryModel: DiaryModelRealm, createdAt: Date, isDeleted: Bool) {
+    convenience public init(uuid: String, diaryModel: DiaryModelRealm, createdAt: Date, isDeleted: Bool) {
         self.init()
         self.uuid = uuid
         self.title = diaryModel.title

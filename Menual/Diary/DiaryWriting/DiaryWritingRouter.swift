@@ -8,6 +8,8 @@
 import RIBs
 import RxSwift
 import RxRelay
+import MenualUtil
+import MenualEntity
 
 protocol DiaryWritingInteractable: Interactable, DiaryTempSaveListener {
     var router: DiaryWritingRouting? { get set }

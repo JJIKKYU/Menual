@@ -8,9 +8,8 @@
 import SnapKit
 import Then
 import UIKit
-import DesignSystem
 
-class MomentsNoStartView: UIView {
+public class MomentsNoStartView: UIView {
     
     let testSet: [Int: String] = [
         1: "12/31",
@@ -66,7 +65,7 @@ class MomentsNoStartView: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -105,7 +104,7 @@ class MomentsNoStartView: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         // 작성을 모두 완료했을때

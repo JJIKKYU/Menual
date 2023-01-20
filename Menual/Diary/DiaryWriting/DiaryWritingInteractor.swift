@@ -10,6 +10,8 @@ import RxSwift
 import RealmSwift
 import RxRelay
 import Foundation
+import MenualEntity
+import MenualUtil
 
 protocol DiaryWritingRouting: ViewableRouting {
     func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModelRealm?>, tempSaveResetRelay: BehaviorRelay<Bool>)

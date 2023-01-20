@@ -8,21 +8,23 @@
 import UIKit
 import SnapKit
 import Then
+import MenualUtil
+import MenualEntity
 
-class MenualBottomSheetCell: UICollectionViewCell {
-    var weatherIconType: Weather? {
+public class MenualBottomSheetCell: UICollectionViewCell {
+    public var weatherIconType: Weather? {
         didSet {
             layoutSubviews()
         }
     }
     
-    var placeIconType: Place? {
+    public var placeIconType: Place? {
         didSet {
             layoutSubviews()
         }
     }
     
-    var cellIsSelected: Bool = false
+    public var cellIsSelected: Bool = false
     
     var iconView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
@@ -58,7 +60,7 @@ class MenualBottomSheetCell: UICollectionViewCell {
         $0.isHidden = true
     }
     
-    override func awakeFromNib() {
+    public override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
@@ -67,7 +69,7 @@ class MenualBottomSheetCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         setViews()
     }
@@ -93,7 +95,7 @@ class MenualBottomSheetCell: UICollectionViewCell {
         
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         print("suvViews!")
         setIconView()
@@ -152,7 +154,7 @@ class MenualBottomSheetCell: UICollectionViewCell {
         
     }
     
-    func selected() {
+    public func selected() {
         iconView.tintColor = Colors.tint.sub.n400
         selectedView.isHidden = false
         selectedView.layer.borderWidth = 0
@@ -160,7 +162,7 @@ class MenualBottomSheetCell: UICollectionViewCell {
         cellIsSelected = true
     }
     
-    func unSelected() {
+    public func unSelected() {
         iconView.tintColor = Colors.grey.g400
         selectedView.isHidden = false
         selectedView.layer.borderWidth = 1

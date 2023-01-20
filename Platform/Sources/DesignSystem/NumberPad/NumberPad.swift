@@ -8,13 +8,14 @@
 import UIKit
 import Then
 import SnapKit
+import MenualUtil
 
-protocol NumberPadDelegate: AnyObject {
+public protocol NumberPadDelegate: AnyObject {
     func deleteNumber()
     func selectNumber(number: Int)
 }
 
-class NumberPad: UIView {
+public class NumberPad: UIView {
     
     public weak var delegate: NumberPadDelegate?
     
@@ -37,7 +38,7 @@ class NumberPad: UIView {
         $0.register(NumberPadCell.self, forCellWithReuseIdentifier: "NumberPadCell")
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -55,7 +56,7 @@ class NumberPad: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
     }
 
@@ -63,11 +64,11 @@ class NumberPad: UIView {
 
 // MARK: - UICollectionView Delegate
 extension NumberPad: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return numberPadData.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "NumberPadCell", for: indexPath) as? NumberPadCell else { return UICollectionViewCell() }
         
         let index = indexPath.row
@@ -76,14 +77,14 @@ extension NumberPad: UICollectionViewDelegate, UICollectionViewDelegateFlowLayou
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         let width = bounds.width / 3
         let height = width * 0.78
         return CGSize(width: width , height: height )
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let index = indexPath.row
         print("NumberPad :: didSelectCell! = \(indexPath), \(numberPadData[index])")
         

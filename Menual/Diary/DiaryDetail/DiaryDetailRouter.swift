@@ -8,6 +8,9 @@
 import RIBs
 import RxRelay
 import UIKit
+import MenualUtil
+import DesignSystem
+import MenualEntity
 
 protocol DiaryDetailInteractable: Interactable, DiaryBottomSheetListener, DiaryWritingListener, DiaryDetailImageListener {
     var router: DiaryDetailRouting? { get set }

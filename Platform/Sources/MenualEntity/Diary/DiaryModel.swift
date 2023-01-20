@@ -12,19 +12,19 @@ import UIKit
 // MARK: - Realm에 저장하기 위한 Class
 public class DiaryModelRealm: Object {
     // @objc dynamic var id: ObjectId
-    @Persisted(primaryKey: true) var _id: ObjectId
-    var uuid: String {
+    @Persisted(primaryKey: true) public var _id: ObjectId
+    public var uuid: String {
         get {
             return _id.stringValue
         }
     }
-    @Persisted var pageNum: Int
-    @Persisted var title = ""
-    @Persisted var weather: WeatherModelRealm?
-    @Persisted var place: PlaceModelRealm?
-    @Persisted var desc: String = ""
-    @Persisted var image: Bool
-    var originalImage: Data? {
+    @Persisted public var pageNum: Int
+    @Persisted public var title = ""
+    @Persisted public var weather: WeatherModelRealm?
+    @Persisted public var place: PlaceModelRealm?
+    @Persisted public var desc: String = ""
+    @Persisted public var image: Bool
+    public var originalImage: Data? {
         get {
             if image == false { return nil }
             // 1. 도큐먼트 폴더 경로가져오기
@@ -41,7 +41,7 @@ public class DiaryModelRealm: Object {
             return nil
         }
     }
-    var thumbImage: Data? {
+    public var thumbImage: Data? {
         get {
             if image == false { return nil }
             // 1. 도큐먼트 폴더 경로가져오기
@@ -58,7 +58,7 @@ public class DiaryModelRealm: Object {
             return nil
         }
     }
-    var cropImage: Data? {
+    public var cropImage: Data? {
         get {
             if image == false { return nil }
             // 1. 도큐먼트 폴더 경로가져오기
@@ -75,11 +75,11 @@ public class DiaryModelRealm: Object {
             return nil
         }
     }
-    @Persisted var readCount: Int
-    @Persisted var createdAt: Date
-    @Persisted var isDeleted: Bool
-    @Persisted var replies: List<DiaryReplyModelRealm>
-    var repliesArr: [DiaryReplyModelRealm] {
+    @Persisted public var readCount: Int
+    @Persisted public var createdAt: Date
+    @Persisted public var isDeleted: Bool
+    @Persisted public var replies: List<DiaryReplyModelRealm>
+    public var repliesArr: [DiaryReplyModelRealm] {
         get {
             return replies.map { $0 }
         }
@@ -88,11 +88,11 @@ public class DiaryModelRealm: Object {
             replies.append(objectsIn: newValue)
         }
     }
-    @Persisted var lastMomentsDate: Date?
-    @Persisted var isHide: Bool
-    @Persisted var reminder: ReminderModelRealm?
+    @Persisted public var lastMomentsDate: Date?
+    @Persisted public var isHide: Bool
+    @Persisted public var reminder: ReminderModelRealm?
     
-    convenience init(pageNum: Int,
+    public convenience init(pageNum: Int,
                      title: String,
                      weather: WeatherModelRealm?,
                      place: PlaceModelRealm?,
@@ -123,7 +123,7 @@ public class DiaryModelRealm: Object {
         self.reminder = reminder
     }
     
-    func updatePageNum(pageNum: Int) {
+    public func updatePageNum(pageNum: Int) {
         self.pageNum = pageNum + 1
     }
 }

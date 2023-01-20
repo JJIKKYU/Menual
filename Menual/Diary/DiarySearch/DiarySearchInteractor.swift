@@ -9,6 +9,7 @@ import RIBs
 import RxSwift
 import RxRelay
 import RealmSwift
+import MenualEntity
 
 protocol DiarySearchRouting: ViewableRouting {
     func attachDiaryDetailVC(diaryModel: DiaryModelRealm)

@@ -10,8 +10,11 @@ import Then
 import SnapKit
 import RxSwift
 import RxRelay
+import RxCocoa
+import MenualEntity
+import MenualUtil
 
-protocol MenualBottomSheetReminderComponentViewDelegate: AnyObject {
+public protocol MenualBottomSheetReminderComponentViewDelegate: AnyObject {
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
     func pressedQuestionBtn()
     func pressedIsEnabledSwitchBtn(isEnabled: Bool)
@@ -20,9 +23,9 @@ protocol MenualBottomSheetReminderComponentViewDelegate: AnyObject {
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
 }
 
-class MenualBottomSheetReminderComponentView: UIView {
+public class MenualBottomSheetReminderComponentView: UIView {
     
-    weak var delegate: MenualBottomSheetReminderComponentViewDelegate?
+    public weak var delegate: MenualBottomSheetReminderComponentViewDelegate?
     
     // 윤달 처리를 위해서
     private var numOfDaysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31]
@@ -127,7 +130,7 @@ class MenualBottomSheetReminderComponentView: UIView {
         btn.addTarget(self, action: #selector(pressedSelectBtn), for: .touchUpInside)
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         categoryName = "reminder"
         setInitCalendar()
@@ -139,7 +142,7 @@ class MenualBottomSheetReminderComponentView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func willMove(toWindow newWindow: UIWindow?) {
+    public override func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)
         print("Reminder :: willMove! = \(delegate)")
         bind()
@@ -209,7 +212,7 @@ class MenualBottomSheetReminderComponentView: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         if let dateComponets = dateComponets {
@@ -462,13 +465,13 @@ extension MenualBottomSheetReminderComponentView {
 
 // MARK: - Calendar UICollectionVIew Delegate
 extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print("Reminder :: firstWeekDayOfMonth = \(firstWeekDayOfMonth)")
         // return numOfDaysInMonth[currentMonthIndex - 1] + firstWeekDayOfMonth - 1
         return 42
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DateCell", for: indexPath) as? DateCell else {
             return UICollectionViewCell()
         }
@@ -530,7 +533,7 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
 
         guard let cell = collectionView.cellForItem(at: indexPath) as? DateCell else { return true }
         
@@ -544,7 +547,7 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         guard let cell = collectionView.cellForItem(at: indexPath) as? DateCell else { return }
         
@@ -553,23 +556,23 @@ extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICo
         MenualLog.logEventAction(responder: cell)
     }
     
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         // print("Reminder :: deS")
         guard let cell = collectionView.cellForItem(at: indexPath) as? DateCell else { return }
         
         print("Reminder :: didDeselected!")
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let widthHeight = collectionView.frame.width / 7
         return CGSize(width: widthHeight, height: widthHeight)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
 }

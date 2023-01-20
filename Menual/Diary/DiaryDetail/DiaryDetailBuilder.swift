@@ -7,6 +7,7 @@
 
 import RIBs
 import RxRelay
+import MenualEntity
 
 protocol DiaryDetailDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be

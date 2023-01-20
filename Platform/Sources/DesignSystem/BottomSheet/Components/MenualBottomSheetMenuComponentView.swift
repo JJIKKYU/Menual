@@ -8,10 +8,11 @@
 import UIKit
 import SnapKit
 import Then
+import MenualUtil
 
-class MenualBottomSheetMenuComponentView: UIView {
+public class MenualBottomSheetMenuComponentView: UIView {
     
-    enum MenuComponent {
+    public enum MenuComponent {
         case none
         case hide
         case edit
@@ -61,7 +62,7 @@ class MenualBottomSheetMenuComponentView: UIView {
         $0.leftUIImage = Asset._24px.delete.image.withRenderingMode(.alwaysTemplate)
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -101,7 +102,7 @@ class MenualBottomSheetMenuComponentView: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         print("DiaryBottomSheet :: Hide \(isHide)")
         

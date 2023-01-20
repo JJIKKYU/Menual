@@ -9,12 +9,12 @@ import UIKit
 import SnapKit
 import Then
 
-class TabsText: UIView {
-    var number: String = "" {
+public class TabsText: UIView {
+    public var number: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var title: String = "" {
+    public var title: String = "" {
         didSet { setNeedsLayout() }
     }
     
@@ -30,7 +30,7 @@ class TabsText: UIView {
         $0.textColor = Colors.grey.g800
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -58,7 +58,7 @@ class TabsText: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         numberLabel.text = number

@@ -10,12 +10,13 @@ import SnapKit
 import Then
 import RxSwift
 import RxRelay
+import MenualEntity
 
-protocol MenualDateFilterComponentDelegate: AnyObject {
+public protocol MenualDateFilterComponentDelegate: AnyObject {
     var dateFilterModelRelay: BehaviorRelay<[DateFilterModel]?>? { get }
 }
 
-class MenualDateFilterComponentView: UIView {
+public class MenualDateFilterComponentView: UIView {
     
     public weak var delegate: MenualDateFilterComponentDelegate?
 
@@ -24,8 +25,8 @@ class MenualDateFilterComponentView: UIView {
     let currentYear = Calendar.current.component(.year, from: Date())
     let currentMonth = Calendar.current.component(.month, from: Date())
     
-    let monthArrowIdxRelay = BehaviorRelay<Int>(value: 0)
-    let yearArrowIdxRelay = BehaviorRelay<Int>(value: 0)
+    public let monthArrowIdxRelay = BehaviorRelay<Int>(value: 0)
+    public let yearArrowIdxRelay = BehaviorRelay<Int>(value: 0)
     
     // "2022NOV" 같은 DiaryHome에서 사용
     var yearEngMonth: String = ""
@@ -73,7 +74,7 @@ class MenualDateFilterComponentView: UIView {
     }
     
     // Month
-    lazy var prevMonthArrowBtn = UIButton().then {
+    public lazy var prevMonthArrowBtn = UIButton().then {
         $0.actionName = "prevMonth"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -106,7 +107,7 @@ class MenualDateFilterComponentView: UIView {
         $0.title = "텍스트"
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -168,7 +169,7 @@ class MenualDateFilterComponentView: UIView {
         }
     }
     
-    override func willMove(toWindow newWindow: UIWindow?) {
+    public override func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)
         
         print("DiaryBottomSheet :: willMove!")
@@ -278,7 +279,7 @@ class MenualDateFilterComponentView: UIView {
         .disposed(by: disposeBag)
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         monthTitle.text = "\(month)월"

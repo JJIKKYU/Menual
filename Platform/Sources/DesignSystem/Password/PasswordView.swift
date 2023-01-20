@@ -9,18 +9,17 @@ import UIKit
 import Then
 import SnapKit
 import MenualUtil
-import DesignSystem
 
-class PasswordView: UIView {
+public class PasswordView: UIView {
     
-    enum PasswordViewType {
+    public enum PasswordViewType {
         case check // 비밀번호 변경시에 사용
         case first
         case second
         case error
     }
     
-    enum ScreenType {
+    public enum ScreenType {
         case setting
         case main
         case change
@@ -72,7 +71,7 @@ class PasswordView: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -129,7 +128,7 @@ class PasswordView: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         switch type {

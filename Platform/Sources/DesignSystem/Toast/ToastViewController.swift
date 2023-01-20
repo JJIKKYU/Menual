@@ -9,7 +9,7 @@ import UIKit
 import Then
 import SnapKit
 
-class ToastView: UIView {
+public class ToastView: UIView {
     
     public var titleText: String = "Toast 타이틀입니다." {
         didSet { setText() }
@@ -59,40 +59,40 @@ class ToastView: UIView {
     }
 }
 
-extension UIViewController {
+public extension UIViewController {
 
-func showToast(message : String) -> ToastView {
-    let toastView = ToastView()
+    public func showToast(message : String) -> ToastView {
+        let toastView = ToastView()
 
-    toastView.titleText = message
-    
-    view.addSubview(toastView)
-    toastView.snp.makeConstraints { make in
-        make.leading.equalToSuperview()
-        make.width.equalToSuperview()
-        make.top.equalToSuperview().inset(-UIApplication.topSafeAreaHeight - 36)
-        make.height.equalTo(UIApplication.topSafeAreaHeight + 36)
-    }
-    toastView.alpha = 1.0
-
-    view.layoutIfNeeded()
-    UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
-        toastView.snp.updateConstraints { make in
-            make.top.equalToSuperview().inset(0)
-        }
-        self.view.layoutIfNeeded()
-    } completion: { _ in
+        toastView.titleText = message
         
-    }
-
-    UIView.animate(withDuration: 0.3, delay: 2, options: .curveEaseInOut, animations: {
-        toastView.snp.updateConstraints { make in
+        view.addSubview(toastView)
+        toastView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
             make.top.equalToSuperview().inset(-UIApplication.topSafeAreaHeight - 36)
+            make.height.equalTo(UIApplication.topSafeAreaHeight + 36)
         }
-        self.view.layoutIfNeeded()
-    }, completion: { [weak self] isCompleted in
-        toastView.removeFromSuperview()
-    })
-    return toastView
-    }
+        toastView.alpha = 1.0
+
+        view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
+            toastView.snp.updateConstraints { make in
+                make.top.equalToSuperview().inset(0)
+            }
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            
+        }
+
+        UIView.animate(withDuration: 0.3, delay: 2, options: .curveEaseInOut, animations: {
+            toastView.snp.updateConstraints { make in
+                make.top.equalToSuperview().inset(-UIApplication.topSafeAreaHeight - 36)
+            }
+            self.view.layoutIfNeeded()
+        }, completion: { [weak self] isCompleted in
+            toastView.removeFromSuperview()
+        })
+        return toastView
+        }
 }

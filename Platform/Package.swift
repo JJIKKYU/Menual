@@ -15,6 +15,9 @@ let package = Package(
         .library(
             name: "MenualUtil",
             targets: ["MenualUtil"]),
+        .library(
+            name: "MenualEntity",
+            targets: ["MenualEntity"]),
     ],
     dependencies: [
         .package(url: "https://github.com/devxoul/Then", exact: Version("3.0.0")),
@@ -33,15 +36,25 @@ let package = Package(
                 .product(name: "SnapKit", package: "SnapKit"),
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
-            ]
+                .product(name: "RxCocoa", package: "RxSwift"),
+            ],
+            resources: [.process("Resources")]
         ),
         .target(
             name: "MenualUtil",
             dependencies: [
+                "MenualEntity",
                 .product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
                 .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk"),
                 .product(name: "Then", package: "Then"),
+            ]
+        ),
+        .target(
+            name: "MenualEntity",
+            dependencies: [
+                .product(name: "Realm", package: "realm-swift"),
+                .product(name: "RealmSwift", package: "realm-swift"),
             ]
         ),
     ]

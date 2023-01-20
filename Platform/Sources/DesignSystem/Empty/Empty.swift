@@ -10,25 +10,25 @@ import Then
 import SnapKit
 import MenualUtil
 
-class Empty: UIView {
+public class Empty: UIView {
     
-    enum screen {
+    public enum screen {
         case main
         case writing
         case search
     }
     
-    enum main {
+    public enum main {
         case main
         case filter
     }
     
-    enum writing {
+    public enum writing {
         case temporarysave
         case lock
     }
     
-    enum search {
+    public enum search {
         case search
         case result
     }
@@ -61,7 +61,7 @@ class Empty: UIView {
         $0.textColor = Colors.grey.g600
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         backgroundColor = .clear
         setViews()
@@ -87,7 +87,7 @@ class Empty: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         switch screenType {

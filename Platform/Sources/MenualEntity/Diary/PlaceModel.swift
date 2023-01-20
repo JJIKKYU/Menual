@@ -20,7 +20,7 @@ public enum Place: String, PersistableEnum {
     case company = "회사"
     case car = "차 안"
     
-    func getPlaceText(place: Place) -> String {
+    public func getPlaceText(place: Place) -> String {
         var text = ""
         switch place {
         case .place:
@@ -46,16 +46,16 @@ public enum Place: String, PersistableEnum {
        return text
     }
     
-    func getVariation() -> [Place] {
+    public func getVariation() -> [Place] {
         return [.place, .home, .company, .school, .bus, .subway, .store, .travel, .car]
     }
 }
 
-class PlaceModelRealm: EmbeddedObject {
-    @Persisted var place: Place?
-    @Persisted var detailText: String = ""
+public class PlaceModelRealm: EmbeddedObject {
+    @Persisted public var place: Place?
+    @Persisted public var detailText: String = ""
     
-    convenience init(place: Place?, detailText: String) {
+    public convenience init(place: Place?, detailText: String) {
         self.init()
         self.place = place
         self.detailText = detailText

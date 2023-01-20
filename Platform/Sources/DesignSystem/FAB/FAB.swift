@@ -8,49 +8,48 @@
 import Foundation
 import Then
 import SnapKit
-import DesignSystem
 import UIKit
 import MenualUtil
 
-enum FABType {
+public enum FABType {
     case primary
     case secondary
     case spacRequired
 }
 
-enum FABStatus {
+public enum FABStatus {
     case default_
     case pressed
 }
 
-enum FABIsFilltered {
+public enum FABIsFilltered {
     case enabled
     case disabled
 }
 
-class FAB: UIButton {
+public class FAB: UIButton {
 
-    var fabType: FABType = .primary {
+    public var fabType: FABType = .primary {
         didSet { setNeedsLayout() }
     }
     
-    var fabStatus: FABStatus = .default_ {
+    public var fabStatus: FABStatus = .default_ {
         didSet { setNeedsLayout() }
     }
     
-    var spaceRequiredCurrentPage: String = "P.999" {
+    public var spaceRequiredCurrentPage: String = "P.999" {
         didSet { setNeedsLayout() }
     }
     
-    var isFiltered: FABIsFilltered = .disabled {
+    public var isFiltered: FABIsFilltered = .disabled {
         didSet { setNeedsLayout() }
     }
     
-    var leftArrowIsEnabled: Bool =  true {
+    public var leftArrowIsEnabled: Bool =  true {
         didSet { setNeedsLayout() }
     }
     
-    var rightArrowIsEnabled: Bool = true {
+    public var rightArrowIsEnabled: Bool = true {
         didSet { setNeedsLayout() }
     }
     
@@ -62,7 +61,7 @@ class FAB: UIButton {
         $0.isHidden = true
     }
     
-    var spaceRequiredLeftArrowBtn = BaseButton().then {
+    public var spaceRequiredLeftArrowBtn = BaseButton().then {
         $0.actionName = "left"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.contentMode = .scaleAspectFit
@@ -74,7 +73,7 @@ class FAB: UIButton {
         $0.tag = -1
     }
     
-    var spaceRequiredRightArrowBtn = BaseButton().then {
+    public var spaceRequiredRightArrowBtn = BaseButton().then {
         $0.actionName = "right"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.contentMode = .scaleAspectFit
@@ -100,12 +99,12 @@ class FAB: UIButton {
         }
     }
     
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
     
-    convenience init(fabType: FABType, fabStatus: FABStatus) {
+    public convenience init(fabType: FABType, fabStatus: FABStatus) {
         self.init()
         self.fabType = fabType
         self.fabStatus = fabStatus
@@ -148,7 +147,7 @@ class FAB: UIButton {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         switch fabType {

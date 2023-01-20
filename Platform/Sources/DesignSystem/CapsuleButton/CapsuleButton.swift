@@ -9,34 +9,34 @@ import UIKit
 import Then
 import SnapKit
 
-enum CapsuleButtonStatus {
+public enum CapsuleButtonStatus {
     case defaultType
     case pressed
 }
 
-enum CapsuleButtonIncludeType {
+public enum CapsuleButtonIncludeType {
     case textOnly
     case iconText
 }
 
-class CapsuleButton: UIButton {
-    var includeType: CapsuleButtonIncludeType = .textOnly {
+public class CapsuleButton: UIButton {
+    public var includeType: CapsuleButtonIncludeType = .textOnly {
         didSet { setNeedsLayout() }
     }
     
-    var buttonStatus: CapsuleButtonStatus = .defaultType {
+    public var buttonStatus: CapsuleButtonStatus = .defaultType {
         didSet { setNeedsLayout() }
     }
     
-    var title: String = "" {
+    public var title: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var image: UIImage = UIImage() {
+    public var image: UIImage = UIImage() {
         didSet { setNeedsLayout() }
     }
     
-    var btnSelected: Bool = false {
+    public var btnSelected: Bool = false {
         didSet { setNeedsLayout() }
     }
     
@@ -54,7 +54,7 @@ class CapsuleButton: UIButton {
         $0.font = UIFont.AppTitle(.title_1)
     }
     
-    init(frame: CGRect, includeType: CapsuleButtonIncludeType) {
+    public init(frame: CGRect, includeType: CapsuleButtonIncludeType) {
         self.includeType = includeType
         super.init(frame: frame)
         setViews()
@@ -81,7 +81,7 @@ class CapsuleButton: UIButton {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         rightTitleLabel.text = title

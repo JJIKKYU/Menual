@@ -8,15 +8,14 @@
 import UIKit
 import SnapKit
 import Then
-import DesignSystem
 
-class MomentsText: UIView {
+public class MomentsText: UIView {
     
-    var tagTitle: String = "" {
+    public var tagTitle: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var momentsTitle: String = "" {
+    public var momentsTitle: String = "" {
         didSet { setNeedsLayout() }
     }
     
@@ -35,7 +34,7 @@ class MomentsText: UIView {
         $0.adjustsFontSizeToFitWidth = false
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -60,7 +59,7 @@ class MomentsText: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         momentsTagView.title = tagTitle

@@ -9,6 +9,8 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
+import DesignSystem
+import MenualEntity
 
 enum SelectedWeatherLocationType {
     case weather

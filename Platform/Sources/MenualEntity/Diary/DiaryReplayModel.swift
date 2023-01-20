@@ -10,14 +10,14 @@ import RealmSwift
 
 // MARK: - Realm에 저장하기 위한 Class
 public class DiaryReplyModelRealm: EmbeddedObject {
-    @Persisted var uuid: String = ""
-    @Persisted var replyNum: Int
-    @Persisted var diaryUuid: String
-    @Persisted var desc: String
-    @Persisted var createdAt: Date
-    @Persisted var isDeleted: Bool
+    @Persisted public var uuid: String = ""
+    @Persisted public var replyNum: Int
+    @Persisted public var diaryUuid: String
+    @Persisted public var desc: String
+    @Persisted public var createdAt: Date
+    @Persisted public var isDeleted: Bool
     
-    convenience init(uuid: String, replyNum: Int, diaryUuid: String, desc: String, createdAt: Date, isDeleted: Bool) {
+    convenience public init(uuid: String, replyNum: Int, diaryUuid: String, desc: String, createdAt: Date, isDeleted: Bool) {
         self.init()
         self.uuid = uuid
         self.replyNum = replyNum
@@ -27,7 +27,7 @@ public class DiaryReplyModelRealm: EmbeddedObject {
         self.isDeleted = isDeleted
     }
     
-    func updateReplyNum(replyNum: Int) {
+    public func updateReplyNum(replyNum: Int) {
         self.replyNum = replyNum + 1
     }
 }

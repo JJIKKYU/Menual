@@ -8,21 +8,21 @@
 import RIBs
 import RxSwift
 
-protocol ProfileOpensourceRouting: ViewableRouting {
+public protocol ProfileOpensourceRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
 }
 
-protocol ProfileOpensourcePresentable: Presentable {
+public protocol ProfileOpensourcePresentable: Presentable {
     var listener: ProfileOpensourcePresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
 }
 
-protocol ProfileOpensourceListener: AnyObject {
+public protocol ProfileOpensourceListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func profileOpensourcePressedBackBtn(isOnlyDetach: Bool)
 }
 
-final class ProfileOpensourceInteractor: PresentableInteractor<ProfileOpensourcePresentable>, ProfileOpensourceInteractable, ProfileOpensourcePresentableListener {
+public final class ProfileOpensourceInteractor: PresentableInteractor<ProfileOpensourcePresentable>, ProfileOpensourceInteractable, ProfileOpensourcePresentableListener {
 
     weak var router: ProfileOpensourceRouting?
     weak var listener: ProfileOpensourceListener?
@@ -34,17 +34,17 @@ final class ProfileOpensourceInteractor: PresentableInteractor<ProfileOpensource
         presenter.listener = self
     }
 
-    override func didBecomeActive() {
+    public override func didBecomeActive() {
         super.didBecomeActive()
         // TODO: Implement business logic here.
     }
 
-    override func willResignActive() {
+    public override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
     }
     
-    func pressedBackBtn(isOnlyDetach: Bool) {
+    public func pressedBackBtn(isOnlyDetach: Bool) {
         listener?.profileOpensourcePressedBackBtn(isOnlyDetach: isOnlyDetach)
     }
 }

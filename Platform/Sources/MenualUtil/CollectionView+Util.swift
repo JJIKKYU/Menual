@@ -8,12 +8,12 @@
 import Foundation
 import UIKit
 
-class CustomCollectionViewFlowLayout: UICollectionViewFlowLayout {
+public class CustomCollectionViewFlowLayout: UICollectionViewFlowLayout {
     
     private var previousOffset: CGFloat = 0
     private var currentPage: Int = 0
     
-    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
+    public override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
         guard let collectionView = collectionView else {
             return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
         }

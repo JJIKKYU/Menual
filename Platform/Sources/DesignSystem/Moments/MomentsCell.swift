@@ -9,17 +9,17 @@ import UIKit
 import Then
 import SnapKit
 
-class MomentsCell: UICollectionViewCell {
+public class MomentsCell: UICollectionViewCell {
     
-    var tagTitle: String = "" {
+    public var tagTitle: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var momentsTitle: String = "" {
+    public var momentsTitle: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var icon: String = "" {
+    public var icon: String = "" {
         didSet { setNeedsLayout() }
     }
     
@@ -27,7 +27,7 @@ class MomentsCell: UICollectionViewCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         self.isUserInteractionEnabled = true
         setViews()
@@ -39,7 +39,7 @@ class MomentsCell: UICollectionViewCell {
         
     }
     
-    override func awakeFromNib() {
+    public override func awakeFromNib() {
         super.awakeFromNib()
     }
     
@@ -52,7 +52,7 @@ class MomentsCell: UICollectionViewCell {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         momentsView.tagTitle = tagTitle

@@ -10,7 +10,7 @@ import SnapKit
 import Then
 import DesignSystem
 
-class TempSaveCell: UITableViewCell {
+public class TempSaveCell: UITableViewCell {
     
     public var title: String = "" {
         didSet { setNeedsLayout() }
@@ -40,11 +40,11 @@ class TempSaveCell: UITableViewCell {
         didSet { setNeedsLayout() }
     }
     
-    var listStatus: ListStatus = .default_ {
+    public var listStatus: ListStatus = .default_ {
         didSet { setNeedsLayout() }
     }
     
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+    public override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         listStatus = highlighted ? .highlighed : .default_
     }
@@ -68,12 +68,12 @@ class TempSaveCell: UITableViewCell {
         $0.backgroundColor = Colors.grey.g800
     }
 
-    override func awakeFromNib() {
+    public override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setViews()
     }
@@ -82,13 +82,13 @@ class TempSaveCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
+    public override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         // Configure the view for the selected state
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         listTitleView.titleText = title

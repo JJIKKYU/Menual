@@ -10,26 +10,28 @@ import SnapKit
 import Then
 import RxSwift
 import RxRelay
+import MenualEntity
+import MenualUtil
 
-protocol MenualBottomSheetFilterComponentDelegate: AnyObject {
+public protocol MenualBottomSheetFilterComponentDelegate: AnyObject {
     var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]>? { get }
     var filterPlaceSelectedArrRelay: BehaviorRelay<[Place]>? { get }
     var filteredMenaulCountsObservable: Observable<Int> { get }
 }
 
-class MenualBottomSheetFilterComponentView: UIView {
+public class MenualBottomSheetFilterComponentView: UIView {
     // var weatherSelectedArr: [Weather] = []
     
     // var placeSelectedArr: [Place] = []
     
-    weak var delegate: MenualBottomSheetFilterComponentDelegate? {
+    public weak var delegate: MenualBottomSheetFilterComponentDelegate? {
         didSet {
             print("델리게이트 불림!")
         }
     }
     var disposeBag = DisposeBag()
     
-    var filteredCount: Int = 0 {
+    public var filteredCount: Int = 0 {
         didSet { setNeedsLayout() }
     }
     
@@ -108,7 +110,7 @@ class MenualBottomSheetFilterComponentView: UIView {
         $0.isEnabled = false
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
         setBindRelay()
@@ -119,7 +121,7 @@ class MenualBottomSheetFilterComponentView: UIView {
     }
     
     // bind는 delegate setting을 한 후에 사용하는 곳에서 직접 수행
-    func bind() {
+    public func bind() {
         print("bind!")
         delegate?.filteredMenaulCountsObservable
             .subscribe(onNext: { [weak self] count in
@@ -132,7 +134,7 @@ class MenualBottomSheetFilterComponentView: UIView {
             .disposed(by: disposeBag)
     }
     
-    func setBindRelay() {
+    public func setBindRelay() {
         print("DiaryBottomSheet :: setBindRelay! = \(delegate?.filterWeatherSelectedArrRelay), \(delegate?.filterPlaceSelectedArrRelay)")
         
         delegate?.filterWeatherSelectedArrRelay?
@@ -218,7 +220,7 @@ class MenualBottomSheetFilterComponentView: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         guard let weatherSelectedArr = delegate?.filterWeatherSelectedArrRelay?.value,
               let placeSelectedArr = delegate?.filterPlaceSelectedArrRelay?.value
@@ -334,11 +336,11 @@ extension MenualBottomSheetFilterComponentView {
 
 // MARK: - WeatherPlaceSelectViewDelegate
 extension MenualBottomSheetFilterComponentView: WeatherPlaceSelectViewDelegate {
-    func isSelected(_ isSelected: Bool) {
+    public func isSelected(_ isSelected: Bool) {
         print("isSelected!")
     }
     
-    func weatherSendData(weatherType: Weather, isSelected: Bool) {
+    public func weatherSendData(weatherType: Weather, isSelected: Bool) {
         print("weatherSendData! - \(weatherType), isSelected = \(isSelected)")
         var weatherSelectedArr = delegate?.filterWeatherSelectedArrRelay?.value ?? []
 
@@ -364,7 +366,7 @@ extension MenualBottomSheetFilterComponentView: WeatherPlaceSelectViewDelegate {
         setNeedsLayout()
     }
     
-    func placeSendData(placeType: Place, isSelected: Bool) {
+    public func placeSendData(placeType: Place, isSelected: Bool) {
         print("placeSendData! - \(placeType), isSelcted = \(isSelected)")
         var placeSelectedArr = delegate?.filterPlaceSelectedArrRelay?.value ?? []
         

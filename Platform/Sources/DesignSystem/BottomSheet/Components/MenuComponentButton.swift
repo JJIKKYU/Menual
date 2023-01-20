@@ -9,7 +9,7 @@ import UIKit
 import Then
 import SnapKit
 
-class MenuComponentButton: UIButton {
+public class MenuComponentButton: UIButton {
     var title: String = "" {
         didSet { setNeedsLayout() }
     }
@@ -60,7 +60,7 @@ class MenuComponentButton: UIButton {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         titleCustomLabel.text = title

@@ -9,14 +9,14 @@ import UIKit
 import Then
 import SnapKit
 
-enum TabsCellStatus {
+public enum TabsCellStatus {
     case active
     case inactive
     case pressed
 }
 
-class TabsCell: UICollectionViewCell {
-    var tabsCellStatus: TabsCellStatus = .active {
+public class TabsCell: UICollectionViewCell {
+    public var tabsCellStatus: TabsCellStatus = .active {
         didSet { setNeedsLayout() }
     }
     
@@ -74,7 +74,7 @@ class TabsCell: UICollectionViewCell {
         
     }
  
-    override func awakeFromNib() {
+    public override func awakeFromNib() {
         super.awakeFromNib()
     }
     
@@ -99,7 +99,7 @@ class TabsCell: UICollectionViewCell {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         self.tabsText.title = title

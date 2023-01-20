@@ -11,9 +11,11 @@ import RxRelay
 import UIKit
 import SnapKit
 import Then
-import FirebaseAnalytics
 import RxAppState
 import RealmSwift
+import MenualUtil
+import MenualEntity
+import DesignSystem
 
 enum TableCollectionViewTag: Int {
     case MomentsCollectionView = 0

@@ -8,11 +8,10 @@
 import UIKit
 import SnapKit
 import Then
-import DesignSystem
 
-class ListTitleView: UIView {
+public class ListTitleView: UIView {
     
-    enum ListTitleType {
+    public enum ListTitleType {
         case title
         case titlePicture
         case titleHide
@@ -23,15 +22,15 @@ class ListTitleView: UIView {
         didSet { setNeedsLayout() }
     }
     
-    var titleText: String = "타이틀 노출영역입니다." {
+    public var titleText: String = "타이틀 노출영역입니다." {
         didSet { setNeedsLayout() }
     }
     
-    var bodyText: String = "내용 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사용합니다." {
+    public var bodyText: String = "내용 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사용합니다." {
         didSet { setNeedsLayout() }
     }
     
-    var searchKeyword: String = "" {
+    public var searchKeyword: String = "" {
         didSet { setNeedsLayout() }
     }
     
@@ -61,7 +60,7 @@ class ListTitleView: UIView {
         $0.isHidden = true
     }
 
-    init(type: ListTitleType) {
+    public init(type: ListTitleType) {
         self.listTitleType = type
         super.init(frame: CGRect.zero)
         setViews()
@@ -93,7 +92,7 @@ class ListTitleView: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         titleLabel.text = titleText

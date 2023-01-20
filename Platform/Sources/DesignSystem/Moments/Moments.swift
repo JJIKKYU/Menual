@@ -9,17 +9,17 @@ import UIKit
 import SnapKit
 import Then
 
-class Moments: UIView {
+public class Moments: UIView {
     
-    var tagTitle: String = "" {
+    public var tagTitle: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var momentsTitle: String = "" {
+    public var momentsTitle: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var icon: String = "" {
+    public var icon: String = "" {
         didSet { setNeedsLayout() }
     }
     
@@ -33,7 +33,7 @@ class Moments: UIView {
         $0.image = Asset._120px.tea.image
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -63,7 +63,7 @@ class Moments: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         momentsText.tagTitle = tagTitle

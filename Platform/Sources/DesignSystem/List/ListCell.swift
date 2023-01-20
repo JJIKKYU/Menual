@@ -8,10 +8,10 @@
 import UIKit
 import Then
 import SnapKit
-import DesignSystem
 import MenualUtil
+import MenualEntity
 
-enum ListType {
+public enum ListType {
     case normal
     // case textReview
     case textAndImage
@@ -21,29 +21,29 @@ enum ListType {
     case hide
 }
 
-enum ListStatus {
+public enum ListStatus {
     case default_
     case highlighed
     case pressed
 }
 
-class ListCell: UITableViewCell {
+public class ListCell: UITableViewCell {
     
-    var testModel: DiaryModelRealm?
+    public var testModel: DiaryModelRealm?
     
     // 현재 정보를 담고 있는 게시글의 UUID
     // Search 후에 필요한 정보를 임시로 담고 있도록
-    var uuid: String = ""
+    public var uuid: String = ""
     
-    var listType: ListType = .normal {
+    public var listType: ListType = .normal {
         didSet { setNeedsLayout() }
     }
     
-    var listStatus: ListStatus = .default_ {
+    public var listStatus: ListStatus = .default_ {
         didSet { setNeedsLayout() }
     }
     
-    var searchKeyword: String = "" {
+    public var searchKeyword: String = "" {
         didSet { setNeedsLayout() }
     }
     
@@ -52,36 +52,36 @@ class ListCell: UITableViewCell {
 //        listStatus = selected ? .pressed : .default_
 //   }
        
-   override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+    public override func setHighlighted(_ highlighted: Bool, animated: Bool) {
        super.setHighlighted(highlighted, animated: animated)
        listStatus = highlighted ? .highlighed : .default_
    }
     
-    var title: String = "" {
+    public var title: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var date: String = "" {
+    public var date: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var time: String = "" {
+    public var time: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var pageCount: String = "" {
+    public var pageCount: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var reviewCount: String = "" {
+    public var reviewCount: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var image: UIImage? {
+    public var image: UIImage? {
         didSet { setNeedsLayout() }
     }
     
-    var body: String = "" {
+    public var body: String = "" {
         didSet { setNeedsLayout() }
     }
     
@@ -112,12 +112,12 @@ class ListCell: UITableViewCell {
         $0.backgroundColor = Colors.grey.g800
     }
 
-    override func awakeFromNib() {
+    public override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setViews()
     }
@@ -169,7 +169,7 @@ class ListCell: UITableViewCell {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         removeSectionSeparators()

@@ -10,6 +10,7 @@ import RxSwift
 import RxRelay
 import RealmSwift
 import UIKit
+import MenualEntity
 
 public protocol DiaryRepository {
     var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }

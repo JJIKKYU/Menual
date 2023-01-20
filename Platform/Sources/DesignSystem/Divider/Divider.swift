@@ -8,21 +8,20 @@
 import UIKit
 import SnapKit
 import Then
-import DesignSystem
 
-enum DividerType {
+public enum DividerType {
     case _2px
     case _1px
     case year
 }
 
-class Divider: UIView {
+public class Divider: UIView {
     
-    var type: DividerType = ._1px {
+    public var type: DividerType = ._1px {
         didSet { setNeedsLayout() }
     }
     
-    var dateTitle: String = "" {
+    public var dateTitle: String = "" {
         didSet { setNeedsLayout() }
     }
     
@@ -33,7 +32,7 @@ class Divider: UIView {
         $0.transform = CGAffineTransform(rotationAngle: CGFloat(Double(-90) * .pi/180))
     }
 
-    init(type: DividerType) {
+    public init(type: DividerType) {
         self.type = type
         super.init(frame: CGRect.zero)
         setViews()
@@ -52,7 +51,7 @@ class Divider: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         switch type {

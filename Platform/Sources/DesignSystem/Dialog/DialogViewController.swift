@@ -8,30 +8,29 @@
 import UIKit
 import SnapKit
 import Then
-import DesignSystem
 import MenualUtil
 
-enum DialogSize {
+public enum DialogSize {
     case small
     case medium
     case large
 }
 
-enum DialogButtonType {
+public enum DialogButtonType {
     case oneBtn
     case twoBtn
 }
 
 // Dialog의 버튼의 액션을 처리하는 Delegate입니다.
-protocol DialogDelegate: AnyObject {
+public protocol DialogDelegate: AnyObject {
     func action(titleText: String)   // confirm button event
     func exit(titleText: String)     // cancel button event
 }
 
 
-class DialogViewController: UIViewController {
+public class DialogViewController: UIViewController {
     
-    weak var delegate: DialogDelegate?
+    public weak var delegate: DialogDelegate?
     
     public var titleText: String = "타이틀입니다" {
         didSet { setText() }
@@ -148,14 +147,14 @@ class DialogViewController: UIViewController {
         $0.backgroundColor = Colors.background.withAlphaComponent(0.7)
     }
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
 
         screenName = "dialog"
         setViews()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
+    public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
         
@@ -295,7 +294,7 @@ extension DialogViewController {
 
 // MARK: - 재사용성
 extension DialogDelegate where Self: UIViewController {
-    func show(
+    public func show(
         size: DialogSize,
         buttonType: DialogButtonType,
         titleText: String,

@@ -12,6 +12,9 @@ import UIKit
 import Then
 import SnapKit
 import RealmSwift
+import MenualEntity
+import DesignSystem
+import MenualUtil
 
 protocol DiaryDetailPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)

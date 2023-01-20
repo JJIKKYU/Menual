@@ -9,12 +9,12 @@ import Foundation
 import RealmSwift
 
 public class ReminderModelRealm: EmbeddedObject {
-    @Persisted var uuid: String
-    @Persisted var requestDate: Date
-    @Persisted var createdAt: Date
-    @Persisted var isEnabled: Bool
-    
-    convenience init(uuid: String, requestDate: Date, createdAt: Date, isEnabled: Bool) {
+    @Persisted public var uuid: String
+    @Persisted public var requestDate: Date
+    @Persisted public var createdAt: Date
+    @Persisted public var isEnabled: Bool
+
+    convenience public init(uuid: String, requestDate: Date, createdAt: Date, isEnabled: Bool) {
         self.init()
         self.uuid = uuid
         self.requestDate = requestDate

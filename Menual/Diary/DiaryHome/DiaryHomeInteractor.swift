@@ -10,6 +10,8 @@ import RxSwift
 import RealmSwift
 import RxRelay
 import Foundation
+import MenualEntity
+import MenualUtil
 
 protocol DiaryHomeRouting: ViewableRouting {
     func attachMyPage()

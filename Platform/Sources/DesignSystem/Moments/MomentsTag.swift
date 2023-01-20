@@ -9,19 +9,19 @@ import UIKit
 import SnapKit
 import Then
 
-class MomentsTag: UIView {
+public class MomentsTag: UIView {
     
-    var title: String = "" {
+    public var title: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var titleLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 3, left: 10, bottom: 3, right: 10)).then {
+    public var titleLabel = BasePaddingLabel(padding: UIEdgeInsets(top: 3, left: 10, bottom: 3, right: 10)).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppHead(.head_2)
         $0.textColor = Colors.tint.main.v100
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -44,7 +44,7 @@ class MomentsTag: UIView {
         titleLabel.sizeToFit()
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         titleLabel.text = title

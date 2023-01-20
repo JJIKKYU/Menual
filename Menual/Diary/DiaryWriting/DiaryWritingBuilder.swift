@@ -7,6 +7,7 @@
 
 import RIBs
 import RxRelay
+import MenualEntity
 
 protocol DiaryWritingDependency: Dependency {
     var diaryRepository: DiaryRepository { get }

@@ -9,6 +9,7 @@ import Foundation
 import RxSwift
 import RxRelay
 import RealmSwift
+import MenualEntity
 
 public protocol MomentsRepository {
     func fetch()

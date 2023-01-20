@@ -24,12 +24,17 @@
 ##   - To know which params are supported for a template, use `swiftgen template doc xcassets swift5` to open the template documentation on GitHub.
  xcassets:
    inputs:
-     - Menual/MenualAssets/Icons.xcassets
+     ## - Menual/MenualAssets/Icons.xcassets
+     - Platform/Sources/DesignSystem/Resources/Icons.xcassets
    outputs:
      - templateName: swift5
        params:
          forceProvidesNamespaces: true
-       output: Menual/MenualAssets/Generated/Icons+Generated.swift
+         publicAccess: true
+         ignoreTargetModule: true
+         module: Menual
+       ## output: Menual/MenualAssets/Generated/Icons+Generated.swift
+       output : Platform/Sources/DesignSystem/Generated/Icons+Generated.swift
 
 
 ## Generate constants for your storyboards and XIBs.

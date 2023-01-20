@@ -8,8 +8,9 @@
 import UIKit
 import SnapKit
 import Then
+import MenualUtil
 
-enum ListHeaderType {
+public enum ListHeaderType {
     case textandicon
     case text
     case datepageandicon
@@ -19,7 +20,7 @@ enum ListHeaderType {
     case myPage
 }
 
-enum DetailType {
+public enum DetailType {
     case none
     case filter
     case arrow
@@ -30,7 +31,7 @@ enum DetailType {
     case empty
 }
 
-class ListHeader: UIView {
+public class ListHeader: UIView {
     
     private var type: ListHeaderType = .datepageandicon {
         didSet { setNeedsLayout() }
@@ -40,19 +41,19 @@ class ListHeader: UIView {
         didSet { setNeedsLayout() }
     }
     
-    var title: String = "        " {
+    public var title: String = "        " {
         didSet { setNeedsLayout() }
     }
     
-    var pageNumber: Int = 0 {
+    public var pageNumber: Int = 0 {
         didSet { setNeedsLayout() }
     }
     
-    var rightFilterBtnIsEnabled: Bool = false {
+    public var rightFilterBtnIsEnabled: Bool = false {
         didSet { setFilterIcon() }
     }
     
-    var rightCalendarBtnIsEnabled: Bool = false {
+    public var rightCalendarBtnIsEnabled: Bool = false {
         didSet { setNeedsLayout() }
     }
     
@@ -83,7 +84,7 @@ class ListHeader: UIView {
         $0.contentVerticalAlignment = .fill
     }
     
-    let rightTextBtn = BaseButton().then {
+    public let rightTextBtn = BaseButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle(MenualString.search_button_delete_all_search_menual, for: .normal)
         $0.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
@@ -104,7 +105,7 @@ class ListHeader: UIView {
         $0.contentVerticalAlignment = .fill
     }
 
-    init(type: ListHeaderType, rightIconType: DetailType) {
+    public init(type: ListHeaderType, rightIconType: DetailType) {
         self.type = type
         self.detailType = rightIconType
         super.init(frame: CGRect.zero)
@@ -170,7 +171,7 @@ class ListHeader: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         titleLabel.text = title
 

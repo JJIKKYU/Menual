@@ -14,6 +14,7 @@ import RxRelay
 import RealmSwift
 import MenualUtil
 import DesignSystem
+import MenualEntity
 
 protocol DiaryTempSavePresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform

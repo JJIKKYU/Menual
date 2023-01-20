@@ -9,6 +9,8 @@ import UIKit
 import SnapKit
 import Then
 import RxSwift
+import DesignSystem
+import DesignSystem
 
 class ReplyBottomView: UIView {
     

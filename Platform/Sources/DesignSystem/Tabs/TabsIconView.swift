@@ -9,35 +9,35 @@ import UIKit
 import Then
 import SnapKit
 
-enum TabsIconStatus {
+public enum TabsIconStatus {
     case active
     case inactive
 }
 
-enum TabsIconStep {
+public enum TabsIconStep {
     case step1
     case step2
     case step3
     case step4
 }
 
-class TabsIconView: UIView {
-    let pathLineWidth: CGFloat = 0
+public class TabsIconView: UIView {
+    public let pathLineWidth: CGFloat = 0
     
-    var tabsIconStep: TabsIconStep = .step1 {
+    public var tabsIconStep: TabsIconStep = .step1 {
         didSet { setNeedsDisplay() }
     }
     
-    var tabsIconStatus: TabsIconStatus = .active {
+    public var tabsIconStatus: TabsIconStatus = .active {
         didSet { setNeedsDisplay() }
     }
     
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
     
-    convenience init(tabsIconStatus: TabsIconStatus, tabsIconStep: TabsIconStep) {
+    public convenience init(tabsIconStatus: TabsIconStatus, tabsIconStep: TabsIconStep) {
         self.init()
         self.tabsIconStatus = tabsIconStatus
         self.tabsIconStep = tabsIconStep
@@ -47,7 +47,7 @@ class TabsIconView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func draw(_ rect: CGRect) {
+    public override func draw(_ rect: CGRect) {
         let path = UIBezierPath()
         clipsToBounds = true
         path.move(to: CGPoint(x: 0.5, y: 10.5))
@@ -102,7 +102,7 @@ class TabsIconView: UIView {
         backgroundColor = .clear
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
     }
 

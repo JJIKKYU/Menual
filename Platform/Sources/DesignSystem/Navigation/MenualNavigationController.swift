@@ -163,7 +163,7 @@ public class MenualNaviView: UIView {
         setNaviViewType()
     }
     
-    func setNaviViewType() {
+    public func setNaviViewType() {
         switch naviViewType {
         case .main:
             rightButton1.actionName = "profile"

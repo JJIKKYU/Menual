@@ -11,6 +11,7 @@ import UIKit
 import Then
 import SnapKit
 import RxRelay
+import DesignSystem
 
 protocol ProfilePasswordPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)

@@ -7,6 +7,7 @@
 
 import RIBs
 import RxRelay
+import MenualUtil
 
 protocol AppRootInteractable: Interactable,
                               DiaryHomeListener,

@@ -8,6 +8,8 @@
 import RIBs
 import RxSwift
 import RxRelay
+import DesignSystem
+import MenualEntity
 
 // 사용하려고 하는 곳에만 Dependency 설정
 extension DiaryBottomSheetDependency {

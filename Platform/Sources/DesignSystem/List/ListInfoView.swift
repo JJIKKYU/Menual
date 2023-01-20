@@ -8,11 +8,10 @@
 import UIKit
 import SnapKit
 import Then
-import DesignSystem
 
-class ListInfoView: UIView {
+public class ListInfoView: UIView {
     
-    enum InfoType {
+    public enum InfoType {
         case time
         case timeWriting
         case info
@@ -100,7 +99,7 @@ class ListInfoView: UIView {
         $0.isHidden = true
     }
 
-    init(type: InfoType) {
+    public init(type: InfoType) {
         infoType = type
         super.init(frame: CGRect.zero)
         setViews()
@@ -166,7 +165,7 @@ class ListInfoView: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         dateLabel.text = date

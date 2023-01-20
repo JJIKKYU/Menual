@@ -17,7 +17,7 @@ public enum Weather: String, PersistableEnum {
     case snow = "눈"
     case wind = "바람"
     
-    func getWeatherText(weather: Weather) -> String {
+    public func getWeatherText(weather: Weather) -> String {
         var text = ""
         switch weather {
         case .sun:
@@ -37,16 +37,16 @@ public enum Weather: String, PersistableEnum {
        return text
     }
     
-    func getVariation() -> [Weather] {
+    public func getVariation() -> [Weather] {
         return [.sun, .cloud, .rain, .snow, .wind, .thunder]
     }
 }
 
-class WeatherModelRealm: EmbeddedObject {
-    @Persisted var weather: Weather?
-    @Persisted var detailText: String = ""
+public class WeatherModelRealm: EmbeddedObject {
+    @Persisted public var weather: Weather?
+    @Persisted public var detailText: String = ""
     
-    convenience init(weather: Weather?, detailText: String) {
+    public convenience init(weather: Weather?, detailText: String) {
         self.init()
         self.weather = weather
         self.detailText = detailText

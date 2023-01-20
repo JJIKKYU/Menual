@@ -8,7 +8,7 @@
 import UIKit
 import Then
 import SnapKit
-import DesignSystem
+import MenualEntity
 
 class WeatherPlaceSelectViewCell: UICollectionViewCell {
     

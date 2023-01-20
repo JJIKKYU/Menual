@@ -11,45 +11,45 @@ import Then
 import SnapKit
 import DesignSystem
 
-enum BoxButtonStatus {
+public enum BoxButtonStatus {
     case active
     case inactive
     case pressed
 }
 
-enum BoxButtonSize {
+public enum BoxButtonSize {
     case large
     case xLarge
 }
 
 // 필터가 적용되면서 색상이 변경되는 경우가 있음
-enum BoxButtonIsFiltered {
+public enum BoxButtonIsFiltered {
     case enabled
     case disabled
 }
 
-class BoxButton: UIButton {
-    var btnStatus: BoxButtonStatus = .inactive {
+public class BoxButton: UIButton {
+    public var btnStatus: BoxButtonStatus = .inactive {
         didSet { setNeedsLayout() }
     }
     
-    var btnSize: BoxButtonSize = .large {
+    public var btnSize: BoxButtonSize = .large {
         didSet { setNeedsLayout() }
     }
     
-    var isFiltered: BoxButtonIsFiltered = .disabled {
+    public var isFiltered: BoxButtonIsFiltered = .disabled {
         didSet { setNeedsLayout() }
     }
     
-    var title: String = "" {
+    public var title: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var btnSelected: Bool = false {
+    public var btnSelected: Bool = false {
         didSet { setNeedsLayout() }
     }
     
-    override var isHighlighted: Bool {
+    public override var isHighlighted: Bool {
         didSet {
             if isHighlighted && btnStatus != .inactive {
                 btnStatus = .pressed
@@ -65,7 +65,7 @@ class BoxButton: UIButton {
         $0.text = "텍스트를 입력해주세요"
     }
     
-    init(frame: CGRect, btnStatus: BoxButtonStatus, btnSize: BoxButtonSize) {
+    public init(frame: CGRect, btnStatus: BoxButtonStatus, btnSize: BoxButtonSize) {
         self.btnStatus = btnStatus
         self.btnSize = btnSize
         super.init(frame: frame)
@@ -85,7 +85,7 @@ class BoxButton: UIButton {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         btnLabel.text = title
