@@ -8,6 +8,9 @@
 import Foundation
 import RIBs
 import RxRelay
+import MenualRepository
+import ProfilePassword
+import DiaryHome
 
 final class AppRootComponent: Component<AppRootDependency> {
 

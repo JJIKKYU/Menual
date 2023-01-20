@@ -7,6 +7,8 @@
 
 import RIBs
 import RxRelay
+import ProfilePassword
+import DiaryHome
 
 protocol AppRootDependency: Dependency {
 }
