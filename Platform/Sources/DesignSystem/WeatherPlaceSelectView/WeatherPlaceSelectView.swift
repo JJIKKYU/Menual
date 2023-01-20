@@ -19,19 +19,19 @@ public protocol WeatherPlaceSelectViewDelegate: AnyObject {
 
 public class WeatherPlaceSelectView: UIView {
     
-    enum WeatherPlaceType {
+    public enum WeatherPlaceType {
         case weather
         case place
     }
     
-    var weatherPlaceType: WeatherPlaceSelectView.WeatherPlaceType = .place {
+    public var weatherPlaceType: WeatherPlaceSelectView.WeatherPlaceType = .place {
         didSet { setNeedsLayout() }
     }
     
-    var selectedWeatherType: Weather? {
+    public var selectedWeatherType: Weather? {
         didSet { setNeedsLayout() }
     }
-    var selectedPlaceType: Place? {
+    public var selectedPlaceType: Place? {
         didSet { setNeedsLayout() }
     }
     
@@ -65,7 +65,7 @@ public class WeatherPlaceSelectView: UIView {
     }
     
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -74,7 +74,7 @@ public class WeatherPlaceSelectView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(type: WeatherPlaceSelectView.WeatherPlaceType) {
+    public convenience init(type: WeatherPlaceSelectView.WeatherPlaceType) {
         self.init()
         self.weatherPlaceType = type
     }

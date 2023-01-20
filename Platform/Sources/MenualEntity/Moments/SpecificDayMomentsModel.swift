@@ -9,6 +9,11 @@ import Foundation
 
 public struct SpecificDayMomentsModel {
     // MMdd
-    var monthDay: String
-    var title: [String]
+    public var monthDay: String
+    public var title: [String]
+    
+    public init(monthDay: String, title: [String]) {
+        self.monthDay = monthDay
+        self.title = title
+    }
 }

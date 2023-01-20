@@ -9,17 +9,17 @@ import UIKit
 import Then
 import SnapKit
 
-class DividerView: UICollectionReusableView {
+public class DividerView: UICollectionReusableView {
     
-    var date: String = "2099" {
+    public var date: String = "2099" {
         didSet { setNeedsLayout() }
     }
     
-    let divider = Divider(type: .year).then {
+    public let divider = Divider(type: .year).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
 
-     override init(frame: CGRect) {
+    public override init(frame: CGRect) {
          super.init(frame: frame)
 
          addSubview(divider)
@@ -36,7 +36,7 @@ class DividerView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutIfNeeded() {
+    public override func layoutIfNeeded() {
         super.layoutIfNeeded()
         
         divider.dateTitle = date

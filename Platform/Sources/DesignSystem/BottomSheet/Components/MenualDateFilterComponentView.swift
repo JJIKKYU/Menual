@@ -29,7 +29,7 @@ public class MenualDateFilterComponentView: UIView {
     public let yearArrowIdxRelay = BehaviorRelay<Int>(value: 0)
     
     // "2022NOV" 같은 DiaryHome에서 사용
-    var yearEngMonth: String = ""
+    public var yearEngMonth: String = ""
     
     private var month: String = "00" {
         didSet { setNeedsLayout() }

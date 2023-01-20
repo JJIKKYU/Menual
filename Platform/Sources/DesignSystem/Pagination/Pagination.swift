@@ -8,18 +8,17 @@
 import UIKit
 import Then
 import SnapKit
-import DesignSystem
 
-class Pagination: UIPageControl {
-    override var currentPage: Int {
+public class Pagination: UIPageControl {
+    public override var currentPage: Int {
         didSet { updateDots() }
     }
     
-    override var numberOfPages: Int {
+    public override var numberOfPages: Int {
         didSet { updateDots() }
     }
     
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         isUserInteractionEnabled = false
         currentPageIndicatorTintColor = Colors.grey.g600

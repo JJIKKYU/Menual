@@ -10,20 +10,20 @@ import SnapKit
 import Then
 
 // 외부에서 Bages를 사용할 때 쓰이는 Delegate
-protocol BadgesDelegate: AnyObject {
+public protocol BadgesDelegate: AnyObject {
     func show(digit: String?, type: Badges.type)
     func hide()
 }
 
-class Badges: UIView {
+public class Badges: UIView {
     
-    enum type {
+    public enum type {
         case _1digit
         case _2digit
         case dot
     }
     
-    weak var delegate: BadgesDelegate?
+    public weak var delegate: BadgesDelegate?
     
     public var badgeType: Badges.type = .dot {
         didSet { setNeedsLayout() }
@@ -40,7 +40,7 @@ class Badges: UIView {
         $0.font = UIFont.AppTitle(.title_6).withSize(8)
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
         self.isHidden = true
@@ -55,7 +55,7 @@ class Badges: UIView {
         backgroundColor = Colors.tint.sub.n400
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         
         switch badgeType {

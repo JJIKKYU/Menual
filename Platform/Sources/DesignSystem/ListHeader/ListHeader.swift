@@ -61,7 +61,7 @@ public class ListHeader: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    let rightArrowBtn = BaseButton().then {
+    public let rightArrowBtn = BaseButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Arrow.right.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g400
@@ -70,10 +70,10 @@ public class ListHeader: UIView {
         $0.contentVerticalAlignment = .fill
     }
     
-    let rightFilterBtnBadge = Badges().then {
+    public let rightFilterBtnBadge = Badges().then {
         $0.badgeType = .dot
     }
-    let rightFilterBtn = BaseButton().then {
+    public let rightFilterBtn = BaseButton().then {
         $0.actionName = "filter"
         $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -91,10 +91,10 @@ public class ListHeader: UIView {
         $0.setTitleColor(Colors.grey.g500, for: .normal)
     }
     
-    let rightCalenderBtnBadge = Badges().then {
+    public let rightCalenderBtnBadge = Badges().then {
         $0.badgeType = .dot
     }
-    let rightCalenderBtn = BaseButton().then {
+    public let rightCalenderBtn = BaseButton().then {
         $0.actionName = "calendarFilter"
         $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false

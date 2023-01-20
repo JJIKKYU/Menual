@@ -11,6 +11,7 @@ import Then
 import FirebaseAnalytics
 import MenualEntity
 import DesignSystem
+import MenualUtil
 
 protocol WeatherPlaceToolbarViewDelegate: AnyObject {
     func weatherSendData(weatherType: Weather)

@@ -10,10 +10,10 @@ import RealmSwift
 
 // MARK: - 메인에 추천하는 추천 Moments 모델
 public class MomentsRealm: Object {
-    @Persisted(primaryKey: true) var _id: ObjectId
-    @Persisted var lastUpdatedDate: Date
-    @Persisted var items: List<MomentsItemRealm>
-    var itemsArr: [MomentsItemRealm] {
+    @Persisted(primaryKey: true) public var _id: ObjectId
+    @Persisted public var lastUpdatedDate: Date
+    @Persisted public var items: List<MomentsItemRealm>
+    public var itemsArr: [MomentsItemRealm] {
         get {
             return items.map { $0 }
         }
@@ -23,7 +23,7 @@ public class MomentsRealm: Object {
         }
     }
     
-    convenience init(lastUpdatedDate: Date, items: [MomentsItemRealm]) {
+    public convenience init(lastUpdatedDate: Date, items: [MomentsItemRealm]) {
         self.init()
         self.lastUpdatedDate = lastUpdatedDate
         self.itemsArr = items
@@ -32,15 +32,15 @@ public class MomentsRealm: Object {
 
 // MARK: - Moments 안에 세세하게 사용되는 아이템
 public class MomentsItemRealm: EmbeddedObject {
-    @Persisted var order: Int
-    @Persisted var title: String
-    @Persisted var uuid: String
-    @Persisted var icon: String
-    @Persisted var diaryUUID: String
-    @Persisted var userChecked: Bool
-    @Persisted var createdAt: Date
+    @Persisted public var order: Int
+    @Persisted public var title: String
+    @Persisted public var uuid: String
+    @Persisted public var icon: String
+    @Persisted public var diaryUUID: String
+    @Persisted public var userChecked: Bool
+    @Persisted public var createdAt: Date
     
-    convenience init(order: Int, title: String, uuid: String, icon: String, diaryUUID: String, userChecked: Bool, createdAt: Date) {
+    public convenience init(order: Int, title: String, uuid: String, icon: String, diaryUUID: String, userChecked: Bool, createdAt: Date) {
         self.init()
         self.order = order
         self.title = title

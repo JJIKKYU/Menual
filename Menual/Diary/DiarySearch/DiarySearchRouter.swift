@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import MenualEntity
 
 protocol DiarySearchInteractable: Interactable, DiaryDetailListener {
     var router: DiarySearchRouting? { get set }
