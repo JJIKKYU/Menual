@@ -8,6 +8,7 @@
 import Foundation
 import RIBs
 import RxSwift
+import MenualRepository
 
 protocol AppRootRouting: Routing {
     func cleanupViews()

@@ -11,6 +11,7 @@ import Firebase
 import FirebaseAnalytics
 import RealmSwift
 import RxRelay
+import MenualEntity
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
