@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Profile",
+    defaultLocalization: "ko",
     platforms: [.iOS(.v14), .macOS(.v10_15)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
@@ -20,6 +21,9 @@ let package = Package(
         .library(
             name: "ProfileDeveloper",
             targets: ["ProfileDeveloper"]),
+        .library(
+            name: "ProfileDesignSystem",
+            targets: ["ProfileDesignSystem"]),
     ],
     dependencies: [
         .package(url: "https://github.com/uber/RIBs", branch: "main"),
@@ -83,6 +87,14 @@ let package = Package(
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "MenualRepository", package: "Platform"),
+            ]
+        ),
+        .target(
+            name: "ProfileDesignSystem",
+            dependencies: [
+                .product(name: "RIBs", package: "RIBs"),
+                .product(name: "DesignSystem", package: "Platform"),
+                .product(name: "MenualEntity", package: "Platform"),
             ]
         ),
     ]

@@ -61,7 +61,7 @@ public class ToastView: UIView {
 
 public extension UIViewController {
 
-    public func showToast(message : String) -> ToastView {
+    func showToast(message : String) -> ToastView {
         let toastView = ToastView()
 
         toastView.titleText = message
