@@ -14,6 +14,7 @@ import UserNotifications
 import DesignSystem
 import MenualEntity
 import MenualUtil
+import MenualRepository
 
 protocol DiaryDetailRouting: ViewableRouting {
     func attachBottomSheet(type: MenualBottomSheetType, menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?)

@@ -12,6 +12,7 @@ import RxRelay
 import Foundation
 import MenualEntity
 import MenualUtil
+import MenualRepository
 
 protocol DiaryHomeRouting: ViewableRouting {
     func attachMyPage()

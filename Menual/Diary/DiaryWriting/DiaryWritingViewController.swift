@@ -16,7 +16,6 @@ import FirebaseAnalytics
 import MenualEntity
 import MenualUtil
 import DesignSystem
-import MenualUtil
 
 protocol DiaryWritingPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform

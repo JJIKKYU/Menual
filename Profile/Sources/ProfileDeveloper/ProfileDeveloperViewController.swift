@@ -13,7 +13,7 @@ import SnapKit
 import RxRelay
 import DesignSystem
 
-protocol ProfileDeveloperPresentableListener: AnyObject {
+public protocol ProfileDeveloperPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
     // business logic, such as signIn(). This protocol is implemented by the corresponding
     // interactor class.

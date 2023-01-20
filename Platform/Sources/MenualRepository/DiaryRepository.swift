@@ -9,8 +9,9 @@ import Foundation
 import RxSwift
 import RxRelay
 import RealmSwift
-import UIKit
 import MenualEntity
+import MenualUtil
+import UIKit // 제거할 것.. UIImage는 Data로 변경
 
 public protocol DiaryRepository {
     var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }
@@ -54,6 +55,10 @@ public protocol DiaryRepository {
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
+    
+    public init() {
+        
+    }
 
     public var diaryString: BehaviorRelay<[DiaryModelRealm]> { diaryModelSubject }
     public let diaryModelSubject = BehaviorRelay<[DiaryModelRealm]>(value: [])

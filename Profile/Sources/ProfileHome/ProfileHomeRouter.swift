@@ -8,6 +8,8 @@
 import RIBs
 import MenualUtil
 import ProfileOpensource
+import ProfilePassword
+import ProfileDeveloper
 
 protocol ProfileHomeInteractable: Interactable, ProfilePasswordListener, ProfileDeveloperListener, ProfileOpensourceListener {
     var router: ProfileHomeRouting? { get set }

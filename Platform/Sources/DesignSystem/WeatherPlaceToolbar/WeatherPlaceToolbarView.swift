@@ -10,31 +10,26 @@ import SnapKit
 import Then
 import FirebaseAnalytics
 import MenualEntity
-import DesignSystem
 import MenualUtil
 
-protocol WeatherPlaceToolbarViewDelegate: AnyObject {
+public protocol WeatherPlaceToolbarViewDelegate: AnyObject {
     func weatherSendData(weatherType: Weather)
     func placeSendData(placeType: Place)
     func close()
 }
 
-class WeatherPlaceToolbarView: UIView {
+public class WeatherPlaceToolbarView: UIView {
     
-    weak var delegate: WeatherPlaceToolbarViewDelegate?
+    public weak var delegate: WeatherPlaceToolbarViewDelegate?
     
-    var menualBottomSheetRightBtnIsActivate: MenualBottomSheetRightBtnIsActivate = .unActivate {
+    public var weatherPlaceType: WeatherPlaceSelectView.WeatherPlaceType = .weather {
         didSet { setNeedsLayout() }
     }
     
-    var weatherPlaceType: WeatherPlaceSelectView.WeatherPlaceType = .weather {
+    public var selectedWeatherType: Weather? {
         didSet { setNeedsLayout() }
     }
-    
-    var selectedWeatherType: Weather? {
-        didSet { setNeedsLayout() }
-    }
-    var selectedPlaceType: Place? {
+    public var selectedPlaceType: Place? {
         didSet { setNeedsLayout() }
     }
     
@@ -44,17 +39,6 @@ class WeatherPlaceToolbarView: UIView {
         $0.textColor = Colors.grey.g100
         $0.text = "날씨를 선택해 주세요"
     }
-    
-//    private lazy var rightBtn = UIButton().then {
-//        $0.isEnabled = true
-//        $0.contentMode = .scaleAspectFit
-//        $0.contentHorizontalAlignment = .fill
-//        $0.contentVerticalAlignment = .fill
-//        $0.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
-//        $0.tintColor = Colors.grey.g600
-//        $0.addTarget(self, action: #selector(pressedCloseBtn), for: .touchUpInside)
-//    }
-    
     private let divider = Divider(type: ._1px).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = Colors.grey.g700
@@ -65,7 +49,7 @@ class WeatherPlaceToolbarView: UIView {
         $0.delegate = self
     }
 
-    init() {
+    public init() {
         super.init(frame: CGRect.zero)
         setViews()
     }
@@ -91,12 +75,6 @@ class WeatherPlaceToolbarView: UIView {
             make.height.equalTo(20)
         }
         
-//        rightBtn.snp.makeConstraints { make in
-//            make.trailing.equalToSuperview().inset(24)
-//            make.top.equalToSuperview().offset(24)
-//            make.width.height.equalTo(24)
-//        }
-        
         divider.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
@@ -111,25 +89,9 @@ class WeatherPlaceToolbarView: UIView {
         }
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
-        
-        /*
-        switch menualBottomSheetRightBtnIsActivate {
-        case .unActivate:
-            rightBtn.tintColor = Colors.grey.g600
-            rightBtn.isUserInteractionEnabled = false
-            
-        case .activate:
-            rightBtn.tintColor = Colors.tint.sub.n400
-            rightBtn.isUserInteractionEnabled = true
-            
-        case ._default:
-            rightBtn.tintColor = Colors.grey.g600
-            rightBtn.isUserInteractionEnabled = true
-        }
-        */
-        
+
         switch weatherPlaceType {
         case .weather:
             print("WeatherPlcaeToolbarView :: .weather")
@@ -158,17 +120,17 @@ class WeatherPlaceToolbarView: UIView {
 }
 
 extension WeatherPlaceToolbarView: WeatherPlaceSelectViewDelegate {
-    func isSelected(_ isSelected: Bool) {
+    public func isSelected(_ isSelected: Bool) {
         print("isSelected!")
     }
     
-    func weatherSendData(weatherType: Weather, isSelected: Bool) {
+    public func weatherSendData(weatherType: Weather, isSelected: Bool) {
         print("weatherSendData! - \(weatherType)")
         MenualLog.logEventAction("writing_weather", parameter: ["weather" : "\(weatherType)"])
         delegate?.weatherSendData(weatherType: weatherType)
     }
     
-    func placeSendData(placeType: Place, isSelected: Bool) {
+    public func placeSendData(placeType: Place, isSelected: Bool) {
         print("placeSendData! - \(placeType)")
         MenualLog.logEventAction("writing_place", parameter: ["place" : "\(placeType)"])
         delegate?.placeSendData(placeType: placeType)

@@ -6,19 +6,20 @@
 //
 
 import RIBs
+import MenualRepository
 
-protocol ProfilePasswordDependency: Dependency {
+public protocol ProfilePasswordDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
 }
 
-final class ProfilePasswordComponent: Component<ProfilePasswordDependency>, ProfilePasswordInteractorDependency{
+public final class ProfilePasswordComponent: Component<ProfilePasswordDependency>, ProfilePasswordInteractorDependency{
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
 
 // MARK: - Builder
 
-protocol ProfilePasswordBuildable: Buildable {
+public protocol ProfilePasswordBuildable: Buildable {
     func build(
         withListener listener: ProfilePasswordListener,
         isMainScreen: Bool,
@@ -27,13 +28,13 @@ protocol ProfilePasswordBuildable: Buildable {
     ) -> ProfilePasswordRouting
 }
 
-final class ProfilePasswordBuilder: Builder<ProfilePasswordDependency>, ProfilePasswordBuildable {
+public final class ProfilePasswordBuilder: Builder<ProfilePasswordDependency>, ProfilePasswordBuildable {
 
-    override init(dependency: ProfilePasswordDependency) {
+    public override init(dependency: ProfilePasswordDependency) {
         super.init(dependency: dependency)
     }
 
-    func build(
+    public func build(
         withListener listener: ProfilePasswordListener,
         isMainScreen: Bool,
         isPasswordChange: Bool,

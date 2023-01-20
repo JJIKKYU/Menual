@@ -10,18 +10,19 @@ import RxSwift
 import RxRelay
 import Foundation
 import MenualEntity
+import MenualRepository
 
-protocol ProfileDeveloperRouting: ViewableRouting {
+public protocol ProfileDeveloperRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
 }
 
-protocol ProfileDeveloperPresentable: Presentable {
+public protocol ProfileDeveloperPresentable: Presentable {
     var listener: ProfileDeveloperPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     
 }
 
-protocol ProfileDeveloperListener: AnyObject {
+public protocol ProfileDeveloperListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func profileDeveloperPressedBackBtn(isOnlyDetach: Bool)
 }
@@ -30,10 +31,10 @@ protocol ProfileDeveloperInteractorDependency {
     var diaryRepository: DiaryRepository { get }
 }
 
-final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeveloperPresentable>, ProfileDeveloperInteractable, ProfileDeveloperPresentableListener {
+public final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeveloperPresentable>, ProfileDeveloperInteractable, ProfileDeveloperPresentableListener {
 
-    var tempMenualSetRelay = BehaviorRelay<Bool?>(value: nil)
-    var reminderDataCallRelay = BehaviorRelay<Bool?>(value: nil)
+    public var tempMenualSetRelay = BehaviorRelay<Bool?>(value: nil)
+    public var reminderDataCallRelay = BehaviorRelay<Bool?>(value: nil)
     
     
     weak var router: ProfileDeveloperRouting?
@@ -52,13 +53,13 @@ final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeveloperPr
         presenter.listener = self
     }
 
-    override func didBecomeActive() {
+    public override func didBecomeActive() {
         super.didBecomeActive()
         // TODO: Implement business logic here.
         bind()
     }
 
-    override func willResignActive() {
+    public override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
     }
@@ -128,11 +129,11 @@ final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeveloperPr
             .disposed(by: disposeBag)
     }
     
-    func pressedBackBtn(isOnlyDetach: Bool) {
+    public func pressedBackBtn(isOnlyDetach: Bool) {
         listener?.profileDeveloperPressedBackBtn(isOnlyDetach: isOnlyDetach)
     }
 
-    func allMenualRemove() {
+    public func allMenualRemove() {
         dependency.diaryRepository
             .removeAllDiary()
     }

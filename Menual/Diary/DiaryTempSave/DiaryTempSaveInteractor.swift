@@ -11,6 +11,7 @@ import RxRelay
 import RealmSwift
 import MenualUtil
 import MenualEntity
+import MenualRepository
 
 protocol DiaryTempSaveRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.

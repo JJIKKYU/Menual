@@ -17,11 +17,12 @@ public protocol MomentsRepository {
 }
 
 public final class MomentsRepositoryImp: MomentsRepository {
+
     // private var moments: MomentsRealm?
     private let disposeBag = DisposeBag()
     private var diaryArr: [DiaryModelRealm]? = nil
     
-    init() {
+    public init() {
         guard let realm = Realm.safeInit() else { return }
         self.diaryArr = realm.objects(DiaryModelRealm.self)
             .toArray(type: DiaryModelRealm.self)

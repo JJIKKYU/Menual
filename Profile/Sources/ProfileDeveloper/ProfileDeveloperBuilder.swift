@@ -6,14 +6,15 @@
 //
 
 import RIBs
+import MenualRepository
 
-protocol ProfileDeveloperDependency: Dependency {
+public protocol ProfileDeveloperDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
     var diaryRepository: DiaryRepository { get }
 }
 
-final class ProfileDeveloperComponent: Component<ProfileDeveloperDependency>, ProfileDeveloperInteractorDependency {
+public final class ProfileDeveloperComponent: Component<ProfileDeveloperDependency>, ProfileDeveloperInteractorDependency {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
@@ -22,17 +23,17 @@ final class ProfileDeveloperComponent: Component<ProfileDeveloperDependency>, Pr
 
 // MARK: - Builder
 
-protocol ProfileDeveloperBuildable: Buildable {
+public protocol ProfileDeveloperBuildable: Buildable {
     func build(withListener listener: ProfileDeveloperListener) -> ProfileDeveloperRouting
 }
 
-final class ProfileDeveloperBuilder: Builder<ProfileDeveloperDependency>, ProfileDeveloperBuildable {
+public final class ProfileDeveloperBuilder: Builder<ProfileDeveloperDependency>, ProfileDeveloperBuildable {
 
-    override init(dependency: ProfileDeveloperDependency) {
+    public override init(dependency: ProfileDeveloperDependency) {
         super.init(dependency: dependency)
     }
 
-    func build(withListener listener: ProfileDeveloperListener) -> ProfileDeveloperRouting {
+    public func build(withListener listener: ProfileDeveloperListener) -> ProfileDeveloperRouting {
         let component = ProfileDeveloperComponent(dependency: dependency)
         let viewController = ProfileDeveloperViewController()
         let interactor = ProfileDeveloperInteractor(

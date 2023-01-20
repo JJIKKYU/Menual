@@ -13,6 +13,7 @@ import Foundation
 import MenualUtil
 import MenualEntity
 import DesignSystem
+import MenualRepository
 
 protocol DiaryBottomSheetRouting: ViewableRouting {
     

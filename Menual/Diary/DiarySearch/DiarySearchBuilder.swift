@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import MenualRepository
 
 protocol DiarySearchDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be

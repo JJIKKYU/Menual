@@ -18,6 +18,9 @@ let package = Package(
         .library(
             name: "MenualEntity",
             targets: ["MenualEntity"]),
+        .library(
+            name: "MenualRepository",
+            targets: ["MenualRepository"]),
     ],
     dependencies: [
         .package(url: "https://github.com/devxoul/Then", exact: Version("3.0.0")),
@@ -25,6 +28,7 @@ let package = Package(
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", .upToNextMajor(from: "9.0.0")),
         .package(url: "https://github.com/SnapKit/SnapKit", exact: Version("5.6.0")),
         .package(url: "https://github.com/ReactiveX/RxSwift", exact: Version("6.0.0")),
+        .package(url: "https://github.com/JJIKKYU/TOCropViewController", branch: "main")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -37,6 +41,7 @@ let package = Package(
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
                 .product(name: "RxCocoa", package: "RxSwift"),
+                .product(name: "CropViewController", package: "TOCropViewController")
             ],
             resources: [.process("Resources")]
         ),
@@ -53,6 +58,15 @@ let package = Package(
         .target(
             name: "MenualEntity",
             dependencies: [
+                .product(name: "Realm", package: "realm-swift"),
+                .product(name: "RealmSwift", package: "realm-swift"),
+            ]
+        ),
+        .target(
+            name: "MenualRepository",
+            dependencies: [
+                "MenualEntity",
+                "MenualUtil",
                 .product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
             ]

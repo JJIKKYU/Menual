@@ -7,6 +7,7 @@
 
 import RIBs
 import RxRelay
+import ProfilePassword
 
 protocol AppRootDependency: Dependency {
 }

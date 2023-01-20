@@ -10,8 +10,11 @@ import RxSwift
 import RealmSwift
 import RxRelay
 import Foundation
+import MenualRepository
+import MenualEntity
 
-protocol ProfilePasswordRouting: ViewableRouting {
+
+public protocol ProfilePasswordRouting: ViewableRouting {
 
 }
 
@@ -20,7 +23,7 @@ protocol ProfilePasswordPresentable: Presentable {
     // TODO: Declare methods the interactor can invoke the presenter to present data.
 }
 
-protocol ProfilePasswordListener: AnyObject {
+public protocol ProfilePasswordListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func profilePasswordPressedBackBtn(isOnlyDetach: Bool)
     func goDiaryHome()

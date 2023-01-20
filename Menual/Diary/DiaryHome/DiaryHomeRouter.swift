@@ -8,6 +8,7 @@
 import RIBs
 import MenualUtil
 import MenualEntity
+import ProfileHome
 
 protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryMomentsListener, DiaryWritingListener, DiaryDetailListener, DesignSystemListener, DiaryBottomSheetListener {
     var router: DiaryHomeRouting? { get set }

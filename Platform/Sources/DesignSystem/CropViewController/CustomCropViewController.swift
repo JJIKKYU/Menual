@@ -9,19 +9,18 @@ import UIKit
 import CropViewController
 import Then
 import SnapKit
-import DesignSystem
 import MenualUtil
 
-class CustomCropViewController: CropViewController {
+public class CustomCropViewController: CropViewController {
     
     let notificationIdentifier: String = "StartCamera"
     
-    enum CropVCNaviViewType {
+    public enum CropVCNaviViewType {
         case backArrow
         case close
     }
     
-    enum CropVCButtonType {
+    public enum CropVCButtonType {
         case add
         case edit
     }
@@ -58,7 +57,7 @@ class CustomCropViewController: CropViewController {
         $0.textColor = Colors.grey.g200
     }
 
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
 
         setViews()

@@ -8,6 +8,7 @@
 import RIBs
 import RxRelay
 import MenualUtil
+import ProfilePassword
 
 protocol AppRootInteractable: Interactable,
                               DiaryHomeListener,

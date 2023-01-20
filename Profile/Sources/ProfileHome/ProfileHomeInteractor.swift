@@ -8,12 +8,13 @@
 import RIBs
 import RxSwift
 import RxRelay
-import CloudKit
 import RealmSwift
 import ZipArchive
-import MenualUtil
+import DesignSystem
+import MenualRepository
+import MenualEntity
 
-protocol ProfileHomeRouting: ViewableRouting {
+public protocol ProfileHomeRouting: ViewableRouting {
     func attachProfilePassword(isPasswordChange: Bool, isPaswwordDisabled: Bool)
     func detachProfilePassword(isOnlyDetach: Bool)
     
@@ -30,7 +31,7 @@ protocol ProfileHomePresentable: Presentable {
     func showShareSheet(path: String)
 }
 
-protocol ProfileHomeListener: AnyObject {
+public protocol ProfileHomeListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func profileHomePressedBackBtn(isOnlyDetach: Bool)
 }

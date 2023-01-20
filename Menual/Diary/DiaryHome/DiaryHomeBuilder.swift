@@ -8,6 +8,8 @@
 import RIBs
 import RxRelay
 import MenualEntity
+import MenualRepository
+import ProfileHome
 
 protocol DiaryHomeDependency: Dependency {
     // AppRootComponent에서 생성해서, 부모(AppRoot RIBs)로부터 받아옴
