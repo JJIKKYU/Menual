@@ -10,6 +10,8 @@ import SnapKit
 import Then
 import RxSwift
 import MenualEntity
+import FlexLayout
+import PinLayout
 
 public enum SelectedWeatherLocationType {
     case weather
@@ -18,6 +20,7 @@ public enum SelectedWeatherLocationType {
 
 public class WeatherLocationSelectView: UIView {
     
+    fileprivate let rootFlexContainer = UIView()
     private let disposeBag = DisposeBag()
     
     public var selected: Bool = false {
@@ -75,7 +78,29 @@ public class WeatherLocationSelectView: UIView {
     
     public init() {
         super.init(frame: CGRect.zero)
-        setViews()
+        addSubview(rootFlexContainer)
+        rootFlexContainer.flex
+            .direction(.row)
+            .justifyContent(.spaceBetween)
+            .alignContent(.center)
+            .wrap(.noWrap)
+            .define { flex in
+                flex.addItem(selectImageView)
+                    .width(24)
+                    .height(24)
+                    .grow(0)
+
+                flex.addItem(selectTextView)
+                    .marginLeft(8)
+                    .grow(1)
+
+                flex.addItem(deleteBtn)
+                    .width(24)
+                    .height(24)
+                    .right(0)
+                    .grow(0)
+            }
+        // setViews()
         bind()
     }
     
@@ -85,44 +110,9 @@ public class WeatherLocationSelectView: UIView {
     
     public convenience init(type: SelectedWeatherLocationType) {
         self.init()
-        print("WeatherLocationSelectView :: init! type = \(type)")
         self.selectedWeatherLocationType = type
-        print("!! selectedWeatherLocationType \(selectedWeatherLocationType)")
     }
-    
-    func setViews() {
-        addSubview(selectImageView)
-        // addSubview(selectLabel)
-        addSubview(selectTextView)
-        addSubview(deleteBtn)
-        
-        selectImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.height.equalTo(24)
-            make.centerY.equalToSuperview()
-        }
-        /*
-        selectLabel.snp.makeConstraints { make in
-            make.leading.equalTo(selectImageView.snp.trailing).offset(8)
-            make.width.equalToSuperview()
-            make.centerY.equalToSuperview()
-        }
-         */
-        
-        selectTextView.snp.makeConstraints { make in
-            make.leading.equalTo(selectImageView.snp.trailing).offset(8)
-            make.height.equalTo(24)
-            make.trailing.equalToSuperview().inset(20)
-            make.centerY.equalToSuperview()
-        }
-        
-        deleteBtn.snp.makeConstraints { make in
-            make.trailing.equalToSuperview()
-            make.width.height.equalTo(24)
-            make.centerY.equalToSuperview()
-        }
-    }
-    
+
     func bind() {
         selectTextView.rx.text
             .orEmpty
@@ -137,22 +127,16 @@ public class WeatherLocationSelectView: UIView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         
+        rootFlexContainer.pin.all()
+        rootFlexContainer.flex.layout(mode: .adjustHeight)
+        
         switch selectedWeatherLocationType {
         case .weather:
             switch selected {
             case true:
                 selectImageView.image = selectImage.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.tint.sub.n800
-                // selectLabel.textColor = Colors.grey.g400
                 selectTextView.textColor = Colors.grey.g400
-                /*
-                if selectTitle.isEmpty {
-                    selectTextView.text = selectedWeatherType?.rawValue
-                } else {
-                    selectTextView.text = selectTitle
-                }
-                 */
-                
                 selectTextView.text = selectTitle
                 selectTextView.centerVerticalText()
                 deleteBtn.isHidden = !isDeleteBtnEnabled
@@ -160,11 +144,9 @@ public class WeatherLocationSelectView: UIView {
             case false:
                 selectImageView.image = Asset._24px.weather.image.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.grey.g700
-                // selectLabel.textColor = Colors.grey.g600
                 selectTextView.textColor = Colors.grey.g600
-                // selectTextView.text = "오늘 날씨는 어땠나요?"
                 selectTextView.centerVerticalText()
-                deleteBtn.isHidden = !isDeleteBtnEnabled
+                deleteBtn.flex.display(isDeleteBtnEnabled == true ? .none : .flex)
             }
             
         case .location:
@@ -172,26 +154,15 @@ public class WeatherLocationSelectView: UIView {
             case true:
                 selectImageView.image = selectImage.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.tint.sub.n800
-                // selectLabel.textColor = Colors.grey.g400
                 selectTextView.textColor = Colors.grey.g400
-                /*
-                if selectTitle.isEmpty {
-                    selectTextView.text = selectedPlaceType?.rawValue
-                } else {
-                    selectTextView.text = selectTitle
-                }
-                 */
                 selectTextView.text = selectTitle
-                
                 selectTextView.centerVerticalText()
                 deleteBtn.isHidden = !isDeleteBtnEnabled
                 
             case false:
                 selectImageView.image = Asset._24px.place.image.withRenderingMode(.alwaysTemplate)
                 selectImageView.tintColor = Colors.grey.g700
-                // selectLabel.textColor = Colors.grey.g600
                 selectTextView.textColor = Colors.grey.g600
-                // selectTextView.text = "지금 장소는 어디신가요?"
                 selectTextView.centerVerticalText()
                 deleteBtn.isHidden = !isDeleteBtnEnabled
             }
