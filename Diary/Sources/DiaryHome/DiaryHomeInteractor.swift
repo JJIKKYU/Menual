@@ -67,7 +67,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     private var disposebag: DisposeBag
 
     var lastPageNumRelay = BehaviorRelay<Int>(value: 0)
-    // var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?>
     let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
     

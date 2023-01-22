@@ -34,7 +34,6 @@ public protocol DiaryHomePresentableListener: AnyObject {
     func pressedDateFilterBtn()
     
     var lastPageNumRelay: BehaviorRelay<Int> { get }
-    // var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var diaryDictionary: [String: DiaryHomeSectionModel] { get }
     var momentsRealm: MomentsRealm? { get }
