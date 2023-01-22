@@ -22,6 +22,7 @@
 		985DE9752974036800F9E7AD /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9742974036800F9E7AD /* FirebaseAnalytics */; };
 		985DE9772974036800F9E7AD /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9762974036800F9E7AD /* FirebaseAnalyticsSwift */; };
 		98703A1A297A8ABE006C805D /* ProfileOpensource in Frameworks */ = {isa = PBXBuildFile; productRef = 98703A19297A8ABE006C805D /* ProfileOpensource */; };
+		98717686297CFA5300FD49F8 /* FlexLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 98717685297CFA5300FD49F8 /* FlexLayout */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
 		9888DDE927646F000091918F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE727646F000091918F /* LaunchScreen.storyboard */; };
@@ -148,6 +149,7 @@
 				98A6E1E42973FDF2008CF101 /* RxCocoa in Frameworks */,
 				98100498297AB53800820867 /* DiaryBottomSheet in Frameworks */,
 				98935C8129744CA800AA3A29 /* DesignSystem in Frameworks */,
+				98717686297CFA5300FD49F8 /* FlexLayout in Frameworks */,
 				98BAA732297A9C8B0061B891 /* ProfilePassword in Frameworks */,
 				98A6E1F629740075008CF101 /* SnapKit in Frameworks */,
 				98A259A9297AA082009D3C2D /* ProfileDeveloper in Frameworks */,
@@ -393,6 +395,7 @@
 				981004A1297AB53800820867 /* DiaryTempSave */,
 				981004A3297AB53800820867 /* DiaryWriting */,
 				981004A5297AB63A00820867 /* ProfileDesignSystem */,
+				98717685297CFA5300FD49F8 /* FlexLayout */,
 			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
@@ -477,6 +480,7 @@
 				985DE96B297401C700F9E7AD /* XCRemoteSwiftPackageReference "realm-swift" */,
 				985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive" */,
 				985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				98717684297CFA5200FD49F8 /* XCRemoteSwiftPackageReference "FlexLayout" */,
 			);
 			productRefGroup = 9888DDDA27646EFF0091918F /* Products */;
 			projectDirPath = "";
@@ -669,10 +673,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = GCC_PREPROCESSOR_DEFINITIONS;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -730,6 +731,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = GCC_PREPROCESSOR_DEFINITIONS;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -985,6 +987,14 @@
 				minimumVersion = 9.0.0;
 			};
 		};
+		98717684297CFA5200FD49F8 /* XCRemoteSwiftPackageReference "FlexLayout" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/layoutBox/FlexLayout";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		98A6E1DF2973FDD4008CF101 /* XCRemoteSwiftPackageReference "Then" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/devxoul/Then";
@@ -1096,6 +1106,11 @@
 		98703A19297A8ABE006C805D /* ProfileOpensource */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ProfileOpensource;
+		};
+		98717685297CFA5300FD49F8 /* FlexLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98717684297CFA5200FD49F8 /* XCRemoteSwiftPackageReference "FlexLayout" */;
+			productName = FlexLayout;
 		};
 		98935C8029744CA800AA3A29 /* DesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;

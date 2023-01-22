@@ -37,7 +37,8 @@ let package = Package(
         .package(url: "https://github.com/ReactiveX/RxSwift", exact: Version("6.0.0")),
         .package(path: "../Platform"),
         .package(path: "../Profile"),
-        .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3"))
+        .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3")),
+        .package(url: "https://github.com/layoutBox/FlexLayout", exact: Version("1.3.27"))
     ],
     targets: [
         .target(
@@ -67,6 +68,7 @@ let package = Package(
                 "DiaryDetailImage",
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
+                .product(name: "FlexLayout", package: "FlexLayout"),
             ]
         ),
         .target(
