@@ -6,16 +6,14 @@
 //
 
 import UIKit
+import SnapKit
+import Then
 
 class TitleView: UIView {
     var title: String = "TITLE VIEW" {
         didSet { setNeedsLayout() }
     }
-    
-//    var titleAction: UIControl = UIControl {
-//        didSet { setNeedsLayout() }
-//    }
-    
+
     var rightTitle: String = "Right Btn" {
         didSet { setNeedsLayout() }
     }

@@ -5,11 +5,9 @@
 //  Created by 정진균 on 2022/05/21.
 //
 
-import Foundation
 import UIKit
 import Then
 import SnapKit
-import DesignSystem
 
 public enum BoxButtonStatus {
     case active
@@ -143,14 +141,5 @@ public class BoxButton: UIButton {
         case false:
             print("BoxButton :: isSelecteed! - false")
         }
-        
-//        if btnStatus == .inactive { return }
-//        switch btnSelected {
-//        case true:
-//            btnStatus = .pressed
-//
-//        case false:
-//            btnStatus = .active
-//        }
     }
 }

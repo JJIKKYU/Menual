@@ -15,7 +15,6 @@ import RealmSwift
 import MenualEntity
 import DesignSystem
 import MenualUtil
-import FlexLayout
 
 public protocol DiaryDetailPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)

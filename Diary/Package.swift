@@ -38,8 +38,6 @@ let package = Package(
         .package(path: "../Platform"),
         .package(path: "../Profile"),
         .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3")),
-        .package(url: "https://github.com/JJIKKYU/FlexLayoutForSPM", branch: "master"),
-        .package(url: "https://github.com/layoutBox/PinLayout", exact: Version("1.10.3"))
     ],
     targets: [
         .target(
@@ -69,8 +67,6 @@ let package = Package(
                 "DiaryDetailImage",
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
-                .product(name: "FlexLayout", package: "FlexLayoutForSPM"),
-                .product(name: "PinLayout", package: "PinLayout"),
             ]
         ),
         .target(
