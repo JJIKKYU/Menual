@@ -51,7 +51,6 @@ public class WeatherLocationSelectView: UIView {
         didSet { setNeedsLayout() }
     }
     
-    
     private let selectImageView = UIImageView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.contentMode = .scaleAspectFit
@@ -100,7 +99,6 @@ public class WeatherLocationSelectView: UIView {
                     .right(0)
                     .grow(0)
             }
-        // setViews()
         bind()
     }
     
@@ -146,7 +144,7 @@ public class WeatherLocationSelectView: UIView {
                 selectImageView.tintColor = Colors.grey.g700
                 selectTextView.textColor = Colors.grey.g600
                 selectTextView.centerVerticalText()
-                deleteBtn.flex.display(isDeleteBtnEnabled == true ? .none : .flex)
+                deleteBtn.isHidden = !isDeleteBtnEnabled
             }
             
         case .location:

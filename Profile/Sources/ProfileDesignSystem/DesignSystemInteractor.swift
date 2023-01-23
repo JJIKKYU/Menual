@@ -35,9 +35,6 @@ public protocol DesignSystemRouting: ViewableRouting {
     func attachFABVC()
     func detachFABVC(isOnlyDetach: Bool)
     
-    func attachTabsVC()
-    func detachTabsVC(isOnlyDetach: Bool)
-    
     func attachPaginationVC()
     func detachPaginationVC(isOnlyDetach: Bool)
     
@@ -72,7 +69,6 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
         "Badges",
         "Capsule Button",
         "Box Button",
-        "Tabs",
         "FAB",
         "List Header",
         "Pagination",
@@ -167,14 +163,6 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     
     func FABPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachFABVC(isOnlyDetach: isOnlyDetach)
-    }
-    
-    func pressedTabsCell() {
-        router?.attachTabsVC()
-    }
-    
-    func tabsPressedBackBtn(isOnlyDetach: Bool) {
-        router?.detachTabsVC(isOnlyDetach: isOnlyDetach)
     }
     
     func pressedPaginationCell() {
