@@ -866,7 +866,9 @@ extension DiaryWritingViewController {
         }
         
         if isShowDialog {
-            show(size: writingType == .writing ? .medium : .small,
+            showDialog(
+                dialogScreen: .diaryWriting(.writingCancel),
+                size: writingType == .writing ? .medium : .small,
                  buttonType: .twoBtn,
                  titleText: titleText,
                  subTitleText: "작성한 내용은 임시저장글에 저장됩니다.",
@@ -884,14 +886,18 @@ extension DiaryWritingViewController {
         MenualLog.logEventAction(responder: button)
         view.endEditing(true) // 키보드가 내려가도록
         var titleText: String = ""
+        var dialogScreen: DialogScreen = .diaryWriting(.writing)
         switch writingType {
         case .writing:
+            dialogScreen = .diaryWriting(.writing)
             titleText = "메뉴얼을 등록하시겠어요?"
         case .edit:
+            dialogScreen = .diaryWriting(.edit)
             titleText = "메뉴얼을 수정하시겠어요?"
         }
-
-        show(size: .small,
+        showDialog(
+             dialogScreen: dialogScreen,
+             size: .small,
              buttonType: .twoBtn,
              titleText: titleText,
              cancelButtonText: "취소",
@@ -916,7 +922,9 @@ extension DiaryWritingViewController {
     func pressedImageUploadViewDeleteBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
         print("DiaryWriting :: pressedImageUploadViewDeleteBtn")
-        show(size: .small,
+        showDialog(
+             dialogScreen: .diaryWriting(.editCancel),
+             size: .small,
              buttonType: .twoBtn,
              titleText: "사진을 삭제하시겠어요?",
              cancelButtonText: "취소",
@@ -974,7 +982,9 @@ extension DiaryWritingViewController {
             guard isAuthorized else {
                 print("DiaryWriting :: 노권한!, \(isAuthorized)")
                 DispatchQueue.main.async {
-                    self.show(size: .large,
+                    self.showDialog(
+                         dialogScreen: .diaryWriting(.camera),
+                         size: .large,
                          buttonType: .oneBtn,
                          titleText: "카메라 권한이 필요합니다",
                          subTitleText: "설정에서 Menual의\n카메라 권한을 활성화 해주세요",
@@ -1360,6 +1370,38 @@ extension DiaryWritingViewController: CropViewControllerDelegate {
 }
 
 extension DiaryWritingViewController: DialogDelegate {
+    func action(dialogScreen: DesignSystem.DialogScreen) {
+        switch dialogScreen {
+        case .diaryWriting(.writing), .diaryWriting(.edit):
+            addDiary()
+            
+        case .diaryWriting(.writingCancel), .diaryWriting(.editCancel):
+            if let diaryModel = zipDiaryModelForTempSave() {
+                listener?.saveTempSave(diaryModel: diaryModel,
+                                       originalImageData: selectedOriginalImage?.jpegData(compressionQuality: 0.5),
+                                       cropImageData: selectedImage?.jpegData(compressionQuality: 1.0)
+                )
+            }
+            listener?.pressedBackBtn(isOnlyDetach: false)
+            
+        case .diaryWriting(.deletePhoto):
+            imageUploadView.image = nil
+            selectedImage = nil
+            selectedOriginalImage = nil
+            isEditBeginRelay.accept(true)
+            
+        case .diaryWriting(.camera):
+            break
+
+        case .diaryDetail(_):
+            break
+        case .diarySearch(_):
+            break
+        case .diaryBottomSheet(_):
+            break
+        }
+    }
+    
     func action(titleText: String) {
         switch titleText {
         case "메뉴얼 작성을 취소하시겠어요?",

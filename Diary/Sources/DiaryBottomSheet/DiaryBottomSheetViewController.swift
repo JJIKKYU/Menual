@@ -703,6 +703,10 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
 
 // MARK: - Dialog
 extension DiaryBottomSheetViewController: DialogDelegate {
+    func action(dialogScreen: DesignSystem.DialogScreen) {
+        
+    }
+    
     func action(titleText: String) {
         print("DiaryBottomSheet :: action! -> \(titleText)")
         switch titleText {

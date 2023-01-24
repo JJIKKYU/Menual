@@ -673,6 +673,10 @@ extension DiarySearchViewController {
 
 // MARK: - Dialog
 extension DiarySearchViewController: DialogDelegate {
+    public func action(dialogScreen: DesignSystem.DialogScreen) {
+        
+    }
+    
     public func action(titleText: String) {
         switch titleText {
         case "모든 기록을 삭제하시겠어요?":

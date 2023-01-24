@@ -878,6 +878,10 @@ extension DiaryDetailViewController: UITextViewDelegate {
 
 // MARK: - Dialog
 extension DiaryDetailViewController: DialogDelegate {
+    func action(dialogScreen: DesignSystem.DialogScreen) {
+        
+    }
+    
     func action(titleText: String) {
         print("DiaryDetail :: action!")
         switch titleText {

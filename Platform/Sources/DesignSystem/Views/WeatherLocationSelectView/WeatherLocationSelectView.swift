@@ -12,6 +12,7 @@ import RxSwift
 import MenualEntity
 import FlexLayout
 import PinLayout
+import MenualUtil
 
 public enum SelectedWeatherLocationType {
     case weather
@@ -64,7 +65,7 @@ public class WeatherLocationSelectView: UIView {
         $0.textContainer.maximumNumberOfLines = 1
     }
     
-    public lazy var deleteBtn = UIButton().then {
+    public lazy var deleteBtn = BaseButton().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setImage(Asset._24px.Circle.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.grey.g700
