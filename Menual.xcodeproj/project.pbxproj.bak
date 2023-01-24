@@ -59,11 +59,27 @@
 		98A6E1FB29740099008CF101 /* TOCropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1FA29740099008CF101 /* TOCropViewController */; };
 		98BAA732297A9C8B0061B891 /* ProfilePassword in Frameworks */ = {isa = PBXBuildFile; productRef = 98BAA731297A9C8B0061B891 /* ProfilePassword */; };
 		98C4767429744FC1006634A3 /* MenualUtil in Frameworks */ = {isa = PBXBuildFile; productRef = 98C4767329744FC1006634A3 /* MenualUtil */; };
+		98CE6E8A297D015B00465329 /* PinLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 98CE6E89297D015B00465329 /* PinLayout */; };
 		98D0EBEB27CA0AFF0076136E /* Montserrat ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBEA27CA0AFF0076136E /* Montserrat ExtraBold.ttf */; };
 		98D0EBEE27CA0E190076136E /* SpoqaHanSansNeo Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBEC27CA0E190076136E /* SpoqaHanSansNeo Regular.otf */; };
 		98D0EBEF27CA0E190076136E /* SpoqaHanSansNeo Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 98D0EBED27CA0E190076136E /* SpoqaHanSansNeo Bold.otf */; };
 		98E2A05F297A7A4700A623D2 /* MenualEntity in Frameworks */ = {isa = PBXBuildFile; productRef = 98E2A05E297A7A4700A623D2 /* MenualEntity */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		987A0A9B297D0B0500C84084 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.macro";
+			fileType = pattern.proxy;
+			inputFiles = (
+			);
+			isEditable = 1;
+			outputFiles = (
+			);
+			script = "HEADER=\"${SRCROOT}/Config.h\"\ncd ${SRCROOT}\necho \"// Do not edit\" > $HEADER\ncat \"${INPUT_FILE_PATH}\" | while read line\ndo\n    macro=\"`echo $line | cut -d= -f1`\"\n    cmd=\"`echo $line | cut -d= -f2-`\"\n    value=$($cmd)\n    echo \"#define ${macro} @\\\"${value}\\\"\" >> $HEADER\ndone\necho \"// Updated on \"`date` >> $HEADER\n";
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
 		9888DDF027646F000091918F /* PBXContainerItemProxy */ = {
@@ -148,6 +164,7 @@
 				98A6E1E42973FDF2008CF101 /* RxCocoa in Frameworks */,
 				98100498297AB53800820867 /* DiaryBottomSheet in Frameworks */,
 				98935C8129744CA800AA3A29 /* DesignSystem in Frameworks */,
+				98CE6E8A297D015B00465329 /* PinLayout in Frameworks */,
 				98BAA732297A9C8B0061B891 /* ProfilePassword in Frameworks */,
 				98A6E1F629740075008CF101 /* SnapKit in Frameworks */,
 				98A259A9297AA082009D3C2D /* ProfileDeveloper in Frameworks */,
@@ -358,6 +375,7 @@
 				9888DDD727646EFF0091918F /* Resources */,
 			);
 			buildRules = (
+				987A0A9B297D0B0500C84084 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -393,6 +411,7 @@
 				981004A1297AB53800820867 /* DiaryTempSave */,
 				981004A3297AB53800820867 /* DiaryWriting */,
 				981004A5297AB63A00820867 /* ProfileDesignSystem */,
+				98CE6E89297D015B00465329 /* PinLayout */,
 			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
@@ -477,6 +496,8 @@
 				985DE96B297401C700F9E7AD /* XCRemoteSwiftPackageReference "realm-swift" */,
 				985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive" */,
 				985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				98CE6E88297D015B00465329 /* XCRemoteSwiftPackageReference "PinLayout" */,
+				98E9BFBC297D18980045336D /* XCRemoteSwiftPackageReference "FlexLayoutForSPM" */,
 			);
 			productRefGroup = 9888DDDA27646EFF0091918F /* Products */;
 			projectDirPath = "";
@@ -522,7 +543,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		98239BEA27E43DA500E216F1 /* Run swiftgen */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -534,13 +555,13 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "PATH=/opt/homebrew/bin:$PATH\nswiftgen config run\n";
 		};
 		985A52B227F0244F00B10829 /* Localized */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -552,7 +573,7 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "echo \"generating I18N.swift\"\n\ntouch tempI18N.swift\necho \"import Foundation\n\npublic extension String {\n    var localized: String {\n            return NSLocalizedString(self, tableName: nil, bundle: Bundle.module, value: \\\"\\\", comment: \\\"\\\")\n    }\n}\n\" >> tempI18N.swift\n\necho \"public struct MenualString {\" >> tempI18N.swift\n\ninputfile=${PROJECT_DIR}/Platform/Sources/DesignSystem/Resources/ko.lproj/Localizable.strings\nwhile IFS= read -r line\n\ndo\necho $line\npattern='^[a-zA-Z]+(.*)[\\\\s]*=[\\\\s]*(.*)$'\n\ncomment='\\/\\/.+'\n\nif [[ $line =~ $pattern ]]\nthen\n    echo \"Yes👌\"\n    variableName=$(echo ${line%%=*})\n    echo $variableName\n    if [ \"$variableName\" != \"\" ]; then\n        echo \"    public static let $variableName = \\\"$variableName\\\".localized\" >> tempI18N.swift\n    fi\nelse\n    if [[ $line =~ $comment ]]\n    then\n        echo \"Comment 📝\"\n        echo \"\\n    $line\" >> tempI18N.swift\n    else\n        echo \"No👎\"\n    fi\nfi\ndone <\"$inputfile\"\n\necho \"}\" >> tempI18N.swift\ncat tempI18N.swift > ${PROJECT_DIR}/Platform/Sources/DesignSystem/Localizations/I18N.swift\nrm tempI18N.swift\n\necho \"-------------\"\ncat $inputfile\ncat ${PROJECT_DIR}/Platform/Sources/DesignSystem/Localizations/I18N.swift\necho \"-------------\"\n";
 		};
@@ -669,21 +690,22 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "FLEXLAYOUT_SWIFT_PACKAGE=1";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "-D FLEXLAYOUT_SWIFT_PACKAGE=1 -D FLEXLAYOUT_SWIFT_PACKAGE";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -730,16 +752,21 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "FLEXLAYOUT_SWIFT_PACKAGE=1";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "";
+				INFOPLIST_PREPROCESSOR_DEFINITIONS = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "-D FLEXLAYOUT_SWIFT_PACKAGE=1 -D FLEXLAYOUT_SWIFT_PACKAGE";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -755,7 +782,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -779,6 +806,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -793,7 +821,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -829,7 +857,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -854,7 +882,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -878,7 +906,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -901,7 +929,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1030,6 +1058,22 @@
 			repositoryURL = "https://github.com/JJIKKYU/TOCropViewController";
 			requirement = {
 				branch = main;
+				kind = branch;
+			};
+		};
+		98CE6E88297D015B00465329 /* XCRemoteSwiftPackageReference "PinLayout" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/layoutBox/PinLayout";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		98E9BFBC297D18980045336D /* XCRemoteSwiftPackageReference "FlexLayoutForSPM" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JJIKKYU/FlexLayoutForSPM";
+			requirement = {
+				branch = master;
 				kind = branch;
 			};
 		};
@@ -1165,6 +1209,11 @@
 		98C4767329744FC1006634A3 /* MenualUtil */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MenualUtil;
+		};
+		98CE6E89297D015B00465329 /* PinLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98CE6E88297D015B00465329 /* XCRemoteSwiftPackageReference "PinLayout" */;
+			productName = PinLayout;
 		};
 		98E2A05E297A7A4700A623D2 /* MenualEntity */ = {
 			isa = XCSwiftPackageProductDependency;
