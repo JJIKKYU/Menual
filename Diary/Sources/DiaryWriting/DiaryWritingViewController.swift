@@ -1393,59 +1393,28 @@ extension DiaryWritingViewController: DialogDelegate {
         case .diaryWriting(.camera):
             break
 
-        case .diaryDetail(_):
-            break
-        case .diarySearch(_):
-            break
-        case .diaryBottomSheet(_):
+        case .diaryDetail(_), .diarySearch(_), .diaryBottomSheet(_):
             break
         }
     }
-    
-    func action(titleText: String) {
-        switch titleText {
-        case "메뉴얼 작성을 취소하시겠어요?",
-             "메뉴얼 수정을 취소하시겠어요?":
-            if let diaryModel = zipDiaryModelForTempSave() {
-                listener?.saveTempSave(diaryModel: diaryModel,
-                                       originalImageData: selectedOriginalImage?.jpegData(compressionQuality: 0.5),
-                                       cropImageData: selectedImage?.jpegData(compressionQuality: 1.0)
-                )
-            }
-            listener?.pressedBackBtn(isOnlyDetach: false)
-            
-        case "메뉴얼을 등록하시겠어요?",
-             "메뉴얼을 수정하시겠어요?":
-            addDiary()
-            
-        case "사진을 삭제하시겠어요?":
-            imageUploadView.image = nil
-            selectedImage = nil
-            selectedOriginalImage = nil
-            isEditBeginRelay.accept(true)
+
+    func exit(dialogScreen: DesignSystem.DialogScreen) {
+        switch dialogScreen {
+        case .diaryWriting(.writing), .diaryWriting(.edit):
             break
             
-        default:
+        case .diaryWriting(.writingCancel), .diaryWriting(.editCancel):
             break
             
-        }
-    }
-    
-    func exit(titleText: String) {
-        switch titleText {
-        case "메뉴얼 작성을 취소하시겠어요?",
-             "메뉴얼 수정을 취소하시겠어요?":
+        case .diaryWriting(.deletePhoto):
             break
             
-        case "메뉴얼을 등록하시겠어요?",
-             "메뉴얼을 수정하시겠어요?":
+        case .diaryWriting(.camera):
             break
-            
-        case "사진을 삭제하시겠어요?":
-            break
-            
-        default:
+
+        case .diaryDetail(_), .diarySearch(_), .diaryBottomSheet(_):
             break
         }
     }
+
 }

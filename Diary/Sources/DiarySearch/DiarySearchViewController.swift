@@ -262,7 +262,9 @@ extension DiarySearchViewController {
     @objc
     func pressedRecentSearchCellDeleteBtn() {
         print("Search :: pressedDeleteBtn!")
-        show(size: .small,
+        showDialog(
+            dialogScreen: .diarySearch(.delete),
+             size: .small,
              buttonType: .twoBtn,
              titleText: "모든 기록을 삭제하시겠어요?",
              cancelButtonText: "취소",
@@ -674,27 +676,22 @@ extension DiarySearchViewController {
 // MARK: - Dialog
 extension DiarySearchViewController: DialogDelegate {
     public func action(dialogScreen: DesignSystem.DialogScreen) {
-        
-    }
-    
-    public func action(titleText: String) {
-        switch titleText {
-        case "모든 기록을 삭제하시겠어요?":
+        switch dialogScreen {
+        case .diarySearch(.delete):
             listener?.deleteAllRecentSearchData()
 
-        default:
+        case .diaryBottomSheet(_), .diaryDetail(_), .diaryWriting(_):
             break
         }
     }
     
-    public func exit(titleText: String) {
-        switch titleText {
-        case "모든 기록을 삭제하시겠어요?":
+    public func exit(dialogScreen: DesignSystem.DialogScreen) {
+        switch dialogScreen {
+        case .diarySearch(.delete):
             break
-        default:
+
+        case .diaryBottomSheet(_), .diaryDetail(_), .diaryWriting(_):
             break
         }
     }
-    
-    
 }

@@ -607,7 +607,9 @@ extension DiaryDetailViewController {
         
         // 겹스끼 내용을 한 글자 이상 작성했을 경우 Alert (UX)
         if replyText.count > 0 && replyText != replyTextPlcaeHolder {
-            show(size: .small,
+            showDialog(
+                 dialogScreen: .diaryDetail(.replyCancel),
+                 size: .small,
                  buttonType: .twoBtn,
                  titleText: "겹쓰기를 취소하고 돌아가시겠어요?",
                  cancelButtonText: "취소",
@@ -625,7 +627,9 @@ extension DiaryDetailViewController {
         ]
         MenualLog.logEventAction(responder: button, parameter: parameter)
         print("DiaryDetail :: pressedSubmitReplyBtn")
-        show(size: .small,
+        showDialog(
+            dialogScreen: .diaryDetail(.reply),
+             size: .small,
              buttonType: .twoBtn,
              titleText: "겹쓰기 작성을 완료하시겠어요?",
              cancelButtonText: "취소",
@@ -648,7 +652,9 @@ extension DiaryDetailViewController {
     func pressedLockBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
         print("DiaryDetail :: 숨김 해제하기 버튼 클릭!")
-        show(size: .small,
+        showDialog(
+             dialogScreen: .diaryDetail(.hide),
+             size: .small,
              buttonType: .twoBtn,
              titleText: "숨김을 해제 하시겠어요?",
              cancelButtonText: "취소",
@@ -677,7 +683,9 @@ extension DiaryDetailViewController {
         // print("DiaryDetail :: uuid = \(cell.replyUUID)")
         // self.willDeleteReplyUUID = cell.replyUUID
         
-        show(size: .small,
+        showDialog(
+             dialogScreen: .diaryDetail(.replyDelete),
+             size: .small,
              buttonType: .twoBtn,
              titleText: "겹쓰기를 삭제 하시겠어요?",
              cancelButtonText: "취소",
@@ -879,19 +887,8 @@ extension DiaryDetailViewController: UITextViewDelegate {
 // MARK: - Dialog
 extension DiaryDetailViewController: DialogDelegate {
     func action(dialogScreen: DesignSystem.DialogScreen) {
-        
-    }
-    
-    func action(titleText: String) {
-        print("DiaryDetail :: action!")
-        switch titleText {
-        case "숨김을 해제 하시겠어요?":
-            listener?.hideDiary()
-            
-        case "겹쓰기를 취소하고 돌아가시겠어요?":
-            listener?.pressedBackBtn(isOnlyDetach: false)
-            
-        case "겹쓰기 작성을 완료하시겠어요?":
+        switch dialogScreen {
+        case .diaryDetail(.reply):
             let text = replyBottomView.writedText
             listener?.pressedReplySubmitBtn(desc: text)
             replyBottomView.replyTextView.text = ""
@@ -899,32 +896,37 @@ extension DiaryDetailViewController: DialogDelegate {
             replyBottomView.replyTextView.layoutIfNeeded()
             replyBottomView.setNeedsLayout()
             view.endEditing(true)
-
-        case "겹쓰기를 삭제 하시겠어요?":
+            
+        case .diaryDetail(.replyCancel):
+            listener?.pressedBackBtn(isOnlyDetach: false)
+            
+        case .diaryDetail(.replyDelete):
             guard let willDeleteReplyModel = willDeleteReplyModel else { return }
             listener?.deleteReply(replyModel: willDeleteReplyModel)
-
-        default:
+            
+        case .diaryDetail(.hide):
+            listener?.hideDiary()
+            
+        case .diaryWriting(_), .diaryBottomSheet(_), .diarySearch(_):
             break
         }
     }
     
-    func exit(titleText: String) {
-        print("DiaryDetail :: exit")
-        switch titleText {
-        case "숨김을 해제 하시겠어요?":
+    func exit(dialogScreen: DesignSystem.DialogScreen) {
+        switch dialogScreen {
+        case .diaryDetail(.reply):
             break
             
-        case "겹쓰기를 취소하고 돌아가시겠어요?":
+        case .diaryDetail(.replyCancel):
             break
             
-        case "겹쓰기 작성을 완료하시겠어요?":
-            break
-            
-        case "겹쓰기를 삭제 하시겠어요?":
+        case .diaryDetail(.replyDelete):
             self.willDeleteReplyUUID = nil
-
-        default:
+            
+        case .diaryDetail(.hide):
+            break
+            
+        case .diaryWriting(_), .diaryBottomSheet(_), .diarySearch(_):
             break
         }
     }

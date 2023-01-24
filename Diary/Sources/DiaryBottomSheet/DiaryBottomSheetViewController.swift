@@ -599,7 +599,9 @@ extension DiaryBottomSheetViewController {
             titleText = "이 메뉴얼을 숨기시겠어요?"
         }
 
-        show(size: .small,
+        showDialog(
+            dialogScreen: .diaryBottomSheet(.hide),
+             size: .small,
              buttonType: .twoBtn,
              titleText: titleText,
              cancelButtonText: "취소",
@@ -618,7 +620,9 @@ extension DiaryBottomSheetViewController {
     func pressedDeleteBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
         print("DiaryBottomSheet :: pressedDeleteBtn")
-        show(size: .small,
+        showDialog(
+             dialogScreen: .diaryBottomSheet(.diaryDelete),
+             size: .small,
              buttonType: .twoBtn,
              titleText: "해당 메뉴얼을 삭제하시겠어요?",
              cancelButtonText: "취소",
@@ -659,7 +663,9 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
     func pressedQuestionBtn() {
         print("DiaryBottomSheet :: pressedReminderQuestionBtn")
 
-        show(size: .large,
+        showDialog(
+             dialogScreen: .diaryBottomSheet(.reminderQuestion),
+             size: .large,
              buttonType: .oneBtn,
              titleText: MenualString.reminder_alert_title_qna,
              subTitleText: MenualString.reminder_alert_desc_qna,
@@ -667,7 +673,9 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
     }
     
     func isNeedReminderAuthorization() {
-        show(size: .large,
+        showDialog(
+             dialogScreen: .diaryBottomSheet(.reminderAuth),
+             size: .large,
              buttonType: .oneBtn,
              titleText: MenualString.reminder_alert_title_reminder_auth,
              subTitleText: MenualString.reminder_alert_desc_reminder,
@@ -692,7 +700,9 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
     }
     
     func pressedIsEnabledSwitchBtn(isEnabled: Bool) {
-        show(size: .small,
+        showDialog(
+             dialogScreen: .diaryBottomSheet(.reminderEnable),
+             size: .small,
              buttonType: .twoBtn,
              titleText: MenualString.reminder_alert_title_reminder_clear,
              cancelButtonText: MenualString.reminder_alert_cancel,
@@ -704,63 +714,53 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
 // MARK: - Dialog
 extension DiaryBottomSheetViewController: DialogDelegate {
     func action(dialogScreen: DesignSystem.DialogScreen) {
-        
-    }
-    
-    func action(titleText: String) {
-        print("DiaryBottomSheet :: action! -> \(titleText)")
-        switch titleText {
-        case MenualString.menu_alert_title_lock,
-            MenualString.menu_alert_title_unlock:
+        switch dialogScreen {
+        case .diaryBottomSheet(.reminderEnable):
+            listener?.isEnabledReminderRelay?.accept(false)
+            
+        case .diaryBottomSheet(.hide):
             print("DiaryBottomSheet :: 숨기기 action!")
             listener?.menuComponentRelay?.accept(.hide)
             hideBottomSheetAndGoBack()
             
-        case MenualString.menu_alert_title_delete:
+        case .diaryBottomSheet(.diaryDelete):
             listener?.menuComponentRelay?.accept(.delete)
             hideBottomSheetAndGoBack()
-            
-        case MenualString.reminder_alert_desc_reminder:
+
+        case .diaryBottomSheet(.reminderQuestion):
+            break
+
+        case .diaryBottomSheet(.reminderAuth):
             guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
 
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url)
             }
-            break
             
-        case MenualString.reminder_alert_title_reminder_clear:
-            listener?.isEnabledReminderRelay?.accept(false)
-            break
-            
-        case MenualString.reminder_alert_title_qna:
-            break
-
-        default:
+        case .diarySearch(_), .diaryWriting(_), .diaryDetail(_):
             break
         }
     }
     
-    func exit(titleText: String) {
-        print("DiaryBottomSheet :: exit!")
-        switch titleText {
-        case MenualString.menu_alert_title_lock,
-            MenualString.menu_alert_title_unlock:
+    func exit(dialogScreen: DesignSystem.DialogScreen) {
+        switch dialogScreen {
+        case .diaryBottomSheet(.reminderEnable):
+            break
+            
+        case .diaryBottomSheet(.hide):
             print("DiaryBottomSheet :: 숨기기 exit!")
             hideBottomSheetAndGoBack()
-            break
             
-        case MenualString.menu_alert_title_delete:
+        case .diaryBottomSheet(.diaryDelete):
             hideBottomSheetAndGoBack()
-            break
-            
-        case MenualString.reminder_alert_desc_reminder:
-            break
-            
-        case MenualString.reminder_alert_title_reminder_clear:
+
+        case .diaryBottomSheet(.reminderQuestion):
             break
 
+        case .diaryBottomSheet(.reminderAuth):
+            break
             
-        default:
+        case .diarySearch(_), .diaryWriting(_), .diaryDetail(_):
             break
         }
     }

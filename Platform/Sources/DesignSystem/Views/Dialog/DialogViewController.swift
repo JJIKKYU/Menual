@@ -38,22 +38,28 @@ public enum DiaryWritingDialog {
 }
 
 public enum DiaryDetailDialog {
-    case cancel
+    case replyCancel
+    case replyDelete
+    case reply
+    case hide
 }
 
 public enum DiarySearchDialog {
-    case cancel
+    case delete
 }
 
 public enum DiaryBottomSheetDialog {
-    case cancel
+    case hide
+    case diaryDelete
+    case reminderQuestion
+    case reminderAuth
+    case reminderEnable
 }
 
 // Dialog의 버튼의 액션을 처리하는 Delegate입니다.
 public protocol DialogDelegate: AnyObject {
-    func action(titleText: String)   // confirm button event
     func action(dialogScreen: DialogScreen)
-    func exit(titleText: String)     // cancel button event
+    func exit(dialogScreen: DialogScreen)
 }
 
 
@@ -305,7 +311,6 @@ extension DialogViewController {
     func pressedConfirmBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
         self.dismiss(animated: true) {
-            self.delegate?.action(titleText: self.titleText)
             if let dialogScreen = self.dialogScreen {
                 self.delegate?.action(dialogScreen: dialogScreen)
             }
@@ -318,9 +323,8 @@ extension DialogViewController {
     func pressedCancelBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
         self.dismiss(animated: true) {
-            self.delegate?.exit(titleText: self.titleText)
             if let dialogScreen = self.dialogScreen {
-                self.delegate?.action(dialogScreen: dialogScreen)
+                self.delegate?.exit(dialogScreen: dialogScreen)
             }
             self.delegate = nil
         }
@@ -329,34 +333,6 @@ extension DialogViewController {
 
 // MARK: - 재사용성
 extension DialogDelegate where Self: UIViewController {
-    public func show(
-        size: DialogSize,
-        buttonType: DialogButtonType,
-        titleText: String,
-        subTitleText: String? = "",
-        cancelButtonText: String? = "",
-        confirmButtonText: String
-    ) {
-        
-        let dialogViewController = DialogViewController()
-        
-        dialogViewController.delegate = self
-        
-        dialogViewController.modalPresentationStyle = .overFullScreen
-        dialogViewController.modalTransitionStyle = .crossDissolve
-        
-        dialogViewController.dialogButtonType = buttonType
-        dialogViewController.dialogSize = size
-        print("dialog :: dialogSize = \(size)")
-        dialogViewController.titleText = titleText
-        dialogViewController.subTitleText = subTitleText ?? ""
-        dialogViewController.confirmText = confirmButtonText
-        dialogViewController.cancleText = cancelButtonText ?? ""
-        dialogViewController.setButtonLayout()
-        
-        self.present(dialogViewController, animated: true, completion: nil)
-    }
-    
     public func showDialog(
         dialogScreen: DialogScreen,
         size: DialogSize,
