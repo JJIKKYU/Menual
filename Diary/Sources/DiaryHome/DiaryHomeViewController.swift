@@ -36,6 +36,7 @@ public protocol DiaryHomePresentableListener: AnyObject {
     var lastPageNumRelay: BehaviorRelay<Int> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var diaryDictionary: [String: DiaryHomeSectionModel] { get }
+    var onboardingDiarySet: BehaviorRelay<[Int: String]?> { get }
     var momentsRealm: MomentsRealm? { get }
 }
 
@@ -445,6 +446,18 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                     break
                 case .some(.none):
                     break
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        listener?.onboardingDiarySet
+            .subscribe(onNext: { [weak self] data in
+                guard let self = self else { return }
+                if let data = data {
+                    self.momentsNoStartView.isHidden = false
+                    self.momentsNoStartView.writingDiarySet = data
+                } else {
+                    self.momentsNoStartView.isHidden = true
                 }
             })
             .disposed(by: disposeBag)
@@ -877,7 +890,7 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
             print("DiaryHome :: momentsCount = \(momentsCount)")
 
             if momentsCount == 0 {
-                self.momentsEmptyView.isHidden = false
+                self.momentsEmptyView.isHidden = true
                 self.momentsCollectionViewPagination.numberOfPages = 0
                 return 0
             } else {

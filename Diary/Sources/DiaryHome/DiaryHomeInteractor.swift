@@ -80,6 +80,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     var diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
     var arraySerction: [String] = []
     
+    let onboardingDiarySet = BehaviorRelay<[Int: String]?>(value: nil)
+    
     // filter 적용할 때, 원래 PageNum을 저장해놓고 필터가 끝났을때 다시 쓸 수 있도록
     var prevLastPageNum: Int = 0
     
@@ -307,6 +309,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             writingDiarySet[index + 1] = date
         }
 
+        onboardingDiarySet.accept(writingDiarySet)
         print("DiaryHomeInteractor :: writingDiarySet = \(writingDiarySet)")
     }
     
