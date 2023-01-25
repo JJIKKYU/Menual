@@ -496,6 +496,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         myMenualTableView.insertRows(at: [IndexPath(row: row, section: section)], with: .automatic)
         myMenualTableView.endUpdates()
     }
+    
+    // 메뉴얼을 14개 이하로 작성했을경우 온보딩
+    func setOnBoardingDiary() {
+        print("DiaryHome :: setOnBoardingDiary!")
+    }
 }
 
 // MARK: - IBAction
