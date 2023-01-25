@@ -176,6 +176,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     print("DiaryHome :: diaryDictionary = \(self.diaryDictionary)")
                     print("DiaryHome :: sectionSet = \(section)")
 
+                    self.setOnBoarding(modelArr: filteredModel)
                     self.presenter.reloadTableView()
                     
                 case .update(let model, _, let insertions, let modifications):
@@ -283,6 +284,30 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     print("DiaryHome :: MomentsError! = \(error)")
                 }
             })
+    }
+
+    /// 온보딩이 필요한지 체크
+    func setOnBoarding(modelArr: [DiaryModelRealm]) {
+        guard let realm = Realm.safeInit() else { return }
+        guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
+        if momentsRealm.isShowOnBoarding == false { return }
+
+        print("DiaryHomeInteractor :: modelArr")
+
+        var modelSet: Set<String> = []
+        for model in modelArr {
+            let date = model.createdAt.toStringWithMMdd()
+            modelSet.insert(date)
+        }
+
+        let sortedModelArr = Array(modelSet).sorted(by: { $0 < $1 })
+
+        var writingDiarySet: [Int: String] = [:]
+        for (index, date) in sortedModelArr.enumerated() {
+            writingDiarySet[index + 1] = date
+        }
+
+        print("DiaryHomeInteractor :: writingDiarySet = \(writingDiarySet)")
     }
     
     // AdaptivePresentationControllerDelegate, Drag로 뷰를 Dismiss 시킬경우에 호출됨

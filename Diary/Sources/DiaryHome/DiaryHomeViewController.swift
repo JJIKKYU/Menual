@@ -205,6 +205,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.isHidden = true
     }
     
+    private let momentsNoStartView = MomentsNoStartView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .clear
+    }
+    
     // MARK: - VC 코드
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -268,6 +273,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         
         tableViewHeaderView.addSubview(momentsCollectionView)
         tableViewHeaderView.addSubview(momentsCollectionViewPagination)
+        tableViewHeaderView.addSubview(momentsNoStartView)
         
         naviView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -312,6 +318,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(momentsCollectionView.snp.top).offset(20)
             make.bottom.equalTo(momentsCollectionView.snp.bottom).inset(20)
+        }
+        
+        momentsNoStartView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalToSuperview().offset(20)
+            make.bottom.equalToSuperview()
         }
         
         momentsCollectionViewPagination.snp.makeConstraints { make in

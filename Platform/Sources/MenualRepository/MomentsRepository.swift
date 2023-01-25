@@ -31,7 +31,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
         // moments를 한 번도 세팅하지 않은 경우
         let momentsRealm = realm.objects(MomentsRealm.self).first
         if momentsRealm == nil {
-            let momentsRealm = MomentsRealm(lastUpdatedDate: Date(), items: [])
+            let momentsRealm = MomentsRealm(lastUpdatedDate: Date(), isShowOnBoarding: true, items: [])
             print("MomentsRepo :: momentsRealm을 한 번도 세팅하지 않았습니다.")
             realm.safeWrite {
                 realm.add(momentsRealm)
@@ -39,6 +39,8 @@ public final class MomentsRepositoryImp: MomentsRepository {
         } else {
             print("MomentsRepo :: momentsRealm이 세팅되어 있습니다.")
         }
+
+        checkNeedOnboarding()
     }
     
     // 유저의 Moments 방문 유무 체크
@@ -48,6 +50,31 @@ public final class MomentsRepositoryImp: MomentsRepository {
         realm.safeWrite {
             momentsItem.userChecked = true
         }
+    }
+    
+    /// 유저에게 Onboarding을 제공해도 되는지 체크
+    public func checkNeedOnboarding() {
+        guard let realm = Realm.safeInit() else { return }
+        guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
+        if momentsRealm.isShowOnBoarding == false { return }
+
+        var modelSet: Set<String> = []
+        let diaryArr: [DiaryModelRealm] = realm.objects(DiaryModelRealm.self)
+            .toArray(type: DiaryModelRealm.self)
+            .filter ({ $0.isDeleted == false })
+
+        for model in diaryArr {
+            let date = model.createdAt.toStringWithMMdd()
+            modelSet.insert(date)
+        }
+        
+        if modelSet.count > 10 {
+            print("MomentsRepo :: 제공할 필요가 없습니다!")
+        } else {
+            print("MomentsRepo :: 제공해야 합니다.")
+        }
+
+        print("MomentsRepo :: modelSet Count = \(modelSet.count), \(modelSet)")
     }
     
     public func fetch() {
