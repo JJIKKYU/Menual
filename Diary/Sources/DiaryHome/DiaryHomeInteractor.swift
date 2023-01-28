@@ -178,11 +178,15 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     print("DiaryHome :: diaryDictionary = \(self.diaryDictionary)")
                     print("DiaryHome :: sectionSet = \(section)")
 
-                    self.setOnBoarding(modelArr: filteredModel)
+                    self.setOnboardingDiaries()
                     self.presenter.reloadTableView()
                     
                 case .update(let model, _, let insertions, let modifications):
                     print("DiaryHome :: update! = \(model)")
+
+                    // diaryModelRealm이 업데이트 될 때마다 온보딩 다이어리 업데이트가 필요하면 진행하도록
+                    self.setOnboardingDiaries()
+
                     if insertions.count > 0 {
                         guard let insertionsRow: Int = insertions.first else { return }
                         print("DiaryHome :: realmObserve = insertion = \(insertions)")
@@ -286,31 +290,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     print("DiaryHome :: MomentsError! = \(error)")
                 }
             })
-    }
-
-    /// 온보딩이 필요한지 체크
-    func setOnBoarding(modelArr: [DiaryModelRealm]) {
-        guard let realm = Realm.safeInit() else { return }
-        guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
-        if momentsRealm.isShowOnBoarding == false { return }
-
-        print("DiaryHomeInteractor :: modelArr")
-
-        var modelSet: Set<String> = []
-        for model in modelArr {
-            let date = model.createdAt.toStringWithMMdd()
-            modelSet.insert(date)
-        }
-
-        let sortedModelArr = Array(modelSet).sorted(by: { $0 < $1 })
-
-        var writingDiarySet: [Int: String] = [:]
-        for (index, date) in sortedModelArr.enumerated() {
-            writingDiarySet[index + 1] = date
-        }
-
-        onboardingDiarySet.accept(writingDiarySet)
-        print("DiaryHomeInteractor :: writingDiarySet = \(writingDiarySet)")
     }
     
     // AdaptivePresentationControllerDelegate, Drag로 뷰를 Dismiss 시킬경우에 호출됨
@@ -493,6 +472,40 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     }
 }
 
+// MARK: - OnBoarding
+extension DiaryHomeInteractor {
+    /// 온보딩이 필요한지 체크하고, 필요하다면 값을 넣어줄 수 있도록 하는 함수
+    func setOnboardingDiaries() {
+        print("DiaryHomeInteractor :: setOnboardingDiaries!")
+        guard let realm = Realm.safeInit() else { return }
+        guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
+        // onboarding이 보일 필요가 없으면 return
+        if momentsRealm.isShowOnBoarding == false { return }
+
+        let diaries: [DiaryModelRealm] = realm.objects(DiaryModelRealm.self)
+            .toArray(type: DiaryModelRealm.self)
+            .filter ({ $0.isDeleted == false })
+        
+        // 중복되지 않게 set에 날짜 insert
+        var diarySet: Set<String> = []
+        for diary in diaries {
+            let date = diary.createdAt.toStringWithMMdd()
+            diarySet.insert(date)
+        }
+
+        // 정렬
+        let sortedModelArr = Array(diarySet)
+            .sorted(by: { $0 < $1 })
+
+        // onboarding UI가 보일 수 있도록 형변환
+        var writingDiarySet: [Int: String] = [:]
+        for (index, date) in sortedModelArr.enumerated() {
+            writingDiarySet[index + 1] = date
+        }
+
+        onboardingDiarySet.accept(writingDiarySet)
+    }
+}
 
 // MARK: - 미사용
 extension DiaryHomeInteractor {
