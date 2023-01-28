@@ -480,7 +480,7 @@ extension DiaryHomeInteractor {
         guard let realm = Realm.safeInit() else { return }
         guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
         // onboarding이 보일 필요가 없으면 return
-        if momentsRealm.isShowOnBoarding == false { return }
+        if momentsRealm.onboardingIsClear == true { return }
 
         let diaries: [DiaryModelRealm] = realm.objects(DiaryModelRealm.self)
             .toArray(type: DiaryModelRealm.self)
@@ -503,6 +503,12 @@ extension DiaryHomeInteractor {
             writingDiarySet[index + 1] = date
         }
 
+        // 14개 이상 작성이 완료되었을 경우 다음날 부터 모먼츠 제공될 수 있도록 체크
+        if writingDiarySet.count >= 14 {
+            dependency.momentsRepository
+                .clearOnboarding()
+        }
+        
         onboardingDiarySet.accept(writingDiarySet)
     }
 }

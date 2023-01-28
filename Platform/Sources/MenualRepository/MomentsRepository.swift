@@ -14,6 +14,7 @@ import MenualEntity
 public protocol MomentsRepository {
     func fetch()
     func visitMoments(momentsItem: MomentsItemRealm)
+    func clearOnboarding()
 }
 
 public final class MomentsRepositoryImp: MomentsRepository {
@@ -31,7 +32,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
         // moments를 한 번도 세팅하지 않은 경우
         let momentsRealm = realm.objects(MomentsRealm.self).first
         if momentsRealm == nil {
-            let momentsRealm = MomentsRealm(lastUpdatedDate: Date(), isShowOnBoarding: true, items: [])
+            let momentsRealm = MomentsRealm(lastUpdatedDate: Date(), items: [])
             print("MomentsRepo :: momentsRealm을 한 번도 세팅하지 않았습니다.")
             realm.safeWrite {
                 realm.add(momentsRealm)
@@ -50,31 +51,6 @@ public final class MomentsRepositoryImp: MomentsRepository {
         realm.safeWrite {
             momentsItem.userChecked = true
         }
-    }
-    
-    /// 유저에게 Onboarding을 제공해도 되는지 체크
-    public func checkNeedOnboarding() {
-        guard let realm = Realm.safeInit() else { return }
-        guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
-        if momentsRealm.isShowOnBoarding == false { return }
-
-        var modelSet: Set<String> = []
-        let diaryArr: [DiaryModelRealm] = realm.objects(DiaryModelRealm.self)
-            .toArray(type: DiaryModelRealm.self)
-            .filter ({ $0.isDeleted == false })
-
-        for model in diaryArr {
-            let date = model.createdAt.toStringWithMMdd()
-            modelSet.insert(date)
-        }
-        
-        if modelSet.count > 10 {
-            print("MomentsRepo :: 제공할 필요가 없습니다!")
-        } else {
-            print("MomentsRepo :: 제공해야 합니다.")
-        }
-
-        print("MomentsRepo :: modelSet Count = \(modelSet.count), \(modelSet)")
     }
     
     public func fetch() {
@@ -464,6 +440,36 @@ public final class MomentsRepositoryImp: MomentsRepository {
     }
 }
 
+// MARK: - onboarding
+extension MomentsRepositoryImp {
+    /// 유저가 온보딩을 완료했을때
+    public func clearOnboarding() {
+        print("MomentsRepo :: clearOnboarding!")
+        guard let realm = Realm.safeInit() else { return }
+        guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
+        
+        realm.safeWrite {
+            momentsRealm.onboardingClearDate = Date()
+        }
+    }
+    
+    /// 유저에게 Onboarding을 제공해도 되는지 체크
+    public func checkNeedOnboarding() {
+        guard let realm = Realm.safeInit() else { return }
+        guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
+        
+        guard let _ = momentsRealm.onboardingClearDate else { return }
+        
+        // 클리어한지 하루가 지났다면 표시하지 않아도 되므로 리턴
+        RefreshManager.shared.onboardingLoadDataIfNeeded(completion: { success in
+            print("MomentsRepo :: success = \(success)")
+            if success == true { return }
+        })
+        
+        // 클리어한지 하루가 되지 않았다면 지속 표시
+    }
+}
+
 // MARK: - MomentsRefrshManager
 class RefreshManager: NSObject {
 
@@ -490,19 +496,63 @@ class RefreshManager: NSObject {
         }
     }
 
+    /// Moments Refresh가 필요한지 체크
     private func isRefreshRequired() -> Bool {
         guard let realm = Realm.safeInit(),
               let momentsRealm = realm.objects(MomentsRealm.self).first
         else { return false }
         
         let lastUpdateDate = momentsRealm.lastUpdatedDate
-        let updateTime = 3
+        let updateTime = 0
         
         let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour
         let currentHour =  calender.dateComponents([.hour], from: Date()).hour
         
         print("MomentsRepo :: isRefreshRequired -> diff = \(diff), \(currentHour)")
         
+        
+        if let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour,
+            let currentHour =  calender.dateComponents([.hour], from: Date()).hour,
+            diff >= 24, updateTime <= currentHour {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func onboardingLoadDataIfNeeded(completion: (Bool) -> Void) {
+        guard let realm = Realm.safeInit(),
+              let momentsRealm = realm.objects(MomentsRealm.self).first
+        else {
+            completion(false)
+            return
+        }
+
+        if onboardingIsRefreshRequired() {
+            print("MomentsRepo :: onboardingIsRefreshRequired!!!")
+            // load the data
+            // defaults.set(Date(), forKey: defaultsKey)
+            realm.safeWrite {
+                momentsRealm.onboardingIsClear = true
+            }
+            completion(true)
+        } else {
+            completion(false)
+        }
+    }
+    
+    private func onboardingIsRefreshRequired() -> Bool {
+        guard let realm = Realm.safeInit(),
+              let momentsRealm = realm.objects(MomentsRealm.self).first
+        else { return false }
+        
+        guard let lastUpdateDate = momentsRealm.onboardingClearDate else { return false }
+        let updateTime = 0
+        
+        let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour
+        let currentHour =  calender.dateComponents([.hour], from: Date()).hour
+        
+        print("MomentsRepo :: onboardingIsRefreshRequired -> diff = \(diff), \(currentHour)")
         
         if let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour,
             let currentHour =  calender.dateComponents([.hour], from: Date()).hour,

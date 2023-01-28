@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // 1. config 설정(이전 버전에서 다음 버전으로 마이그레이션될때 어떻게 변경될것인지)
         let config = Realm.Configuration(
-            schemaVersion: 3, // 새로운 스키마 버전 설정
+            schemaVersion: 5, // 새로운 스키마 버전 설정
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion <= 2 {
                     // 1-1. 마이그레이션 수행(버전 2보다 작은 경우 버전 2에 맞게 데이터베이스 수정)
@@ -42,7 +42,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
                 if oldSchemaVersion <= 3 {
                     migration.enumerateObjects(ofType: MomentsRealm.className()) { oldObject, newObject in
-                        newObject!["isShowOnBoarding"] = true
+                        newObject!["onboardingClearDate"] = nil
+                    }
+                }
+                
+                if oldSchemaVersion <= 5 {
+                    migration.enumerateObjects(ofType: MomentsRealm.className()) { oldObject, newObject in
+                        newObject!["onboardingIsClear"] = false
                     }
                 }
             }

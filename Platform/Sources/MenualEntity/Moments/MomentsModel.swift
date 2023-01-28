@@ -12,7 +12,8 @@ import RealmSwift
 public class MomentsRealm: Object {
     @Persisted(primaryKey: true) public var _id: ObjectId
     @Persisted public var lastUpdatedDate: Date
-    @Persisted public var isShowOnBoarding: Bool
+    @Persisted public var onboardingClearDate: Date?
+    @Persisted public var onboardingIsClear: Bool
     @Persisted public var items: List<MomentsItemRealm>
     public var itemsArr: [MomentsItemRealm] {
         get {
@@ -24,7 +25,7 @@ public class MomentsRealm: Object {
         }
     }
     
-    public convenience init(lastUpdatedDate: Date, isShowOnBoarding: Bool, items: [MomentsItemRealm]) {
+    public convenience init(lastUpdatedDate: Date, onboardingClearDate: Date? = nil, onboardingIsClear: Bool = false, items: [MomentsItemRealm]) {
         self.init()
         self.lastUpdatedDate = lastUpdatedDate
         self.itemsArr = items
