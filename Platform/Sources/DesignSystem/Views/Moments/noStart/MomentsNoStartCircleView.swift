@@ -19,6 +19,10 @@ class MomentsNoStartCircleView: UIView {
         }
     }
     
+    var count: Int = 0 {
+        didSet { setNeedsLayout() }
+    }
+    
     private let imageView = UIImageView().then {
         $0.image = Asset._40px.paper.image
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -26,7 +30,7 @@ class MomentsNoStartCircleView: UIView {
     
     private let countLabel = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = "1/10"
+        $0.text = "1/14"
         $0.font = UIFont.AppHead(.head_1)
         $0.textColor = Colors.grey.g600
     }
@@ -60,6 +64,8 @@ class MomentsNoStartCircleView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        countLabel.text = "\(count)/14"
     }
 
     override func draw(_ rect: CGRect) {
@@ -92,18 +98,12 @@ class MomentsNoStartCircleView: UIView {
         shapeLayer.path = bezierPath.cgPath
         // shapeLayer.lineCap = .round    // 프로그래스 바의 끝을 둥글게 설정
 
-        var color: UIColor = Colors.grey.g600
-        if value == 1.0 {
-            color = Colors.tint.sub.n400
-            countLabel.textColor = color
-        }
+        let color = Colors.tint.sub.n400
 
         shapeLayer.strokeColor = color.cgColor
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.lineWidth = lineWidth
 
         self.layer.addSublayer(shapeLayer)
-        
-        countLabel.text = "\(Int(value * 10))/10"
     }
 }
