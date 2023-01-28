@@ -8,7 +8,6 @@
 import UIKit
 import Then
 import SnapKit
-import DesignSystem
 
 class MomentsNoStartStampCell: UICollectionViewCell {
     
@@ -64,7 +63,7 @@ class MomentsNoStartStampCell: UICollectionViewCell {
         $0.font = UIFont.AppHead(.head_1)
         $0.textColor = Colors.tint.main.v600
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = "??/??"
+        $0.text = " "
     }
     
     override init(frame: CGRect) {
@@ -110,7 +109,7 @@ class MomentsNoStartStampCell: UICollectionViewCell {
         
         imageView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
-            make.width.height.equalTo(18)
+            make.width.height.equalTo(22)
         }
         
         dateLabel.snp.makeConstraints { make in
@@ -132,12 +131,12 @@ class MomentsNoStartStampCell: UICollectionViewCell {
             stampView.backgroundColor = Colors.tint.main.v800
             stampView.layer.borderColor = Colors.tint.main.v100.cgColor
             imageView.tintColor = Colors.tint.main.v100
-            dateLabel.textColor = Colors.tint.main.v100
+            dateLabel.textColor = Colors.tint.main.v200
         
             
         case .unactive:
             stampNumberLabel.textColor = Colors.tint.main.v600
-            dateLabel.text = "??/??"
+            dateLabel.text = ""
             stampNumberView.backgroundColor = Colors.tint.main.v800
             stampView.backgroundColor = Colors.tint.main.v500
             stampView.layer.borderColor = Colors.tint.main.v800.cgColor

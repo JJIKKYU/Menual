@@ -67,7 +67,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     private var disposebag: DisposeBag
 
     var lastPageNumRelay = BehaviorRelay<Int>(value: 0)
-    // var filteredDiaryMonthSetRelay: BehaviorRelay<[DiaryYearModel]>
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?>
     let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
     
@@ -80,6 +79,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     var diaryRealmArr: Results<DiaryModelRealm>?
     var diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
     var arraySerction: [String] = []
+    
+    let onboardingDiarySet = BehaviorRelay<[Int: String]?>(value: nil)
     
     // filter 적용할 때, 원래 PageNum을 저장해놓고 필터가 끝났을때 다시 쓸 수 있도록
     var prevLastPageNum: Int = 0
@@ -177,10 +178,15 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     print("DiaryHome :: diaryDictionary = \(self.diaryDictionary)")
                     print("DiaryHome :: sectionSet = \(section)")
 
+                    self.setOnboardingDiaries()
                     self.presenter.reloadTableView()
                     
                 case .update(let model, _, let insertions, let modifications):
                     print("DiaryHome :: update! = \(model)")
+
+                    // diaryModelRealm이 업데이트 될 때마다 온보딩 다이어리 업데이트가 필요하면 진행하도록
+                    self.setOnboardingDiaries()
+
                     if insertions.count > 0 {
                         guard let insertionsRow: Int = insertions.first else { return }
                         print("DiaryHome :: realmObserve = insertion = \(insertions)")
@@ -466,6 +472,60 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     }
 }
 
+// MARK: - OnBoarding
+extension DiaryHomeInteractor {
+    /// 온보딩이 필요한지 체크하고, 필요하다면 값을 넣어줄 수 있도록 하는 함수
+    func setOnboardingDiaries() {
+        print("DiaryHomeInteractor :: setOnboardingDiaries!")
+        guard let realm = Realm.safeInit() else { return }
+        guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
+        // onboarding이 보일 필요가 없으면 return
+        if momentsRealm.onboardingIsClear == true { return }
+
+        let diaries = realm.objects(DiaryModelRealm.self)
+            .toArray(type: DiaryModelRealm.self)
+            .filter ({ $0.isDeleted == false })
+
+        var sortedModelArr: [String] = []
+        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
+        // 디버그 모드일 경우에는 다이어리 작성일자 카운트 하지 않고 나타날 수 있도록
+        if isDebugMode {
+            var diaryArr: [String] = []
+            for diary in diaries {
+                let date = diary.createdAt.toStringWithMMdd()
+                diaryArr.append(date)
+            }
+
+            sortedModelArr = diaryArr
+                .sorted(by: { $0 < $1 })
+        } else {
+            // 중복되지 않게 set에 날짜 insert
+            var diarySet: Set<String> = []
+            for diary in diaries {
+                let date = diary.createdAt.toStringWithMMdd()
+                diarySet.insert(date)
+            }
+
+            // 정렬
+            sortedModelArr = Array(diarySet)
+                .sorted(by: { $0 < $1 })
+        }
+        
+        // onboarding UI가 보일 수 있도록 형변환
+        var writingDiarySet: [Int: String] = [:]
+        for (index, date) in sortedModelArr.enumerated() {
+            writingDiarySet[index + 1] = date
+        }
+
+        // 14개 이상 작성이 완료되었을 경우 다음날 부터 모먼츠 제공될 수 있도록 체크
+        if writingDiarySet.count >= 14 {
+            dependency.momentsRepository
+                .clearOnboarding()
+        }
+        
+        onboardingDiarySet.accept(writingDiarySet)
+    }
+}
 
 // MARK: - 미사용
 extension DiaryHomeInteractor {
