@@ -489,7 +489,7 @@ class RefreshManager: NSObject {
             completion(false)
             return
         }
-
+        
         if isRefreshRequired() {
             // load the data
             // defaults.set(Date(), forKey: defaultsKey)
@@ -512,6 +512,12 @@ class RefreshManager: NSObject {
         if momentsRealm.onboardingIsClear == false {
             print("MomentsRepo :: onboaridng을 완료하지 않았으므로 moments를 제공하지 않습니다.")
             return false
+        }
+        
+        // 디버그 모드일때는 항상 리프레쉬 되도록
+        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
+        if isDebugMode {
+            return true
         }
         
         let lastUpdateDate = momentsRealm.lastUpdatedDate
@@ -557,6 +563,12 @@ class RefreshManager: NSObject {
         guard let realm = Realm.safeInit(),
               let momentsRealm = realm.objects(MomentsRealm.self).first
         else { return false }
+        
+        // 디버그 모드일때는 하루 차이 없이 바로 나타나도록
+        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
+        if isDebugMode {
+            return true
+        }
         
         guard let lastUpdateDate = momentsRealm.onboardingClearDate else { return false }
         let updateTime = 0

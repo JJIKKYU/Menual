@@ -482,21 +482,35 @@ extension DiaryHomeInteractor {
         // onboarding이 보일 필요가 없으면 return
         if momentsRealm.onboardingIsClear == true { return }
 
-        let diaries: [DiaryModelRealm] = realm.objects(DiaryModelRealm.self)
+        let diaries = realm.objects(DiaryModelRealm.self)
             .toArray(type: DiaryModelRealm.self)
             .filter ({ $0.isDeleted == false })
-        
-        // 중복되지 않게 set에 날짜 insert
-        var diarySet: Set<String> = []
-        for diary in diaries {
-            let date = diary.createdAt.toStringWithMMdd()
-            diarySet.insert(date)
+
+        var sortedModelArr: [String] = []
+        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
+        // 디버그 모드일 경우에는 다이어리 작성일자 카운트 하지 않고 나타날 수 있도록
+        if isDebugMode {
+            var diaryArr: [String] = []
+            for diary in diaries {
+                let date = diary.createdAt.toStringWithMMdd()
+                diaryArr.append(date)
+            }
+
+            sortedModelArr = diaryArr
+                .sorted(by: { $0 < $1 })
+        } else {
+            // 중복되지 않게 set에 날짜 insert
+            var diarySet: Set<String> = []
+            for diary in diaries {
+                let date = diary.createdAt.toStringWithMMdd()
+                diarySet.insert(date)
+            }
+
+            // 정렬
+            sortedModelArr = Array(diarySet)
+                .sorted(by: { $0 < $1 })
         }
-
-        // 정렬
-        let sortedModelArr = Array(diarySet)
-            .sorted(by: { $0 < $1 })
-
+        
         // onboarding UI가 보일 수 있도록 형변환
         var writingDiarySet: [Int: String] = [:]
         for (index, date) in sortedModelArr.enumerated() {
