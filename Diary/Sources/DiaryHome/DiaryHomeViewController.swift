@@ -338,7 +338,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         myMenualTitleView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.equalTo(momentsCollectionViewPagination.snp.bottom).offset(24)
+            make.top.equalTo(tableViewHeaderView.snp.bottom)
             make.height.equalTo(22)
         }
         
@@ -456,6 +456,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 if let data = data {
                     self.momentsNoStartView.isHidden = false
                     self.momentsNoStartView.writingDiarySet = data
+                    self.tableViewHeaderView.snp.updateConstraints { make in
+                        make.height.equalTo(240)
+                    }
+                    self.view.layoutIfNeeded()
+                    self.myMenualTableView.reloadData()
                 } else {
                     self.momentsNoStartView.isHidden = true
                 }
@@ -606,9 +611,18 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
         // myMenualTableView일때만 작동하도록
         if case .MyMenualTableView = tableCollectionViewTag {
             // print("DiaryHome :: contents offset = \(scrollView.contentOffset.y)")
-            let offset = scrollView.contentOffset.y
+            let offset: CGFloat = scrollView.contentOffset.y
+            
+            // 상단 콘텐츠 높이에 따라서 Attach 되는 목표 offset 변경
+            var maxOffsetValue: CGFloat = 0
+            if listener?.onboardingDiarySet.value != nil {
+               maxOffsetValue = 230
+            } else {
+                maxOffsetValue = 165
+            }
+            
             // TitleView를 넘어서 스크롤할 경우
-            if offset > 165 {
+            if offset > maxOffsetValue {
                 // print("DiaryHome :: contents > 155")
                 setFABMode(isEnabled: true)
                 myMenualTitleView.AppShadow(.shadow_6)
@@ -637,7 +651,7 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
                 myMenualTitleView.snp.remakeConstraints { make in
                     make.leading.equalToSuperview()
                     make.width.equalToSuperview()
-                    make.top.equalTo(momentsCollectionViewPagination.snp.bottom).offset(24)
+                    make.top.equalTo(tableViewHeaderView.snp.bottom)
                     make.height.equalTo(22)
                 }
             }
@@ -688,7 +702,8 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // 첫번재 섹션일 경우에는 넓게 안띄움
         if section == 0 {
-            return 44
+            return 82
+            // return 200
         }
         return 60
     }
@@ -838,8 +853,6 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        
         switch collectionView.tag {
         // MomentsCollectionView
         case 0:
