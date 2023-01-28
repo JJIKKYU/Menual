@@ -254,9 +254,9 @@ public final class MomentsRepositoryImp: MomentsRepository {
                 }
                 
                 // 4. 30일이 지난 콘텐츠인지 확인
-                let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
+                // let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
                 
-                return isAvailableContent
+                return true
             })
 
         print("MomentsRepo :: getSpecificDayDiary = \(diaryArr)")
@@ -297,29 +297,35 @@ public final class MomentsRepositoryImp: MomentsRepository {
     ]
     func setReadCountZeroMomentsItem() -> Observable<[MomentsItemRealm]?> {
         guard let diaryArr = diaryArr else { return .just(nil) }
-
-        let momentsDiaryArr: [DiaryModelRealm] = diaryArr
-            .filter({
-                let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
+        guard let momentsDiary: DiaryModelRealm = diaryArr
+            .filter ({
+                // 1. 조회수가 0인지 체크
                 let isReadCountZero: Bool = ($0.readCount == 0)
-                return isAvailableContent && isReadCountZero
+                
+                // 2. 이 모먼츠가 추천된 후 유저가 터치한 이력이 있는지 체크
+                if let lastMomentsDate = $0.lastMomentsDate {
+                    // 터치한 이력이 있지만, 30일이 지나서 다시 한 번 추천이 가능한지 확인
+                    let isAvailableContent: Bool = checkAvailableDiaryContents(lastMomentsDate, targetDay: 30)
+                    print("MomentsRepo :: 추천된 후 유저가 터치한 이력이 있습니다., 경과된 시간 = \(isAvailableContent)")
+                    if isAvailableContent == false { return false }
+                }
+                
+                return isReadCountZero
             })
+            .first
+        else { return .just(nil) }
+
+        let title: String = readCountZeroTitleData.randomElement() ?? ""
+        let item = MomentsItemRealm(order: 0,
+                                    title: title,
+                                    uuid: UUID().uuidString,
+                                    icon: "120px/book/close",
+                                    diaryUUID: momentsDiary.uuid,
+                                    userChecked: false,
+                                    createdAt: Date()
+        )
         
-        var momentsItems: [MomentsItemRealm] = []
-        for diary in momentsDiaryArr {
-            let title: String = readCountZeroTitleData.randomElement() ?? ""
-            let item = MomentsItemRealm(order: 0,
-                                        title: title,
-                                        uuid: UUID().uuidString,
-                                        icon: "120px/book/close",
-                                        diaryUUID: diary.uuid,
-                                        userChecked: false,
-                                        createdAt: Date()
-            )
-            momentsItems.append(item)
-        }
-        
-        return .just(momentsItems)
+        return .just([item])
     }
 
     //MARK: - 새벽감석 터지는 메뉴얼
@@ -334,7 +340,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
         guard let momentsDiary: DiaryModelRealm = diaryArr
             .filter ({
                 // 1. 30일이 지나 유저에게 추천 가능한지 체크
-                let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
+                // let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
                 
                 // 2. 실제로 새벽에 작성했는지  체크
                 let hour = Calendar.current.component(.hour, from: $0.createdAt)
@@ -348,7 +354,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
                     if isAvailableContent == false { return false }
                 }
                 
-                return isAvailableContent && isSpecificHour
+                return isSpecificHour
             })
             .first
         else { return .just(nil) }
@@ -501,6 +507,12 @@ class RefreshManager: NSObject {
         guard let realm = Realm.safeInit(),
               let momentsRealm = realm.objects(MomentsRealm.self).first
         else { return false }
+        
+        // onboarding을 완료하지 않았을 경우 moments를 제공하지 않음
+        if momentsRealm.onboardingIsClear == false {
+            print("MomentsRepo :: onboaridng을 완료하지 않았으므로 moments를 제공하지 않습니다.")
+            return false
+        }
         
         let lastUpdateDate = momentsRealm.lastUpdatedDate
         let updateTime = 0
