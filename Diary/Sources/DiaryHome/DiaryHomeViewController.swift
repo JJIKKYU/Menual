@@ -301,7 +301,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.top.equalToSuperview()
             make.width.equalToSuperview()
-            make.height.equalTo(132)
+            make.height.equalTo(172)
         }
         self.view.layoutIfNeeded()
         
