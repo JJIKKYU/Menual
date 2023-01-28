@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 import Then
 import SnapKit
-import DesignSystem
 
 public enum BoxButtonStatus {
     case active
@@ -144,13 +143,13 @@ public class BoxButton: UIButton {
             print("BoxButton :: isSelecteed! - false")
         }
         
-//        if btnStatus == .inactive { return }
-//        switch btnSelected {
-//        case true:
-//            btnStatus = .pressed
-//
-//        case false:
-//            btnStatus = .active
-//        }
+        if btnStatus == .inactive { return }
+        switch btnSelected {
+        case true:
+            btnStatus = .pressed
+
+        case false:
+            btnStatus = .active
+        }
     }
 }
