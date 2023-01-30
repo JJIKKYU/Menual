@@ -40,7 +40,12 @@ class MomentsNoStartCircleView: UIView {
         print("Moments :: draw!")
         let bezierPath = UIBezierPath()
 
-        bezierPath.addArc(withCenter: CGPoint(x: rect.midX, y: rect.midY), radius: rect.midX - ((lineWidth - 1) / 2), startAngle: 0, endAngle: .pi * 2, clockwise: true)
+        bezierPath.addArc(withCenter: CGPoint(x: rect.midX, y: rect.midY),
+                          radius: rect.midX - ((lineWidth - 1) / 2),
+                          startAngle: 0,
+                          endAngle: .pi * 2,
+                          clockwise: true
+        )
 
         bezierPath.lineWidth = 4
         Colors.grey.g800.set()
@@ -59,10 +64,22 @@ class MomentsNoStartCircleView: UIView {
 
         let bezierPath = UIBezierPath()
 
-        bezierPath.addArc(withCenter: CGPoint(x: rect.midX, y: rect.midY), radius: rect.midX - ((lineWidth - 1) / 2), startAngle: -.pi / 2, endAngle: ((.pi * 2) * value) - (.pi / 2), clockwise: true)
+        bezierPath.addArc(withCenter: CGPoint(x: rect.midX, y: rect.midY),
+                          radius: rect.midX - ((lineWidth - 1) / 2),
+                          startAngle: -.pi / 2,
+                          endAngle: ((.pi * 2) * value) - (.pi / 2),
+                          clockwise: true
+        )
+        
+        let animation = CABasicAnimation(keyPath: "strokeEnd")
+        animation.fromValue = 0
+        animation.toValue = 1
+        animation.duration = 2
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        animation.isRemovedOnCompletion = false
 
         let shapeLayer = CAShapeLayer()
-
+        shapeLayer.add(animation, forKey: nil)
         shapeLayer.path = bezierPath.cgPath
         // shapeLayer.lineCap = .round    // 프로그래스 바의 끝을 둥글게 설정
 
