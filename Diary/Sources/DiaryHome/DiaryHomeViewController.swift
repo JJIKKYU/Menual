@@ -924,7 +924,7 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MomentsCell", for: indexPath) as? MomentsCell else { return UICollectionViewCell() }
             guard let data = listener?.momentsRealm?.itemsArr[safe: indexPath.row] else { return UICollectionViewCell() }
             
-            cell.tagTitle = "MENUAL TIPS"
+            cell.tagTitle = "MOMENTS"
             cell.momentsTitle = data.title
             cell.icon = data.icon
             

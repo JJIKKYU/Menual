@@ -70,6 +70,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?>
     let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
     
+    let filterResetBtnRelay = BehaviorRelay<Bool>(value: false)
     let filteredWeatherArrRelay = BehaviorRelay<[Weather]>(value: [])
     let filteredPlaceArrRelay = BehaviorRelay<[Place]>(value: [])
     
@@ -105,6 +106,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         super.didBecomeActive()
         bind()
         bindMoments()
+        bindFilter()
     }
 
     override func willResignActive() {
@@ -290,6 +292,15 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     print("DiaryHome :: MomentsError! = \(error)")
                 }
             })
+    }
+    
+    func bindFilter() {
+        filterResetBtnRelay
+            .subscribe(onNext: { [weak self] isResetClicked in
+                guard let self = self else { return }
+                print("DiaryHomeIntreactor :: filterResetBtnRelay! = \(isResetClicked)")
+        })
+            .disposed(by: disposebag)
     }
     
     // AdaptivePresentationControllerDelegate, Drag로 뷰를 Dismiss 시킬경우에 호출됨

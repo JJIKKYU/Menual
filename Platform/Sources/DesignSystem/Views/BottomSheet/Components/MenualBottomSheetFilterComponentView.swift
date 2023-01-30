@@ -17,6 +17,7 @@ public protocol MenualBottomSheetFilterComponentDelegate: AnyObject {
     var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]>? { get }
     var filterPlaceSelectedArrRelay: BehaviorRelay<[Place]>? { get }
     var filteredMenaulCountsObservable: Observable<Int> { get }
+    var filterResetBtnRelay: BehaviorRelay<Bool>? { get }
 }
 
 public class MenualBottomSheetFilterComponentView: UIView {
@@ -326,10 +327,11 @@ extension MenualBottomSheetFilterComponentView {
     func pressedResetFilterBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
         print("bottomSheet :: pressedResetFilterBtn!")
-        delegate?.filterWeatherSelectedArrRelay?.accept([])
-        delegate?.filterPlaceSelectedArrRelay?.accept([])
-        weatherSelectView.resetCells()
-        placeSelectView.resetCells()
+//        delegate?.filterWeatherSelectedArrRelay?.accept([])
+//        delegate?.filterPlaceSelectedArrRelay?.accept([])
+//        weatherSelectView.resetCells()
+//        placeSelectView.resetCells()
+        delegate?.filterResetBtnRelay?.accept(true)
         setNeedsLayout()
     }
 }

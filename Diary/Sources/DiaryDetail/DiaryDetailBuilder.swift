@@ -21,6 +21,7 @@ public protocol DiaryDetailDependency: Dependency {
 
 public final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency, DiaryDetailImageDependency {
     
+    public var filterResetBtnRelay: RxRelay.BehaviorRelay<Bool>?
     public var isEnabledReminderRelay: BehaviorRelay<Bool?>?
     public var isHideMenualRelay: BehaviorRelay<Bool>?
     public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?

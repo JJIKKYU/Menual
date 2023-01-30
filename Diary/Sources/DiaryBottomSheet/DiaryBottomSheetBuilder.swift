@@ -27,13 +27,15 @@ public protocol DiaryBottomSheetDependency: Dependency {
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
+    var filterResetBtnRelay: BehaviorRelay<Bool>? { get }
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
     var isHideMenualRelay: BehaviorRelay<Bool>? { get }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
 }
 
 public final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency>, DiaryWritingDependency, DiaryBottomSheetInteractorDependency {
-
+    
+    public var filterResetBtnRelay: BehaviorRelay<Bool>? { dependency.filterResetBtnRelay }
     public var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { dependency.reminderRequestDateRelay }
     public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { dependency.filteredWeatherArrRelay }
     public var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { dependency.filteredPlaceArrRelay }

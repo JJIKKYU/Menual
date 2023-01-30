@@ -37,6 +37,7 @@ public enum MenualBottomSheetType {
 public protocol DiaryBottomSheetPresentableListener: AnyObject {
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
+    var filterResetBtnRelay: BehaviorRelay<Bool>? { get }
     var isHideMenualRelay: BehaviorRelay<Bool>? { get }
     
     func pressedCloseBtn()
@@ -493,6 +494,9 @@ extension DiaryBottomSheetViewController {
 
 // MARK: - MenualBottomSheetFilterComponentView
 extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelegate {
+    var filterResetBtnRelay: BehaviorRelay<Bool>? {
+        listener?.filterResetBtnRelay
+    }
     var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]>? {
         listener?.filteredWeatherArrRelay
     }
