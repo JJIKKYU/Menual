@@ -109,3 +109,4 @@ reminder_toast_set = "리마인더 알림이 설정되었어요"; // Reminder
 reply_placeholder = "겹쓸내용을 입력해 주세요"; // Reply
 writing_button_take_picture = "사진 촬영"; // Writing
 writing_button_select_picture = "이미지 선택"; // Writing
+filter_button_all_menual = "전체 메뉴얼 보기"; // Filter

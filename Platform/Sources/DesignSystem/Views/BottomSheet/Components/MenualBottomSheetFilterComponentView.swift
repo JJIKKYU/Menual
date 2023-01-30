@@ -107,7 +107,7 @@ public class MenualBottomSheetFilterComponentView: UIView {
     
     public lazy var filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
         $0.actionName = "confirm"
-        $0.title = MenualString.filter_button_select
+        $0.title = MenualString.filter_button_all_menual
         $0.isEnabled = false
     }
 
@@ -232,24 +232,21 @@ public class MenualBottomSheetFilterComponentView: UIView {
         weatherSelectNumTitle.text = String(format: MenualString.filter_button_select_with_count, weatherSelectedArr.count)
         placeSelectNumTitle.text = String(format: MenualString.filter_button_select_with_count, placeSelectedArr.count)
         
+        filterBtn.btnStatus = .active
+        filterBtn.isEnabled = true
+        
         // 초기화 버튼, 필터 버튼 변환 로직
         // 하나라도 선택될 경우 초기화 버튼 활성화
         if weatherSelectedArr.count > 0 || placeSelectedArr.count > 0 {
             resetBtn.isEnabled = true
             resetBtn.layer.borderColor = Colors.tint.main.v600.cgColor
             resetBtn.tintColor = Colors.tint.main.v500
-            
-            filterBtn.btnStatus = .active
-            filterBtn.isEnabled = true
         }
         // 아무것도 선택되지 않았을 경우 버튼 비활성화
         else if weatherSelectedArr.count == 0 || placeSelectedArr.count == 0 {
             resetBtn.isEnabled = false
             resetBtn.layer.borderColor = Colors.grey.g700.cgColor
             resetBtn.tintColor = Colors.grey.g600
-            
-            filterBtn.btnStatus = .inactive
-            filterBtn.isEnabled = false
         }
         
         // 날씨 전체 선택 버튼 로직
@@ -268,7 +265,7 @@ public class MenualBottomSheetFilterComponentView: UIView {
         
         // 필터버튼 카운트
         if filteredCount == -1 {
-            filterBtn.title = MenualString.filter_button_select
+            filterBtn.title = MenualString.filter_button_all_menual
         } else {
             filterBtn.title = String(format: MenualString.filter_button_watch_with_menaul_count, filteredCount)
         }

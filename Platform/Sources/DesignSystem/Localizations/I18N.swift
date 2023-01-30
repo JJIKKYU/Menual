@@ -119,4 +119,5 @@ public struct MenualString {
     public static let reply_placeholder = "reply_placeholder".localized
     public static let writing_button_take_picture = "writing_button_take_picture".localized
     public static let writing_button_select_picture = "writing_button_select_picture".localized
+    public static let filter_button_all_menual = "filter_button_all_menual".localized
 }
