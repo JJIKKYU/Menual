@@ -22,54 +22,22 @@ class MomentsNoStartCircleView: UIView {
     var count: Int = 0 {
         didSet { setNeedsLayout() }
     }
-    
-    private let imageView = UIImageView().then {
-        $0.image = Asset._40px.paper.image
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private let countLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = "1/14"
-        $0.font = UIFont.AppHead(.head_1)
-        $0.textColor = Colors.grey.g600
-    }
 
     init() {
-        super.init(frame: CGRect.zero)
-        setViews()
+        super.init(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+        backgroundColor = .clear
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setViews() {
-        backgroundColor = .clear
-        
-        addSubview(imageView)
-        addSubview(countLabel)
-        
-        imageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(14)
-            make.width.height.equalTo(40)
-            make.centerX.equalToSuperview()
-        }
-        
-        countLabel.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom)
-            make.centerX.equalToSuperview()
-        }
-    }
-    
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        countLabel.text = "\(count)/14"
     }
 
     override func draw(_ rect: CGRect) {
-        setViews()
+        print("Moments :: draw!")
         let bezierPath = UIBezierPath()
 
         bezierPath.addArc(withCenter: CGPoint(x: rect.midX, y: rect.midY), radius: rect.midX - ((lineWidth - 1) / 2), startAngle: 0, endAngle: .pi * 2, clockwise: true)

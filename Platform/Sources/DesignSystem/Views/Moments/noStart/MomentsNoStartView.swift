@@ -63,6 +63,18 @@ public class MomentsNoStartView: UIView {
         $0.value = 0.84
     }
     
+    private let imageView = UIImageView().then {
+        $0.image = Asset._40px.paper.image
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private let countLabel = UILabel().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.text = "1/14"
+        $0.font = UIFont.AppHead(.head_1)
+        $0.textColor = Colors.grey.g600
+    }
+    
     private let stampView = MomentsNoStartStampView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -82,6 +94,9 @@ public class MomentsNoStartView: UIView {
         addSubview(circleView)
         addSubview(stampView)
         
+        addSubview(imageView)
+        addSubview(countLabel)
+        
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalToSuperview()
@@ -96,6 +111,17 @@ public class MomentsNoStartView: UIView {
             make.trailing.equalToSuperview().inset(20)
             make.width.height.equalTo(80)
             make.top.equalToSuperview()
+        }
+        
+        imageView.snp.makeConstraints { make in
+            make.top.equalTo(circleView.snp.top).offset(14)
+            make.width.height.equalTo(40)
+            make.centerX.equalTo(circleView.snp.centerX)
+        }
+        
+        countLabel.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.bottom)
+            make.centerX.equalTo(circleView.snp.centerX)
         }
         
         stampView.snp.makeConstraints { make in
@@ -119,6 +145,7 @@ public class MomentsNoStartView: UIView {
         }
         circleView.value = (Double(writingDiarySet.count) * Double(1.0 / Double(maxCount)))
         circleView.count = writingDiarySet.count
+        countLabel.text = "\(writingDiarySet.count)/\(maxCount)"
         stampView.writingDiarySet = writingDiarySet
     }
 }
