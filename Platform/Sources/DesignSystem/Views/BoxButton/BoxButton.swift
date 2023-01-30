@@ -28,9 +28,7 @@ public enum BoxButtonIsFiltered {
 }
 
 public class BoxButton: UIButton {
-    public var btnStatus: BoxButtonStatus = .inactive {
-        didSet { setNeedsLayout() }
-    }
+    public var btnStatus: BoxButtonStatus = .inactive
     
     public var btnSize: BoxButtonSize = .large {
         didSet { setNeedsLayout() }

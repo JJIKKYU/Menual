@@ -298,7 +298,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         filterResetBtnRelay
             .subscribe(onNext: { [weak self] isResetClicked in
                 guard let self = self else { return }
+                if isResetClicked == false { return }
                 print("DiaryHomeIntreactor :: filterResetBtnRelay! = \(isResetClicked)")
+                self.pressedFilterResetBtn()
         })
             .disposed(by: disposebag)
     }
@@ -455,7 +457,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         
         // double check
         if prevLastPageNum == 0 {
-            let pageNum = self.diaryRealmArr?
+            guard let realm = Realm.safeInit() else { return }
+            let pageNum = realm.objects(DiaryModelRealm.self)
                 .toArray(type: DiaryModelRealm.self)
                 .filter ({ $0.isDeleted == false })
                 .sorted(by: { $0.createdAt > $1.createdAt })

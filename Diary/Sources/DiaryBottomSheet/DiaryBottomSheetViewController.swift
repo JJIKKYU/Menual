@@ -182,6 +182,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         // setViews()
         bottomSheetView.backgroundColor = Colors.background
         
+        filterBind()
         isModalInPresentation = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -578,6 +579,17 @@ extension DiaryBottomSheetViewController: MenualDateFilterComponentDelegate {
         // let month = dateFilterComponentView.month
         // let filteredDate =
         listener?.filterDatePressedFilterBtn(yearDateFormatString: dateFilterComponentView.yearEngMonth)
+    }
+    
+    func filterBind() {
+        listener?.filterResetBtnRelay?
+            .subscribe(onNext: { [weak self] isReset in
+                guard let self = self else { return }
+                if isReset == false { return }
+                self.listener?.filterResetBtnRelay?.accept(false)
+                self.hideBottomSheetAndGoBack()
+            })
+            .disposed(by: disposeBag)
     }
 }
 
