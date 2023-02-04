@@ -32,6 +32,9 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // iCloud 저장
     func saveiCloud()
+    
+    // backup
+    func backup()
 }
 
 enum ProfileHomeSection: Int {
@@ -259,6 +262,15 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             } else if data.title == "iCloud 동기화하기" {
                 print("ProfileHome :: iCloud 동기화하기!")
                 self.listener?.saveiCloud()
+            } else if data.title == MenualString.profile_button_backup {
+                print("ProfileHome :: backup!")
+                listener?.backup()
+            } else if data.title == MenualString.profile_button_restore {
+                print("ProfileHome :: restore")
+                let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.zip])
+                documentPicker.delegate = self
+                // documentPicker.directoryURL = .homeDirectory
+                present(documentPicker, animated: true, completion: nil)
             }
             
         }
@@ -344,7 +356,7 @@ extension ProfileHomeViewController: MFMailComposeViewControllerDelegate {
 }
 
 // MARK: - 파일 공유
-extension ProfileHomeViewController {
+extension ProfileHomeViewController: UIDocumentPickerDelegate {
     func showShareSheet(path: String) {
         print("ProfileHome :: path! = \(path)")
         let fileURL = NSURL(fileURLWithPath: path)

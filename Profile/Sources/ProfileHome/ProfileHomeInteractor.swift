@@ -57,8 +57,8 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     var profileHomeDataArr_Setting2: [ProfileHomeModel] {
         let arr: [ProfileHomeModel] = [
             // profileHomeModel(section: .SETTING2, type: .arrow, title: "iCloud 동기화하기"),
-            // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 백업하기"),
-            // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 내보내기"),
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_backup, actionName: "backup"),
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_restore, actionName: "load"),
             ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_mail, actionName: "mail"),
             ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_openSource, actionName: "openSource"),
             // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자 도구"),
@@ -260,5 +260,11 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
         path += "/\(UUID().uuidString).zip"
         return path
+    }
+    
+    // MARK: - Backup 관련 기능
+    func backup() {
+        print("ProfileHome :: Backup!")
+        self.saveiCloud()
     }
 }
