@@ -29,10 +29,7 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // ProfileOpensource
     func pressedProfileOpensourceCell()
-    
-    // iCloud 저장
-    func saveiCloud()
-    
+
     // backup
     func backup()
 }
@@ -261,7 +258,6 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 self.pressedDeveloperQACell()
             } else if data.title == "iCloud 동기화하기" {
                 print("ProfileHome :: iCloud 동기화하기!")
-                self.listener?.saveiCloud()
             } else if data.title == MenualString.profile_button_backup {
                 print("ProfileHome :: backup!")
                 listener?.backup()
@@ -355,22 +351,7 @@ extension ProfileHomeViewController: MFMailComposeViewControllerDelegate {
     }
 }
 
-// MARK: - 파일 공유
+// MARK: - UIDocumentPickerDelegate
 extension ProfileHomeViewController: UIDocumentPickerDelegate {
-    func showShareSheet(path: String) {
-        print("ProfileHome :: path! = \(path)")
-        let fileURL = NSURL(fileURLWithPath: path)
-
-        // Create the Array which includes the files you want to share
-        var filesToShare = [Any]()
-
-        // Add the path of the file to the Array
-        filesToShare.append(fileURL)
-
-        // Make the activityViewContoller which shows the share-view
-        let activityViewController = UIActivityViewController(activityItems: filesToShare, applicationActivities: nil)
-
-        // Show the share-view
-        self.present(activityViewController, animated: true, completion: nil)
-    }
+    
 }
