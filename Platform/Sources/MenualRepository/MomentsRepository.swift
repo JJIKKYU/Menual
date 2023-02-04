@@ -13,6 +13,7 @@ import MenualEntity
 
 public protocol MomentsRepository {
     func fetch()
+    func deleteMoments(uuid: String)
     func visitMoments(momentsItem: MomentsItemRealm)
     func clearOnboarding()
 }
@@ -50,6 +51,24 @@ public final class MomentsRepositoryImp: MomentsRepository {
         
         realm.safeWrite {
             momentsItem.userChecked = true
+        }
+    }
+    
+    public func deleteMoments(uuid: String) {
+        print("MomentsRepo :: deletMoments!")
+
+        guard let realm = Realm.safeInit(),
+              let momentsRealm = realm.objects(MomentsRealm.self).first
+        else { return }
+        
+        guard let willDeleteDiary = momentsRealm
+            .itemsArr
+            .filter ({ $0.diaryUUID == uuid })
+            .first
+        else { return }
+        
+        realm.safeWrite {
+            realm.delete(willDeleteDiary)
         }
     }
     

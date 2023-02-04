@@ -903,7 +903,7 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
             print("DiaryHome :: momentsCount = \(momentsCount)")
 
             if momentsCount == 0 {
-                self.momentsEmptyView.isHidden = true
+                self.momentsEmptyView.isHidden = false
                 self.momentsCollectionViewPagination.numberOfPages = 0
                 return 0
             } else {

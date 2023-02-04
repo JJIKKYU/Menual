@@ -238,6 +238,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         
                         // 삭제일때
                         if diary.isDeleted == true {
+                            self.dependency.momentsRepository.deleteMoments(uuid: diary.uuid)
                             // 전체 PageNum 추려내기
                             let lastPageNum = model.filter { $0.isDeleted == false }
                                 .sorted { $0.createdAt > $1.createdAt }
@@ -286,7 +287,16 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     
                 case .update(let model, let deletions, let insertions, let modifications):
                     print("DiaryHome :: Moments! update! = \(model)")
+                    guard let momentsRealm = realm.objects(MomentsRealm.self).toArray(type: MomentsRealm.self).first
+                    else { return }
+                    self.momentsRealm = momentsRealm
+                    self.presenter.reloadCollectionView()
+
+                    if deletions.count > 0 {
+                        print("DiaryHome :: Moments! delete!")
+                    }
                     break
+                    
                     
                 case .error(let error):
                     print("DiaryHome :: MomentsError! = \(error)")
