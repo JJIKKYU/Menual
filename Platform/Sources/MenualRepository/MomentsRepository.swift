@@ -482,7 +482,16 @@ extension MomentsRepositoryImp {
     public func checkNeedOnboarding() {
         guard let realm = Realm.safeInit() else { return }
         guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
-        
+
+        // 다이어리를 작성한게 14개가 넘었을 경우에는 clear 상태로 변환
+        // 기능이 후에 업데이트 되었으므로, 기존 유저에게 잘못 보이는 현상 수정
+        let diaryModelRealmArr = realm.objects(DiaryModelRealm.self)
+        if diaryModelRealmArr.count > 14 {
+            realm.safeWrite {
+                momentsRealm.onboardingIsClear = true
+            }
+        }
+
         guard let _ = momentsRealm.onboardingClearDate else { return }
         
         // 클리어한지 하루가 지났다면 표시하지 않아도 되므로 리턴
