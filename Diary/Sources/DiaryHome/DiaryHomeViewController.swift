@@ -893,16 +893,16 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         switch collectionView.tag {
         // MomentsCollectionView
         case 0:
+            print("DiaryHome :: onboardingDiarySet = \(listener?.onboardingDiarySet.value?.count)")
+            let onboardingIsClear: Bool = listener?.momentsRealm?.onboardingIsClear ?? false
+            // let isClearOnboarding: Bool = listener?.onboardingDiarySet
             // 초기에는 Realm도 설정되어 있지 않으므로 따로 설정
             guard let momentsCount = listener?.momentsRealm?.itemsArr.count else {
-                print("DiaryHome :: 여기!?")
-                self.momentsEmptyView.isHidden = false
-                self.momentsCollectionViewPagination.numberOfPages = 0
                 return  0
             }
             print("DiaryHome :: momentsCount = \(momentsCount)")
 
-            if momentsCount == 0 {
+            if momentsCount == 0 && onboardingIsClear {
                 self.momentsEmptyView.isHidden = false
                 self.momentsCollectionViewPagination.numberOfPages = 0
                 return 0

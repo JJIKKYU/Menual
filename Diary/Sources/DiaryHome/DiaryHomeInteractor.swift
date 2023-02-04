@@ -287,13 +287,13 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     
                 case .update(let model, let deletions, let insertions, let modifications):
                     print("DiaryHome :: Moments! update! = \(model)")
-                    guard let momentsRealm = realm.objects(MomentsRealm.self).toArray(type: MomentsRealm.self).first
-                    else { return }
-                    self.momentsRealm = momentsRealm
-                    self.presenter.reloadCollectionView()
 
                     if deletions.count > 0 {
                         print("DiaryHome :: Moments! delete!")
+                        guard let momentsRealm = realm.objects(MomentsRealm.self).toArray(type: MomentsRealm.self).first
+                        else { return }
+                        self.momentsRealm = momentsRealm
+                        self.presenter.reloadCollectionView()
                     }
                     break
                     
