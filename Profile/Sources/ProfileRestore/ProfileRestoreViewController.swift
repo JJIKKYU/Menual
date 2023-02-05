@@ -8,6 +8,7 @@
 import RIBs
 import RxSwift
 import UIKit
+import Foundation
 import DesignSystem
 
 public protocol ProfileRestorePresentableListener: AnyObject {
@@ -126,6 +127,7 @@ extension ProfileRestoreViewController {
                 
                 DispatchQueue.main.async {
                     let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.zip])
+                    
                     documentPicker.delegate = self
                     // documentPicker.directoryURL = .homeDirectory
                     self.present(documentPicker, animated: true, completion: nil)
@@ -150,23 +152,31 @@ extension ProfileRestoreViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         print("ProfileRestore :: picker!")
         guard let fileURL = urls.first else { return }
-        
+
+        // Start accessing a security-scoped resource.
+        guard fileURL.startAccessingSecurityScopedResource() else {
+            return
+        }
+
         print("ProfileRestore :: url = \(fileURL)")
         listener?.restoreDiary(url: fileURL)
+        
+        // Make sure you release the security-scoped resource when you finish.
+        fileURL.stopAccessingSecurityScopedResource()
     }
 }
 
 // MARK: - DialogDelegate
 extension ProfileRestoreViewController: DialogDelegate {
+    func exit(titleText: String) {
+        
+    }
+    
     func action(titleText: String) {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
 
         if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url)
         }
-    }
-    
-    func exit(titleText: String) {
-        
     }
 }

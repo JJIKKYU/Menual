@@ -67,14 +67,14 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
         }
 
         // SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
-        let realm = try? Realm(fileURL: URL(string: "\(newPath)/default.realm")!)
-        let diaryModelRealm = realm?.objects(DiaryModelRealm.self)
-        print("ProfileRestore :: 교체예정인 다이어리 개수 = \(diaryModelRealm?.count)")
-
-        let config = Realm.Configuration(fileURL: URL(string: "\(newPath)/default.realm"))
-        Realm.Configuration.defaultConfiguration = config
-        print("ProfileRestore :: realm = \(realm)")
-        print("ProfileRestore :: config = \(config)")
+//        let realm = try? Realm(fileURL: URL(string: "\(newPath)/default.realm")!)
+//        let diaryModelRealm = realm?.objects(DiaryModelRealm.self)
+//        print("ProfileRestore :: 교체예정인 다이어리 개수 = \(diaryModelRealm?.count)")
+//
+//        let config = Realm.Configuration(fileURL: URL(string: "\(newPath)/default.realm"))
+//        Realm.Configuration.defaultConfiguration = config
+//        print("ProfileRestore :: realm = \(realm)")
+//        print("ProfileRestore :: config = \(config)")
         // restartAppWithPush()
     }
     
