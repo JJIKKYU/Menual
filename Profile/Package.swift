@@ -24,6 +24,12 @@ let package = Package(
         .library(
             name: "ProfileDesignSystem",
             targets: ["ProfileDesignSystem"]),
+        .library(
+            name: "ProfileRestore",
+            targets: ["ProfileRestore"]),
+        .library(
+            name: "ProfileBackup",
+            targets: ["ProfileBackup"]),
     ],
     dependencies: [
         .package(url: "https://github.com/uber/RIBs", branch: "main"),
@@ -67,14 +73,15 @@ let package = Package(
                 "ProfileOpensource",
                 "ProfileDeveloper",
                 "ProfilePassword",
+                "ProfileBackup",
+                "ProfileRestore",
                 .product(name: "RIBs", package: "RIBs"),
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
                 .product(name: "RxCocoa", package: "RxSwift"),
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
-                .product(name: "MenualRepository", package: "Platform"),
-                .product(name: "ZipArchive", package: "ZipArchive")
+                .product(name: "MenualRepository", package: "Platform")
             ]
         ),
         .target(
@@ -95,6 +102,25 @@ let package = Package(
                 .product(name: "RIBs", package: "RIBs"),
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
+            ]
+        ),
+        .target(
+            name: "ProfileBackup",
+            dependencies: [
+                .product(name: "RIBs", package: "RIBs"),
+                .product(name: "DesignSystem", package: "Platform"),
+                .product(name: "MenualEntity", package: "Platform"),
+                .product(name: "ZipArchive", package: "ZipArchive"),
+            ]
+        ),
+        .target(
+            name: "ProfileRestore",
+            dependencies: [
+                .product(name: "RIBs", package: "RIBs"),
+                .product(name: "DesignSystem", package: "Platform"),
+                .product(name: "MenualEntity", package: "Platform"),
+                .product(name: "ZipArchive", package: "ZipArchive"),
+                .product(name: "MenualUtil", package: "Platform"),
             ]
         ),
     ]

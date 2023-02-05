@@ -9,7 +9,6 @@ import RIBs
 import RxSwift
 import RxRelay
 import RealmSwift
-import ZipArchive
 import DesignSystem
 import MenualRepository
 import MenualEntity
@@ -23,12 +22,17 @@ public protocol ProfileHomeRouting: ViewableRouting {
     
     func attachProfileOpensource()
     func detachProfileOpensource(isOnlyDetach: Bool)
+    
+    func attachProfileBackup()
+    func detachProfileBackup(isOnlyDetach: Bool)
+    
+    func attachProfileRestore()
+    func detachProfileRestore(isOnlyDetach: Bool)
 }
 
 protocol ProfileHomePresentable: Presentable {
     var listener: ProfileHomePresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
-    func showShareSheet(path: String)
 }
 
 public protocol ProfileHomeListener: AnyObject {
@@ -57,8 +61,8 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     var profileHomeDataArr_Setting2: [ProfileHomeModel] {
         let arr: [ProfileHomeModel] = [
             // profileHomeModel(section: .SETTING2, type: .arrow, title: "iCloud 동기화하기"),
-            // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 백업하기"),
-            // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "메뉴얼 내보내기"),
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_backup, actionName: "backup"),
+            ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_restore, actionName: "load"),
             ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_mail, actionName: "mail"),
             ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_openSource, actionName: "openSource"),
             // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자 도구"),
@@ -215,50 +219,21 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     func goDiaryHome() { }
     
-    // MARK: - iCloud 동기화하기
-    func saveiCloud() {
-        let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-        let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-        let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-
-        var filePaths: [String] = []
-        var fileElements: [String] = []
-        var folderPaths: [String] = []
-        let enumerator = FileManager.default.enumerator(atPath: path.first!)
-        // Documents폴더를 돌면서 파일의 절대값과, 업로드하고자 하는 상대값을 두 Array에 담아서 저장
-        // 폴더는 미리 생성하기 위해서 저장
-        while let element = enumerator?.nextObject() as? String {
-            if let fType = enumerator?.fileAttributes?[FileAttributeKey.type] as? FileAttributeType {
-                switch fType {
-                case .typeRegular:
-                    filePaths.append(path.first! + "/" + element)
-                    fileElements.append(element)
-                case .typeDirectory:
-                    folderPaths.append(element)
-                default:
-                    break
-                }
-            }
-        }
-
-        let savePath: String = tempZipPath()
-        let zip = SSZipArchive.init(path: savePath)
-        zip.open()
-        for path in folderPaths {
-            zip.writeFolder(atPath: savePath, withFolderName: path, withPassword: nil)
-        }
-
-        for (index, file) in filePaths.enumerated() {
-            zip.writeFile(atPath: file, withFileName: fileElements[index], withPassword: nil)
-        }
-        zip.close()
-
-        presenter.showShareSheet(path: savePath)
+    // MARK: - ProfileRestore
+    func pressedProfileRestoreBackBtn(isOnlyDetach: Bool) {
+        router?.detachProfileRestore(isOnlyDetach: isOnlyDetach)
     }
     
-    func tempZipPath() -> String {
-        var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-        path += "/\(UUID().uuidString).zip"
-        return path
+    func pressedProfileRestoreCell() {
+        router?.attachProfileRestore()
+    }
+    
+    // MARK: - ProfileBackup
+    func pressedProfileBackupCell() {
+        router?.attachProfileBackup()
+    }
+    
+    func pressedProfileBackupBackBtn(isOnlyDetach: Bool) {
+        router?.detachProfileBackup(isOnlyDetach: isOnlyDetach)
     }
 }

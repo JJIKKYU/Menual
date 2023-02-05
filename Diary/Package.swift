@@ -111,6 +111,6 @@ let package = Package(
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "DesignSystem", package: "Platform"),
             ]
-        ),
+        )
     ]
 )

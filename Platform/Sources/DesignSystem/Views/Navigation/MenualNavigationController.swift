@@ -30,6 +30,8 @@ public enum NaviViewType {
     case edit
     case temporarySave
     case detailImage
+    case backup
+    case restore
 }
 
 public class MenualNaviView: UIView {
@@ -280,6 +282,20 @@ public class MenualNaviView: UIView {
             rightButton1.isHidden = false
             rightButton1.tintColor = Colors.grey.g100
             rightButton1.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        case .backup:
+            titleLabel.isHidden = false
+            titleLabel.text = MenualString.backup_title
+            titleLabel.font = UIFont.AppTitle(.title_3)
+            backButton.isHidden = false
+            backButton.tintColor = Colors.grey.g100
+            backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
+        case .restore:
+            titleLabel.isHidden = false
+            titleLabel.text = MenualString.restore_title
+            titleLabel.font = UIFont.AppTitle(.title_3)
+            backButton.isHidden = false
+            backButton.tintColor = Colors.grey.g100
+            backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
         }
     }
     
@@ -336,6 +352,8 @@ public class MenualNaviView: UIView {
                 }
             }
         case .writePicture, .writePictureClose:
+            break
+        case .backup, .restore:
             break
         case .detailImage:
             backgroundColor = .clear
