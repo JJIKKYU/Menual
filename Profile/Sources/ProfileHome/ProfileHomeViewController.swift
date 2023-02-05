@@ -29,9 +29,12 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // ProfileOpensource
     func pressedProfileOpensourceCell()
-
-    // backup
-    func backup()
+    
+    // ProfileRestore
+    func pressedProfileRestoreCell()
+    
+    // ProfileBackup
+    func pressedProfileBackupCell()
 }
 
 enum ProfileHomeSection: Int {
@@ -260,13 +263,10 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 print("ProfileHome :: iCloud 동기화하기!")
             } else if data.title == MenualString.profile_button_backup {
                 print("ProfileHome :: backup!")
-                listener?.backup()
+                listener?.pressedProfileBackupCell()
             } else if data.title == MenualString.profile_button_restore {
                 print("ProfileHome :: restore")
-                let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.zip])
-                documentPicker.delegate = self
-                // documentPicker.directoryURL = .homeDirectory
-                present(documentPicker, animated: true, completion: nil)
+                listener?.pressedProfileRestoreCell()
             }
             
         }

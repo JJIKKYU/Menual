@@ -119,6 +119,8 @@ let package = Package(
                 .product(name: "RIBs", package: "RIBs"),
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
+                .product(name: "ZipArchive", package: "ZipArchive"),
+                .product(name: "MenualUtil", package: "Platform"),
             ]
         ),
     ]

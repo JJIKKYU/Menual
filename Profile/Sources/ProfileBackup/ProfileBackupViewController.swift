@@ -8,14 +8,20 @@
 import RIBs
 import RxSwift
 import UIKit
+import DesignSystem
 
 public protocol ProfileBackupPresentableListener: AnyObject {
-
+    func pressedBackBtn(isOnlyDetach: Bool)
+    func saveZip()
 }
 
 final class ProfileBackupViewController: UIViewController, ProfileBackupPresentable, ProfileBackupViewControllable {
 
     weak var listener: ProfileBackupPresentableListener?
+    private let disposeBag = DisposeBag()
+    
+    lazy var naviView = MenualNaviView(type: .myPage)
+    lazy var tempBoxButton = BoxButton(frame: .zero, btnStatus: .active, btnSize: .large)
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -29,13 +35,65 @@ final class ProfileBackupViewController: UIViewController, ProfileBackupPresenta
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .gray
+        view.backgroundColor = Colors.background
+        
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        setViews()
+    }
+    
+    func setViews() {
+        naviView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+        }
+
+        tempBoxButton.do {
+            $0.title = "메뉴얼 백업하기"
+            $0.addTarget(self, action: #selector(pressedBackupBtn), for: .touchUpInside)
+        }
+
+        self.view.addSubview(naviView)
+        self.view.addSubview(tempBoxButton)
+        
+        naviView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+        
+        tempBoxButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(100)
+            make.height.equalTo(56)
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if isMovingFromParent || isBeingDismissed {
+            listener?.pressedBackBtn(isOnlyDetach: true)
+        }
+    }
+}
+
+// MARK: - IBAction
+extension ProfileBackupViewController {
+    @objc
+    func pressedBackBtn() {
+        listener?.pressedBackBtn(isOnlyDetach: false)
+    }
+    
+    @objc
+    func pressedBackupBtn() {
+        listener?.saveZip()
     }
 }
 
 // MARK: - 파일 공유
 extension ProfileBackupViewController: UIDocumentPickerDelegate {
-    func showShareSheet(path: String) {
+    @objc func showShareSheet(path: String) {
         print("ProfileHome :: path! = \(path)")
         let fileURL = NSURL(fileURLWithPath: path)
 

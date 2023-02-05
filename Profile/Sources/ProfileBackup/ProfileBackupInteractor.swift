@@ -20,7 +20,7 @@ public protocol ProfileBackupPresentable: Presentable {
 }
 
 public protocol ProfileBackupListener: AnyObject {
-    // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
+    func pressedProfileBackupBackBtn(isOnlyDetach: Bool)
 }
 
 final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresentable>, ProfileBackupInteractable, ProfileBackupPresentableListener {
@@ -51,7 +51,7 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
         return path
     }
     
-    func saveiCloud() {
+    func saveZip() {
         let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
         let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
         let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
@@ -89,5 +89,9 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
         zip.close()
 
         presenter.showShareSheet(path: savePath)
+    }
+    
+    func pressedBackBtn(isOnlyDetach: Bool) {
+        listener?.pressedProfileBackupBackBtn(isOnlyDetach: isOnlyDetach)
     }
 }

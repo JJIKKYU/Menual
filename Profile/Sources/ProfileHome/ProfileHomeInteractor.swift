@@ -219,8 +219,21 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     func goDiaryHome() { }
     
-    // MARK: - Backup 관련 기능
-    func backup() {
-        print("ProfileHome :: Backup!")
+    // MARK: - ProfileRestore
+    func pressedProfileRestoreBackBtn(isOnlyDetach: Bool) {
+        router?.detachProfileRestore(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func pressedProfileRestoreCell() {
+        router?.attachProfileRestore()
+    }
+    
+    // MARK: - ProfileBackup
+    func pressedProfileBackupCell() {
+        router?.attachProfileBackup()
+    }
+    
+    func pressedProfileBackupBackBtn(isOnlyDetach: Bool) {
+        router?.detachProfileBackup(isOnlyDetach: isOnlyDetach)
     }
 }
