@@ -444,7 +444,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
         if filteredWeatherArrRelay.value.count == 0 && filteredPlaceArrRelay.value.count == 0 {
             presenter.isFilteredRelay.accept(false)
-            dependency.diaryRepository.fetch()
         } else {
             presenter.isFilteredRelay.accept(true)
             let _ = dependency.diaryRepository

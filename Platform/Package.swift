@@ -82,6 +82,8 @@ let package = Package(
                 "MenualEntity",
                 "MenualUtil",
                 "MenualRepository",
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
                 .product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
             ]

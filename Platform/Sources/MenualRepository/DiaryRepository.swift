@@ -11,13 +11,12 @@ import RxRelay
 import RealmSwift
 import MenualEntity
 import MenualUtil
+import UserNotifications
 
 public protocol DiaryRepository {
-    var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var password: BehaviorRelay<PasswordModelRealm?> { get }
 
-    func fetch()
     func addDiary(info: DiaryModelRealm)
     func updateDiary(info: DiaryModelRealm, uuid: String)
     func updateDiary(DiaryModel: DiaryModelRealm ,reminder: ReminderModelRealm?)
@@ -57,9 +56,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
     public init() {
         
     }
-
-    public var diaryString: BehaviorRelay<[DiaryModelRealm]> { diaryModelSubject }
-    public let diaryModelSubject = BehaviorRelay<[DiaryModelRealm]>(value: [])
     
     public var filteredDiaryDic = BehaviorRelay<DiaryHomeFilteredSectionModel?>(value: nil)
     
@@ -154,20 +150,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         completionHandler(true)
     }
     
-    public func fetch() {
-        print("DiaryRepository :: fetch")
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-        let diaryModelResults = realm
-            .objects(DiaryModelRealm.self)
-            .sorted(byKeyPath: "createdAt", ascending: false)
-            .filter { $0.isDeleted == false }
-
-        diaryModelSubject.accept(diaryModelResults.map { DiaryModelRealm(value: $0) })
-    }
-    
     // MARK: - Diary CRUD
     public func addDiary(info: DiaryModelRealm) {
         guard let realm = Realm.safeInit() else {
@@ -260,12 +242,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
             realm.delete(realm.objects(DiaryModelRealm.self))
         }
-        
-        // self.diaryMonthDic.accept([])
-        // self.diaryMonthDicSubject.accept([])
-        // self.filteredMonthDicSubject.accept([])
-        self.diaryModelSubject.accept([])
-        self.fetch()
     }
     
     public func deleteDiary(info: DiaryModelRealm) {
