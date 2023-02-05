@@ -11,7 +11,6 @@ import RxRelay
 import RealmSwift
 import MenualEntity
 import MenualUtil
-import UIKit // 제거할 것.. UIImage는 Data로 변경
 
 public protocol DiaryRepository {
     var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }
@@ -28,7 +27,6 @@ public protocol DiaryRepository {
     
     // Image
     func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void)
-    func loadImageFromDocumentDirectory(imageName: String, completionHandler: @escaping (UIImage?) -> Void)
     func deleteImageFromDocumentDirectory(diaryUUID: String, completionHandler: @escaping (Bool) -> Void)
     
     // 겹쓰기 로직
@@ -107,24 +105,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
             print("DiaryWriting :: DiaryRepository :: 이미지를 저장하지 못했습니다.")
             completionHandler(false)
         }
-    }
-    
-    public func loadImageFromDocumentDirectory(imageName: String, completionHandler: @escaping (UIImage?) -> Void) {
-            
-        // 1. 도큐먼트 폴더 경로가져오기
-        let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-        let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-        let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-        
-        if let directoryPath = path.first {
-        // 2. 이미지 URL 찾기
-            let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(imageName)
-            // 3. UIImage로 불러오기
-            completionHandler(UIImage(contentsOfFile: imageURL.path))
-            // return UIImage(contentsOfFile: imageURL.path)
-        }
-        
-        completionHandler(nil)
     }
     
     public func deleteImageFromDocumentDirectory(diaryUUID: String, completionHandler: @escaping (Bool) -> Void) {

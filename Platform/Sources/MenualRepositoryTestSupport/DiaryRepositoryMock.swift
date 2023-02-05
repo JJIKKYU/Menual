@@ -8,7 +8,3 @@
 import Foundation
 import MenualEntity
 import MenualRepository
-
-public final class DiaryRepositoryMock: DiaryRepository {
-    
-}

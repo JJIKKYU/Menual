@@ -16,6 +16,7 @@
 		981004A4297AB53800820867 /* DiaryWriting in Frameworks */ = {isa = PBXBuildFile; productRef = 981004A3297AB53800820867 /* DiaryWriting */; };
 		981004A6297AB63A00820867 /* ProfileDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 981004A5297AB63A00820867 /* ProfileDesignSystem */; };
 		98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 98281EC9278AC6A900736D59 /* GoogleService-Info.plist */; };
+		982A7C06298FA2DE007AD7C2 /* MenualRepositoryTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 982A7C05298FA2DE007AD7C2 /* MenualRepositoryTestSupport */; };
 		985DE96D297401C700F9E7AD /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE96C297401C700F9E7AD /* Realm */; };
 		985DE96F297401C700F9E7AD /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE96E297401C700F9E7AD /* RealmSwift */; };
 		985DE9722974028500F9E7AD /* ZipArchive in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9712974028500F9E7AD /* ZipArchive */; };
@@ -151,6 +152,7 @@
 				98BAA732297A9C8B0061B891 /* ProfilePassword in Frameworks */,
 				98A6E1F629740075008CF101 /* SnapKit in Frameworks */,
 				98A259A9297AA082009D3C2D /* ProfileDeveloper in Frameworks */,
+				982A7C06298FA2DE007AD7C2 /* MenualRepositoryTestSupport in Frameworks */,
 				985DE9772974036800F9E7AD /* FirebaseAnalyticsSwift in Frameworks */,
 				98703A1A297A8ABE006C805D /* ProfileOpensource in Frameworks */,
 				9810049C297AB53800820867 /* DiaryDetailImage in Frameworks */,
@@ -402,6 +404,7 @@
 				981004A1297AB53800820867 /* DiaryTempSave */,
 				981004A3297AB53800820867 /* DiaryWriting */,
 				981004A5297AB63A00820867 /* ProfileDesignSystem */,
+				982A7C05298FA2DE007AD7C2 /* MenualRepositoryTestSupport */,
 			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
@@ -1078,6 +1081,10 @@
 		981004A5297AB63A00820867 /* ProfileDesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ProfileDesignSystem;
+		};
+		982A7C05298FA2DE007AD7C2 /* MenualRepositoryTestSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MenualRepositoryTestSupport;
 		};
 		985DE96C297401C700F9E7AD /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
