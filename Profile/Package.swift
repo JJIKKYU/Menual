@@ -73,6 +73,8 @@ let package = Package(
                 "ProfileOpensource",
                 "ProfileDeveloper",
                 "ProfilePassword",
+                "ProfileBackup",
+                "ProfileRestore",
                 .product(name: "RIBs", package: "RIBs"),
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),

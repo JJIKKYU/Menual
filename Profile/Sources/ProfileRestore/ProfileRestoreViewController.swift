@@ -9,13 +9,26 @@ import RIBs
 import RxSwift
 import UIKit
 
-protocol ProfileRestorePresentableListener: AnyObject {
-    // TODO: Declare properties and methods that the view controller can invoke to perform
-    // business logic, such as signIn(). This protocol is implemented by the corresponding
-    // interactor class.
+public protocol ProfileRestorePresentableListener: AnyObject {
+    
 }
 
 final class ProfileRestoreViewController: UIViewController, ProfileRestorePresentable, ProfileRestoreViewControllable {
 
     weak var listener: ProfileRestorePresentableListener?
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        modalPresentationStyle = .fullScreen
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .gray
+    }
 }

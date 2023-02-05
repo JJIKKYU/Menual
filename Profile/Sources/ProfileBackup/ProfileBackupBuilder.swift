@@ -6,32 +6,34 @@
 //
 
 import RIBs
+import MenualRepository
 
-protocol ProfileBackupDependency: Dependency {
+public protocol ProfileBackupDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
 }
 
-final class ProfileBackupComponent: Component<ProfileBackupDependency> {
+public final class ProfileBackupComponent: Component<ProfileBackupDependency> {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
 
 // MARK: - Builder
 
-protocol ProfileBackupBuildable: Buildable {
+public protocol ProfileBackupBuildable: Buildable {
     func build(withListener listener: ProfileBackupListener) -> ProfileBackupRouting
 }
 
-final class ProfileBackupBuilder: Builder<ProfileBackupDependency>, ProfileBackupBuildable {
+public final class ProfileBackupBuilder: Builder<ProfileBackupDependency>, ProfileBackupBuildable {
 
-    override init(dependency: ProfileBackupDependency) {
+    public override init(dependency: ProfileBackupDependency) {
         super.init(dependency: dependency)
     }
 
-    func build(withListener listener: ProfileBackupListener) -> ProfileBackupRouting {
+    public func build(withListener listener: ProfileBackupListener) -> ProfileBackupRouting {
         let component = ProfileBackupComponent(dependency: dependency)
         let viewController = ProfileBackupViewController()
+        viewController.screenName = "backup"
         let interactor = ProfileBackupInteractor(presenter: viewController)
         interactor.listener = listener
         return ProfileBackupRouter(interactor: interactor, viewController: viewController)

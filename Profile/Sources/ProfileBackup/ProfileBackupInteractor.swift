@@ -9,17 +9,17 @@ import RIBs
 import RxSwift
 import ZipArchive
 
-protocol ProfileBackupRouting: ViewableRouting {
+public protocol ProfileBackupRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
 }
 
-protocol ProfileBackupPresentable: Presentable {
+public protocol ProfileBackupPresentable: Presentable {
     var listener: ProfileBackupPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     func showShareSheet(path: String)
 }
 
-protocol ProfileBackupListener: AnyObject {
+public protocol ProfileBackupListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
 }
 

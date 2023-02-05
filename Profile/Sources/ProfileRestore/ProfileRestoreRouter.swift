@@ -7,16 +7,16 @@
 
 import RIBs
 
-protocol ProfileRestoreInteractable: Interactable {
+public protocol ProfileRestoreInteractable: Interactable {
     var router: ProfileRestoreRouting? { get set }
     var listener: ProfileRestoreListener? { get set }
 }
 
-protocol ProfileRestoreViewControllable: ViewControllable {
+public protocol ProfileRestoreViewControllable: ViewControllable {
     // TODO: Declare methods the router invokes to manipulate the view hierarchy.
 }
 
-final class ProfileRestoreRouter: ViewableRouter<ProfileRestoreInteractable, ProfileRestoreViewControllable>, ProfileRestoreRouting {
+public final class ProfileRestoreRouter: ViewableRouter<ProfileRestoreInteractable, ProfileRestoreViewControllable>, ProfileRestoreRouting {
 
     // TODO: Constructor inject child builder protocols to allow building children.
     override init(interactor: ProfileRestoreInteractable, viewController: ProfileRestoreViewControllable) {

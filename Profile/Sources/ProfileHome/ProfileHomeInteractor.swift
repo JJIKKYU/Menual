@@ -22,6 +22,12 @@ public protocol ProfileHomeRouting: ViewableRouting {
     
     func attachProfileOpensource()
     func detachProfileOpensource(isOnlyDetach: Bool)
+    
+    func attachProfileBackup()
+    func detachProfileBackup(isOnlyDetach: Bool)
+    
+    func attachProfileRestore()
+    func detachProfileRestore(isOnlyDetach: Bool)
 }
 
 protocol ProfileHomePresentable: Presentable {

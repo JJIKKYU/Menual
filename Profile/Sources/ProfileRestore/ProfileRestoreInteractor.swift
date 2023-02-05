@@ -8,16 +8,16 @@
 import RIBs
 import RxSwift
 
-protocol ProfileRestoreRouting: ViewableRouting {
+public protocol ProfileRestoreRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
 }
 
-protocol ProfileRestorePresentable: Presentable {
+public protocol ProfileRestorePresentable: Presentable {
     var listener: ProfileRestorePresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
 }
 
-protocol ProfileRestoreListener: AnyObject {
+public protocol ProfileRestoreListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
 }
 
