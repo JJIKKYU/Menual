@@ -55,7 +55,7 @@ extension ProfileRestoreViewController: ProfileRestorePresentable {
     func exitWithAnimation() {
         UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            exit(0)
+            Darwin.exit(0)
         }
     }
 }
@@ -90,6 +90,15 @@ extension ProfileRestoreViewController {
             make.height.equalTo(56)
         }
     }
+    
+    func needAuthorization() {
+        show(size: .large,
+             buttonType: .oneBtn,
+             titleText: "알림 설정을 켜주세요",
+             subTitleText: "메뉴얼 복원이 완료되면 알림으로 알려드려요",
+             confirmButtonText: MenualString.reminder_alert_confirm_reminder
+        )
+    }
 }
 
 // MARK: - IBAction
@@ -101,10 +110,34 @@ extension ProfileRestoreViewController {
     
     @objc
     func pressedRestoreBtn() {
-        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.zip])
-        documentPicker.delegate = self
-        // documentPicker.directoryURL = .homeDirectory
-        present(documentPicker, animated: true, completion: nil)
+        // 권한 물어보기
+        let userNotiCenter = UNUserNotificationCenter.current()
+        let notiAuthOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
+        userNotiCenter.requestAuthorization(options: notiAuthOptions) { (success, error) in
+            if let error = error {
+                print(#function, error)
+                print("Reminder :: 권한 요청? error! = \(error)")
+                // self.delegate?.isNeedReminderAuthorization()
+                self.needAuthorization()
+            }
+            
+            if success == true {
+                print("Reminder :: 권한 요청? success! = \(success)")
+                
+                DispatchQueue.main.async {
+                    let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.zip])
+                    documentPicker.delegate = self
+                    // documentPicker.directoryURL = .homeDirectory
+                    self.present(documentPicker, animated: true, completion: nil)
+                }
+
+            } else {
+                DispatchQueue.main.async {
+                    self.needAuthorization()
+                }
+            }
+        }
+
     }
 }
 
@@ -120,5 +153,20 @@ extension ProfileRestoreViewController: UIDocumentPickerDelegate {
         
         print("ProfileRestore :: url = \(fileURL)")
         listener?.restoreDiary(url: fileURL)
+    }
+}
+
+// MARK: - DialogDelegate
+extension ProfileRestoreViewController: DialogDelegate {
+    func action(titleText: String) {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    func exit(titleText: String) {
+        
     }
 }
