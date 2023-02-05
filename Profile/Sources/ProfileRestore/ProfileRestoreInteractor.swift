@@ -19,7 +19,7 @@ public protocol ProfileRestoreRouting: ViewableRouting {
 
 public protocol ProfileRestorePresentable: Presentable {
     var listener: ProfileRestorePresentableListener? { get set }
-    // TODO: Declare methods the interactor can invoke the presenter to present data.
+    func exitWithAnimation()
 }
 
 public protocol ProfileRestoreListener: AnyObject {
@@ -53,8 +53,9 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
     }
     
     func restoreDiary(url: URL) {
+        clearDocumentFolder()
         var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        let newPath = path + "/test2"
+        let newPath = path
         
         print("ProfileRestore :: path = \(path), url = \(url.absoluteString), \(url.path)")
         SSZipArchive.unzipFile(atPath: url.path, toDestination: newPath) { _, _, c, d in
@@ -62,6 +63,7 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
             print("ProfileRestore :: \(c) / \(d)")
         } completionHandler: { a, b, error in
             print("ProfileRestore :: \(a), \(b), error = \(error)")
+            self.restartAppWithPush()
         }
 
         // SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
@@ -73,7 +75,20 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
         Realm.Configuration.defaultConfiguration = config
         print("ProfileRestore :: realm = \(realm)")
         print("ProfileRestore :: config = \(config)")
-        restartAppWithPush()
+        // restartAppWithPush()
+    }
+    
+    func clearDocumentFolder() {
+        let fileManager = FileManager.default
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        do {
+            let filePaths = try fileManager.contentsOfDirectory(atPath: path)
+            for filePath in filePaths {
+                try fileManager.removeItem(atPath: path + "/" + filePath)
+            }
+        } catch {
+            print("Could not clear temp folder: \(error)")
+        }
     }
     
     func restartAppWithPush() {
@@ -82,11 +97,11 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
         // localUserInfo["pushType"] = "restart"
         
         let content = UNMutableNotificationContent()
-        content.title = "Configuration Update Complete"
-        content.body = "Tap to reopen the application"
-        content.sound = UNNotificationSound.default
+        content.title = "메뉴얼 가져오기가 완료되었습니다👏"
+        content.body = "터치해 앱을 다시 실행해주세요"
+        // content.sound = UNNotificationSound.default
         // content.userInfo = localUserInfo
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2.5, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
 
         let identifier = UUID().uuidString
         let request = UNNotificationRequest.init(identifier: identifier, content: content, trigger: trigger)
@@ -95,6 +110,7 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
         center.add(request) { error in
             print("ProfileRestore :: error? = \(error)")
         }
-        exit(0)
+        
+        presenter.exitWithAnimation()
     }
 }

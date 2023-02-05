@@ -16,12 +16,12 @@ public protocol ProfileRestorePresentableListener: AnyObject {
     func restoreDiary(url: URL)
 }
 
-final class ProfileRestoreViewController: UIViewController, ProfileRestorePresentable, ProfileRestoreViewControllable {
+final class ProfileRestoreViewController: UIViewController, ProfileRestoreViewControllable {
 
     weak var listener: ProfileRestorePresentableListener?
     private let disposeBag = DisposeBag()
 
-    lazy var naviView = MenualNaviView(type: .myPage)
+    lazy var naviView = MenualNaviView(type: .restore)
     lazy var tempBoxButton = BoxButton(frame: .zero, btnStatus: .active, btnSize: .large)
     
     init() {
@@ -46,6 +46,16 @@ final class ProfileRestoreViewController: UIViewController, ProfileRestorePresen
         super.viewDidDisappear(animated)
         if isMovingFromParent || isBeingDismissed {
             listener?.pressedBackBtn(isOnlyDetach: true)
+        }
+    }
+}
+
+// MARK: - ProfileRestorePresentable
+extension ProfileRestoreViewController: ProfileRestorePresentable {
+    func exitWithAnimation() {
+        UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            exit(0)
         }
     }
 }

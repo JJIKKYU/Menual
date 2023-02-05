@@ -120,4 +120,6 @@ public struct MenualString {
     public static let writing_button_take_picture = "writing_button_take_picture".localized
     public static let writing_button_select_picture = "writing_button_select_picture".localized
     public static let filter_button_all_menual = "filter_button_all_menual".localized
+    public static let restore_title = "restore_title".localized
+    public static let backup_title = "backup_title".localized
 }

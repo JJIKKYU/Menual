@@ -15,12 +15,12 @@ public protocol ProfileBackupPresentableListener: AnyObject {
     func saveZip()
 }
 
-final class ProfileBackupViewController: UIViewController, ProfileBackupPresentable, ProfileBackupViewControllable {
+final class ProfileBackupViewController: UIViewController, ProfileBackupViewControllable {
 
     weak var listener: ProfileBackupPresentableListener?
     private let disposeBag = DisposeBag()
     
-    lazy var naviView = MenualNaviView(type: .myPage)
+    lazy var naviView = MenualNaviView(type: .backup)
     lazy var tempBoxButton = BoxButton(frame: .zero, btnStatus: .active, btnSize: .large)
     
     init() {
@@ -76,6 +76,11 @@ final class ProfileBackupViewController: UIViewController, ProfileBackupPresenta
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
     }
+}
+
+// MARK: - ProfileBacupPresentable
+extension ProfileBackupViewController: ProfileBackupPresentable {
+    
 }
 
 // MARK: - IBAction

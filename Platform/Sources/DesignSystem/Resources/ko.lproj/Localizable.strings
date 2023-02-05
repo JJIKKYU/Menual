@@ -110,3 +110,5 @@ reply_placeholder = "겹쓸내용을 입력해 주세요"; // Reply
 writing_button_take_picture = "사진 촬영"; // Writing
 writing_button_select_picture = "이미지 선택"; // Writing
 filter_button_all_menual = "전체 메뉴얼 보기"; // Filter
+restore_title = "메뉴얼 가져오기"; // Restore
+backup_title = "메뉴얼 백업하기"; // Backup
