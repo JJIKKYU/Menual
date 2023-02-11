@@ -8,6 +8,7 @@
 import Foundation
 import XCTest
 import MenualEntity
+import RIBs
 @testable import MenualRepositoryTestSupport
 @testable import DiaryWriting
 
@@ -48,11 +49,11 @@ final class DiaryWritingInteractorTests: XCTestCase {
     
     // MARK: - Tests
     
-    func testActivate() {
+    func testActivate() throws {
         // given
 
         // when
-        sut.activate()
+        sut.didBecomeActive()
         
         // then
         XCTAssertEqual(presenter.listener?.page, 999)

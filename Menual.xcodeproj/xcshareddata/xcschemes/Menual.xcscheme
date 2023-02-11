@@ -20,6 +20,34 @@
                ReferencedContainer = "container:Menual.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9888DDEE27646F000091918F"
+               BuildableName = "MenualTests.xctest"
+               BlueprintName = "MenualTests"
+               ReferencedContainer = "container:Menual.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DiaryWritingTests"
+               BuildableName = "DiaryWritingTests"
+               BlueprintName = "DiaryWritingTests"
+               ReferencedContainer = "container:Diary">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -43,6 +71,13 @@
             BuildableName = "MenualTests.xctest"
             BlueprintName = "MenualTests"
             ReferencedContainer = "container:Menual.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "DiaryWritingTests"
+            BuildableName = "DiaryWritingTests"
+            BlueprintName = "DiaryWritingTests"
+            ReferencedContainer = "container:Diary">
          </BuildableReference>
       </CodeCoverageTargets>
       <Testables>
