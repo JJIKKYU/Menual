@@ -115,6 +115,10 @@ let package = Package(
         .testTarget(
             name: "DiaryWritingTests",
             dependencies: [
+                "DiaryWriting",
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "MenualRepository", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "MenualRepositoryTestSupport", package: "Platform"),
             ]

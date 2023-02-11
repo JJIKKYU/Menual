@@ -12,12 +12,12 @@ import MenualUtil
 import MenualEntity
 import DiaryTempSave
 
-protocol DiaryWritingInteractable: Interactable, DiaryTempSaveListener {
+public protocol DiaryWritingInteractable: Interactable, DiaryTempSaveListener {
     var router: DiaryWritingRouting? { get set }
     var listener: DiaryWritingListener? { get set }
 }
 
-protocol DiaryWritingViewControllable: ViewControllable {
+public protocol DiaryWritingViewControllable: ViewControllable {
     // TODO: Declare methods the router invokes to manipulate the view hierarchy.
 }
 
