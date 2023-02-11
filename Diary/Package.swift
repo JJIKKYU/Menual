@@ -111,6 +111,13 @@ let package = Package(
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "DesignSystem", package: "Platform"),
             ]
+        ),
+        .testTarget(
+            name: "DiaryWritingTests",
+            dependencies: [
+                .product(name: "MenualEntity", package: "Platform"),
+                .product(name: "MenualRepositoryTestSupport", package: "Platform"),
+            ]
         )
     ]
 )
