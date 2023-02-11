@@ -142,7 +142,7 @@ final class DiaryWritingRoutingMock: DiaryWritingRouting {
     }
 }
 
-// MARK: -
+// MARK: - DiaryWritingInteractableMock
 final class DiaryWritingInteractableMock: DiaryWritingInteractable {
     var isActive: Bool { isActiveRelay.value }
     var isActiveStream: RxSwift.Observable<Bool> { isActiveRelay.asObservable() }

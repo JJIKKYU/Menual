@@ -35,19 +35,10 @@
 		9888DE1B276483DD0091918F /* AppRootComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DE1A276483DD0091918F /* AppRootComponent.swift */; };
 		9888DE1D276484950091918F /* RootTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DE1C276484950091918F /* RootTabBarController.swift */; };
 		988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A1878278AD17500DF81DA /* AppRootViewController.swift */; };
-		988A2D3327F821F10046C43A /* DiaryHomeInteractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D3127F821F10046C43A /* DiaryHomeInteractorTests.swift */; };
-		988A2D3427F821F10046C43A /* DiaryHomeRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D3227F821F10046C43A /* DiaryHomeRouterTests.swift */; };
-		988A2D3827F823160046C43A /* DiaryHomeMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D3727F823160046C43A /* DiaryHomeMock.swift */; };
-		988A2D3F27F8303F0046C43A /* ProfileHomeMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D3E27F8303F0046C43A /* ProfileHomeMock.swift */; };
-		988A2D4227F8312E0046C43A /* DiarySearchMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D4127F8312E0046C43A /* DiarySearchMock.swift */; };
-		988A2D4527F864F40046C43A /* DiarySearchInteractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D4327F864F40046C43A /* DiarySearchInteractorTests.swift */; };
-		988A2D4627F864F40046C43A /* DiarySearchRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D4427F864F40046C43A /* DiarySearchRouterTests.swift */; };
-		988A2D65280162790046C43A /* DiaryWritingMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 988A2D64280162790046C43A /* DiaryWritingMock.swift */; };
 		98935C8129744CA800AA3A29 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 98935C8029744CA800AA3A29 /* DesignSystem */; };
 		98A259A7297A9DEA009D3C2D /* MenualRepository in Frameworks */ = {isa = PBXBuildFile; productRef = 98A259A6297A9DEA009D3C2D /* MenualRepository */; };
 		98A259A9297AA082009D3C2D /* ProfileDeveloper in Frameworks */ = {isa = PBXBuildFile; productRef = 98A259A8297AA082009D3C2D /* ProfileDeveloper */; };
 		98A259AB297AA082009D3C2D /* ProfileHome in Frameworks */ = {isa = PBXBuildFile; productRef = 98A259AA297AA082009D3C2D /* ProfileHome */; };
-		98A2BD942802BCE000C1FB92 /* DiaryRepositoryMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A2BD932802BCE000C1FB92 /* DiaryRepositoryMock.swift */; };
 		98A2BDA3280AD96200C1FB92 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98A2BDA2280AD96200C1FB92 /* CloudKit.framework */; };
 		98A6E1E12973FDD4008CF101 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1E02973FDD4008CF101 /* Then */; };
 		98A6E1E42973FDF2008CF101 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1E32973FDF2008CF101 /* RxCocoa */; };
@@ -102,15 +93,6 @@
 		9888DE1C276484950091918F /* RootTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarController.swift; sourceTree = "<group>"; };
 		988A1878278AD17500DF81DA /* AppRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootViewController.swift; sourceTree = "<group>"; };
 		988A2D3027F81ACF0046C43A /* Menual.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Menual.entitlements; sourceTree = "<group>"; };
-		988A2D3127F821F10046C43A /* DiaryHomeInteractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeInteractorTests.swift; sourceTree = "<group>"; };
-		988A2D3227F821F10046C43A /* DiaryHomeRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeRouterTests.swift; sourceTree = "<group>"; };
-		988A2D3727F823160046C43A /* DiaryHomeMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryHomeMock.swift; sourceTree = "<group>"; };
-		988A2D3E27F8303F0046C43A /* ProfileHomeMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHomeMock.swift; sourceTree = "<group>"; };
-		988A2D4127F8312E0046C43A /* DiarySearchMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchMock.swift; sourceTree = "<group>"; };
-		988A2D4327F864F40046C43A /* DiarySearchInteractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchInteractorTests.swift; sourceTree = "<group>"; };
-		988A2D4427F864F40046C43A /* DiarySearchRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiarySearchRouterTests.swift; sourceTree = "<group>"; };
-		988A2D64280162790046C43A /* DiaryWritingMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryWritingMock.swift; sourceTree = "<group>"; };
-		98A2BD932802BCE000C1FB92 /* DiaryRepositoryMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryRepositoryMock.swift; sourceTree = "<group>"; };
 		98A2BDA2280AD96200C1FB92 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		98A2BDAA280BD52D00C1FB92 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ko; path = ko.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		98AD776F2975A878002E5BD8 /* Diary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Diary; sourceTree = "<group>"; };
@@ -220,8 +202,6 @@
 		9888DDF227646F000091918F /* MenualTests */ = {
 			isa = PBXGroup;
 			children = (
-				988A2D3C27F830280046C43A /* Profile */,
-				988A2D3527F822EF0046C43A /* Diary */,
 			);
 			path = MenualTests;
 			sourceTree = "<group>";
@@ -255,69 +235,6 @@
 				9888DE18276482CC0091918F /* AppComponent.swift */,
 			);
 			path = AppDelegate;
-			sourceTree = "<group>";
-		};
-		988A2D3527F822EF0046C43A /* Diary */ = {
-			isa = PBXGroup;
-			children = (
-				98A2BD922802BCD200C1FB92 /* DiaryRepository */,
-				988A2D632801626C0046C43A /* DiaryWriting */,
-				988A2D4027F831210046C43A /* DiarySearch */,
-				988A2D3627F822F50046C43A /* DiaryHomeTests */,
-			);
-			path = Diary;
-			sourceTree = "<group>";
-		};
-		988A2D3627F822F50046C43A /* DiaryHomeTests */ = {
-			isa = PBXGroup;
-			children = (
-				988A2D3127F821F10046C43A /* DiaryHomeInteractorTests.swift */,
-				988A2D3227F821F10046C43A /* DiaryHomeRouterTests.swift */,
-				988A2D3727F823160046C43A /* DiaryHomeMock.swift */,
-			);
-			path = DiaryHomeTests;
-			sourceTree = "<group>";
-		};
-		988A2D3C27F830280046C43A /* Profile */ = {
-			isa = PBXGroup;
-			children = (
-				988A2D3D27F8302F0046C43A /* ProfileHome */,
-			);
-			path = Profile;
-			sourceTree = "<group>";
-		};
-		988A2D3D27F8302F0046C43A /* ProfileHome */ = {
-			isa = PBXGroup;
-			children = (
-				988A2D3E27F8303F0046C43A /* ProfileHomeMock.swift */,
-			);
-			path = ProfileHome;
-			sourceTree = "<group>";
-		};
-		988A2D4027F831210046C43A /* DiarySearch */ = {
-			isa = PBXGroup;
-			children = (
-				988A2D4127F8312E0046C43A /* DiarySearchMock.swift */,
-				988A2D4327F864F40046C43A /* DiarySearchInteractorTests.swift */,
-				988A2D4427F864F40046C43A /* DiarySearchRouterTests.swift */,
-			);
-			path = DiarySearch;
-			sourceTree = "<group>";
-		};
-		988A2D632801626C0046C43A /* DiaryWriting */ = {
-			isa = PBXGroup;
-			children = (
-				988A2D64280162790046C43A /* DiaryWritingMock.swift */,
-			);
-			path = DiaryWriting;
-			sourceTree = "<group>";
-		};
-		98A2BD922802BCD200C1FB92 /* DiaryRepository */ = {
-			isa = PBXGroup;
-			children = (
-				98A2BD932802BCE000C1FB92 /* DiaryRepositoryMock.swift */,
-			);
-			path = DiaryRepository;
 			sourceTree = "<group>";
 		};
 		98B6A213298E6FDC00234060 /* Tests */ = {
@@ -590,15 +507,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				988A2D65280162790046C43A /* DiaryWritingMock.swift in Sources */,
-				988A2D4527F864F40046C43A /* DiarySearchInteractorTests.swift in Sources */,
-				988A2D3F27F8303F0046C43A /* ProfileHomeMock.swift in Sources */,
-				98A2BD942802BCE000C1FB92 /* DiaryRepositoryMock.swift in Sources */,
-				988A2D3327F821F10046C43A /* DiaryHomeInteractorTests.swift in Sources */,
-				988A2D4227F8312E0046C43A /* DiarySearchMock.swift in Sources */,
-				988A2D4627F864F40046C43A /* DiarySearchRouterTests.swift in Sources */,
-				988A2D3827F823160046C43A /* DiaryHomeMock.swift in Sources */,
-				988A2D3427F821F10046C43A /* DiaryHomeRouterTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
