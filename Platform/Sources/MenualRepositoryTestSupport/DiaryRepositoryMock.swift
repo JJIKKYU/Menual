@@ -53,11 +53,13 @@ public final class DiaryRepositoryMock: DiaryRepository {
     public var saveImageToDocumentDirectoryCallCount = 0
     public func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void) {
         saveImageToDocumentDirectoryCallCount += 1
+        completionHandler(true)
     }
 
     public var deleteImageFromDocumentDirectoryCallCount = 0
     public func deleteImageFromDocumentDirectory(diaryUUID: String, completionHandler: @escaping (Bool) -> Void) {
         deleteImageFromDocumentDirectoryCallCount += 1
+        completionHandler(true)
     }
 
     public var addReplyCallCount = 0
