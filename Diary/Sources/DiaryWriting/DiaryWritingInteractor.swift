@@ -59,27 +59,27 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     weak var router: DiaryWritingRouting?
     weak var listener: DiaryWritingListener?
     
-    private let dependency: DiaryWritingInteractorDependency
-    private var disposebag: DisposeBag
+    let dependency: DiaryWritingInteractorDependency
+    var disposebag: DisposeBag
     
-    private let weatherModelRelay = BehaviorRelay<WeatherModelRealm?>(value: nil)
-    private let placeModelRelay = BehaviorRelay<PlaceModelRealm?>(value: nil)
+    let weatherModelRelay = BehaviorRelay<WeatherModelRealm?>(value: nil)
+    let placeModelRelay = BehaviorRelay<PlaceModelRealm?>(value: nil)
     
     // 수정하기일 경우에는 내용을 세팅해야하기 때문에 릴레이에 작접 accept 해줌
-    private let diaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
+    let diaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
     
     // TempSave <-> DiaryWrtiting으로 전달하기 위한 Relay
-    private let tempSaveDiaryModelRelay = BehaviorRelay<TempSaveModelRealm?>(value: nil)
+    let tempSaveDiaryModelRelay = BehaviorRelay<TempSaveModelRealm?>(value: nil)
     // TempSave 적용되었던 메뉴얼을 초기화해야 할 경우
-    private let tempSaveResetRelay = BehaviorRelay<Bool>(value: false)
+    let tempSaveResetRelay = BehaviorRelay<Bool>(value: false)
     
     // 이미지 업로드 후 updateDiary 하기 위해 관리하는 Relay
-    private let updateDiaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
+    let updateDiaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
     
     // 이미지를 저장할 경우 모두 저장이 되었는지 확인하는 Relay
     // 1. croppedImage, 2. originalImage
     // 저장이 모두 완료되었을 경우 true
-    private let imageSaveRelay = BehaviorRelay<(Bool, Bool, Bool)>(value: (false, false, false))
+    let imageSaveRelay = BehaviorRelay<(Bool, Bool, Bool)>(value: (false, false, false))
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
