@@ -23,9 +23,12 @@
 		985DE9752974036800F9E7AD /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9742974036800F9E7AD /* FirebaseAnalytics */; };
 		985DE9772974036800F9E7AD /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9762974036800F9E7AD /* FirebaseAnalyticsSwift */; };
 		98703A1A297A8ABE006C805D /* ProfileOpensource in Frameworks */ = {isa = PBXBuildFile; productRef = 98703A19297A8ABE006C805D /* ProfileOpensource */; };
+		98763D7E299A80A700EFA01B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98763D7D299A80A700EFA01B /* Launch Screen.storyboard */; };
+		98763D83299A811200EFA01B /* splashMenual.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D80299A811200EFA01B /* splashMenual.png */; };
+		98763D84299A811200EFA01B /* splashMenual@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D81299A811200EFA01B /* splashMenual@2x.png */; };
+		98763D85299A811200EFA01B /* splashMenual@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D82299A811200EFA01B /* splashMenual@3x.png */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
-		9888DDE927646F000091918F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE727646F000091918F /* LaunchScreen.storyboard */; };
 		9888DDFE27646F000091918F /* MenualUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDFD27646F000091918F /* MenualUITests.swift */; };
 		9888DE0027646F000091918F /* MenualUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDFF27646F000091918F /* MenualUITestsLaunchTests.swift */; };
 		9888DE142764825F0091918F /* AppRootRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DE112764825F0091918F /* AppRootRouter.swift */; };
@@ -76,7 +79,10 @@
 
 /* Begin PBXFileReference section */
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		985A52A927F023DB00B10829 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		98763D7D299A80A700EFA01B /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		98763D80299A811200EFA01B /* splashMenual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splashMenual.png; sourceTree = "<group>"; };
+		98763D81299A811200EFA01B /* splashMenual@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splashMenual@2x.png"; sourceTree = "<group>"; };
+		98763D82299A811200EFA01B /* splashMenual@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splashMenual@3x.png"; sourceTree = "<group>"; };
 		9888DDD927646EFF0091918F /* Menual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9888DDDC27646EFF0091918F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9888DDE527646F000091918F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -94,7 +100,6 @@
 		988A1878278AD17500DF81DA /* AppRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootViewController.swift; sourceTree = "<group>"; };
 		988A2D3027F81ACF0046C43A /* Menual.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Menual.entitlements; sourceTree = "<group>"; };
 		98A2BDA2280AD96200C1FB92 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
-		98A2BDAA280BD52D00C1FB92 /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ko; path = ko.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		98AD776F2975A878002E5BD8 /* Diary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Diary; sourceTree = "<group>"; };
 		98C59F3429744366002703C6 /* Profile */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Profile; sourceTree = "<group>"; };
 		98C59F35297443B1002703C6 /* Platform */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Platform; sourceTree = "<group>"; };
@@ -160,6 +165,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		98763D7F299A810500EFA01B /* LaunchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				98763D80299A811200EFA01B /* splashMenual.png */,
+				98763D81299A811200EFA01B /* splashMenual@2x.png */,
+				98763D82299A811200EFA01B /* splashMenual@3x.png */,
+				98763D7D299A80A700EFA01B /* Launch Screen.storyboard */,
+			);
+			path = LaunchScreen;
+			sourceTree = "<group>";
+		};
 		9888DDD027646EFF0091918F = {
 			isa = PBXGroup;
 			children = (
@@ -187,11 +203,11 @@
 		9888DDDB27646EFF0091918F /* Menual */ = {
 			isa = PBXGroup;
 			children = (
+				98763D7F299A810500EFA01B /* LaunchScreen */,
 				98B6A213298E6FDC00234060 /* Tests */,
 				988A2D3027F81ACF0046C43A /* Menual.entitlements */,
 				98D0EBE627CA09640076136E /* MenualAssets */,
 				98281EC9278AC6A900736D59 /* GoogleService-Info.plist */,
-				9888DDE727646F000091918F /* LaunchScreen.storyboard */,
 				9888DDEA27646F000091918F /* Info.plist */,
 				9888DE17276482670091918F /* AppDelegate */,
 				9888DE0F276481EA0091918F /* AppRoot */,
@@ -423,12 +439,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9888DDE927646F000091918F /* LaunchScreen.storyboard in Resources */,
 				98D0EBEB27CA0AFF0076136E /* Montserrat ExtraBold.ttf in Resources */,
 				98D0EBEE27CA0E190076136E /* SpoqaHanSansNeo Regular.otf in Resources */,
 				9888DDE627646F000091918F /* Assets.xcassets in Resources */,
 				98D0EBEF27CA0E190076136E /* SpoqaHanSansNeo Bold.otf in Resources */,
+				98763D85299A811200EFA01B /* splashMenual@3x.png in Resources */,
 				98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */,
+				98763D84299A811200EFA01B /* splashMenual@2x.png in Resources */,
+				98763D7E299A80A700EFA01B /* Launch Screen.storyboard in Resources */,
+				98763D83299A811200EFA01B /* splashMenual.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -533,18 +552,6 @@
 			targetProxy = 9888DDFA27646F000091918F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		9888DDE727646F000091918F /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				985A52A927F023DB00B10829 /* ko */,
-				98A2BDAA280BD52D00C1FB92 /* ko */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		9888DE0127646F000091918F /* Debug */ = {
@@ -672,6 +679,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -684,7 +692,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하여 메뉴얼에 첨부하는 기능 사용을 위해 카메라 권한을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 선택하여 메뉴얼에 첨부하는 기능 사용을 위해 사진 라이브러리에 접근하도록 허용합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -711,6 +719,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -723,7 +732,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하여 메뉴얼에 첨부하는 기능 사용을 위해 카메라 권한을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 선택하여 메뉴얼에 첨부하는 기능 사용을 위해 사진 라이브러리에 접근하도록 허용합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
