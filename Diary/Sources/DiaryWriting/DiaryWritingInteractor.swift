@@ -76,6 +76,12 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     // 이미지 업로드 후 updateDiary 하기 위해 관리하는 Relay
     let updateDiaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
     
+    // 다이어리 작성 관련 값
+    let titleRelay = BehaviorRelay<String>(value: "")
+    let descRelay = BehaviorRelay<String>(value: "")
+    let placeDescRelay = BehaviorRelay<String>(value: "")
+    let weatherDescRelay = BehaviorRelay<String>(value: "")
+    
     // 이미지를 저장할 경우 모두 저장이 되었는지 확인하는 Relay
     // 1. croppedImage, 2. originalImage
     // 저장이 모두 완료되었을 경우 true

@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import RxCocoa
 import RxSwift
 import RxRelay
 import SnapKit
@@ -33,6 +34,11 @@ public protocol DiaryWritingPresentableListener: AnyObject {
     func deleteAllImages(diaryUUID: String)
     
     var page: Int { get }
+    
+    var titleRelay: BehaviorRelay<String> { get }
+    var descRelay: BehaviorRelay<String> { get }
+    var placeDescRelay: BehaviorRelay<String> { get }
+    var weatherDescRelay: BehaviorRelay<String> { get }
 }
 
 final class DiaryWritingViewController: UIViewController, DiaryWritingViewControllable {
@@ -212,19 +218,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         $0.contentMode = .scaleAspectFill
 
     }
-    
-    /*
-    lazy var imageViewBtn = UIButton().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.addTarget(self, action: #selector(pressedImageview), for: .touchUpInside)
-        $0.setTitle("이미지 업로드하기", for: .normal)
-    }
-     */
-    
+
     var phpickerConfiguration = PHPickerConfiguration()
     weak var weakImagePicker: PHPickerViewController?
-    // (configuration: phpickerConfiguration)
-    
     lazy var testImagePicker = UIImagePickerController().then {
         $0.delegate = self
         $0.sourceType = .photoLibrary
@@ -272,7 +268,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         locationSelectView.selectTextView.centerVerticalText()
         cropVC?.delegate = self
         setImageButtonUIActionMenu()
-        // testImagePicker.delegate = self
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -307,9 +302,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         dismiss(animated: false) {
             self.pressedTakeImagePullDownBtn()
         }
-        print("navigationController?.viewControllers = \(navigationController?.viewControllers)")
-        // testImagePicker.popViewController(animated: true)
-        // self.navigationController?.popViewController(animated: true)
     }
     
     func setViews() {
@@ -435,6 +427,30 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     }
     
     func bind() {
+        guard let listener = listener else { return }
+
+        titleTextField.rx.text
+            .orEmpty
+            .bind(to: listener.titleRelay)
+            .disposed(by: disposeBag)
+        
+        descriptionTextView.rx.text
+            .orEmpty
+            .bind(to: listener.descRelay)
+            .disposed(by: disposeBag)
+        
+        locationSelectView.selectTextView.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .bind(to: listener.placeDescRelay)
+            .disposed(by: disposeBag)
+        
+        weatherSelectView.selectTextView.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .bind(to: listener.weatherDescRelay)
+            .disposed(by: disposeBag)
+
         descriptionTextView.rx.text
             .orEmpty
             .distinctUntilChanged()
@@ -662,7 +678,7 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
     func resetDiary() {
         print("DiaryWriting :: resetDiary!")
         self.titleTextField.text = defaultTitleText
-         self.titleTextField.textColor = Colors.grey.g600
+        self.titleTextField.textColor = Colors.grey.g600
         
         self.weatherSelectView.selectTitle = ""
         self.weatherSelectView.selectTextView.text = defaultWeatherText
