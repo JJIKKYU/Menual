@@ -234,7 +234,7 @@ public class ListHeader: UIView {
 
                 // MY MENUAL ''P.00]''
                 let number = (text as NSString).substring(with: NSMakeRange(10, range))
-                
+
                 attributedString.addAttribute(.foregroundColor,
                                               value: Colors.tint.main.v600,
                                               range: (text as NSString).range(of: number))

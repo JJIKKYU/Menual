@@ -23,10 +23,10 @@
 		985DE9752974036800F9E7AD /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9742974036800F9E7AD /* FirebaseAnalytics */; };
 		985DE9772974036800F9E7AD /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9762974036800F9E7AD /* FirebaseAnalyticsSwift */; };
 		98703A1A297A8ABE006C805D /* ProfileOpensource in Frameworks */ = {isa = PBXBuildFile; productRef = 98703A19297A8ABE006C805D /* ProfileOpensource */; };
-		98763D7E299A80A700EFA01B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98763D7D299A80A700EFA01B /* Launch Screen.storyboard */; };
 		98763D83299A811200EFA01B /* splashMenual.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D80299A811200EFA01B /* splashMenual.png */; };
 		98763D84299A811200EFA01B /* splashMenual@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D81299A811200EFA01B /* splashMenual@2x.png */; };
 		98763D85299A811200EFA01B /* splashMenual@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D82299A811200EFA01B /* splashMenual@3x.png */; };
+		98763D86299A8B6800EFA01B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98763D88299A8B6800EFA01B /* Launch Screen.storyboard */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
 		9888DDFE27646F000091918F /* MenualUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDFD27646F000091918F /* MenualUITests.swift */; };
@@ -79,10 +79,12 @@
 
 /* Begin PBXFileReference section */
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		98763D7D299A80A700EFA01B /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		98763D80299A811200EFA01B /* splashMenual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splashMenual.png; sourceTree = "<group>"; };
 		98763D81299A811200EFA01B /* splashMenual@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splashMenual@2x.png"; sourceTree = "<group>"; };
 		98763D82299A811200EFA01B /* splashMenual@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splashMenual@3x.png"; sourceTree = "<group>"; };
+		98763D87299A8B6800EFA01B /* ko */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ko; path = "ko.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
+		98763D89299A8BC300EFA01B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
+		98763D8B299A8BC700EFA01B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/Launch Screen.strings"; sourceTree = "<group>"; };
 		9888DDD927646EFF0091918F /* Menual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9888DDDC27646EFF0091918F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9888DDE527646F000091918F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -171,7 +173,7 @@
 				98763D80299A811200EFA01B /* splashMenual.png */,
 				98763D81299A811200EFA01B /* splashMenual@2x.png */,
 				98763D82299A811200EFA01B /* splashMenual@3x.png */,
-				98763D7D299A80A700EFA01B /* Launch Screen.storyboard */,
+				98763D88299A8B6800EFA01B /* Launch Screen.storyboard */,
 			);
 			path = LaunchScreen;
 			sourceTree = "<group>";
@@ -408,8 +410,8 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				ko,
 				Base,
+				ko,
 			);
 			mainGroup = 9888DDD027646EFF0091918F;
 			packageReferences = (
@@ -446,7 +448,7 @@
 				98763D85299A811200EFA01B /* splashMenual@3x.png in Resources */,
 				98281ECA278AC6A900736D59 /* GoogleService-Info.plist in Resources */,
 				98763D84299A811200EFA01B /* splashMenual@2x.png in Resources */,
-				98763D7E299A80A700EFA01B /* Launch Screen.storyboard in Resources */,
+				98763D86299A8B6800EFA01B /* Launch Screen.storyboard in Resources */,
 				98763D83299A811200EFA01B /* splashMenual.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -552,6 +554,19 @@
 			targetProxy = 9888DDFA27646F000091918F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		98763D88299A8B6800EFA01B /* Launch Screen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				98763D87299A8B6800EFA01B /* ko */,
+				98763D89299A8BC300EFA01B /* Base */,
+				98763D8B299A8BC700EFA01B /* en */,
+			);
+			name = "Launch Screen.storyboard";
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		9888DE0127646F000091918F /* Debug */ = {
@@ -683,11 +698,11 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Menual;
+				INFOPLIST_KEY_CFBundleDisplayName = MenualAlpha;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하여 메뉴얼에 첨부하는 기능 사용을 위해 카메라 권한을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 선택하여 메뉴얼에 첨부하는 기능 사용을 위해 사진 라이브러리에 접근하도록 허용합니다.";
@@ -702,7 +717,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.905.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menual;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menualAlpha;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -723,11 +738,11 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Menual;
+				INFOPLIST_KEY_CFBundleDisplayName = MenualAlpha;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하여 메뉴얼에 첨부하는 기능 사용을 위해 카메라 권한을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 선택하여 메뉴얼에 첨부하는 기능 사용을 위해 사진 라이브러리에 접근하도록 허용합니다.";
@@ -742,7 +757,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.905.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menual;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menualAlpha;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -760,7 +775,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -785,7 +800,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -809,7 +824,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -832,7 +847,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -68,7 +68,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.urlHandler = result.urlHandler
         
         launchRouter?.launch(from: window)
-        Analytics.logEvent("AppStart", parameters: nil)
         UNUserNotificationCenter.current().delegate = self
         
         return true
