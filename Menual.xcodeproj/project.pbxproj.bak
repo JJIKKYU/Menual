@@ -717,7 +717,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.905.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menualAlpha;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menual;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -757,7 +757,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.905.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menualAlpha;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menual;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

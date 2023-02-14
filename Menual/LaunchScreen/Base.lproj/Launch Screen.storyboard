@@ -22,7 +22,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splashMenual.png" translatesAutoresizingMaskIntoConstraints="NO" id="ggC-PJ-40c">
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splashMenual.png" translatesAutoresizingMaskIntoConstraints="NO" id="ggC-PJ-40c">
                                 <rect key="frame" x="116.66666666666669" y="318.66666666666669" width="160" height="160"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="160" id="1et-ke-rgO"/>
