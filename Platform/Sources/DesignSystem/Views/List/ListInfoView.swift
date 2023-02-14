@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import Then
+import SkeletonView
 
 public class ListInfoView: UIView {
     
@@ -40,6 +41,7 @@ public class ListInfoView: UIView {
     }
     
     private let pageLabel = UILabel().then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = Colors.grey.g600
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
@@ -48,6 +50,7 @@ public class ListInfoView: UIView {
     }
     
     private let reviewIcon = UIImageView().then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.image = Asset._16px.rewrite.image.withRenderingMode(.alwaysTemplate)
         $0.tintColor = Colors.grey.g600
@@ -56,6 +59,7 @@ public class ListInfoView: UIView {
     }
     
     private let reviewLabel = UILabel().then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = Colors.grey.g600
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
@@ -64,6 +68,7 @@ public class ListInfoView: UIView {
     }
     
     private let timeLabel = UILabel().then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = Colors.grey.g600
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
@@ -72,6 +77,7 @@ public class ListInfoView: UIView {
     }
     
     private let dateLabel = UILabel().then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = Colors.grey.g600
         $0.font = UIFont.AppBodyOnlyFont(.body_2)

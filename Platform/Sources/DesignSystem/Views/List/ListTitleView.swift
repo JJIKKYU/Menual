@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import Then
+import SkeletonView
 
 public class ListTitleView: UIView {
     
@@ -35,6 +36,7 @@ public class ListTitleView: UIView {
     }
     
     public let titleLabel = UILabel().then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.text = "타이틀 노출영역입니다."
         $0.textColor = Colors.grey.g200
@@ -44,6 +46,7 @@ public class ListTitleView: UIView {
     }
     
     private let titleLeftImageView = UIImageView().then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.image = Asset._24px.picture.image.withRenderingMode(.alwaysTemplate)
         $0.tintColor = Colors.grey.g200
@@ -52,6 +55,7 @@ public class ListTitleView: UIView {
     }
     
     public let bodyLabel = UILabel().then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = Colors.grey.g400
         $0.font = UIFont.AppBodyOnlyFont(.body_3)

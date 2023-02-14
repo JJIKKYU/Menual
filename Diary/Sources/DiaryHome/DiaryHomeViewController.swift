@@ -16,6 +16,7 @@ import RealmSwift
 import MenualUtil
 import MenualEntity
 import DesignSystem
+import SkeletonView
 
 public enum TableCollectionViewTag: Int {
     case MomentsCollectionView = 0
@@ -258,6 +259,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     func setViews() {
+        //view.isSkeletonable = true
+        // view.showSkeleton()
+        myMenualTableView.isSkeletonable = true
+        myMenualTableView.showSkeleton()
         self.view.backgroundColor = Colors.background
         
         self.view.addSubview(naviView)
@@ -698,7 +703,17 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
 }
 
 // MARK: - UITableView Deleagte, Datasource
-extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
+extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource, SkeletonTableViewDataSource {
+    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        return "ListCell"
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // 첫번재 섹션일 경우에는 넓게 안띄움
         if section == 0 {

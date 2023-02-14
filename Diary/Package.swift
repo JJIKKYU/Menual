@@ -101,7 +101,8 @@ let package = Package(
                 .product(name: "RxCocoa", package: "RxSwift"),
                 .product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
-                .product(name: "ZipArchive", package: "ZipArchive")
+                .product(name: "ZipArchive", package: "ZipArchive"),
+                .product(name: "SkeletonView", package: "SkeletonView")
             ]
         ),
         .target(

@@ -10,6 +10,7 @@ import Then
 import SnapKit
 import MenualUtil
 import MenualEntity
+import SkeletonView
 
 public enum ListType {
     case normal
@@ -86,10 +87,12 @@ public class ListCell: UITableViewCell {
     }
     
     private let listTitleView = ListTitleView(type: .title).then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
 
     private let menualImageView = UIImageView().then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
         $0.contentMode = .scaleAspectFill
@@ -99,10 +102,12 @@ public class ListCell: UITableViewCell {
     }
     
     private let listInfoView = ListInfoView(type: .time).then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private let listBodyView = ListTitleView(type: .titleBodyText).then {
+        $0.isSkeletonable = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isHidden = true
     }
