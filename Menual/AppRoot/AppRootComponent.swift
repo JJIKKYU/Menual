@@ -35,7 +35,7 @@ final class AppRootComponent: Component<AppRootDependency> {
 
 extension AppRootComponent: DiaryHomeDependency,
                             ProfilePasswordDependency,
-                            AppRootInteractorDependency
+                            AppRootInteractorDependency, SplashDependency
 {
 
     

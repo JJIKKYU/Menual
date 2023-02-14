@@ -54,6 +54,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     private weak var weakToastView: ToastView?
     
     // MARK: - UI 코드
+    private let splashView = UIView().then {
+        $0.isUserInteractionEnabled = false
+        $0.backgroundColor = Colors.background
+    }
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
@@ -289,6 +293,26 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.bringSubviewToFront(scrollToTopFAB)
         self.view.bringSubviewToFront(myMenualTitleView)
         self.view.bringSubviewToFront(naviView)
+        
+        self.view.addSubview(splashView)
+        splashView.snp.makeConstraints { make in
+            make.leading.trailing.top.bottom.equalToSuperview()
+        }
+        
+        splashView.do {
+            print("")
+            let menualImageView = UIImageView(image: Asset.splashMenual.image)
+            $0.addSubview(menualImageView)
+            menualImageView.snp.makeConstraints { make in
+                make.centerY.equalToSuperview().inset(30)
+                make.centerX.equalToSuperview()
+                make.width.height.equalTo(130)
+            }
+        }
+        
+        UIView.animate(withDuration: 0.75, delay: 0.5) {
+            self.splashView.layer.opacity = 0
+        }
         
         myMenualTableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
