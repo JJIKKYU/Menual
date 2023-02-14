@@ -27,6 +27,7 @@
 		98763D84299A811200EFA01B /* splashMenual@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D81299A811200EFA01B /* splashMenual@2x.png */; };
 		98763D85299A811200EFA01B /* splashMenual@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D82299A811200EFA01B /* splashMenual@3x.png */; };
 		98763D86299A8B6800EFA01B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98763D88299A8B6800EFA01B /* Launch Screen.storyboard */; };
+		98763D8F299BE15400EFA01B /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = 98763D8E299BE15400EFA01B /* SkeletonView */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
 		9888DDFE27646F000091918F /* MenualUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDFD27646F000091918F /* MenualUITests.swift */; };
@@ -136,6 +137,7 @@
 				985DE96D297401C700F9E7AD /* Realm in Frameworks */,
 				98A6E1E42973FDF2008CF101 /* RxCocoa in Frameworks */,
 				98100498297AB53800820867 /* DiaryBottomSheet in Frameworks */,
+				98763D8F299BE15400EFA01B /* SkeletonView in Frameworks */,
 				98935C8129744CA800AA3A29 /* DesignSystem in Frameworks */,
 				98BAA732297A9C8B0061B891 /* ProfilePassword in Frameworks */,
 				98A6E1F629740075008CF101 /* SnapKit in Frameworks */,
@@ -339,6 +341,7 @@
 				981004A3297AB53800820867 /* DiaryWriting */,
 				981004A5297AB63A00820867 /* ProfileDesignSystem */,
 				982A7C05298FA2DE007AD7C2 /* MenualRepositoryTestSupport */,
+				98763D8E299BE15400EFA01B /* SkeletonView */,
 			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
@@ -423,6 +426,7 @@
 				985DE96B297401C700F9E7AD /* XCRemoteSwiftPackageReference "realm-swift" */,
 				985DE9702974028500F9E7AD /* XCRemoteSwiftPackageReference "ZipArchive" */,
 				985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				98763D8D299BE15400EFA01B /* XCRemoteSwiftPackageReference "SkeletonView" */,
 			);
 			productRefGroup = 9888DDDA27646EFF0091918F /* Products */;
 			projectDirPath = "";
@@ -929,6 +933,14 @@
 				minimumVersion = 9.0.0;
 			};
 		};
+		98763D8D299BE15400EFA01B /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Juanpe/SkeletonView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		98A6E1DF2973FDD4008CF101 /* XCRemoteSwiftPackageReference "Then" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/devxoul/Then";
@@ -1044,6 +1056,11 @@
 		98703A19297A8ABE006C805D /* ProfileOpensource */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ProfileOpensource;
+		};
+		98763D8E299BE15400EFA01B /* SkeletonView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98763D8D299BE15400EFA01B /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			productName = SkeletonView;
 		};
 		98935C8029744CA800AA3A29 /* DesignSystem */ = {
 			isa = XCSwiftPackageProductDependency;
