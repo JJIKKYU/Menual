@@ -539,6 +539,10 @@ class RefreshManager: NSObject {
         // onboarding을 완료하지 않았을 경우 moments를 제공하지 않음
         if momentsRealm.onboardingIsClear == false {
             print("MomentsRepo :: onboaridng을 완료하지 않았으므로 moments를 제공하지 않습니다.")
+            // 중간 업데이트로 이미 모먼츠가 노출되고 있던 14개 이하 작성자들 Moments 삭제
+            realm.safeWrite {
+                realm.delete(momentsRealm.items)
+            }
             return false
         }
         
