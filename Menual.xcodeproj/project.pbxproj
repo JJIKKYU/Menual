@@ -27,6 +27,10 @@
 		98763D84299A811200EFA01B /* splashMenual@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D81299A811200EFA01B /* splashMenual@2x.png */; };
 		98763D85299A811200EFA01B /* splashMenual@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D82299A811200EFA01B /* splashMenual@3x.png */; };
 		98763D86299A8B6800EFA01B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98763D88299A8B6800EFA01B /* Launch Screen.storyboard */; };
+		98763D95299BE6EA00EFA01B /* SplashRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98763D91299BE6EA00EFA01B /* SplashRouter.swift */; };
+		98763D96299BE6EA00EFA01B /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98763D92299BE6EA00EFA01B /* SplashViewController.swift */; };
+		98763D97299BE6EA00EFA01B /* SplashBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98763D93299BE6EA00EFA01B /* SplashBuilder.swift */; };
+		98763D98299BE6EA00EFA01B /* SplashInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98763D94299BE6EA00EFA01B /* SplashInteractor.swift */; };
 		9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDDC27646EFF0091918F /* AppDelegate.swift */; };
 		9888DDE627646F000091918F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9888DDE527646F000091918F /* Assets.xcassets */; };
 		9888DDFE27646F000091918F /* MenualUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9888DDFD27646F000091918F /* MenualUITests.swift */; };
@@ -84,6 +88,10 @@
 		98763D82299A811200EFA01B /* splashMenual@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splashMenual@3x.png"; sourceTree = "<group>"; };
 		98763D89299A8BC300EFA01B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		98763D8C299BDE1200EFA01B /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = "ko.lproj/Launch Screen.strings"; sourceTree = "<group>"; };
+		98763D91299BE6EA00EFA01B /* SplashRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashRouter.swift; sourceTree = "<group>"; };
+		98763D92299BE6EA00EFA01B /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
+		98763D93299BE6EA00EFA01B /* SplashBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashBuilder.swift; sourceTree = "<group>"; };
+		98763D94299BE6EA00EFA01B /* SplashInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashInteractor.swift; sourceTree = "<group>"; };
 		9888DDD927646EFF0091918F /* Menual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9888DDDC27646EFF0091918F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9888DDE527646F000091918F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -177,6 +185,17 @@
 			path = LaunchScreen;
 			sourceTree = "<group>";
 		};
+		98763D90299BE68600EFA01B /* Splash */ = {
+			isa = PBXGroup;
+			children = (
+				98763D91299BE6EA00EFA01B /* SplashRouter.swift */,
+				98763D92299BE6EA00EFA01B /* SplashViewController.swift */,
+				98763D93299BE6EA00EFA01B /* SplashBuilder.swift */,
+				98763D94299BE6EA00EFA01B /* SplashInteractor.swift */,
+			);
+			path = Splash;
+			sourceTree = "<group>";
+		};
 		9888DDD027646EFF0091918F = {
 			isa = PBXGroup;
 			children = (
@@ -204,6 +223,7 @@
 		9888DDDB27646EFF0091918F /* Menual */ = {
 			isa = PBXGroup;
 			children = (
+				98763D90299BE68600EFA01B /* Splash */,
 				98763D7F299A810500EFA01B /* LaunchScreen */,
 				98B6A213298E6FDC00234060 /* Tests */,
 				988A2D3027F81ACF0046C43A /* Menual.entitlements */,
@@ -515,11 +535,15 @@
 				9888DE152764825F0091918F /* AppRootBuilder.swift in Sources */,
 				9888DE1D276484950091918F /* RootTabBarController.swift in Sources */,
 				9888DE1B276483DD0091918F /* AppRootComponent.swift in Sources */,
+				98763D97299BE6EA00EFA01B /* SplashBuilder.swift in Sources */,
 				988A1879278AD17500DF81DA /* AppRootViewController.swift in Sources */,
 				9888DE142764825F0091918F /* AppRootRouter.swift in Sources */,
 				9888DE19276482CC0091918F /* AppComponent.swift in Sources */,
+				98763D98299BE6EA00EFA01B /* SplashInteractor.swift in Sources */,
 				9888DE162764825F0091918F /* AppRootInteractor.swift in Sources */,
+				98763D95299BE6EA00EFA01B /* SplashRouter.swift in Sources */,
 				9888DDDD27646EFF0091918F /* AppDelegate.swift in Sources */,
+				98763D96299BE6EA00EFA01B /* SplashViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -696,7 +720,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -705,7 +729,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하여 메뉴얼에 첨부하는 기능 사용을 위해 카메라 권한을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 선택하여 메뉴얼에 첨부하는 기능 사용을 위해 사진 라이브러리에 접근하도록 허용합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -736,7 +760,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -745,7 +769,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하여 메뉴얼에 첨부하는 기능 사용을 위해 카메라 권한을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 선택하여 메뉴얼에 첨부하는 기능 사용을 위해 사진 라이브러리에 접근하도록 허용합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -773,7 +797,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -798,7 +822,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -822,7 +846,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -845,7 +869,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
