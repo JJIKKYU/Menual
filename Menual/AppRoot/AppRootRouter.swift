@@ -162,7 +162,7 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
         viewController.setViewController(navigation)
         
         // presentInsideNavigation(profilePasswordRouting.viewControllable)
-        navigation.present(profilePasswordRouting.viewControllable, animated: true, completion: nil)
+        navigation.present(profilePasswordRouting.viewControllable, animated: false, completion: nil)
     }
 
 }

@@ -242,6 +242,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         super.viewDidAppear(animated)
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         MenualLog.logEventAction("writing_appear")
+        actionSplashView()
         
         print("DiaryHome :: PushList!")
         
@@ -297,21 +298,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.addSubview(splashView)
         splashView.snp.makeConstraints { make in
             make.leading.trailing.top.bottom.equalToSuperview()
-        }
-        
-        splashView.do {
-            print("")
-            let menualImageView = UIImageView(image: Asset.splashMenual.image)
-            $0.addSubview(menualImageView)
-            menualImageView.snp.makeConstraints { make in
-                make.centerY.equalToSuperview().inset(30)
-                make.centerX.equalToSuperview()
-                make.width.height.equalTo(130)
-            }
-        }
-        
-        UIView.animate(withDuration: 0.75, delay: 0.5) {
-            self.splashView.layer.opacity = 0
         }
         
         myMenualTableView.snp.makeConstraints { make in
@@ -397,6 +383,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.bottom.equalToSuperview()
+        }
+    }
+    
+    /// 앱. 런치때 부드러운 Init 효과를 위해 Animation
+    func actionSplashView() {
+        print("DiaryHome :: actionSplashView!")
+        UIView.animate(withDuration: 0.25, delay: 0.25) {
+            self.splashView.layer.opacity = 0
         }
     }
     
