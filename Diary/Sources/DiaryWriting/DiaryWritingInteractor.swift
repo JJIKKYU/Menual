@@ -62,6 +62,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     let dependency: DiaryWritingInteractorDependency
     var disposebag: DisposeBag
     
+    // Editing 일때 ViewController를 세팅하기 위한 Relay
     let weatherModelRelay = BehaviorRelay<WeatherModelRealm?>(value: nil)
     let placeModelRelay = BehaviorRelay<PlaceModelRealm?>(value: nil)
     
@@ -76,11 +77,16 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     // 이미지 업로드 후 updateDiary 하기 위해 관리하는 Relay
     let updateDiaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
     
-    // 다이어리 작성 관련 값
+    // 다이어리 작성 값 바인딩
     let titleRelay = BehaviorRelay<String>(value: "")
     let descRelay = BehaviorRelay<String>(value: "")
     let placeDescRelay = BehaviorRelay<String>(value: "")
+    let placeRelay = BehaviorRelay<Place?>(value: nil)
     let weatherDescRelay = BehaviorRelay<String>(value: "")
+    let weatherRelay = BehaviorRelay<Weather?>(value: nil)
+    let cropImageDataRelay = BehaviorRelay<Data?>(value: nil)
+    let originalImageDataRelay = BehaviorRelay<Data?>(value: nil)
+    let thumbImageDataRelay = BehaviorRelay<Data?>(value: nil)
     
     // 이미지를 저장할 경우 모두 저장이 되었는지 확인하는 Relay
     // 1. croppedImage, 2. originalImage
@@ -204,7 +210,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     }
     
     // 글 작성할 때
-    func writeDiary(info: DiaryModelRealm) {
+    func writeDiary() {
         // print("DiaryWritingInteractor :: writeDiary! info = \(info)")
         
         let title: String = titleRelay.value
@@ -214,8 +220,20 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         
         print("DiaryWriting :: \(title)")
         print("DiaryWriting :: \(desc)")
-        print("DiaryWriting :: \(placeDesc), \(placeModelRelay.value)")
-        print("DiaryWriting :: \(weatherDesc), \(weatherModelRelay.value)")
+        print("DiaryWriting :: \(placeDesc), \(placeRelay.value)")
+        print("DiaryWriting :: \(weatherDesc), \(weatherRelay.value)")
+        print("DiaryWriting :: cropImage = \(cropImageDataRelay.value)")
+        print("DiaryWriting :: originalImage = \(originalImageDataRelay.value)")
+        print("DiaryWritign :: thumbImage = \(thumbImageDataRelay.value)")
+        
+//        let diaryModelRealm = DiaryModelRealm(pageNum: 0,
+//                                              title: title,
+//                                              weather: <#T##WeatherModelRealm?#>,
+//                                              place: <#T##PlaceModelRealm?#>,
+//                                              desc: <#T##String#>,
+//                                              image: <#T##Bool#>,
+//                                              createdAt: <#T##Date#>
+//        )
         
         /*
         dependency.diaryRepository

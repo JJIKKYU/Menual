@@ -19,11 +19,8 @@ import MenualUtil
 import DesignSystem
 
 public protocol DiaryWritingPresentableListener: AnyObject {
-    // TODO: Declare properties and methods that the view controller can invoke to perform
-    // business logic, such as signIn(). This protocol is implemented by the corresponding
-    // interactor class.
     func pressedBackBtn(isOnlyDetach: Bool)
-    func writeDiary(info: DiaryModelRealm)
+    func writeDiary()
     func updateDiary(info: DiaryModelRealm, edittedImage: Bool)
     
     func saveCropImage(diaryUUID: String, imageData: Data)
@@ -38,9 +35,12 @@ public protocol DiaryWritingPresentableListener: AnyObject {
     var titleRelay: BehaviorRelay<String> { get }
     var descRelay: BehaviorRelay<String> { get }
     var placeDescRelay: BehaviorRelay<String> { get }
-    var placeModelRelay: BehaviorRelay<PlaceModelRealm?> { get }
+    var placeRelay: BehaviorRelay<Place?> { get }
     var weatherDescRelay: BehaviorRelay<String> { get }
-    var weatherModelRelay: BehaviorRelay<WeatherModelRealm?> { get }
+    var weatherRelay: BehaviorRelay<Weather?> { get }
+    var cropImageDataRelay: BehaviorRelay<Data?> { get }
+    var originalImageDataRelay: BehaviorRelay<Data?> { get }
+    var thumbImageDataRelay: BehaviorRelay<Data?> { get }
 }
 
 final class DiaryWritingViewController: UIViewController, DiaryWritingViewControllable {
@@ -430,27 +430,53 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     
     func bind() {
         guard let listener = listener else { return }
-
         titleTextField.rx.text
             .orEmpty
-            .bind(to: listener.titleRelay)
+            .filter { [weak self] text in
+                guard let self = self else { return false }
+                return text == self.defaultTitleText ? false : true
+            }
+            .bind(to: listener.titleRelay )
             .disposed(by: disposeBag)
-        
+
         descriptionTextView.rx.text
             .orEmpty
+            .filter { [weak self] text in
+                guard let self = self else { return false }
+                return text == self.defaultDescriptionText ? false : true
+            }
             .bind(to: listener.descRelay)
             .disposed(by: disposeBag)
-        
+
         locationSelectView.selectTextView.rx.text
             .orEmpty
             .distinctUntilChanged()
+            .filter { [weak self] text in
+                guard let self = self else { return false }
+                return text == self.defaultPlaceText ? false : true
+            }
             .bind(to: listener.placeDescRelay)
             .disposed(by: disposeBag)
-        
+
         weatherSelectView.selectTextView.rx.text
             .orEmpty
             .distinctUntilChanged()
+            .filter { [weak self] text in
+                guard let self = self else { return false }
+                return text == self.defaultWeatherText ? false : true
+            }
             .bind(to: listener.weatherDescRelay)
+            .disposed(by: disposeBag)
+
+        listener.cropImageDataRelay
+            .map { data -> UIImage? in
+                if let data = data {
+                    return UIImage(data: data)
+                } else {
+                    return nil
+                }
+            }
+            .bind(to: imageUploadView.rx.image)
             .disposed(by: disposeBag)
 
         descriptionTextView.rx.text
@@ -550,7 +576,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
         switch writingType {
         case .writing:
-            listener?.writeDiary(info: DiaryModelRealm())
+            listener?.writeDiary()
             /*
             let diaryModelRealm = DiaryModelRealm(
                                                   pageNum: 0,
@@ -853,7 +879,6 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         print("DiaryWriting ::setWeatherView = \(model)")
         weatherSelectView.selected = true
         weatherSelectView.selectedWeatherType = weather
-        listener?.weatherModelRelay.accept(model)
     }
 
     func setPlaceView(model: PlaceModelRealm) {
@@ -863,7 +888,6 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         print("DiaryWriting ::setPlaceView = \(model)")
         locationSelectView.selected = true
         locationSelectView.selectedPlaceType = place
-        listener?.placeModelRelay.accept(model)
     }
 }
 
@@ -1250,6 +1274,14 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                         cropVC.delegate = self
                         print("DiaryWriting :: selectedOriginalImage = \(image)")
                         self.selectedOriginalImage = self.fixImageOrientation(image)
+
+                        // OriginalImage ViewModel에 넘기기
+                        self.listener?.originalImageDataRelay.accept(self.fixImageOrientation(image).jpeg(.low))
+                        // OriginalImage를 줄여서 Thumbnail을 만들어서 ViewModel에 넘기기
+                        if let thumbImageData = UIImage().imageWithImage(sourceImage: self.fixImageOrientation(image), scaledToWidth: 150).jpeg(.medium) {
+                            self.listener?.thumbImageDataRelay.accept(thumbImageData)
+                        }
+
                         picker.navigationController?.pushViewController(cropVC, animated: true)
                     }
                 }
@@ -1350,6 +1382,7 @@ extension DiaryWritingViewController: WeatherPlaceToolbarViewDelegate {
         weatherSelectView.selectedWeatherType = weatherType
         weatherSelectView.selected = true
         isEditBeginRelay.accept(true)
+        listener?.weatherRelay.accept(weatherType)
     }
     
     func placeSendData(placeType: Place) {
@@ -1358,6 +1391,7 @@ extension DiaryWritingViewController: WeatherPlaceToolbarViewDelegate {
         locationSelectView.selectedPlaceType = placeType
         locationSelectView.selected = true
         isEditBeginRelay.accept(true)
+        listener?.placeRelay.accept(placeType)
     }
 }
 
@@ -1368,7 +1402,8 @@ extension DiaryWritingViewController: CropViewControllerDelegate {
         print("image! = \(image)")
         let resizeImage = UIImage().imageWithImage(sourceImage: image, scaledToWidth: UIScreen.main.bounds.width * 2)
         self.selectedImage = resizeImage
-        self.imageUploadView.image = resizeImage
+
+        listener?.cropImageDataRelay.accept(resizeImage.jpeg(.medium))
         self.isEdittedIamge = true
 
         // 텍스트는 기본 텍스트고 이미지만 변경했을 경우에는 업로드 불가능
