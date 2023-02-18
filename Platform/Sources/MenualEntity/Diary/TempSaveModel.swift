@@ -50,6 +50,23 @@ public class TempSaveModelRealm: Object {
             return nil
         }
     }
+    public var thumbImage: Data? {
+        get {
+            if image == false { return nil }
+            // 1. 도큐먼트 폴더 경로가져오기
+            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+
+            if let directoryPath = path.first {
+            // 2. 이미지 URL 찾기
+                let thumbImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Thumb")
+                // 3. UIImage로 불러오고 Data로 Return
+                return UIImage(contentsOfFile: thumbImageURL.path)?.jpegData(compressionQuality: 0.9)
+            }
+            return nil
+        }
+    }
     @Persisted public var weather: Weather?
     @Persisted public var weatherDetailText: String?
     @Persisted public var place: Place?

@@ -26,7 +26,7 @@ public protocol DiaryWritingPresentableListener: AnyObject {
     func saveCropImage(diaryUUID: String, imageData: Data)
     func saveOriginalImage(diaryUUID: String, imageData: Data)
     func saveThumbImage(diaryUUID: String, imageData: Data)
-    func saveTempSave(diaryModel: DiaryModelRealm, originalImageData: Data?, cropImageData: Data?)
+    func saveTempSave()
     func pressedTempSaveBtn()
     func deleteAllImages(diaryUUID: String)
     
@@ -43,6 +43,12 @@ public protocol DiaryWritingPresentableListener: AnyObject {
     var thumbImageDataRelay: BehaviorRelay<Data?> { get }
 }
 
+public enum WritingType {
+    case writing
+    case edit
+    case tempSave
+}
+
 final class DiaryWritingViewController: UIViewController, DiaryWritingViewControllable {
     
     private let TITLE_TEXT_MAX_COUNT: Int = 40
@@ -54,15 +60,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         case location = 2
         case description = 3
     }
-    
-    enum WritingType {
-        case writing
-        case edit
-    }
 
     weak var listener: DiaryWritingPresentableListener?
     private let isEditBeginRelay = BehaviorRelay<Bool>(value: false)
-    private var editDiaryModel: DiaryModelRealm?
     
     // 유저가 선택 후 기본 선택 되어있도록
     private var selectedWeatherType: Weather?
@@ -72,12 +72,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     
     private var writingType: WritingType = .writing
     
-    private var diaryModelUUID: String?
-    
     // 수정하기 상태에서 이미지를 수정했을때만 저장할 수 있도록 하는 플래그
     private var isEdittedIamge: Bool = false
-    // 업로드할 크롭된 이미지
-    private var selectedImage: UIImage?
     // 업로드할 오리지날 이미지
     private var selectedOriginalImage: UIImage?
     
@@ -492,7 +488,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                 
                 self.datePageTextCountView.textCount = String(text.count)
                 switch self.writingType {
-                case .writing:
+                case .writing, .tempSave:
                     if text.count > 0 {
                         self.naviView.rightButton1IsActive = true
                     } else {
@@ -559,7 +555,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     
     func addDiary() {
         switch writingType {
-        case .writing:
+        case .writing, .tempSave:
             listener?.writeDiary()
 
         case .edit:
@@ -584,48 +580,80 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         pullDownImageButton.menu = UIMenu(children: [takeImage, uploadImage])
         pullDownImageButtonEditBtn.menu = UIMenu(children: [takeImage, uploadImage])
     }
-    
-    // tempSaveModel로 만들기 위해서 오물락조물락
-    func zipDiaryModelForTempSave() -> DiaryModelRealm? {
-        guard let title = self.titleTextField.text,
-              let description = self.descriptionTextView.text
-        else { return nil }
-        print("DiaryWriting :: zipDiaryModelForTempSave!")
-        
-        let weatherModel = WeatherModelRealm(weather: weatherSelectView.selectedWeatherType ?? nil,
-                                            detailText: weatherSelectView.selectTitle
-        )
-
-        let placeModel = PlaceModelRealm(place: locationSelectView.selectedPlaceType ?? nil,
-                                         detailText: locationSelectView.selectTitle
-        )
-        
-        // 만약 타이틀을 하나도 안썼을 경우, 쓰려고 했다가 모두 지워서 하나도 안쓴 것처럼 되었을 경우
-        // 날짜가 기본으로 입력되도록
-        var fixedTitle: String = title
-        if title.count == 0 || title == defaultTitleText {
-            fixedTitle = Date().toString()
-        }
-        
-        let diaryModel = DiaryModelRealm(
-                                         pageNum: 0,
-                                         title: fixedTitle,
-                                         weather: weatherModel,
-                                         place: placeModel,
-                                         desc: description,
-                                         image: self.selectedOriginalImage != nil ? true : false,
-                                         readCount: 0,
-                                         createdAt: Date(),
-                                         replies: [],
-                                         isDeleted: false,
-                                         isHide: false
-        )
-        return diaryModel
-    }
 }
 
 // MARK: - Interactor Dependency Function
 extension DiaryWritingViewController: DiaryWritingPresentable {
+    func setUI(writeType: WritingType) {
+        switch writeType {
+        // UI 기본 세팅은 작성하기이므로 작성하기일 경우에는 세팅하지 않음
+        case .writing, .tempSave:
+            break
+        case .edit:
+            self.writingType = .edit
+            self.naviView.naviViewType = .edit
+            self.naviView.setNaviViewType()
+            
+        }
+        
+        guard let title = listener?.titleRelay.value,
+              let weatherDesc = listener?.weatherDescRelay.value,
+              let placeDesc = listener?.placeDescRelay.value,
+              let desc = listener?.descRelay.value
+        else { return }
+        
+        selectedPlaceType = listener?.placeRelay.value
+        selectedWeatherType = listener?.weatherRelay.value
+        
+        // 타이틀 세팅
+        titleTextField.attributedText = UIFont.AppTitleWithText(.title_5,
+                                                                Colors.grey.g200,
+                                                                text: title)
+        
+        // 날씨, 장소 세팅
+        weatherSelectView.selectedWeatherType = selectedWeatherType
+        if weatherDesc == defaultWeatherText {
+            self.weatherSelectView.selected = false
+        } else {
+            self.weatherSelectView.selected = true
+            self.weatherSelectView.selectTextView.text = weatherDesc
+            self.weatherSelectView.selectTitle = weatherDesc
+        }
+
+        self.locationSelectView.selectedPlaceType = selectedPlaceType
+        if placeDesc == defaultPlaceText {
+            self.locationSelectView.selected = false
+        } else {
+            self.locationSelectView.selected = true
+            self.locationSelectView.selectTextView.text = placeDesc
+            self.locationSelectView.selectTitle = placeDesc
+        }
+        
+        
+        // desc 세팅
+        self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
+                                                                         Colors.grey.g100,
+                                                                         text: desc)
+        let size = CGSize(width: UIScreen.main.bounds.width - 40, height: .infinity)
+        let estimatedSize = descriptionTextView.sizeThatFits(size)
+        self.view.layoutIfNeeded()
+        descriptionTextView.constraints.forEach { (constraint) in
+          /// 180 이하일때는 더 이상 줄어들지 않게하기
+            if estimatedSize.height <= 185 {
+                if constraint.firstAttribute == .height {
+                    constraint.constant = 185
+                }
+            }
+            else {
+                if constraint.firstAttribute == .height {
+                    constraint.constant = estimatedSize.height
+                }
+            }
+        }
+        
+        self.view.layoutIfNeeded()
+    }
+    
     func resetDiary() {
         print("DiaryWriting :: resetDiary!")
         self.titleTextField.text = defaultTitleText
@@ -651,146 +679,7 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         
         self.view.layoutIfNeeded()
     }
-    
-    // 수정하기일때만 사용!
-    func setDiaryEditMode(diaryModel: DiaryModelRealm) {
-        self.editDiaryModel = diaryModel
-        self.diaryModelUUID = diaryModel.uuid
-        self.writingType = .edit
-        self.naviView.naviViewType = .edit
-        self.naviView.setNaviViewType()
 
-        self.titleTextField.attributedText = UIFont.AppTitleWithText(.title_5,
-                                                                     Colors.grey.g200,
-                                                                     text: diaryModel.title)
-        
-        self.weatherSelectView.selectedWeatherType = diaryModel.weather?.weather ?? nil
-        if diaryModel.weather?.detailText ?? "" == defaultWeatherText {
-            self.weatherSelectView.selected = false
-        } else {
-            self.weatherSelectView.selected = true
-            self.weatherSelectView.selectTextView.text = diaryModel.weather?.detailText ?? ""
-            self.weatherSelectView.selectTitle = diaryModel.weather?.detailText ?? ""
-        }
-
-        self.locationSelectView.selectedPlaceType = diaryModel.place?.place ?? nil
-        if diaryModel.place?.detailText ?? "" == defaultPlaceText {
-            self.locationSelectView.selected = false
-        } else {
-            self.locationSelectView.selected = true
-            self.locationSelectView.selectTextView.text = diaryModel.place?.detailText ?? ""
-            self.locationSelectView.selectTitle = diaryModel.place?.detailText ?? ""
-        }
-        
-        
-        self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
-                                                                         Colors.grey.g100,
-                                                                         text: diaryModel.desc)
-        let size = CGSize(width: UIScreen.main.bounds.width - 40, height: .infinity)
-        let estimatedSize = descriptionTextView.sizeThatFits(size)
-        self.view.layoutIfNeeded()
-        descriptionTextView.constraints.forEach { (constraint) in
-          /// 180 이하일때는 더 이상 줄어들지 않게하기
-            if estimatedSize.height <= 185 {
-                if constraint.firstAttribute == .height {
-                    constraint.constant = 185
-                }
-            }
-            else {
-                if constraint.firstAttribute == .height {
-                    constraint.constant = estimatedSize.height
-                }
-            }
-        }
-        
-        if diaryModel.image == true,
-           let imageData = diaryModel.cropImage,
-           let originalImageData = diaryModel.originalImage {
-            self.selectedOriginalImage = UIImage(data: originalImageData)
-            self.selectedImage = UIImage(data: imageData)
-            self.imageUploadView.image = UIImage(data: imageData)
-        } else {
-            self.selectedOriginalImage = nil
-            self.selectedImage = nil
-            self.imageUploadView.image = nil
-        }
-        
-        
-        self.selectedPlaceType = diaryModel.place?.place
-        self.selectedWeatherType = diaryModel.weather?.weather
-        
-        self.view.layoutIfNeeded()
-    }
-    
-    func setTempSaveModel(tempSaveModel: TempSaveModelRealm) {
-        print("DiaryWriting :: setTempSaveModel")
-        self.titleTextField.attributedText = UIFont.AppTitleWithText(.title_5,
-                                                                     Colors.grey.g200,
-                                                                   text: tempSaveModel.title)
-        
-        self.weatherSelectView.selectTitle = tempSaveModel.weatherDetailText ?? ""
-        self.weatherSelectView.selectTextView.centerVerticalText()
-        self.weatherSelectView.selectedWeatherType = tempSaveModel.weather
-        if tempSaveModel.weatherDetailText ?? "" == defaultWeatherText {
-            print("DiaryWriting :: weatherDetailText가 기본입니다!")
-            self.weatherSelectView.selectTextView.textColor = Colors.grey.g600
-            self.weatherSelectView.selected = false
-        } else {
-            self.weatherSelectView.selected = true
-        }
-
-        self.locationSelectView.selectedPlaceType = tempSaveModel.place
-        self.locationSelectView.selectTextView.centerVerticalText()
-        self.locationSelectView.selectTitle = tempSaveModel.placeDetailText ?? ""
-        if tempSaveModel.placeDetailText ?? "" == defaultPlaceText {
-            self.locationSelectView.selectTextView.textColor = Colors.grey.g600
-            self.locationSelectView.selected = false
-        } else {
-            self.locationSelectView.selected = true
-        }
-        
-        self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
-                                                                         Colors.grey.g100,
-                                                                         text: tempSaveModel.desc
-        )
-        let size = CGSize(width: UIScreen.main.bounds.width - 40, height: .infinity)
-        let estimatedSize = descriptionTextView.sizeThatFits(size)
-        
-        descriptionTextView.constraints.forEach { (constraint) in
-          /// 180 이하일때는 더 이상 줄어들지 않게하기
-            if estimatedSize.height <= 185 {
-                if constraint.firstAttribute == .height {
-                    constraint.constant = 185
-                }
-            }
-            else {
-                if constraint.firstAttribute == .height {
-                    constraint.constant = estimatedSize.height
-                }
-            }
-        }
-
-        self.descriptionTextView.sizeToFit()
-        self.descriptionTextView.layoutIfNeeded()
-        
-        if tempSaveModel.image == true {
-            guard let imageData = tempSaveModel.cropImage else { return }
-            self.imageUploadView.image = UIImage(data: imageData)
-            self.selectedImage = UIImage(data: imageData)
-            self.isEdittedIamge = true
-        } else {
-            self.imageUploadView.image = nil
-        }
-        
-        if let tempSaveModelOriginalImage = tempSaveModel.originalImage {
-            self.selectedOriginalImage = UIImage(data: tempSaveModelOriginalImage)
-        }
-        
-        
-        self.selectedPlaceType = tempSaveModel.place
-        self.selectedWeatherType = tempSaveModel.weather
-    }
-    
     func setWeatherView(model: WeatherModelRealm) {
         // 날씨를 선택하지 않았으면 뷰를 변경할 필요 없음
         guard let weather = model.weather else {
@@ -819,7 +708,7 @@ extension DiaryWritingViewController {
         var titleText: String = ""
         var isShowDialog: Bool = false
         switch writingType {
-        case .writing:
+        case .writing, .tempSave:
             titleText = "메뉴얼 작성을 취소하시겠어요?"
             if isEditBeginRelay.value == true {
                 isShowDialog = true
@@ -833,7 +722,7 @@ extension DiaryWritingViewController {
         }
         
         if isShowDialog {
-            show(size: writingType == .writing ? .medium : .small,
+            show(size: writingType == .writing || writingType == .tempSave ? .medium : .small,
                  buttonType: .twoBtn,
                  titleText: titleText,
                  subTitleText: "작성한 내용은 임시저장글에 저장됩니다.",
@@ -852,7 +741,7 @@ extension DiaryWritingViewController {
         view.endEditing(true) // 키보드가 내려가도록
         var titleText: String = ""
         switch writingType {
-        case .writing:
+        case .writing, .tempSave:
             titleText = "메뉴얼을 등록하시겠어요?"
         case .edit:
             titleText = "메뉴얼을 수정하시겠어요?"
@@ -1184,7 +1073,7 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                         cropVC.cropVCNaviViewType = .backArrow
                         
                         switch self.writingType {
-                        case .writing:
+                        case .writing, .tempSave:
                             cropVC.cropVCButtonType = .add
                         case .edit:
                             cropVC.cropVCButtonType = .edit
@@ -1193,7 +1082,7 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                         self.cropVC = cropVC
                         cropVC.delegate = self
                         print("DiaryWriting :: selectedOriginalImage = \(image)")
-                        self.selectedOriginalImage = self.fixImageOrientation(image)
+                        // self.selectedOriginalImage = self.fixImageOrientation(image)
 
                         // OriginalImage ViewModel에 넘기기
                         self.listener?.originalImageDataRelay.accept(self.fixImageOrientation(image).jpeg(.low))
@@ -1241,7 +1130,7 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
         cropVC.cropVCNaviViewType = .close
         
         switch writingType {
-        case .writing:
+        case .writing, .tempSave:
             cropVC.cropVCButtonType = .add
         case .edit:
             cropVC.cropVCButtonType = .edit
@@ -1249,7 +1138,7 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
 
         // self.cropVC = cropVC
         cropVC.delegate = self
-        self.selectedOriginalImage = newImage
+        // self.selectedOriginalImage = newImage
         dismiss(animated: true) {
             self.present(cropVC, animated: true, completion: nil)
         }
@@ -1321,7 +1210,7 @@ extension DiaryWritingViewController: CropViewControllerDelegate {
     func cropViewController(_ cropViewController: CropViewController, didCropToImage image: UIImage, withRect cropRect: CGRect, angle: Int) {
         print("image! = \(image)")
         let resizeImage = UIImage().imageWithImage(sourceImage: image, scaledToWidth: UIScreen.main.bounds.width * 2)
-        self.selectedImage = resizeImage
+        // self.selectedImage = resizeImage
 
         listener?.cropImageDataRelay.accept(resizeImage.jpeg(.medium))
         self.isEdittedIamge = true
@@ -1342,12 +1231,7 @@ extension DiaryWritingViewController: DialogDelegate {
         switch titleText {
         case "메뉴얼 작성을 취소하시겠어요?",
              "메뉴얼 수정을 취소하시겠어요?":
-            if let diaryModel = zipDiaryModelForTempSave() {
-                listener?.saveTempSave(diaryModel: diaryModel,
-                                       originalImageData: selectedOriginalImage?.jpegData(compressionQuality: 0.5),
-                                       cropImageData: selectedImage?.jpegData(compressionQuality: 1.0)
-                )
-            }
+            listener?.saveTempSave()
             listener?.pressedBackBtn(isOnlyDetach: false)
             
         case "메뉴얼을 등록하시겠어요?",
@@ -1356,8 +1240,8 @@ extension DiaryWritingViewController: DialogDelegate {
             
         case "사진을 삭제하시겠어요?":
             imageUploadView.image = nil
-            selectedImage = nil
-            selectedOriginalImage = nil
+            // selectedImage = nil
+            // selectedOriginalImage = nil
             isEditBeginRelay.accept(true)
             break
             
