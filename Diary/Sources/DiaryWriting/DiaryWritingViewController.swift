@@ -882,7 +882,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
                 }
                 else {
                     if constraint.firstAttribute == .height {
-                        constraint.constant = estimatedSize.height
+                        constraint.constant = estimatedSize.height + 20
                     }
                 }
             }
@@ -1245,6 +1245,8 @@ extension DiaryWritingViewController {
             }
             $0.isScrollEnabled = false
             $0.tag = TextViewType.description.rawValue
+            $0.textContainerInset = .zero
+            $0.textContainer.lineFragmentPadding = 0
         }
         
         datePageTextCountView.do {
