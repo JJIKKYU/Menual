@@ -22,13 +22,8 @@ public protocol DiaryWritingPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
     func writeDiary()
     func updateDiary(isUpdateImage: Bool)
-    
-    func saveCropImage(diaryUUID: String, imageData: Data)
-    func saveOriginalImage(diaryUUID: String, imageData: Data)
-    func saveThumbImage(diaryUUID: String, imageData: Data)
     func saveTempSave()
     func pressedTempSaveBtn()
-    func deleteAllImages(diaryUUID: String)
     
     var page: Int { get }
     
@@ -90,140 +85,25 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     private weak var uploadImageAction: UIAction?
     private weak var takeImageAction: UIAction?
     
-    private lazy var naviView = MenualNaviView(type: .write).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
-        // 글 작성 완료 버튼
-        $0.rightButton1.addTarget(self, action: #selector(pressedCheckBtn), for: .touchUpInside)
-        // 임시 저장 버튼
-        $0.rightButton2.addTarget(self, action: #selector(pressedTempSaveBtn), for: .touchUpInside)
-    }
-    
-    private lazy var weatherPlaceToolbarView = WeatherPlaceToolbarView().then {
-        $0.categoryName = "weatherPlace"
-        $0.clipsToBounds = true
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.delegate = self
-        $0.isHidden = true
-        $0.AppShadow(.shadow_6)
-    }
-    
-    private lazy var scrollView = UIScrollView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .clear
-        $0.isScrollEnabled = true
-        // $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
-    }
-    
-    private lazy var titleTextField = UITextView().then {
-        $0.categoryName = "title"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.delegate = self
-        $0.text = defaultTitleText
-        $0.textColor = Colors.grey.g600
-        $0.font = UIFont.AppTitle(.title_5)
-        $0.tag = TextViewType.title.rawValue
-        $0.backgroundColor = .clear
-        $0.isScrollEnabled = false
-    }
-    
-    private let divider1 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.grey.g800
-    }
-    
-    private lazy var weatherSelectView = WeatherLocationSelectView(type: .weather).then {
-        $0.categoryName = "weather"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        
-        $0.selectTextView.delegate = self
-        $0.selectTextView.tag = TextViewType.weather.rawValue
-        $0.selectTextView.text = self.defaultWeatherText
-        $0.deleteBtn.addTarget(self, action: #selector(pressedWeatherViewDeleteBtn), for: .touchUpInside)
-        $0.isDeleteBtnEnabled = false
-    }
-    
-    private let divider2 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.grey.g800
-    }
-    
-    private lazy var locationSelectView = WeatherLocationSelectView(type: .location).then {
-        $0.categoryName = "place"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-
-        $0.selectTextView.delegate = self
-        $0.selectTextView.tag = TextViewType.location.rawValue
-        $0.selectTextView.text = self.defaultPlaceText
-        $0.deleteBtn.addTarget(self, action: #selector(pressedPlaceViewDeleteBtn), for: .touchUpInside)
-        $0.isDeleteBtnEnabled = false
-    }
-    
-    private let divider3 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.grey.g800
-    }
-    
-    lazy var descriptionTextView = UITextView().then {
-        $0.categoryName = "description"
-        $0.delegate = self
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        // $0.typingAttributes = UIFont.AppBody(.body_4, .lightGray)
-        // $0.backgroundColor = .gray.withAlphaComponent(0.1)
-        $0.backgroundColor = .clear
-        $0.text = defaultDescriptionText
-        $0.textColor = Colors.grey.g600
-        $0.font = UIFont.AppBodyOnlyFont(.body_4).withSize(14)
-        $0.isScrollEnabled = false
-        $0.tag = TextViewType.description.rawValue
-    }
-    
-    private lazy var datePageTextCountView = DatePageTextCountView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.page = String(self.listener?.page ?? 0)
-    }
-    
-    private let divider4 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = Colors.grey.g800
-    }
-    
-    private lazy var imageUploadView = ImageUploadView().then {
-        $0.categoryName = "image"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.deleteBtn.actionName = "delete"
-        $0.deleteBtn.addTarget(self, action: #selector(pressedImageUploadViewDeleteBtn), for: .touchUpInside)
-        $0.editBtn.actionName = "edit"
-        $0.editBtn.addTarget(self, action: #selector(pressedImageUploadViewEditBtn), for: .touchUpInside)
-    }
-    
-    private lazy var pullDownImageButton = UIButton(frame: .zero).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .clear
-        $0.showsMenuAsPrimaryAction = true
-    }
-    
-    private lazy var pullDownImageButtonEditBtn = UIButton(frame: .zero).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .clear
-        $0.showsMenuAsPrimaryAction = true
-    }
-    
-    let imageView = UIImageView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.layer.masksToBounds = true
-        $0.backgroundColor = .brown
-        $0.contentMode = .scaleAspectFill
-
-    }
-
-    var phpickerConfiguration = PHPickerConfiguration()
-    weak var weakImagePicker: PHPickerViewController?
-    lazy var testImagePicker = UIImagePickerController().then {
-        $0.delegate = self
-        $0.sourceType = .photoLibrary
-        $0.allowsEditing = false
-    }
+    private lazy var naviView = MenualNaviView(type: .write)
+    private lazy var weatherPlaceToolbarView = WeatherPlaceToolbarView()
+    private lazy var scrollView = UIScrollView()
+    private lazy var titleTextField = UITextView()
+    private let divider1 = Divider(type: ._1px)
+    private lazy var weatherSelectView = WeatherLocationSelectView(type: .weather)
+    private let divider2 = Divider(type: ._1px)
+    private lazy var locationSelectView = WeatherLocationSelectView(type: .location)
+    private let divider3 = Divider(type: ._1px)
+    private lazy var descriptionTextView = UITextView()
+    private lazy var datePageTextCountView = DatePageTextCountView()
+    private let divider4 = Divider(type: ._1px)
+    private lazy var imageUploadView = ImageUploadView()
+    private lazy var pullDownImageButton = UIButton(frame: .zero)
+    private lazy var pullDownImageButtonEditBtn = UIButton(frame: .zero)
+    private let imageView = UIImageView()
+    private var phpickerConfiguration = PHPickerConfiguration()
+    private weak var weakImagePicker: PHPickerViewController?
+    private lazy var testImagePicker = UIImagePickerController()
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -239,6 +119,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
       super.viewDidLoad()
         
         view.backgroundColor = .white
+        initUI()
         setViews()
         bind()
         self.datePageTextCountView.date = Date().toString()
@@ -1266,6 +1147,148 @@ extension DiaryWritingViewController: DialogDelegate {
             
         default:
             break
+        }
+    }
+}
+
+// MARK: - UI Setting
+extension DiaryWritingViewController {
+    func initUI() {
+        naviView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+            // 글 작성 완료 버튼
+            $0.rightButton1.addTarget(self, action: #selector(pressedCheckBtn), for: .touchUpInside)
+            // 임시 저장 버튼
+            $0.rightButton2.addTarget(self, action: #selector(pressedTempSaveBtn), for: .touchUpInside)
+        }
+        
+        weatherPlaceToolbarView.do {
+            $0.categoryName = "weatherPlace"
+            $0.clipsToBounds = true
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.delegate = self
+            $0.isHidden = true
+            $0.AppShadow(.shadow_6)
+        }
+        
+        scrollView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = .clear
+            $0.isScrollEnabled = true
+            // $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
+        }
+        
+        titleTextField.do {
+            $0.categoryName = "title"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.delegate = self
+            // 초기에만 세팅하고, Edit, TempSave에서는 세팅되지 않도록
+            if $0.text.count == 0 || $0.text == defaultTitleText {
+                $0.text = defaultTitleText
+                $0.font = UIFont.AppTitle(.title_5)
+                $0.textColor = Colors.grey.g600
+            }
+            $0.tag = TextViewType.title.rawValue
+            $0.backgroundColor = .clear
+            $0.isScrollEnabled = false
+        }
+        
+        divider1.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = Colors.grey.g800
+        }
+        
+        weatherSelectView.do {
+            $0.categoryName = "weather"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            
+            $0.selectTextView.delegate = self
+            $0.selectTextView.tag = TextViewType.weather.rawValue
+            $0.selectTextView.text = self.defaultWeatherText
+            $0.deleteBtn.addTarget(self, action: #selector(pressedWeatherViewDeleteBtn), for: .touchUpInside)
+            $0.isDeleteBtnEnabled = false
+        }
+        
+        divider2.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = Colors.grey.g800
+        }
+        
+        locationSelectView.do {
+            $0.categoryName = "place"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+
+            $0.selectTextView.delegate = self
+            $0.selectTextView.tag = TextViewType.location.rawValue
+            $0.selectTextView.text = self.defaultPlaceText
+            $0.deleteBtn.addTarget(self, action: #selector(pressedPlaceViewDeleteBtn), for: .touchUpInside)
+            $0.isDeleteBtnEnabled = false
+        }
+        
+        divider3.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = Colors.grey.g800
+        }
+        
+        descriptionTextView.do {
+            $0.categoryName = "description"
+            $0.delegate = self
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            // $0.typingAttributes = UIFont.AppBody(.body_4, .lightGray)
+            // $0.backgroundColor = .gray.withAlphaComponent(0.1)
+            $0.backgroundColor = .clear
+            if $0.text.count == 0 || $0.text == defaultDescriptionText {
+                $0.text = defaultDescriptionText
+                $0.textColor = Colors.grey.g600
+                $0.font = UIFont.AppBodyOnlyFont(.body_4).withSize(14)
+            }
+            $0.isScrollEnabled = false
+            $0.tag = TextViewType.description.rawValue
+        }
+        
+        datePageTextCountView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.page = String(self.listener?.page ?? 0)
+        }
+        
+        divider4.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = Colors.grey.g800
+        }
+        
+        imageUploadView.do {
+            $0.categoryName = "image"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.deleteBtn.actionName = "delete"
+            $0.deleteBtn.addTarget(self, action: #selector(pressedImageUploadViewDeleteBtn), for: .touchUpInside)
+            $0.editBtn.actionName = "edit"
+            $0.editBtn.addTarget(self, action: #selector(pressedImageUploadViewEditBtn), for: .touchUpInside)
+        }
+        
+        pullDownImageButton.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = .clear
+            $0.showsMenuAsPrimaryAction = true
+        }
+        
+        pullDownImageButtonEditBtn.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = .clear
+            $0.showsMenuAsPrimaryAction = true
+        }
+        
+        imageView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.layer.masksToBounds = true
+            $0.backgroundColor = .brown
+            $0.contentMode = .scaleAspectFill
+
+        }
+        testImagePicker.do {
+            $0.delegate = self
+            $0.sourceType = .photoLibrary
+            $0.allowsEditing = false
         }
     }
 }

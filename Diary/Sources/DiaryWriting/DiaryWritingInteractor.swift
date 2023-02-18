@@ -461,14 +461,6 @@ extension DiaryWritingInteractor {
         let uuid: String = UUID().uuidString
         
         saveImage(uuid: uuid)
-//        if let cropImageData = cropImageData {
-//            saveCropImage(diaryUUID: uuid, imageData: cropImageData)
-//        }
-//
-//        if let originalImageData = originalImageData {
-//            saveOriginalImage(diaryUUID: uuid, imageData: originalImageData)
-//        }
-        
         // 이미 임시저장이 있을 경우 임시저장 데이터에 업데이트
         if let tempSaveModel = tempSaveDiaryModelRelay.value {
             print("DiaryWriting :: interactor -> TempSaveModel이 이미 있으므로 업데이트합니다. \(diaryModel.desc)")
@@ -481,17 +473,6 @@ extension DiaryWritingInteractor {
             dependency.diaryRepository
                 .addTempSave(diaryModel: diaryModel, tempSaveUUID: uuid)
         }
-        
-//        print("DiaryWriting :: interactor -> tempsave!")
-//        if let tempSaveModel = tempSaveDiaryModelRelay.value {
-//            print("DiaryWriting :: interactor -> TempSaveModel이 이미 있으므로 업데이트합니다.")
-//            dependency.diaryRepository
-//                .updateTempSave(diaryModel: diaryModel, tempSaveUUID: tempSaveModel.uuid)
-//        } else {
-//            print("DiaryWriting :: interactor -> TempSaveModel이 없으므로 새로 저장합니다.")
-//            dependency.diaryRepository
-//                .addTempSave(diaryModel: diaryModel, tempSaveUUID: uuid)
-//        }
     }
 }
 
