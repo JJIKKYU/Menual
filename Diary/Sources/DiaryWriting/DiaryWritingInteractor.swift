@@ -206,6 +206,18 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     // 글 작성할 때
     func writeDiary(info: DiaryModelRealm) {
         // print("DiaryWritingInteractor :: writeDiary! info = \(info)")
+        
+        let title: String = titleRelay.value
+        let desc: String = descRelay.value
+        let placeDesc: String = placeDescRelay.value
+        let weatherDesc: String = weatherDescRelay.value
+        
+        print("DiaryWriting :: \(title)")
+        print("DiaryWriting :: \(desc)")
+        print("DiaryWriting :: \(placeDesc), \(placeModelRelay.value)")
+        print("DiaryWriting :: \(weatherDesc), \(weatherModelRelay.value)")
+        
+        /*
         dependency.diaryRepository
             .addDiary(info: info)
         
@@ -223,6 +235,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         }
         
         listener?.diaryWritingPressedBackBtn(isOnlyDetach: false, isNeedToast: true, mode: .writing)
+        */
     }
     
     // 글 수정할 때

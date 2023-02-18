@@ -38,7 +38,9 @@ public protocol DiaryWritingPresentableListener: AnyObject {
     var titleRelay: BehaviorRelay<String> { get }
     var descRelay: BehaviorRelay<String> { get }
     var placeDescRelay: BehaviorRelay<String> { get }
+    var placeModelRelay: BehaviorRelay<PlaceModelRealm?> { get }
     var weatherDescRelay: BehaviorRelay<String> { get }
+    var weatherModelRelay: BehaviorRelay<WeatherModelRealm?> { get }
 }
 
 final class DiaryWritingViewController: UIViewController, DiaryWritingViewControllable {
@@ -548,6 +550,8 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
         switch writingType {
         case .writing:
+            listener?.writeDiary(info: DiaryModelRealm())
+            /*
             let diaryModelRealm = DiaryModelRealm(
                                                   pageNum: 0,
                                                   title: title == defaultTitleText ? Date().toString() : title,
@@ -575,6 +579,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
             }
             listener?.writeDiary(info: diaryModelRealm)
             dismiss(animated: true)
+             */
 
         case .edit:
             print("PressedCheckBtn! edit!")
@@ -848,6 +853,7 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         print("DiaryWriting ::setWeatherView = \(model)")
         weatherSelectView.selected = true
         weatherSelectView.selectedWeatherType = weather
+        listener?.weatherModelRelay.accept(model)
     }
 
     func setPlaceView(model: PlaceModelRealm) {
@@ -857,6 +863,7 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         print("DiaryWriting ::setPlaceView = \(model)")
         locationSelectView.selected = true
         locationSelectView.selectedPlaceType = place
+        listener?.placeModelRelay.accept(model)
     }
 }
 
