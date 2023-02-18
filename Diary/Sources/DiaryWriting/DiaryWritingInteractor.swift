@@ -198,7 +198,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                 place = diaryModel.place?.place
                 placeDesc = diaryModel.place?.detailText ?? ""
                 desc = diaryModel.desc
-                writingType = .writing
+                writingType = .edit
             }
 
             // 임시 저장에서 데이터를 받아왔을 경우
