@@ -183,128 +183,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         }
     }
     
-    func setViews() {
-        // 뒤로가기 제스쳐 가능하도록
-        navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        view.backgroundColor = Colors.background
-        
-        self.view.addSubview(naviView)
-        self.view.addSubview(scrollView)
-        self.view.addSubview(weatherPlaceToolbarView)
-        
-        scrollView.addSubview(titleTextField)
-        scrollView.addSubview(divider1)
-        scrollView.addSubview(weatherSelectView)
-        scrollView.addSubview(divider2)
-        scrollView.addSubview(locationSelectView)
-        scrollView.addSubview(divider3)
-        scrollView.addSubview(descriptionTextView)
-        scrollView.addSubview(datePageTextCountView)
-        scrollView.addSubview(divider4)
-        scrollView.addSubview(imageUploadView)
-        scrollView.addSubview(pullDownImageButton)
-        scrollView.addSubview(pullDownImageButtonEditBtn)
-        self.view.bringSubviewToFront(naviView)
-        
-        naviView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.top.equalToSuperview()
-            make.width.equalToSuperview()
-            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
-        }
-        
-        scrollView.snp.makeConstraints { make in
-            make.leading.width.equalToSuperview()
-            make.top.equalTo(naviView.snp.bottom)
-            make.bottom.equalToSuperview()
-        }
-        
-        titleTextField.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalToSuperview().offset(24)
-        }
-        
-        divider1.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(titleTextField.snp.bottom).offset(20)
-            make.height.equalTo(1)
-        }
-        
-        weatherSelectView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.height.equalTo(24)
-            make.top.equalTo(divider1.snp.bottom).offset(13)
-        }
-        
-        divider2.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(weatherSelectView.snp.bottom).offset(12)
-            make.height.equalTo(1)
-        }
-        
-        locationSelectView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.height.equalTo(24)
-            make.top.equalTo(divider2.snp.bottom).offset(12)
-        }
-        
-        divider3.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(locationSelectView.snp.bottom).offset(12)
-            make.height.equalTo(1)
-        }
-        
-        descriptionTextView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(divider3.snp.bottom).offset(16)
-            make.height.equalTo(185)
-        }
-        
-        datePageTextCountView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalTo(descriptionTextView.snp.bottom)
-            make.height.equalTo(15)
-        }
-        
-        divider4.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(datePageTextCountView.snp.bottom).offset(16)
-            make.height.equalTo(1)
-        }
-        
-        imageUploadView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(divider4.snp.bottom).offset(16)
-            make.height.equalTo(110)
-            make.bottom.equalToSuperview().inset(40)
-        }
-        
-        pullDownImageButton.snp.makeConstraints { make in
-            make.leading.width.height.top.equalTo(imageUploadView.uploadedImageView)
-        }
-        
-        pullDownImageButtonEditBtn.snp.makeConstraints { make in
-            make.leading.top.equalTo(imageUploadView.editBtn)
-            make.width.height.equalTo(24)
-        }
-        
-        weatherPlaceToolbarView.snp.makeConstraints { make in
-            make.leading.width.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.height.equalTo(130)
-        }
-    }
-    
     func bind() {
         guard let listener = listener else { return }
         titleTextField.rx.text
@@ -1268,6 +1146,128 @@ extension DiaryWritingViewController {
             $0.delegate = self
             $0.sourceType = .photoLibrary
             $0.allowsEditing = false
+        }
+    }
+    
+    func setViews() {
+        // 뒤로가기 제스쳐 가능하도록
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        view.backgroundColor = Colors.background
+        
+        self.view.addSubview(naviView)
+        self.view.addSubview(scrollView)
+        self.view.addSubview(weatherPlaceToolbarView)
+        
+        scrollView.addSubview(titleTextField)
+        scrollView.addSubview(divider1)
+        scrollView.addSubview(weatherSelectView)
+        scrollView.addSubview(divider2)
+        scrollView.addSubview(locationSelectView)
+        scrollView.addSubview(divider3)
+        scrollView.addSubview(descriptionTextView)
+        scrollView.addSubview(datePageTextCountView)
+        scrollView.addSubview(divider4)
+        scrollView.addSubview(imageUploadView)
+        scrollView.addSubview(pullDownImageButton)
+        scrollView.addSubview(pullDownImageButtonEditBtn)
+        self.view.bringSubviewToFront(naviView)
+        
+        naviView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+        }
+        
+        scrollView.snp.makeConstraints { make in
+            make.leading.width.equalToSuperview()
+            make.top.equalTo(naviView.snp.bottom)
+            make.bottom.equalToSuperview()
+        }
+        
+        titleTextField.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalToSuperview().offset(24)
+        }
+        
+        divider1.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(titleTextField.snp.bottom).offset(20)
+            make.height.equalTo(1)
+        }
+        
+        weatherSelectView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(24)
+            make.top.equalTo(divider1.snp.bottom).offset(13)
+        }
+        
+        divider2.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(weatherSelectView.snp.bottom).offset(12)
+            make.height.equalTo(1)
+        }
+        
+        locationSelectView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(24)
+            make.top.equalTo(divider2.snp.bottom).offset(12)
+        }
+        
+        divider3.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(locationSelectView.snp.bottom).offset(12)
+            make.height.equalTo(1)
+        }
+        
+        descriptionTextView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(divider3.snp.bottom).offset(16)
+            make.height.equalTo(185)
+        }
+        
+        datePageTextCountView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalTo(descriptionTextView.snp.bottom)
+            make.height.equalTo(15)
+        }
+        
+        divider4.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(datePageTextCountView.snp.bottom).offset(16)
+            make.height.equalTo(1)
+        }
+        
+        imageUploadView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(divider4.snp.bottom).offset(16)
+            make.height.equalTo(110)
+            make.bottom.equalToSuperview().inset(40)
+        }
+        
+        pullDownImageButton.snp.makeConstraints { make in
+            make.leading.width.height.top.equalTo(imageUploadView.uploadedImageView)
+        }
+        
+        pullDownImageButtonEditBtn.snp.makeConstraints { make in
+            make.leading.top.equalTo(imageUploadView.editBtn)
+            make.width.height.equalTo(24)
+        }
+        
+        weatherPlaceToolbarView.snp.makeConstraints { make in
+            make.leading.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(130)
         }
     }
 }
