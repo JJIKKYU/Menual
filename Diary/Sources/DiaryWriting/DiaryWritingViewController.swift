@@ -467,7 +467,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 extension DiaryWritingViewController: DiaryWritingPresentable {
     func setUI(writeType: WritingType) {
         switch writeType {
-        // UI 기본 세팅은 작성하기이므로 작성하기일 경우에는 세팅하지 않음
+            // UI 기본 세팅은 작성하기이므로 작성하기일 경우에는 세팅하지 않음
         case .writing, .tempSave:
             break
         case .edit:
@@ -487,34 +487,54 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         selectedWeatherType = listener?.weatherRelay.value
         
         // 타이틀 세팅
-        titleTextField.attributedText = UIFont.AppTitleWithText(.title_5,
-                                                                Colors.grey.g200,
-                                                                text: title)
+        let fixedTitle = title.count == 0 ? defaultTitleText : title
+        if fixedTitle == title {
+            titleTextField.attributedText = UIFont.AppTitleWithText(.title_5,
+                                                                    Colors.grey.g200,
+                                                                    text: fixedTitle)
+        } else {
+            titleTextField.text = defaultTitleText
+            titleTextField.font = UIFont.AppTitle(.title_5)
+            titleTextField.textColor = Colors.grey.g600
+        }
+        
         
         // 날씨, 장소 세팅
         weatherSelectView.selectedWeatherType = selectedWeatherType
-        if weatherDesc == defaultWeatherText {
-            self.weatherSelectView.selected = false
+        if weatherDesc == defaultWeatherText || weatherDesc.count == 0 {
+            weatherSelectView.selected = false
+            weatherSelectView.selectTextView.text = defaultWeatherText
+            weatherSelectView.selectTitle = defaultWeatherText
         } else {
-            self.weatherSelectView.selected = true
-            self.weatherSelectView.selectTextView.text = weatherDesc
-            self.weatherSelectView.selectTitle = weatherDesc
+            weatherSelectView.selected = true
+            weatherSelectView.selectTextView.text = weatherDesc
+            weatherSelectView.selectTitle = weatherDesc
         }
-
+        
         self.locationSelectView.selectedPlaceType = selectedPlaceType
-        if placeDesc == defaultPlaceText {
-            self.locationSelectView.selected = false
+        if placeDesc == defaultPlaceText || placeDesc.count == 0 {
+            locationSelectView.selected = false
+            locationSelectView.selectTextView.text = defaultPlaceText
+            locationSelectView.selectTitle = defaultPlaceText
         } else {
-            self.locationSelectView.selected = true
-            self.locationSelectView.selectTextView.text = placeDesc
-            self.locationSelectView.selectTitle = placeDesc
+            locationSelectView.selected = true
+            locationSelectView.selectTextView.text = placeDesc
+            locationSelectView.selectTitle = placeDesc
         }
         
         
         // desc 세팅
-        self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
-                                                                         Colors.grey.g100,
-                                                                         text: desc)
+        let fixedDesc = desc.count == 0 ? defaultDescriptionText : desc
+        if fixedDesc == desc {
+            self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
+                                                                             Colors.grey.g100,
+                                                                             text: desc)
+        } else {
+            descriptionTextView.text = defaultDescriptionText
+            descriptionTextView.textColor = Colors.grey.g600
+            descriptionTextView.font = UIFont.AppBodyOnlyFont(.body_4).withSize(14)
+        }
+        
         let size = CGSize(width: UIScreen.main.bounds.width - 40, height: .infinity)
         let estimatedSize = descriptionTextView.sizeThatFits(size)
         self.view.layoutIfNeeded()

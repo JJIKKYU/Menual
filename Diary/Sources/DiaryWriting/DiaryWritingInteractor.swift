@@ -240,7 +240,13 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                 
                 switch needReset {
                 case true:
-                    self.presenter.resetDiary()
+                    self.titleRelay.accept("")
+                    self.weatherRelay.accept(nil)
+                    self.placeRelay.accept(nil)
+                    self.weatherDescRelay.accept("")
+                    self.placeDescRelay.accept("")
+                    self.descRelay.accept("")
+                    self.presenter.setUI(writeType: .tempSave)
 
                 case false:
                     break
