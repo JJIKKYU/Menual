@@ -21,7 +21,7 @@ import DesignSystem
 public protocol DiaryWritingPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
     func writeDiary()
-    func updateDiary(info: DiaryModelRealm, edittedImage: Bool)
+    func updateDiary(isUpdateImage: Bool)
     
     func saveCropImage(diaryUUID: String, imageData: Data)
     func saveOriginalImage(diaryUUID: String, imageData: Data)
@@ -555,96 +555,16 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
                 self.weatherSelectView.isDeleteBtnEnabled = true
             })
             .disposed(by: disposeBag)
-        
-        
     }
     
     func addDiary() {
-        print("DiaryWriting :: addDiary! - 1")
-        guard let title = self.titleTextField.text,
-              let description = self.descriptionTextView.text
-        else { return }
-        print("DiaryWriting :: addDiary! - 2")
-
-        let weatherModel = WeatherModelRealm(weather: weatherSelectView.selectedWeatherType ?? nil,
-                                                  detailText: weatherSelectView.selectTitle
-        )
-
-        let placeModel = PlaceModelRealm(place: locationSelectView.selectedPlaceType ?? nil,
-                                         detailText: locationSelectView.selectTitle
-        )
-
         switch writingType {
         case .writing:
             listener?.writeDiary()
-            /*
-            let diaryModelRealm = DiaryModelRealm(
-                                                  pageNum: 0,
-                                                  title: title == defaultTitleText ? Date().toString() : title,
-                                                  weather: weatherModel,
-                                                  place: placeModel,
-                                                  desc: description == defaultDescriptionText ? "" : description,
-                                                  image: selectedOriginalImage == nil ? false : true,
-                                                  readCount: 0,
-                                                  createdAt: Date(),
-                                                  replies: [],
-                                                  isDeleted: false,
-                                                  isHide: false
-            )
-
-            if isEdittedIamge == true,
-               let selectedImage = selectedImage,
-               let selectedImageData = selectedImage.jpegData(compressionQuality: 1.0),
-               let selectedOriginalImage = selectedOriginalImage,
-               let selectedOriginalImageData = selectedOriginalImage.jpegData(compressionQuality: 0.5),
-               let thumbImageData = UIImage().imageWithImage(sourceImage: selectedOriginalImage, scaledToWidth: 150).jpegData(compressionQuality: 0.8) {
-                print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
-                listener?.saveCropImage(diaryUUID: diaryModelRealm.uuid, imageData: selectedImageData)
-                listener?.saveOriginalImage(diaryUUID: diaryModelRealm.uuid, imageData: selectedOriginalImageData)
-                listener?.saveThumbImage(diaryUUID: diaryModelRealm.uuid, imageData: thumbImageData)
-            }
-            listener?.writeDiary(info: diaryModelRealm)
-            dismiss(animated: true)
-             */
 
         case .edit:
             print("PressedCheckBtn! edit!")
-            guard let editDiaryModel = editDiaryModel else { return }
-            print("DiarWriting :: selectedOriginalImage = \(selectedOriginalImage)")
-            let diaryModelRealm = DiaryModelRealm(
-                                                  pageNum: editDiaryModel.pageNum,
-                                                  title: title == defaultTitleText ? Date().toString() : title,
-                                                  weather: weatherModel,
-                                                  place: placeModel,
-                                                  desc: description == defaultDescriptionText ? "" : description,
-                                                  image: selectedOriginalImage == nil ? false : true,
-                                                  readCount: editDiaryModel.readCount,
-                                                  createdAt: editDiaryModel.createdAt,
-                                                  replies: [],
-                                                  isDeleted: false,
-                                                  isHide: false
-            )
-
-            // 전에는 이미지가 있었으나 수정할 때 이미지를 삭제한 경우
-            if editDiaryModel.image == true && self.selectedImage == nil {
-                print("DiaryWriting :: 전에는 이미지가 있었으나 수정할 때 이미지를 삭제한 경우")
-                self.listener?.deleteAllImages(diaryUUID: editDiaryModel.uuid)
-            }
-            
-            self.listener?.updateDiary(info: diaryModelRealm, edittedImage: self.isEdittedIamge)
-
-            if isEdittedIamge == true,
-               let selectedImage = selectedImage,
-               let selectedImageData = selectedImage.jpegData(compressionQuality: 1.0),
-               let selectedOriginalImage = selectedOriginalImage,
-               let selectedOriginalImageData = selectedOriginalImage.jpegData(compressionQuality: 0.5),
-               let thumbImageData = UIImage().imageWithImage(sourceImage: selectedOriginalImage, scaledToWidth: 150).jpegData(compressionQuality: 0.8),
-               let diaryModelUUID = diaryModelUUID {
-                print("DiaryWriting :: 이미지를 사용자가 업로드 했습니다.")
-                listener?.saveCropImage(diaryUUID: diaryModelUUID, imageData: selectedImageData)
-                listener?.saveOriginalImage(diaryUUID: diaryModelUUID, imageData: selectedOriginalImageData)
-                listener?.saveThumbImage(diaryUUID: diaryModelUUID, imageData: thumbImageData)
-            }
+            listener?.updateDiary(isUpdateImage: isEdittedIamge)
         }
     }
     
