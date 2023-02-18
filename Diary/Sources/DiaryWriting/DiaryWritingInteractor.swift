@@ -287,8 +287,10 @@ extension DiaryWritingInteractor {
     func writeDiary() {
         guard let weatherModel = self.weatherModelRealm,
               let placeModel = self.placeModelRealm else { return }
+        
+        let title = titleRelay.value.count == 0 ? Date().toString() : titleRelay.value
         let diaryModelRealm = DiaryModelRealm(pageNum: 0,
-                                              title: titleRelay.value,
+                                              title: title,
                                               weather: weatherModel,
                                               place: placeModel,
                                               desc: descRelay.value,
@@ -345,8 +347,9 @@ extension DiaryWritingInteractor {
               let placeModel = placeModelRealm
         else { return }
 
+        let title = titleRelay.value.count == 0 ? Date().toString() : titleRelay.value
         let newDiaryModel = DiaryModelRealm(pageNum: originalDiaryModel.pageNum,
-                                            title: titleRelay.value,
+                                            title: title,
                                             weather: weatherModel,
                                             place: placeModel,
                                             desc: descRelay.value,

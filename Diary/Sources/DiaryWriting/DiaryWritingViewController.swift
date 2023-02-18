@@ -522,7 +522,6 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
             locationSelectView.selectTitle = placeDesc
         }
         
-        
         // desc 세팅
         let fixedDesc = desc.count == 0 ? defaultDescriptionText : desc
         if fixedDesc == desc {
