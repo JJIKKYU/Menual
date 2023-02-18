@@ -553,32 +553,6 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         
         self.view.layoutIfNeeded()
     }
-    
-    func resetDiary() {
-        print("DiaryWriting :: resetDiary!")
-        self.titleTextField.text = defaultTitleText
-        self.titleTextField.textColor = Colors.grey.g600
-        
-        self.weatherSelectView.selectTitle = ""
-        self.weatherSelectView.selectTextView.text = defaultWeatherText
-        self.weatherSelectView.selectedWeatherType = nil
-        self.weatherSelectView.selected = false
-
-        self.locationSelectView.selectedPlaceType = nil
-        self.locationSelectView.selectTitle = ""
-        self.locationSelectView.selectTextView.text = defaultPlaceText
-        self.locationSelectView.selected = false
-        
-        self.descriptionTextView.text = defaultDescriptionText
-        self.descriptionTextView.textColor = Colors.grey.g600
-        
-        self.imageUploadView.image = nil
-        
-        self.selectedPlaceType = nil
-        self.selectedWeatherType = nil
-        
-        self.view.layoutIfNeeded()
-    }
 
     func setWeatherView(model: WeatherModelRealm) {
         // 날씨를 선택하지 않았으면 뷰를 변경할 필요 없음
@@ -858,20 +832,8 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
     }
 
     func textViewDidChange(_ textView: UITextView) {
-        let fixedWidth = textView.frame.size.width
-
         switch textView.tag {
         case TextViewType.title.rawValue:
-//            textView.attributedText = UIFont.AppTitleWithText(.title_5,
-//                                                             Colors.grey.g100,
-//                                                             text: textView.text
-//            )
-//
-//            let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
-//            textView.frame.size = CGSize(width: max(newSize.width, fixedWidth),
-//                                         height: max(50.3, newSize.height))
-            // print("JJIKKYU :: newSizeHeight = \(newSize.height), \(textView.frame.height)")
-            // textView.centerVerticalText()
             isEditBeginRelay.accept(true)
             
         case TextViewType.weather.rawValue:
@@ -884,10 +846,6 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
             
         case TextViewType.description.rawValue:
             print("DiaryWriting :: TextView DidChagne!")
-//            textView.attributedText = UIFont.AppBodyWithText(.body_4,
-//                                                             Colors.grey.g100,
-//                                                             text: textView.text
-//            )
 
             let size = CGSize(width: UIScreen.main.bounds.width - 40, height: .infinity)
             let estimatedSize = textView.sizeThatFits(size)

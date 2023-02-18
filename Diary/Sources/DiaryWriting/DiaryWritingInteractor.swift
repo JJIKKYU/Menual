@@ -21,13 +21,10 @@ public protocol DiaryWritingRouting: ViewableRouting {
 
 public protocol DiaryWritingPresentable: Presentable {
     var listener: DiaryWritingPresentableListener? { get set }
-    // TODO: Declare methods the interactor can invoke the presenter to present data.
+    
     func setWeatherView(model: WeatherModelRealm)
     func setPlaceView(model: PlaceModelRealm)
     func setUI(writeType: WritingType)
-    
-    // 다이어리 초기화
-    func resetDiary()
 }
 
 public protocol DiaryWritingListener: AnyObject {
