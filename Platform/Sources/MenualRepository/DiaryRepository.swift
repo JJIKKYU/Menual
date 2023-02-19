@@ -17,7 +17,7 @@ public protocol DiaryRepository {
     var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var password: BehaviorRelay<PasswordModelRealm?> { get }
-
+    
     func fetch()
     func addDiary(info: DiaryModelRealm)
     func updateDiary(info: DiaryModelRealm, uuid: String)
@@ -54,7 +54,7 @@ public protocol DiaryRepository {
     func updatePassword(password: Int, isEnabled: Bool)
     
     // Backup로직
-    func backUp()
+    func backUp() -> [Data]
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
@@ -62,7 +62,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
     public init() {
         
     }
-
+    
     public var diaryString: BehaviorRelay<[DiaryModelRealm]> { diaryModelSubject }
     public let diaryModelSubject = BehaviorRelay<[DiaryModelRealm]>(value: [])
     
@@ -81,10 +81,10 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         // 3. 이미지 압축(image.pngData())
         // 압축할거면 jpegData로~(0~1 사이 값)
-//        guard let data = image.pngData() else {
-//            print("압축이 실패했습니다.")
-//            return
-//        }
+        //        guard let data = image.pngData() else {
+        //            print("압축이 실패했습니다.")
+        //            return
+        //        }
         let data = imageData
         
         // 4. 이미지 저장: 동일한 경로에 이미지를 저장하게 될 경우, 덮어쓰기하는 경우
@@ -113,14 +113,14 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
     
     public func loadImageFromDocumentDirectory(imageName: String, completionHandler: @escaping (UIImage?) -> Void) {
-            
+        
         // 1. 도큐먼트 폴더 경로가져오기
         let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
         let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
         let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
         
         if let directoryPath = path.first {
-        // 2. 이미지 URL 찾기
+            // 2. 이미지 URL 찾기
             let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(imageName)
             // 3. UIImage로 불러오기
             completionHandler(UIImage(contentsOfFile: imageURL.path))
@@ -187,7 +187,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             .objects(DiaryModelRealm.self)
             .sorted(byKeyPath: "createdAt", ascending: false)
             .filter { $0.isDeleted == false }
-
+        
         // diaryModelSubject.accept(diaryModelResults.map { DiaryModelRealm(value: $0) })
     }
     
@@ -196,20 +196,20 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         let diariesCount = realm.objects(DiaryModelRealm.self)
             .sorted(byKeyPath: "createdAt", ascending: false)
             .filter({ $0.isDeleted == false })
             .first?
             .pageNum ?? 0
-
+        
         info.updatePageNum(pageNum: diariesCount)
-
+        
         realm.safeWrite {
             realm.add(info)
         }
     }
-
+    
     public func updateDiary(info: DiaryModelRealm, uuid: String) {
         print("Repo :: update Diary!")
         // Realm에서 DiaryModelRealm Array를 받아온다.
@@ -221,7 +221,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         else { return }
         
         print("Repo :: update Diary! - 2")
-
+        
         realm.safeWrite {
             data.readCount = info.readCount + 1
             if data.title != info.title {
@@ -232,12 +232,12 @@ public final class DiaryRepositoryImp: DiaryRepository {
             if data.desc != info.desc {
                 data.desc = info.desc
             }
-
+            
             // TODO: - 이미지 생성 시점 체크할 것
             if data.image != info.image {
                 data.image = info.image
             }
-
+            
             if data.weather?.weather != info.weather?.weather ||
                 data.weather?.detailText != info.weather?.detailText {
                 data.weather = info.weather
@@ -267,7 +267,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 print("DiaryDetail :: repo :: reminder.uuid = \(reminder)")
                 UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder])
             }
-
+            
             realm.safeWrite {
                 DiaryModel.reminder = nil
             }
@@ -295,7 +295,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         realm.safeWrite {
             info.isDeleted = true
         }
@@ -314,7 +314,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 realm.delete(searchData)
             }
         }
-
+        
         // 리마인더가 있따면 함께 삭제
         if let reminder = info.reminder {
             UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder.uuid])
@@ -327,7 +327,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         realm.safeWrite {
             info.isHide = isHide
         }
@@ -338,12 +338,12 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         let repliesCount = diaryModel
             .repliesArr
             .filter ({ $0.isDeleted == false })
             .count
-
+        
         info.updateReplyNum(replyNum: repliesCount)
         
         realm.safeWrite {
@@ -355,12 +355,12 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         realm.safeWrite {
             realm.delete(replyModel)
         }
     }
-
+    
     // MARK: - 최근검색목록 로직 (SearchModel)
     public func deleteAllRecentDiarySearch() {
         print("Search :: DiaryRepository :: deleteAllRecentDiarySearch!")
@@ -402,7 +402,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 realm.delete(diarySearchRealm)
             }
         }
-
+        
         guard let diary = realm.objects(DiaryModelRealm.self).filter ({ $0.uuid == info.uuid}).first else { return }
         let diarySearchModel = DiarySearchModelRealm(diaryUuid: info.uuid,
                                                      diary: diary,
@@ -411,7 +411,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         )
         
         realm.safeWrite {
-             realm.add(diarySearchModel)
+            realm.add(diarySearchModel)
         }
     }
     
@@ -419,9 +419,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
     public func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int {
         print("diaryRepo :: filterDiary -> 날짜/장소")
         guard let realm = Realm.safeInit() else { return 0 }
-
+        
         var diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
-
+        
         var section = Set<String>()
         let model = realm.objects(DiaryModelRealm.self)
             .filter { diary in
@@ -433,7 +433,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 if placeTypes.count != 0 {
                     checkedFilterCount += 1
                 }
-
+                
                 var isContainWeather: Bool = false
                 if let weather = diary.weather?.weather {
                     isContainWeather = weatherTypes.contains(weather)
@@ -447,13 +447,13 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 } else {
                     isContainPlace = false
                 }
-
+                
                 if checkedFilterCount == 2 {
                     return diary.isDeleted == false && isContainWeather && isContainPlace
                 } else if checkedFilterCount == 1 {
                     return diary.isDeleted == false && isContainWeather || isContainPlace
                 }
-
+                
                 return diary.isDeleted == false && isContainWeather || isContainPlace
             }
             .sorted(by: ({ $0.createdAt > $1.createdAt }))
@@ -461,9 +461,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
         if isOnlyFilterCount == true {
             return model.count
         }
-
+        
         model.forEach { section.insert($0.createdAt.toStringWithYYYYMM())}
-
+        
         var arraySection = Array(section)
         arraySection.sort { $0 > $1 }
         arraySection.enumerated().forEach { (index: Int, sectionName: String) in
@@ -495,9 +495,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
                                                                 createdAt: Date(),
                                                                 isDeleted: false
         )
-
+        
         realm.safeWrite {
-             realm.add(realmModel)
+            realm.add(realmModel)
         }
     }
     
@@ -525,7 +525,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         let model = TempSaveModelRealm(uuid: tempSaveUUID,
                                        diaryModel: diaryModel,
                                        createdAt: Date(),
@@ -553,7 +553,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         print("diaryRepo :: passwordFetch! - 1")
-
+        
         guard let passwordModelRealm = realm.objects(PasswordModelRealm.self).first
         else { return }
         password.accept(passwordModelRealm)
@@ -565,7 +565,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         print("diaryRepo :: addPassword! - 1")
-    
+        
         realm.safeWrite {
             realm.delete(realm.objects(PasswordModelRealm.self))
             realm.add(model)
@@ -594,17 +594,23 @@ public final class DiaryRepositoryImp: DiaryRepository {
     }
     
     // MARK: - Backup 로직
-    public func backUp() {
+    public func backUp() -> [Data] {
         print("DiaryRepo :: backup!")
         
-        guard let realm = Realm.safeInit() else { return }
-
+        guard let realm = Realm.safeInit() else { return [] }
+        var backupDataArr: [Data] = []
+        var backupDataDic: [String: Data] = [:]
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        
         // Diary
         let diaryArray = realm
             .objects(DiaryModelRealm.self)
             .toArray(type: DiaryModelRealm.self)
-        let diaryData = try? JSONEncoder().encode(diaryArray)
-        if let jsonString = String(data: diaryData ?? Data(), encoding: .utf8) {
+        if let diaryData = try? encoder.encode(diaryArray),
+           let jsonString = String(data: diaryData, encoding: .utf8) {
+            backupDataArr.append(diaryData)
+            backupDataDic["diary"] = diaryData
             print("DiaryRepo :: diary = \(jsonString)")
         }
         
@@ -612,8 +618,10 @@ public final class DiaryRepositoryImp: DiaryRepository {
         let momentsArray =  realm
             .objects(MomentsRealm.self)
             .toArray(type: MomentsRealm.self)
-        let momentsData = try? JSONEncoder().encode(momentsArray)
-        if let jsonString = String(data: momentsData ?? Data(), encoding: .utf8) {
+        if let momentsData = try? encoder.encode(momentsArray),
+           let jsonString = String(data: momentsData, encoding: .utf8) {
+            backupDataArr.append(momentsData)
+            backupDataDic["moments"] = momentsData
             print("DiaryRepo :: moments = \(jsonString)")
         }
         
@@ -621,8 +629,10 @@ public final class DiaryRepositoryImp: DiaryRepository {
         let tempSaveArray = realm
             .objects(TempSaveModelRealm.self)
             .toArray(type: TempSaveModelRealm.self)
-        let tempSaveData = try? JSONEncoder().encode(tempSaveArray)
-        if let jsonString = String(data: tempSaveData ?? Data(), encoding: .utf8) {
+        if let tempSaveData = try? encoder.encode(tempSaveArray),
+           let jsonString = String(data: tempSaveData, encoding: .utf8) {
+            backupDataArr.append(tempSaveData)
+            backupDataDic["tempSave"] = tempSaveData
             print("DiaryRepo :: tempSave :: \(jsonString)")
         }
         
@@ -630,13 +640,34 @@ public final class DiaryRepositoryImp: DiaryRepository {
         let diarySearchArray = realm
             .objects(DiarySearchModelRealm.self)
             .toArray(type: DiarySearchModelRealm.self)
-        let diarySearchData = try? JSONEncoder().encode(diarySearchArray)
-        if let jsonString = String(data: diarySearchData ?? Data(), encoding: .utf8) {
+        if let diarySearchData = try? encoder.encode(diarySearchArray),
+           let jsonString = String(data: diarySearchData, encoding: .utf8) {
+            backupDataArr.append(diarySearchData)
+            backupDataDic["diarySearch"] = diarySearchData
             print("DiaryRepo :: search :: \(jsonString)")
         }
         
-        // let decoded = String(data: jsonData!, encoding: .utf8)!
-        // print("DiaryRepo :: jsonData = \(jsonData)")
-
+        // Password
+        let passwordArray = realm
+            .objects(PasswordModelRealm.self)
+            .toArray(type: PasswordModelRealm.self)
+        if let passwordData = try? encoder.encode(passwordArray),
+           let jsonString = String(data: passwordData, encoding: .utf8) {
+            backupDataArr.append(passwordData)
+            backupDataDic["password"] = passwordData
+            print("DiaryRepo :: password :: \(jsonString)")
+        }
+        
+        for data in backupDataDic {
+            do {
+                let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                let fileUrl = documentsDirectory.appendingPathComponent("\(data.key).json")
+                try data.value.write(to: fileUrl, options: .atomic)
+            } catch {
+                print("Error saving JSON data: \(error)")
+            }
+        }
+        
+        return backupDataArr
     }
 }

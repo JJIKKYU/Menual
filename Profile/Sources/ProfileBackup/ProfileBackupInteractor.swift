@@ -63,10 +63,10 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
     
     func saveZip() {
         print("ProfileBackup :: saveZip!")
-        dependency.diaryRepository
-            .backUp()
+        let dataArr: [Data] = dependency.diaryRepository.backUp()
+        print("ProfileBackup :: dataArr = \(dataArr)")
         
-        /*
+        
         let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
         let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
         let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
@@ -78,6 +78,11 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
         // Documents폴더를 돌면서 파일의 절대값과, 업로드하고자 하는 상대값을 두 Array에 담아서 저장
         // 폴더는 미리 생성하기 위해서 저장
         while let element = enumerator?.nextObject() as? String {
+            // Realm은 저장하지 않고, 이미지 파일만 저장하도록
+            if element.contains("default") {
+                continue
+            }
+
             if let fType = enumerator?.fileAttributes?[FileAttributeKey.type] as? FileAttributeType {
                 switch fType {
                 case .typeRegular:
@@ -104,7 +109,6 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
         zip.close()
 
         presenter.showShareSheet(path: savePath)
-         */
     }
     
     func pressedBackBtn(isOnlyDetach: Bool) {
