@@ -8,6 +8,7 @@
 import RIBs
 import RxSwift
 import ZipArchive
+import MenualRepository
 
 public protocol ProfileBackupRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
@@ -23,14 +24,23 @@ public protocol ProfileBackupListener: AnyObject {
     func pressedProfileBackupBackBtn(isOnlyDetach: Bool)
 }
 
+protocol ProfileBackupInteractorDependency {
+    var diaryRepository: DiaryRepository { get }
+}
+
 final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresentable>, ProfileBackupInteractable, ProfileBackupPresentableListener {
 
     weak var router: ProfileBackupRouting?
     weak var listener: ProfileBackupListener?
+    private let dependency: ProfileBackupInteractorDependency
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
-    override init(presenter: ProfileBackupPresentable) {
+    init(
+        presenter: ProfileBackupPresentable,
+        dependency: ProfileBackupInteractorDependency
+    ) {
+        self.dependency = dependency
         super.init(presenter: presenter)
         presenter.listener = self
     }
@@ -52,6 +62,11 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
     }
     
     func saveZip() {
+        print("ProfileBackup :: saveZip!")
+        dependency.diaryRepository
+            .backUp()
+        
+        /*
         let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
         let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
         let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
@@ -89,6 +104,7 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
         zip.close()
 
         presenter.showShareSheet(path: savePath)
+         */
     }
     
     func pressedBackBtn(isOnlyDetach: Bool) {

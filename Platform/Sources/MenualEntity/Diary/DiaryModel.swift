@@ -10,7 +10,7 @@ import RealmSwift
 import UIKit
 
 // MARK: - Realm에 저장하기 위한 Class
-public class DiaryModelRealm: Object {
+public class DiaryModelRealm: Object, Codable {
     // @objc dynamic var id: ObjectId
     @Persisted(primaryKey: true) public var _id: ObjectId
     public var uuid: String {
@@ -31,9 +31,9 @@ public class DiaryModelRealm: Object {
             let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
             let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
             let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-
+            
             if let directoryPath = path.first {
-            // 2. 이미지 URL 찾기
+                // 2. 이미지 URL 찾기
                 let originalImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Original")
                 // 3. UIImage로 불러오고 Data로 Return
                 return UIImage(contentsOfFile: originalImageURL.path)?.jpegData(compressionQuality: 0.9)
@@ -48,9 +48,9 @@ public class DiaryModelRealm: Object {
             let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
             let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
             let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-
+            
             if let directoryPath = path.first {
-            // 2. 이미지 URL 찾기
+                // 2. 이미지 URL 찾기
                 let thumbImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Thumb")
                 // 3. UIImage로 불러오고 Data로 Return
                 return UIImage(contentsOfFile: thumbImageURL.path)?.jpegData(compressionQuality: 0.9)
@@ -67,7 +67,7 @@ public class DiaryModelRealm: Object {
             let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
             
             if let directoryPath = path.first {
-            // 2. 이미지 URL 찾기
+                // 2. 이미지 URL 찾기
                 let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid)
                 // 3. UIImage로 불러오고 Data로 Return
                 return UIImage(contentsOfFile: imageURL.path)?.jpegData(compressionQuality: 1.0)
@@ -93,18 +93,18 @@ public class DiaryModelRealm: Object {
     @Persisted public var reminder: ReminderModelRealm?
     
     public convenience init(pageNum: Int,
-                     title: String,
-                     weather: WeatherModelRealm?,
-                     place: PlaceModelRealm?,
-                     desc: String,
-                     image: Bool,
-                     readCount: Int = 0,
-                     createdAt: Date,
-                     replies: [DiaryReplyModelRealm] = [],
-                     isDeleted: Bool = false,
-                     lastMomentsDate: Date? = nil,
-                     isHide: Bool = false,
-                     reminder: ReminderModelRealm? = nil
+                            title: String,
+                            weather: WeatherModelRealm?,
+                            place: PlaceModelRealm?,
+                            desc: String,
+                            image: Bool,
+                            readCount: Int = 0,
+                            createdAt: Date,
+                            replies: [DiaryReplyModelRealm] = [],
+                            isDeleted: Bool = false,
+                            lastMomentsDate: Date? = nil,
+                            isHide: Bool = false,
+                            reminder: ReminderModelRealm? = nil
     ) {
         self.init()
         self.pageNum = pageNum
@@ -125,5 +125,65 @@ public class DiaryModelRealm: Object {
     
     public func updatePageNum(pageNum: Int) {
         self.pageNum = pageNum + 1
+    }
+    
+    enum CodingKeys: String,CodingKey {
+        case _id
+        case pageNum
+        case title
+        case weather
+        case place
+        case desc
+        case image
+        case readCount
+        case createdAt
+        case isDeleted
+        case replies
+        case lastMomentsDate
+        case isHide
+        case reminder
+    }
+    
+    public override init() {
+        super.init()
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        super.init()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        _id = try container.decode(ObjectId.self, forKey: ._id)
+        pageNum = try container.decode(Int.self, forKey: .pageNum)
+        title = try container.decode(String.self, forKey: .title)
+        weather = try container.decode(WeatherModelRealm.self, forKey: .weather)
+        place = try container.decode(PlaceModelRealm.self, forKey: .place)
+        desc = try container.decode(String.self, forKey: .desc)
+        image = try container.decode(Bool.self, forKey: .image)
+        readCount = try container.decode(Int.self, forKey: .readCount)
+        createdAt = try container.decode(Date.self, forKey: .createdAt)
+        isDeleted = try container.decode(Bool.self, forKey: .isDeleted)
+        replies = try container.decode(List<DiaryReplyModelRealm>.self, forKey: .replies)
+        lastMomentsDate = try container.decode(Date.self, forKey: .lastMomentsDate)
+        isHide = try container.decode(Bool.self, forKey: .isHide)
+        reminder = try container.decode(ReminderModelRealm.self, forKey: .reminder)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(_id, forKey: ._id)
+        try container.encode(pageNum, forKey: .pageNum)
+        try container.encode(title, forKey: .title)
+        try container.encode(weather, forKey: .weather)
+        try container.encode(place, forKey: .place)
+        try container.encode(desc, forKey: .desc)
+        try container.encode(image, forKey: .image)
+        try container.encode(readCount, forKey: .readCount)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(isDeleted, forKey: .isDeleted)
+        try container.encode(replies, forKey: .replies)
+        try container.encode(lastMomentsDate, forKey: .lastMomentsDate)
+        try container.encode(isHide, forKey: .isHide)
+        try container.encode(reminder, forKey: .reminder)
+
+        
     }
 }

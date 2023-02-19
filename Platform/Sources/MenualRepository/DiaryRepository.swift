@@ -52,6 +52,9 @@ public protocol DiaryRepository {
     func fetchPassword()
     func addPassword(model: PasswordModelRealm)
     func updatePassword(password: Int, isEnabled: Bool)
+    
+    // Backup로직
+    func backUp()
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
@@ -185,7 +188,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             .sorted(byKeyPath: "createdAt", ascending: false)
             .filter { $0.isDeleted == false }
 
-        diaryModelSubject.accept(diaryModelResults.map { DiaryModelRealm(value: $0) })
+        // diaryModelSubject.accept(diaryModelResults.map { DiaryModelRealm(value: $0) })
     }
     
     // MARK: - Diary CRUD
@@ -588,5 +591,34 @@ public final class DiaryRepositoryImp: DiaryRepository {
         print("diaryRepo :: updatePassword! - 2")
         
         fetchPassword()
+    }
+    
+    // MARK: - Backup 로직
+    public func backUp() {
+        print("DiaryRepo :: backup!")
+        
+        guard let realm = Realm.safeInit() else { return }
+        
+        let diaryModelRealm = realm.objects(DiaryModelRealm.self)
+        
+        var objectDictionaries = [NSDictionary]()
+        
+        // Diary
+        let diaryModelRealmAllObjects = realm.objects(DiaryModelRealm.self)
+        for object in diaryModelRealmAllObjects {
+            let dictionary = object.toDictionary()
+            print("DiaryRepo :: dic = \(dictionary)")
+            
+            do {
+                let jsonData = try JSONEncoder().encode(object)
+                let jsonString = String(data: jsonData, encoding: .utf8)
+                guard let printJsonString = jsonString else { return }
+                print("DiaryModelRealm :: \(printJsonString)")
+            } catch {
+                print("DiaryModelRealm :: Json 출력이 실패했습니다. \(error)")
+            }
+        }
+        
+        // Moments
     }
 }

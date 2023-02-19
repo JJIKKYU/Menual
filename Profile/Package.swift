@@ -111,6 +111,7 @@ let package = Package(
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "ZipArchive", package: "ZipArchive"),
+                .product(name: "MenualRepository", package: "Platform")
             ]
         ),
         .target(

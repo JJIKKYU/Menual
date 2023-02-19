@@ -9,11 +9,12 @@ import RIBs
 import MenualRepository
 
 public protocol ProfileBackupDependency: Dependency {
-    // TODO: Declare the set of dependencies required by this RIB, but cannot be
-    // created by this RIB.
+    var diaryRepository: DiaryRepository { get }
 }
 
-public final class ProfileBackupComponent: Component<ProfileBackupDependency> {
+public final class ProfileBackupComponent: Component<ProfileBackupDependency>, ProfileBackupInteractorDependency {
+    var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
@@ -34,7 +35,10 @@ public final class ProfileBackupBuilder: Builder<ProfileBackupDependency>, Profi
         let component = ProfileBackupComponent(dependency: dependency)
         let viewController = ProfileBackupViewController()
         viewController.screenName = "backup"
-        let interactor = ProfileBackupInteractor(presenter: viewController)
+        let interactor = ProfileBackupInteractor(
+            presenter: viewController,
+            dependency: component
+        )
         interactor.listener = listener
         return ProfileBackupRouter(interactor: interactor, viewController: viewController)
     }

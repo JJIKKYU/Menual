@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 // MARK: - Realm에 저장하기 위한 Class
-public class DiaryReplyModelRealm: EmbeddedObject {
+public class DiaryReplyModelRealm: EmbeddedObject, Codable {
     @Persisted public var uuid: String = ""
     @Persisted public var replyNum: Int
     @Persisted public var diaryUuid: String
@@ -29,5 +29,33 @@ public class DiaryReplyModelRealm: EmbeddedObject {
     
     public func updateReplyNum(replyNum: Int) {
         self.replyNum = replyNum + 1
+    }
+    
+    enum CodingKeys: String,CodingKey {
+        case uuid
+        case replyNum
+        case diaryUuid
+        case desc
+        case createdAt
+        case isDeleted
+    }
+    
+    public override init() {
+        super.init()
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        super.init()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        uuid = try container.decode(String.self, forKey: .uuid)
+        replyNum = try container.decode(Int.self, forKey: .replyNum)
+        diaryUuid = try container.decode(String.self, forKey: .diaryUuid)
+        desc = try container.decode(String.self, forKey: .desc)
+        createdAt = try container.decode(Date.self, forKey: .createdAt)
+        isDeleted = try container.decode(Bool.self, forKey: .isDeleted)
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        
     }
 }
