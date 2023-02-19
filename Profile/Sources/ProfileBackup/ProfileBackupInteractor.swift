@@ -77,6 +77,7 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
         let enumerator = FileManager.default.enumerator(atPath: path.first!)
         // Documents폴더를 돌면서 파일의 절대값과, 업로드하고자 하는 상대값을 두 Array에 담아서 저장
         // 폴더는 미리 생성하기 위해서 저장
+        print("DiaryRepo :: 파일 while 시작!")
         while let element = enumerator?.nextObject() as? String {
             // Realm은 저장하지 않고, 이미지 파일만 저장하도록
             if element.contains("default") {
@@ -96,6 +97,7 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
             }
         }
 
+        print("DiaryRepo :: 압축시작!")
         let savePath: String = tempZipPath()
         let zip = SSZipArchive.init(path: savePath)
         zip.open()

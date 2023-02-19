@@ -55,6 +55,7 @@ public protocol DiaryRepository {
     
     // Backup로직
     func backUp() -> [Data]
+    func restoreWithJson()
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
@@ -668,6 +669,11 @@ public final class DiaryRepositoryImp: DiaryRepository {
             }
         }
         
+        print("DiaryRepo :: return!")
         return backupDataArr
+    }
+    
+    public func restoreWithJson() {
+        
     }
 }

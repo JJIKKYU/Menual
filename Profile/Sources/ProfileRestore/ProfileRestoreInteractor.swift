@@ -52,7 +52,37 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
         listener?.pressedProfileRestoreBackBtn(isOnlyDetach: isOnlyDetach)
     }
     
+    func tempZipPath() -> String {
+        var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+        path += "/\(UUID().uuidString).zip"
+        return path
+    }
+    
+    /// 유저가 선택한 파일이 MenualZipFile인지 체크
+    ///  url - 유저의 zip file URL (zip이 아닐 수도 있음)
+    func checkIsMenualZipFile(url: URL) {
+        print("ProfileRestore :: checkIsMenualZipFile!")
+        
+        var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+        path += "/jsonTest/"
+        
+        // 메뉴얼 저장된게 없으면 메뉴얼 Zip파일이 아니라고 판단
+        var isDiaryJson: Bool = false
+
+        SSZipArchive.unzipFile(atPath: url.path, toDestination: path) { fileName, b, c, d in
+            print("ProfileRestore :: \(fileName), \(b), \(c) / \(d)")
+            if fileName == "diary.json" {
+                isDiaryJson = true
+            }
+        } completionHandler: { a, b, error in
+            print("ProfileRestore :: \(a), \(b), error = \(error), isDiaryJson = \(isDiaryJson)")
+            // isDiaryJson == true -> MenualZipFile
+        }
+    }
+    
     func restoreDiary(url: URL) {
+        checkIsMenualZipFile(url: url)
+        /*
         clearDocumentFolder()
         var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         let newPath = path
@@ -65,6 +95,7 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
             print("ProfileRestore :: \(a), \(b), error = \(error)")
             self.restartAppWithPush()
         }
+         */
 
         // SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
 //        let realm = try? Realm(fileURL: URL(string: "\(newPath)/default.realm")!)
