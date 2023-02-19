@@ -823,7 +823,7 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                         // OriginalImage ViewModel에 넘기기
                         self.listener?.originalImageDataRelay.accept(self.fixImageOrientation(image).jpeg(.low))
                         // OriginalImage를 줄여서 Thumbnail을 만들어서 ViewModel에 넘기기
-                        if let thumbImageData = UIImage().imageWithImage(sourceImage: self.fixImageOrientation(image), scaledToWidth: 150).jpeg(.medium) {
+                        if let thumbImageData = UIImage().imageWithImage(sourceImage: self.fixImageOrientation(image), scaledToWidth: 150).jpeg(.high) {
                             self.listener?.thumbImageDataRelay.accept(thumbImageData)
                         }
 
