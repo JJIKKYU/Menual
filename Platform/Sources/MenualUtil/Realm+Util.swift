@@ -33,8 +33,9 @@ extension Object {
             } else if let nestedListObject = self[prop.name] as? RLMSwiftCollectionBase {
                 var objects = [[String: Any]]()
                 for index in 0..<nestedListObject._rlmCollection.count  {
-                    let object = nestedListObject._rlmCollection[index] as! Object
-                    objects.append(object.toDictionary())
+                    if let object = nestedListObject._rlmCollection[index] as? Object {
+                        objects.append(object.toDictionary())
+                    }
                 }
                 mutabledic[prop.name] = objects
             }

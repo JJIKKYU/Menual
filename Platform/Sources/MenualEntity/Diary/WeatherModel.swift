@@ -64,11 +64,13 @@ public class WeatherModelRealm: EmbeddedObject, Codable {
     public required init(from decoder: Decoder) throws {
         super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        weather = try container.decode(Weather.self, forKey: .weather)
+        weather = try container.decode(Weather?.self, forKey: .weather)
         detailText = try container.decode(String.self, forKey: .detailText)
     }
     
     public func encode(to encoder: Encoder) throws {
-        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(weather, forKey: .weather)
+        try container.encode(detailText, forKey: .detailText)
     }
 }

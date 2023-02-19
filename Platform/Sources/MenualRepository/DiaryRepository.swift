@@ -599,25 +599,25 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         guard let realm = Realm.safeInit() else { return }
         
-        let diaryModelRealm = realm.objects(DiaryModelRealm.self)
-        
-        var objectDictionaries = [NSDictionary]()
-        
+        var objectDictionaries = [[String: Any]]()
         // Diary
         let diaryModelRealmAllObjects = realm.objects(DiaryModelRealm.self)
         for object in diaryModelRealmAllObjects {
             let dictionary = object.toDictionary()
-            print("DiaryRepo :: dic = \(dictionary)")
+            objectDictionaries.append(dictionary)
             
-            do {
-                let jsonData = try JSONEncoder().encode(object)
-                let jsonString = String(data: jsonData, encoding: .utf8)
-                guard let printJsonString = jsonString else { return }
-                print("DiaryModelRealm :: \(printJsonString)")
-            } catch {
-                print("DiaryModelRealm :: Json 출력이 실패했습니다. \(error)")
-            }
+            print("DiaryRepo :: dic = \(dictionary)")
         }
+        
+        do {
+            let jsonData = try JSONEncoder().encode(objectDictionaries)
+            let jsonString = String(data: jsonData, encoding: .utf8)
+            guard let printJsonString = jsonString else { return }
+            print("DiaryModelRealm :: \(printJsonString)")
+        } catch {
+            print("DiaryModelRealm :: Json 출력이 실패했습니다. \(error)")
+        }
+        
         
         // Moments
     }

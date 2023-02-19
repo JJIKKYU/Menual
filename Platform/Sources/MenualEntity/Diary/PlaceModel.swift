@@ -73,11 +73,13 @@ public class PlaceModelRealm: EmbeddedObject, Codable {
     public required init(from decoder: Decoder) throws {
         super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        place = try container.decode(Place.self, forKey: .place)
+        place = try container.decode(Place?.self, forKey: .place)
         detailText = try container.decode(String.self, forKey: .detailText)
     }
     
     public func encode(to encoder: Encoder) throws {
-        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(place, forKey: .place)
+        try container.encode(detailText, forKey: .detailText)
     }
 }

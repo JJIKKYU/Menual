@@ -154,17 +154,17 @@ public class DiaryModelRealm: Object, Codable {
         _id = try container.decode(ObjectId.self, forKey: ._id)
         pageNum = try container.decode(Int.self, forKey: .pageNum)
         title = try container.decode(String.self, forKey: .title)
-        weather = try container.decode(WeatherModelRealm.self, forKey: .weather)
-        place = try container.decode(PlaceModelRealm.self, forKey: .place)
+        weather = try container.decode(WeatherModelRealm?.self, forKey: .weather)
+        place = try container.decode(PlaceModelRealm?.self, forKey: .place)
         desc = try container.decode(String.self, forKey: .desc)
         image = try container.decode(Bool.self, forKey: .image)
         readCount = try container.decode(Int.self, forKey: .readCount)
         createdAt = try container.decode(Date.self, forKey: .createdAt)
         isDeleted = try container.decode(Bool.self, forKey: .isDeleted)
         replies = try container.decode(List<DiaryReplyModelRealm>.self, forKey: .replies)
-        lastMomentsDate = try container.decode(Date.self, forKey: .lastMomentsDate)
+        lastMomentsDate = try container.decode(Date?.self, forKey: .lastMomentsDate)
         isHide = try container.decode(Bool.self, forKey: .isHide)
-        reminder = try container.decode(ReminderModelRealm.self, forKey: .reminder)
+        reminder = try container.decode(ReminderModelRealm?.self, forKey: .reminder)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -183,7 +183,5 @@ public class DiaryModelRealm: Object, Codable {
         try container.encode(lastMomentsDate, forKey: .lastMomentsDate)
         try container.encode(isHide, forKey: .isHide)
         try container.encode(reminder, forKey: .reminder)
-
-        
     }
 }

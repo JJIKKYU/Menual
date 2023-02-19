@@ -56,6 +56,12 @@ public class DiaryReplyModelRealm: EmbeddedObject, Codable {
     }
     
     public func encode(to encoder: Encoder) throws {
-        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(uuid, forKey: .uuid)
+        try container.encode(replyNum, forKey: .replyNum)
+        try container.encode(diaryUuid, forKey: .diaryUuid)
+        try container.encode(desc, forKey: .desc)
+        try container.encode(createdAt, forKey: .createdAt)
+        try container.encode(isDeleted, forKey: .isDeleted)
     }
 }
