@@ -169,7 +169,7 @@ public class DiaryModelRealm: Object, Codable {
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(_id, forKey: ._id)
+        try container.encode(_id.stringValue, forKey: ._id)
         try container.encode(pageNum, forKey: .pageNum)
         try container.encode(title, forKey: .title)
         try container.encode(weather, forKey: .weather)

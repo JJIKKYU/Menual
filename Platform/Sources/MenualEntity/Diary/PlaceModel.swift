@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 // MARK: - Enum
-public enum Place: String, PersistableEnum, Codable {
+public enum Place: String, PersistableEnum {
     case place = ""
     case home = "집"
     case bus = "버스"
@@ -73,13 +73,19 @@ public class PlaceModelRealm: EmbeddedObject, Codable {
     public required init(from decoder: Decoder) throws {
         super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        place = try container.decode(Place?.self, forKey: .place)
+         // place = try container.decode(Place.self, forKey: .place)
+        if let placeRawValue = try container.decodeIfPresent(String.self, forKey: .place),
+            let place = Place(rawValue: placeRawValue) {
+            self.place = place
+        } else {
+            self.place = nil
+        }
         detailText = try container.decode(String.self, forKey: .detailText)
     }
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(place, forKey: .place)
+        try container.encode(place?.rawValue ?? "", forKey: .place)
         try container.encode(detailText, forKey: .detailText)
     }
 }

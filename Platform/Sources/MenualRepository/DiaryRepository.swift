@@ -598,27 +598,45 @@ public final class DiaryRepositoryImp: DiaryRepository {
         print("DiaryRepo :: backup!")
         
         guard let realm = Realm.safeInit() else { return }
-        
-        var objectDictionaries = [[String: Any]]()
+
         // Diary
-        let diaryModelRealmAllObjects = realm.objects(DiaryModelRealm.self)
-        for object in diaryModelRealmAllObjects {
-            let dictionary = object.toDictionary()
-            objectDictionaries.append(dictionary)
-            
-            print("DiaryRepo :: dic = \(dictionary)")
+        let diaryArray = realm
+            .objects(DiaryModelRealm.self)
+            .toArray(type: DiaryModelRealm.self)
+        let diaryData = try? JSONEncoder().encode(diaryArray)
+        if let jsonString = String(data: diaryData ?? Data(), encoding: .utf8) {
+            print("DiaryRepo :: diary = \(jsonString)")
         }
-        
-        do {
-            let jsonData = try JSONEncoder().encode(objectDictionaries)
-            let jsonString = String(data: jsonData, encoding: .utf8)
-            guard let printJsonString = jsonString else { return }
-            print("DiaryModelRealm :: \(printJsonString)")
-        } catch {
-            print("DiaryModelRealm :: Json 출력이 실패했습니다. \(error)")
-        }
-        
         
         // Moments
+        let momentsArray =  realm
+            .objects(MomentsRealm.self)
+            .toArray(type: MomentsRealm.self)
+        let momentsData = try? JSONEncoder().encode(momentsArray)
+        if let jsonString = String(data: momentsData ?? Data(), encoding: .utf8) {
+            print("DiaryRepo :: moments = \(jsonString)")
+        }
+        
+        // TempSave
+        let tempSaveArray = realm
+            .objects(TempSaveModelRealm.self)
+            .toArray(type: TempSaveModelRealm.self)
+        let tempSaveData = try? JSONEncoder().encode(tempSaveArray)
+        if let jsonString = String(data: tempSaveData ?? Data(), encoding: .utf8) {
+            print("DiaryRepo :: tempSave :: \(jsonString)")
+        }
+        
+        // DiarySearch
+        let diarySearchArray = realm
+            .objects(DiarySearchModelRealm.self)
+            .toArray(type: DiarySearchModelRealm.self)
+        let diarySearchData = try? JSONEncoder().encode(diarySearchArray)
+        if let jsonString = String(data: diarySearchData ?? Data(), encoding: .utf8) {
+            print("DiaryRepo :: search :: \(jsonString)")
+        }
+        
+        // let decoded = String(data: jsonData!, encoding: .utf8)!
+        // print("DiaryRepo :: jsonData = \(jsonData)")
+
     }
 }
