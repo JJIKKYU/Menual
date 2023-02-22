@@ -7,6 +7,7 @@
 
 import RIBs
 import RxSwift
+import RxRelay
 import ZipArchive
 import RealmSwift
 import MenualUtil
@@ -30,6 +31,9 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
 
     weak var router: ProfileRestoreRouting?
     weak var listener: ProfileRestoreListener?
+    
+    private let disposeBag = DisposeBag()
+    private let menualRestoreFileRelay = BehaviorRelay<Bool>(value: false)
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -40,7 +44,7 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
 
     override func didBecomeActive() {
         super.didBecomeActive()
-        // TODO: Implement business logic here.
+        bind()
     }
 
     override func willResignActive() {
@@ -50,6 +54,22 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
     
     func pressedBackBtn(isOnlyDetach: Bool) {
         listener?.pressedProfileRestoreBackBtn(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func bind() {
+        menualRestoreFileRelay
+            .subscribe(onNext: { [weak self] isRestoreMenualFile in
+                guard let self = self else { return }
+                
+                switch isRestoreMenualFile {
+                case true:
+                    print("ProfileRestore :: isRestoreMenualFile! = true")
+
+                case false:
+                    print("ProfileRestore :: isRestoreMenualFile! = false")
+                }
+            })
+            .disposed(by: disposeBag)
     }
     
     func tempZipPath() -> String {
@@ -74,8 +94,10 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
             if fileName == "diary.json" {
                 isDiaryJson = true
             }
-        } completionHandler: { a, b, error in
+        } completionHandler: { [weak self] a, b, error in
+            guard let self = self else { return }
             print("ProfileRestore :: \(a), \(b), error = \(error), isDiaryJson = \(isDiaryJson)")
+            self.menualRestoreFileRelay.accept(isDiaryJson)
             // isDiaryJson == true -> MenualZipFile
         }
     }

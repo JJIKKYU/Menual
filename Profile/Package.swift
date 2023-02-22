@@ -117,6 +117,8 @@ let package = Package(
         .target(
             name: "ProfileRestore",
             dependencies: [
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
                 .product(name: "RIBs", package: "RIBs"),
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
