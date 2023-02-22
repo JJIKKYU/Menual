@@ -34,6 +34,8 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
     
     private let disposeBag = DisposeBag()
     private let menualRestoreFileRelay = BehaviorRelay<Bool>(value: false)
+    var fileName: String?
+    var fileCreatedAt: String?
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
@@ -64,6 +66,9 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
                 switch isRestoreMenualFile {
                 case true:
                     print("ProfileRestore :: isRestoreMenualFile! = true")
+                    // Valid한 file만 parsing
+                    let restoreFile = self.parseJsonFile()
+                    print("ProfileRestore :: restoreFile = \(restoreFile)")
 
                 case false:
                     print("ProfileRestore :: isRestoreMenualFile! = false")
@@ -83,23 +88,109 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
     func checkIsMenualZipFile(url: URL) {
         print("ProfileRestore :: checkIsMenualZipFile!")
         
+        self.fileName = url.lastPathComponent
+        self.fileCreatedAt = getFileCreatedAt(url: url)
+
         var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
         path += "/jsonTest/"
         
         // 메뉴얼 저장된게 없으면 메뉴얼 Zip파일이 아니라고 판단
         var isDiaryJson: Bool = false
-
+        
+        // 압축 해제 시작
         SSZipArchive.unzipFile(atPath: url.path, toDestination: path) { fileName, b, c, d in
             print("ProfileRestore :: \(fileName), \(b), \(c) / \(d)")
+
+            // 파일에 diaryJson이 있다면 메뉴얼 파일이므로 isDiaryJson을 true로 변경
             if fileName == "diary.json" {
                 isDiaryJson = true
             }
         } completionHandler: { [weak self] a, b, error in
             guard let self = self else { return }
+
             print("ProfileRestore :: \(a), \(b), error = \(error), isDiaryJson = \(isDiaryJson)")
+
             self.menualRestoreFileRelay.accept(isDiaryJson)
-            // isDiaryJson == true -> MenualZipFile
         }
+    }
+
+    /// 파일 생성 일자 확인하는 함수
+    func getFileCreatedAt(url: URL) -> String? {
+        let fileManager = FileManager.default
+
+        do {
+            let attributes = try fileManager.attributesOfItem(atPath: url.path)
+            let creationDate = attributes[.creationDate] as? Date
+            
+            if let creationDate = creationDate {
+                return creationDate.toString()
+            }
+        } catch {
+            print("Error getting file attributes: \(error.localizedDescription)")
+        }
+
+        return nil
+    }
+    
+    /// Cache 폴더에 미리 압축한 내용을 확인하고 RestoreFile에 캐시
+    func parseJsonFile() -> RestoreFile? {
+        print("ProfileRestore :: parseJsonFile!")
+        // Cache폴더에 복원하고자 하는 File을 미리 압축을 해제했음.
+        var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+        path += "/jsonTest/"
+
+        var restoreFile = RestoreFile(fileName: self.fileName ?? "",
+                                      createdDate: self.fileCreatedAt ?? "",
+                                      isVaildMenualRestoreFile: true
+        )
+
+        // FileManager에서 복원하고자 하는 파일을 캐시
+        let fileManager = FileManager.default
+        let decoder = JSONDecoder()
+        do {
+            let fileURLs = try fileManager.contentsOfDirectory(atPath: path)
+
+            for fileURL in fileURLs {
+                print("ProfileRestore :: File name: \(fileURL)")
+                let filePath = URL(fileURLWithPath: path + fileURL)
+                print("filePath = \(filePath)")
+                switch fileURL {
+                case "diary.json":
+                    if let diaryJsonData = try? Data(contentsOf: filePath) {
+                        restoreFile.diaryJson = diaryJsonData
+                    }
+
+                case "diarySearch.json":
+                    if let diarySearchData = try? Data(contentsOf: filePath) {
+                        restoreFile.diarySearchJson = diarySearchData
+                    }
+
+                case "moments.json":
+                    if let momentsData = try? Data(contentsOf: filePath) {
+                        restoreFile.momentsJson = momentsData
+                    }
+                    
+                case "password.json":
+                    if let passwordData = try? Data(contentsOf: filePath) {
+                        restoreFile.passwordJson = passwordData
+                    }
+
+                case "tempSave.json":
+                    if let tempSaveData = try? Data(contentsOf: filePath) {
+                        restoreFile.tempSaveJson = tempSaveData
+                    }
+
+                default:
+                    if let iamgeData = try? Data(contentsOf: filePath) {
+                        restoreFile.imageDataArr?.append(iamgeData)
+                    }
+                }
+            }
+        } catch {
+            print("Error getting directory contents: \(error.localizedDescription)")
+        }
+        
+        return restoreFile
     }
     
     func restoreDiary(url: URL) {
