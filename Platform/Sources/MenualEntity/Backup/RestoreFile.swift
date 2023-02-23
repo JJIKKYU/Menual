@@ -15,22 +15,38 @@ public struct RestoreFile {
     /// 복원하고자 하는 파일이 메뉴얼 복원 파일인지 체크
     public var isVaildMenualRestoreFile: Bool
 
-    public var diaryJson: Data?
-    public var diarySearchJson: Data?
-    public var momentsJson: Data?
-    public var passwordJson: Data?
-    public var tempSaveJson: Data?
-    public var imageDataArr: [Data]?
+    public var diaryData: Data?
+    public var diarySearchData: Data?
+    public var momentsData: Data?
+    public var passwordData: Data?
+    public var tempSaveData: Data?
+    public var backupHistoryData: Data?
+    public var imageDataArr: [ImageFile] = []
     
-    public init(fileName: String, createdDate: String, isVaildMenualRestoreFile: Bool, diaryJson: Data? = nil, diarySearchJson: Data? = nil, momentsJson: Data? = nil, passwordJson: Data? = nil, tempSaveJson: Data? = nil, imageDataArr: [Data]? = nil) {
+    public init(fileName: String, createdDate: String, isVaildMenualRestoreFile: Bool) {
         self.fileName = fileName
         self.createdDate = createdDate
         self.isVaildMenualRestoreFile = isVaildMenualRestoreFile
-        self.diaryJson = diaryJson
-        self.diarySearchJson = diarySearchJson
-        self.momentsJson = momentsJson
-        self.passwordJson = passwordJson
-        self.tempSaveJson = tempSaveJson
-        self.imageDataArr = imageDataArr
     }
+}
+
+public struct ImageFile {
+    public var fileName: String
+    public var Data: Data
+    
+    public init(fileName: String, Data: Data) {
+        self.fileName = fileName
+        self.Data = Data
+    }
+}
+
+/// 최종적으로 백업/복원 해야하는 파일 리스트
+/// Realm 파일이 추가되면 항상 추가해야하는 enum
+public enum RestoreFileType: String {
+    case diary = "diary.json"
+    case diarySearch = "diarySearch.json"
+    case moments = "moments.json"
+    case password = "password.json"
+    case tempSave = "tempSave.json"
+    case backupHistory = "backupHistory.json"
 }

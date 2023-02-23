@@ -67,8 +67,11 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
                 case true:
                     print("ProfileRestore :: isRestoreMenualFile! = true")
                     // Valid한 file만 parsing
-                    let restoreFile = self.parseJsonFile()
-                    print("ProfileRestore :: restoreFile = \(restoreFile)")
+                    guard let restoreFile = self.parseJsonFile() else {
+                        // 오류 핸들러 UI 표시
+                        return
+                    }
+                    print("ProfileRestore :: restoreFile = \(restoreFile.fileName), \(restoreFile.createdDate)")
 
                 case false:
                     print("ProfileRestore :: isRestoreMenualFile! = false")
@@ -135,12 +138,14 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
     /// Cache 폴더에 미리 압축한 내용을 확인하고 RestoreFile에 캐시
     func parseJsonFile() -> RestoreFile? {
         print("ProfileRestore :: parseJsonFile!")
+        guard let fileName = fileName,
+              let fileCreatedAt = fileCreatedAt else { return nil }
         // Cache폴더에 복원하고자 하는 File을 미리 압축을 해제했음.
         var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
         path += "/jsonTest/"
 
-        var restoreFile = RestoreFile(fileName: self.fileName ?? "",
-                                      createdDate: self.fileCreatedAt ?? "",
+        var restoreFile = RestoreFile(fileName: fileName,
+                                      createdDate: fileCreatedAt,
                                       isVaildMenualRestoreFile: true
         )
 
@@ -154,35 +159,38 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
                 print("ProfileRestore :: File name: \(fileURL)")
                 let filePath = URL(fileURLWithPath: path + fileURL)
                 print("filePath = \(filePath)")
-                switch fileURL {
-                case "diary.json":
-                    if let diaryJsonData = try? Data(contentsOf: filePath) {
-                        restoreFile.diaryJson = diaryJsonData
+                if let restoreFileType = RestoreFileType(rawValue: fileURL) {
+                    switch restoreFileType {
+                    case .diary:
+                        if let diaryJsonData = try? Data(contentsOf: filePath) {
+                            restoreFile.diaryData = diaryJsonData
+                        }
+                    case .diarySearch:
+                        if let diarySearchData = try? Data(contentsOf: filePath) {
+                            restoreFile.diarySearchData = diarySearchData
+                        }
+                    case .moments:
+                        if let momentsData = try? Data(contentsOf: filePath) {
+                            restoreFile.momentsData = momentsData
+                        }
+                    case .password:
+                        if let passwordData = try? Data(contentsOf: filePath) {
+                            restoreFile.passwordData = passwordData
+                        }
+                    case .tempSave:
+                        if let tempSaveData = try? Data(contentsOf: filePath) {
+                            restoreFile.tempSaveData = tempSaveData
+                        }
+                    case .backupHistory:
+                        if let backupHistoryData = try? Data(contentsOf: filePath) {
+                            restoreFile.backupHistoryData = backupHistoryData
+                        }
                     }
-
-                case "diarySearch.json":
-                    if let diarySearchData = try? Data(contentsOf: filePath) {
-                        restoreFile.diarySearchJson = diarySearchData
-                    }
-
-                case "moments.json":
-                    if let momentsData = try? Data(contentsOf: filePath) {
-                        restoreFile.momentsJson = momentsData
-                    }
-                    
-                case "password.json":
-                    if let passwordData = try? Data(contentsOf: filePath) {
-                        restoreFile.passwordJson = passwordData
-                    }
-
-                case "tempSave.json":
-                    if let tempSaveData = try? Data(contentsOf: filePath) {
-                        restoreFile.tempSaveJson = tempSaveData
-                    }
-
-                default:
-                    if let iamgeData = try? Data(contentsOf: filePath) {
-                        restoreFile.imageDataArr?.append(iamgeData)
+                } else {
+                    if fileURL == ".DS_Store" { continue }
+                    if let imageData = try? Data(contentsOf: filePath) {
+                        let imageFile = ImageFile(fileName: fileURL, Data: imageData)
+                        restoreFile.imageDataArr.append(imageFile)
                     }
                 }
             }

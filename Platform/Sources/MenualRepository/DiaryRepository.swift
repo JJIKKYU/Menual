@@ -659,6 +659,17 @@ public final class DiaryRepositoryImp: DiaryRepository {
             print("DiaryRepo :: password :: \(jsonString)")
         }
         
+        // BackupHistory
+        let backupHistoryArr = realm
+            .objects(BackupHistoryModelRealm.self)
+            .toArray(type: BackupHistoryModelRealm.self)
+        if let backupHistoryData = try? encoder.encode(backupHistoryArr),
+           let jsonString = String(data: backupHistoryData, encoding: .utf8) {
+            backupDataArr.append(backupHistoryData)
+            backupDataDic["backupHistory"] = backupHistoryData
+            print("DiaryRepo :: backupHistory :: \(jsonString)")
+        }
+        
         for data in backupDataDic {
             do {
                 let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
