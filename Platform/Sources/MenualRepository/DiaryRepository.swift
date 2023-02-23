@@ -743,13 +743,35 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 realm.add(diaryModelRealmArr)
             }
         }
+
+        /// MomentsData
+        if let momentsData = restoreFile.momentsData,
+           let momentsDataArr = try? decoder.decode([MomentsRealm].self, from: momentsData) {
+            print("DiaryRepo :: moemntsDataArr = \(momentsDataArr)")
+        }
+
+        if let passwordData = restoreFile.passwordData,
+           let passwordDataArr = try? decoder.decode([PasswordModelRealm].self, from: passwordData) {
+            
+        }
+        
+        if let tempSaveData = restoreFile.tempSaveData,
+           let tempSaveDataArr = try? decoder.decode([TempSaveModelRealm].self, from: tempSaveData) {
+            
+        }
+        
+        if let backupHistoryData = restoreFile.backupHistoryData,
+           let backupHistoryDataArr = try? decoder.decode([BackupHistoryModelRealm].self, from: backupHistoryData) {
+            
+        }
     }
     
     private func restoreWithJsonSaveImageData(diaryModelRealm: [DiaryModelRealm], imageFiles: [ImageFile]) {
-        guard let realm = Realm.safeInit() else {
-            return
-        }
+        /// Key - 원래 ObjectId
+        /// Value - 바뀐 ObjectId
         var objectIdSet: [String: String] = [:]
+
+        // 신/구 ObjectId를 해쉬 형태로 세팅
         for diary in diaryModelRealm {
             guard let prevObjectId = diary.prevObjectId else { return }
             objectIdSet[prevObjectId] = diary.uuid
@@ -757,7 +779,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         
-        
+        // 바뀐 ObjectId 이름으로 변경하여 이미지 세팅
         for imageFile in imageFiles {
             guard let newObjectId = objectIdSet[imageFile.fileName] else { return }
             let imageURL = documentDirectory.appendingPathComponent(newObjectId + imageFile.type.rawValue)
