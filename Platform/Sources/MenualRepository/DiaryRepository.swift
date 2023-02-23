@@ -55,7 +55,7 @@ public protocol DiaryRepository {
     
     // Backup로직
     func backUp() -> [Data]
-    func restoreWithJson()
+    func restoreWithJson(restoreFile: RestoreFile)
 }
 
 public final class DiaryRepositoryImp: DiaryRepository {
@@ -319,6 +319,47 @@ public final class DiaryRepositoryImp: DiaryRepository {
         // 리마인더가 있따면 함께 삭제
         if let reminder = info.reminder {
             UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder.uuid])
+        }
+    }
+    
+    public func deleteDiaries() {
+        guard let realm = Realm.safeInit() else { return }
+        let diaries = realm.objects(DiaryModelRealm.self)
+        let searchData = realm.objects(DiarySearchModelRealm.self)
+        var willDeleteImageData: [String] = []
+        var willDeleteSearchData: [DiarySearchModelRealm] = []
+        var willDeleteReminderData: [String] = []
+        
+        diaries.forEach { diary in
+
+            realm.safeWrite {
+                diary.isDeleted = true
+            }
+
+            if diary.image {
+                willDeleteImageData.append(diary.uuid)
+            }
+            
+            if let searchData = searchData.filter ({ $0.diaryUuid == diary.uuid }).first {
+                willDeleteSearchData.append(searchData)
+            }
+            
+            if let reminder = diary.reminder {
+                willDeleteReminderData.append(reminder.uuid)
+            }
+        }
+
+        realm.safeWrite {
+            realm.delete(willDeleteSearchData)
+            realm.add(diaries, update: .modified)
+        }
+
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: willDeleteReminderData)
+        
+        willDeleteImageData.forEach { uuid in
+            deleteImageFromDocumentDirectory(diaryUUID: uuid) { isDeleted in
+                print("diaryRepo :: deleteDiaries! 이미지도 함께 삭제합니다.")
+            }
         }
     }
     
@@ -684,7 +725,21 @@ public final class DiaryRepositoryImp: DiaryRepository {
         return backupDataArr
     }
     
-    public func restoreWithJson() {
+    public func restoreWithJson(restoreFile: RestoreFile) {
+        print("DiaryRepo :: restoreWithJson! restoreFile = \(restoreFile)")
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        let decoder = JSONDecoder()
         
+        /// DiaryData
+        if let diaryData = restoreFile.diaryData,
+           let diaryModelRealmArr = try? decoder.decode([DiaryModelRealm].self, from: diaryData) {
+            deleteDiaries()
+            
+            realm.safeWrite {
+                realm.add(diaryModelRealmArr)
+            }
+        }
     }
 }

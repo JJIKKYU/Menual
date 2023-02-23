@@ -13,6 +13,7 @@ import RealmSwift
 import MenualUtil
 import MenualEntity
 import UserNotifications
+import MenualRepository
 
 public protocol ProfileRestoreRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
@@ -27,19 +28,26 @@ public protocol ProfileRestoreListener: AnyObject {
     func pressedProfileRestoreBackBtn(isOnlyDetach: Bool)
 }
 
+public protocol ProfileRestoreInteractorDependency {
+    var diaryRepository: DiaryRepository { get }
+}
+
 final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresentable>, ProfileRestoreInteractable, ProfileRestorePresentableListener {
 
     weak var router: ProfileRestoreRouting?
     weak var listener: ProfileRestoreListener?
+    private let dependency: ProfileRestoreInteractorDependency
     
     private let disposeBag = DisposeBag()
     private let menualRestoreFileRelay = BehaviorRelay<Bool>(value: false)
     var fileName: String?
     var fileCreatedAt: String?
 
-    // TODO: Add additional dependencies to constructor. Do not perform any logic
-    // in constructor.
-    override init(presenter: ProfileRestorePresentable) {
+    init(
+        presenter: ProfileRestorePresentable,
+        dependency: ProfileRestoreInteractorDependency
+    ) {
+        self.dependency = dependency
         super.init(presenter: presenter)
         presenter.listener = self
     }
@@ -72,6 +80,10 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
                         return
                     }
                     print("ProfileRestore :: restoreFile = \(restoreFile.fileName), \(restoreFile.createdDate)")
+                    self.dependency.diaryRepository
+                        .restoreWithJson(restoreFile: restoreFile)
+
+                    // self.migrateMenual(restoreFile: restoreFile)
 
                 case false:
                     print("ProfileRestore :: isRestoreMenualFile! = false")
@@ -230,6 +242,18 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
         // restartAppWithPush()
     }
     
+    /// 최종적으로 메뉴얼에 백업 데이터 마이그레이션 작업
+    func migrateMenual(restoreFile: RestoreFile) {
+        do {
+            if let data = restoreFile.diaryData  {
+                let json = try JSONDecoder().decode([DiaryModelRealm].self, from: data)
+                
+            }
+        } catch {
+            print("ProfileRestore :: migrateMenual Error! \(error)")
+        }
+    }
+
     func clearDocumentFolder() {
         let fileManager = FileManager.default
         let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]

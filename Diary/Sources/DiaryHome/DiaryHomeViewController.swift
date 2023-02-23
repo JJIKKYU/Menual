@@ -527,6 +527,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         myMenualTableView.insertRows(at: [IndexPath(row: row, section: section)], with: .automatic)
         myMenualTableView.endUpdates()
     }
+    
+    func insertTableViewRow(section: Int, rows: [Int]) {
+        myMenualTableView.beginUpdates()
+        let indexPaths = rows.map { IndexPath(item: $0, section: section)}
+        myMenualTableView.insertRows(at: indexPaths, with: .automatic)
+        myMenualTableView.endUpdates()
+    }
 }
 
 // MARK: - IBAction

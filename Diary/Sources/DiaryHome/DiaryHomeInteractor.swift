@@ -41,6 +41,7 @@ public protocol DiaryHomePresentable: Presentable {
 
     func reloadTableViewRow(section: Int, row: Int)
     func insertTableViewRow(section: Int, row: Int)
+    func insertTableViewRow(section: Int, rows: [Int])
     func deleteTableViewRow(section: Int, row: Int)
     
     func insertTableViewSection()
@@ -183,46 +184,74 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     self.setOnboardingDiaries()
                     self.presenter.reloadTableView()
                     
-                case .update(let model, _, let insertions, let modifications):
+                case .update(let model, let deletions, let insertions, let modifications):
                     print("DiaryHome :: update! = \(model)")
 
                     // diaryModelRealm이 업데이트 될 때마다 온보딩 다이어리 업데이트가 필요하면 진행하도록
                     self.setOnboardingDiaries()
 
                     if insertions.count > 0 {
-                        guard let insertionsRow: Int = insertions.first else { return }
-                        print("DiaryHome :: realmObserve = insertion = \(insertions)")
-                        let diary: DiaryModelRealm = model[insertionsRow]
-                        let sectionName: String = diary.createdAt.toStringWithYYYYMM()
+                        for insertionRow in insertions {
+                            let diary: DiaryModelRealm = model[insertionRow]
+                            let sectionName: String = diary.createdAt.toStringWithYYYYMM()
 
-                        // 글이 하나도 없을 경우에는 sectionIndex 0에 작성될 수 있도록
-                        let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex ?? 0
-                        var needInsertSection: Bool = false
-                        if self.diaryDictionary[sectionName] == nil {
-                            print("DiaryHome :: test! = nil입니다!")
-                            
-                            for secName in self.arraySerction {
-                                self.diaryDictionary["\(secName)"]?.sectionIndex += 1
+                            // 글이 하나도 없을 경우에는 sectionIndex 0에 작성될 수 있도록
+                            let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex ?? 0
+                            var needInsertSection: Bool = false
+                            if self.diaryDictionary[sectionName] == nil {
+                                for secName in self.arraySerction {
+                                    self.diaryDictionary[secName]?.sectionIndex += 1
+                                }
+                                self.diaryDictionary[sectionName] = DiaryHomeSectionModel(sectionName: sectionName,
+                                                                                          sectionIndex: 0,
+                                                                                          diaries: []
+                                )
+                                needInsertSection = true
                             }
 
-                            self.diaryDictionary[sectionName] = DiaryHomeSectionModel(sectionName: sectionName, sectionIndex: 0, diaries: [])
-                            needInsertSection = true
+                            // 전체 pageNum 추려내기
+                            let lastPageNum = model.filter { $0.isDeleted == false }
+                                .sorted { $0.createdAt < $1.createdAt }
+                                .first?.pageNum ?? 0
+                            
+                            self.lastPageNumRelay.accept(lastPageNum)
+                            self.diaryDictionary[sectionName]?.diaries.insert(diary, at: 0)
+                            self.presenter.insertTableViewRow(section: sectionIndex, row: 0)
                         }
-
-                        // 전체 PageNum 추려내기
-                        let lastPageNum = model.filter { $0.isDeleted == false }
-                            .sorted { $0.createdAt > $1.createdAt }
-                            .first?.pageNum ?? 0
                         
-                        print("DiaryHome :: test! = \(lastPageNum)")
-                        self.lastPageNumRelay.accept(lastPageNum)
-
-                        self.diaryDictionary[sectionName]?.diaries.insert(diary, at: 0)
-                        print("DiaryHome :: test! = \(self.diaryDictionary[sectionName]?.diaries)")
-                        if needInsertSection {
-                            // self.presenter.insertTableViewSection()
-                        }
-                        self.presenter.insertTableViewRow(section: sectionIndex, row: 0)
+//                        guard let insertionsRow: Int = insertions.first else { return }
+//                        print("DiaryHome :: realmObserve = insertion = \(insertions)")
+//                        let diary: DiaryModelRealm = model[insertionsRow]
+//                        let sectionName: String = diary.createdAt.toStringWithYYYYMM()
+//
+//                        // 글이 하나도 없을 경우에는 sectionIndex 0에 작성될 수 있도록
+//                        let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex ?? 0
+//                        var needInsertSection: Bool = false
+//                        if self.diaryDictionary[sectionName] == nil {
+//                            print("DiaryHome :: test! = nil입니다!")
+//
+//                            for secName in self.arraySerction {
+//                                self.diaryDictionary["\(secName)"]?.sectionIndex += 1
+//                            }
+//
+//                            self.diaryDictionary[sectionName] = DiaryHomeSectionModel(sectionName: sectionName, sectionIndex: 0, diaries: [])
+//                            needInsertSection = true
+//                        }
+//
+//                        // 전체 PageNum 추려내기
+//                        let lastPageNum = model.filter { $0.isDeleted == false }
+//                            .sorted { $0.createdAt > $1.createdAt }
+//                            .first?.pageNum ?? 0
+//
+//                        print("DiaryHome :: test! = \(lastPageNum)")
+//                        self.lastPageNumRelay.accept(lastPageNum)
+//
+//                        self.diaryDictionary[sectionName]?.diaries.insert(diary, at: 0)
+//                        print("DiaryHome :: test! = \(self.diaryDictionary[sectionName]?.diaries)")
+//                        if needInsertSection {
+//                            // self.presenter.insertTableViewSection()
+//                        }
+//                        self.presenter.insertTableViewRow(section: sectionIndex, row: 0)
                     }
                         
                     if modifications.count > 0 {

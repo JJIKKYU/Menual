@@ -123,6 +123,10 @@ public class DiaryModelRealm: Object, Codable {
         self.reminder = reminder
     }
     
+    public convenience init(backupDic: [[String: Any]]) {
+        self.init()
+    }
+    
     public func updatePageNum(pageNum: Int) {
         self.pageNum = pageNum + 1
     }
@@ -151,7 +155,14 @@ public class DiaryModelRealm: Object, Codable {
     public required init(from decoder: Decoder) throws {
         super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        _id = try container.decode(ObjectId.self, forKey: ._id)
+
+        let time = Date()
+        let machine = Int.random(in: 100000 ..< 999999)
+        let pid = Int.random(in: 1000 ..< 9999)
+        let counter = String(Int.random(in: 100000 ..< 999999))
+        
+        _id = ObjectId(timestamp: time, machineId: machine, processId: pid)
+
         pageNum = try container.decode(Int.self, forKey: .pageNum)
         title = try container.decode(String.self, forKey: .title)
         weather = try container.decode(WeatherModelRealm?.self, forKey: .weather)
@@ -169,7 +180,7 @@ public class DiaryModelRealm: Object, Codable {
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(_id.stringValue, forKey: ._id)
+        try container.encode(_id, forKey: ._id)
         try container.encode(pageNum, forKey: .pageNum)
         try container.encode(title, forKey: .title)
         try container.encode(weather, forKey: .weather)

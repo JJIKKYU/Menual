@@ -124,6 +124,7 @@ let package = Package(
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "ZipArchive", package: "ZipArchive"),
                 .product(name: "MenualUtil", package: "Platform"),
+                .product(name: "MenualRepository", package: "Platform")
             ]
         ),
     ]

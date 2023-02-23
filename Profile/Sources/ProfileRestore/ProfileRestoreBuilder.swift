@@ -9,13 +9,11 @@ import RIBs
 import MenualRepository
 
 public protocol ProfileRestoreDependency: Dependency {
-    // TODO: Declare the set of dependencies required by this RIB, but cannot be
-    // created by this RIB.
+    var diaryRepository: DiaryRepository { get }
 }
 
-public final class ProfileRestoreComponent: Component<ProfileRestoreDependency> {
-
-    // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
+public final class ProfileRestoreComponent: Component<ProfileRestoreDependency>, ProfileRestoreInteractorDependency {
+    public var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
 
 // MARK: - Builder
@@ -34,7 +32,10 @@ public final class ProfileRestoreBuilder: Builder<ProfileRestoreDependency>, Pro
         let component = ProfileRestoreComponent(dependency: dependency)
         let viewController = ProfileRestoreViewController()
         viewController.screenName = "restore"
-        let interactor = ProfileRestoreInteractor(presenter: viewController)
+        let interactor = ProfileRestoreInteractor(
+            presenter: viewController,
+            dependency: component
+        )
         interactor.listener = listener
         return ProfileRestoreRouter(interactor: interactor, viewController: viewController)
     }
