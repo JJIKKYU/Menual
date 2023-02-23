@@ -59,6 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 if oldSchemaVersion <= 8 {
                     migration.create("BackupHistoryModelRealm")
                 }
+                
             }
         )
         

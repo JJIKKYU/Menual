@@ -731,15 +731,37 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         let decoder = JSONDecoder()
+        let fileManager = FileManager.default
         
         /// DiaryData
         if let diaryData = restoreFile.diaryData,
            let diaryModelRealmArr = try? decoder.decode([DiaryModelRealm].self, from: diaryData) {
+            restoreWithJsonSaveImageData(diaryModelRealm: diaryModelRealmArr, imageFiles: restoreFile.imageDataArr)
             deleteDiaries()
             
             realm.safeWrite {
                 realm.add(diaryModelRealmArr)
             }
+        }
+    }
+    
+    private func restoreWithJsonSaveImageData(diaryModelRealm: [DiaryModelRealm], imageFiles: [ImageFile]) {
+        guard let realm = Realm.safeInit() else {
+            return
+        }
+        var objectIdSet: [String: String] = [:]
+        for diary in diaryModelRealm {
+            guard let prevObjectId = diary.prevObjectId else { return }
+            objectIdSet[prevObjectId] = diary.uuid
+        }
+        
+        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        
+        
+        for imageFile in imageFiles {
+            guard let newObjectId = objectIdSet[imageFile.fileName] else { return }
+            let imageURL = documentDirectory.appendingPathComponent(newObjectId + imageFile.type.rawValue)
+            try? imageFile.data.write(to: imageURL)
         }
     }
 }

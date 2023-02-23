@@ -201,7 +201,19 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
                 } else {
                     if fileURL == ".DS_Store" { continue }
                     if let imageData = try? Data(contentsOf: filePath) {
-                        let imageFile = ImageFile(fileName: fileURL, Data: imageData)
+                        var fileName: String = ""
+                        var imageType: ImageFileType = .original
+                        if fileURL.contains("Original") {
+                            fileName = fileURL.replacingOccurrences(of: "Original", with: "")
+                            imageType = .original
+                        } else if fileURL.contains("Thumb") {
+                            fileName = fileURL.replacingOccurrences(of: "Thumb", with: "")
+                            imageType = .thumb
+                        } else {
+                            fileName = fileURL
+                            imageType = .crop
+                        }
+                        let imageFile = ImageFile(fileName: fileName, data: imageData, type: imageType)
                         restoreFile.imageDataArr.append(imageFile)
                     }
                 }
