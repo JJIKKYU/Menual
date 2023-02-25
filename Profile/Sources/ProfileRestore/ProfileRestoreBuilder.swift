@@ -10,10 +10,12 @@ import MenualRepository
 
 public protocol ProfileRestoreDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
+    var backupRestoreRepository: BackupRestoreRepository { get }
 }
 
 public final class ProfileRestoreComponent: Component<ProfileRestoreDependency>, ProfileRestoreInteractorDependency {
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
 }
 
 // MARK: - Builder

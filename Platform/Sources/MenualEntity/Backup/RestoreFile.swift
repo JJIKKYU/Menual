@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Realm
+import RealmSwift
 
 public struct RestoreFile {
     /// 복원하고자 하는 파일의 이름

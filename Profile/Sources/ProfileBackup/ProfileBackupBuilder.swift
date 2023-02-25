@@ -10,10 +10,12 @@ import MenualRepository
 
 public protocol ProfileBackupDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
+    var backupRestoreRepository: BackupRestoreRepository { get }
 }
 
 public final class ProfileBackupComponent: Component<ProfileBackupDependency>, ProfileBackupInteractorDependency {
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
     
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.

@@ -21,6 +21,9 @@ public protocol ProfileHomeDependency: Dependency {
 
 public final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency, ProfileDeveloperDependency, ProfileHomeInteractorDependency, ProfileOpensourceDependency, ProfileBackupDependency, ProfileRestoreDependency {
 
+    public var backupRestoreRepository: BackupRestoreRepository {
+        BackupRestoreRepositoryImp()
+    }
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
 

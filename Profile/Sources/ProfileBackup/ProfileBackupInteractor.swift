@@ -26,6 +26,7 @@ public protocol ProfileBackupListener: AnyObject {
 
 protocol ProfileBackupInteractorDependency {
     var diaryRepository: DiaryRepository { get }
+    var backupRestoreRepository: BackupRestoreRepository { get }
 }
 
 final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresentable>, ProfileBackupInteractable, ProfileBackupPresentableListener {
@@ -63,7 +64,7 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
     
     func saveZip() {
         print("ProfileBackup :: saveZip!")
-        let dataArr: [Data] = dependency.diaryRepository.backUp()
+        let dataArr: [Data] = dependency.backupRestoreRepository.backUp()
         print("ProfileBackup :: dataArr = \(dataArr)")
         
         

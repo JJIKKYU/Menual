@@ -30,6 +30,7 @@ public protocol ProfileRestoreListener: AnyObject {
 
 public protocol ProfileRestoreInteractorDependency {
     var diaryRepository: DiaryRepository { get }
+    var backupRestoreRepository: BackupRestoreRepository { get }
 }
 
 final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresentable>, ProfileRestoreInteractable, ProfileRestorePresentableListener {
@@ -80,7 +81,7 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
                         return
                     }
                     print("ProfileRestore :: restoreFile = \(restoreFile.fileName), \(restoreFile.createdDate)")
-                    self.dependency.diaryRepository
+                    self.dependency.backupRestoreRepository
                         .restoreWithJson(restoreFile: restoreFile)
 
                     // self.migrateMenual(restoreFile: restoreFile)
