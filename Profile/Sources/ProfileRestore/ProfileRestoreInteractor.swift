@@ -194,10 +194,6 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
                         if let tempSaveData = try? Data(contentsOf: filePath) {
                             restoreFile.tempSaveData = tempSaveData
                         }
-                    case .backupHistory:
-                        if let backupHistoryData = try? Data(contentsOf: filePath) {
-                            restoreFile.backupHistoryData = backupHistoryData
-                        }
                     }
                 } else {
                     if fileURL == ".DS_Store" { continue }

@@ -22,7 +22,6 @@ public struct RestoreFile {
     public var momentsData: Data?
     public var passwordData: Data?
     public var tempSaveData: Data?
-    public var backupHistoryData: Data?
     public var imageDataArr: [ImageFile] = []
     
     public init(fileName: String, createdDate: String, isVaildMenualRestoreFile: Bool) {
@@ -58,5 +57,4 @@ public enum RestoreFileType: String {
     case moments = "moments.json"
     case password = "password.json"
     case tempSave = "tempSave.json"
-    case backupHistory = "backupHistory.json"
 }

@@ -22,7 +22,82 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
     public init() {
         
     }
+    // MARK: - 공용
     
+    // MARK: - Backup
+    
+    /// realm Object Type을 넣으면 백업 data를 만들어주는 함수
+    public func makeBackupData<T: Object & Codable>(of: T.Type) -> Data? {
+        guard let realm = Realm.safeInit() else { return nil }
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        
+        let array = realm
+            .objects(T.self)
+            .toArray(type: T.self)
+        guard let data = try? encoder.encode(array) else { return nil }
+        return data
+    }
+    
+    /// backup이 필요한 Realm Object를 Data로 변경해 backup할 데이터를 json으로 저장하고, Data List를 반환하는 함수
+    public func backUp() -> [Data] {
+        print("DiaryRepo :: backup!")
+        var backupDataArr: [Data] = []
+        var backupDataDic: [String: Data] = [:]
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+
+        // 각 데이터가 있을 경우에 리스트/ 딕셔너리에 할당
+        if let diaryData = makeBackupData(of: DiaryModelRealm.self) {
+            backupDataDic["diary"] = diaryData
+            backupDataArr.append(diaryData)
+        }
+        if let momentsData = makeBackupData(of: MomentsRealm.self) {
+            backupDataDic["moments"] = momentsData
+            backupDataArr.append(momentsData)
+        }
+        if let tempSaveData = makeBackupData(of: TempSaveModelRealm.self) {
+            backupDataDic["tempSave"] = tempSaveData
+            backupDataArr.append(tempSaveData)
+        }
+        if let diarySearchData = makeBackupData(of: DiarySearchModelRealm.self) {
+            backupDataDic["diarySearch"] = diarySearchData
+            backupDataArr.append(diarySearchData)
+        }
+        if let passwordData = makeBackupData(of: PasswordModelRealm.self) {
+            backupDataDic["password"] = passwordData
+            backupDataArr.append(passwordData)
+        }
+
+        // 딕셔너리에 있는 Key값은 파일의 이름
+        // value는 data로 FileManager에 json파일 저장
+        for data in backupDataDic {
+            do {
+                let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                let fileUrl = documentsDirectory.appendingPathComponent("\(data.key).json")
+                try data.value.write(to: fileUrl, options: .atomic)
+            } catch {
+                print("Error saving JSON data: \(error)")
+            }
+        }
+        
+        print("DiaryRepo :: return!")
+        return backupDataArr
+    }
+    
+    // MARK: - Restore
+    
+    /// RealmObject를 넣으면 decode한 realm Array를 반환
+    public func makeRestoreData<T: Object & Codable>(of: T.Type, data: Data?) -> [T]? {
+        // 데이터가 nil로 들어왔을 경우 restoreFile을 만들 필요가 없으므로 nil 리턴
+        guard let data = data else { return nil }
+        let decoder = JSONDecoder()
+        
+        guard let array = try? decoder.decode([T].self, from: data) else { return nil }
+        return array
+    }
+    
+    /// 복원 하기전에 이미 있는 이미지를 삭제하는 함수
     public func deleteImageFromDocumentDirectory(diaryUUID: String, completionHandler: @escaping (Bool) -> Void) {
         // 1. 이미지를 삭제할 경로를 설정해줘야함 - 도큐먼트 폴더,File 관련된건 Filemanager가 관리함(싱글톤 패턴)
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {return}
@@ -69,71 +144,13 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         
         completionHandler(true)
     }
-    
-    public func makeBackupData<T: Object & Codable>(of: T.Type) -> Data? {
-        guard let realm = Realm.safeInit() else { return nil }
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        
-        let array = realm
-            .objects(T.self)
-            .toArray(type: T.self)
-        guard let data = try? encoder.encode(array) else { return nil }
-        return data
-    }
-    
-    public func backUp() -> [Data] {
-        print("DiaryRepo :: backup!")
-        var backupDataArr: [Data] = []
-        var backupDataDic: [String: Data] = [:]
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
 
-        let diaryData = makeBackupData(of: DiaryModelRealm.self)
-        let momentsData = makeBackupData(of: MomentsRealm.self)
-        let tempSaveData = makeBackupData(of: TempSaveModelRealm.self)
-        let diarySearchData = makeBackupData(of: DiarySearchModelRealm.self)
-        let passwordData = makeBackupData(of: PasswordModelRealm.self)
-        let backupHistoryData = makeBackupData(of: BackupHistoryModelRealm.self)
-        
-        backupDataDic["diary"] = diaryData
-        backupDataDic["moments"] = momentsData
-        backupDataDic["tempSave"] = tempSaveData
-        backupDataDic["diarySearch"] = diarySearchData
-        backupDataDic["password"] = passwordData
-        backupDataDic["backupHistory"] = backupHistoryData
-
-        for data in backupDataDic {
-            do {
-                let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                let fileUrl = documentsDirectory.appendingPathComponent("\(data.key).json")
-                try data.value.write(to: fileUrl, options: .atomic)
-            } catch {
-                print("Error saving JSON data: \(error)")
-            }
-        }
-        
-        print("DiaryRepo :: return!")
-        return backupDataArr
-    }
-    
-    public func makeRestoreData<T: Object & Codable>(of: T.Type, data: Data?) -> [T]? {
-        // 데이터가 nil로 들어왔을 경우 restoreFile을 만들 필요가 없으므로 nil 리턴
-        guard let data = data else { return nil }
-        let decoder = JSONDecoder()
-        
-        guard let array = try? decoder.decode([T].self, from: data) else { return nil }
-        return array
-    }
-    
+    /// 최종적으로 json파일을 기반으로 realm.default에 할당하는 작업
     public func restoreWithJson(restoreFile: RestoreFile) {
         print("DiaryRepo :: restoreWithJson! restoreFile = \(restoreFile)")
         guard let realm = Realm.safeInit() else {
             return
         }
-        let decoder = JSONDecoder()
-        let fileManager = FileManager.default
-        
         /// DiaryData
 
         if let diaryArray = makeRestoreData(of: DiaryModelRealm.self, data: restoreFile.diaryData) {
@@ -145,26 +162,63 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
             }
         }
         
-        if let momentsArr = makeRestoreData(of: MomentsRealm.self, data: restoreFile.momentsData) {
-            
-        }
-
-        if let passwordData = restoreFile.passwordData,
-           let passwordDataArr = try? decoder.decode([PasswordModelRealm].self, from: passwordData) {
-            
+        if let moments = makeRestoreData(of: MomentsRealm.self, data: restoreFile.momentsData)?.first {
+            restoreMoments(newMoments: moments)
         }
         
-        if let tempSaveData = restoreFile.tempSaveData,
-           let tempSaveDataArr = try? decoder.decode([TempSaveModelRealm].self, from: tempSaveData) {
-            
+        if let password = makeRestoreData(of: PasswordModelRealm.self, data: restoreFile.passwordData)?.first {
+            restorePassword(newPassword: password)
         }
         
-        if let backupHistoryData = restoreFile.backupHistoryData,
-           let backupHistoryDataArr = try? decoder.decode([BackupHistoryModelRealm].self, from: backupHistoryData) {
-            
+        if let tempSave = makeRestoreData(of: TempSaveModelRealm.self, data: restoreFile.tempSaveData) {
+            restoreTempSave(newTempSave: tempSave)
         }
     }
     
+    /// Moments 데이터를 복원하는 함수
+    public func restoreMoments(newMoments: MomentsRealm) {
+        guard let realm = Realm.safeInit() else { return }
+        guard let moments = realm.objects(MomentsRealm.self).first else { return }
+        
+        realm.safeWrite {
+            moments.itemsArr = newMoments.itemsArr
+            moments.onboardingIsClear = newMoments.onboardingIsClear
+            moments.onboardingClearDate = newMoments.onboardingClearDate
+            moments.lastUpdatedDate = newMoments.lastUpdatedDate
+        }
+    }
+    
+    /// password를 복원하는 함수
+    public func restorePassword(newPassword: PasswordModelRealm) {
+        guard let realm = Realm.safeInit() else { return }
+        // password가 있을 경우
+        if let password = realm.objects(PasswordModelRealm.self).first {
+            realm.safeWrite {
+                password.isEnabled = newPassword.isEnabled
+                password.password = newPassword.password
+            }
+        }
+        // password가 없을 경우 새로 만들어주어야 함
+        else {
+            realm.safeWrite {
+                realm.add(newPassword)
+            }
+        }
+    }
+    
+    /// tempSave를 복원하는 함수
+    public func restoreTempSave(newTempSave: [TempSaveModelRealm]) {
+        guard let realm = Realm.safeInit() else { return }
+        let tempSave = realm.objects(TempSaveModelRealm.self)
+        
+        realm.safeWrite {
+            realm.delete(tempSave)
+            realm.add(newTempSave)
+        }
+        
+    }
+    
+    /// 다이어리에 저장된 이미지, 검색, 리마인더 등 데이터를 삭제하는 함수
     public func deleteDiaries() {
         guard let realm = Realm.safeInit() else { return }
         let diaries = realm.objects(DiaryModelRealm.self)
