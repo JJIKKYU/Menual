@@ -31,7 +31,7 @@ let package = Package(
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", .upToNextMajor(from: "9.0.0")),
         .package(url: "https://github.com/SnapKit/SnapKit", exact: Version("5.6.0")),
         .package(url: "https://github.com/ReactiveX/RxSwift", exact: Version("6.0.0")),
-        .package(url: "https://github.com/JJIKKYU/TOCropViewController", branch: "main")
+        .package(url: "https://github.com/JJIKKYU/TOCropViewController", branch: "main"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

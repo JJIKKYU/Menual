@@ -11,8 +11,12 @@ import Realm
 import RealmSwift
 
 public protocol BackupRestoreRepository {
+    /// 백업 관련
+    func backUp() -> [Data]///
     func makeBackupData<T: Object & Codable>(of: T.Type) -> Data?
-    func backUp() -> [Data]
+    func addOrUpdateBackupHistory()
+    
+    /// 불러오기 관련
     func makeRestoreData<T: Object & Codable>(of: T.Type, data: Data?) -> [T]?
     func restoreWithJsonSaveImageData(diaryModelRealm: [DiaryModelRealm], imageFiles: [ImageFile])
     func restoreWithJson(restoreFile: RestoreFile)
@@ -22,8 +26,7 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
     public init() {
         
     }
-    // MARK: - 공용
-    
+
     // MARK: - Backup
     
     /// realm Object Type을 넣으면 백업 data를 만들어주는 함수
@@ -83,6 +86,36 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         
         print("DiaryRepo :: return!")
         return backupDataArr
+    }
+    
+    public func addOrUpdateBackupHistory() {
+        guard let realm = Realm.safeInit() else { return }
+        
+        
+        let diaryModelRealm = realm.objects(DiaryModelRealm.self)
+            .toArray(type: DiaryModelRealm.self)
+            .sorted { $0.createdAt < $1.createdAt }
+            .filter { $0.isDeleted == false }
+        
+        let date: Date = Date()
+        let diaryCount: Int = diaryModelRealm.count
+        let diaryPageCount: Int = diaryModelRealm.first?.pageNum ?? 0
+        
+        if let backupHistory = realm.objects(BackupHistoryModelRealm.self).first {
+            realm.safeWrite {
+                backupHistory.createdAt = date
+                backupHistory.diaryCount = diaryCount
+                backupHistory.pageCount = diaryPageCount
+            }
+        } else {
+            let backupHistory = BackupHistoryModelRealm(pageCount: diaryPageCount,
+                                                        diaryCount: diaryCount,
+                                                        createdAt: date
+            )
+            realm.safeWrite {
+                realm.add(backupHistory)
+            }
+        }
     }
     
     // MARK: - Restore
@@ -260,6 +293,8 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         }
     }
     
+    /// Realm의 ObjectID가 변환되기 때문에,
+    /// 변환된 ObjectID에 맞게 이미지를 저장할 수 있도록 하는 함수
     public func restoreWithJsonSaveImageData(diaryModelRealm: [DiaryModelRealm], imageFiles: [ImageFile]) {
         /// Key - 원래 ObjectId
         /// Value - 바뀐 ObjectId
