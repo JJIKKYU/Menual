@@ -73,6 +73,10 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
                     break
 
                 case .update(let model, let deletions, let insertions, let modifications):
+                    guard let model = model
+                        .toArray(type: BackupHistoryModelRealm.self)
+                        .first else { return }
+                    self.backupHistoryModelRealm = model
                     self.presenter.configueBackupHistoryUI()
                     break
 
