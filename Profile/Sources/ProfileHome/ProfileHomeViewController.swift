@@ -131,6 +131,10 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         print("ProfileHomeVC :: pressedBackBtn!")
         listener?.pressedBackBtn(isOnlyDetach: false)
     }
+    
+    func showToastRestoreSuccess() {
+        showToast(message: "메뉴얼 가져오기를 완료했어요")
+    }
 }
 
 // MARK: - IBaction

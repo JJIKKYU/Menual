@@ -9,6 +9,8 @@ import Foundation
 import MenualEntity
 import Realm
 import RealmSwift
+import RxSwift
+import RxRelay
 
 public protocol BackupRestoreRepository {
     /// 백업 관련
@@ -19,7 +21,7 @@ public protocol BackupRestoreRepository {
     /// 불러오기 관련
     func makeRestoreData<T: Object & Codable>(of: T.Type, data: Data?) -> [T]?
     func restoreWithJsonSaveImageData(diaryModelRealm: [DiaryModelRealm], imageFiles: [ImageFile])
-    func restoreWithJson(restoreFile: RestoreFile)
+    func restoreWithJson(restoreFile: RestoreFile, progressRelay: BehaviorRelay<Int>)
 }
 
 public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
@@ -179,7 +181,7 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
     }
 
     /// 최종적으로 json파일을 기반으로 realm.default에 할당하는 작업
-    public func restoreWithJson(restoreFile: RestoreFile) {
+    public func restoreWithJson(restoreFile: RestoreFile, progressRelay: BehaviorRelay<Int>) {
         print("DiaryRepo :: restoreWithJson! restoreFile = \(restoreFile)")
         guard let realm = Realm.safeInit() else {
             return
@@ -194,18 +196,22 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
                 realm.add(diaryArray)
             }
         }
+        progressRelay.accept(30)
         
         if let moments = makeRestoreData(of: MomentsRealm.self, data: restoreFile.momentsData)?.first {
             restoreMoments(newMoments: moments)
         }
+        progressRelay.accept(60)
         
         if let password = makeRestoreData(of: PasswordModelRealm.self, data: restoreFile.passwordData)?.first {
             restorePassword(newPassword: password)
         }
+        progressRelay.accept(70)
         
         if let tempSave = makeRestoreData(of: TempSaveModelRealm.self, data: restoreFile.tempSaveData) {
             restoreTempSave(newTempSave: tempSave)
         }
+        progressRelay.accept(80)
     }
     
     /// Moments 데이터를 복원하는 함수

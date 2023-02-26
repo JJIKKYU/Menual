@@ -14,6 +14,8 @@ import MenualUtil
 public protocol ProfileRestoreConfirmPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
     func pressedRestoreBtn()
+    var fileName: String? { get }
+    var fileCreatedAt: String? { get }
 }
 
 final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestoreConfirmViewControllable {
@@ -73,12 +75,6 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
             $0.addTarget(self, action: #selector(pressedRestoreBtn), for: .touchUpInside)
         }
         
-        
-        currentBackupStatusView.do {
-            $0.fileName = "파일네이밍 테스트"
-            $0.fileCreatedAt = Date()
-        }
-        
         naviView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalToSuperview()
@@ -110,11 +106,30 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
 // MARK: -
 extension ProfileRestoreConfirmViewController: ProfileRestoreConfirmPresentable {
     func notVaildZipFile() {
-        show(size: .small,
+        show(size: .medium,
              buttonType: .oneBtn,
-             titleText: "파일을 제대로 선택했는지 확인해주세요.",
+             titleText: "메뉴얼 백업 파일이 아니에요",
+             subTitleText: "파일을 제대로 선택했는지 확인해주세요.",
              confirmButtonText: "확인"
         )
+    }
+    
+    func loadErrorZipFile() {
+        show(size: .large,
+             buttonType: .oneBtn,
+             titleText: "메뉴얼을 가져올 수 없어요",
+             subTitleText:
+             """
+             메뉴얼을 가져오는 중 오류가 발생했어요.
+             잠시 후 다시 시도해주세요.
+             """,
+             confirmButtonText: "확인"
+        )
+    }
+    
+    func fileNameAndDateSetUI() {
+        currentBackupStatusView.fileName = listener?.fileName
+        currentBackupStatusView.fileCreatedAt = listener?.fileCreatedAt
     }
 }
 

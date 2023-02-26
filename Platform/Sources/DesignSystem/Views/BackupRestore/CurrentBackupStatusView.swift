@@ -36,7 +36,7 @@ public class CurrentBackupStatusView: UIView {
         didSet { setNeedsLayout() }
     }
     
-    public var fileCreatedAt: Date? {
+    public var fileCreatedAt: String? {
         didSet { setNeedsLayout() }
     }
 
@@ -219,7 +219,7 @@ public class CurrentBackupStatusView: UIView {
             currentBackupPageDesc.text = fileName
             currentBackupDiarycountStackView.isHidden = false
             currentBackupDiarycount.text = "생성일"
-            currentBackupDiarycountDesc.text = fileCreatedAt.toStringWithHourMin()
+            currentBackupDiarycountDesc.text = fileCreatedAt
             currentBackupDateStackView.isHidden = true
             backupInformationLabel.isHidden = true
             

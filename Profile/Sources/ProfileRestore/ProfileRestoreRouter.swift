@@ -12,6 +12,8 @@ import Foundation
 public protocol ProfileRestoreInteractable: Interactable, ProfileRestoreConfirmListener {
     var router: ProfileRestoreRouting? { get set }
     var listener: ProfileRestoreListener? { get set }
+    
+    func clearProfileConfirmDetach()
 }
 
 public protocol ProfileRestoreViewControllable: ViewControllable {
@@ -60,5 +62,6 @@ public final class ProfileRestoreRouter: ViewableRouter<ProfileRestoreInteractab
         
         detachChild(router)
         profileRestoreConfirmRouting = nil
+        // interactor.clearProfileConfirmDetach()
     }
 }

@@ -16,7 +16,7 @@ public protocol ProfileRestorePresentableListener: AnyObject {
     func pressedBackupBtn(url: URL?)
 }
 
-final class ProfileRestoreViewController: UIViewController, ProfileRestoreViewControllable {
+final class ProfileRestoreViewController: UIViewController, ProfileRestoreViewControllable, ProfileRestorePresentable {
 
     weak var listener: ProfileRestorePresentableListener?
     private let disposeBag = DisposeBag()
@@ -166,8 +166,8 @@ extension ProfileRestoreViewController {
     
     @objc
     func pressedRestoreBtn() {
-        listener?.pressedBackupBtn(url: nil)
-        /*
+        // listener?.pressedBackupBtn(url: nil)
+        
         DispatchQueue.main.async {
             let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.zip])
             
@@ -175,7 +175,7 @@ extension ProfileRestoreViewController {
             // documentPicker.directoryURL = .homeDirectory
             self.present(documentPicker, animated: true, completion: nil)
         }
-         */
+        
 
     }
 }
@@ -200,20 +200,5 @@ extension ProfileRestoreViewController: UIDocumentPickerDelegate {
         
         // Make sure you release the security-scoped resource when you finish.
         fileURL.stopAccessingSecurityScopedResource()
-    }
-}
-
-// MARK: - DialogDelegate
-extension ProfileRestoreViewController: DialogDelegate {
-    func exit(titleText: String) {
-        
-    }
-    
-    func action(titleText: String) {
-        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-
-        if UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
-        }
     }
 }

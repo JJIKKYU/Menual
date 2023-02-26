@@ -21,10 +21,13 @@ public protocol ProfileRestoreConfirmPresentable: Presentable {
     var listener: ProfileRestoreConfirmPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
     func notVaildZipFile()
+    func loadErrorZipFile()
+    func fileNameAndDateSetUI()
 }
 
 public protocol ProfileRestoreConfirmListener: AnyObject {
     func profileRestoreConfirmPressedBackBtn(isOnlyDetach: Bool)
+    func profileRestoreSuccess()
 }
 
 public protocol ProfileRestoreConfirmInteractorDependency {
@@ -39,7 +42,8 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
     
     private let disposeBag = DisposeBag()
     private let dependency: ProfileRestoreConfirmInteractorDependency
-    private let menualRestoreFileRelay = BehaviorRelay<Bool>(value: false)
+    private let menualRestoreFileRelay = BehaviorSubject<Bool?>(value: nil)
+    private let menualRestoreProgressRelay = BehaviorRelay<Int>(value: -1)
     var fileName: String?
     var fileCreatedAt: String?
     
@@ -55,12 +59,15 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
         self.dependency = dependency
         self.fileURL = fileURL
         super.init(presenter: presenter)
+        bind()
         presenter.listener = self
     }
 
     override func didBecomeActive() {
         super.didBecomeActive()
-        bind()
+        if let fileURL = fileURL {
+            checkIsMenualZipFile(url: fileURL)
+        }
     }
 
     override func willResignActive() {
@@ -71,7 +78,9 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
     func bind() {
         menualRestoreFileRelay
             .subscribe(onNext: { [weak self] isRestoreMenualFile in
-                guard let self = self else { return }
+                guard let self = self,
+                      let isRestoreMenualFile = isRestoreMenualFile
+                else { return }
                 
                 switch isRestoreMenualFile {
                 case true:
@@ -79,16 +88,28 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
                     // Valid한 file만 parsing
                     guard let restoreFile = self.parseJsonFile() else {
                         // 오류 핸들러 UI 표시
+                        self.presenter.loadErrorZipFile()
                         return
                     }
                     print("ProfileRestore :: restoreFile = \(restoreFile.fileName), \(restoreFile.createdDate)")
-                    self.dependency.backupRestoreRepository
-                        .restoreWithJson(restoreFile: restoreFile)
 
                     // self.migrateMenual(restoreFile: restoreFile)
 
                 case false:
+                    self.presenter.notVaildZipFile()
                     print("ProfileRestore :: isRestoreMenualFile! = false")
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        menualRestoreProgressRelay
+            .subscribe(onNext: { [weak self] percent in
+                guard let self = self else { return }
+                if percent < 0 { return }
+                print("ProfileRestoreConfirm :: \(percent)")
+                
+                if percent == 100 {
+                    self.listener?.profileRestoreSuccess()
                 }
             })
             .disposed(by: disposeBag)
@@ -179,6 +200,7 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
         
         self.fileName = url.lastPathComponent
         self.fileCreatedAt = getFileCreatedAt(url: url)
+        self.presenter.fileNameAndDateSetUI()
 
         var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
         path += "/jsonTest/"
@@ -199,7 +221,7 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
 
             print("ProfileRestore :: \(a), \(b), error = \(error), isDiaryJson = \(isDiaryJson)")
 
-            self.menualRestoreFileRelay.accept(isDiaryJson)
+            self.menualRestoreFileRelay.onNext(isDiaryJson)
         }
     }
     
@@ -222,7 +244,21 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
     }
     
     func pressedRestoreBtn() {
-        guard let url = self.fileURL else { return }
-        checkIsMenualZipFile(url: url)
+        print("ProfileRestoreConfirm :: pressedRestoreBtn!")
+        
+        guard let restoreFile = self.parseJsonFile() else {
+            // 오류 핸들러 UI 표시
+            self.presenter.loadErrorZipFile()
+            return
+        }
+        menualRestoreProgressRelay.accept(0)
+
+        self.dependency.backupRestoreRepository
+            .restoreWithJson(restoreFile: restoreFile,
+                             progressRelay: menualRestoreProgressRelay
+            )
+        
+        menualRestoreProgressRelay.accept(100)
+
     }
 }

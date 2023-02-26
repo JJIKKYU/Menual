@@ -32,7 +32,8 @@ public protocol ProfileHomeRouting: ViewableRouting {
 
 protocol ProfileHomePresentable: Presentable {
     var listener: ProfileHomePresentableListener? { get set }
-    // TODO: Declare methods the interactor can invoke the presenter to present data.
+    
+    func showToastRestoreSuccess()
 }
 
 public protocol ProfileHomeListener: AnyObject {
@@ -226,6 +227,10 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     func pressedProfileRestoreCell() {
         router?.attachProfileRestore()
+    }
+    func profileRestoreSuccess() {
+        router?.detachProfileRestore(isOnlyDetach: false)
+        // presenter.showToastRestoreSuccess()
     }
     
     // MARK: - ProfileBackup

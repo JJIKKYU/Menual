@@ -22,11 +22,11 @@ public protocol ProfileRestoreRouting: ViewableRouting {
 
 public protocol ProfileRestorePresentable: Presentable {
     var listener: ProfileRestorePresentableListener? { get set }
-    func exitWithAnimation()
 }
 
 public protocol ProfileRestoreListener: AnyObject {
     func pressedProfileRestoreBackBtn(isOnlyDetach: Bool)
+    func profileRestoreSuccess()
 }
 
 public protocol ProfileRestoreInteractorDependency {
@@ -66,39 +66,19 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
         listener?.pressedProfileRestoreBackBtn(isOnlyDetach: isOnlyDetach)
     }
     
-    func restoreDiary(url: URL) {
-        /*
-        clearDocumentFolder()
-        var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        let newPath = path
-        
-        print("ProfileRestore :: path = \(path), url = \(url.absoluteString), \(url.path)")
-        SSZipArchive.unzipFile(atPath: url.path, toDestination: newPath) { _, _, c, d in
-        
-            print("ProfileRestore :: \(c) / \(d)")
-        } completionHandler: { a, b, error in
-            print("ProfileRestore :: \(a), \(b), error = \(error)")
-            self.restartAppWithPush()
-        }
-         */
-
-        // SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
-//        let realm = try? Realm(fileURL: URL(string: "\(newPath)/default.realm")!)
-//        let diaryModelRealm = realm?.objects(DiaryModelRealm.self)
-//        print("ProfileRestore :: 교체예정인 다이어리 개수 = \(diaryModelRealm?.count)")
-//
-//        let config = Realm.Configuration(fileURL: URL(string: "\(newPath)/default.realm"))
-//        Realm.Configuration.defaultConfiguration = config
-//        print("ProfileRestore :: realm = \(realm)")
-//        print("ProfileRestore :: config = \(config)")
-        // restartAppWithPush()
-    }
-    
     func pressedBackupBtn(url: URL?) {
         router?.attachProfileConfirm(fileURL: url)
     }
     
     func profileRestoreConfirmPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachProfileConfirm(isOnlyDetach: isOnlyDetach)
+    }
+    
+    func profileRestoreSuccess() {
+        router?.detachProfileConfirm(isOnlyDetach: false)
+    }
+    
+    func clearProfileConfirmDetach() {
+        listener?.profileRestoreSuccess()
     }
 }
