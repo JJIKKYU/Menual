@@ -49,6 +49,9 @@ public protocol DesignSystemRouting: ViewableRouting {
     
     func attachNumberPadVC()
     func detachNumberPadVC(isOnlyDetach: Bool)
+    
+    func attachProgressVC()
+    func detachProgressVC(isOnlyDetach: Bool)
 }
 
 public protocol DesignSystemPresentable: Presentable {
@@ -82,6 +85,7 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
         "Empty",
         "MetaData",
         "NumberPad",
+        "Progress"
     ]
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
@@ -207,5 +211,11 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     
     func numberPadPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachNumberPadVC(isOnlyDetach: isOnlyDetach)
+    }
+    func pressedProgressCell() {
+        router?.attachProgressVC()
+    }
+    func pressedProgressBackBtn(isOnlyDetach: Bool) {
+        router?.detachProgressVC(isOnlyDetach: isOnlyDetach)
     }
 }

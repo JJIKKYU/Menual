@@ -15,6 +15,9 @@ public class MenualProgressView: UIView {
         didSet { setNeedsLayout() }
     }
     
+    private let progressIconView = ProgressIconView(frame: .zero)
+    private let slider = UISlider(frame: .zero)
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setViews()
@@ -26,22 +29,19 @@ public class MenualProgressView: UIView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-    }
-    
-    func setViews() {
+        let value = progressValue as NSNumber
+        progressIconView.updateAnimateProgress(value)
         
     }
     
-    public override func draw(_ rect: CGRect) {
-        let path = UIBezierPath()
-    }
-    
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+    func setViews() {
+        addSubview(progressIconView)
+        backgroundColor = Colors.background.withAlphaComponent(0.6)
 
+        progressIconView.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+            make.width.equalTo(71)
+            make.height.equalTo(67)
+        }
+    }
 }
