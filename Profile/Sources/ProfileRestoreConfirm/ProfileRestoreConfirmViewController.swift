@@ -10,12 +10,14 @@ import RxSwift
 import UIKit
 import DesignSystem
 import MenualUtil
+import RxRelay
 
 public protocol ProfileRestoreConfirmPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
     func pressedRestoreBtn()
     var fileName: String? { get }
     var fileCreatedAt: String? { get }
+    var menualRestoreProgressRelay: BehaviorRelay<CGFloat> { get }
 }
 
 final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestoreConfirmViewControllable {
@@ -30,6 +32,8 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
     lazy var bottomBoxButton = BoxButton(frame: .zero, btnStatus: .active, btnSize: .large)
     private let fileConfirmTitleLabel = UILabel(frame: .zero)
     private let currentBackupStatusView = CurrentBackupStatusView(type: .restore)
+    private let progressView = MenualProgressView(frame: .zero)
+    private let disposeBag = DisposeBag()
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -45,6 +49,7 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
         super.viewDidLoad()
         view.backgroundColor = Colors.background
         setViews()
+        bind()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -60,6 +65,7 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
         self.view.addSubview(fileConfirmTitleLabel)
         self.view.addSubview(currentBackupStatusView)
         self.view.addSubview(bottomBoxButton)
+        self.view.addSubview(progressView)
         
         self.view.bringSubviewToFront(naviView)
         
@@ -73,6 +79,10 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
         bottomBoxButton.do {
             $0.title = "메뉴얼 가져오기"
             $0.addTarget(self, action: #selector(pressedRestoreBtn), for: .touchUpInside)
+        }
+        
+        progressView.do {
+            $0.isHidden = true
         }
         
         naviView.snp.makeConstraints { make in
@@ -100,6 +110,44 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
             make.width.equalToSuperview().inset(20)
             make.top.equalTo(fileConfirmTitleLabel.snp.bottom).offset(24)
         }
+        
+        progressView.snp.makeConstraints { make in
+            make.top.leading.width.bottom.equalToSuperview()
+        }
+    }
+    
+    func bind() {
+        listener?.menualRestoreProgressRelay
+            .subscribe(onNext: { [weak self] progress in
+                guard let self = self else { return }
+                
+                if progress >= 0 && progress < 1.0 {
+                    self.progressView.isHidden = false
+                    self.progressView.progressValue = CGFloat(progress)
+                } else if progress >= 1.0 {
+                    self.progressView.progressValue = CGFloat(progress)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.progressView.isHidden = true
+                        self.showCompletePopup()
+                    }
+                    
+                } else {
+                    self.progressView.isHidden = true
+                }
+                
+                print("ProfileRestoreConfirm :: progress! = \(progress)")
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    /// 가져오기가 완료될 경우 팝업으로 안내
+    func showCompletePopup() {
+        show(size: .small,
+             buttonType: .oneBtn,
+             titleText: "메뉴얼을 성공적으로 가져왔어요",
+             confirmButtonText: "확인"
+        )
     }
 }
 

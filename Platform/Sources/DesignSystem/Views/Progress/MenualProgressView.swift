@@ -16,7 +16,7 @@ public class MenualProgressView: UIView {
     }
     
     private let progressIconView = ProgressIconView(frame: .zero)
-    private let slider = UISlider(frame: .zero)
+    private let progressLabel = UILabel(frame: .zero)
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,12 +36,25 @@ public class MenualProgressView: UIView {
     
     func setViews() {
         addSubview(progressIconView)
+        addSubview(progressLabel)
         backgroundColor = Colors.background.withAlphaComponent(0.6)
+        
+        progressLabel.do {
+            $0.numberOfLines = 1
+            $0.text = "메뉴얼을 가져오고 있어요..."
+            $0.textColor = Colors.grey.g200
+            $0.font = UIFont.AppBodyOnlyFont(.body_3)
+        }
 
         progressIconView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
             make.width.equalTo(71)
             make.height.equalTo(67)
+        }
+        
+        progressLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(progressIconView.snp.bottom).offset(14)
         }
     }
 }
