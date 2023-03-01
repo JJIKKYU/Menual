@@ -28,6 +28,9 @@ public protocol ProfileHomeRouting: ViewableRouting {
     
     func attachProfileRestore()
     func detachProfileRestore(isOnlyDetach: Bool)
+    
+    func attachDesignSystem()
+    func detachDesignSystem(isOnlyDetach: Bool)
 }
 
 protocol ProfileHomePresentable: Presentable {
@@ -69,6 +72,14 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
             // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자 도구"),
         ]
 
+        return arr
+    }
+    
+    var profileHomeDevDataArr: [ProfileHomeModel] {
+        let arr: [ProfileHomeModel] = [
+            ProfileHomeModel(section: .DEV, type: .arrow, title: "디자인 시스템", actionName: "designSystem")
+        ]
+        
         return arr
     }
     
@@ -240,5 +251,14 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     func pressedProfileBackupBackBtn(isOnlyDetach: Bool) {
         router?.detachProfileBackup(isOnlyDetach: isOnlyDetach)
+    }
+    
+    // MARK: - DesignSystem
+    func pressedDesignSystemCell() {
+        router?.attachDesignSystem()
+    }
+    
+    func designSystemPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachDesignSystem(isOnlyDetach: isOnlyDetach)
     }
 }

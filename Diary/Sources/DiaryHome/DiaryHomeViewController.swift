@@ -28,7 +28,6 @@ public protocol DiaryHomePresentableListener: AnyObject {
     func pressedWritingBtn()
     func pressedDiaryCell(diaryModel: DiaryModelRealm)
     func pressedMomentsCell(momentsItem: MomentsItemRealm)
-    func pressedMenualTitleBtn()
     func pressedFilterBtn()
     func pressedFilterResetBtn()
     func pressedDateFilterBtn()
@@ -565,7 +564,6 @@ extension DiaryHomeViewController {
     @objc
     func pressedMenualBtn(_ button: UIButton) {
         print("메뉴얼 버튼 눌렀니?")
-        listener?.pressedMenualTitleBtn()
     }
     
     @objc

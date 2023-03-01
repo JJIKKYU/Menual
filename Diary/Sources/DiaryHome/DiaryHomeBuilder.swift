@@ -11,7 +11,6 @@ import MenualEntity
 import MenualRepository
 
 import ZipArchive
-import ProfileDesignSystem
 import DiarySearch
 import DiaryWriting
 import DiaryDetail
@@ -25,7 +24,7 @@ public protocol DiaryHomeDependency: Dependency {
     var diaryUUIDRelay: BehaviorRelay<String> { get }
 }
 
-public final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DesignSystemDependency, DiaryBottomSheetDependency {
+public final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DiaryBottomSheetDependency {
     
     public var diaryUUIDRelay: BehaviorRelay<String> { dependency.diaryUUIDRelay }
     public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
@@ -69,7 +68,6 @@ public final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuil
         let diarySearchBuildable = DiarySearchBuilder(dependency: component)
         let diaryWritingBuildable = DiaryWritingBuilder(dependency: component)
         let diaryDetailBuildable = DiaryDetailBuilder(dependency: component)
-        let designSystemBuildable = DesignSystemBuilder(dependency: component)
         let diaryBottomSheetBuildable = DiaryBottomSheetBuilder(dependency: component)
         
         let viewController = DiaryHomeViewController()
@@ -91,7 +89,6 @@ public final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuil
             diarySearchBuildable: diarySearchBuildable,
             diaryWritingBuildable: diaryWritingBuildable,
             diaryDetailBuildable: diaryDetailBuildable,
-            designSystemBuildable: designSystemBuildable,
             diarybottomSheetBuildable: diaryBottomSheetBuildable
         )
     }

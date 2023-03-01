@@ -75,6 +75,7 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
     }
     
     func profileRestoreSuccess() {
+        print("PRofileRestoreConfirm :: profileRestoreSuccess!")
         router?.detachProfileConfirm(isOnlyDetach: false)
     }
     

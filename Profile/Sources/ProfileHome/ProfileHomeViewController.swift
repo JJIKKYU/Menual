@@ -18,6 +18,7 @@ protocol ProfileHomePresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
     var profileHomeDataArr_Setting1: [ProfileHomeModel] { get }
     var profileHomeDataArr_Setting2: [ProfileHomeModel] { get }
+    var profileHomeDevDataArr: [ProfileHomeModel] { get }
     
     // ProfilePassword
     func pressedProfilePasswordCell()
@@ -35,11 +36,15 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // ProfileBackup
     func pressedProfileBackupCell()
+    
+    // ProfileDesignSystem
+    func pressedDesignSystemCell()
 }
 
 enum ProfileHomeSection: Int {
     case SETTING1 = 0
     case SETTING2 = 1
+    case DEV
 }
 
 final class ProfileHomeViewController: UIViewController, ProfileHomePresentable, ProfileHomeViewControllable {
@@ -154,7 +159,13 @@ extension ProfileHomeViewController {
 // MARK: - UITableView
 extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        // 디버그 모드가 아닐 경우에는 2개만 노출
+        if !DebugMode.isDebugMode {
+            return 2
+        }
+        
+        // 디버그 모드일 경우에는 개발자 도구도 함께 노출
+        return 3
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -170,32 +181,42 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             make.height.equalTo(2)
         }
 
-        switch section {
-        case ProfileHomeSection.SETTING1.rawValue:
+        guard let sections = ProfileHomeSection(rawValue: section) else { return UIView() }
+        
+        switch sections {
+        case .SETTING1:
             headerView.title = "메뉴얼 설정"
             return headerView
-        case ProfileHomeSection.SETTING2.rawValue:
+
+        case .SETTING2:
             headerView.title = "기타"
             return headerView
-        default:
-            return UIView()
+
+        case .DEV:
+            if !DebugMode.isDebugMode { return UIView() }
+            headerView.title = "개발자 도구"
+            return headerView
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case ProfileHomeSection.SETTING1.rawValue:
-            
+        guard let sections = ProfileHomeSection(rawValue: section) else { return 0 }
+        switch sections {
+        case .SETTING1:
             var count = listener?.profileHomeDataArr_Setting1.count ?? 0
             if listener?.isEnabledPasswordRelay.value ?? false == false {
                 count -= 1
             }
 
             return count
-        case ProfileHomeSection.SETTING2.rawValue:
+            
+
+        case .SETTING2:
             return listener?.profileHomeDataArr_Setting2.count ?? 0
-        default:
-            return 0
+
+        case .DEV:
+            if !DebugMode.isDebugMode { return 0 }
+            return listener?.profileHomeDevDataArr.count ?? 0
         }
     }
     
@@ -220,6 +241,15 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.profileHomeCellType = data.type
+            cell.actionName = data.actionName
+            return cell
+            
+        case .DEV:
+            if !DebugMode.isDebugMode { return UITableViewCell() }
+            guard let data = listener?.profileHomeDevDataArr[safe: index] else { return UITableViewCell() }
+            cell.title = data.title
+            cell.profileHomeCellType = data.type
+            
             cell.actionName = data.actionName
             return cell
         }
@@ -271,6 +301,13 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             } else if data.title == MenualString.profile_button_restore {
                 print("ProfileHome :: restore")
                 listener?.pressedProfileRestoreCell()
+            }
+            
+        case .DEV:
+            guard let data = listener?.profileHomeDevDataArr[safe: index] else { return }
+            if data.title == "디자인 시스템" {
+                print("ProfileHome :: 디자인 시스템 호출!")
+                listener?.pressedDesignSystemCell()
             }
             
         }

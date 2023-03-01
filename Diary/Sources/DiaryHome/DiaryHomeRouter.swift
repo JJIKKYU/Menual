@@ -9,13 +9,12 @@ import RIBs
 import MenualUtil
 import MenualEntity
 import DiarySearch
-import ProfileDesignSystem
 import DiaryBottomSheet
 import DiaryWriting
 import DiaryDetail
 import ProfileHome
 
-protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryWritingListener, DiaryDetailListener, DesignSystemListener, DiaryBottomSheetListener {
+protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryWritingListener, DiaryDetailListener, DiaryBottomSheetListener {
     var router: DiaryHomeRouting? { get set }
     var listener: DiaryHomeListener? { get set }
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
@@ -43,9 +42,6 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     private let diaryDetailBuildable: DiaryDetailBuildable
     private var diaryDetailRouting: Routing?
     
-    private let designSystemBuildable: DesignSystemBuildable
-    private var designSystemRouting: Routing?
-    
     private let diaryBottomSheetBuildable: DiaryBottomSheetBuildable
     private var diaryBottomSheetRouting: Routing?
     
@@ -57,14 +53,12 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         diarySearchBuildable: DiarySearchBuildable,
         diaryWritingBuildable: DiaryWritingBuildable,
         diaryDetailBuildable: DiaryDetailBuildable,
-        designSystemBuildable: DesignSystemBuildable,
         diarybottomSheetBuildable: DiaryBottomSheetBuildable
     ) {
         self.profileHomeBuildable = profileHomeBuildable
         self.diarySearchBuildable = diarySearchBuildable
         self.diaryWritingBuildable = diaryWritingBuildable
         self.diaryDetailBuildable = diaryDetailBuildable
-        self.designSystemBuildable = designSystemBuildable
         self.diaryBottomSheetBuildable = diarybottomSheetBuildable
         
         super.init(
@@ -217,32 +211,6 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
 
         detachChild(router)
         diaryDetailRouting = nil
-    }
-    
-    // MARK: - DesignSystem RIBs 관련 함수
-    func attachDesignSystem() {
-        if designSystemRouting != nil {
-            return
-        }
-        
-        let router = designSystemBuildable.build(withListener: interactor)
-        viewController.pushViewController(router.viewControllable, animated: true)
-        
-        designSystemRouting = router
-        attachChild(router)
-    }
-    
-    func detachDesignSystem(isOnlyDetach: Bool) {
-        guard let router = designSystemRouting else {
-            return
-        }
-        
-        if !isOnlyDetach {
-            viewController.popViewController(animated: true)
-        }
-        
-        detachChild(router)
-        designSystemRouting = nil
     }
     
     // MARK: - DiaryBottomSheet

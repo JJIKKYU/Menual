@@ -24,8 +24,6 @@ public protocol DiaryHomeRouting: ViewableRouting {
     func detachDiaryWriting(isOnlyDetach: Bool)
     func attachDiaryDetail(model: DiaryModelRealm)
     func detachDiaryDetail(isOnlyDetach: Bool)
-    func attachDesignSystem()
-    func detachDesignSystem(isOnlyDetach: Bool)
     func attachBottomSheet(type: MenualBottomSheetType)
     func detachBottomSheet()
 }
@@ -413,18 +411,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     func diaryDeleteNeedToast(isNeedToast: Bool) {
         print("DiaryHome :: diaryDeleteNeedToast = \(isNeedToast)")
         presenter.isShowToastDiaryResultRelay.accept(.delete)
-    }
-
-    // MARK: - Menual Title Btn을 눌렀을때 Action
-    func pressedMenualTitleBtn() {
-        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
-        if isDebugMode {
-            router?.attachDesignSystem()
-        }
-    }
-    
-    func designSystemPressedBackBtn(isOnlyDetach: Bool) {
-        router?.detachDesignSystem(isOnlyDetach: isOnlyDetach)
     }
     
     // MARK: - Diary Bottom Sheet

@@ -12,8 +12,9 @@ import ProfilePassword
 import ProfileDeveloper
 import ProfileBackup
 import ProfileRestore
+import ProfileDesignSystem
 
-protocol ProfileHomeInteractable: Interactable, ProfilePasswordListener, ProfileDeveloperListener, ProfileOpensourceListener, ProfileBackupListener, ProfileRestoreListener {
+protocol ProfileHomeInteractable: Interactable, ProfilePasswordListener, ProfileDeveloperListener, ProfileOpensourceListener, ProfileBackupListener, ProfileRestoreListener, DesignSystemListener {
     var router: ProfileHomeRouting? { get set }
     var listener: ProfileHomeListener? { get set }
 }
@@ -40,6 +41,9 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
     
     private var profileRestoreBuildable: ProfileRestoreBuildable
     private var profileRestoreRouting: Routing?
+    
+    private var designSystemBuildable: DesignSystemBuildable
+    private var designSystemRouting: Routing?
 
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
@@ -49,13 +53,15 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
         profileDeveloperBuildable: ProfileDeveloperBuildable,
         profileOpensourceBuildable: ProfileOpensourceBuildable,
         profileBackupBuildable: ProfileBackupBuildable,
-        profileRestoreBuildable: ProfileRestoreBuildable
+        profileRestoreBuildable: ProfileRestoreBuildable,
+        designSystemBuildable: DesignSystemBuildable
     ) {
         self.profilePasswordBuildable = profilePasswordBuildable
         self.profileDeveloperBuildable = profileDeveloperBuildable
         self.profileOpensourceBuildable = profileOpensourceBuildable
         self.profileBackupBuildable = profileBackupBuildable
         self.profileRestoreBuildable = profileRestoreBuildable
+        self.designSystemBuildable = designSystemBuildable
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
     }
@@ -217,5 +223,31 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
         
         detachChild(router)
         profileRestoreRouting = nil
+    }
+    
+    // MARK: - DesignSystem
+    func attachDesignSystem() {
+        if designSystemRouting != nil {
+            return
+        }
+        
+        let router = designSystemBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        designSystemRouting = router
+        attachChild(router)
+    }
+    
+    func detachDesignSystem(isOnlyDetach: Bool) {
+        guard let router = designSystemRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        designSystemRouting = nil
     }
 }
