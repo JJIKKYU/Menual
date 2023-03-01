@@ -18,6 +18,7 @@ public protocol ProfileRestoreConfirmPresentableListener: AnyObject {
     var fileName: String? { get }
     var fileCreatedAt: String? { get }
     var menualRestoreProgressRelay: BehaviorRelay<CGFloat> { get }
+    func restoreSuccess()
 }
 
 final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestoreConfirmViewControllable {
@@ -184,7 +185,19 @@ extension ProfileRestoreConfirmViewController: ProfileRestoreConfirmPresentable 
 // MARK: - Dialog Delegate
 extension ProfileRestoreConfirmViewController: DialogDelegate {
     func action(titleText: String) {
-        pressedBackBtn()
+        switch titleText {
+        case "메뉴얼을 가져올 수 없어요":
+            pressedBackBtn()
+            
+        case "메뉴얼 백업 파일이 아니에요":
+            pressedBackBtn()
+            
+        case "메뉴얼을 성공적으로 가져왔어요":
+            listener?.restoreSuccess()
+            
+        default:
+            break
+        }
     }
     
     func exit(titleText: String) {

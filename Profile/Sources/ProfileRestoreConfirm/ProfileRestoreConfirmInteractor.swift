@@ -27,7 +27,7 @@ public protocol ProfileRestoreConfirmPresentable: Presentable {
 
 public protocol ProfileRestoreConfirmListener: AnyObject {
     func profileRestoreConfirmPressedBackBtn(isOnlyDetach: Bool)
-    func profileRestoreSuccess()
+    func restoreSuccess()
 }
 
 public protocol ProfileRestoreConfirmInteractorDependency {
@@ -98,18 +98,6 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
                 case false:
                     self.presenter.notVaildZipFile()
                     print("ProfileRestore :: isRestoreMenualFile! = false")
-                }
-            })
-            .disposed(by: disposeBag)
-        
-        menualRestoreProgressRelay
-            .subscribe(onNext: { [weak self] percent in
-                guard let self = self else { return }
-                if percent < 0 { return }
-                print("ProfileRestoreConfirm :: \(percent)")
-                
-                if percent == 100 {
-                    self.listener?.profileRestoreSuccess()
                 }
             })
             .disposed(by: disposeBag)
@@ -260,5 +248,9 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
         
         menualRestoreProgressRelay.accept(1)
 
+    }
+    
+    func restoreSuccess() {
+        listener?.restoreSuccess()
     }
 }

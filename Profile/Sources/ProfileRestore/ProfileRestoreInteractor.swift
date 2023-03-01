@@ -17,7 +17,8 @@ import MenualRepository
 
 public protocol ProfileRestoreRouting: ViewableRouting {
     func attachProfileConfirm(fileURL: URL?)
-    func detachProfileConfirm(isOnlyDetach: Bool)
+    func detachProfileConfirm(isOnlyDetach: Bool, isAnimated: Bool)
+    func detachProfileConfirmIfSucess(isOnlyDetach: Bool, completion: @escaping (Bool) -> Void)
 }
 
 public protocol ProfileRestorePresentable: Presentable {
@@ -26,7 +27,7 @@ public protocol ProfileRestorePresentable: Presentable {
 
 public protocol ProfileRestoreListener: AnyObject {
     func pressedProfileRestoreBackBtn(isOnlyDetach: Bool)
-    func profileRestoreSuccess()
+    func restoreSuccess()
 }
 
 public protocol ProfileRestoreInteractorDependency {
@@ -71,15 +72,23 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
     }
     
     func profileRestoreConfirmPressedBackBtn(isOnlyDetach: Bool) {
-        router?.detachProfileConfirm(isOnlyDetach: isOnlyDetach)
+        router?.detachProfileConfirm(isOnlyDetach: isOnlyDetach, isAnimated: true)
     }
     
-    func profileRestoreSuccess() {
+    func restoreSuccess() {
         print("PRofileRestoreConfirm :: profileRestoreSuccess!")
-        router?.detachProfileConfirm(isOnlyDetach: false)
+        self.router?.detachProfileConfirm(isOnlyDetach: false, isAnimated: false)
+        self.listener?.restoreSuccess()
+        
+//        self.listener?.restoreSuccess()
+//        router?.detachProfileConfirmIfSucess(isOnlyDetach: false, completion: { isSuccess in
+//            if isSuccess {
+//                self.listener?.restoreSuccess()
+//            }
+//        })
     }
     
     func clearProfileConfirmDetach() {
-        listener?.profileRestoreSuccess()
+        listener?.restoreSuccess()
     }
 }

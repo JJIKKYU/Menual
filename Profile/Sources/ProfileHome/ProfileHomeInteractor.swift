@@ -27,7 +27,7 @@ public protocol ProfileHomeRouting: ViewableRouting {
     func detachProfileBackup(isOnlyDetach: Bool)
     
     func attachProfileRestore()
-    func detachProfileRestore(isOnlyDetach: Bool)
+    func detachProfileRestore(isOnlyDetach: Bool, isAnimated: Bool)
     
     func attachDesignSystem()
     func detachDesignSystem(isOnlyDetach: Bool)
@@ -42,6 +42,7 @@ protocol ProfileHomePresentable: Presentable {
 public protocol ProfileHomeListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func profileHomePressedBackBtn(isOnlyDetach: Bool)
+    func restoreSuccess()
 }
 
 protocol ProfileHomeInteractorDependency {
@@ -233,14 +234,16 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     // MARK: - ProfileRestore
     func pressedProfileRestoreBackBtn(isOnlyDetach: Bool) {
-        router?.detachProfileRestore(isOnlyDetach: isOnlyDetach)
+        router?.detachProfileRestore(isOnlyDetach: isOnlyDetach, isAnimated: true)
     }
     
     func pressedProfileRestoreCell() {
         router?.attachProfileRestore()
     }
-    func profileRestoreSuccess() {
-        router?.detachProfileRestore(isOnlyDetach: false)
+    func restoreSuccess() {
+        router?.detachProfileRestore(isOnlyDetach: false, isAnimated: false)
+        listener?.restoreSuccess()
+        // listener?.profileHomePressedBackBtn(isOnlyDetach: false)
         // presenter.showToastRestoreSuccess()
     }
     

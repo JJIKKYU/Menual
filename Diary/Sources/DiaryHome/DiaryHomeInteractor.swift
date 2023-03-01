@@ -17,7 +17,7 @@ import DiaryBottomSheet
 
 public protocol DiaryHomeRouting: ViewableRouting {
     func attachMyPage()
-    func detachMyPage(isOnlyDetach: Bool)
+    func detachMyPage(isOnlyDetach: Bool, isAnimated: Bool)
     func attachDiarySearch()
     func detachDiarySearch(isOnlyDetach: Bool)
     func attachDiaryWriting(page: Int)
@@ -44,6 +44,8 @@ public protocol DiaryHomePresentable: Presentable {
     
     func insertTableViewSection()
     func deleteTableViewSection(section: Int)
+    
+    func showRestoreSuccessToast()
 }
 
 public protocol DiaryHomeListener: AnyObject {
@@ -355,7 +357,13 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func profileHomePressedBackBtn(isOnlyDetach: Bool) {
         print("DiaryHomeInteractor :: profileHomePressedBackBtn!")
-        router?.detachMyPage(isOnlyDetach: isOnlyDetach)
+        router?.detachMyPage(isOnlyDetach: isOnlyDetach, isAnimated: true)
+    }
+    
+    func restoreSuccess() {
+        print("DiaryHomeInteractor :: restoreSuccess!")
+        router?.detachMyPage(isOnlyDetach: false, isAnimated: false)
+        presenter.showRestoreSuccessToast()
     }
     
     // MARK: - Diary Search (검색화면) 관련 함수

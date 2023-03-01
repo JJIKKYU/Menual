@@ -51,17 +51,32 @@ public final class ProfileRestoreRouter: ViewableRouter<ProfileRestoreInteractab
         attachChild(router)
     }
     
-    public func detachProfileConfirm(isOnlyDetach: Bool) {
+    public func detachProfileConfirm(isOnlyDetach: Bool, isAnimated: Bool) {
         guard let router = profileRestoreConfirmRouting else {
             return
         }
         
         if !isOnlyDetach {
-            viewController.popViewController(animated: true)
+            viewController.popViewController(animated: isAnimated)
         }
         
         detachChild(router)
         profileRestoreConfirmRouting = nil
-        // interactor.clearProfileConfirmDetach()
+    }
+    
+    /// 복원 성공시 detach하는 함수
+    public func detachProfileConfirmIfSucess(isOnlyDetach: Bool, completion: @escaping (Bool) -> Void) {
+        guard let router = profileRestoreConfirmRouting else {
+            completion(false)
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: false)
+        }
+        
+        // detachChild(router)
+        profileRestoreConfirmRouting = nil
+        completion(true)
     }
 }

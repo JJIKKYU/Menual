@@ -212,13 +212,13 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
         attachChild(router)
     }
     
-    func detachProfileRestore(isOnlyDetach: Bool) {
+    func detachProfileRestore(isOnlyDetach: Bool, isAnimated: Bool) {
         guard let router = profileRestoreRouting else {
             return
         }
         
         if !isOnlyDetach {
-            viewController.popViewController(animated: true)
+            viewController.popViewController(animated: isAnimated)
         }
         
         detachChild(router)

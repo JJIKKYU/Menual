@@ -533,6 +533,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         myMenualTableView.insertRows(at: indexPaths, with: .automatic)
         myMenualTableView.endUpdates()
     }
+    
+    func showRestoreSuccessToast() {
+        showToast(message: "메뉴얼 가져오기가 완료되었습니다.")
+    }
 }
 
 // MARK: - IBAction
