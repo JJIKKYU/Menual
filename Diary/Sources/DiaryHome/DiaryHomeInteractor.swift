@@ -316,6 +316,15 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     
                 case .update(let model, let deletions, let insertions, let modifications):
                     print("DiaryHome :: Moments! update! = \(model)")
+                    self.setOnboardingDiaries()
+                    
+                    if modifications.count > 0 {
+                        print("DiaryHome :: Moments! modifications! -> 메뉴얼 불러오기 등..")
+                        guard let momentsRealm = realm.objects(MomentsRealm.self).toArray(type: MomentsRealm.self).first
+                        else { return }
+                        self.momentsRealm = momentsRealm
+                        self.presenter.reloadCollectionView()
+                    }
 
                     if deletions.count > 0 {
                         print("DiaryHome :: Moments! delete!")
@@ -527,7 +536,10 @@ extension DiaryHomeInteractor {
         guard let realm = Realm.safeInit() else { return }
         guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
         // onboarding이 보일 필요가 없으면 return
-        if momentsRealm.onboardingIsClear == true { return }
+        if momentsRealm.onboardingIsClear == true {
+            onboardingDiarySet.accept(nil)
+            return
+        }
 
         let diaries = realm.objects(DiaryModelRealm.self)
             .toArray(type: DiaryModelRealm.self)

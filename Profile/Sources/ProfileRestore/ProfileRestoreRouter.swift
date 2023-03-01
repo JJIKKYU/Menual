@@ -12,8 +12,6 @@ import Foundation
 public protocol ProfileRestoreInteractable: Interactable, ProfileRestoreConfirmListener {
     var router: ProfileRestoreRouting? { get set }
     var listener: ProfileRestoreListener? { get set }
-    
-    func clearProfileConfirmDetach()
 }
 
 public protocol ProfileRestoreViewControllable: ViewControllable {
@@ -62,21 +60,5 @@ public final class ProfileRestoreRouter: ViewableRouter<ProfileRestoreInteractab
         
         detachChild(router)
         profileRestoreConfirmRouting = nil
-    }
-    
-    /// 복원 성공시 detach하는 함수
-    public func detachProfileConfirmIfSucess(isOnlyDetach: Bool, completion: @escaping (Bool) -> Void) {
-        guard let router = profileRestoreConfirmRouting else {
-            completion(false)
-            return
-        }
-        
-        if !isOnlyDetach {
-            viewController.popViewController(animated: false)
-        }
-        
-        // detachChild(router)
-        profileRestoreConfirmRouting = nil
-        completion(true)
     }
 }

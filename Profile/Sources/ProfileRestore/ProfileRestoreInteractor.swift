@@ -18,7 +18,6 @@ import MenualRepository
 public protocol ProfileRestoreRouting: ViewableRouting {
     func attachProfileConfirm(fileURL: URL?)
     func detachProfileConfirm(isOnlyDetach: Bool, isAnimated: Bool)
-    func detachProfileConfirmIfSucess(isOnlyDetach: Bool, completion: @escaping (Bool) -> Void)
 }
 
 public protocol ProfileRestorePresentable: Presentable {
@@ -75,20 +74,10 @@ final class ProfileRestoreInteractor: PresentableInteractor<ProfileRestorePresen
         router?.detachProfileConfirm(isOnlyDetach: isOnlyDetach, isAnimated: true)
     }
     
+    /// DiaryHome까지 restoreSucess 전달
     func restoreSuccess() {
         print("PRofileRestoreConfirm :: profileRestoreSuccess!")
         self.router?.detachProfileConfirm(isOnlyDetach: false, isAnimated: false)
         self.listener?.restoreSuccess()
-        
-//        self.listener?.restoreSuccess()
-//        router?.detachProfileConfirmIfSucess(isOnlyDetach: false, completion: { isSuccess in
-//            if isSuccess {
-//                self.listener?.restoreSuccess()
-//            }
-//        })
-    }
-    
-    func clearProfileConfirmDetach() {
-        listener?.restoreSuccess()
     }
 }

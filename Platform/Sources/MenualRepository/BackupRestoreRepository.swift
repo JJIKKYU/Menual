@@ -22,6 +22,7 @@ public protocol BackupRestoreRepository {
     func makeRestoreData<T: Object & Codable>(of: T.Type, data: Data?) -> [T]?
     func restoreWithJsonSaveImageData(diaryModelRealm: [DiaryModelRealm], imageFiles: [ImageFile])
     func restoreWithJson(restoreFile: RestoreFile, progressRelay: BehaviorRelay<CGFloat>)
+    func clearCacheDirecotry(completion: @escaping (Bool) -> Void)
 }
 
 public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
@@ -189,11 +190,12 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         /// DiaryData
 
         if let diaryArray = makeRestoreData(of: DiaryModelRealm.self, data: restoreFile.diaryData) {
+            let filteredDiaryArray = diaryArray.filter { $0.isDeleted == false }
             restoreWithJsonSaveImageData(diaryModelRealm: diaryArray, imageFiles: restoreFile.imageDataArr)
             deleteDiaries()
             
             realm.safeWrite {
-                realm.add(diaryArray)
+                realm.add(filteredDiaryArray)
             }
         }
         progressRelay.accept(0.3)
@@ -319,6 +321,29 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
             guard let newObjectId = objectIdSet[imageFile.fileName] else { return }
             let imageURL = documentDirectory.appendingPathComponent(newObjectId + imageFile.type.rawValue)
             try? imageFile.data.write(to: imageURL)
+        }
+    }
+    
+    /// 임시로 압축을 풀어서 확인했던 Cache 폴더 데이터 일괄 정리
+    public func clearCacheDirecotry(completion: @escaping (Bool) -> Void) {
+        let fileManager = FileManager.default
+        
+        guard let cacheURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first else {
+            completion(false)
+            return
+        }
+        
+        do {
+            let contents = try fileManager.contentsOfDirectory(at: cacheURL, includingPropertiesForKeys: nil, options: [])
+            print("backupRepo :: contents = \(contents)")
+
+           for url in contents {
+               try fileManager.removeItem(at: url)
+           }
+            completion(true)
+        } catch {
+            completion(false)
+            print("backupRepo :: cache를 삭제하는데 오류가 발생했습니다. \(error)")
         }
     }
 }

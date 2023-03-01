@@ -46,6 +46,13 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
     internal let menualRestoreProgressRelay = BehaviorRelay<CGFloat>(value: -1)
     var fileName: String?
     var fileCreatedAt: String?
+    var hash: String?
+    /// 여러번 같은 이름의 폴더를 압축을 풀 수 있으니 hash정보와 함께
+    var fileDirectory: String? {
+        guard let fileName = fileName,
+              let hash = hash else { return nil }
+        return fileName + "_" + hash
+    }
     
     internal let fileURL: URL?
 
@@ -110,7 +117,9 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
               let fileCreatedAt = fileCreatedAt else { return nil }
         // Cache폴더에 복원하고자 하는 File을 미리 압축을 해제했음.
         var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-        path += "/jsonTest/"
+        guard let fileDirectory = fileDirectory else { return nil }
+        print("ProfileRestoreConfirm :: fileDirectory2 = \(fileDirectory)")
+        path += "/\(fileDirectory)/"
 
         var restoreFile = RestoreFile(fileName: fileName,
                                       createdDate: fileCreatedAt,
@@ -179,6 +188,12 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
     
     func pressedBackBtn(isOnlyDetach: Bool) {
         listener?.profileRestoreConfirmPressedBackBtn(isOnlyDetach: isOnlyDetach)
+        
+        // 실패하거나, 성공해도 모두 Progress 진행
+        dependency.backupRestoreRepository
+            .clearCacheDirecotry { isSuccess in
+                print("ProfileRestoreConfirm :: cahce isSucess! \(isSuccess)")
+            }
     }
     
     /// 유저가 선택한 파일이 MenualZipFile인지 체크
@@ -188,10 +203,13 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
         
         self.fileName = url.lastPathComponent
         self.fileCreatedAt = getFileCreatedAt(url: url)
+        self.hash = UUID().uuidString
         self.presenter.fileNameAndDateSetUI()
 
         var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-        path += "/jsonTest/"
+        guard let fileDirectory = fileDirectory else { return }
+        print("ProfileRestoreConfirm :: fileDirectionry = \(fileDirectory)")
+        path += "/\(fileDirectory)/"
         
         // 메뉴얼 저장된게 없으면 메뉴얼 Zip파일이 아니라고 판단
         var isDiaryJson: Bool = false
@@ -246,8 +264,11 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
                              progressRelay: menualRestoreProgressRelay
             )
         
-        menualRestoreProgressRelay.accept(1)
-
+        // 실패하거나, 성공해도 모두 Progress 진행
+        dependency.backupRestoreRepository
+            .clearCacheDirecotry { isSuccess in
+                self.menualRestoreProgressRelay.accept(1)
+            }
     }
     
     func restoreSuccess() {

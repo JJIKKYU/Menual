@@ -461,8 +461,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                     self.view.layoutIfNeeded()
                     self.myMenualTableView.reloadData()
                 } else {
+                    self.tableViewHeaderView.snp.updateConstraints { make in
+                        make.height.equalTo(172)
+                    }
                     self.momentsNoStartView.isHidden = true
                 }
+                self.view.layoutIfNeeded()
+                self.myMenualTableView.reloadData()
             })
             .disposed(by: disposeBag)
     }

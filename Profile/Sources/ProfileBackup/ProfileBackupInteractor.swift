@@ -89,7 +89,9 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
     
     func checkIsBackupEnabled() -> Bool {
         guard let realm = Realm.safeInit() else { return false }
-        let diaryCount = realm.objects(DiaryModelRealm.self).count
+        let diaryCount = realm.objects(DiaryModelRealm.self)
+            .filter { $0.isDeleted == false }
+            .count
         return diaryCount == 0 ? false : true
     }
 
