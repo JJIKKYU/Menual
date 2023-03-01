@@ -78,6 +78,7 @@ let package = Package(
                 "ProfilePassword",
                 "ProfileBackup",
                 "ProfileRestore",
+                "ProfileDesignSystem",
                 .product(name: "RIBs", package: "RIBs"),
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
