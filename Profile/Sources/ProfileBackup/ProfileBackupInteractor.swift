@@ -72,7 +72,7 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
                     self.presenter.configueBackupHistoryUI()
                     break
 
-                case .update(let model, let deletions, let insertions, let modifications):
+                case .update(let model, _, _, _):
                     guard let model = model
                         .toArray(type: BackupHistoryModelRealm.self)
                         .first else { return }
@@ -81,9 +81,16 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
                     break
 
                 case .error(let error):
+                    print("ProfileBack :: error! \(error)")
                     break
                 }
             }
+    }
+    
+    func checkIsBackupEnabled() -> Bool {
+        guard let realm = Realm.safeInit() else { return false }
+        let diaryCount = realm.objects(DiaryModelRealm.self).count
+        return diaryCount == 0 ? false : true
     }
 
     override func willResignActive() {

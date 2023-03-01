@@ -16,6 +16,7 @@ public protocol ProfileBackupPresentableListener: AnyObject {
     func saveZip()
     func addOrUpdateBackupHistory()
     
+    func checkIsBackupEnabled() -> Bool
     var backupHistoryModelRealm: BackupHistoryModelRealm? { get }
 }
 
@@ -218,7 +219,21 @@ extension ProfileBackupViewController {
     
     @objc
     func pressedBackupBtn() {
-        listener?.saveZip()
+        guard let isEnable = listener?.checkIsBackupEnabled() else { return }
+        switch isEnable {
+        // 백업할 파일이 있을 경우 백업 진행
+        case true:
+            listener?.saveZip()
+        
+        // 백업할 파일이 없을 경우 팝업
+        case false:
+            show(size: .medium,
+                 buttonType: .oneBtn,
+                 titleText: "백업할 수 있는 메뉴얼이 없어요",
+                 subTitleText: "메뉴얼을 작성하고 백업을 진행해주세요.",
+                 confirmButtonText: "확인"
+            )
+        }
     }
 }
 
@@ -246,5 +261,16 @@ extension ProfileBackupViewController {
 
         // Show the share-view
         self.present(activityViewController, animated: true, completion: nil)
+    }
+}
+
+// MARK: - Dialog
+extension ProfileBackupViewController: DialogDelegate {
+    func action(titleText: String) {
+        
+    }
+    
+    func exit(titleText: String) {
+        
     }
 }
