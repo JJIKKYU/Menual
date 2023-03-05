@@ -27,7 +27,7 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
     
     lazy var naviView = MenualNaviView(type: .moments).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.titleLabel.text = "메뉴얼 가져오기"
+        $0.titleLabel.text = MenualString.restore_title
         $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
     }
     lazy var bottomBoxButton = BoxButton(frame: .zero, btnStatus: .active, btnSize: .large)
@@ -72,13 +72,13 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
         
         fileConfirmTitleLabel.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.text = "파일이 맞는지 확인해주세요."
+            $0.text = MenualString.restore_title_last_confirm
             $0.font = UIFont.AppTitle(.title_3)
             $0.textColor = Colors.grey.g100
         }
         
         bottomBoxButton.do {
-            $0.title = "메뉴얼 가져오기"
+            $0.title = MenualString.profile_button_restore
             $0.addTarget(self, action: #selector(pressedRestoreBtn), for: .touchUpInside)
         }
         
@@ -146,8 +146,8 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
     func showCompletePopup() {
         show(size: .small,
              buttonType: .oneBtn,
-             titleText: "메뉴얼을 성공적으로 가져왔어요",
-             confirmButtonText: "확인"
+             titleText: MenualString.restore_alert_success,
+             confirmButtonText: MenualString.writing_alert_confirm
         )
     }
 }
@@ -157,22 +157,18 @@ extension ProfileRestoreConfirmViewController: ProfileRestoreConfirmPresentable 
     func notVaildZipFile() {
         show(size: .medium,
              buttonType: .oneBtn,
-             titleText: "메뉴얼 백업 파일이 아니에요",
-             subTitleText: "파일을 제대로 선택했는지 확인해주세요.",
-             confirmButtonText: "확인"
+             titleText: MenualString.restore_alert_title_not_menual,
+             subTitleText: MenualString.restore_alert_desc_not_menual,
+             confirmButtonText: MenualString.writing_alert_confirm
         )
     }
     
     func loadErrorZipFile() {
         show(size: .large,
              buttonType: .oneBtn,
-             titleText: "메뉴얼을 가져올 수 없어요",
-             subTitleText:
-             """
-             메뉴얼을 가져오는 중 오류가 발생했어요.
-             잠시 후 다시 시도해주세요.
-             """,
-             confirmButtonText: "확인"
+             titleText: MenualString.restore_alert_title_error,
+             subTitleText: MenualString.restore_alert_desc_error,
+             confirmButtonText: MenualString.writing_alert_confirm
         )
     }
     
@@ -186,13 +182,13 @@ extension ProfileRestoreConfirmViewController: ProfileRestoreConfirmPresentable 
 extension ProfileRestoreConfirmViewController: DialogDelegate {
     func action(titleText: String) {
         switch titleText {
-        case "메뉴얼을 가져올 수 없어요":
+        case MenualString.restore_alert_title_error:
             pressedBackBtn()
             
-        case "메뉴얼 백업 파일이 아니에요":
+        case MenualString.restore_alert_title_not_menual:
             pressedBackBtn()
             
-        case "메뉴얼을 성공적으로 가져왔어요":
+        case MenualString.restore_alert_success:
             listener?.restoreSuccess()
             
         default:

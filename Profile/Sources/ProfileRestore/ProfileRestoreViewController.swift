@@ -63,7 +63,7 @@ extension ProfileRestoreViewController {
         }
 
         bottomBoxButton.do {
-            $0.title = "가져올 파일 선택하기"
+            $0.title = MenualString.restore_button_select_file
             $0.addTarget(self, action: #selector(pressedRestoreBtn), for: .touchUpInside)
         }
         
@@ -75,12 +75,7 @@ extension ProfileRestoreViewController {
             $0.lineBreakStrategy = .hangulWordPriority
             $0.numberOfLines = 0
             $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.text =
-            """
-            ・ 메뉴얼을 불러오면 이전에 기록한 메뉴얼들은 모두 삭제돼요.
-            ・ 삭제된 메뉴얼은 복원할 수 없어요. 백업 파일을 확인하고 메뉴얼 가져오기를 진행해주세요.
-            ・ 아이클라우드에서 파일을 불러올 경우 인터넷 연결 상태를 확인해주세요.
-            """
+            $0.text = MenualString.restore_desc_notice
             $0.setLineHeight(lineHeight: 1.44)
             $0.font = UIFont.AppBodyOnlyFont(.body_2)
             $0.textColor = Colors.grey.g300
@@ -88,7 +83,7 @@ extension ProfileRestoreViewController {
         
         restoreOrderTitleLabel.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.text = "메뉴얼 가져오기 순서"
+            $0.text = MenualString.restore_title_order
             $0.font = UIFont.AppTitle(.title_3)
             $0.textColor = Colors.grey.g100
         }
@@ -97,14 +92,7 @@ extension ProfileRestoreViewController {
             $0.lineBreakStrategy = .hangulWordPriority
             $0.numberOfLines = 0
             $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.text =
-            """
-            1. 하단의 [파일 선택하기] 버튼을 눌러주세요.
-            2. 팝업창에서 불러올 파일을 선택해주세요
-               메뉴얼의 백업 파일은 '.zip' 형식이에요.
-            3. [메뉴얼 가져오기] 버튼을 눌러 불러오기를 진행해주세요.
-            4. 메뉴얼 가져오기가 완료됐어요 :)
-            """
+            $0.text = MenualString.restore_desc_order
             $0.setLineHeight(lineHeight: 1.44)
             $0.font = UIFont.AppBodyOnlyFont(.body_2)
             $0.textColor = Colors.grey.g300

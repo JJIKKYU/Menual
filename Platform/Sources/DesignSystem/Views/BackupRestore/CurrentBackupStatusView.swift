@@ -98,7 +98,7 @@ public class CurrentBackupStatusView: UIView {
             $0.distribution = .fill
         }
         currentBackupDate.do {
-            $0.text = "백업한 날짜"
+            $0.text = MenualString.backup_desc_recent_date
             $0.font = UIFont.AppBodyOnlyFont(.body_2)
             $0.textColor = Colors.grey.g400
         }
@@ -115,7 +115,7 @@ public class CurrentBackupStatusView: UIView {
             $0.distribution = .fill
         }
         currentBackupDiarycount.do {
-            $0.text = "백업한 메뉴얼 개수"
+            $0.text = MenualString.backup_desc_recent_count
             $0.font = UIFont.AppBodyOnlyFont(.body_2)
             $0.textColor = Colors.grey.g400
         }
@@ -132,7 +132,7 @@ public class CurrentBackupStatusView: UIView {
             $0.distribution = .fill
         }
         currentBackupPage.do {
-            $0.text = "마지막 메뉴얼 페이지"
+            $0.text = MenualString.backup_desc_recent_page
             $0.font = UIFont.AppBodyOnlyFont(.body_2)
             $0.textColor = Colors.grey.g400
         }
@@ -146,11 +146,7 @@ public class CurrentBackupStatusView: UIView {
         backupInformationLabel.do {
             $0.numberOfLines = 0
             $0.textAlignment = .center
-            $0.text =
-            """
-            메뉴얼을 백업하시면
-            이곳에 백업한 메뉴얼 정보가 표시돼요.
-            """
+            $0.text = MenualString.backup_desc_recent_empty
             $0.setLineHeight(lineHeight: 1.34)
             $0.textColor = Colors.grey.g400
             $0.font = UIFont.AppBodyOnlyFont(.body_2)
@@ -215,10 +211,10 @@ public class CurrentBackupStatusView: UIView {
             }
 
             currentBackupPageStackView.isHidden = false
-            currentBackupPage.text = "파일명"
+            currentBackupPage.text = MenualString.restore_desc_file_name
             currentBackupPageDesc.text = fileName
             currentBackupDiarycountStackView.isHidden = false
-            currentBackupDiarycount.text = "생성일"
+            currentBackupDiarycount.text = MenualString.restore_desc_date
             currentBackupDiarycountDesc.text = fileCreatedAt
             currentBackupDateStackView.isHidden = true
             backupInformationLabel.isHidden = true
