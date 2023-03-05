@@ -7,7 +7,7 @@
 
 import RIBs
 
-protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener, FABListener, TabsListener, PaginationListener, EmptyViewListener, MetaDataListener, NumberPadListener {
+protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener, FABListener, TabsListener, PaginationListener, EmptyViewListener, MetaDataListener, NumberPadListener, ProgressListener {
     var router: DesignSystemRouting? { get set }
     var listener: DesignSystemListener? { get set }
 }
@@ -57,6 +57,9 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
     private let numberPadBuildable: NumberPadBuildable
     private var numberPadRouting: Routing?
     
+    private let progressBuildable: ProgressBuildable
+    private var progressRouting: Routing?
+    
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DesignSystemInteractable,
@@ -73,7 +76,8 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         paginationBuildable: PaginationBuildable,
         emptyBuildable: EmptyViewBuildable,
         metaDataBuildable: MetaDataBuildable,
-        numberPadBuildable: NumberPadBuildable
+        numberPadBuildable: NumberPadBuildable,
+        progressBuildable: ProgressBuildable
     ) {
         self.boxButtonBuildable = boxButtonBuildable
         self.gnbHeaderBuildable = gnbHeaderBuildable
@@ -88,6 +92,7 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         self.emptyBuildable = emptyBuildable
         self.metaDataBuildable = metaDataBuildable
         self.numberPadBuildable = numberPadBuildable
+        self.progressBuildable = progressBuildable
         super.init(interactor: interactor,
                    viewController: viewController
         )
@@ -430,6 +435,32 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         
         detachChild(router)
         numberPadRouting = nil
+    }
+    
+    // MARK: - Progress
+    func attachProgressVC() {
+        if numberPadRouting != nil {
+            return
+        }
+        
+        let router = progressBuildable.build(withListener: interactor)
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        progressRouting = router
+        attachChild(router)
+    }
+    
+    func detachProgressVC(isOnlyDetach: Bool) {
+        guard let router = progressRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: true)
+        }
+        
+        detachChild(router)
+        progressRouting = nil
     }
 
 }

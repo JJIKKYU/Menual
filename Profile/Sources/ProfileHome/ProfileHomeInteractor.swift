@@ -27,17 +27,22 @@ public protocol ProfileHomeRouting: ViewableRouting {
     func detachProfileBackup(isOnlyDetach: Bool)
     
     func attachProfileRestore()
-    func detachProfileRestore(isOnlyDetach: Bool)
+    func detachProfileRestore(isOnlyDetach: Bool, isAnimated: Bool)
+    
+    func attachDesignSystem()
+    func detachDesignSystem(isOnlyDetach: Bool)
 }
 
 protocol ProfileHomePresentable: Presentable {
     var listener: ProfileHomePresentableListener? { get set }
-    // TODO: Declare methods the interactor can invoke the presenter to present data.
+    
+    func showToastRestoreSuccess()
 }
 
 public protocol ProfileHomeListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func profileHomePressedBackBtn(isOnlyDetach: Bool)
+    func restoreSuccess()
 }
 
 protocol ProfileHomeInteractorDependency {
@@ -68,6 +73,14 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
             // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자 도구"),
         ]
 
+        return arr
+    }
+    
+    var profileHomeDevDataArr: [ProfileHomeModel] {
+        let arr: [ProfileHomeModel] = [
+            ProfileHomeModel(section: .DEV, type: .arrow, title: "디자인 시스템", actionName: "designSystem")
+        ]
+        
         return arr
     }
     
@@ -221,11 +234,17 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     // MARK: - ProfileRestore
     func pressedProfileRestoreBackBtn(isOnlyDetach: Bool) {
-        router?.detachProfileRestore(isOnlyDetach: isOnlyDetach)
+        router?.detachProfileRestore(isOnlyDetach: isOnlyDetach, isAnimated: true)
     }
     
     func pressedProfileRestoreCell() {
         router?.attachProfileRestore()
+    }
+    func restoreSuccess() {
+        router?.detachProfileRestore(isOnlyDetach: false, isAnimated: false)
+        listener?.restoreSuccess()
+        // listener?.profileHomePressedBackBtn(isOnlyDetach: false)
+        // presenter.showToastRestoreSuccess()
     }
     
     // MARK: - ProfileBackup
@@ -235,5 +254,14 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     func pressedProfileBackupBackBtn(isOnlyDetach: Bool) {
         router?.detachProfileBackup(isOnlyDetach: isOnlyDetach)
+    }
+    
+    // MARK: - DesignSystem
+    func pressedDesignSystemCell() {
+        router?.attachDesignSystem()
+    }
+    
+    func designSystemPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachDesignSystem(isOnlyDetach: isOnlyDetach)
     }
 }

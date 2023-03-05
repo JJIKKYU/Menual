@@ -16,7 +16,7 @@ import UserNotifications
 public protocol DiaryRepository {
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var password: BehaviorRelay<PasswordModelRealm?> { get }
-
+    
     func addDiary(info: DiaryModelRealm)
     func updateDiary(info: DiaryModelRealm, uuid: String)
     func updateDiary(DiaryModel: DiaryModelRealm ,reminder: ReminderModelRealm?)
@@ -72,10 +72,10 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         // 3. 이미지 압축(image.pngData())
         // 압축할거면 jpegData로~(0~1 사이 값)
-//        guard let data = image.pngData() else {
-//            print("압축이 실패했습니다.")
-//            return
-//        }
+        //        guard let data = image.pngData() else {
+        //            print("압축이 실패했습니다.")
+        //            return
+        //        }
         let data = imageData
         
         // 4. 이미지 저장: 동일한 경로에 이미지를 저장하게 될 경우, 덮어쓰기하는 경우
@@ -102,7 +102,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             completionHandler(false)
         }
     }
-    
+
     public func deleteImageFromDocumentDirectory(diaryUUID: String, completionHandler: @escaping (Bool) -> Void) {
         // 1. 이미지를 삭제할 경로를 설정해줘야함 - 도큐먼트 폴더,File 관련된건 Filemanager가 관리함(싱글톤 패턴)
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {return}
@@ -155,20 +155,20 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         let diariesCount = realm.objects(DiaryModelRealm.self)
             .sorted(byKeyPath: "createdAt", ascending: false)
             .filter({ $0.isDeleted == false })
             .first?
             .pageNum ?? 0
-
+        
         info.updatePageNum(pageNum: diariesCount)
-
+        
         realm.safeWrite {
             realm.add(info)
         }
     }
-
+    
     public func updateDiary(info: DiaryModelRealm, uuid: String) {
         print("Repo :: update Diary!")
         // Realm에서 DiaryModelRealm Array를 받아온다.
@@ -180,7 +180,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         else { return }
         
         print("Repo :: update Diary! - 2")
-
+        
         realm.safeWrite {
             data.readCount = info.readCount + 1
             if data.title != info.title {
@@ -191,12 +191,12 @@ public final class DiaryRepositoryImp: DiaryRepository {
             if data.desc != info.desc {
                 data.desc = info.desc
             }
-
+            
             // TODO: - 이미지 생성 시점 체크할 것
             if data.image != info.image {
                 data.image = info.image
             }
-
+            
             if data.weather?.weather != info.weather?.weather ||
                 data.weather?.detailText != info.weather?.detailText {
                 data.weather = info.weather
@@ -226,7 +226,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 print("DiaryDetail :: repo :: reminder.uuid = \(reminder)")
                 UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder])
             }
-
+            
             realm.safeWrite {
                 DiaryModel.reminder = nil
             }
@@ -248,7 +248,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         realm.safeWrite {
             info.isDeleted = true
         }
@@ -267,7 +267,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 realm.delete(searchData)
             }
         }
-
+        
         // 리마인더가 있따면 함께 삭제
         if let reminder = info.reminder {
             UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [reminder.uuid])
@@ -280,7 +280,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         realm.safeWrite {
             info.isHide = isHide
         }
@@ -291,12 +291,12 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         let repliesCount = diaryModel
             .repliesArr
             .filter ({ $0.isDeleted == false })
             .count
-
+        
         info.updateReplyNum(replyNum: repliesCount)
         
         realm.safeWrite {
@@ -308,12 +308,12 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         realm.safeWrite {
             realm.delete(replyModel)
         }
     }
-
+    
     // MARK: - 최근검색목록 로직 (SearchModel)
     public func deleteAllRecentDiarySearch() {
         print("Search :: DiaryRepository :: deleteAllRecentDiarySearch!")
@@ -355,7 +355,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 realm.delete(diarySearchRealm)
             }
         }
-
+        
         guard let diary = realm.objects(DiaryModelRealm.self).filter ({ $0.uuid == info.uuid}).first else { return }
         let diarySearchModel = DiarySearchModelRealm(diaryUuid: info.uuid,
                                                      diary: diary,
@@ -364,7 +364,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         )
         
         realm.safeWrite {
-             realm.add(diarySearchModel)
+            realm.add(diarySearchModel)
         }
     }
     
@@ -372,9 +372,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
     public func filterDiary(weatherTypes: [Weather], placeTypes: [Place], isOnlyFilterCount: Bool) -> Int {
         print("diaryRepo :: filterDiary -> 날짜/장소")
         guard let realm = Realm.safeInit() else { return 0 }
-
+        
         var diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
-
+        
         var section = Set<String>()
         let model = realm.objects(DiaryModelRealm.self)
             .filter { diary in
@@ -386,7 +386,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 if placeTypes.count != 0 {
                     checkedFilterCount += 1
                 }
-
+                
                 var isContainWeather: Bool = false
                 if let weather = diary.weather?.weather {
                     isContainWeather = weatherTypes.contains(weather)
@@ -400,13 +400,13 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 } else {
                     isContainPlace = false
                 }
-
+                
                 if checkedFilterCount == 2 {
                     return diary.isDeleted == false && isContainWeather && isContainPlace
                 } else if checkedFilterCount == 1 {
                     return diary.isDeleted == false && isContainWeather || isContainPlace
                 }
-
+                
                 return diary.isDeleted == false && isContainWeather || isContainPlace
             }
             .sorted(by: ({ $0.createdAt > $1.createdAt }))
@@ -414,9 +414,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
         if isOnlyFilterCount == true {
             return model.count
         }
-
+        
         model.forEach { section.insert($0.createdAt.toStringWithYYYYMM())}
-
+        
         var arraySection = Array(section)
         arraySection.sort { $0 > $1 }
         arraySection.enumerated().forEach { (index: Int, sectionName: String) in
@@ -448,9 +448,9 @@ public final class DiaryRepositoryImp: DiaryRepository {
                                                                 createdAt: Date(),
                                                                 isDeleted: false
         )
-
+        
         realm.safeWrite {
-             realm.add(realmModel)
+            realm.add(realmModel)
         }
     }
     
@@ -478,7 +478,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         guard let realm = Realm.safeInit() else {
             return
         }
-
+        
         let model = TempSaveModelRealm(uuid: tempSaveUUID,
                                        diaryModel: diaryModel,
                                        createdAt: Date(),
@@ -506,7 +506,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         print("diaryRepo :: passwordFetch! - 1")
-
+        
         guard let passwordModelRealm = realm.objects(PasswordModelRealm.self).first
         else { return }
         password.accept(passwordModelRealm)
@@ -518,7 +518,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
         print("diaryRepo :: addPassword! - 1")
-    
+        
         realm.safeWrite {
             realm.delete(realm.objects(PasswordModelRealm.self))
             realm.add(model)

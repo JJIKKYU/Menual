@@ -122,4 +122,27 @@ public struct MenualString {
     public static let filter_button_all_menual = "filter_button_all_menual".localized
     public static let restore_title = "restore_title".localized
     public static let backup_title = "backup_title".localized
+    public static let backup_alert_title_nothing = "backup_alert_title_nothing".localized
+    public static let backup_alert_desc_nothing = "backup_alert_desc_nothing".localized
+    public static let backup_desc_notice = "backup_desc_notice".localized
+    public static let backup_title_order = "backup_title_order".localized
+    public static let backup_desc_order = "backup_desc_order".localized
+    public static let backup_title_recent = "backup_title_recent".localized
+    public static let backup_desc_recent_date = "backup_desc_recent_date".localized
+    public static let backup_desc_recent_count = "backup_desc_recent_count".localized
+    public static let backup_desc_recent_page = "backup_desc_recent_page".localized
+    public static let backup_desc_recent_empty = "backup_desc_recent_empty".localized
+    public static let restore_button_select_file = "restore_button_select_file".localized
+    public static let restore_desc_notice = "restore_desc_notice".localized
+    public static let restore_title_order = "restore_title_order".localized
+    public static let restore_desc_order = "restore_desc_order".localized
+    public static let restore_alert_confirm_file = "restore_alert_confirm_file".localized
+    public static let restore_alert_success = "restore_alert_success".localized
+    public static let restore_alert_title_not_menual = "restore_alert_title_not_menual".localized
+    public static let restore_alert_desc_not_menual = "restore_alert_desc_not_menual".localized
+    public static let restore_alert_title_error = "restore_alert_title_error".localized
+    public static let restore_alert_desc_error = "restore_alert_desc_error".localized
+    public static let restore_desc_date = "restore_desc_date".localized
+    public static let restore_desc_file_name = "restore_desc_file_name".localized
+    public static let restore_title_last_confirm = "restore_title_last_confirm".localized
 }

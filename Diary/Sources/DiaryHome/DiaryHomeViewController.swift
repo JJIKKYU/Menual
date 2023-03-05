@@ -28,7 +28,6 @@ public protocol DiaryHomePresentableListener: AnyObject {
     func pressedWritingBtn()
     func pressedDiaryCell(diaryModel: DiaryModelRealm)
     func pressedMomentsCell(momentsItem: MomentsItemRealm)
-    func pressedMenualTitleBtn()
     func pressedFilterBtn()
     func pressedFilterResetBtn()
     func pressedDateFilterBtn()
@@ -480,8 +479,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                     self.view.layoutIfNeeded()
                     self.myMenualTableView.reloadData()
                 } else {
+                    self.tableViewHeaderView.snp.updateConstraints { make in
+                        make.height.equalTo(172)
+                    }
                     self.momentsNoStartView.isHidden = true
                 }
+                self.view.layoutIfNeeded()
+                self.myMenualTableView.reloadData()
             })
             .disposed(by: disposeBag)
     }
@@ -545,6 +549,17 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         myMenualTableView.insertRows(at: [IndexPath(row: row, section: section)], with: .automatic)
         myMenualTableView.endUpdates()
     }
+    
+    func insertTableViewRow(section: Int, rows: [Int]) {
+        myMenualTableView.beginUpdates()
+        let indexPaths = rows.map { IndexPath(item: $0, section: section)}
+        myMenualTableView.insertRows(at: indexPaths, with: .automatic)
+        myMenualTableView.endUpdates()
+    }
+    
+    func showRestoreSuccessToast() {
+        showToast(message: "메뉴얼 가져오기가 완료되었습니다.")
+    }
 }
 
 // MARK: - IBAction
@@ -576,7 +591,6 @@ extension DiaryHomeViewController {
     @objc
     func pressedMenualBtn(_ button: UIButton) {
         print("메뉴얼 버튼 눌렀니?")
-        listener?.pressedMenualTitleBtn()
     }
     
     @objc

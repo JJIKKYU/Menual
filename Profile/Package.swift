@@ -28,6 +28,9 @@ let package = Package(
             name: "ProfileRestore",
             targets: ["ProfileRestore"]),
         .library(
+            name: "ProfileRestoreConfirm",
+            targets: ["ProfileRestoreConfirm"]),
+        .library(
             name: "ProfileBackup",
             targets: ["ProfileBackup"]),
     ],
@@ -75,6 +78,7 @@ let package = Package(
                 "ProfilePassword",
                 "ProfileBackup",
                 "ProfileRestore",
+                "ProfileDesignSystem",
                 .product(name: "RIBs", package: "RIBs"),
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
@@ -111,16 +115,34 @@ let package = Package(
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "ZipArchive", package: "ZipArchive"),
+                .product(name: "MenualRepository", package: "Platform")
             ]
         ),
         .target(
             name: "ProfileRestore",
             dependencies: [
+                "ProfileRestoreConfirm",
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
                 .product(name: "RIBs", package: "RIBs"),
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "ZipArchive", package: "ZipArchive"),
                 .product(name: "MenualUtil", package: "Platform"),
+                .product(name: "MenualRepository", package: "Platform")
+            ]
+        ),
+        .target(
+            name: "ProfileRestoreConfirm",
+            dependencies: [
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "RIBs", package: "RIBs"),
+                .product(name: "DesignSystem", package: "Platform"),
+                .product(name: "MenualEntity", package: "Platform"),
+                .product(name: "ZipArchive", package: "ZipArchive"),
+                .product(name: "MenualUtil", package: "Platform"),
+                .product(name: "MenualRepository", package: "Platform")
             ]
         ),
     ]

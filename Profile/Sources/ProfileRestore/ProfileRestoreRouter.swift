@@ -6,8 +6,10 @@
 //
 
 import RIBs
+import ProfileRestoreConfirm
+import Foundation
 
-public protocol ProfileRestoreInteractable: Interactable {
+public protocol ProfileRestoreInteractable: Interactable, ProfileRestoreConfirmListener {
     var router: ProfileRestoreRouting? { get set }
     var listener: ProfileRestoreListener? { get set }
 }
@@ -17,10 +19,46 @@ public protocol ProfileRestoreViewControllable: ViewControllable {
 }
 
 public final class ProfileRestoreRouter: ViewableRouter<ProfileRestoreInteractable, ProfileRestoreViewControllable>, ProfileRestoreRouting {
+    
+    private var profileRestoreConfirmBuildable: ProfileRestoreConfirmBuildable
+    private var profileRestoreConfirmRouting: Routing?
 
     // TODO: Constructor inject child builder protocols to allow building children.
-    override init(interactor: ProfileRestoreInteractable, viewController: ProfileRestoreViewControllable) {
+    init(
+        interactor: ProfileRestoreInteractable,
+        viewController: ProfileRestoreViewControllable,
+        profileRestoreConfirmBuildable: ProfileRestoreConfirmBuildable
+    ) {
+        self.profileRestoreConfirmBuildable = profileRestoreConfirmBuildable
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
+    }
+    
+    public func attachProfileConfirm(fileURL: URL?) {
+        if profileRestoreConfirmRouting != nil {
+            return
+        }
+        
+        let router = profileRestoreConfirmBuildable.build(
+            withListener: interactor,
+            fileURL: fileURL
+        )
+        viewController.pushViewController(router.viewControllable, animated: true)
+        
+        profileRestoreConfirmRouting = router
+        attachChild(router)
+    }
+    
+    public func detachProfileConfirm(isOnlyDetach: Bool, isAnimated: Bool) {
+        guard let router = profileRestoreConfirmRouting else {
+            return
+        }
+        
+        if !isOnlyDetach {
+            viewController.popViewController(animated: isAnimated)
+        }
+        
+        detachChild(router)
+        profileRestoreConfirmRouting = nil
     }
 }
