@@ -211,7 +211,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
                             // 전체 pageNum 추려내기
                             let lastPageNum = model.filter { $0.isDeleted == false }
-                                .sorted { $0.createdAt < $1.createdAt }
+                                .sorted { $0.createdAt > $1.createdAt }
                                 .first?.pageNum ?? 0
                             
                             self.lastPageNumRelay.accept(lastPageNum)
