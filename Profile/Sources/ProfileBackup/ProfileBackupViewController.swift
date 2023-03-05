@@ -255,7 +255,10 @@ extension ProfileBackupViewController {
         activityViewController.completionWithItemsHandler = { [weak self] activity, success, items, error in
             guard let self = self else { return }
             print("ProfileBackup :: activity: \(activity), success: \(success), items: \(items), error: \(error)")
-            self.listener?.addOrUpdateBackupHistory()
+            // 저장에 성공했을 때만 DB에 저장
+            if success {
+                self.listener?.addOrUpdateBackupHistory()
+            }
         }
     
 
