@@ -31,18 +31,21 @@ let package = Package(
             targets: ["DiaryWriting"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/uber/RIBs", branch: "main"),
         .package(url: "https://github.com/devxoul/Then", exact: Version("3.0.0")),
         .package(url: "https://github.com/realm/realm-swift", exact: Version("10.34.0")),
         .package(url: "https://github.com/SnapKit/SnapKit", exact: Version("5.6.0")),
         .package(url: "https://github.com/ReactiveX/RxSwift", exact: Version("6.0.0")),
         .package(path: "../Platform"),
         .package(path: "../Profile"),
-        .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3"))
+        .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3")),
+        .package(url: "https://github.com/Juanpe/SkeletonView", from: "1.30.4")
     ],
     targets: [
         .target(
             name: "DiaryDetailImage",
             dependencies: [
+                .product(name: "RIBs", package: "RIBs"),
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "SnapKit", package: "SnapKit"),
@@ -56,6 +59,7 @@ let package = Package(
             name: "DiaryBottomSheet",
             dependencies: [
                 "DiaryWriting",
+                .product(name: "RIBs", package: "RIBs"),
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
             ]
@@ -65,6 +69,7 @@ let package = Package(
             dependencies: [
                 "DiaryBottomSheet",
                 "DiaryDetailImage",
+                .product(name: "RIBs", package: "RIBs"),
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
             ]
@@ -73,6 +78,7 @@ let package = Package(
             name: "DiarySearch",
             dependencies: [
                 "DiaryDetail",
+                .product(name: "RIBs", package: "RIBs"),
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
             ]
@@ -84,6 +90,7 @@ let package = Package(
                 "DiaryWriting",
                 "DiaryDetail",
                 "DiaryBottomSheet",
+                .product(name: "RIBs", package: "RIBs"),
                 .product(name: "ProfileDesignSystem", package: "Profile"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "MenualRepository", package: "Platform"),
@@ -100,6 +107,7 @@ let package = Package(
         .target(
             name: "DiaryTempSave",
             dependencies: [
+                .product(name: "RIBs", package: "RIBs"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "DesignSystem", package: "Platform"),
             ]
@@ -108,8 +116,21 @@ let package = Package(
             name: "DiaryWriting",
             dependencies: [
                 "DiaryTempSave",
+                .product(name: "RIBs", package: "RIBs"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "DesignSystem", package: "Platform"),
+            ]
+        ),
+        .testTarget(
+            name: "DiaryWritingTests",
+            dependencies: [
+                "DiaryWriting",
+                .product(name: "RIBs", package: "RIBs"),
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "MenualRepository", package: "Platform"),
+                .product(name: "MenualEntity", package: "Platform"),
+                .product(name: "MenualRepositoryTestSupport", package: "Platform"),
             ]
         )
     ]

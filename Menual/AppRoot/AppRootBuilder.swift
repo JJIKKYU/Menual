@@ -50,13 +50,15 @@ final class AppRootBuilder: Builder<AppRootDependency>, AppRootBuildable {
         )
         let profilePassword = ProfilePasswordBuilder(dependency: component)
         let diaryHome = DiaryHomeBuilder(dependency: component)
+        let splash = SplashBuilder(dependency: component)
         
         let router = AppRootRouter(
             interactor: interactor,
             viewController: viewController,
             diaryHome: diaryHome,
             profilePassword: profilePassword,
-            diaryUUIDRelay: diaryUUIDRelay
+            diaryUUIDRelay: diaryUUIDRelay,
+            splash: splash
         )
         
         return (router, interactor)

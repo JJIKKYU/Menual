@@ -53,6 +53,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     private weak var weakToastView: ToastView?
     
     // MARK: - UI 코드
+    private let splashView = UIView().then {
+        $0.isUserInteractionEnabled = false
+        $0.backgroundColor = Colors.background
+    }
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
@@ -237,6 +241,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         super.viewDidAppear(animated)
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         MenualLog.logEventAction("writing_appear")
+        actionSplashView()
         
         print("DiaryHome :: PushList!")
         
@@ -288,6 +293,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.bringSubviewToFront(scrollToTopFAB)
         self.view.bringSubviewToFront(myMenualTitleView)
         self.view.bringSubviewToFront(naviView)
+        
+        self.view.addSubview(splashView)
+        splashView.snp.makeConstraints { make in
+            make.leading.trailing.top.bottom.equalToSuperview()
+        }
         
         myMenualTableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -372,6 +382,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.bottom.equalToSuperview()
+        }
+    }
+    
+    /// 앱. 런치때 부드러운 Init 효과를 위해 Animation
+    func actionSplashView() {
+        print("DiaryHome :: actionSplashView!")
+        UIView.animate(withDuration: 0.25, delay: 0.25) {
+            self.splashView.layer.opacity = 0
         }
     }
     

@@ -10,10 +10,12 @@ import RxRelay
 import MenualUtil
 import ProfilePassword
 import DiaryHome
+import Foundation
 
 protocol AppRootInteractable: Interactable,
                               DiaryHomeListener,
-                              ProfilePasswordListener
+                              ProfilePasswordListener,
+                              SplashListener
 {
     var router: AppRootRouting? { get set }
     var listener: AppRootListener? { get set }
@@ -36,16 +38,21 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
     private var profilePasswordRouting: ViewableRouting?
     private let diaryUUIDRelay: BehaviorRelay<String>
     
+    private let splash: SplashBuildable
+    private var splashRouting: ViewableRouting?
+    
     init(
         interactor: AppRootInteractable,
         viewController: AppRootViewControllable,
         diaryHome: DiaryHomeBuildable,
         profilePassword: ProfilePasswordBuildable,
-        diaryUUIDRelay: BehaviorRelay<String>
+        diaryUUIDRelay: BehaviorRelay<String>,
+        splash: SplashBuildable
     ) {
         self.diaryUUIDRelay = diaryUUIDRelay
         self.diaryHome = diaryHome
         self.profilePassword = profilePassword
+        self.splash = splash
         
         super.init(interactor: interactor, viewController: viewController)
 
@@ -82,21 +89,7 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
             withListener: interactor,
             diaryUUIDRelay: nil
         )
-        
-        // attachChild(diaryWritingRouting)
-        // attachChild(registerHomeRouting)
-        
-        // attachChild(registerHomeRouting)
-        // attachChild(loginHomeRouting)
         attachChild(diaryHomeRouting)
-        
-        // viewController가 많아지면 여기에 추가해서 진행
-        /*
-        let viewControllers = [
-            NavigationControllerable(root: registerHomeRouting.viewControllable)
-            // NavigationControllerable(root: diaryWritingRouting.viewControllable)
-        ]
-         */
         
         let navigation = NavigationControllerable(root: diaryHomeRouting.viewControllable)
         navigation.navigationController.modalPresentationStyle = .fullScreen
@@ -110,7 +103,15 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
 //        diaryHomeRouting.viewControllable.uiviewController.title = "123123"
         
         //viewController.setViewController(diaryWritingRouting.viewControllable)
+//        navigation.present(splashRouting.viewControllable, animated: false) {
+//            print("!!!?")
+//            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+//                print("!@#")
+//            }
+//        }
+        
          viewController.setViewController(navigation)
+        
     }
     
     func cleanupViews() {
@@ -161,7 +162,7 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
         viewController.setViewController(navigation)
         
         // presentInsideNavigation(profilePasswordRouting.viewControllable)
-        navigation.present(profilePasswordRouting.viewControllable, animated: true, completion: nil)
+        navigation.present(profilePasswordRouting.viewControllable, animated: false, completion: nil)
     }
 
 }

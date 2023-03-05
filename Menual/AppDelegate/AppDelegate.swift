@@ -23,7 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private let diaryUUIDRelay = BehaviorRelay<String>(value: "")
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         FirebaseApp.configure()
         
         let window = UIWindow(frame: UIScreen.main.bounds)
@@ -77,7 +76,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.urlHandler = result.urlHandler
         
         launchRouter?.launch(from: window)
-        Analytics.logEvent("AppStart", parameters: nil)
         UNUserNotificationCenter.current().delegate = self
         
         return true

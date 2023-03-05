@@ -9,7 +9,6 @@ import Foundation
 import RIBs
 import UIKit
 import SnapKit
-import MenualUtil
 
 public final class NavigationControllerable: ViewControllable {
   

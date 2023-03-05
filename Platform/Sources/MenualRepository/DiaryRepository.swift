@@ -11,14 +11,12 @@ import RxRelay
 import RealmSwift
 import MenualEntity
 import MenualUtil
-import UIKit // 제거할 것.. UIImage는 Data로 변경
+import UserNotifications
 
 public protocol DiaryRepository {
-    var diaryString: BehaviorRelay<[DiaryModelRealm]> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var password: BehaviorRelay<PasswordModelRealm?> { get }
     
-    func fetch()
     func addDiary(info: DiaryModelRealm)
     func updateDiary(info: DiaryModelRealm, uuid: String)
     func updateDiary(DiaryModel: DiaryModelRealm ,reminder: ReminderModelRealm?)
@@ -28,7 +26,6 @@ public protocol DiaryRepository {
     
     // Image
     func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void)
-    func loadImageFromDocumentDirectory(imageName: String, completionHandler: @escaping (UIImage?) -> Void)
     func deleteImageFromDocumentDirectory(diaryUUID: String, completionHandler: @escaping (Bool) -> Void)
     
     // 겹쓰기 로직
@@ -59,9 +56,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
     public init() {
         
     }
-    
-    public var diaryString: BehaviorRelay<[DiaryModelRealm]> { diaryModelSubject }
-    public let diaryModelSubject = BehaviorRelay<[DiaryModelRealm]>(value: [])
     
     public var filteredDiaryDic = BehaviorRelay<DiaryHomeFilteredSectionModel?>(value: nil)
     
@@ -108,25 +102,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
             completionHandler(false)
         }
     }
-    
-    public func loadImageFromDocumentDirectory(imageName: String, completionHandler: @escaping (UIImage?) -> Void) {
-        
-        // 1. 도큐먼트 폴더 경로가져오기
-        let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-        let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-        let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-        
-        if let directoryPath = path.first {
-            // 2. 이미지 URL 찾기
-            let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(imageName)
-            // 3. UIImage로 불러오기
-            completionHandler(UIImage(contentsOfFile: imageURL.path))
-            // return UIImage(contentsOfFile: imageURL.path)
-        }
-        
-        completionHandler(nil)
-    }
-    
+
     public func deleteImageFromDocumentDirectory(diaryUUID: String, completionHandler: @escaping (Bool) -> Void) {
         // 1. 이미지를 삭제할 경로를 설정해줘야함 - 도큐먼트 폴더,File 관련된건 Filemanager가 관리함(싱글톤 패턴)
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {return}
@@ -172,20 +148,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         
         
         completionHandler(true)
-    }
-    
-    public func fetch() {
-        print("DiaryRepository :: fetch")
-        guard let realm = Realm.safeInit() else {
-            return
-        }
-        
-        let diaryModelResults = realm
-            .objects(DiaryModelRealm.self)
-            .sorted(byKeyPath: "createdAt", ascending: false)
-            .filter { $0.isDeleted == false }
-        
-        // diaryModelSubject.accept(diaryModelResults.map { DiaryModelRealm(value: $0) })
     }
     
     // MARK: - Diary CRUD
@@ -280,12 +242,6 @@ public final class DiaryRepositoryImp: DiaryRepository {
         realm.safeWrite {
             realm.delete(realm.objects(DiaryModelRealm.self))
         }
-        
-        // self.diaryMonthDic.accept([])
-        // self.diaryMonthDicSubject.accept([])
-        // self.filteredMonthDicSubject.accept([])
-        self.diaryModelSubject.accept([])
-        self.fetch()
     }
     
     public func deleteDiary(info: DiaryModelRealm) {
