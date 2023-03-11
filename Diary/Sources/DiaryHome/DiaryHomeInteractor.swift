@@ -191,6 +191,33 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     self.setOnboardingDiaries()
 
                     if insertions.count > 0 {
+                        // 여러 개가 한 번에 추가될 경우 (백업 후 불러오기 등)
+                        if insertions.count != 1 {
+                            let lastPageNum = model
+                                .last?.pageNum ?? 0
+                            print("DiaryHome :: lastPageNumRelay = \(self.lastPageNumRelay.value)")
+                            self.lastPageNumRelay.accept(lastPageNum)
+
+                            var section = Set<String>()
+                            model.forEach { section.insert($0.createdAt.toStringWithYYYYMM()) }
+                            
+                            self.arraySerction = Array(section)
+                            self.arraySerction.sort { $0 > $1 }
+                            self.arraySerction.enumerated().forEach { (index: Int, sectionName: String) in
+                                self.diaryDictionary[sectionName] = DiaryHomeSectionModel(sectionName: sectionName, sectionIndex: index, diaries: [])
+                            }
+                            
+                            for diary in model {
+                                let sectionName: String = diary.createdAt.toStringWithYYYYMM()
+                                self.diaryDictionary[sectionName]?.diaries.append(diary)
+                            }
+                            
+                            self.setOnboardingDiaries()
+                            self.presenter.reloadTableView()
+
+                            return
+                        }
+
                         for insertionRow in insertions {
                             let diary: DiaryModelRealm = model[insertionRow]
                             let sectionName: String = diary.createdAt.toStringWithYYYYMM()
@@ -217,7 +244,11 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                             self.lastPageNumRelay.accept(lastPageNum)
                             self.diaryDictionary[sectionName]?.diaries.insert(diary, at: 0)
                             self.presenter.insertTableViewRow(section: sectionIndex, row: 0)
+                            if needInsertSection {
+                                // self.presenter.insertTableViewSection()
+                            }
                         }
+
                     }
                         
                     if modifications.count > 0 {
@@ -283,6 +314,12 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 case .update(let model, let deletions, let insertions, let modifications):
                     print("DiaryHome :: Moments! update! = \(model)")
                     self.setOnboardingDiaries()
+                    
+                    if insertions.count > 0 {
+                        print("DiaryHome :: Moments! insertions!")
+                        guard let momentsRealm = realm.objects(MomentsRealm.self).toArray(type: MomentsRealm.self).first
+                        else { return }
+                    }
                     
                     if modifications.count > 0 {
                         print("DiaryHome :: Moments! modifications! -> 메뉴얼 불러오기 등..")
