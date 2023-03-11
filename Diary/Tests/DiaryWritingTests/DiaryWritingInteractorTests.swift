@@ -187,15 +187,7 @@ final class DiaryWritingInteractorTests: XCTestCase {
         sut.weatherModelRelay.accept(WeatherModelRealm(weather: .cloud, detailText: "cloud"))
         sut.titleRelay.accept("newTestTitle")
         sut.descRelay.accept("newTestDesc")
-        let newDiaryModelRealm = DiaryModelRealm(pageNum: 1,
-                                              title: "newTestTitle",
-                                              weather: nil,
-                                              place: nil,
-                                              desc: "newTestDesc",
-                                              image: false,
-                                              createdAt: Date(),
-                                              lastMomentsDate: nil
-        )
+
         let exp = expectation(description: "testUpdateDiary")
         
         // when
@@ -222,20 +214,12 @@ final class DiaryWritingInteractorTests: XCTestCase {
     /// originalDiaryModel이 nil이어서 아무런 업데이트도 되지 않았을 경우
     func testUpdateDiaryIfNil() {
         // given
-        let newDiaryModelRealm = DiaryModelRealm(pageNum: 1,
-                                              title: "newTestTitle",
-                                              weather: nil,
-                                              place: nil,
-                                              desc: "newTestDesc",
-                                              image: false,
-                                              createdAt: Date(),
-                                              lastMomentsDate: nil
-        )
+        sut.activate()
+
         let exp = expectation(description: "testUpdateDiaryIfNil")
         
         // when
-        sut.activate()
-//        sut.updateDiary(info: newDiaryModelRealm, edittedImage: false)
+        sut.updateDiary(isUpdateImage: false)
         
         Observable.combineLatest(
             sut.imageSaveRelay,
