@@ -202,11 +202,13 @@ extension ProfileBackupViewController {
         
         // 백업할 파일이 없을 경우 팝업
         case false:
-            show(size: .medium,
-                 buttonType: .oneBtn,
-                 titleText: MenualString.backup_alert_title_nothing,
-                 subTitleText: MenualString.backup_alert_desc_nothing,
-                 confirmButtonText: MenualString.writing_alert_confirm
+            showDialog(
+                dialogScreen: .profileBackup(.nothingBackup),
+                size: .medium,
+                buttonType: .oneBtn,
+                titleText: MenualString.backup_alert_title_nothing,
+                subTitleText: MenualString.backup_alert_desc_nothing,
+                confirmButtonText: MenualString.writing_alert_confirm
             )
         }
     }
@@ -244,11 +246,11 @@ extension ProfileBackupViewController {
 
 // MARK: - Dialog
 extension ProfileBackupViewController: DialogDelegate {
-    func action(titleText: String) {
+    func action(dialogScreen: DesignSystem.DialogScreen) {
         
     }
     
-    func exit(titleText: String) {
+    func exit(dialogScreen: DesignSystem.DialogScreen) {
         
     }
 }

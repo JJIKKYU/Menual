@@ -676,22 +676,20 @@ extension DiarySearchViewController {
 // MARK: - Dialog
 extension DiarySearchViewController: DialogDelegate {
     public func action(dialogScreen: DesignSystem.DialogScreen) {
-        switch dialogScreen {
-        case .diarySearch(.delete):
-            listener?.deleteAllRecentSearchData()
-
-        case .diaryBottomSheet(_), .diaryDetail(_), .diaryWriting(_):
-            break
+        if case .diarySearch(let diarySearchDialog) = dialogScreen {
+            switch diarySearchDialog {
+            case .delete:
+                listener?.deleteAllRecentSearchData()
+            }
         }
     }
     
     public func exit(dialogScreen: DesignSystem.DialogScreen) {
-        switch dialogScreen {
-        case .diarySearch(.delete):
-            break
-
-        case .diaryBottomSheet(_), .diaryDetail(_), .diaryWriting(_):
-            break
+        if case .diarySearch(let diarySearchDialog) = dialogScreen {
+            switch diarySearchDialog {
+            case .delete:
+                break
+            }
         }
     }
 }

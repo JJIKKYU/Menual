@@ -474,16 +474,13 @@ extension DiaryWritingViewController {
         }
         
         if isShowDialog {
-            showDialog(
-                dialogScreen: .diaryWriting(.writingCancel),
-                size: writingType == .writing ? .medium : .small,
-
-            show(size: writingType == .writing || writingType == .tempSave ? .medium : .small,
-                 buttonType: .twoBtn,
-                 titleText: titleText,
-                 subTitleText: "작성한 내용은 임시저장글에 저장됩니다.",
-                 cancelButtonText: "취소",
-                 confirmButtonText: "확인"
+            showDialog(dialogScreen: .diaryWriting(.writingCancel),
+                       size: writingType == .writing || writingType == .tempSave ? .medium : .small,
+                       buttonType: .twoBtn,
+                       titleText: titleText,
+                       subTitleText: "작성한 내용은 임시저장글에 저장됩니다.",
+                       cancelButtonText: "취소",
+                       confirmButtonText: "확인"
             )
         } else {
             listener?.pressedBackBtn(isOnlyDetach: false)
@@ -976,57 +973,40 @@ extension DiaryWritingViewController: CropViewControllerDelegate {
 
 extension DiaryWritingViewController: DialogDelegate {
     func action(dialogScreen: DesignSystem.DialogScreen) {
-        switch dialogScreen {
-        case .diaryWriting(.writing), .diaryWriting(.edit):
-            addDiary()
-            
-        case .diaryWriting(.writingCancel), .diaryWriting(.editCancel):
-            if let diaryModel = zipDiaryModelForTempSave() {
-                listener?.saveTempSave(diaryModel: diaryModel,
-                                       originalImageData: selectedOriginalImage?.jpegData(compressionQuality: 0.5),
-                                       cropImageData: selectedImage?.jpegData(compressionQuality: 1.0)
-                )
+        if case .diaryWriting(let diaryWritingDialog) = dialogScreen {
+            switch diaryWritingDialog {
+            case .writing, .edit:
+                addDiary()
+                
+            case .writingCancel, .editCancel:
+                listener?.saveTempSave()
+                listener?.pressedBackBtn(isOnlyDetach: false)
+                
+            case .deletePhoto:
+                imageUploadView.image = nil
+                isEditBeginRelay.accept(true)
+                
+            case .camera:
+                break
             }
         }
     }
 
-    func action(titleText: String) {
-        switch titleText {
-        case "메뉴얼 작성을 취소하시겠어요?",
-             "메뉴얼 수정을 취소하시겠어요?":
-            listener?.saveTempSave()
-            listener?.pressedBackBtn(isOnlyDetach: false)
-            
-        case .diaryWriting(.deletePhoto):
-            imageUploadView.image = nil
-            // selectedImage = nil
-            // selectedOriginalImage = nil
-            isEditBeginRelay.accept(true)
-            
-        case .diaryWriting(.camera):
-            break
-
-        case .diaryDetail(_), .diarySearch(_), .diaryBottomSheet(_):
-            break
-        }
-    }
-
     func exit(dialogScreen: DesignSystem.DialogScreen) {
-        switch dialogScreen {
-        case .diaryWriting(.writing), .diaryWriting(.edit):
-            break
-            
-        case .diaryWriting(.writingCancel), .diaryWriting(.editCancel):
-            break
-            
-        case .diaryWriting(.deletePhoto):
-            break
-            
-        case .diaryWriting(.camera):
-            break
-
-        case .diaryDetail(_), .diarySearch(_), .diaryBottomSheet(_):
-            break
+        if case .diaryWriting(let diaryWritingDialog) = dialogScreen {
+            switch diaryWritingDialog {
+            case .writing, .edit:
+                break
+                
+            case .writingCancel, .editCancel:
+                break
+                
+            case .deletePhoto:
+                break
+                
+            case .camera:
+                break
+            }
         }
     }
 

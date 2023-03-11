@@ -730,54 +730,50 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
 // MARK: - Dialog
 extension DiaryBottomSheetViewController: DialogDelegate {
     func action(dialogScreen: DesignSystem.DialogScreen) {
-        switch dialogScreen {
-        case .diaryBottomSheet(.reminderEnable):
-            listener?.isEnabledReminderRelay?.accept(false)
-            
-        case .diaryBottomSheet(.hide):
-            print("DiaryBottomSheet :: 숨기기 action!")
-            listener?.menuComponentRelay?.accept(.hide)
-            hideBottomSheetAndGoBack()
-            
-        case .diaryBottomSheet(.diaryDelete):
-            listener?.menuComponentRelay?.accept(.delete)
-            hideBottomSheetAndGoBack()
+        if case .diaryBottomSheet(let diaryBottomSheetDialog) = dialogScreen {
+            switch diaryBottomSheetDialog {
+            case .reminderEnable:
+                listener?.isEnabledReminderRelay?.accept(false)
+                
+            case .hide:
+                listener?.menuComponentRelay?.accept(.hide)
+                hideBottomSheetAndGoBack()
+                
+            case .diaryDelete:
+                listener?.menuComponentRelay?.accept(.delete)
+                hideBottomSheetAndGoBack()
+                
+            case .reminderQuestion:
+                break
+                
+            case .reminderAuth:
+                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
 
-        case .diaryBottomSheet(.reminderQuestion):
-            break
-
-        case .diaryBottomSheet(.reminderAuth):
-            guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-
-            if UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url)
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
             }
-            
-        case .diarySearch(_), .diaryWriting(_), .diaryDetail(_):
-            break
         }
     }
     
     func exit(dialogScreen: DesignSystem.DialogScreen) {
-        switch dialogScreen {
-        case .diaryBottomSheet(.reminderEnable):
-            break
-            
-        case .diaryBottomSheet(.hide):
-            print("DiaryBottomSheet :: 숨기기 exit!")
-            hideBottomSheetAndGoBack()
-            
-        case .diaryBottomSheet(.diaryDelete):
-            hideBottomSheetAndGoBack()
-
-        case .diaryBottomSheet(.reminderQuestion):
-            break
-
-        case .diaryBottomSheet(.reminderAuth):
-            break
-            
-        case .diarySearch(_), .diaryWriting(_), .diaryDetail(_):
-            break
+        if case .diaryBottomSheet(let diaryBottomSheetDialog) = dialogScreen {
+            switch diaryBottomSheetDialog {
+            case .reminderEnable:
+                break
+                
+            case .hide:
+                hideBottomSheetAndGoBack()
+                
+            case .diaryDelete:
+                hideBottomSheetAndGoBack()
+                
+            case .reminderQuestion:
+                break
+                
+            case .reminderAuth:
+                break
+            }
         }
     }
 }

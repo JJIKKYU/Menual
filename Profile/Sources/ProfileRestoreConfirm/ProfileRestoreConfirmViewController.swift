@@ -144,10 +144,12 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
     
     /// 가져오기가 완료될 경우 팝업으로 안내
     func showCompletePopup() {
-        show(size: .small,
-             buttonType: .oneBtn,
-             titleText: MenualString.restore_alert_success,
-             confirmButtonText: MenualString.writing_alert_confirm
+        showDialog(
+            dialogScreen: .profileRestore(.success),
+            size: .small,
+            buttonType: .oneBtn,
+            titleText: MenualString.restore_alert_success,
+            confirmButtonText: MenualString.writing_alert_confirm
         )
     }
 }
@@ -155,20 +157,24 @@ final class ProfileRestoreConfirmViewController: UIViewController, ProfileRestor
 // MARK: -
 extension ProfileRestoreConfirmViewController: ProfileRestoreConfirmPresentable {
     func notVaildZipFile() {
-        show(size: .medium,
-             buttonType: .oneBtn,
-             titleText: MenualString.restore_alert_title_not_menual,
-             subTitleText: MenualString.restore_alert_desc_not_menual,
-             confirmButtonText: MenualString.writing_alert_confirm
+        showDialog(
+            dialogScreen: .profileRestore(.notValidZipFile),
+            size: .medium,
+            buttonType: .oneBtn,
+            titleText: MenualString.restore_alert_title_not_menual,
+            subTitleText: MenualString.restore_alert_desc_not_menual,
+            confirmButtonText: MenualString.writing_alert_confirm
         )
     }
     
     func loadErrorZipFile() {
-        show(size: .large,
-             buttonType: .oneBtn,
-             titleText: MenualString.restore_alert_title_error,
-             subTitleText: MenualString.restore_alert_desc_error,
-             confirmButtonText: MenualString.writing_alert_confirm
+        showDialog(
+            dialogScreen: .profileRestore(.errorZipFile),
+            size: .large,
+            buttonType: .oneBtn,
+            titleText: MenualString.restore_alert_title_error,
+            subTitleText: MenualString.restore_alert_desc_error,
+            confirmButtonText: MenualString.writing_alert_confirm
         )
     }
     
@@ -180,23 +186,20 @@ extension ProfileRestoreConfirmViewController: ProfileRestoreConfirmPresentable 
 
 // MARK: - Dialog Delegate
 extension ProfileRestoreConfirmViewController: DialogDelegate {
-    func action(titleText: String) {
-        switch titleText {
-        case MenualString.restore_alert_title_error:
-            pressedBackBtn()
-            
-        case MenualString.restore_alert_title_not_menual:
-            pressedBackBtn()
-            
-        case MenualString.restore_alert_success:
-            listener?.restoreSuccess()
-            
-        default:
-            break
-        }
+    func action(dialogScreen: DesignSystem.DialogScreen) {
+        if case .profileRestore(let profileRestoreDialog) = dialogScreen {
+            switch profileRestoreDialog {
+            case .success:
+                listener?.restoreSuccess()
+            case .errorZipFile:
+                pressedBackBtn()
+            case .notValidZipFile:
+                pressedBackBtn()
+            }
+       }
     }
     
-    func exit(titleText: String) {
+    func exit(dialogScreen: DesignSystem.DialogScreen) {
         pressedBackBtn()
     }
 }

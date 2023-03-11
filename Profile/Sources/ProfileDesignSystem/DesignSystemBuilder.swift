@@ -12,7 +12,7 @@ public protocol DesignSystemDependency: Dependency {
     // created by this RIB.
 }
 
-public final class DesignSystemComponent: Component<DesignSystemDependency>, BoxButtonDependency, GNBHeaderDependency, ListHeaderDependency, MomentsDependency, DividerDependency, CapsuleButtonDependency, ListDependency, FABDependency, TabsDependency, PaginationDependency, EmptyViewDependency, MetaDataDependency, NumberPadDependency, ProgressDependency {
+public final class DesignSystemComponent: Component<DesignSystemDependency>, BoxButtonDependency, GNBHeaderDependency, ListHeaderDependency, MomentsDependency, DividerDependency, CapsuleButtonDependency, ListDependency, FABDependency, PaginationDependency, EmptyViewDependency, MetaDataDependency, NumberPadDependency, ProgressDependency {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }

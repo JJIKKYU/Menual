@@ -887,47 +887,46 @@ extension DiaryDetailViewController: UITextViewDelegate {
 // MARK: - Dialog
 extension DiaryDetailViewController: DialogDelegate {
     func action(dialogScreen: DesignSystem.DialogScreen) {
-        switch dialogScreen {
-        case .diaryDetail(.reply):
-            let text = replyBottomView.writedText
-            listener?.pressedReplySubmitBtn(desc: text)
-            replyBottomView.replyTextView.text = ""
-            textViewDidChange(replyBottomView.replyTextView)
-            replyBottomView.replyTextView.layoutIfNeeded()
-            replyBottomView.setNeedsLayout()
-            view.endEditing(true)
-            
-        case .diaryDetail(.replyCancel):
-            listener?.pressedBackBtn(isOnlyDetach: false)
-            
-        case .diaryDetail(.replyDelete):
-            guard let willDeleteReplyModel = willDeleteReplyModel else { return }
-            listener?.deleteReply(replyModel: willDeleteReplyModel)
-            
-        case .diaryDetail(.hide):
-            listener?.hideDiary()
-            
-        case .diaryWriting(_), .diaryBottomSheet(_), .diarySearch(_):
-            break
+        if case .diaryDetail(let diaryDetailDialog) = dialogScreen {
+            switch diaryDetailDialog {
+            case .reply:
+                let text = replyBottomView.writedText
+                listener?.pressedReplySubmitBtn(desc: text)
+                replyBottomView.replyTextView.text = ""
+                textViewDidChange(replyBottomView.replyTextView)
+                replyBottomView.replyTextView.layoutIfNeeded()
+                replyBottomView.setNeedsLayout()
+                view.endEditing(true)
+
+            case .replyCancel:
+                listener?.pressedBackBtn(isOnlyDetach: false)
+                
+            case .replyDelete:
+                guard let willDeleteReplyModel = willDeleteReplyModel else { return }
+                listener?.deleteReply(replyModel: willDeleteReplyModel)
+                
+            case .hide:
+                listener?.hideDiary()
+                
+            }
         }
     }
     
     func exit(dialogScreen: DesignSystem.DialogScreen) {
-        switch dialogScreen {
-        case .diaryDetail(.reply):
-            break
-            
-        case .diaryDetail(.replyCancel):
-            break
-            
-        case .diaryDetail(.replyDelete):
-            self.willDeleteReplyUUID = nil
-            
-        case .diaryDetail(.hide):
-            break
-            
-        case .diaryWriting(_), .diaryBottomSheet(_), .diarySearch(_):
-            break
+        if case .diaryDetail(let diaryDetailDialog) = dialogScreen {
+            switch diaryDetailDialog {
+            case .reply:
+                break
+                
+            case .replyCancel:
+                break
+                
+            case .replyDelete:
+                self.willDeleteReplyUUID = nil
+                
+            case .hide:
+                break
+            }
         }
     }
 }

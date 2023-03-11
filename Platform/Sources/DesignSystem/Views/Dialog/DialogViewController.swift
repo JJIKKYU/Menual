@@ -26,6 +26,8 @@ public enum DialogScreen {
     case diaryDetail(DiaryDetailDialog)
     case diarySearch(DiarySearchDialog)
     case diaryBottomSheet(DiaryBottomSheetDialog)
+    case profileBackup(ProfileBackupDialog)
+    case profileRestore(ProfileRestoreDialog)
 }
 
 public enum DiaryWritingDialog {
@@ -54,6 +56,16 @@ public enum DiaryBottomSheetDialog {
     case reminderQuestion
     case reminderAuth
     case reminderEnable
+}
+
+public enum ProfileBackupDialog {
+    case nothingBackup
+}
+
+public enum ProfileRestoreDialog {
+    case success
+    case errorZipFile
+    case notValidZipFile
 }
 
 // Dialog의 버튼의 액션을 처리하는 Delegate입니다.
