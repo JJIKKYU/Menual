@@ -21,6 +21,9 @@ let package = Package(
         .library(
             name: "MenualRepository",
             targets: ["MenualRepository"]),
+        .library(
+            name: "MenualRepositoryTestSupport",
+            targets: ["MenualRepositoryTestSupport"]),
     ],
     dependencies: [
         .package(url: "https://github.com/devxoul/Then", exact: Version("3.0.0")),
@@ -71,6 +74,20 @@ let package = Package(
             dependencies: [
                 "MenualEntity",
                 "MenualUtil",
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "Realm", package: "realm-swift"),
+                .product(name: "RealmSwift", package: "realm-swift"),
+            ]
+        ),
+        .target(
+            name: "MenualRepositoryTestSupport",
+            dependencies: [
+                "MenualEntity",
+                "MenualUtil",
+                "MenualRepository",
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
                 .product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
             ]

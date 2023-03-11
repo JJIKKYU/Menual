@@ -97,6 +97,7 @@ public class DialogViewController: UIViewController {
         $0.textColor = Colors.grey.g100
         $0.textAlignment = .center
         $0.text = "안녕하세요 반갑습니다."
+        $0.setLineHeight(lineHeight: 1.28)
         $0.numberOfLines = 0
     }
     

@@ -37,6 +37,7 @@ public enum MenualBottomSheetType {
 public protocol DiaryBottomSheetPresentableListener: AnyObject {
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
+    var filterResetBtnRelay: BehaviorRelay<Bool>? { get }
     var isHideMenualRelay: BehaviorRelay<Bool>? { get }
     
     func pressedCloseBtn()
@@ -181,6 +182,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         // setViews()
         bottomSheetView.backgroundColor = Colors.background
         
+        filterBind()
         isModalInPresentation = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -493,6 +495,9 @@ extension DiaryBottomSheetViewController {
 
 // MARK: - MenualBottomSheetFilterComponentView
 extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelegate {
+    var filterResetBtnRelay: BehaviorRelay<Bool>? {
+        listener?.filterResetBtnRelay
+    }
     var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]>? {
         listener?.filteredWeatherArrRelay
     }
@@ -574,6 +579,17 @@ extension DiaryBottomSheetViewController: MenualDateFilterComponentDelegate {
         // let month = dateFilterComponentView.month
         // let filteredDate =
         listener?.filterDatePressedFilterBtn(yearDateFormatString: dateFilterComponentView.yearEngMonth)
+    }
+    
+    func filterBind() {
+        listener?.filterResetBtnRelay?
+            .subscribe(onNext: { [weak self] isReset in
+                guard let self = self else { return }
+                if isReset == false { return }
+                self.listener?.filterResetBtnRelay?.accept(false)
+                self.hideBottomSheetAndGoBack()
+            })
+            .disposed(by: disposeBag)
     }
 }
 

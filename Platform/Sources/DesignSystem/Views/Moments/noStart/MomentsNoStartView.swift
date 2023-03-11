@@ -11,6 +11,8 @@ import UIKit
 
 public class MomentsNoStartView: UIView {
     
+    let maxCount: Int = 14
+    
     let testSet: [Int: String] = [
         1: "12/31",
         2: "01/01",
@@ -50,7 +52,7 @@ public class MomentsNoStartView: UIView {
     let subTitleLabel = UILabel().then {
         $0.numberOfLines = 2
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = "10개의 일기를 적어보세요.\n나를 알아갈 수 있는 콘텐츠가 제공돼요 :)"
+        $0.text = " "
         $0.setLineHeight(lineHeight: 1.28)
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
         $0.textColor = Colors.grey.g400
@@ -59,6 +61,18 @@ public class MomentsNoStartView: UIView {
     let circleView = MomentsNoStartCircleView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.value = 0.84
+    }
+    
+    private let imageView = UIImageView().then {
+        $0.image = Asset._40px.paper.image
+        $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    private let countLabel = UILabel().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.text = "1/14"
+        $0.font = UIFont.AppHead(.head_1)
+        $0.textColor = Colors.grey.g600
     }
     
     private let stampView = MomentsNoStartStampView().then {
@@ -80,6 +94,9 @@ public class MomentsNoStartView: UIView {
         addSubview(circleView)
         addSubview(stampView)
         
+        addSubview(imageView)
+        addSubview(countLabel)
+        
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalToSuperview()
@@ -96,6 +113,17 @@ public class MomentsNoStartView: UIView {
             make.top.equalToSuperview()
         }
         
+        imageView.snp.makeConstraints { make in
+            make.top.equalTo(circleView.snp.top).offset(14)
+            make.width.height.equalTo(40)
+            make.centerX.equalTo(circleView.snp.centerX)
+        }
+        
+        countLabel.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.bottom)
+            make.centerX.equalTo(circleView.snp.centerX)
+        }
+        
         stampView.snp.makeConstraints { make in
             make.top.equalTo(subTitleLabel.snp.bottom).offset(22)
             make.leading.equalToSuperview()
@@ -108,11 +136,16 @@ public class MomentsNoStartView: UIView {
         super.layoutSubviews()
         
         // 작성을 모두 완료했을때
-        if writingDiarySet.count == 10 {
+        if writingDiarySet.count >= maxCount {
             titleLabel.text = "일기 작성을 완료했어요!"
             subTitleLabel.text = "내일이면 나를 알아갈 수 있는\n새로운 콘텐츠가 제공될 거예요! :D"
+        } else {
+            titleLabel.text = "메뉴얼은 당신을 알아가는 중!"
+            subTitleLabel.text = "\(maxCount)개의 일기를 적어보세요.\n나를 알아갈 수 있는 콘텐츠가 제공돼요 :)"
         }
-        circleView.value = (Double(writingDiarySet.count) * 0.1)
+        circleView.value = (Double(writingDiarySet.count) * Double(1.0 / Double(maxCount)))
+        circleView.count = writingDiarySet.count
+        countLabel.text = "\(writingDiarySet.count)/\(maxCount)"
         stampView.writingDiarySet = writingDiarySet
     }
 }

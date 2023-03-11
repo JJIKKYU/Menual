@@ -444,6 +444,7 @@ public enum Asset {
     public static let paginationSelected = ImageAsset(name: "Pagination/paginationSelected")
     public static let paginationUnselected = ImageAsset(name: "Pagination/paginationUnselected")
   }
+  public static let splashMenual = ImageAsset(name: "splashMenual")
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 

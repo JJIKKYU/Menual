@@ -31,6 +31,7 @@ public protocol DesignSystemPresentableListener: AnyObject {
     func pressedEmptyCell()
     func pressedMetaDataCell()
     func pressedNumberPadCell()
+    func pressedProgressCell()
 }
 
 final class DesignSystemViewController: UIViewController, DesignSystemPresentable, DesignSystemViewControllable {
@@ -105,7 +106,6 @@ final class DesignSystemViewController: UIViewController, DesignSystemPresentabl
 // MARK: - TableView
 extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 13
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -118,7 +118,7 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         case "GNB Header":
             cell.backgroundColor = .clear
         case "Badges":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "Capsule Button":
             cell.backgroundColor = .clear
         case "Box Button":
@@ -136,11 +136,13 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         case "List":
             cell.backgroundColor = .clear
         case "Empty":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "MetaData":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
         case "NumberPad":
-            cell.backgroundColor = Colors.tint.main.v400
+            cell.backgroundColor = .clear
+        case "Progress":
+            cell.backgroundColor = .clear
         default:
             break
         }
@@ -181,6 +183,8 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
             listener?.pressedMetaDataCell()
         case "NumberPad":
             listener?.pressedNumberPadCell()
+        case "Progress":
+            listener?.pressedProgressCell()
         default:
             break
         }

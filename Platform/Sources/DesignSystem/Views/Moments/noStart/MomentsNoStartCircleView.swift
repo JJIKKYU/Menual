@@ -19,43 +19,17 @@ class MomentsNoStartCircleView: UIView {
         }
     }
     
-    private let imageView = UIImageView().then {
-        $0.image = Asset._40px.paper.image
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private let countLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = "1/10"
-        $0.font = UIFont.AppHead(.head_1)
-        $0.textColor = Colors.grey.g600
+    var count: Int = 0 {
+        didSet { setNeedsLayout() }
     }
 
     init() {
-        super.init(frame: CGRect.zero)
-        setViews()
+        super.init(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+        backgroundColor = .clear
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setViews() {
-        backgroundColor = .clear
-        
-        addSubview(imageView)
-        addSubview(countLabel)
-        
-        imageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(14)
-            make.width.height.equalTo(40)
-            make.centerX.equalToSuperview()
-        }
-        
-        countLabel.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.bottom)
-            make.centerX.equalToSuperview()
-        }
     }
     
     override func layoutSubviews() {
@@ -63,10 +37,15 @@ class MomentsNoStartCircleView: UIView {
     }
 
     override func draw(_ rect: CGRect) {
-        setViews()
+        print("Moments :: draw!")
         let bezierPath = UIBezierPath()
 
-        bezierPath.addArc(withCenter: CGPoint(x: rect.midX, y: rect.midY), radius: rect.midX - ((lineWidth - 1) / 2), startAngle: 0, endAngle: .pi * 2, clockwise: true)
+        bezierPath.addArc(withCenter: CGPoint(x: rect.midX, y: rect.midY),
+                          radius: rect.midX - ((lineWidth - 1) / 2),
+                          startAngle: 0,
+                          endAngle: .pi * 2,
+                          clockwise: true
+        )
 
         bezierPath.lineWidth = 4
         Colors.grey.g800.set()
@@ -85,25 +64,31 @@ class MomentsNoStartCircleView: UIView {
 
         let bezierPath = UIBezierPath()
 
-        bezierPath.addArc(withCenter: CGPoint(x: rect.midX, y: rect.midY), radius: rect.midX - ((lineWidth - 1) / 2), startAngle: -.pi / 2, endAngle: ((.pi * 2) * value) - (.pi / 2), clockwise: true)
+        bezierPath.addArc(withCenter: CGPoint(x: rect.midX, y: rect.midY),
+                          radius: rect.midX - ((lineWidth - 1) / 2),
+                          startAngle: -.pi / 2,
+                          endAngle: ((.pi * 2) * value) - (.pi / 2),
+                          clockwise: true
+        )
+        
+        let animation = CABasicAnimation(keyPath: "strokeEnd")
+        animation.fromValue = 0
+        animation.toValue = 1
+        animation.duration = 2
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        animation.isRemovedOnCompletion = false
 
         let shapeLayer = CAShapeLayer()
-
+        shapeLayer.add(animation, forKey: nil)
         shapeLayer.path = bezierPath.cgPath
         // shapeLayer.lineCap = .round    // 프로그래스 바의 끝을 둥글게 설정
 
-        var color: UIColor = Colors.grey.g600
-        if value == 1.0 {
-            color = Colors.tint.sub.n400
-            countLabel.textColor = color
-        }
+        let color = Colors.tint.sub.n400
 
         shapeLayer.strokeColor = color.cgColor
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.lineWidth = lineWidth
 
         self.layer.addSublayer(shapeLayer)
-        
-        countLabel.text = "\(Int(value * 10))/10"
     }
 }

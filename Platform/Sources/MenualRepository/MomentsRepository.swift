@@ -13,7 +13,9 @@ import MenualEntity
 
 public protocol MomentsRepository {
     func fetch()
+    func deleteMoments(uuid: String)
     func visitMoments(momentsItem: MomentsItemRealm)
+    func clearOnboarding()
 }
 
 public final class MomentsRepositoryImp: MomentsRepository {
@@ -39,6 +41,8 @@ public final class MomentsRepositoryImp: MomentsRepository {
         } else {
             print("MomentsRepo :: momentsRealm이 세팅되어 있습니다.")
         }
+
+        checkNeedOnboarding()
     }
     
     // 유저의 Moments 방문 유무 체크
@@ -47,6 +51,24 @@ public final class MomentsRepositoryImp: MomentsRepository {
         
         realm.safeWrite {
             momentsItem.userChecked = true
+        }
+    }
+    
+    public func deleteMoments(uuid: String) {
+        print("MomentsRepo :: deletMoments!")
+
+        guard let realm = Realm.safeInit(),
+              let momentsRealm = realm.objects(MomentsRealm.self).first
+        else { return }
+        
+        guard let willDeleteDiary = momentsRealm
+            .itemsArr
+            .filter ({ $0.diaryUUID == uuid })
+            .first
+        else { return }
+        
+        realm.safeWrite {
+            realm.delete(willDeleteDiary)
         }
     }
     
@@ -251,9 +273,9 @@ public final class MomentsRepositoryImp: MomentsRepository {
                 }
                 
                 // 4. 30일이 지난 콘텐츠인지 확인
-                let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
+                // let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
                 
-                return isAvailableContent
+                return true
             })
 
         print("MomentsRepo :: getSpecificDayDiary = \(diaryArr)")
@@ -294,29 +316,35 @@ public final class MomentsRepositoryImp: MomentsRepository {
     ]
     func setReadCountZeroMomentsItem() -> Observable<[MomentsItemRealm]?> {
         guard let diaryArr = diaryArr else { return .just(nil) }
-
-        let momentsDiaryArr: [DiaryModelRealm] = diaryArr
-            .filter({
-                let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
+        guard let momentsDiary: DiaryModelRealm = diaryArr
+            .filter ({
+                // 1. 조회수가 0인지 체크
                 let isReadCountZero: Bool = ($0.readCount == 0)
-                return isAvailableContent && isReadCountZero
+                
+                // 2. 이 모먼츠가 추천된 후 유저가 터치한 이력이 있는지 체크
+                if let lastMomentsDate = $0.lastMomentsDate {
+                    // 터치한 이력이 있지만, 30일이 지나서 다시 한 번 추천이 가능한지 확인
+                    let isAvailableContent: Bool = checkAvailableDiaryContents(lastMomentsDate, targetDay: 30)
+                    print("MomentsRepo :: 추천된 후 유저가 터치한 이력이 있습니다., 경과된 시간 = \(isAvailableContent)")
+                    if isAvailableContent == false { return false }
+                }
+                
+                return isReadCountZero
             })
+            .first
+        else { return .just(nil) }
+
+        let title: String = readCountZeroTitleData.randomElement() ?? ""
+        let item = MomentsItemRealm(order: 0,
+                                    title: title,
+                                    uuid: UUID().uuidString,
+                                    icon: "120px/book/close",
+                                    diaryUUID: momentsDiary.uuid,
+                                    userChecked: false,
+                                    createdAt: Date()
+        )
         
-        var momentsItems: [MomentsItemRealm] = []
-        for diary in momentsDiaryArr {
-            let title: String = readCountZeroTitleData.randomElement() ?? ""
-            let item = MomentsItemRealm(order: 0,
-                                        title: title,
-                                        uuid: UUID().uuidString,
-                                        icon: "120px/book/close",
-                                        diaryUUID: diary.uuid,
-                                        userChecked: false,
-                                        createdAt: Date()
-            )
-            momentsItems.append(item)
-        }
-        
-        return .just(momentsItems)
+        return .just([item])
     }
 
     //MARK: - 새벽감석 터지는 메뉴얼
@@ -331,7 +359,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
         guard let momentsDiary: DiaryModelRealm = diaryArr
             .filter ({
                 // 1. 30일이 지나 유저에게 추천 가능한지 체크
-                let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
+                // let isAvailableContent: Bool = checkAvailableDiaryContents($0.createdAt, targetDay: 30)
                 
                 // 2. 실제로 새벽에 작성했는지  체크
                 let hour = Calendar.current.component(.hour, from: $0.createdAt)
@@ -345,7 +373,7 @@ public final class MomentsRepositoryImp: MomentsRepository {
                     if isAvailableContent == false { return false }
                 }
                 
-                return isAvailableContent && isSpecificHour
+                return isSpecificHour
             })
             .first
         else { return .just(nil) }
@@ -437,6 +465,45 @@ public final class MomentsRepositoryImp: MomentsRepository {
     }
 }
 
+// MARK: - onboarding
+extension MomentsRepositoryImp {
+    /// 유저가 온보딩을 완료했을때
+    public func clearOnboarding() {
+        print("MomentsRepo :: clearOnboarding!")
+        guard let realm = Realm.safeInit() else { return }
+        guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
+        
+        realm.safeWrite {
+            momentsRealm.onboardingClearDate = Date()
+        }
+    }
+    
+    /// 유저에게 Onboarding을 제공해도 되는지 체크
+    public func checkNeedOnboarding() {
+        guard let realm = Realm.safeInit() else { return }
+        guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
+
+        // 다이어리를 작성한게 14개가 넘었을 경우에는 clear 상태로 변환
+        // 기능이 후에 업데이트 되었으므로, 기존 유저에게 잘못 보이는 현상 수정
+        let diaryModelRealmArr = realm.objects(DiaryModelRealm.self)
+        if diaryModelRealmArr.count > 14 {
+            realm.safeWrite {
+                momentsRealm.onboardingIsClear = true
+            }
+        }
+
+        guard let _ = momentsRealm.onboardingClearDate else { return }
+        
+        // 클리어한지 하루가 지났다면 표시하지 않아도 되므로 리턴
+        RefreshManager.shared.onboardingLoadDataIfNeeded(completion: { success in
+            print("MomentsRepo :: success = \(success)")
+            if success == true { return }
+        })
+        
+        // 클리어한지 하루가 되지 않았다면 지속 표시
+    }
+}
+
 // MARK: - MomentsRefrshManager
 class RefreshManager: NSObject {
 
@@ -450,7 +517,7 @@ class RefreshManager: NSObject {
             completion(false)
             return
         }
-
+        
         if isRefreshRequired() {
             // load the data
             // defaults.set(Date(), forKey: defaultsKey)
@@ -463,19 +530,85 @@ class RefreshManager: NSObject {
         }
     }
 
+    /// Moments Refresh가 필요한지 체크
     private func isRefreshRequired() -> Bool {
         guard let realm = Realm.safeInit(),
               let momentsRealm = realm.objects(MomentsRealm.self).first
         else { return false }
         
+        // onboarding을 완료하지 않았을 경우 moments를 제공하지 않음
+        if momentsRealm.onboardingIsClear == false {
+            print("MomentsRepo :: onboaridng을 완료하지 않았으므로 moments를 제공하지 않습니다.")
+            // 중간 업데이트로 이미 모먼츠가 노출되고 있던 14개 이하 작성자들 Moments 삭제
+            realm.safeWrite {
+                realm.delete(momentsRealm.items)
+            }
+            return false
+        }
+        
+        // 디버그 모드일때는 항상 리프레쉬 되도록
+        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
+        if isDebugMode {
+            return true
+        }
+        
         let lastUpdateDate = momentsRealm.lastUpdatedDate
-        let updateTime = 3
+        let updateTime = 0
         
         let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour
         let currentHour =  calender.dateComponents([.hour], from: Date()).hour
         
         print("MomentsRepo :: isRefreshRequired -> diff = \(diff), \(currentHour)")
         
+        
+        if let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour,
+            let currentHour =  calender.dateComponents([.hour], from: Date()).hour,
+            diff >= 24, updateTime <= currentHour {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func onboardingLoadDataIfNeeded(completion: (Bool) -> Void) {
+        guard let realm = Realm.safeInit(),
+              let momentsRealm = realm.objects(MomentsRealm.self).first
+        else {
+            completion(false)
+            return
+        }
+
+        if onboardingIsRefreshRequired() {
+            print("MomentsRepo :: onboardingIsRefreshRequired!!!")
+            // load the data
+            // defaults.set(Date(), forKey: defaultsKey)
+            realm.safeWrite {
+                momentsRealm.onboardingIsClear = true
+            }
+            completion(true)
+        } else {
+            completion(false)
+        }
+    }
+    
+    private func onboardingIsRefreshRequired() -> Bool {
+        guard let realm = Realm.safeInit(),
+              let momentsRealm = realm.objects(MomentsRealm.self).first
+        else { return false }
+        
+        // 디버그 모드일때는 하루 차이 없이 바로 나타나도록
+        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
+        if isDebugMode {
+            return true
+        }
+        
+        guard let lastUpdateDate = momentsRealm.onboardingClearDate else { return false }
+        let updateTime = 0
+        
+        let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour
+        let currentHour =  calender.dateComponents([.hour], from: Date()).hour
+        
+        print("MomentsRepo :: onboardingIsRefreshRequired -> diff = \(diff), \(currentHour)")
         
         if let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour,
             let currentHour =  calender.dateComponents([.hour], from: Date()).hour,

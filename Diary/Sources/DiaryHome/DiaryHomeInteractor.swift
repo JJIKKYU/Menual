@@ -17,15 +17,13 @@ import DiaryBottomSheet
 
 public protocol DiaryHomeRouting: ViewableRouting {
     func attachMyPage()
-    func detachMyPage(isOnlyDetach: Bool)
+    func detachMyPage(isOnlyDetach: Bool, isAnimated: Bool)
     func attachDiarySearch()
     func detachDiarySearch(isOnlyDetach: Bool)
     func attachDiaryWriting(page: Int)
     func detachDiaryWriting(isOnlyDetach: Bool)
     func attachDiaryDetail(model: DiaryModelRealm)
     func detachDiaryDetail(isOnlyDetach: Bool)
-    func attachDesignSystem()
-    func detachDesignSystem(isOnlyDetach: Bool)
     func attachBottomSheet(type: MenualBottomSheetType)
     func detachBottomSheet()
 }
@@ -41,10 +39,13 @@ public protocol DiaryHomePresentable: Presentable {
 
     func reloadTableViewRow(section: Int, row: Int)
     func insertTableViewRow(section: Int, row: Int)
+    func insertTableViewRow(section: Int, rows: [Int])
     func deleteTableViewRow(section: Int, row: Int)
     
     func insertTableViewSection()
     func deleteTableViewSection(section: Int)
+    
+    func showRestoreSuccessToast()
 }
 
 public protocol DiaryHomeListener: AnyObject {
@@ -70,6 +71,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?>
     let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
     
+    let filterResetBtnRelay = BehaviorRelay<Bool>(value: false)
     let filteredWeatherArrRelay = BehaviorRelay<[Weather]>(value: [])
     let filteredPlaceArrRelay = BehaviorRelay<[Place]>(value: [])
     
@@ -79,6 +81,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     var diaryRealmArr: Results<DiaryModelRealm>?
     var diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
     var arraySerction: [String] = []
+    
+    let onboardingDiarySet = BehaviorRelay<[Int: String]?>(value: nil)
     
     // filter 적용할 때, 원래 PageNum을 저장해놓고 필터가 끝났을때 다시 쓸 수 있도록
     var prevLastPageNum: Int = 0
@@ -103,6 +107,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         super.didBecomeActive()
         bind()
         bindMoments()
+        bindFilter()
     }
 
     override func willResignActive() {
@@ -176,44 +181,74 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     print("DiaryHome :: diaryDictionary = \(self.diaryDictionary)")
                     print("DiaryHome :: sectionSet = \(section)")
 
+                    self.setOnboardingDiaries()
                     self.presenter.reloadTableView()
                     
                 case .update(let model, _, let insertions, let modifications):
                     print("DiaryHome :: update! = \(model)")
-                    if insertions.count > 0 {
-                        guard let insertionsRow: Int = insertions.first else { return }
-                        print("DiaryHome :: realmObserve = insertion = \(insertions)")
-                        let diary: DiaryModelRealm = model[insertionsRow]
-                        let sectionName: String = diary.createdAt.toStringWithYYYYMM()
 
-                        // 글이 하나도 없을 경우에는 sectionIndex 0에 작성될 수 있도록
-                        let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex ?? 0
-                        var needInsertSection: Bool = false
-                        if self.diaryDictionary[sectionName] == nil {
-                            print("DiaryHome :: test! = nil입니다!")
+                    // diaryModelRealm이 업데이트 될 때마다 온보딩 다이어리 업데이트가 필요하면 진행하도록
+                    self.setOnboardingDiaries()
+
+                    if insertions.count > 0 {
+                        // 여러 개가 한 번에 추가될 경우 (백업 후 불러오기 등)
+                        if insertions.count != 1 {
+                            let lastPageNum = model
+                                .last?.pageNum ?? 0
+                            print("DiaryHome :: lastPageNumRelay = \(self.lastPageNumRelay.value)")
+                            self.lastPageNumRelay.accept(lastPageNum)
+
+                            var section = Set<String>()
+                            model.forEach { section.insert($0.createdAt.toStringWithYYYYMM()) }
                             
-                            for secName in self.arraySerction {
-                                self.diaryDictionary["\(secName)"]?.sectionIndex += 1
+                            self.arraySerction = Array(section)
+                            self.arraySerction.sort { $0 > $1 }
+                            self.arraySerction.enumerated().forEach { (index: Int, sectionName: String) in
+                                self.diaryDictionary[sectionName] = DiaryHomeSectionModel(sectionName: sectionName, sectionIndex: index, diaries: [])
+                            }
+                            
+                            for diary in model {
+                                let sectionName: String = diary.createdAt.toStringWithYYYYMM()
+                                self.diaryDictionary[sectionName]?.diaries.append(diary)
+                            }
+                            
+                            self.setOnboardingDiaries()
+                            self.presenter.reloadTableView()
+
+                            return
+                        }
+
+                        for insertionRow in insertions {
+                            let diary: DiaryModelRealm = model[insertionRow]
+                            let sectionName: String = diary.createdAt.toStringWithYYYYMM()
+
+                            // 글이 하나도 없을 경우에는 sectionIndex 0에 작성될 수 있도록
+                            let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex ?? 0
+                            var needInsertSection: Bool = false
+                            if self.diaryDictionary[sectionName] == nil {
+                                for secName in self.arraySerction {
+                                    self.diaryDictionary[secName]?.sectionIndex += 1
+                                }
+                                self.diaryDictionary[sectionName] = DiaryHomeSectionModel(sectionName: sectionName,
+                                                                                          sectionIndex: 0,
+                                                                                          diaries: []
+                                )
+                                needInsertSection = true
                             }
 
-                            self.diaryDictionary[sectionName] = DiaryHomeSectionModel(sectionName: sectionName, sectionIndex: 0, diaries: [])
-                            needInsertSection = true
+                            // 전체 pageNum 추려내기
+                            let lastPageNum = model.filter { $0.isDeleted == false }
+                                .sorted { $0.createdAt > $1.createdAt }
+                                .first?.pageNum ?? 0
+                            
+                            self.lastPageNumRelay.accept(lastPageNum)
+                            self.diaryDictionary[sectionName]?.diaries.insert(diary, at: 0)
+                            self.presenter.insertTableViewRow(section: sectionIndex, row: 0)
+                            if needInsertSection {
+                                // self.presenter.insertTableViewSection()
+                            }
                         }
 
-                        // 전체 PageNum 추려내기
-                        let lastPageNum = model.filter { $0.isDeleted == false }
-                            .sorted { $0.createdAt > $1.createdAt }
-                            .first?.pageNum ?? 0
-                        
-                        print("DiaryHome :: test! = \(lastPageNum)")
-                        self.lastPageNumRelay.accept(lastPageNum)
-
-                        self.diaryDictionary[sectionName]?.diaries.insert(diary, at: 0)
-                        print("DiaryHome :: test! = \(self.diaryDictionary[sectionName]?.diaries)")
-                        if needInsertSection {
-                            // self.presenter.insertTableViewSection()
-                        }
-                        self.presenter.insertTableViewRow(section: sectionIndex, row: 0)
                     }
                         
                     if modifications.count > 0 {
@@ -229,6 +264,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         
                         // 삭제일때
                         if diary.isDeleted == true {
+                            self.dependency.momentsRepository.deleteMoments(uuid: diary.uuid)
                             // 전체 PageNum 추려내기
                             let lastPageNum = model.filter { $0.isDeleted == false }
                                 .sorted { $0.createdAt > $1.createdAt }
@@ -277,12 +313,47 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     
                 case .update(let model, let deletions, let insertions, let modifications):
                     print("DiaryHome :: Moments! update! = \(model)")
+                    self.setOnboardingDiaries()
+                    
+                    if insertions.count > 0 {
+                        print("DiaryHome :: Moments! insertions!")
+                        guard let momentsRealm = realm.objects(MomentsRealm.self).toArray(type: MomentsRealm.self).first
+                        else { return }
+                    }
+                    
+                    if modifications.count > 0 {
+                        print("DiaryHome :: Moments! modifications! -> 메뉴얼 불러오기 등..")
+                        guard let momentsRealm = realm.objects(MomentsRealm.self).toArray(type: MomentsRealm.self).first
+                        else { return }
+                        self.momentsRealm = momentsRealm
+                        self.presenter.reloadCollectionView()
+                    }
+
+                    if deletions.count > 0 {
+                        print("DiaryHome :: Moments! delete!")
+                        guard let momentsRealm = realm.objects(MomentsRealm.self).toArray(type: MomentsRealm.self).first
+                        else { return }
+                        self.momentsRealm = momentsRealm
+                        self.presenter.reloadCollectionView()
+                    }
                     break
+                    
                     
                 case .error(let error):
                     print("DiaryHome :: MomentsError! = \(error)")
                 }
             })
+    }
+    
+    func bindFilter() {
+        filterResetBtnRelay
+            .subscribe(onNext: { [weak self] isResetClicked in
+                guard let self = self else { return }
+                if isResetClicked == false { return }
+                print("DiaryHomeIntreactor :: filterResetBtnRelay! = \(isResetClicked)")
+                self.pressedFilterResetBtn()
+        })
+            .disposed(by: disposebag)
     }
     
     // AdaptivePresentationControllerDelegate, Drag로 뷰를 Dismiss 시킬경우에 호출됨
@@ -298,7 +369,13 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func profileHomePressedBackBtn(isOnlyDetach: Bool) {
         print("DiaryHomeInteractor :: profileHomePressedBackBtn!")
-        router?.detachMyPage(isOnlyDetach: isOnlyDetach)
+        router?.detachMyPage(isOnlyDetach: isOnlyDetach, isAnimated: true)
+    }
+    
+    func restoreSuccess() {
+        print("DiaryHomeInteractor :: restoreSuccess!")
+        router?.detachMyPage(isOnlyDetach: false, isAnimated: false)
+        presenter.showRestoreSuccessToast()
     }
     
     // MARK: - Diary Search (검색화면) 관련 함수
@@ -355,18 +432,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         print("DiaryHome :: diaryDeleteNeedToast = \(isNeedToast)")
         presenter.isShowToastDiaryResultRelay.accept(.delete)
     }
-
-    // MARK: - Menual Title Btn을 눌렀을때 Action
-    func pressedMenualTitleBtn() {
-        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
-        if isDebugMode {
-            router?.attachDesignSystem()
-        }
-    }
-    
-    func designSystemPressedBackBtn(isOnlyDetach: Bool) {
-        router?.detachDesignSystem(isOnlyDetach: isOnlyDetach)
-    }
     
     // MARK: - Diary Bottom Sheet
     func diaryBottomSheetPressedCloseBtn() {
@@ -414,7 +479,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
         if filteredWeatherArrRelay.value.count == 0 && filteredPlaceArrRelay.value.count == 0 {
             presenter.isFilteredRelay.accept(false)
-            dependency.diaryRepository.fetch()
         } else {
             presenter.isFilteredRelay.accept(true)
             let _ = dependency.diaryRepository
@@ -437,7 +501,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         
         // double check
         if prevLastPageNum == 0 {
-            let pageNum = self.diaryRealmArr?
+            guard let realm = Realm.safeInit() else { return }
+            let pageNum = realm.objects(DiaryModelRealm.self)
                 .toArray(type: DiaryModelRealm.self)
                 .filter ({ $0.isDeleted == false })
                 .sorted(by: { $0.createdAt > $1.createdAt })
@@ -465,6 +530,63 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     }
 }
 
+// MARK: - OnBoarding
+extension DiaryHomeInteractor {
+    /// 온보딩이 필요한지 체크하고, 필요하다면 값을 넣어줄 수 있도록 하는 함수
+    func setOnboardingDiaries() {
+        print("DiaryHomeInteractor :: setOnboardingDiaries!")
+        guard let realm = Realm.safeInit() else { return }
+        guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
+        // onboarding이 보일 필요가 없으면 return
+        if momentsRealm.onboardingIsClear == true {
+            onboardingDiarySet.accept(nil)
+            return
+        }
+
+        let diaries = realm.objects(DiaryModelRealm.self)
+            .toArray(type: DiaryModelRealm.self)
+            .filter ({ $0.isDeleted == false })
+
+        var sortedModelArr: [String] = []
+        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
+        // 디버그 모드일 경우에는 다이어리 작성일자 카운트 하지 않고 나타날 수 있도록
+        if isDebugMode {
+            var diaryArr: [String] = []
+            for diary in diaries {
+                let date = diary.createdAt.toStringWithMMdd()
+                diaryArr.append(date)
+            }
+
+            sortedModelArr = diaryArr
+                .sorted(by: { $0 < $1 })
+        } else {
+            // 중복되지 않게 set에 날짜 insert
+            var diarySet: Set<String> = []
+            for diary in diaries {
+                let date = diary.createdAt.toStringWithMMdd()
+                diarySet.insert(date)
+            }
+
+            // 정렬
+            sortedModelArr = Array(diarySet)
+                .sorted(by: { $0 < $1 })
+        }
+        
+        // onboarding UI가 보일 수 있도록 형변환
+        var writingDiarySet: [Int: String] = [:]
+        for (index, date) in sortedModelArr.enumerated() {
+            writingDiarySet[index + 1] = date
+        }
+
+        // 14개 이상 작성이 완료되었을 경우 다음날 부터 모먼츠 제공될 수 있도록 체크
+        if writingDiarySet.count >= 14 {
+            dependency.momentsRepository
+                .clearOnboarding()
+        }
+        
+        onboardingDiarySet.accept(writingDiarySet)
+    }
+}
 
 // MARK: - 미사용
 extension DiaryHomeInteractor {

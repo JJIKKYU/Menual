@@ -42,6 +42,7 @@ public protocol DiaryBottomSheetListener: AnyObject {
 public protocol DiaryBottomSheetInteractorDependency {
     var diaryRepository: DiaryRepository { get }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
+    var filterResetBtnRelay: BehaviorRelay<Bool>? { get }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
@@ -60,6 +61,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDiaryCountRelay }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { dependency.filteredWeatherArrRelay }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { dependency.filteredPlaceArrRelay }
+    var filterResetBtnRelay: BehaviorRelay<Bool>? { dependency.filterResetBtnRelay }
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { dependency.reminderRequestDateRelay }
     var isHideMenualRelay: BehaviorRelay<Bool>? { dependency.isHideMenualRelay }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { dependency.isEnabledReminderRelay }

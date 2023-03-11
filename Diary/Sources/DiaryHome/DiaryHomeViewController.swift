@@ -28,7 +28,6 @@ public protocol DiaryHomePresentableListener: AnyObject {
     func pressedWritingBtn()
     func pressedDiaryCell(diaryModel: DiaryModelRealm)
     func pressedMomentsCell(momentsItem: MomentsItemRealm)
-    func pressedMenualTitleBtn()
     func pressedFilterBtn()
     func pressedFilterResetBtn()
     func pressedDateFilterBtn()
@@ -36,6 +35,7 @@ public protocol DiaryHomePresentableListener: AnyObject {
     var lastPageNumRelay: BehaviorRelay<Int> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var diaryDictionary: [String: DiaryHomeSectionModel] { get }
+    var onboardingDiarySet: BehaviorRelay<[Int: String]?> { get }
     var momentsRealm: MomentsRealm? { get }
 }
 
@@ -53,6 +53,10 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     private weak var weakToastView: ToastView?
     
     // MARK: - UI 코드
+    private let splashView = UIView().then {
+        $0.isUserInteractionEnabled = false
+        $0.backgroundColor = Colors.background
+    }
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
@@ -156,7 +160,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         filterEmptyHeaderDivider.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(38)
             make.height.equalTo(2)
         }
         
@@ -183,7 +187,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.addSubview(empty)
         
         divider.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(38)
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.height.equalTo(2)
@@ -203,6 +207,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.backgroundColor = .clear
         $0.writingBtn.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
         $0.isHidden = true
+    }
+    
+    private let momentsNoStartView = MomentsNoStartView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = .clear
     }
     
     // MARK: - VC 코드
@@ -232,6 +241,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         super.viewDidAppear(animated)
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         MenualLog.logEventAction("writing_appear")
+        actionSplashView()
         
         print("DiaryHome :: PushList!")
         
@@ -268,6 +278,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         
         tableViewHeaderView.addSubview(momentsCollectionView)
         tableViewHeaderView.addSubview(momentsCollectionViewPagination)
+        tableViewHeaderView.addSubview(momentsNoStartView)
         
         naviView.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -283,6 +294,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         self.view.bringSubviewToFront(myMenualTitleView)
         self.view.bringSubviewToFront(naviView)
         
+        self.view.addSubview(splashView)
+        splashView.snp.makeConstraints { make in
+            make.leading.trailing.top.bottom.equalToSuperview()
+        }
+        
         myMenualTableView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
@@ -294,7 +310,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.top.equalToSuperview()
             make.width.equalToSuperview()
-            make.height.equalTo(210)
+            make.height.equalTo(172)
         }
         self.view.layoutIfNeeded()
         
@@ -314,6 +330,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.bottom.equalTo(momentsCollectionView.snp.bottom).inset(20)
         }
         
+        momentsNoStartView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalToSuperview().offset(20)
+            make.bottom.equalToSuperview()
+        }
+        
         momentsCollectionViewPagination.snp.makeConstraints { make in
             make.top.equalTo(momentsCollectionView.snp.bottom).offset(10)
             make.leading.equalToSuperview()
@@ -324,7 +347,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         myMenualTitleView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.top.equalTo(momentsCollectionViewPagination.snp.bottom).offset(24)
+            make.top.equalTo(tableViewHeaderView.snp.bottom)
             make.height.equalTo(22)
         }
         
@@ -359,6 +382,14 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.bottom.equalToSuperview()
+        }
+    }
+    
+    /// 앱. 런치때 부드러운 Init 효과를 위해 Animation
+    func actionSplashView() {
+        print("DiaryHome :: actionSplashView!")
+        UIView.animate(withDuration: 0.25, delay: 0.25) {
+            self.splashView.layer.opacity = 0
         }
     }
     
@@ -420,7 +451,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             .withLatestFrom(isShowToastDiaryResultRelay)
             .subscribe(onNext: { [weak self] mode in
                 guard let self = self else { return }
-                print("DiaryHome :: rxViewWillAppear! -> mode = \(mode)")
                 switch mode {
                 case .writing:
                     self.showToastDiaryResult(mode: .writing)
@@ -433,6 +463,28 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 case .some(.none):
                     break
                 }
+            })
+            .disposed(by: disposeBag)
+        
+        listener?.onboardingDiarySet
+            .subscribe(onNext: { [weak self] data in
+                guard let self = self else { return }
+                if let data = data {
+                    self.momentsNoStartView.isHidden = false
+                    self.momentsNoStartView.writingDiarySet = data
+                    self.tableViewHeaderView.snp.updateConstraints { make in
+                        make.height.equalTo(240)
+                    }
+                    self.view.layoutIfNeeded()
+                    self.myMenualTableView.reloadData()
+                } else {
+                    self.tableViewHeaderView.snp.updateConstraints { make in
+                        make.height.equalTo(172)
+                    }
+                    self.momentsNoStartView.isHidden = true
+                }
+                self.view.layoutIfNeeded()
+                self.myMenualTableView.reloadData()
             })
             .disposed(by: disposeBag)
     }
@@ -497,9 +549,15 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         myMenualTableView.endUpdates()
     }
     
-    // 메뉴얼을 14개 이하로 작성했을경우 온보딩
-    func setOnBoardingDiary() {
-        print("DiaryHome :: setOnBoardingDiary!")
+    func insertTableViewRow(section: Int, rows: [Int]) {
+        myMenualTableView.beginUpdates()
+        let indexPaths = rows.map { IndexPath(item: $0, section: section)}
+        myMenualTableView.insertRows(at: indexPaths, with: .automatic)
+        myMenualTableView.endUpdates()
+    }
+    
+    func showRestoreSuccessToast() {
+        _ = showToast(message: "메뉴얼 가져오기가 완료되었습니다.")
     }
 }
 
@@ -532,7 +590,6 @@ extension DiaryHomeViewController {
     @objc
     func pressedMenualBtn(_ button: UIButton) {
         print("메뉴얼 버튼 눌렀니?")
-        listener?.pressedMenualTitleBtn()
     }
     
     @objc
@@ -585,9 +642,18 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
         // myMenualTableView일때만 작동하도록
         if case .MyMenualTableView = tableCollectionViewTag {
             // print("DiaryHome :: contents offset = \(scrollView.contentOffset.y)")
-            let offset = scrollView.contentOffset.y
+            let offset: CGFloat = scrollView.contentOffset.y
+            
+            // 상단 콘텐츠 높이에 따라서 Attach 되는 목표 offset 변경
+            var maxOffsetValue: CGFloat = 0
+            if listener?.onboardingDiarySet.value != nil {
+               maxOffsetValue = 230
+            } else {
+                maxOffsetValue = 165
+            }
+            
             // TitleView를 넘어서 스크롤할 경우
-            if offset > 165 {
+            if offset > maxOffsetValue {
                 // print("DiaryHome :: contents > 155")
                 setFABMode(isEnabled: true)
                 myMenualTitleView.AppShadow(.shadow_6)
@@ -616,7 +682,7 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
                 myMenualTitleView.snp.remakeConstraints { make in
                     make.leading.equalToSuperview()
                     make.width.equalToSuperview()
-                    make.top.equalTo(momentsCollectionViewPagination.snp.bottom).offset(24)
+                    make.top.equalTo(tableViewHeaderView.snp.bottom)
                     make.height.equalTo(22)
                 }
             }
@@ -667,7 +733,8 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // 첫번재 섹션일 경우에는 넓게 안띄움
         if section == 0 {
-            return 44
+            return 82
+            // return 200
         }
         return 60
     }
@@ -817,8 +884,6 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        
         switch collectionView.tag {
         // MomentsCollectionView
         case 0:
@@ -859,16 +924,15 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         switch collectionView.tag {
         // MomentsCollectionView
         case 0:
+            let onboardingIsClear: Bool = listener?.momentsRealm?.onboardingIsClear ?? false
+            // let isClearOnboarding: Bool = listener?.onboardingDiarySet
             // 초기에는 Realm도 설정되어 있지 않으므로 따로 설정
             guard let momentsCount = listener?.momentsRealm?.itemsArr.count else {
-                print("DiaryHome :: 여기!?")
-                self.momentsEmptyView.isHidden = false
-                self.momentsCollectionViewPagination.numberOfPages = 0
                 return  0
             }
             print("DiaryHome :: momentsCount = \(momentsCount)")
 
-            if momentsCount == 0 {
+            if momentsCount == 0 && onboardingIsClear {
                 self.momentsEmptyView.isHidden = false
                 self.momentsCollectionViewPagination.numberOfPages = 0
                 return 0
@@ -890,7 +954,7 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MomentsCell", for: indexPath) as? MomentsCell else { return UICollectionViewCell() }
             guard let data = listener?.momentsRealm?.itemsArr[safe: indexPath.row] else { return UICollectionViewCell() }
             
-            cell.tagTitle = "MENUAL TIPS"
+            cell.tagTitle = "MOMENTS"
             cell.momentsTitle = data.title
             cell.icon = data.icon
             

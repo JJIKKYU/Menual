@@ -23,7 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private let diaryUUIDRelay = BehaviorRelay<String>(value: "")
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         FirebaseApp.configure()
         
         let window = UIWindow(frame: UIScreen.main.bounds)
@@ -31,14 +30,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // 1. config 설정(이전 버전에서 다음 버전으로 마이그레이션될때 어떻게 변경될것인지)
         let config = Realm.Configuration(
-            schemaVersion: 2, // 새로운 스키마 버전 설정
+            schemaVersion: 8, // 새로운 스키마 버전 설정
             migrationBlock: { migration, oldSchemaVersion in
-                if oldSchemaVersion < 2 {
+                if oldSchemaVersion <= 2 {
                     // 1-1. 마이그레이션 수행(버전 2보다 작은 경우 버전 2에 맞게 데이터베이스 수정)
                     migration.enumerateObjects(ofType: MomentsItemRealm.className()) { oldObject, newObject in
                         newObject!["icon"] = "120px/book/open"
                     }
                 }
+
+                if oldSchemaVersion <= 3 {
+                    migration.enumerateObjects(ofType: MomentsRealm.className()) { oldObject, newObject in
+                        newObject!["onboardingClearDate"] = nil
+                    }
+                }
+                
+                if oldSchemaVersion <= 5 {
+                    migration.enumerateObjects(ofType: MomentsRealm.className()) { oldObject, newObject in
+                        newObject!["onboardingIsClear"] = false
+                    }
+                }
+                
+                if oldSchemaVersion <= 6 {
+                    migration.deleteData(forType: "SearchModelRealm")
+                }
+                
+                if oldSchemaVersion <= 8 {
+                    migration.create("BackupHistoryModelRealm")
+                }
+                
             }
         )
         
@@ -56,7 +76,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.urlHandler = result.urlHandler
         
         launchRouter?.launch(from: window)
-        Analytics.logEvent("AppStart", parameters: nil)
         UNUserNotificationCenter.current().delegate = self
         
         return true

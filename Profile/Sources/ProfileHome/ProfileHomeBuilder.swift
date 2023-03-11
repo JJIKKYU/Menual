@@ -10,6 +10,9 @@ import MenualRepository
 import ProfileOpensource
 import ProfilePassword
 import ProfileDeveloper
+import ProfileBackup
+import ProfileRestore
+import ProfileDesignSystem
 
 public protocol ProfileHomeDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
@@ -17,8 +20,11 @@ public protocol ProfileHomeDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
 }
 
-public final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency, ProfileDeveloperDependency, ProfileHomeInteractorDependency, ProfileOpensourceDependency {
+public final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency, ProfileDeveloperDependency, ProfileHomeInteractorDependency, ProfileOpensourceDependency, ProfileBackupDependency, ProfileRestoreDependency, DesignSystemDependency {
 
+    public var backupRestoreRepository: BackupRestoreRepository {
+        BackupRestoreRepositoryImp()
+    }
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
 
@@ -42,6 +48,9 @@ public final class ProfileHomeBuilder: Builder<ProfileHomeDependency>, ProfileHo
         let profilePasswordBuildable = ProfilePasswordBuilder(dependency: component)
         let profileDveloperBuildable = ProfileDeveloperBuilder(dependency: component)
         let profileOpensourceBuildable = ProfileOpensourceBuilder(dependency: component)
+        let profileBackupBuildable = ProfileBackupBuilder(dependency: component)
+        let profileRestoreBuildable = ProfileRestoreBuilder(dependency: component)
+        let designSystemBuildable = DesignSystemBuilder(dependency: component)
         
         let viewController = ProfileHomeViewController()
         viewController.screenName = "profile"
@@ -56,7 +65,10 @@ public final class ProfileHomeBuilder: Builder<ProfileHomeDependency>, ProfileHo
             viewController: viewController,
             profilePasswordBuildable: profilePasswordBuildable,
             profileDeveloperBuildable: profileDveloperBuildable,
-            profileOpensourceBuildable: profileOpensourceBuildable
+            profileOpensourceBuildable: profileOpensourceBuildable,
+            profileBackupBuildable: profileBackupBuildable,
+            profileRestoreBuildable: profileRestoreBuildable,
+            designSystemBuildable: designSystemBuildable
         )
     }
 }

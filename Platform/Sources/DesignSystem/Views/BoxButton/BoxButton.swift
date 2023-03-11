@@ -27,9 +27,7 @@ public enum BoxButtonIsFiltered {
 }
 
 public class BoxButton: UIButton {
-    public var btnStatus: BoxButtonStatus = .inactive {
-        didSet { setNeedsLayout() }
-    }
+    public var btnStatus: BoxButtonStatus = .inactive
     
     public var btnSize: BoxButtonSize = .large {
         didSet { setNeedsLayout() }
@@ -140,6 +138,15 @@ public class BoxButton: UIButton {
 
         case false:
             print("BoxButton :: isSelecteed! - false")
+        }
+        
+        if btnStatus == .inactive { return }
+        switch btnSelected {
+        case true:
+            btnStatus = .pressed
+
+        case false:
+            btnStatus = .active
         }
     }
 }

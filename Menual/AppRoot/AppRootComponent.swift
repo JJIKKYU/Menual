@@ -28,7 +28,6 @@ final class AppRootComponent: Component<AppRootDependency> {
         self.rootViewController = rootViewController
         self.diaryRepository = DiaryRepositoryImp()
         self.momentsRepository = MomentsRepositoryImp()
-        self.diaryRepository.fetch()
         self.momentsRepository.fetch()
         super.init(dependency: dependency)
     }
@@ -36,7 +35,7 @@ final class AppRootComponent: Component<AppRootDependency> {
 
 extension AppRootComponent: DiaryHomeDependency,
                             ProfilePasswordDependency,
-                            AppRootInteractorDependency
+                            AppRootInteractorDependency, SplashDependency
 {
 
     
