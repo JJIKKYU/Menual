@@ -28,6 +28,15 @@
       }
     },
     {
+      "identity" : "flexlayoutforspm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/JJIKKYU/FlexLayoutForSPM",
+      "state" : {
+        "branch" : "master",
+        "revision" : "8fead465e2b9a6607e85d8df9a1150969a032c23"
+      }
+    },
+    {
       "identity" : "googleappmeasurement",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/GoogleAppMeasurement.git",
@@ -88,6 +97,15 @@
       "state" : {
         "revision" : "819d0a2173aff699fb8c364b6fb906f7cdb1a692",
         "version" : "2.30909.0"
+      }
+    },
+    {
+      "identity" : "pinlayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/layoutBox/PinLayout",
+      "state" : {
+        "revision" : "75c88c5c374c7bc78a154ffdf963cd362f38258a",
+        "version" : "1.10.3"
       }
     },
     {

@@ -40,14 +40,7 @@ public class ToastView: UIView {
     func setViews() {
         backgroundColor = Colors.tint.main.v800
         addSubview(toastTitleLabel)
-        
-//        toastView.snp.makeConstraints { make in
-//            make.leading.equalToSuperview()
-//            make.width.equalToSuperview()
-//            make.top.equalToSuperview()
-//            make.height.equalTo(UIApplication.topSafeAreaHeight + 36)
-//        }
-        
+
         toastTitleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().inset(18)
@@ -90,9 +83,10 @@ public extension UIViewController {
                 make.top.equalToSuperview().inset(-UIApplication.topSafeAreaHeight - 36)
             }
             self.view.layoutIfNeeded()
-        }, completion: { [weak self] isCompleted in
+        }, completion: { isCompleted in
             toastView.removeFromSuperview()
         })
+
         return toastView
         }
 }

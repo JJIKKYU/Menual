@@ -21,15 +21,51 @@ public enum DialogButtonType {
     case twoBtn
 }
 
+public enum DialogScreen {
+    case diaryWriting(DiaryWritingDialog)
+    case diaryDetail(DiaryDetailDialog)
+    case diarySearch(DiarySearchDialog)
+    case diaryBottomSheet(DiaryBottomSheetDialog)
+}
+
+public enum DiaryWritingDialog {
+    case writingCancel
+    case writing
+    case editCancel
+    case edit
+    case deletePhoto
+    case camera
+}
+
+public enum DiaryDetailDialog {
+    case replyCancel
+    case replyDelete
+    case reply
+    case hide
+}
+
+public enum DiarySearchDialog {
+    case delete
+}
+
+public enum DiaryBottomSheetDialog {
+    case hide
+    case diaryDelete
+    case reminderQuestion
+    case reminderAuth
+    case reminderEnable
+}
+
 // Dialog의 버튼의 액션을 처리하는 Delegate입니다.
 public protocol DialogDelegate: AnyObject {
-    func action(titleText: String)   // confirm button event
-    func exit(titleText: String)     // cancel button event
+    func action(dialogScreen: DialogScreen)
+    func exit(dialogScreen: DialogScreen)
 }
 
 
 public class DialogViewController: UIViewController {
     
+    public var dialogScreen: DialogScreen?
     public weak var delegate: DialogDelegate?
     
     public var titleText: String = "타이틀입니다" {
@@ -157,8 +193,6 @@ public class DialogViewController: UIViewController {
     
     public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
-        
     }
 
     func setViews() {
@@ -278,7 +312,10 @@ extension DialogViewController {
     func pressedConfirmBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
         self.dismiss(animated: true) {
-            self.delegate?.action(titleText: self.titleText)
+            if let dialogScreen = self.dialogScreen {
+                self.delegate?.action(dialogScreen: dialogScreen)
+            }
+
             self.delegate = nil
         }
     }
@@ -287,7 +324,9 @@ extension DialogViewController {
     func pressedCancelBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
         self.dismiss(animated: true) {
-            self.delegate?.exit(titleText: self.titleText)
+            if let dialogScreen = self.dialogScreen {
+                self.delegate?.exit(dialogScreen: dialogScreen)
+            }
             self.delegate = nil
         }
     }
@@ -295,7 +334,8 @@ extension DialogViewController {
 
 // MARK: - 재사용성
 extension DialogDelegate where Self: UIViewController {
-    public func show(
+    public func showDialog(
+        dialogScreen: DialogScreen,
         size: DialogSize,
         buttonType: DialogButtonType,
         titleText: String,
@@ -303,24 +343,22 @@ extension DialogDelegate where Self: UIViewController {
         cancelButtonText: String? = "",
         confirmButtonText: String
     ) {
-        
         let dialogViewController = DialogViewController()
         
         dialogViewController.delegate = self
+        dialogViewController.dialogScreen = dialogScreen
         
         dialogViewController.modalPresentationStyle = .overFullScreen
         dialogViewController.modalTransitionStyle = .crossDissolve
-
+        
         dialogViewController.dialogButtonType = buttonType
         dialogViewController.dialogSize = size
-        print("dialog :: dialogSize = \(size)")
         dialogViewController.titleText = titleText
         dialogViewController.subTitleText = subTitleText ?? ""
         dialogViewController.confirmText = confirmButtonText
         dialogViewController.cancleText = cancelButtonText ?? ""
         dialogViewController.setButtonLayout()
-
+        
         self.present(dialogViewController, animated: true, completion: nil)
     }
 }
-

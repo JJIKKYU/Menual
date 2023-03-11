@@ -27,7 +27,6 @@ public protocol DesignSystemPresentableListener: AnyObject {
     func pressedCapsuleButtonCell()
     func pressedListButtonCell()
     func pressedFABButtonCell()
-    func pressedTabsCell()
     func pressedPaginationCell()
     func pressedEmptyCell()
     func pressedMetaDataCell()
@@ -67,7 +66,6 @@ final class DesignSystemViewController: UIViewController, DesignSystemPresentabl
     override func viewDidLoad() {
         super.viewDidLoad()
         setViews()
-        print("이거 됨? \(listener?.designSystemVariation)")
         detachRelay?.accept(true)
     }
     
@@ -108,7 +106,6 @@ final class DesignSystemViewController: UIViewController, DesignSystemPresentabl
 // MARK: - TableView
 extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 15
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -125,8 +122,6 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
         case "Capsule Button":
             cell.backgroundColor = .clear
         case "Box Button":
-            cell.backgroundColor = .clear
-        case "Tabs":
             cell.backgroundColor = .clear
         case "FAB":
             cell.backgroundColor = .clear
@@ -170,8 +165,6 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
             listener?.pressedCapsuleButtonCell()
         case "Box Button":
             listener?.pressedBoxButtonCell()
-        case "Tabs":
-            listener?.pressedTabsCell()
         case "FAB":
             listener?.pressedFABButtonCell()
         case "List Header":

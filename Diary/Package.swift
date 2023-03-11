@@ -39,7 +39,6 @@ let package = Package(
         .package(path: "../Platform"),
         .package(path: "../Profile"),
         .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3")),
-        .package(url: "https://github.com/Juanpe/SkeletonView", from: "1.30.4")
     ],
     targets: [
         .target(

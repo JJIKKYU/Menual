@@ -5,15 +5,10 @@
 //  Created by 정진균 on 2022/04/17.
 //
 
-import Foundation
 import UIKit
 import SnapKit
 import Then
 import MenualUtil
-
-public protocol MenualNaviViewProtocol {
-    
-}
 
 /// 뷰마다 NavigationType 정의
 public enum NaviViewType {
@@ -22,7 +17,6 @@ public enum NaviViewType {
     case search
     case myPage
     case myPageCancel
-    
     case write
     case writePicture
     case writePictureClose
@@ -60,6 +54,7 @@ public class MenualNaviView: UIView {
         $0.text = "title"
         $0.font = UIFont.AppTitle(.title_3)
         $0.textColor = .white
+        $0.textAlignment = .center
         $0.isHidden = true
     }
     
@@ -84,6 +79,7 @@ public class MenualNaviView: UIView {
     
     // 오른쪽에서 2번째
     public var rightButton2 = BaseButton().then {
+        $0.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
         $0.setImage(Asset._24px.search.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = Colors.tint.main.v700
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -94,6 +90,7 @@ public class MenualNaviView: UIView {
     }
     
     public var leftButton1 = BaseButton().then {
+        $0.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
         $0.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
         $0.tintColor = .white
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -107,7 +104,10 @@ public class MenualNaviView: UIView {
         self.naviViewType = type
         super.init(frame: CGRect.zero)
         categoryName = "navi"
+        backgroundColor = Colors.background
+
         setViews()
+        setNaviViewType()
     }
     
     required init?(coder: NSCoder) {
@@ -173,6 +173,7 @@ public class MenualNaviView: UIView {
             rightButton2.actionName = "search"
             rightButton2.isHidden = false
             menualTitleImage.isHidden = false
+
         case .moments:
             titleLabel.text = "MOMENTS"
             titleLabel.font = UIFont.AppHead(.head_4)

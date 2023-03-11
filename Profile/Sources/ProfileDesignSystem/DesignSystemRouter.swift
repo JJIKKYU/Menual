@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import MenualUtil
 
 protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener, FABListener, TabsListener, PaginationListener, EmptyViewListener, MetaDataListener, NumberPadListener, ProgressListener {
     var router: DesignSystemRouting? { get set }
@@ -42,8 +43,6 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
     private let fabBuildable: FABBuildable
     private var fabRouting: Routing?
     
-    private let tabsBuildable: TabsBuildable
-    private var tabsRouting: Routing?
     
     private let paginationBuildable: PaginationBuildable
     private var paginationRouting: Routing?
@@ -72,7 +71,6 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         capsuleButtonBuildable: CapsuleButtonBuildable,
         listBuildable: ListBuildable,
         fabBuildable: FABBuildable,
-        tabsBuildable: TabsBuildable,
         paginationBuildable: PaginationBuildable,
         emptyBuildable: EmptyViewBuildable,
         metaDataBuildable: MetaDataBuildable,
@@ -87,7 +85,6 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         self.capsuleButtonBuildable = capsuleButtonBuildable
         self.listBuildable = listBuildable
         self.fabBuildable = fabBuildable
-        self.tabsBuildable = tabsBuildable
         self.paginationBuildable = paginationBuildable
         self.emptyBuildable = emptyBuildable
         self.metaDataBuildable = metaDataBuildable
@@ -305,32 +302,6 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         
         detachChild(router)
         fabRouting = nil
-    }
-    
-    // MARK: - Tabs DesignSystem RIBs
-    func attachTabsVC() {
-        if tabsRouting != nil {
-            return
-        }
-        
-        let router = tabsBuildable.build(withListener: interactor)
-        viewController.pushViewController(router.viewControllable, animated: true)
-        
-        tabsRouting = router
-        attachChild(router)
-    }
-    
-    func detachTabsVC(isOnlyDetach: Bool) {
-        guard let router = tabsRouting else {
-            return
-        }
-        
-        if !isOnlyDetach {
-            viewController.popViewController(animated: true)
-        }
-        
-        detachChild(router)
-        tabsRouting = nil
     }
     
     // MARK: - Pagination DesignSystem RIBs

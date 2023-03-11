@@ -40,7 +40,6 @@ public final class DesignSystemBuilder: Builder<DesignSystemDependency>, DesignS
         let capsuleButtonBuildable = CapsuleButtonBuilder(dependency: component)
         let listBuildable = ListBuilder(dependency: component)
         let fabBuildable = FABBuilder(dependency: component)
-        let tabsBuildable = TabsBuilder(dependency: component)
         let paginationBuildable = PaginationBuilder(dependency: component)
         let emptyBuildable = EmptyViewBuilder(dependency: component)
         let metaDataBuildable = MetaDataBuilder(dependency: component)
@@ -61,7 +60,6 @@ public final class DesignSystemBuilder: Builder<DesignSystemDependency>, DesignS
             capsuleButtonBuildable: capsuleButtonBuildable,
             listBuildable: listBuildable,
             fabBuildable: fabBuildable,
-            tabsBuildable: tabsBuildable,
             paginationBuildable: paginationBuildable,
             emptyBuildable: emptyBuildable,
             metaDataBuildable: metaDataBuildable,
