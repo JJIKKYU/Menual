@@ -40,13 +40,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
 
     var page: Int
     
-    enum DiaryWritingMode {
-        case writing
-        case edit
-        case none
-    }
-
-    var diaryWritingMode: DiaryWritingMode = .writing
+    var diaryWritingMode: WritingType = .writing
 
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
     
@@ -228,6 +222,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             self.placeDescRelay.accept(placeDesc)
             self.descRelay.accept(desc)
             self.presenter.setUI(writeType: writingType)
+            self.diaryWritingMode = writingType
         })
         .disposed(by: disposebag)
         

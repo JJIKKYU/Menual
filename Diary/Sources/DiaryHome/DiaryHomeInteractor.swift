@@ -184,7 +184,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     self.setOnboardingDiaries()
                     self.presenter.reloadTableView()
                     
-                case .update(let model, let deletions, let insertions, let modifications):
+                case .update(let model, _, let insertions, let modifications):
                     print("DiaryHome :: update! = \(model)")
 
                     // diaryModelRealm이 업데이트 될 때마다 온보딩 다이어리 업데이트가 필요하면 진행하도록

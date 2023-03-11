@@ -16,7 +16,13 @@ import MenualRepositoryTestSupport
 
 // MARK: - DiaryWritingPresentableMock
 final class DiaryWritingPresentableMock: DiaryWritingPresentable {
+    
     var listener: DiaryWriting.DiaryWritingPresentableListener?
+    
+    var setUICallCount = 0
+    func setUI(writeType: DiaryWriting.WritingType) {
+        setUICallCount += 1
+    }
     
     var setWeatherViewCallCount = 0
     func setWeatherView(model: MenualEntity.WeatherModelRealm) {

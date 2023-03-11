@@ -88,18 +88,15 @@ final class DiaryWritingInteractorTests: XCTestCase {
     
     func testWriteDiary() {
         // given
-        let diaryModelRealm = DiaryModelRealm(pageNum: 999,
-                                              title: "testTitle",
-                                              weather: nil,
-                                              place: nil,
-                                              desc: "testDesc",
-                                              image: false,
-                                              createdAt: Date(),
-                                              lastMomentsDate: nil
-        )
+        sut.didBecomeActive()
+
+        sut.placeModelRelay.accept(PlaceModelRealm(place: .bus, detailText: "bus"))
+        sut.weatherModelRelay.accept(WeatherModelRealm(weather: .cloud, detailText: "cloud"))
+        sut.titleRelay.accept("testTitle")
+        sut.descRelay.accept("testdesc")
 
         // when
-        sut.writeDiary(info: diaryModelRealm)
+        sut.writeDiary()
         
         // then
         XCTAssertEqual(diaryRepository.addDiaryCallCount, 1)
@@ -107,15 +104,12 @@ final class DiaryWritingInteractorTests: XCTestCase {
     
     func testWriteDiaryWithTempSave() {
         // given
-        let diaryModelRealm = DiaryModelRealm(pageNum: 999,
-                                              title: "testTitle",
-                                              weather: nil,
-                                              place: nil,
-                                              desc: "testDesc",
-                                              image: false,
-                                              createdAt: Date(),
-                                              lastMomentsDate: nil
-        )
+        sut.activate()
+        sut.placeModelRelay.accept(PlaceModelRealm(place: .bus, detailText: "bus"))
+        sut.weatherModelRelay.accept(WeatherModelRealm(weather: .cloud, detailText: "cloud"))
+        sut.titleRelay.accept("testTitle")
+        sut.descRelay.accept("testdesc")
+
         let tempSaveDiaryModelRealm = DiaryModelRealm(pageNum: 123,
                                                       title: "tempSaveTitle",
                                                       weather: nil,
@@ -132,9 +126,8 @@ final class DiaryWritingInteractorTests: XCTestCase {
         )
         
         // when
-        sut.activate()
         sut.tempSaveDiaryModelRelay.accept(tempSaveModelRealm)
-        sut.writeDiary(info: diaryModelRealm)
+        sut.writeDiary()
         
         // then
         XCTAssertEqual(diaryRepository.deleteTempSaveCallCount, 1)
@@ -144,26 +137,20 @@ final class DiaryWritingInteractorTests: XCTestCase {
     
     func testSaveTempSave() {
         // given
-        let diaryModelRealm = DiaryModelRealm(pageNum: 999,
-                                              title: "testTitle",
-                                              weather: nil,
-                                              place: nil,
-                                              desc: "testDesc",
-                                              image: false,
-                                              createdAt: Date(),
-                                              lastMomentsDate: nil
-        )
+        sut.activate()
+        sut.placeModelRelay.accept(PlaceModelRealm(place: .bus, detailText: "bus"))
+        sut.weatherModelRelay.accept(WeatherModelRealm(weather: .cloud, detailText: "cloud"))
+        sut.titleRelay.accept("testTitle")
+        sut.descRelay.accept("testdesc")
         
         // when
-        sut.saveTempSave(diaryModel: diaryModelRealm,
-                         originalImageData: nil,
-                         cropImageData: nil
-        )
+        sut.saveTempSave()
         
         // then
         XCTAssertEqual(diaryRepository.addTempSaveCallCount, 1)
     }
-    
+
+    /// tempSaveRest 되었을 경우 SetUI를 호출해, UI를 모두 초기화 했는지 체크
     func testTempSaveReset() {
         // given
         
@@ -172,7 +159,13 @@ final class DiaryWritingInteractorTests: XCTestCase {
         sut.tempSaveResetRelay.accept(true)
         
         // then
-        XCTAssertEqual(presenter.resetDiaryCallCount, 1)
+        XCTAssertEqual(presenter.setUICallCount, 1)
+        XCTAssertEqual(sut.titleRelay.value, "")
+        XCTAssertEqual(sut.weatherRelay.value, nil)
+        XCTAssertEqual(sut.placeRelay.value, nil)
+        XCTAssertEqual(sut.weatherDescRelay.value, "")
+        XCTAssertEqual(sut.placeDescRelay.value, "")
+        XCTAssertEqual(sut.descRelay.value, "")
     }
     
     /// 정상적인 값이 들어갔을 경우
@@ -187,6 +180,13 @@ final class DiaryWritingInteractorTests: XCTestCase {
                                               createdAt: Date(),
                                               lastMomentsDate: nil
         )
+        
+        sut.activate()
+        
+        sut.placeModelRelay.accept(PlaceModelRealm(place: .bus, detailText: "bus"))
+        sut.weatherModelRelay.accept(WeatherModelRealm(weather: .cloud, detailText: "cloud"))
+        sut.titleRelay.accept("newTestTitle")
+        sut.descRelay.accept("newTestDesc")
         let newDiaryModelRealm = DiaryModelRealm(pageNum: 1,
                                               title: "newTestTitle",
                                               weather: nil,
@@ -199,9 +199,9 @@ final class DiaryWritingInteractorTests: XCTestCase {
         let exp = expectation(description: "testUpdateDiary")
         
         // when
-        sut.activate()
+        
         sut.diaryModelRelay.accept(diaryModelRealm)
-        sut.updateDiary(info: newDiaryModelRealm, edittedImage: false)
+        sut.updateDiary(isUpdateImage: false)
         
         Observable.combineLatest(
             sut.imageSaveRelay,
@@ -235,7 +235,7 @@ final class DiaryWritingInteractorTests: XCTestCase {
         
         // when
         sut.activate()
-        sut.updateDiary(info: newDiaryModelRealm, edittedImage: false)
+//        sut.updateDiary(info: newDiaryModelRealm, edittedImage: false)
         
         Observable.combineLatest(
             sut.imageSaveRelay,
@@ -309,9 +309,17 @@ final class DiaryWritingInteractorTests: XCTestCase {
         // when
         sut.activate()
         sut.diaryModelRelay.accept(diaryModelRealm)
+        let exp = expectation(description: "testDiaryWritingMode")
+        
+        sut.diaryModelRelay
+            .subscribe(onNext: { _ in
+                exp.fulfill()
+            })
+        
+        wait(for: [exp], timeout: 1)
         
         // then
         XCTAssertEqual(sut.diaryWritingMode, .edit)
-        XCTAssertEqual(presenter.setDiaryEditModeCallCount, 1)
+        XCTAssertEqual(presenter.setUICallCount, 1)
     }
 }

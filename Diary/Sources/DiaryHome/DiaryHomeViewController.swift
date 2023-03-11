@@ -451,7 +451,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             .withLatestFrom(isShowToastDiaryResultRelay)
             .subscribe(onNext: { [weak self] mode in
                 guard let self = self else { return }
-                print("DiaryHome :: rxViewWillAppear! -> mode = \(mode)")
                 switch mode {
                 case .writing:
                     self.showToastDiaryResult(mode: .writing)
@@ -558,7 +557,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     func showRestoreSuccessToast() {
-        showToast(message: "메뉴얼 가져오기가 완료되었습니다.")
+        _ = showToast(message: "메뉴얼 가져오기가 완료되었습니다.")
     }
 }
 
@@ -925,7 +924,6 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
         switch collectionView.tag {
         // MomentsCollectionView
         case 0:
-            print("DiaryHome :: onboardingDiarySet = \(listener?.onboardingDiarySet.value?.count)")
             let onboardingIsClear: Bool = listener?.momentsRealm?.onboardingIsClear ?? false
             // let isClearOnboarding: Bool = listener?.onboardingDiarySet
             // 초기에는 Realm도 설정되어 있지 않으므로 따로 설정
