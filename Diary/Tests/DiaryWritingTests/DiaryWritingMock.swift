@@ -158,11 +158,11 @@ final class DiaryWritingInteractableMock: DiaryWritingInteractable {
     var listener: DiaryWriting.DiaryWritingListener?
 
     func activate() {
-        
+        isActiveRelay.accept(true)
     }
     
     func deactivate() {
-        
+        isActiveRelay.accept(false)
     }
     
     var diaryTempSavePressentBackBtnCallCount = 0

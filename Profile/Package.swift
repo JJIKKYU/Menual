@@ -156,6 +156,18 @@ let package = Package(
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "MenualRepositoryTestSupport", package: "Platform"),
             ]
+        ),
+        .testTarget(
+            name: "ProfileRestoreConfirmTests",
+            dependencies: [
+                "ProfileRestoreConfirm",
+                .product(name: "RIBs", package: "RIBs"),
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "MenualRepository", package: "Platform"),
+                .product(name: "MenualEntity", package: "Platform"),
+                .product(name: "MenualRepositoryTestSupport", package: "Platform"),
+            ]
         )
     ]
 )
