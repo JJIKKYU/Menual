@@ -42,7 +42,7 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
     
     private let disposeBag = DisposeBag()
     private let dependency: ProfileRestoreConfirmInteractorDependency
-    private let menualRestoreFileRelay = BehaviorSubject<Bool?>(value: nil)
+    internal let menualRestoreFileRelay = BehaviorSubject<Bool?>(value: nil)
     internal let menualRestoreProgressRelay = BehaviorRelay<CGFloat>(value: -1)
     var fileName: String?
     var fileCreatedAt: String?

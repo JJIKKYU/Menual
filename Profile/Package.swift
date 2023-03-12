@@ -167,6 +167,9 @@ let package = Package(
                 .product(name: "MenualRepository", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "MenualRepositoryTestSupport", package: "Platform"),
+            ],
+            resources: [
+                .process("TestSupport")
             ]
         )
     ]
