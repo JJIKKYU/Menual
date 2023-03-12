@@ -42,5 +42,6 @@ public final class BackupRestoreRepositoryMock: BackupRestoreRepository {
     public var clearCacheDirecotryCallCount: Int = 0
     public func clearCacheDirecotry(completion: @escaping (Bool) -> Void) {
         clearCacheDirecotryCallCount += 1
+        completion(true)
     }
 }

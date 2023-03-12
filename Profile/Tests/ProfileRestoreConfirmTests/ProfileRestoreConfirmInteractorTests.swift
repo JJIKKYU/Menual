@@ -94,6 +94,18 @@ final class ProfileRestoreConfirmInteractorTests: XCTestCase {
         XCTAssertEqual(testIsRestoreMenualFile, true)
     }
     
+    func testWillResignActive() {
+        // given
+        
+        // when
+        sut.activate()
+        sut.willResignActive()
+        sut.deactivate()
+        
+        // then
+        XCTAssertEqual(sut.isActive, false)
+    }
+    
     /// jsonParsing이 제대로 진행되는지 체크
     ///  - Zip파일이 정상적인 메뉴얼일 경우
     func testParseJson() {
@@ -116,6 +128,34 @@ final class ProfileRestoreConfirmInteractorTests: XCTestCase {
             }
         }
         
+        // diarySearch.json이 의도한대로 잘 변환되는지
+        if let diarySearchURL = Bundle.module.url(forResource: "diarySearch", withExtension: "json") {
+            if let diarySearchData = try? Data(contentsOf: diarySearchURL) {
+                destRestoreFile.diarySearchData = diarySearchData
+            }
+        }
+        
+        // moments.json이 의도한대로 잘 변환되는지
+        if let momentsURL = Bundle.module.url(forResource: "moments", withExtension: "json") {
+            if let momentsData = try? Data(contentsOf: momentsURL) {
+                destRestoreFile.momentsData = momentsData
+            }
+        }
+        
+        // password.json이 의도한대로 잘 변환되는지
+        if let passwordURL = Bundle.module.url(forResource: "password", withExtension: "json") {
+            if let passwordData = try? Data(contentsOf: passwordURL) {
+                destRestoreFile.passwordData = passwordData
+            }
+        }
+        
+        // tempSave.json이 의도한대로 잘 변환되는지
+        if let tempSaveURL = Bundle.module.url(forResource: "tempSave", withExtension: "json") {
+            if let tempSaveData = try? Data(contentsOf: tempSaveURL) {
+                destRestoreFile.tempSaveData = tempSaveData
+            }
+        }
+        
         // when
         sut.activate()
         let parseJsonRestoreFile = sut.parseJsonFile()
@@ -127,13 +167,17 @@ final class ProfileRestoreConfirmInteractorTests: XCTestCase {
         
         // json
         XCTAssertEqual(parseJsonRestoreFile?.diaryData, destRestoreFile.diaryData)
-        
+        XCTAssertEqual(parseJsonRestoreFile?.diarySearchData, destRestoreFile.diarySearchData)
+        XCTAssertEqual(parseJsonRestoreFile?.momentsData, destRestoreFile.momentsData)
+        XCTAssertEqual(parseJsonRestoreFile?.passwordData, destRestoreFile.passwordData)
+        XCTAssertEqual(parseJsonRestoreFile?.tempSaveData, destRestoreFile.tempSaveData)
     }
     
     /// restoreBtn을 유저가 눌렀을 때, Restore 과정이 시나리오대로 진행되는지 확인
     func testRestore() {
         // given
         let exp = expectation(description: "testRestore")
+        var testIsSuccess: Bool = false
         
         // when
         sut.activate()
@@ -157,7 +201,11 @@ final class ProfileRestoreConfirmInteractorTests: XCTestCase {
         
         wait(for: [exp], timeout: 1)
         
-        // then
+//        wait(for: [exp2], timeout: 1)
         
+        // then
+        XCTAssertEqual(backupRestoreRepository.restoreWithJsonCallCount, 1)
+        XCTAssertEqual(backupRestoreRepository.clearCacheDirecotryCallCount, 1)
+        XCTAssertEqual(sut.menualRestoreProgressRelay.value, 1)
     }
 }
