@@ -92,5 +92,18 @@ let package = Package(
                 .product(name: "RealmSwift", package: "realm-swift"),
             ]
         ),
+        .testTarget(
+            name: "MenualRepositoryTests",
+            dependencies: [
+                "MenualRepository",
+                "MenualEntity",
+                "MenualUtil",
+                "MenualRepository",
+                "MenualRepositoryTestSupport",
+                .product(name: "RIBs", package: "RIBs"),
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
+            ]
+        ),
     ]
 )
