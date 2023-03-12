@@ -18,12 +18,14 @@ import RxSwift
 final class ProfileBackupPresentableMock: ProfileBackupPresentable {
     var listener: ProfileBackup.ProfileBackupPresentableListener?
     
+    var showShareSheetParameters: (path: String, Void)?
     var showShareSheetCallCount = 0
     func showShareSheet(path: String) {
         showShareSheetCallCount += 1
+        showShareSheetParameters = (path, ())
     }
     
-    var configueBackupHistoryUICallCount = 0
+    public var configueBackupHistoryUICallCount = 0
     func configueBackupHistoryUI() {
         configueBackupHistoryUICallCount += 1
     }
@@ -43,9 +45,11 @@ final class ProfileBackupInteractorDependencyMock: ProfileBackupInteractorDepend
 
 // MARK: - ProfileBackupListenerMock
 final class ProfileBackupListenerMock: ProfileBackupListener {
+    var pressedBackBtnParameters: (isOnlyDetach: Bool, Void)?
     var pressedProfileBackupBackBtnCallCount = 0
     func pressedProfileBackupBackBtn(isOnlyDetach: Bool) {
         pressedProfileBackupBackBtnCallCount += 1
+        pressedBackBtnParameters = (isOnlyDetach, ())
     }
 }
 
@@ -134,11 +138,11 @@ final class ProfileBackupInteractableMock: ProfileBackupInteractable {
     var listener: ProfileBackupListener?
 
     func activate() {
-        
+        isActiveRelay.accept(true)
     }
     
     func deactivate() {
-        
+        isActiveRelay.accept(false)
     }
     
     var invokedCheckIsBackupEnabled = false
