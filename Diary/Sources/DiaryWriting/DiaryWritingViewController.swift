@@ -507,8 +507,8 @@ extension DiaryWritingViewController {
              size: .small,
              buttonType: .twoBtn,
              titleText: titleText,
-             cancelButtonText: "취소",
-             confirmButtonText: "확인"
+             cancelButtonText: MenualString.writing_alert_cancel,
+             confirmButtonText: MenualString.writing_alert_confirm
         )
     }
     
@@ -534,8 +534,8 @@ extension DiaryWritingViewController {
              size: .small,
              buttonType: .twoBtn,
              titleText: "사진을 삭제하시겠어요?",
-             cancelButtonText: "취소",
-             confirmButtonText: "확인"
+             cancelButtonText: MenualString.writing_alert_cancel,
+             confirmButtonText: MenualString.writing_alert_confirm
         )
     }
     

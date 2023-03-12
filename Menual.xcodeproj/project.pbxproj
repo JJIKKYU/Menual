@@ -220,7 +220,6 @@
 				98C59F35297443B1002703C6 /* Platform */,
 				98C59F3429744366002703C6 /* Profile */,
 				9888DDDB27646EFF0091918F /* Menual */,
-				9888DDF227646F000091918F /* MenualTests */,
 				9888DDFC27646F000091918F /* MenualUITests */,
 				9888DDDA27646EFF0091918F /* Products */,
 				EBD7C8EB992F559C0691738A /* Frameworks */,
@@ -251,13 +250,6 @@
 				9888DE0F276481EA0091918F /* AppRoot */,
 			);
 			path = Menual;
-			sourceTree = "<group>";
-		};
-		9888DDF227646F000091918F /* MenualTests */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = MenualTests;
 			sourceTree = "<group>";
 		};
 		9888DDFC27646F000091918F /* MenualUITests */ = {

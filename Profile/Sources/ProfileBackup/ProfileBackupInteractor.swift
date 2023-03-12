@@ -27,7 +27,7 @@ public protocol ProfileBackupListener: AnyObject {
     func pressedProfileBackupBackBtn(isOnlyDetach: Bool)
 }
 
-protocol ProfileBackupInteractorDependency {
+public protocol ProfileBackupInteractorDependency {
     var diaryRepository: DiaryRepository { get }
     var backupRestoreRepository: BackupRestoreRepository { get }
 }

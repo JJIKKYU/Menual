@@ -10,6 +10,12 @@ import RIBs
 public protocol ProfileBackupInteractable: Interactable {
     var router: ProfileBackupRouting? { get set }
     var listener: ProfileBackupListener? { get set }
+    
+    func checkIsBackupEnabled() -> Bool
+    func tempZipPath() -> String
+    func saveZip()
+    func pressedBackBtn(isOnlyDetach: Bool)
+    func addOrUpdateBackupHistory()
 }
 
 public protocol ProfileBackupViewControllable: ViewControllable {

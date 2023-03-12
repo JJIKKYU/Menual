@@ -15,11 +15,9 @@ import RxRelay
 public protocol BackupRestoreRepository {
     /// 백업 관련
     func backUp() -> [Data]///
-    func makeBackupData<T: Object & Codable>(of: T.Type) -> Data?
     func addOrUpdateBackupHistory()
     
     /// 불러오기 관련
-    func makeRestoreData<T: Object & Codable>(of: T.Type, data: Data?) -> [T]?
     func restoreWithJsonSaveImageData(diaryModelRealm: [DiaryModelRealm], imageFiles: [ImageFile])
     func restoreWithJson(restoreFile: RestoreFile, progressRelay: BehaviorRelay<CGFloat>)
     func clearCacheDirecotry(completion: @escaping (Bool) -> Void)

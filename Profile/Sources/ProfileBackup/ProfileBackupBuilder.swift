@@ -14,8 +14,8 @@ public protocol ProfileBackupDependency: Dependency {
 }
 
 public final class ProfileBackupComponent: Component<ProfileBackupDependency>, ProfileBackupInteractorDependency {
-    var diaryRepository: DiaryRepository { dependency.diaryRepository }
-    var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
+    public var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
     
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
