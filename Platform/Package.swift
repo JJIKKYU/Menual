@@ -26,6 +26,7 @@ let package = Package(
             targets: ["MenualRepositoryTestSupport"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/uber/RIBs", branch: "main"),
         .package(url: "https://github.com/devxoul/Then", exact: Version("3.0.0")),
         .package(url: "https://github.com/realm/realm-swift", exact: Version("10.34.0")),
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", .upToNextMajor(from: "9.0.0")),
@@ -56,6 +57,8 @@ let package = Package(
             name: "MenualUtil",
             dependencies: [
                 "MenualEntity",
+                .product(name: "SnapKit", package: "SnapKit"),
+                .product(name: "RIBs", package: "RIBs"),
                 .product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
                 .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk"),
@@ -101,6 +104,8 @@ let package = Package(
                 "MenualRepositoryTestSupport",
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "Realm", package: "realm-swift"),
+                .product(name: "RealmSwift", package: "realm-swift"),
             ]
         )
     ]
