@@ -95,15 +95,13 @@ let package = Package(
         .testTarget(
             name: "MenualRepositoryTests",
             dependencies: [
-                "MenualRepository",
                 "MenualEntity",
                 "MenualUtil",
                 "MenualRepository",
                 "MenualRepositoryTestSupport",
-                .product(name: "RIBs", package: "RIBs"),
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
             ]
-        ),
+        )
     ]
 )
