@@ -27,6 +27,7 @@ final class BackupRestoreRepositoryTests: XCTestCase {
         guard let realm = Realm.safeInit() else { return }
         // given
         var backupDataDic: [String: Data] = [:]
+        var backupDataArr: [Data] = []
         
         // DiaryModelRealm 추가
         var diaryModelRealmArr: [DiaryModelRealm] = []
@@ -48,21 +49,123 @@ final class BackupRestoreRepositoryTests: XCTestCase {
             diaryModelRealmArr.append(model)
         }
         
+        // Moments 추가
+        var momentsModelRealmArr: [MomentsRealm] = []
+        let momentsModelRealm = MomentsRealm(
+            lastUpdatedDate: Date(),
+            onboardingClearDate: Date(),
+            onboardingIsClear: true,
+            items: [
+                MomentsItemRealm(order: 0,
+                                 title: "title_0",
+                                 uuid: "testuuid_0",
+                                 icon: "icon_0",
+                                 diaryUUID: "diaryuuid_0",
+                                 userChecked: false,
+                                 createdAt: Date()
+                                )
+            ]
+        )
+        momentsModelRealmArr.append(momentsModelRealm)
+        
+        // TempSave 추가
+        var tempSaveModelRealmArr: [TempSaveModelRealm] = []
+        let tempSaveModelRealm = TempSaveModelRealm(
+            uuid: "testuuid_0",
+            diaryModel: DiaryModelRealm(
+                pageNum: 0,
+                title: "testtitle_0",
+                weather: nil,
+                place: nil,
+                desc: "testdesc_0",
+                image: false,
+                createdAt: Date()
+            ),
+            createdAt: Date(),
+            isDeleted: false
+        )
+        tempSaveModelRealmArr.append(tempSaveModelRealm)
+        
+        // DiarySearch 추가
+        var diarySearchModelRealmArr: [DiarySearchModelRealm] = []
+        let diarySearchModelRealm = DiarySearchModelRealm(
+            diaryUuid: "testuuid_0",
+            diary: nil,
+            createdAt: Date(),
+            isDeleted: false
+        )
+        diarySearchModelRealmArr.append(diarySearchModelRealm)
+        
+        // Password 추가
+        var passwordModelRealmArr: [PasswordModelRealm] = []
+        let passwordModelRealm = PasswordModelRealm(
+            password: 1111,
+            isEnabled: true
+        )
+        passwordModelRealmArr.append(passwordModelRealm)
+        
         if let diaryData = sut.makeBackupData(of: DiaryModelRealm.self) {
             backupDataDic["diary"] = diaryData
+            backupDataArr.append(diaryData)
+        }
+        if let momentsData = sut.makeBackupData(of: MomentsRealm.self) {
+            backupDataDic["moments"] = momentsData
+            backupDataArr.append(momentsData)
+        }
+        if let tempSaveData = sut.makeBackupData(of: TempSaveModelRealm.self) {
+            backupDataDic["tempSave"] = tempSaveData
+            backupDataArr.append(tempSaveData)
+        }
+        if let diarySearchData = sut.makeBackupData(of: DiarySearchModelRealm.self) {
+            backupDataDic["diarySearch"] = diarySearchData
+            backupDataArr.append(diarySearchData)
+        }
+        if let passwordData = sut.makeBackupData(of: PasswordModelRealm.self) {
+            backupDataDic["password"] = passwordData
+            backupDataArr.append(passwordData)
         }
         
         realm.safeWrite {
             realm.delete(realm.objects(DiaryModelRealm.self))
+            realm.delete(realm.objects(MomentsRealm.self))
+            realm.delete(realm.objects(TempSaveModelRealm.self))
+            realm.delete(realm.objects(DiarySearchModelRealm.self))
+            realm.delete(realm.objects(PasswordModelRealm.self))
+
             realm.add(diaryModelRealmArr)
+            realm.add(momentsModelRealmArr)
+            realm.add(tempSaveModelRealmArr)
+            realm.add(diarySearchModelRealmArr)
+            realm.add(passwordModelRealmArr)
         }
         
         // when
-        let dataArr = sut.backUp()
+        let testTargetDataDic = sut.backUp()
         
-        // then
-        print("dataArr = \(dataArr)")
-        print("backupDataDic = \(backupDataDic)")
+        XCTAssertEqual(
+            testTargetDataDic["moments"]?.count,
+            backupDataDic["moments"]?.count
+        )
+
+        XCTAssertEqual(
+            testTargetDataDic["diary"]?.count,
+            backupDataDic["diary"]?.count
+        )
+        
+        XCTAssertEqual(
+            testTargetDataDic["diarySearch"]?.count,
+            backupDataDic["diarySearch"]?.count
+        )
+        
+        XCTAssertEqual(
+            testTargetDataDic["tempSave"]?.count,
+            backupDataDic["tempSave"]?.count
+        )
+        
+        XCTAssertEqual(
+            testTargetDataDic["password"]?.count,
+            backupDataDic["password"]?.count
+        )
     }
     
     /// 백업 파일이 정상적으로 저장되는지 확인
@@ -79,9 +182,6 @@ final class BackupRestoreRepositoryTests: XCTestCase {
             "diarySearch",
             "password"
         ]
-        // 체크 된 순서대로 Bool값이 담김
-        var checkFileNameResultArr: [Bool] = []
-
         
         // when
         _ = sut.backUp()

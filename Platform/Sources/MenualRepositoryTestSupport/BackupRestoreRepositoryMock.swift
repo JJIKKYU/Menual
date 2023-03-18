@@ -19,9 +19,9 @@ public final class BackupRestoreRepositoryMock: BackupRestoreRepository {
     }
     
     public var backUpCallCount: Int = 0
-    public func backUp() -> [Data] {
+    public func backUp() -> [String: Data] {
         backUpCallCount += 1
-        return []
+        return [:]
     }
     
     public var addOrUpdateBackupHistoryCallCount: Int = 0

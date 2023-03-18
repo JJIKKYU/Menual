@@ -14,7 +14,7 @@ import RxRelay
 
 public protocol BackupRestoreRepository {
     /// 백업 관련
-    func backUp() -> [Data]///
+    func backUp() -> [String: Data]///
     func addOrUpdateBackupHistory()
     
     /// 불러오기 관련
@@ -44,7 +44,7 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
     }
     
     /// backup이 필요한 Realm Object를 Data로 변경해 backup할 데이터를 json으로 저장하고, Data List를 반환하는 함수
-    public func backUp() -> [Data] {
+    public func backUp() -> [String: Data] {
         print("DiaryRepo :: backup!")
         var backupDataArr: [Data] = []
         var backupDataDic: [String: Data] = [:]
@@ -86,7 +86,7 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         }
         
         print("DiaryRepo :: return!")
-        return backupDataArr
+        return backupDataDic
     }
     
     public func addOrUpdateBackupHistory() {

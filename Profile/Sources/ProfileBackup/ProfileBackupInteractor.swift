@@ -109,8 +109,8 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
     func saveZip() {
         print("ProfileBackup :: saveZip!")
         /// 먼저 json파일을 백업 함
-        let dataArr: [Data] = dependency.backupRestoreRepository.backUp()
-        print("ProfileBackup :: dataArr = \(dataArr)")
+        let dataDic = dependency.backupRestoreRepository.backUp()
+        print("ProfileBackup :: dataArr = \(dataDic)")
         
         
         let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
