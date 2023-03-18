@@ -292,7 +292,6 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         realm.safeWrite {
             realm.delete(realm.objects(DiaryModelRealm.self))
             realm.delete(willDeleteSearchData)
-            realm.add(diaries, update: .modified)
         }
 
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: willDeleteReminderData)
@@ -304,25 +303,13 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         }
     }
     
-    /// Realm의 ObjectID가 변환되기 때문에,
-    /// 변환된 ObjectID에 맞게 이미지를 저장할 수 있도록 하는 함수
+    /// 이미지를 복원하는 함수
     public func restoreWithJsonSaveImageData(diaryModelRealm: [DiaryModelRealm], imageFiles: [ImageFile]) {
-        /// Key - 원래 ObjectId
-        /// Value - 바뀐 ObjectId
-        var objectIdSet: [String: String] = [:]
 
-        // 신/구 ObjectId를 해쉬 형태로 세팅
-        for diary in diaryModelRealm {
-            guard let prevObjectId = diary.prevObjectId else { return }
-            objectIdSet[prevObjectId] = diary.uuid
-        }
-        
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         
-        // 바뀐 ObjectId 이름으로 변경하여 이미지 세팅
         for imageFile in imageFiles {
-            guard let newObjectId = objectIdSet[imageFile.fileName] else { return }
-            let imageURL = documentDirectory.appendingPathComponent(newObjectId + imageFile.type.rawValue)
+            let imageURL = documentDirectory.appendingPathComponent(imageFile.fileName + imageFile.type.rawValue)
             try? imageFile.data.write(to: imageURL)
         }
     }

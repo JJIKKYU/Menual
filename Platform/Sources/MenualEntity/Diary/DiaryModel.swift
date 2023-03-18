@@ -91,7 +91,6 @@ public class DiaryModelRealm: Object, Codable {
     @Persisted public var lastMomentsDate: Date?
     @Persisted public var isHide: Bool
     @Persisted public var reminder: ReminderModelRealm?
-    public var prevObjectId: String? // 백업시에 변경되는 ObjectID 트래킹을 위해서
     
     public convenience init(pageNum: Int,
                             title: String,
@@ -157,13 +156,7 @@ public class DiaryModelRealm: Object, Codable {
         super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        let time = Date()
-        let machine = Int.random(in: 100000 ..< 999999)
-        let pid = Int.random(in: 1000 ..< 9999)
-
-        prevObjectId = try container.decode(ObjectId.self, forKey: ._id).stringValue
-        _id = ObjectId(timestamp: time, machineId: machine, processId: pid)
-
+        _id = try container.decode(ObjectId.self, forKey: ._id)
         pageNum = try container.decode(Int.self, forKey: .pageNum)
         title = try container.decode(String.self, forKey: .title)
         weather = try container.decode(WeatherModelRealm?.self, forKey: .weather)
