@@ -14,6 +14,7 @@ import MenualRepository
 import Realm
 
 public final class BackupRestoreRepositoryMock: BackupRestoreRepository {
+    
     public init() {
         
     }
@@ -23,6 +24,8 @@ public final class BackupRestoreRepositoryMock: BackupRestoreRepository {
         backUpCallCount += 1
         return [:]
     }
+    
+    public var isRestoring: Bool = false
     
     public var addOrUpdateBackupHistoryCallCount: Int = 0
     public func addOrUpdateBackupHistory() {
@@ -42,6 +45,12 @@ public final class BackupRestoreRepositoryMock: BackupRestoreRepository {
     public var clearCacheDirecotryCallCount: Int = 0
     public func clearCacheDirecotry(completion: @escaping (Bool) -> Void) {
         clearCacheDirecotryCallCount += 1
+        completion(true)
+    }
+    
+    public var clearRestoreJsonCallCount: Int = 0
+    public func clearRestoreJson(completion: @escaping (Bool) -> Void) {
+        clearRestoreJsonCallCount += 1
         completion(true)
     }
 }

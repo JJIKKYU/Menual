@@ -13,6 +13,8 @@ import RxSwift
 import RxRelay
 
 public protocol BackupRestoreRepository {
+    var isRestoring: Bool { get set }
+
     /// 백업 관련
     func backUp() -> [String: Data]///
     func addOrUpdateBackupHistory()
@@ -21,9 +23,12 @@ public protocol BackupRestoreRepository {
     func restoreWithJsonSaveImageData(diaryModelRealm: [DiaryModelRealm], imageFiles: [ImageFile])
     func restoreWithJson(restoreFile: RestoreFile, progressRelay: BehaviorRelay<CGFloat>)
     func clearCacheDirecotry(completion: @escaping (Bool) -> Void)
+    func clearRestoreJson(completion: @escaping (Bool) -> Void)
 }
 
 public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
+    public var isRestoring: Bool = false
+    
     public init() {
         
     }
@@ -181,6 +186,8 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
 
     /// 최종적으로 json파일을 기반으로 realm.default에 할당하는 작업
     public func restoreWithJson(restoreFile: RestoreFile, progressRelay: BehaviorRelay<CGFloat>) {
+        self.isRestoring = true
+
         print("DiaryRepo :: restoreWithJson! restoreFile = \(restoreFile)")
         guard let realm = Realm.safeInit() else {
             return
@@ -212,6 +219,8 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
             restoreTempSave(newTempSave: tempSave)
         }
         progressRelay.accept(0.8)
+        
+        isRestoring = false
     }
     
     /// Moments 데이터를 복원하는 함수
@@ -265,13 +274,8 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         var willDeleteImageData: [String] = []
         var willDeleteSearchData: [DiarySearchModelRealm] = []
         var willDeleteReminderData: [String] = []
-        
+
         diaries.forEach { diary in
-
-            realm.safeWrite {
-                diary.isDeleted = true
-            }
-
             if diary.image {
                 willDeleteImageData.append(diary.uuid)
             }
@@ -286,6 +290,7 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         }
 
         realm.safeWrite {
+            realm.delete(realm.objects(DiaryModelRealm.self))
             realm.delete(willDeleteSearchData)
             realm.add(diaries, update: .modified)
         }
@@ -342,6 +347,25 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         } catch {
             completion(false)
             print("backupRepo :: cache를 삭제하는데 오류가 발생했습니다. \(error)")
+        }
+    }
+    
+    /// 백업에 사용되었던 json파일 제거
+    public func clearRestoreJson(completion: @escaping (Bool) -> Void) {
+        let fileManager = FileManager.default
+        guard let documentsUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        
+        do {
+            let fileURLs = try fileManager.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil)
+            for fileURL in fileURLs {
+                if fileURL.pathExtension == "json" {
+                    try fileManager.removeItem(at: fileURL)
+                }
+            }
+            completion(true)
+        } catch {
+            print("bacupRepo :: Error while enumerating files \(documentsUrl.path): \(error.localizedDescription)")
+            completion(false)
         }
     }
 }

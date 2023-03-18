@@ -192,7 +192,11 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
         // 실패하거나, 성공해도 모두 Progress 진행
         dependency.backupRestoreRepository
             .clearCacheDirecotry { isSuccess in
-                print("ProfileRestoreConfirm :: cahce isSucess! \(isSuccess)")
+                print("ProfileRestoreConfirm :: clearCacheDirecotry! \(isSuccess)")
+            }
+        dependency.backupRestoreRepository
+            .clearRestoreJson { isSuccess in
+                print("ProfileRestoreConfirm :: clearRestoreJson! \(isSuccess)")
             }
     }
     
@@ -267,11 +271,17 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
         // 실패하거나, 성공해도 모두 Progress 진행
         dependency.backupRestoreRepository
             .clearCacheDirecotry { isSuccess in
+                self.menualRestoreProgressRelay.accept(0.95)
+            }
+        
+        dependency.backupRestoreRepository
+            .clearRestoreJson { isSuccess in
                 self.menualRestoreProgressRelay.accept(1)
             }
     }
     
     func restoreSuccess() {
         listener?.restoreSuccess()
+
     }
 }

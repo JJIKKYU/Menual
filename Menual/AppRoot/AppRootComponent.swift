@@ -17,6 +17,7 @@ final class AppRootComponent: Component<AppRootDependency> {
     private let rootViewController: ViewControllable
     var diaryRepository: DiaryRepository
     var momentsRepository: MomentsRepository
+    var backupRestoreRepository: BackupRestoreRepository
     var diaryUUIDRelay: BehaviorRelay<String>
     
     init(
@@ -28,6 +29,7 @@ final class AppRootComponent: Component<AppRootDependency> {
         self.rootViewController = rootViewController
         self.diaryRepository = DiaryRepositoryImp()
         self.momentsRepository = MomentsRepositoryImp()
+        self.backupRestoreRepository = BackupRestoreRepositoryImp()
         self.momentsRepository.fetch()
         super.init(dependency: dependency)
     }
@@ -37,6 +39,7 @@ extension AppRootComponent: DiaryHomeDependency,
                             ProfilePasswordDependency,
                             AppRootInteractorDependency, SplashDependency
 {
+    
 
     
 }

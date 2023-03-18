@@ -9,6 +9,7 @@ import Foundation
 import XCTest
 import MenualEntity
 import RxSwift
+import RxRelay
 import RealmSwift
 @testable import MenualRepositoryTestSupport
 @testable import MenualRepository

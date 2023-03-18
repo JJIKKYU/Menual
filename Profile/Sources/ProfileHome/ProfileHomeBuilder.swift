@@ -18,13 +18,12 @@ public protocol ProfileHomeDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
     var diaryRepository: DiaryRepository { get }
+    var backupRestoreRepository: BackupRestoreRepository { get }
 }
 
 public final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency, ProfileDeveloperDependency, ProfileHomeInteractorDependency, ProfileOpensourceDependency, ProfileBackupDependency, ProfileRestoreDependency, DesignSystemDependency {
 
-    public var backupRestoreRepository: BackupRestoreRepository {
-        BackupRestoreRepositoryImp()
-    }
+    public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
 

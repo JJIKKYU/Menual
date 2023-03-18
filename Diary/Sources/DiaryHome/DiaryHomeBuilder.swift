@@ -20,12 +20,13 @@ import ProfileHome
 public protocol DiaryHomeDependency: Dependency {
     // AppRootComponent에서 생성해서, 부모(AppRoot RIBs)로부터 받아옴
     var diaryRepository: DiaryRepository { get }
+    var backupRestoreRepository: BackupRestoreRepository { get }
     var momentsRepository: MomentsRepository { get }
     var diaryUUIDRelay: BehaviorRelay<String> { get }
 }
 
 public final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DiaryBottomSheetDependency {
-    
+    public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
     public var diaryUUIDRelay: BehaviorRelay<String> { dependency.diaryUUIDRelay }
     public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     public var filterResetBtnRelay: BehaviorRelay<Bool>?
