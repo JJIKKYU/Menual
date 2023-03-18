@@ -188,12 +188,14 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 case .update(let model, let deletions, let insertions, let modifications):
                     print("DiaryHome :: update! = \(model)")
 
-                    // diaryModelRealm이 업데이트 될 때마다 온보딩 다이어리 업데이트가 필요하면 진행하도록
-                    self.setOnboardingDiaries()
-
                     if insertions.count > 0 {
                         // 복원 중이고 많은 양의 메뉴얼이 복원될 경우
                         if self.dependency.backupRestoreRepository.isRestoring && insertions.count > 1 {
+                            let filteredModel = model
+                                .toArray(type: DiaryModelRealm.self)
+                                .filter ({ $0.isDeleted == false })
+                                .sorted(by: { $0.createdAt > $1.createdAt })
+
                             let lastPageNum = model
                                 .last?.pageNum ?? 0
                             print("DiaryHome :: lastPageNumRelay = \(self.lastPageNumRelay.value)")
@@ -208,7 +210,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                                 self.diaryDictionary[sectionName] = DiaryHomeSectionModel(sectionName: sectionName, sectionIndex: index, diaries: [])
                             }
                             
-                            for diary in model {
+                            for diary in filteredModel {
                                 let sectionName: String = diary.createdAt.toStringWithYYYYMM()
                                 self.diaryDictionary[sectionName]?.diaries.append(diary)
                             }
@@ -251,7 +253,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         }
 
                     }
-                        
                     else if modifications.count > 0 {
                         for modificationnRow in modifications {
                             print("DiaryHome :: realmObserve = modifications = \(modifications)")
@@ -294,47 +295,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                                 self.presenter.reloadTableViewRow(section: sectionIndex, row: row)
                             }
                         }
-
-//                        guard let modificationsRow: Int = modifications.first else { return }
-//                        print("DiaryHome :: realmObserve = modifications = \(modifications)")
-//                        let diary: DiaryModelRealm = model[modificationsRow]
-//                        let sectionName: String = diary.createdAt.toStringWithYYYYMM()
-//
-//                        guard let diaries: [DiaryModelRealm] = self.diaryDictionary[sectionName]?.diaries,
-//                              let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex,
-//                              let row: Int = diaries.indices.filter ({ diaries[$0].uuid == diary.uuid }).first
-//                        else { return }
-//
-//                        // 삭제일때
-//                        if diary.isDeleted == true {
-//                            self.dependency.momentsRepository.deleteMoments(uuid: diary.uuid)
-//                            // 전체 PageNum 추려내기
-//                            let lastPageNum = model.filter { $0.isDeleted == false }
-//                                .sorted { $0.createdAt > $1.createdAt }
-//                                .first?.pageNum ?? 0
-//
-//                            self.lastPageNumRelay.accept(lastPageNum)
-//                            self.diaryDictionary[sectionName]?.diaries.remove(at: row)
-//                            self.presenter.deleteTableViewRow(section: sectionIndex, row: row)
-//                            print("DiaryHome :: delete! = \(self.diaryDictionary)")
-//
-//                            if let diaryCount: Int = self.diaryDictionary[sectionName]?.diaries.count,
-//                               diaryCount == 0 {
-//                                print("DiaryHome :: 지워야할 것 같은걸")
-//                                let sectionIndex: Int = self.diaryDictionary[sectionName]?.sectionIndex ?? 0
-//                                print("DiaryHome :: sectionIndex = \(sectionIndex)")
-//                                self.diaryDictionary[sectionName] = nil
-//                                for secName in self.arraySerction {
-//                                    self.diaryDictionary[secName]?.sectionIndex -= 1
-//                                }
-//                                self.presenter.deleteTableViewSection(section: sectionIndex)
-//                            }
-//                        }
-//                        // 수정일때
-//                        else {
-//                            self.diaryDictionary[sectionName]?.diaries[row] = diary
-//                            self.presenter.reloadTableViewRow(section: sectionIndex, row: row)
-//                        }
                     }
                     else if deletions.count > 0 {
                         let lastPageNum = 0
@@ -344,6 +304,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         self.setOnboardingDiaries()
                         self.presenter.reloadTableView()
                     }
+                    
+                    // diaryModelRealm이 업데이트 될 때마다 온보딩 다이어리 업데이트가 필요하면 진행하도록
+                    self.setOnboardingDiaries()
                         
                     case .error(let error):
                         fatalError("\(error)")
