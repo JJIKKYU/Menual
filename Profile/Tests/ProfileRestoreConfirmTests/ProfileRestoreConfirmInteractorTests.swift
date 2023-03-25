@@ -177,7 +177,6 @@ final class ProfileRestoreConfirmInteractorTests: XCTestCase {
     func testRestore() {
         // given
         let exp = expectation(description: "testRestore")
-        var testIsSuccess: Bool = false
         
         // when
         sut.activate()
@@ -201,11 +200,39 @@ final class ProfileRestoreConfirmInteractorTests: XCTestCase {
         
         wait(for: [exp], timeout: 1)
         
-//        wait(for: [exp2], timeout: 1)
-        
         // then
         XCTAssertEqual(backupRestoreRepository.restoreWithJsonCallCount, 1)
         XCTAssertEqual(backupRestoreRepository.clearCacheDirecotryCallCount, 1)
         XCTAssertEqual(sut.menualRestoreProgressRelay.value, 1)
+    }
+    
+    /// 최초 설치 상태에서 복원했을 경우
+    func testRestore_최초설치상태() {
+        
+    }
+    
+    /// 온보딩 중 글 작성을 하나도 안한 상태
+    func testRestore_온보딩중글작성을하나도안한상태() {
+        
+    }
+    
+    /// 온보딩 중 글 작성을 하나 이상이라도 한 상태
+    func testRestore_온보딩중에글작성을한상태() {
+        
+    }
+    
+    /// 온보딩이 끝난 첫 날 상태
+    func testRestore_온보딩이끝난첫날상태() {
+        
+    }
+    
+    /// Moments가 하나도 없는 상태
+    func testRestore_Moments가하나도없는상태() {
+        
+    }
+    
+    /// Moments가 하나라도 있는 상태
+    func testRestore_Moments가있는상태() {
+        
     }
 }
