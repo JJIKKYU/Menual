@@ -16,6 +16,14 @@ import MenualRepositoryTestSupport
 
 final class ProfileRestoreConfirmInteractorTests: XCTestCase {
     
+    enum LocalZipFileType: String {
+        case install = "최초설치상태"
+        case onboardingEnd = "온보딩이끝난당일"
+        case onboardingStart = "온보딩중에글작성한상태"
+        case momentsExist = "Moments가있는상태"
+        case momentsNonExist = "Moments가하나도없는상태"
+    }
+    
     private var sut: ProfileRestoreConfirmInteractor!
     private var presenter: ProfileRestoreConfirmPresentableMock!
     private var dependency: ProfileRestoreConfirmInteractorDependencyMock!
@@ -44,7 +52,19 @@ final class ProfileRestoreConfirmInteractorTests: XCTestCase {
             dependency: dependency,
             fileURL: destFiilURL
         )
+
         sut.listener = listener
+    }
+
+    /// enum 케이스를 넣으면 알맞은 테스트용 zip을 주입하는 함수
+    func setLocalZipFile(type: LocalZipFileType) {
+        if let url = Bundle.module.url(forResource: type.rawValue, withExtension: "zip") {
+            destFiilURL = url
+            destFileName = "\(type.rawValue).zip"
+            // Do something with the file
+        } else {
+            destFiilURL = nil
+        }
     }
 
     /// 8개의 메뉴얼이 세팅되어 있는 ZipFile 세팅
@@ -56,6 +76,31 @@ final class ProfileRestoreConfirmInteractorTests: XCTestCase {
         } else {
             destFiilURL = nil
         }
+    }
+    
+    /// 온보딩 중에 글을 하나도 작성하지 않은 상태 ZipFile 세팅
+    func setLocalZipFile_0Diary_startOnboarding() {
+        
+    }
+    
+    /// 온보딩 중에 글을 하나 이상 작성한 ZipFile 세팅
+    func setLocalZipFile_2Diary_startOnBoarding() {
+        
+    }
+    
+    /// 온보딩이 끝난 당일 ZipFile 세팅
+    func setLocalZipFile_14Diary_clearOnBoarding() {
+        
+    }
+    
+    /// Moments가 하나도 없는 상태 (온보딩은 끝난 상태)
+    func setLocalZipFile_14Diary_clearOnBoarding_notExistMoments() {
+        
+    }
+    
+    /// Moments가 하나 이상 있는 상태 (온보딩은 끝난 상태)
+    func setLocalZipFile_14Diary_clearOnBoarding_existMoments() {
+        
     }
     
     // MARK: - Tests
@@ -206,11 +251,6 @@ final class ProfileRestoreConfirmInteractorTests: XCTestCase {
         XCTAssertEqual(sut.menualRestoreProgressRelay.value, 1)
     }
     
-    /// 최초 설치 상태에서 복원했을 경우
-    func testRestore_최초설치상태() {
-        
-    }
-    
     /// 온보딩 중 글 작성을 하나도 안한 상태
     func testRestore_온보딩중글작성을하나도안한상태() {
         
@@ -234,5 +274,62 @@ final class ProfileRestoreConfirmInteractorTests: XCTestCase {
     /// Moments가 하나라도 있는 상태
     func testRestore_Moments가있는상태() {
         
+    }
+}
+
+// MARK: - 최초 설치 상태
+
+/// preCondiction - 최초 설치 상태 (MomentsRealm만 세팅된 상태)\
+extension ProfileRestoreConfirmInteractorTests {
+    /// 최초 설치 상태로 세팅 해주는 함수
+    func testRestore_최초설치상태_init() {
+        guard let realm = Realm.safeInit() else { return }
+
+        // Moments Realm은 앱 시작 시 초기에 무조건 하나 생성되므로 정의
+        let initMoments = MomentsRealm(lastUpdatedDate: Date(),
+                                       items: []
+        )
+        
+        // 모든 Realm Data 초기화
+        // initMoments 세팅
+        realm.safeWrite {
+            realm.delete(realm.objects(DiaryModelRealm.self))
+            realm.delete(realm.objects(DiarySearchModelRealm.self))
+            realm.delete(realm.objects(MomentsRealm.self))
+            realm.delete(realm.objects(PasswordModelRealm.self))
+            realm.delete(realm.objects(TempSaveModelRealm.self))
+            realm.add(initMoments)
+        }
+    }
+
+    /// 최초 설치 상태에서 복원했을 경우
+    func testRestore_최초설치상태() {
+        // given
+        let exp = expectation(description: "testRestore_최초설치상태")
+        
+        testRestore_최초설치상태_init()
+
+        // when
+        sut.activate()
+        
+        sut.menualRestoreFileRelay
+            .subscribe(onNext: { [weak self] isRestoreMenualFile in
+                guard let isRestoreMenualFile = isRestoreMenualFile
+                else { return }
+
+                switch isRestoreMenualFile {
+                case true:
+                    self?.sut.pressedRestoreBtn()
+                    exp.fulfill()
+                case false:
+                    exp.fulfill()
+                    
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        wait(for: [exp], timeout: 1)
+        
+        // then
     }
 }

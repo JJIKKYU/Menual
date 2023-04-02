@@ -473,6 +473,9 @@ extension MomentsRepositoryImp {
         guard let realm = Realm.safeInit() else { return }
         guard let momentsRealm = realm.objects(MomentsRealm.self).first else { return }
         
+        // 백업, 복원 등으로 이미 값이 들어와 있는 상태라면 예외처리
+        if momentsRealm.onboardingClearDate != nil { return }
+        
         realm.safeWrite {
             momentsRealm.onboardingClearDate = Date()
         }
