@@ -214,15 +214,24 @@ public class ListCell: UITableViewCell {
                 make.top.equalToSuperview().offset(12)
                 make.width.height.equalTo(48)
             }
+            listTitleView.isHidden = false
             listTitleView.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(20)
                 make.top.equalToSuperview().offset(16)
                 make.trailing.equalToSuperview().inset(80)
                 make.height.equalTo(18)
             }
+            listBodyView.isHidden = false
+            listBodyView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().inset(80)
+                make.top.equalTo(listTitleView.snp.bottom).offset(6)
+                make.height.equalTo(18)
+            }
+            listInfoView.isHidden = false
             listInfoView.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(20)
-                make.top.equalTo(listTitleView.snp.bottom).offset(6)
+                make.top.equalTo(listBodyView.snp.bottom).offset(6)
                 make.width.equalToSuperview().inset(20)
                 make.height.equalTo(15)
             }
