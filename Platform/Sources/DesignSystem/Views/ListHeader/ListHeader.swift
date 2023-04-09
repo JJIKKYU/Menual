@@ -200,11 +200,13 @@ public class ListHeader: UIView {
             
             if title.count > 6 {
                 let attributedString = NSMutableAttributedString(string: title)
-                let number = (title as NSString).substring(with: NSMakeRange(6, 1))
-                
+                let range = title.count - 6
+                let number = (title as NSString).substring(with: NSMakeRange(6, range))
+
                 attributedString.addAttribute(.foregroundColor, value: Colors.tint.main.v600, range: (title as NSString).range(of: number))
                 titleLabel.attributedText = attributedString
             }
+
             
         // 메인 홈
         case .main:
@@ -223,17 +225,19 @@ public class ListHeader: UIView {
                 // MY MENUAL의 타이틀의 카운트로 한 거니까, 다국어 지원 할 경우에는 코드 변경 필요
 
                 var range = 0
+                var number = ""
                 switch title {
                 case MenualString.home_title_my_menual:
                     range = text.count - 10
+                    // MY MENUAL ''P.00]''
+                    number = (text as NSString).substring(with: NSMakeRange(10, range))
                 case MenualString.home_title_total_page:
-                    range = text.count - 10
+                    range = text.count - 6
+                    number = (text as NSString).substring(with: NSMakeRange(6, range))
                 default:
                     range = text.count
+                    number = ""
                 }
-
-                // MY MENUAL ''P.00]''
-                let number = (text as NSString).substring(with: NSMakeRange(10, range))
 
                 attributedString.addAttribute(.foregroundColor,
                                               value: Colors.tint.main.v600,
