@@ -485,6 +485,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
                     cell.listType = .bodyText
                 }
             }
+            cell.listScreen = .search
             cell.title = model.title
             cell.date = model.createdAt.toString()
             cell.time = model.createdAt.toStringHourMin()

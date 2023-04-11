@@ -807,6 +807,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }
         
+        cell.listScreen = .home
         cell.title = dataModel.title
         cell.date = dataModel.createdAt.toString()
         cell.time = dataModel.createdAt.toStringHourMin()
@@ -819,6 +820,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         cell.pageCount = pageCount
         cell.reviewCount = replies
+        cell.testModel = dataModel
         
         // 마지막 셀일 경우에는 divider 제거
         if index == lastIndex - 1 {
@@ -833,7 +835,9 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
+        guard let cell = tableView.cellForRow(at: indexPath) as? ListCell,
+              let data = cell.testModel
+        else { return }
 
         let parameter: [String: Any] = [
             "page" : data.pageNum,

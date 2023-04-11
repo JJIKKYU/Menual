@@ -11,6 +11,11 @@ import SnapKit
 import MenualUtil
 import MenualEntity
 
+public enum ListScreen {
+    case home
+    case search
+}
+
 public enum ListType {
     case normal
     // case textReview
@@ -29,6 +34,8 @@ public enum ListStatus {
 
 public class ListCell: UITableViewCell {
     
+    public var testModel: DiaryModelRealm?
+    
     // 현재 정보를 담고 있는 게시글의 UUID
     // Search 후에 필요한 정보를 임시로 담고 있도록
     public var uuid: String = ""
@@ -38,6 +45,10 @@ public class ListCell: UITableViewCell {
     }
     
     public var listStatus: ListStatus = .default_ {
+        didSet { setNeedsLayout() }
+    }
+
+    public var listScreen: ListScreen = .home {
         didSet { setNeedsLayout() }
     }
     
@@ -219,19 +230,32 @@ public class ListCell: UITableViewCell {
                 make.trailing.equalToSuperview().inset(80)
                 make.height.equalTo(18)
             }
-            listBodyView.isHidden = false
-            listBodyView.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(20)
-                make.trailing.equalToSuperview().inset(80)
-                make.top.equalTo(listTitleView.snp.bottom).offset(6)
-                make.height.equalTo(18)
-            }
-            listInfoView.isHidden = false
-            listInfoView.snp.remakeConstraints { make in
-                make.leading.equalToSuperview().offset(20)
-                make.top.equalTo(listBodyView.snp.bottom).offset(6)
-                make.width.equalToSuperview().inset(20)
-                make.height.equalTo(15)
+            switch listScreen {
+            case .home:
+                listBodyView.isHidden = true
+                listInfoView.isHidden = false
+                listInfoView.snp.remakeConstraints { make in
+                    make.leading.equalToSuperview().offset(20)
+                    make.top.equalTo(listTitleView.snp.bottom).offset(6)
+                    make.width.equalToSuperview().inset(20)
+                    make.height.equalTo(15)
+                }
+                
+            case .search:
+                listBodyView.isHidden = false
+                listBodyView.snp.remakeConstraints { make in
+                    make.leading.equalToSuperview().offset(20)
+                    make.trailing.equalToSuperview().inset(80)
+                    make.top.equalTo(listTitleView.snp.bottom).offset(6)
+                    make.height.equalTo(18)
+                }
+                listInfoView.isHidden = false
+                listInfoView.snp.remakeConstraints { make in
+                    make.leading.equalToSuperview().offset(20)
+                    make.top.equalTo(listBodyView.snp.bottom).offset(6)
+                    make.width.equalToSuperview().inset(20)
+                    make.height.equalTo(15)
+                }
             }
         case .hide:
             listTitleView.isHidden = false
