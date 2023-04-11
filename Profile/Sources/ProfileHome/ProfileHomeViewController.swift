@@ -308,6 +308,12 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             if data.title == "디자인 시스템" {
                 print("ProfileHome :: 디자인 시스템 호출!")
                 listener?.pressedDesignSystemCell()
+            } else if data.title == "리뷰 요청" {
+                let appID = "1617404636" // 앱스토어 Connect에서 확인 가능한 앱 ID를 입력하세요.
+                let reviewURL = "https://itunes.apple.com/app/id\(appID)?action=write-review"
+                if let url = URL(string: reviewURL), UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
             }
             
         }

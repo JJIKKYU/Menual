@@ -549,9 +549,9 @@ class RefreshManager: NSObject {
             return false
         }
         
-        // 디버그 모드일때는 항상 리프레쉬 되도록
-        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
-        if isDebugMode {
+        // 테스트 모드일때는 항상 리프레쉬 되도록
+        let isTestMode: Bool = UserDefaults.standard.bool(forKey: "test")
+        if isTestMode {
             return true
         }
         
@@ -599,9 +599,9 @@ class RefreshManager: NSObject {
               let momentsRealm = realm.objects(MomentsRealm.self).first
         else { return false }
         
-        // 디버그 모드일때는 하루 차이 없이 바로 나타나도록
-        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
-        if isDebugMode {
+        // 테스트 모드일때는 하루 차이 없이 바로 나타나도록
+        let isTestMode: Bool = UserDefaults.standard.bool(forKey: "test")
+        if isTestMode {
             return true
         }
         

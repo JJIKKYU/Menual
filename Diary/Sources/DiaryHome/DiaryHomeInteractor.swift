@@ -562,9 +562,9 @@ extension DiaryHomeInteractor {
             .filter ({ $0.isDeleted == false })
 
         var sortedModelArr: [String] = []
-        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
-        // 디버그 모드일 경우에는 다이어리 작성일자 카운트 하지 않고 나타날 수 있도록
-        if isDebugMode {
+        let isTestMode: Bool = UserDefaults.standard.bool(forKey: "test")
+        // 테스트 모드일 경우에는 다이어리 작성일자 카운트 하지 않고 나타날 수 있도록
+        if isTestMode {
             var diaryArr: [String] = []
             for diary in diaries {
                 let date = diary.createdAt.toStringWithMMdd()

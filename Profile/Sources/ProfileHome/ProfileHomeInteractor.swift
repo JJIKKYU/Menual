@@ -78,7 +78,9 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     var profileHomeDevDataArr: [ProfileHomeModel] {
         let arr: [ProfileHomeModel] = [
-            ProfileHomeModel(section: .DEV, type: .arrow, title: "디자인 시스템", actionName: "designSystem")
+            ProfileHomeModel(section: .DEV, type: .arrow, title: "디자인 시스템", actionName: "designSystem"),
+            ProfileHomeModel(section: .DEV, type: .arrow, title: "리뷰 요청", actionName: "review"),
+            
         ]
         
         return arr

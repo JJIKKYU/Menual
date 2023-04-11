@@ -161,6 +161,10 @@ public final class DiarySearchViewController: UIViewController, DiarySearchViewC
                     print("Debug :: value = \(value)")
                     UserDefaults.standard.setValue(!value, forKey: "debug")
                     let _ = self.showToast(message: "Debug Mode가 \(!value == true ? "켜졌습니다" : "꺼졌습니다")")
+                } else if keyword == "#test" {
+                    let value = UserDefaults.standard.bool(forKey: "test")
+                    UserDefaults.standard.setValue(!value, forKey: "debug")
+                    let _ = self.showToast(message: "Test Mode가 \(!value == true ? "켜졌습니다" : "꺼졌습니다")")
                 }
 
                 self.listener?.search(keyword: keyword)
