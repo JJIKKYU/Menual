@@ -270,6 +270,7 @@ public class ListCell: UITableViewCell {
                 // make.bottom.equalToSuperview().inset(18)
             }
 
+
         case .bodyText:
             listBodyView.isHidden = false
             menualImageView.isHidden = true

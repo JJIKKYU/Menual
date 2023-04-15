@@ -166,7 +166,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         
         filterEmpty.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(filterEmptyHeaderDivider.snp.bottom).offset(112)
+            make.top.equalTo(filterEmptyHeaderDivider.snp.bottom).offset(50)
             make.width.equalToSuperview()
             make.height.equalTo(180)
         }
@@ -194,7 +194,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         }
         
         empty.snp.makeConstraints { make in
-            make.top.equalTo(divider.snp.bottom).offset(112)
+            make.top.equalTo(divider.snp.bottom).offset(50)
             make.width.equalTo(188)
             make.height.equalTo(180)
             make.centerX.equalToSuperview()

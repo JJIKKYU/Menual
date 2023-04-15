@@ -50,6 +50,7 @@ public class Empty: UIView {
     }
     
     private let emptyImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFit
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
     }
@@ -78,11 +79,10 @@ public class Empty: UIView {
         emptyImageView.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.centerX.equalToSuperview()
-            make.width.height.equalTo(160)
         }
         
         emptyImageTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(emptyImageView.snp.bottom)
+            make.top.equalTo(emptyImageView.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
         }
     }
@@ -97,11 +97,11 @@ public class Empty: UIView {
             }
             switch mainType {
             case .main:
-                emptyImageView.image = Asset.Illurstration.emtpySpace.image
+                emptyImageView.image = Asset.Illurstration.nullDiary.image
                 emptyImageTitleLabel.text = MenualString.home_desc_nonexistent_writing_menual
                 
             case .filter:
-                emptyImageView.image = Asset.Illurstration.emtpySpace.image
+                emptyImageView.image = Asset.Illurstration.emptySpace2.image
                 emptyImageTitleLabel.text = MenualString.home_desc_nonexistent_fiflter_menual
 
             }
@@ -117,7 +117,7 @@ public class Empty: UIView {
                 emptyImageTitleLabel.text = MenualString.tempsave_desc_nonexistent
 
             case .lock:
-                emptyImageView.image = Asset.Illurstration.viewLock.image
+                emptyImageView.image = Asset.Illurstration.viewLock2.image
                 emptyImageTitleLabel.text = MenualString.detail_desc_lock
             }
             
@@ -128,11 +128,11 @@ public class Empty: UIView {
             }
             switch searchType {
             case .search:
-                emptyImageView.image = Asset.Illurstration.emtpySpace.image
+                emptyImageView.image = Asset.Illurstration.emptySpace2.image
                 emptyImageTitleLabel.text = MenualString.search_desc_find_menual
                 
             case .result:
-                emptyImageView.image = Asset.Illurstration.emtpySpace.image
+                emptyImageView.image = Asset.Illurstration.emptySpace2.image
                 emptyImageTitleLabel.text = MenualString.search_desc_inconsistent
             }
 
