@@ -32,6 +32,7 @@ public enum MenualBottomSheetType {
     case reminder
     case filter
     case dateFilter
+    case review
 }
 
 public protocol DiaryBottomSheetPresentableListener: AnyObject {
@@ -57,10 +58,14 @@ public protocol DiaryBottomSheetPresentableListener: AnyObject {
     
     var dateFilterModelRelay: BehaviorRelay<[DateFilterModel]?>? { get }
     // var filteredDiaryCountRelay: BehaviorRelay<Int>? { get set }
+    
+    // ReviewComponentView
+    func pressedReviewBtn()
+    func pressedInquiryBtn()
 }
 
 final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPresentable, DiaryBottomSheetViewControllable {
-
+    
     weak var listener: DiaryBottomSheetPresentableListener?
     var disposeBag = DisposeBag()
     var keyHeight: CGFloat?
@@ -176,6 +181,14 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         $0.isHidden = true
         $0.delegate = self
     }
+    
+    // 리뷰 컴포넌트
+    private lazy var reviewComponentView = MenualBottomSheetReviewComponentView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isHidden = true
+        $0.delegate = self
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -330,6 +343,19 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         case .calender:
             bottomSheetTitle = MenualString.filter_title_date
             
+        case .review:
+            bottomSheetView.addSubview(reviewComponentView)
+            reviewComponentView.isHidden = false
+            divider.isHidden = true
+            reviewComponentView.snp.makeConstraints { make in
+                make.leading.width.equalToSuperview()
+                make.top.equalTo(self.rightBtn.snp.bottom)
+                make.height.equalTo(622)
+            }
+            menualBottomSheetRightBtnType = .close
+            rightBtn.actionName = "close"
+            rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
+            
         
         }
     }
@@ -479,6 +505,10 @@ extension DiaryBottomSheetViewController {
             
         case .reminder:
             bottomSheetTitle = MenualString.reminder_title
+            bottomSheetHeight = 622
+            
+        case .review:
+            bottomSheetTitle = ""
             bottomSheetHeight = 622
         }
     }
@@ -775,5 +805,24 @@ extension DiaryBottomSheetViewController: DialogDelegate {
                 break
             }
         }
+    }
+}
+
+// MARK: - ReviewComponenet
+extension DiaryBottomSheetViewController: MenualBottomSheetReviewComponentViewDelegate {
+    func goReviewPage() {
+        let appID = "1617404636" // 앱스토어 Connect에서 확인 가능한 앱 ID를 입력하세요.
+        let reviewURL = "https://itunes.apple.com/app/id\(appID)?action=write-review"
+        if let url = URL(string: reviewURL), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        }
+    }
+
+    func pressedPraiseBtn() {
+        listener?.pressedReviewBtn()
+    }
+    
+    func pressedInquiryBtn() {
+        listener?.pressedInquiryBtn()
     }
 }

@@ -113,7 +113,7 @@ public class Empty: UIView {
             }
             switch writingType {
             case .temporarysave:
-                emptyImageView.image = Asset.Illurstration.emtpySpace.image
+                emptyImageView.image = Asset.Illurstration.emptySpace2.image
                 emptyImageTitleLabel.text = MenualString.tempsave_desc_nonexistent
 
             case .lock:

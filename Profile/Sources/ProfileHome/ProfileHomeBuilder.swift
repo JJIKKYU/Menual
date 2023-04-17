@@ -6,6 +6,8 @@
 //
 
 import RIBs
+import RxRelay
+import MenualEntity
 import MenualRepository
 import ProfileOpensource
 import ProfilePassword
@@ -13,6 +15,7 @@ import ProfileDeveloper
 import ProfileBackup
 import ProfileRestore
 import ProfileDesignSystem
+import DiaryBottomSheet
 
 public protocol ProfileHomeDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
@@ -21,7 +24,13 @@ public protocol ProfileHomeDependency: Dependency {
     var backupRestoreRepository: BackupRestoreRepository { get }
 }
 
-public final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency, ProfileDeveloperDependency, ProfileHomeInteractorDependency, ProfileOpensourceDependency, ProfileBackupDependency, ProfileRestoreDependency, DesignSystemDependency {
+public final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency, ProfileDeveloperDependency, ProfileHomeInteractorDependency, ProfileOpensourceDependency, ProfileBackupDependency, ProfileRestoreDependency, DesignSystemDependency, DiaryBottomSheetDependency {
+
+    public var filteredDiaryCountRelay: BehaviorRelay<Int>?
+    public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
+    public var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
+    public var filterResetBtnRelay: BehaviorRelay<Bool>?
+    
 
     public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
@@ -50,6 +59,7 @@ public final class ProfileHomeBuilder: Builder<ProfileHomeDependency>, ProfileHo
         let profileBackupBuildable = ProfileBackupBuilder(dependency: component)
         let profileRestoreBuildable = ProfileRestoreBuilder(dependency: component)
         let designSystemBuildable = DesignSystemBuilder(dependency: component)
+        let bottomSheetBuildable = DiaryBottomSheetBuilder(dependency: component)
         
         let viewController = ProfileHomeViewController()
         viewController.screenName = "profile"
@@ -67,7 +77,8 @@ public final class ProfileHomeBuilder: Builder<ProfileHomeDependency>, ProfileHo
             profileOpensourceBuildable: profileOpensourceBuildable,
             profileBackupBuildable: profileBackupBuildable,
             profileRestoreBuildable: profileRestoreBuildable,
-            designSystemBuildable: designSystemBuildable
+            designSystemBuildable: designSystemBuildable,
+            bottomSheetBuildable: bottomSheetBuildable
         )
     }
 }

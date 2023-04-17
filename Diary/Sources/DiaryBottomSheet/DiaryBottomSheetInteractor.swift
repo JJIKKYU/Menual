@@ -27,6 +27,7 @@ public protocol DiaryBottomSheetPresentable: Presentable {
     func setCurrentFilteredBtn(weatherArr: [Weather], placeArr: [Place])
     func setCurrentReminderData(isEnabled: Bool, dateComponets: DateComponents?)
     func setHideBtnTitle(isHide: Bool)
+    func goReviewPage()
 }
 
 public protocol DiaryBottomSheetListener: AnyObject {
@@ -235,6 +236,15 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     // MARK: - DateFilater
     func filterDatePressedFilterBtn(yearDateFormatString: String) {
         listener?.filterDatePressedFilterBtn(yearDateFormatString: yearDateFormatString)
+    }
+    
+    // MARK: - ReviewComponenet
+    func pressedReviewBtn() {
+        presenter.goReviewPage()
+    }
+    
+    func pressedInquiryBtn() {
+        listener?.diaryBottomSheetPressedCloseBtn()
     }
 }
 

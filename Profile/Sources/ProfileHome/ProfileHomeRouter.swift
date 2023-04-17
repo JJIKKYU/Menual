@@ -13,8 +13,9 @@ import ProfileDeveloper
 import ProfileBackup
 import ProfileRestore
 import ProfileDesignSystem
+import DiaryBottomSheet
 
-protocol ProfileHomeInteractable: Interactable, ProfilePasswordListener, ProfileDeveloperListener, ProfileOpensourceListener, ProfileBackupListener, ProfileRestoreListener, DesignSystemListener {
+protocol ProfileHomeInteractable: Interactable, ProfilePasswordListener, ProfileDeveloperListener, ProfileOpensourceListener, ProfileBackupListener, ProfileRestoreListener, DesignSystemListener, DiaryBottomSheetListener {
     var router: ProfileHomeRouting? { get set }
     var listener: ProfileHomeListener? { get set }
 }
@@ -44,6 +45,9 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
     
     private var designSystemBuildable: DesignSystemBuildable
     private var designSystemRouting: Routing?
+    
+    private var bottomSheetBuildable: DiaryBottomSheetBuildable
+    private var bottomSheetRouting: Routing?
 
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
@@ -54,7 +58,8 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
         profileOpensourceBuildable: ProfileOpensourceBuildable,
         profileBackupBuildable: ProfileBackupBuildable,
         profileRestoreBuildable: ProfileRestoreBuildable,
-        designSystemBuildable: DesignSystemBuildable
+        designSystemBuildable: DesignSystemBuildable,
+        bottomSheetBuildable: DiaryBottomSheetBuildable
     ) {
         self.profilePasswordBuildable = profilePasswordBuildable
         self.profileDeveloperBuildable = profileDeveloperBuildable
@@ -62,6 +67,7 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
         self.profileBackupBuildable = profileBackupBuildable
         self.profileRestoreBuildable = profileRestoreBuildable
         self.designSystemBuildable = designSystemBuildable
+        self.bottomSheetBuildable = bottomSheetBuildable
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
     }
@@ -249,5 +255,32 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
         
         detachChild(router)
         designSystemRouting = nil
+    }
+    
+    // MARK: - DevMode
+    func attachReviewBottomSheet() {
+        if bottomSheetRouting != nil {
+            return
+        }
+        
+        let router = bottomSheetBuildable.build(withListener: interactor,
+                                                bottomSheetType: .review,
+                                                menuComponentRelay: nil
+        )
+        viewController.present(router.viewControllable, animated: false, completion: nil)
+        
+        bottomSheetRouting = router
+        attachChild(router)
+    }
+    
+    func detachReviewBottomSheet(isOnlyDetach: Bool) {
+        guard let router = bottomSheetRouting,
+        let diaryBottomSheetRouter = router as? DiaryBottomSheetRouting else {
+            return
+        }
+        
+        diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
+        detachChild(router)
+        bottomSheetRouting = nil
     }
 }

@@ -31,6 +31,9 @@ public protocol ProfileHomeRouting: ViewableRouting {
     
     func attachDesignSystem()
     func detachDesignSystem(isOnlyDetach: Bool)
+    
+    func attachReviewBottomSheet()
+    func detachReviewBottomSheet(isOnlyDetach: Bool)
 }
 
 protocol ProfileHomePresentable: Presentable {
@@ -265,5 +268,33 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     func designSystemPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachDesignSystem(isOnlyDetach: isOnlyDetach)
+    }
+    
+    // MARK: - DEVMode
+    func pressedReviewCell() {
+        router?.attachReviewBottomSheet()
+    }
+    
+    func diaryBottomSheetPressedCloseBtn() {
+        router?.detachReviewBottomSheet(isOnlyDetach: false)
+    }
+}
+
+
+// MARK: - 미사용
+extension ProfileHomeInteractor {
+    func filterWithWeatherPlace(weatherArr: [MenualEntity.Weather], placeArr: [MenualEntity.Place]) {
+    }
+    
+    func filterWithWeatherPlacePressedFilterBtn() {
+        
+    }
+    
+    func reminderCompViewshowToast(isEding: Bool) {
+        
+    }
+    
+    func filterDatePressedFilterBtn(yearDateFormatString: String) {
+        
     }
 }
