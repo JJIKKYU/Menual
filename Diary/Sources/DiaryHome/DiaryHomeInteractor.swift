@@ -605,6 +605,7 @@ extension DiaryHomeInteractor {
 // MARK: - 미사용
 extension DiaryHomeInteractor {
     func reminderCompViewshowToast(isEding: Bool) { }
+    func reviewCompoentViewPresentQA() { }
 }
 
 protocol PropertyReflectable { }

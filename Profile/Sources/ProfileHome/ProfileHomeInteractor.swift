@@ -40,6 +40,7 @@ protocol ProfileHomePresentable: Presentable {
     var listener: ProfileHomePresentableListener? { get set }
     
     func showToastRestoreSuccess()
+    func pressedDeveloperQACell()
 }
 
 public protocol ProfileHomeListener: AnyObject {
@@ -277,6 +278,10 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     func diaryBottomSheetPressedCloseBtn() {
         router?.detachReviewBottomSheet(isOnlyDetach: false)
+    }
+    
+    func reviewCompoentViewPresentQA() {
+        presenter.pressedDeveloperQACell()
     }
 }
 

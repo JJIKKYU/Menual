@@ -38,12 +38,14 @@ public class MenualBottomSheetReviewComponentView: UIView {
         $0.setLineHeight(lineHeight: 1.24)
     }
     
-    private let praiseBtn = BoxButton(frame: .zero, btnStatus: .active, btnSize: .large).then {
+    private lazy var reviewBtn = BoxButton(frame: .zero, btnStatus: .active, btnSize: .large).then {
+        $0.addTarget(self, action: #selector(pressedReviewBtn), for: .touchUpInside)
         $0.title = "칭찬하기"
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    private let inquiryBtn = UIButton().then {
+    private lazy var inquiryBtn = UIButton().then {
+        $0.addTarget(self, action: #selector(pressedInquiryBtn), for: .touchUpInside)
         $0.titleLabel?.textColor = Colors.grey.g200
         $0.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_4)
         $0.setTitle("건의하기", for: .normal)
@@ -66,7 +68,7 @@ public class MenualBottomSheetReviewComponentView: UIView {
         addSubview(titleLabel)
         addSubview(imageView)
         addSubview(subTitleLabel)
-        addSubview(praiseBtn)
+        addSubview(reviewBtn)
         addSubview(inquiryBtn)
         
         titleLabel.snp.makeConstraints { make in
@@ -84,7 +86,7 @@ public class MenualBottomSheetReviewComponentView: UIView {
             make.top.equalTo(imageView.snp.bottom).offset(40)
         }
         
-        praiseBtn.snp.makeConstraints { make in
+        reviewBtn.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.height.equalTo(56)
@@ -92,7 +94,7 @@ public class MenualBottomSheetReviewComponentView: UIView {
         }
         
         inquiryBtn.snp.makeConstraints { make in
-            make.top.equalTo(praiseBtn.snp.bottom).offset(16)
+            make.top.equalTo(reviewBtn.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
         }
     }

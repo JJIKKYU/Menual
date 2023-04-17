@@ -38,6 +38,9 @@ public protocol DiaryBottomSheetListener: AnyObject {
     func filterWithWeatherPlacePressedFilterBtn()
     func reminderCompViewshowToast(isEding: Bool)
     func filterDatePressedFilterBtn(yearDateFormatString: String)
+    
+    // 개발자에게 문의하기
+    func reviewCompoentViewPresentQA()
 }
 
 public protocol DiaryBottomSheetInteractorDependency {
@@ -241,10 +244,12 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     // MARK: - ReviewComponenet
     func pressedReviewBtn() {
         presenter.goReviewPage()
+        listener?.diaryBottomSheetPressedCloseBtn()
     }
     
     func pressedInquiryBtn() {
         listener?.diaryBottomSheetPressedCloseBtn()
+        listener?.reviewCompoentViewPresentQA()
     }
 }
 

@@ -499,4 +499,5 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 extension DiaryDetailInteractor {
     func filterWithWeatherPlacePressedFilterBtn() { }
     func filterDatePressedFilterBtn(yearDateFormatString: String) {}
+    func reviewCompoentViewPresentQA() { }
 }
