@@ -34,6 +34,7 @@ public protocol DiaryWritingListener: AnyObject {
 
 public protocol DiaryWritingInteractorDependency {
     var diaryRepository: DiaryRepository { get }
+    var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
 
 final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentable>, DiaryWritingInteractable, DiaryWritingPresentableListener {

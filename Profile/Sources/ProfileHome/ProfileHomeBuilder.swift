@@ -21,6 +21,7 @@ public protocol ProfileHomeDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
     var diaryRepository: DiaryRepository { get }
+    var appstoreReviewRepository: AppstoreReviewRepository { get }
     var backupRestoreRepository: BackupRestoreRepository { get }
 }
 
@@ -34,6 +35,7 @@ public final class ProfileHomeComponent: Component<ProfileHomeDependency>, Profi
 
     public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    public var appstoreReviewRepository: AppstoreReviewRepository { dependency.appstoreReviewRepository }
 }
 
 // MARK: - Builder

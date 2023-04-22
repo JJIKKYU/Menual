@@ -13,11 +13,13 @@ public protocol DiarySearchDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
     var diaryRepository: DiaryRepository { get }
+    var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
 
 public final class DiarySearchComponent: Component<DiarySearchDependency>, DiaryDetailDependency, DiarySearchInteractorDependency
 {
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    public var appstoreReviewRepository: AppstoreReviewRepository { dependency.appstoreReviewRepository }
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }

@@ -37,7 +37,6 @@ let package = Package(
         .package(url: "https://github.com/SnapKit/SnapKit", exact: Version("5.6.0")),
         .package(url: "https://github.com/ReactiveX/RxSwift", exact: Version("6.0.0")),
         .package(path: "../Platform"),
-        .package(path: "../Profile"),
         .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3")),
     ],
     targets: [
@@ -90,7 +89,6 @@ let package = Package(
                 "DiaryDetail",
                 "DiaryBottomSheet",
                 .product(name: "RIBs", package: "RIBs"),
-                .product(name: "ProfileDesignSystem", package: "Profile"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "MenualRepository", package: "Platform"),
                 .product(name: "SnapKit", package: "SnapKit"),

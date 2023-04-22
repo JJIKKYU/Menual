@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 
 // MARK: - Realm에 저장하기 위한 Class
-public class DiaryReplyModelRealm: EmbeddedObject, Codable {
+public class DiaryReplyModelRealm: EmbeddedObject, Codable, RealmFetchable {
     @Persisted public var uuid: String = ""
     @Persisted public var replyNum: Int
     @Persisted public var diaryUuid: String

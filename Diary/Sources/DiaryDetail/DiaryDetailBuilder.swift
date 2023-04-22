@@ -17,10 +17,11 @@ public protocol DiaryDetailDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
     var diaryRepository: DiaryRepository { get }
+    var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
 
 public final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency, DiaryDetailImageDependency {
-    
+
     public var filterResetBtnRelay: RxRelay.BehaviorRelay<Bool>?
     public var isEnabledReminderRelay: BehaviorRelay<Bool?>?
     public var isHideMenualRelay: BehaviorRelay<Bool>?
@@ -29,6 +30,7 @@ public final class DiaryDetailComponent: Component<DiaryDetailDependency>, Diary
     public var filteredDiaryCountRelay: BehaviorRelay<Int>?
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    public var appstoreReviewRepository: AppstoreReviewRepository { dependency.appstoreReviewRepository }
     public var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>?
 
 }

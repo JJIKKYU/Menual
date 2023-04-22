@@ -13,6 +13,7 @@ import DiaryTempSave
 
 public protocol DiaryWritingDependency: Dependency {
     var diaryRepository: DiaryRepository { get }
+    var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
 
 public final class DiaryWritingComponent: Component<DiaryWritingDependency>, DiaryWritingInteractorDependency, DiaryTempSaveDependency {
@@ -21,6 +22,7 @@ public final class DiaryWritingComponent: Component<DiaryWritingDependency>, Dia
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     var filteredDiaryCountRelay: BehaviorRelay<Int>?
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    public var appstoreReviewRepository: AppstoreReviewRepository { dependency.appstoreReviewRepository }
 
 }
 

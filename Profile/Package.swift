@@ -39,7 +39,8 @@ let package = Package(
         .package(url: "https://github.com/realm/realm-swift", exact: Version("10.34.0")),
         .package(url: "https://github.com/ReactiveX/RxSwift", exact: Version("6.0.0")),
         .package(path: "../Platform"),
-        .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3"))
+        .package(path: "../Diary"),
+        .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -79,6 +80,7 @@ let package = Package(
                 "ProfileBackup",
                 "ProfileRestore",
                 "ProfileDesignSystem",
+                .product(name: "DiaryBottomSheet", package: "Diary"),
                 .product(name: "RIBs", package: "RIBs"),
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
