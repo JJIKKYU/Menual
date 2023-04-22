@@ -480,7 +480,7 @@ extension DiaryBottomSheetViewController {
             make.top.equalTo(view.snp.bottom).inset(bottomSheetHeight)
         }
         
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
+        UIView.animate(withDuration: 0.35, delay: 0, options: .curveEaseInOut) {
             self.dimmedView.alpha = 0.1
             self.view.layoutIfNeeded()
         } completion: { isShow in

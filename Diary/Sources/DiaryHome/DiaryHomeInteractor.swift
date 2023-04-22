@@ -618,6 +618,7 @@ extension DiaryHomeInteractor {
         if !needReviewPopup { return }
         
         // 리뷰 요청이 필요하다면 BottomSheet 띄워서 요청하기
+        router?.attachBottomSheet(type: .review)
     }
 }
 

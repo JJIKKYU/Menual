@@ -45,6 +45,7 @@ public protocol DiaryBottomSheetListener: AnyObject {
 
 public protocol DiaryBottomSheetInteractorDependency {
     var diaryRepository: DiaryRepository { get }
+    var appstoreReviewRepository: AppstoreReviewRepository { get }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
     var filterResetBtnRelay: BehaviorRelay<Bool>? { get }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
@@ -244,10 +245,14 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     // MARK: - ReviewComponenet
     func pressedReviewBtn() {
         presenter.goReviewPage()
+        dependency.appstoreReviewRepository
+            .approveReview()
         listener?.diaryBottomSheetPressedCloseBtn()
     }
     
     func pressedInquiryBtn() {
+        dependency.appstoreReviewRepository
+            .rejectReview()
         listener?.diaryBottomSheetPressedCloseBtn()
         listener?.reviewCompoentViewPresentQA()
     }
