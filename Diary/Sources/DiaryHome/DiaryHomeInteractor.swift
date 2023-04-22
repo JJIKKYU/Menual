@@ -57,6 +57,7 @@ public protocol DiaryHomeInteractorDependency {
     var diaryRepository: DiaryRepository { get }
     var momentsRepository: MomentsRepository { get }
     var backupRestoreRepository: BackupRestoreRepository { get }
+    var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
 
 final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, DiaryHomeInteractable, DiaryHomePresentableListener, AdaptivePresentationControllerDelegate {
@@ -220,6 +221,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
                             return
                         }
+                        
+                        // 리뷰 요청이 필요하다면 요청할 수 있도록
+                        self.showReviewPopupIfNeeded()
 
                         for insertionRow in insertions {
                             let diary: DiaryModelRealm = model[insertionRow]
@@ -599,6 +603,21 @@ extension DiaryHomeInteractor {
         }
         
         onboardingDiarySet.accept(writingDiarySet)
+    }
+}
+
+// MARK: - AppstoreReview
+
+extension DiaryHomeInteractor {
+    /// 리뷰 요청이 필요한 상황인지 체크하고, 필요하다면 요청을 할 수 있도록 하는 함수
+    func showReviewPopupIfNeeded() {
+        // 리뷰 요청이 필요한 지
+        let needReviewPopup: Bool = self.dependency.appstoreReviewRepository
+            .needReviewPopup()
+        // 리뷰 요청이 필요하지 않다면 return
+        if !needReviewPopup { return }
+        
+        // 리뷰 요청이 필요하다면 BottomSheet 띄워서 요청하기
     }
 }
 
