@@ -1065,7 +1065,8 @@ extension DiaryHomeViewController {
 
 // MARK: - Review
 extension DiaryHomeViewController: MFMailComposeViewControllerDelegate {
-    func pressedReviewQABtn() {
+    /// 리뷰 팝업에서 건의하기 버튼을 눌렀을 경우
+    func presentMailVC() {
         print("DiaryHome :: pressedReviewQABtn")
         if MFMailComposeViewController.canSendMail() {
             let composeViewController = MFMailComposeViewController()

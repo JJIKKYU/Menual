@@ -46,6 +46,7 @@ public protocol DiaryHomePresentable: Presentable {
     func deleteTableViewSection(section: Int)
     
     func showRestoreSuccessToast()
+    func presentMailVC()
 }
 
 public protocol DiaryHomeListener: AnyObject {
@@ -623,7 +624,7 @@ extension DiaryHomeInteractor {
     
     /// 리뷰요청 건의하기 버튼을 눌렀을 경우
     func reviewCompoentViewPresentQA() {
-        
+        presenter.presentMailVC()
     }
 }
 
