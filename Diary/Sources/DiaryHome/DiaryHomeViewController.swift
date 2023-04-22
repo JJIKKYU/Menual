@@ -16,6 +16,7 @@ import RealmSwift
 import MenualUtil
 import MenualEntity
 import DesignSystem
+import MessageUI
 
 public enum TableCollectionViewTag: Int {
     case MomentsCollectionView = 0
@@ -1059,6 +1060,60 @@ extension DiaryHomeViewController {
         }
 
         isShowToastDiaryResultRelay.accept(nil)
+    }
+}
+
+// MARK: - Review
+extension DiaryHomeViewController: MFMailComposeViewControllerDelegate {
+    func pressedReviewQABtn() {
+        print("DiaryHome :: pressedReviewQABtn")
+        if MFMailComposeViewController.canSendMail() {
+            let composeViewController = MFMailComposeViewController()
+            composeViewController.mailComposeDelegate = self
+            
+            let bodyString = """
+                             이곳에 내용을 작성해주세요.
+                             
+                             오타 발견 문의 시 아래 양식에 맞춰 작성해주세요.
+                             
+                             <예시>
+                             글귀 ID : 글귀 4 (글귀 클릭 시 상단에 표시)
+                             수정 전 : 실수해도 되.
+                             수정 후 : 실수해도 돼.
+                             
+                             -------------------
+                             
+                             Device Model : \(DeviceUtil.getDeviceIdentifier())
+                             Device OS : \(UIDevice.current.systemVersion)
+                             App Version : \(DeviceUtil.getCurrentVersion())
+                             
+                             -------------------
+                             """
+            
+            composeViewController.setToRecipients(["jjikkyu@naver.com"])
+            composeViewController.setSubject("<메뉴얼> 문의 및 의견")
+            composeViewController.setMessageBody(bodyString, isHTML: false)
+            
+            self.present(composeViewController, animated: true, completion: nil)
+        } else {
+            print("메일 보내기 실패")
+            let sendMailErrorAlert = UIAlertController(title: "메일 전송 실패", message: "메일을 보내려면 'Mail' 앱이 필요합니다. App Store에서 해당 앱을 복원하거나 이메일 설정을 확인하고 다시 시도해주세요.", preferredStyle: .alert)
+            let goAppStoreAction = UIAlertAction(title: "App Store로 이동하기", style: .default) { _ in
+                // 앱스토어로 이동하기(Mail)
+                if let url = URL(string: "https://apps.apple.com/kr/app/mail/id1108187098"), UIApplication.shared.canOpenURL(url) {
+                    if #available(iOS 10.0, *) {
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    } else {
+                        UIApplication.shared.openURL(url)
+                    }
+                }
+            }
+            let cancleAction = UIAlertAction(title: "취소", style: .destructive, handler: nil)
+            
+            sendMailErrorAlert.addAction(goAppStoreAction)
+            sendMailErrorAlert.addAction(cancleAction)
+            self.present(sendMailErrorAlert, animated: true, completion: nil)
+        }
     }
 }
 

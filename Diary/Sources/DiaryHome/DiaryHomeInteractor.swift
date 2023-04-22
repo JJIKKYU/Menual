@@ -620,12 +620,16 @@ extension DiaryHomeInteractor {
         // 리뷰 요청이 필요하다면 BottomSheet 띄워서 요청하기
         router?.attachBottomSheet(type: .review)
     }
+    
+    /// 리뷰요청 건의하기 버튼을 눌렀을 경우
+    func reviewCompoentViewPresentQA() {
+        
+    }
 }
 
 // MARK: - 미사용
 extension DiaryHomeInteractor {
     func reminderCompViewshowToast(isEding: Bool) { }
-    func reviewCompoentViewPresentQA() { }
 }
 
 protocol PropertyReflectable { }
