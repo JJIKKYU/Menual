@@ -339,9 +339,9 @@ extension ProfileHomeViewController: MFMailComposeViewControllerDelegate {
                              
                              -------------------
                              
-                             Device Model : \(self.getDeviceIdentifier())
+                             Device Model : \(DeviceUtil.getDeviceIdentifier())
                              Device OS : \(UIDevice.current.systemVersion)
-                             App Version : \(self.getCurrentVersion())
+                             App Version : \(DeviceUtil.getCurrentVersion())
                              
                              -------------------
                              """
@@ -374,26 +374,6 @@ extension ProfileHomeViewController: MFMailComposeViewControllerDelegate {
     
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         self.dismiss(animated: true, completion: nil)
-    }
-    
-    // Device Identifier 찾기
-    func getDeviceIdentifier() -> String {
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let identifier = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
-        }
-        
-        return identifier
-    }
-
-    // 현재 버전 가져오기
-    func getCurrentVersion() -> String {
-        guard let dictionary = Bundle.main.infoDictionary,
-              let version = dictionary["CFBundleShortVersionString"] as? String else { return "" }
-        return version
     }
 }
 
