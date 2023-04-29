@@ -158,6 +158,10 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
                         if let tempSaveData = try? Data(contentsOf: filePath) {
                             restoreFile.tempSaveData = tempSaveData
                         }
+                    case .review:
+                        if let reviewData = try? Data(contentsOf: filePath) {
+                            restoreFile.reviewData = reviewData
+                        }
                     }
                 } else {
                     if fileURL == ".DS_Store" { continue }
@@ -219,7 +223,8 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
         var isDiaryJson: Bool = false
         
         // 압축 해제 시작
-        SSZipArchive.unzipFile(atPath: url.path, toDestination: path) { fileName, b, c, d in
+        let password = dependency.backupRestoreRepository.getPassword()
+        SSZipArchive.unzipFile(atPath: url.path, toDestination: path, overwrite: true, password: password) { fileName, b, c, d in
             print("ProfileRestore :: \(fileName), \(b), \(c) / \(d)")
 
             // 파일에 diaryJson이 있다면 메뉴얼 파일이므로 isDiaryJson을 true로 변경

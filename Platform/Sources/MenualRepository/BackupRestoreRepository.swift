@@ -24,6 +24,7 @@ public protocol BackupRestoreRepository {
     func restoreWithJson(restoreFile: RestoreFile, progressRelay: BehaviorRelay<CGFloat>)
     func clearCacheDirecotry(completion: @escaping (Bool) -> Void)
     func clearRestoreJson(completion: @escaping (Bool) -> Void)
+    func getPassword() -> String
 }
 
 public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
@@ -76,6 +77,10 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         if let passwordData = makeBackupData(of: PasswordModelRealm.self) {
             backupDataDic["password"] = passwordData
             backupDataArr.append(passwordData)
+        }
+        if let reviewData = makeBackupData(of: ReviewModelRealm.self) {
+            backupDataDic["review"] = reviewData
+            backupDataArr.append(reviewData)
         }
 
         // 딕셔너리에 있는 Key값은 파일의 이름
@@ -218,6 +223,10 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         if let tempSave = makeRestoreData(of: TempSaveModelRealm.self, data: restoreFile.tempSaveData) {
             restoreTempSave(newTempSave: tempSave)
         }
+        
+        if let appstoreReview = makeRestoreData(of: ReviewModelRealm.self, data: restoreFile.reviewData)?.first {
+            restoreReview(newReview: appstoreReview)
+        }
         progressRelay.accept(0.8)
         
         isRestoring = false
@@ -263,7 +272,25 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
             realm.delete(tempSave)
             realm.add(newTempSave)
         }
-        
+    }
+    
+    /// review를 복원하는 함수
+    public func restoreReview(newReview: ReviewModelRealm) {
+        guard let realm = Realm.safeInit() else { return }
+        // review가 있을 경우
+        if let review = realm.objects(ReviewModelRealm.self).first {
+            realm.safeWrite {
+                review.isApproved = newReview.isApproved
+                review.createdAt = newReview.createdAt
+                review.isRejected = newReview.isRejected
+            }
+        }
+        // review가 없을 경우 새로 만들어주어야 함
+        else {
+            realm.safeWrite {
+                realm.add(newReview)
+            }
+        }
     }
     
     /// 다이어리에 저장된 이미지, 검색, 리마인더 등 데이터를 삭제하는 함수

@@ -154,3 +154,4 @@ Menual.xcodeproj/project.pbxproj.bak
 TTU6J4YM3M.p12
 TTU6J4YM3M.certSigningRequest
 TTU6J4YM3M.cer
+Platform/Sources/MenualRepository/BackupRestoreRepository+Extension.swift

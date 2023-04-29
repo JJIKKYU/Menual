@@ -146,13 +146,14 @@ final class ProfileBackupInteractor: PresentableInteractor<ProfileBackupPresenta
         print("DiaryRepo :: 압축시작!")
         let savePath: String = tempZipPath()
         let zip = SSZipArchive.init(path: savePath)
+        let password = dependency.backupRestoreRepository.getPassword()
         zip.open()
         for path in folderPaths {
-            zip.writeFolder(atPath: savePath, withFolderName: path, withPassword: nil)
+            zip.writeFolder(atPath: savePath, withFolderName: path, withPassword: password)
         }
 
         for (index, file) in filePaths.enumerated() {
-            zip.writeFile(atPath: file, withFileName: fileElements[index], withPassword: nil)
+            zip.writeFile(atPath: file, withFileName: fileElements[index], withPassword: password)
         }
         zip.close()
 
