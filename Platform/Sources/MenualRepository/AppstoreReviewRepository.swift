@@ -37,7 +37,7 @@ public class AppstoreReviewRepositoryImp: AppstoreReviewRepository {
         var needReview: Bool = false
 
         // 메뉴얼이 5개, 10개, 20개일 경우를 체크하기 위해
-        let checkCountArr: [Int] = [5, 10 , 20]
+        let checkCountArr: [Int] = [5, 10, 20]
         
         // 삭제되지 않은 메뉴얼 개수
         let diaryCount: Int = realm.objects(DiaryModelRealm.self)

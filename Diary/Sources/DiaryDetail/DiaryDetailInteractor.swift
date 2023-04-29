@@ -39,9 +39,11 @@ public protocol DiaryDetailPresentable: Presentable {
     func setReminderIconEnabled(isEnabled: Bool)
     func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool)
     func enableBackSwipe()
+    func presentMailVC()
 }
 public protocol DiaryDetailInteractorDependency {
     var diaryRepository: DiaryRepository { get }
+    var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
 
 public protocol DiaryDetailListener: AnyObject {
@@ -196,6 +198,9 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 }
                 
                 if insertions.count > 0 {
+                    // 리뷰 요청이 필요하다면 요청할 수 있도록
+                    self.showReviewPopupIfNeeded()
+
                     guard let insertionRow: Int = insertions.first else { return }
                     let replyModelRealm = model[insertionRow]
                     self.diaryReplyArr.append(replyModelRealm)
@@ -494,10 +499,31 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         router?.detachDiaryDetailImage(isOnlyDetach: true)
     }
 }
+
+// MARK: - AppstoreReview
+
+extension DiaryDetailInteractor {
+    /// 리뷰 요청이 필요한 상황인지 체크하고, 필요하다면 요청을 할 수 있도록 하는 함수
+    func showReviewPopupIfNeeded() {
+        // 리뷰 요청이 필요한 지
+        let needReviewPopup: Bool = self.dependency.appstoreReviewRepository
+            .needReviewPopup()
+        // 리뷰 요청이 필요하지 않다면 return
+        if !needReviewPopup { return }
+        
+        // 리뷰 요청이 필요하다면 BottomSheet 띄워서 요청하기
+        router?.attachBottomSheet(type: .review,
+                                  menuComponentRelay: nil)
+    }
+    
+    /// 리뷰요청 건의하기 버튼을 눌렀을 경우
+    func reviewCompoentViewPresentQA() {
+        presenter.presentMailVC()
+    }
+}
  
 // MARK: - 미사용
 extension DiaryDetailInteractor {
     func filterWithWeatherPlacePressedFilterBtn() { }
     func filterDatePressedFilterBtn(yearDateFormatString: String) {}
-    func reviewCompoentViewPresentQA() { }
 }
