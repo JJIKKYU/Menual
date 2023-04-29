@@ -201,8 +201,8 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
 
         if let diaryArray = makeRestoreData(of: DiaryModelRealm.self, data: restoreFile.diaryData) {
             let filteredDiaryArray = diaryArray.filter { $0.isDeleted == false }
-            restoreWithJsonSaveImageData(diaryModelRealm: diaryArray, imageFiles: restoreFile.imageDataArr)
             deleteDiaries()
+            restoreWithJsonSaveImageData(diaryModelRealm: diaryArray, imageFiles: restoreFile.imageDataArr)
             
             realm.safeWrite {
                 realm.add(filteredDiaryArray)
