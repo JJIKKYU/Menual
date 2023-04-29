@@ -416,8 +416,10 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         dependency.momentsRepository.visitMoments(momentsItem: momentsItem)
         
         // 방문 기록 +1
+        // 해당 다이어리가 모먼츠로 추천된 날짜 기록
         realm.safeWrite {
             diaryModel.readCount += diaryModel.readCount + 1
+            diaryModel.lastMomentsDate = Date()
         }
         router?.attachDiaryDetail(model: diaryModel)
     }
@@ -438,6 +440,10 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     // MARK: - Diary detaill 관련 함수
     func pressedDiaryCell(diaryModel: DiaryModelRealm) {
+        guard let realm = Realm.safeInit() else { return }
+        realm.safeWrite {
+            diaryModel.readCount += diaryModel.readCount + 1
+        }
         router?.attachDiaryDetail(model: diaryModel)
     }
 

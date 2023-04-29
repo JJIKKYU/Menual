@@ -556,17 +556,8 @@ class RefreshManager: NSObject {
         }
         
         let lastUpdateDate = momentsRealm.lastUpdatedDate
-        let updateTime = 0
-        
-        let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour
-        let currentHour =  calender.dateComponents([.hour], from: Date()).hour
-        
-        print("MomentsRepo :: isRefreshRequired -> diff = \(diff), \(currentHour)")
-        
-        
         if let diff = calender.dateComponents([.hour], from: lastUpdateDate, to: Date()).hour,
-            let currentHour =  calender.dateComponents([.hour], from: Date()).hour,
-            diff >= 24, updateTime <= currentHour {
+            diff >= 24 {
             return true
         } else {
             return false

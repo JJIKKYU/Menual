@@ -82,7 +82,7 @@ public class Empty: UIView {
         }
         
         emptyImageTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(emptyImageView.snp.bottom)
+            make.top.equalTo(emptyImageView.snp.bottom).offset(10)
             make.centerX.equalToSuperview()
         }
     }
