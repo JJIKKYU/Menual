@@ -434,16 +434,10 @@ public enum Asset {
     public static let tea = ImageAsset(name: "80px/tea")
   }
   public enum Illurstration {
-    public static let emptySpace2 = ImageAsset(name: "Illurstration/empty_space_2")
-    public static let emtpySpace = ImageAsset(name: "Illurstration/emtpy_space")
-    public static let networkError = ImageAsset(name: "Illurstration/network_error")
-    public static let nullDiary = ImageAsset(name: "Illurstration/null_diary")
-    public static let pageError = ImageAsset(name: "Illurstration/page_error")
-    public static let serviceCheck = ImageAsset(name: "Illurstration/service_check")
-    public static let suggestReview = ImageAsset(name: "Illurstration/suggest_review")
-    public static let viewLock = ImageAsset(name: "Illurstration/view_lock")
-    public static let viewLock2 = ImageAsset(name: "Illurstration/view_lock2")
-    public static let viewLock3 = ImageAsset(name: "Illurstration/view_lock3")
+    public static let emtpySpace = ImageAsset(name: "Illurstration/emtpy-space")
+    public static let nullDiary = ImageAsset(name: "Illurstration/null-diary")
+    public static let suggestReview = ImageAsset(name: "Illurstration/suggest-review")
+    public static let viewLock = ImageAsset(name: "Illurstration/view-lock")
   }
   public enum Pagination {
     public static let paginationSelected = ImageAsset(name: "Pagination/paginationSelected")

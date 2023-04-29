@@ -294,7 +294,7 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
         switch sectionType {
         case .search:
             if menualCount == 0 && searchText.count > 0 {
-                return 317
+                return 340
             } else if menualCount == 0 && searchText.count == 0 {
                 return 0
             } else {
@@ -394,8 +394,8 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             searchEmptyView.snp.remakeConstraints { make in
                 make.centerX.equalToSuperview()
                 make.top.equalTo(headerView.snp.bottom).offset(40)
-                make.width.equalTo(170)
-                make.height.equalTo(180)
+                make.width.equalToSuperview()
+                make.height.equalTo(200)
             }
             
             return headerView
@@ -428,8 +428,8 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
             recentSearchEmptyView.snp.makeConstraints { make in
                 make.centerX.equalToSuperview()
                 make.top.equalTo(headerView.snp.bottom).offset(40)
-                make.width.equalTo(217)
-                make.height.equalTo(180)
+                make.width.equalToSuperview()
+                make.height.equalTo(200)
             }
             
             headerView.title = MenualString.search_title_recent

@@ -82,7 +82,7 @@ public class Empty: UIView {
         }
         
         emptyImageTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(emptyImageView.snp.bottom).offset(20)
+            make.top.equalTo(emptyImageView.snp.bottom)
             make.centerX.equalToSuperview()
         }
     }
@@ -101,7 +101,7 @@ public class Empty: UIView {
                 emptyImageTitleLabel.text = MenualString.home_desc_nonexistent_writing_menual
                 
             case .filter:
-                emptyImageView.image = Asset.Illurstration.emptySpace2.image
+                emptyImageView.image = Asset.Illurstration.emtpySpace.image
                 emptyImageTitleLabel.text = MenualString.home_desc_nonexistent_fiflter_menual
 
             }
@@ -113,11 +113,11 @@ public class Empty: UIView {
             }
             switch writingType {
             case .temporarysave:
-                emptyImageView.image = Asset.Illurstration.emptySpace2.image
+                emptyImageView.image = Asset.Illurstration.emtpySpace.image
                 emptyImageTitleLabel.text = MenualString.tempsave_desc_nonexistent
 
             case .lock:
-                emptyImageView.image = Asset.Illurstration.viewLock2.image
+                emptyImageView.image = Asset.Illurstration.viewLock.image
                 emptyImageTitleLabel.text = MenualString.detail_desc_lock
             }
             
@@ -128,11 +128,11 @@ public class Empty: UIView {
             }
             switch searchType {
             case .search:
-                emptyImageView.image = Asset.Illurstration.emptySpace2.image
+                emptyImageView.image = Asset.Illurstration.emtpySpace.image
                 emptyImageTitleLabel.text = MenualString.search_desc_find_menual
                 
             case .result:
-                emptyImageView.image = Asset.Illurstration.emptySpace2.image
+                emptyImageView.image = Asset.Illurstration.emtpySpace.image
                 emptyImageTitleLabel.text = MenualString.search_desc_inconsistent
             }
 

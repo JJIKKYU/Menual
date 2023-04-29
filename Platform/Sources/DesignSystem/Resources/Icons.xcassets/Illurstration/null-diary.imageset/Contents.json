@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "service_check.png",
+      "filename" : "null-diary.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "service_check@2x.png",
+      "filename" : "null-diary@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "service_check@3x.png",
+      "filename" : "null-diary@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
