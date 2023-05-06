@@ -45,6 +45,7 @@ protocol ProfileHomePresentableListener: AnyObject {
     func pressedReviewCell()
     
     // 구독/구매
+    func pressedPurchaseCheckCell()
     func pressedPurchaseCell()
 }
 
@@ -333,7 +334,9 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 listener?.pressedDesignSystemCell()
             } else if data.title == "리뷰 요청" {
                 listener?.pressedReviewCell()
-            } else if data.title == "구독 결제" {
+            } else if data.title == "구독 확인" {
+                listener?.pressedPurchaseCheckCell()
+            }  else if data.title == "결제하기" {
                 listener?.pressedPurchaseCell()
             }
             
