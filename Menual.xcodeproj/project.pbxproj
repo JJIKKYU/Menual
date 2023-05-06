@@ -57,6 +57,7 @@
 		98A6E1F929740099008CF101 /* CropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1F829740099008CF101 /* CropViewController */; };
 		98A6E1FB29740099008CF101 /* TOCropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1FA29740099008CF101 /* TOCropViewController */; };
 		98A937072A061CDE00229093 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 98A937062A061CDE00229093 /* GoogleMobileAds */; };
+		98A937092A065A5000229093 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98A937082A065A5000229093 /* StoreKit.framework */; };
 		98BAA732297A9C8B0061B891 /* ProfilePassword in Frameworks */ = {isa = PBXBuildFile; productRef = 98BAA731297A9C8B0061B891 /* ProfilePassword */; };
 		98C4767429744FC1006634A3 /* MenualUtil in Frameworks */ = {isa = PBXBuildFile; productRef = 98C4767329744FC1006634A3 /* MenualUtil */; };
 		98CE6E8A297D015B00465329 /* PinLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 98CE6E89297D015B00465329 /* PinLayout */; };
@@ -126,6 +127,7 @@
 		988A1878278AD17500DF81DA /* AppRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootViewController.swift; sourceTree = "<group>"; };
 		988A2D3027F81ACF0046C43A /* Menual.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Menual.entitlements; sourceTree = "<group>"; };
 		98A2BDA2280AD96200C1FB92 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		98A937082A065A5000229093 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		98AD776F2975A878002E5BD8 /* Diary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Diary; sourceTree = "<group>"; };
 		98C59F3429744366002703C6 /* Profile */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Profile; sourceTree = "<group>"; };
 		98C59F35297443B1002703C6 /* Platform */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Platform; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				981004A2297AB53800820867 /* DiaryTempSave in Frameworks */,
 				985DE96D297401C700F9E7AD /* Realm in Frameworks */,
 				98A6E1E42973FDF2008CF101 /* RxCocoa in Frameworks */,
+				98A937092A065A5000229093 /* StoreKit.framework in Frameworks */,
 				98100498297AB53800820867 /* DiaryBottomSheet in Frameworks */,
 				98935C8129744CA800AA3A29 /* DesignSystem in Frameworks */,
 				98CE6E8A297D015B00465329 /* PinLayout in Frameworks */,
@@ -315,6 +318,7 @@
 		EBD7C8EB992F559C0691738A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				98A937082A065A5000229093 /* StoreKit.framework */,
 				98A2BDA2280AD96200C1FB92 /* CloudKit.framework */,
 			);
 			name = Frameworks;
@@ -743,7 +747,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -762,7 +766,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menual;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -785,7 +789,7 @@
 				CODE_SIGN_ENTITLEMENTS = Menual/Menual.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Menual/Info.plist;
@@ -804,7 +808,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jjikkyu.menual;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -823,7 +827,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -871,7 +875,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -894,7 +898,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -893,9 +893,14 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) as? ListCell,
-              let data = cell.testModel
-        else { return }
+        guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
+        // 광고 셀일 경우
+        if cell.listType == .bodyTextImage {
+            nativeAd?.callToAction
+        }
+        
+        // 메뉴얼 셀일 경우
+        guard let data = cell.testModel else { return }
 
         let parameter: [String: Any] = [
             "page" : data.pageNum,
@@ -1208,7 +1213,7 @@ extension DiaryHomeViewController {
     }
 }
 
-extension DiaryHomeViewController: GADNativeAdLoaderDelegate {
+extension DiaryHomeViewController: GADNativeAdLoaderDelegate, GADNativeAdDelegate {
     func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: Error) {
         print("Admob :: error \(error)")
     }
@@ -1218,7 +1223,12 @@ extension DiaryHomeViewController: GADNativeAdLoaderDelegate {
         if isShowAd { return }
         
         self.nativeAd = nativeAd
+        nativeAd.delegate = self
         isShowAd = true
         reloadTableView()
+    }
+    
+    func nativeAdDidRecordClick(_ nativeAd: GADNativeAd) {
+        print("Admob :: click!")
     }
 }

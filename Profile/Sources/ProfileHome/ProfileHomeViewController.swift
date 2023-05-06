@@ -330,6 +330,8 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 listener?.pressedDesignSystemCell()
             } else if data.title == "리뷰 요청" {
                 listener?.pressedReviewCell()
+            } else if data.title == "구독 결제" {
+                
             }
             
         }
