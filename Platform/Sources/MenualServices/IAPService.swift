@@ -26,7 +26,6 @@ public final class IAPService: IAPServiceProtocol {
     
     public func getPaymentStateObservable() -> RxSwift.Observable<SKPaymentTransactionState> {
         .create { observer in
-            
             SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
                 for purchase in purchases {
                     switch purchase.transaction.transactionState {

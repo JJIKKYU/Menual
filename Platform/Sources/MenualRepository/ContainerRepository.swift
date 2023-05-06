@@ -30,6 +30,20 @@ public class ContainerRepositoryImp: ContainerRepository {
     }
     
     public func registerRepository() {
+        container.register(AppstoreReviewRepository.self) { _ in
+            AppstoreReviewRepositoryImp()
+        }
         
+        container.register(BackupRestoreRepository.self) { _ in
+            BackupRestoreRepositoryImp()
+        }
+        
+        container.register(DiaryRepository.self) { _ in
+            DiaryRepositoryImp()
+        }
+        
+        container.register(MomentsRepository.self) { _ in
+            MomentsRepositoryImp()
+        }
     }
 }
