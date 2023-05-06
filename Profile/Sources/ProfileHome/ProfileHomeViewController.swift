@@ -13,6 +13,7 @@ import RxRelay
 import MessageUI
 import DesignSystem
 import MenualUtil
+import GoogleMobileAds
 
 protocol ProfileHomePresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
@@ -72,6 +73,14 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         $0.separatorStyle = .none
     }
     
+    private lazy var demoAdmobView = GADBannerView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+        $0.rootViewController = self
+        $0.load(GADRequest())
+        $0.delegate = self
+    }
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
@@ -95,6 +104,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
     func setViews() {
         self.view.addSubview(naviView)
         self.view.addSubview(settingTableView)
+        self.view.addSubview(demoAdmobView)
         self.view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
@@ -106,6 +116,13 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         
         settingTableView.snp.makeConstraints { make in
             make.leading.width.top.bottom.equalToSuperview()
+        }
+        
+        demoAdmobView.snp.makeConstraints { make in
+            make.width.equalTo(GADAdSizeBanner.size.width)
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(GADAdSizeBanner.size.height)
         }
     }
     
@@ -379,5 +396,10 @@ extension ProfileHomeViewController: MFMailComposeViewControllerDelegate {
 
 // MARK: - UIDocumentPickerDelegate
 extension ProfileHomeViewController: UIDocumentPickerDelegate {
+    
+}
+
+// MARK: - GoogleAds Delegate
+extension ProfileHomeViewController: GADBannerViewDelegate {
     
 }

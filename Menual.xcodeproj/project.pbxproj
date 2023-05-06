@@ -56,6 +56,7 @@
 		98A6E1F629740075008CF101 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1F529740075008CF101 /* SnapKit */; };
 		98A6E1F929740099008CF101 /* CropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1F829740099008CF101 /* CropViewController */; };
 		98A6E1FB29740099008CF101 /* TOCropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 98A6E1FA29740099008CF101 /* TOCropViewController */; };
+		98A937072A061CDE00229093 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 98A937062A061CDE00229093 /* GoogleMobileAds */; };
 		98BAA732297A9C8B0061B891 /* ProfilePassword in Frameworks */ = {isa = PBXBuildFile; productRef = 98BAA731297A9C8B0061B891 /* ProfilePassword */; };
 		98C4767429744FC1006634A3 /* MenualUtil in Frameworks */ = {isa = PBXBuildFile; productRef = 98C4767329744FC1006634A3 /* MenualUtil */; };
 		98CE6E8A297D015B00465329 /* PinLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 98CE6E89297D015B00465329 /* PinLayout */; };
@@ -154,6 +155,7 @@
 				98A2BDA3280AD96200C1FB92 /* CloudKit.framework in Frameworks */,
 				98A6E1E12973FDD4008CF101 /* Then in Frameworks */,
 				985DE9752974036800F9E7AD /* FirebaseAnalytics in Frameworks */,
+				98A937072A061CDE00229093 /* GoogleMobileAds in Frameworks */,
 				981004A4297AB53800820867 /* DiaryWriting in Frameworks */,
 				98A259AB297AA082009D3C2D /* ProfileHome in Frameworks */,
 				981004A2297AB53800820867 /* DiaryTempSave in Frameworks */,
@@ -370,6 +372,7 @@
 				981004A5297AB63A00820867 /* ProfileDesignSystem */,
 				98CE6E89297D015B00465329 /* PinLayout */,
 				982A7C05298FA2DE007AD7C2 /* MenualRepositoryTestSupport */,
+				98A937062A061CDE00229093 /* GoogleMobileAds */,
 			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
@@ -456,6 +459,7 @@
 				985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				98CE6E88297D015B00465329 /* XCRemoteSwiftPackageReference "PinLayout" */,
 				98E9BFBC297D18980045336D /* XCRemoteSwiftPackageReference "FlexLayoutForSPM" */,
+				98A937052A061CDE00229093 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			productRefGroup = 9888DDDA27646EFF0091918F /* Products */;
 			projectDirPath = "";
@@ -747,6 +751,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하여 메뉴얼에 첨부하는 기능 사용을 위해 카메라 권한을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 선택하여 메뉴얼에 첨부하는 기능 사용을 위해 사진 라이브러리에 접근하도록 허용합니다.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "앱의 광고 타겟팅을 개선하기 위해 광고 ID를 사용합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
@@ -788,6 +793,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하여 메뉴얼에 첨부하는 기능 사용을 위해 카메라 권한을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 선택하여 메뉴얼에 첨부하는 기능 사용을 위해 사진 라이브러리에 접근하도록 허용합니다.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "앱의 광고 타겟팅을 개선하기 위해 광고 ID를 사용합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDarkContent;
@@ -1020,6 +1026,14 @@
 				kind = branch;
 			};
 		};
+		98A937052A061CDE00229093 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		98CE6E88297D015B00465329 /* XCRemoteSwiftPackageReference "PinLayout" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/layoutBox/PinLayout";
@@ -1164,6 +1178,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 98A6E1F729740099008CF101 /* XCRemoteSwiftPackageReference "TOCropViewController" */;
 			productName = TOCropViewController;
+		};
+		98A937062A061CDE00229093 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98A937052A061CDE00229093 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 		98BAA731297A9C8B0061B891 /* ProfilePassword */ = {
 			isa = XCSwiftPackageProductDependency;

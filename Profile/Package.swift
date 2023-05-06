@@ -41,6 +41,7 @@ let package = Package(
         .package(path: "../Platform"),
         .package(path: "../Diary"),
         .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3")),
+        .package(url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git", exact: Version("9.14.0")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -87,7 +88,8 @@ let package = Package(
                 .product(name: "RxCocoa", package: "RxSwift"),
                 .product(name: "DesignSystem", package: "Platform"),
                 .product(name: "MenualEntity", package: "Platform"),
-                .product(name: "MenualRepository", package: "Platform")
+                .product(name: "MenualRepository", package: "Platform"),
+                .product(name: "GoogleMobileAds", package: "swift-package-manager-google-mobile-ads"),
             ]
         ),
         .target(
