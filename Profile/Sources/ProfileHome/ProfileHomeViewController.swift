@@ -43,6 +43,9 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // 리뷰 요청
     func pressedReviewCell()
+    
+    // 구독/구매
+    func pressedPurchaseCell()
 }
 
 enum ProfileHomeSection: Int {
@@ -331,7 +334,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             } else if data.title == "리뷰 요청" {
                 listener?.pressedReviewCell()
             } else if data.title == "구독 결제" {
-                
+                listener?.pressedPurchaseCell()
             }
             
         }

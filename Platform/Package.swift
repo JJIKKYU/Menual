@@ -24,6 +24,9 @@ let package = Package(
         .library(
             name: "MenualRepositoryTestSupport",
             targets: ["MenualRepositoryTestSupport"]),
+        .library(
+            name: "MenualServices",
+            targets: ["MenualServices"]),
     ],
     dependencies: [
         .package(url: "https://github.com/uber/RIBs", branch: "main"),
@@ -34,7 +37,9 @@ let package = Package(
         .package(url: "https://github.com/ReactiveX/RxSwift", exact: Version("6.0.0")),
         .package(url: "https://github.com/JJIKKYU/TOCropViewController", branch: "main"),
         .package(url: "https://github.com/JJIKKYU/FlexLayoutForSPM", branch: "master"),
-        .package(url: "https://github.com/layoutBox/PinLayout", exact: Version("1.10.3"))
+        .package(url: "https://github.com/layoutBox/PinLayout", exact: Version("1.10.3")),
+        .package(url: "https://github.com/bizz84/SwiftyStoreKit", exact: Version("0.16.4")),
+        .package(url: "https://github.com/Swinject/Swinject", from: "2.8.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -77,10 +82,24 @@ let package = Package(
             dependencies: [
                 "MenualEntity",
                 "MenualUtil",
+                "Swinject",
+                "MenualServices",
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
                 .product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
+            ]
+        ),
+        .target(
+            name: "MenualServices",
+            dependencies: [
+                "MenualEntity",
+                "MenualUtil",
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxRelay", package: "RxSwift"),
+                .product(name: "Realm", package: "realm-swift"),
+                .product(name: "RealmSwift", package: "realm-swift"),
+                .product(name: "SwiftyStoreKit", package: "SwiftyStoreKit"),
             ]
         ),
         .target(
@@ -92,7 +111,6 @@ let package = Package(
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
                 .product(name: "Realm", package: "realm-swift"),
-                .product(name: "RealmSwift", package: "realm-swift"),
             ]
         ),
         .testTarget(

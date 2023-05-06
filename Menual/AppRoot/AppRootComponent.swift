@@ -20,6 +20,7 @@ final class AppRootComponent: Component<AppRootDependency> {
     var momentsRepository: MomentsRepository
     var backupRestoreRepository: BackupRestoreRepository
     var diaryUUIDRelay: BehaviorRelay<String>
+    var containerRepository: ContainerRepository
     
     init(
         dependency: AppRootDependency,
@@ -29,6 +30,7 @@ final class AppRootComponent: Component<AppRootDependency> {
         self.diaryUUIDRelay = diaryUUIDRelay
         self.rootViewController = rootViewController
         self.diaryRepository = DiaryRepositoryImp()
+        self.containerRepository = ContainerRepositoryImp()
         self.momentsRepository = MomentsRepositoryImp()
         self.appstoreReviewRepository = AppstoreReviewRepositoryImp()
         self.backupRestoreRepository = BackupRestoreRepositoryImp()

@@ -12,6 +12,7 @@ import RealmSwift
 import DesignSystem
 import MenualRepository
 import MenualEntity
+import MenualServices
 
 public protocol ProfileHomeRouting: ViewableRouting {
     func attachProfilePassword(isPasswordChange: Bool, isPaswwordDisabled: Bool)
@@ -51,6 +52,8 @@ public protocol ProfileHomeListener: AnyObject {
 
 protocol ProfileHomeInteractorDependency {
     var diaryRepository: DiaryRepository { get }
+    var containerRepository: ContainerRepository { get }
+    var iapService: IAPServiceProtocol? { get }
 }
 
 final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>, ProfileHomeInteractable, ProfileHomePresentableListener {
@@ -283,6 +286,31 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     func reviewCompoentViewPresentQA() {
         presenter.pressedDeveloperQACell()
+    }
+    
+    func pressedPurchaseCell() {
+        dependency.iapService?
+            .getPaymentStateObservable()
+            .subscribe(onNext: { [weak self] state in
+                print("ispService :: test! = \(state)")
+                switch state {
+                case .purchased, .restored:
+                    break
+                    
+                default:
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        dependency.iapService?
+            .getLocalPriceObservable(productID: "com.jjikkyu.menual.ad")
+            .subscribe(onNext: { [weak self] price in
+                guard let self = self else { return }
+                
+                print("ispService :: price = \(price)")
+            })
+            .disposed(by: disposeBag)
     }
 }
 

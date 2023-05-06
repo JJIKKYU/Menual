@@ -22,6 +22,8 @@
 		985DE9722974028500F9E7AD /* ZipArchive in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9712974028500F9E7AD /* ZipArchive */; };
 		985DE9752974036800F9E7AD /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9742974036800F9E7AD /* FirebaseAnalytics */; };
 		985DE9772974036800F9E7AD /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 985DE9762974036800F9E7AD /* FirebaseAnalyticsSwift */; };
+		986EE7D32A06608D00A506DF /* SwiftyStoreKit in Frameworks */ = {isa = PBXBuildFile; productRef = 986EE7D22A06608D00A506DF /* SwiftyStoreKit */; };
+		986EE7D62A06652000A506DF /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 986EE7D52A06652000A506DF /* Swinject */; };
 		98703A1A297A8ABE006C805D /* ProfileOpensource in Frameworks */ = {isa = PBXBuildFile; productRef = 98703A19297A8ABE006C805D /* ProfileOpensource */; };
 		98763D83299A811200EFA01B /* splashMenual.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D80299A811200EFA01B /* splashMenual.png */; };
 		98763D84299A811200EFA01B /* splashMenual@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 98763D81299A811200EFA01B /* splashMenual@2x.png */; };
@@ -148,6 +150,7 @@
 				98A6E1F02974003C008CF101 /* RIBs in Frameworks */,
 				9810049A297AB53800820867 /* DiaryDetail in Frameworks */,
 				9810049E297AB53800820867 /* DiaryHome in Frameworks */,
+				986EE7D62A06652000A506DF /* Swinject in Frameworks */,
 				98C4767429744FC1006634A3 /* MenualUtil in Frameworks */,
 				985DE96F297401C700F9E7AD /* RealmSwift in Frameworks */,
 				98A6E1F929740099008CF101 /* CropViewController in Frameworks */,
@@ -162,6 +165,7 @@
 				98A259AB297AA082009D3C2D /* ProfileHome in Frameworks */,
 				981004A2297AB53800820867 /* DiaryTempSave in Frameworks */,
 				985DE96D297401C700F9E7AD /* Realm in Frameworks */,
+				986EE7D32A06608D00A506DF /* SwiftyStoreKit in Frameworks */,
 				98A6E1E42973FDF2008CF101 /* RxCocoa in Frameworks */,
 				98A937092A065A5000229093 /* StoreKit.framework in Frameworks */,
 				98100498297AB53800820867 /* DiaryBottomSheet in Frameworks */,
@@ -377,6 +381,8 @@
 				98CE6E89297D015B00465329 /* PinLayout */,
 				982A7C05298FA2DE007AD7C2 /* MenualRepositoryTestSupport */,
 				98A937062A061CDE00229093 /* GoogleMobileAds */,
+				986EE7D22A06608D00A506DF /* SwiftyStoreKit */,
+				986EE7D52A06652000A506DF /* Swinject */,
 			);
 			productName = Menual;
 			productReference = 9888DDD927646EFF0091918F /* Menual.app */;
@@ -464,6 +470,8 @@
 				98CE6E88297D015B00465329 /* XCRemoteSwiftPackageReference "PinLayout" */,
 				98E9BFBC297D18980045336D /* XCRemoteSwiftPackageReference "FlexLayoutForSPM" */,
 				98A937052A061CDE00229093 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				986EE7D12A06608D00A506DF /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */,
+				986EE7D42A06652000A506DF /* XCRemoteSwiftPackageReference "Swinject" */,
 			);
 			productRefGroup = 9888DDDA27646EFF0091918F /* Products */;
 			projectDirPath = "";
@@ -982,6 +990,22 @@
 				minimumVersion = 9.0.0;
 			};
 		};
+		986EE7D12A06608D00A506DF /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bizz84/SwiftyStoreKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.3;
+			};
+		};
+		986EE7D42A06652000A506DF /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		98A6E1DF2973FDD4008CF101 /* XCRemoteSwiftPackageReference "Then" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/devxoul/Then";
@@ -1117,6 +1141,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 985DE9732974036800F9E7AD /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalyticsSwift;
+		};
+		986EE7D22A06608D00A506DF /* SwiftyStoreKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 986EE7D12A06608D00A506DF /* XCRemoteSwiftPackageReference "SwiftyStoreKit" */;
+			productName = SwiftyStoreKit;
+		};
+		986EE7D52A06652000A506DF /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 986EE7D42A06652000A506DF /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
 		};
 		98703A19297A8ABE006C805D /* ProfileOpensource */ = {
 			isa = XCSwiftPackageProductDependency;
