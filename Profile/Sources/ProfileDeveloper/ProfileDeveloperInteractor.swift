@@ -83,9 +83,9 @@ public final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeve
                     switch weatherValue {
                     case 0:
                         weatherModel = WeatherModelRealm(weather: .sun, detailText: "디테일 텍스트입니다.")
-                        placeModel = PlaceModelRealm(place: .car, detailText: "디테일 디테일 텍스트입니다.")
+                        placeModel = PlaceModelRealm(place: .company, detailText: "디테일 디테일 텍스트입니다.")
                     case 1:
-                        weatherModel = WeatherModelRealm(weather: .thunder, detailText: "디테일 텍스트입니다.")
+                        weatherModel = WeatherModelRealm(weather: .rain, detailText: "디테일 텍스트입니다.")
                         placeModel = PlaceModelRealm(place: .company, detailText: "디테일 디테일 텍스트입니다.")
                     case 2:
                         weatherModel = WeatherModelRealm(weather: .snow, detailText: "디테일 텍스트입니다.")
