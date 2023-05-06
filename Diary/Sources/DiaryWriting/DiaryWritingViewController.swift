@@ -137,7 +137,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         
         NotificationCenter.default.addObserver(self, selector: #selector(setDelegate), name: NSNotification.Name(rawValue: notificationIdentifier), object: nil)
 
-        // Delegate 해제
+        // Delegate 등록
         weatherPlaceToolbarView.delegate = self
         titleTextField.delegate = self
         descriptionTextView.delegate = self
@@ -156,7 +156,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         // Keyboard observer해제
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: notificationIdentifier), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: notificationIdentifier), object: nil)
         
         // Delegate 해제
         weatherPlaceToolbarView.delegate = nil
@@ -530,7 +530,7 @@ extension DiaryWritingViewController {
         MenualLog.logEventAction(responder: button)
         print("DiaryWriting :: pressedImageUploadViewDeleteBtn")
         showDialog(
-             dialogScreen: .diaryWriting(.editCancel),
+            dialogScreen: .diaryWriting(.deletePhoto),
              size: .small,
              buttonType: .twoBtn,
              titleText: "사진을 삭제하시겠어요?",
@@ -568,12 +568,8 @@ extension DiaryWritingViewController {
         weakImagePicker = imagePicker
         imagePicker.isEditing = true
         imagePicker.delegate = self
-        // present(imagePicker, animated: true, completion: nil)
-//        testImagePicker.modalPresentationStyle = .fullScreen
         
-//        present(testImagePicker, animated: true)
         let navigationController = UINavigationController(rootViewController: imagePicker)
-//        let navigationController = UINavigationController(rootViewController: testImagePicker)
         navigationController.modalPresentationStyle = .overFullScreen
         navigationController.navigationBar.isHidden = true
         navigationController.isNavigationBarHidden = true
