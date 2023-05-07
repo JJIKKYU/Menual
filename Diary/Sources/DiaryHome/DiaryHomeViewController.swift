@@ -1219,6 +1219,8 @@ extension DiaryHomeViewController: GADNativeAdLoaderDelegate, GADNativeAdDelegat
     }
     
     func adLoader(_ adLoader: GADAdLoader, didReceive nativeAd: GADNativeAd) {
+        if !DebugMode.isAlpha { return }
+
         print("Admob :: !! \(nativeAd.body)")
         if isShowAd { return }
         

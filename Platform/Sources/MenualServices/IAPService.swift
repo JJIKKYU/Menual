@@ -10,6 +10,7 @@ import StoreKit
 import SwiftyStoreKit
 import RxSwift
 import MenualEntity
+import MenualUtil
 
 public protocol IAPServiceProtocol {
     func getPaymentStateObservable() -> Observable<SKPaymentTransactionState>
@@ -26,6 +27,8 @@ public final class IAPService: IAPServiceProtocol {
     
     public func getPaymentStateObservable() -> RxSwift.Observable<SKPaymentTransactionState> {
         .create { observer in
+            if !DebugMode.isAlpha { return Disposables.create() }
+
             SwiftyStoreKit.completeTransactions(atomically: true) { purchases in
                 for purchase in purchases {
                     switch purchase.transaction.transactionState {
@@ -43,6 +46,8 @@ public final class IAPService: IAPServiceProtocol {
     
     public func getLocalPriceObservable(productID: String) -> RxSwift.Observable<String> {
         .create { observer in
+            if !DebugMode.isAlpha { return Disposables.create() }
+
             SwiftyStoreKit.retrieveProductsInfo([productID]) { result in
                 if let product = result.retrievedProducts.first {
                     let priceString = product.localizedPrice ?? ""
@@ -59,6 +64,8 @@ public final class IAPService: IAPServiceProtocol {
     
     public func restorePurchaseObservable() -> RxSwift.Observable<Void> {
         .create { observer in
+            if !DebugMode.isAlpha { return Disposables.create() }
+
             SwiftyStoreKit.restorePurchases(atomically: true) { results in
                 if results.restoreFailedPurchases.count > 0 {
                     observer.onError(IAPServiceError.failedRestorePurchases(results.restoreFailedPurchases))
@@ -74,6 +81,8 @@ public final class IAPService: IAPServiceProtocol {
     
     public func purchase(productID: String) -> RxSwift.Observable<Void> {
         .create { observer in
+            if !DebugMode.isAlpha { return Disposables.create() }
+
             SwiftyStoreKit.purchaseProduct(productID, quantity: 1, atomically: true) { result in
                 switch result {
                 case .success:
@@ -113,6 +122,8 @@ public final class IAPService: IAPServiceProtocol {
     
     public func checkPurchasedProducts() -> Observable<Void> {
         .create { observer in
+            if !DebugMode.isAlpha { return Disposables.create() }
+
             let appleValidator = AppleReceiptValidator(service: .sandbox)
 
             SwiftyStoreKit.verifyReceipt(using: appleValidator) { result in

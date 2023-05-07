@@ -12,4 +12,14 @@ public class DebugMode {
         let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
         return isDebugMode
     }
+    
+    static public var isAlpha: Bool {
+        if let bundleIdentifier = Bundle.main.bundleIdentifier {
+            if bundleIdentifier == "com.jjikkyu.menualAlpha" {
+                return true
+            }
+        }
+        
+        return false
+    }
 }
