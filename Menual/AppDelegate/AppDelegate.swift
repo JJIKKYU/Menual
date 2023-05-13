@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var launchRouter: LaunchRouting?
     private var urlHandler: URLHandler?
     private let diaryUUIDRelay = BehaviorRelay<String>(value: "")
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         
@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         newObject!["icon"] = "120px/book/open"
                     }
                 }
-
+                
                 if oldSchemaVersion <= 3 {
                     migration.enumerateObjects(ofType: MomentsRealm.className()) { oldObject, newObject in
                         newObject!["onboardingClearDate"] = nil
@@ -71,6 +71,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                 }
                 
+                // Thunder 모델 삭제 Migration
+//                if oldSchemaVersion <= 11 {
+//                    migration.enumerateObjects(ofType: "WeatherModelRealm") { oldObject, newObject in
+//                        if let oldValue = oldObject?["weather"] as? Weather,
+//                           oldValue.rawValue == "천둥번개" {
+//                            newObject?["weather"] = Weather.sun
+//                        }
+//                    }
+//                }
+                
             }
         )
         
@@ -78,10 +88,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Realm.Configuration.defaultConfiguration = config
         
         let realm = Realm.safeInit()
-         print("Realm Location = \(String(describing: realm?.configuration.fileURL))")
+        print("Realm Location = \(String(describing: realm?.configuration.fileURL))")
         
         print("AppDelegate :: 앱을 실행한다꿍")
-
+        
         let component = AppComponent(diaryUUIDRelay: self.diaryUUIDRelay)
         let result = AppRootBuilder(dependency: component).build(diaryUUIDRelay: self.diaryUUIDRelay)
         self.launchRouter = result.launchRouter
@@ -100,7 +110,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 protocol URLHandler: AnyObject {
-  func handle(_ url: URL)
+    func handle(_ url: URL)
 }
 
 
@@ -114,11 +124,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         // 사용자가 push 알림을 터치하면 이 메서드가 호출된다.
-
+        
         // deep link 처리
         let userInfo = response.notification.request.content.userInfo
         print("Reminder :: url! = \(userInfo), \(userInfo["diaryUUID"])")
-
+        
         guard let pushModel = try? PushModel(decoding: userInfo) else { return }
         
         diaryUUIDRelay.accept(pushModel.diaryUUID)

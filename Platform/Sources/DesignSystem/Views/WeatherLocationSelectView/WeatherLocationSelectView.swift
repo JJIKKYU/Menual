@@ -207,8 +207,6 @@ public class WeatherLocationSelectView: UIView {
                 selectImageView.image = Asset._24px.Weather.cloud.image.withRenderingMode(.alwaysTemplate)
             case .snow:
                 selectImageView.image = Asset._24px.Weather.snow.image.withRenderingMode(.alwaysTemplate)
-            case .thunder:
-                selectImageView.image = Asset._24px.Weather.thunder.image.withRenderingMode(.alwaysTemplate)
             case .wind:
                 selectImageView.image = Asset._24px.Weather.wind.image.withRenderingMode(.alwaysTemplate)
             }
