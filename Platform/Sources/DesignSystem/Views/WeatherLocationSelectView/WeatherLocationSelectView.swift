@@ -172,20 +172,12 @@ public class WeatherLocationSelectView: UIView {
             switch selectedPlaceType {
             case .place:
                 selectImageView.image = Asset._24px.place.image.withRenderingMode(.alwaysTemplate)
-            case .car:
-                selectImageView.image = Asset._24px.Place.car.image.withRenderingMode(.alwaysTemplate)
             case .company:
                 selectImageView.image = Asset._24px.Place.company.image.withRenderingMode(.alwaysTemplate)
             case .home:
                 selectImageView.image = Asset._24px.Place.home.image.withRenderingMode(.alwaysTemplate)
             case .school:
                 selectImageView.image = Asset._24px.Place.school.image.withRenderingMode(.alwaysTemplate)
-            case .bus:
-                selectImageView.image = Asset._20px.Place.bus.image.withRenderingMode(.alwaysTemplate)
-            case .subway:
-                selectImageView.image = Asset._20px.Place.subway.image.withRenderingMode(.alwaysTemplate)
-            case .store:
-                selectImageView.image = Asset._20px.Place.store.image.withRenderingMode(.alwaysTemplate)
             case .travel:
                 selectImageView.image = Asset._20px.Place.luggage.image.withRenderingMode(.alwaysTemplate)
             }
