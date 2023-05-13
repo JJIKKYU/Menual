@@ -530,7 +530,7 @@ extension DiaryWritingViewController {
         MenualLog.logEventAction(responder: button)
         print("DiaryWriting :: pressedImageUploadViewDeleteBtn")
         showDialog(
-             dialogScreen: .diaryWriting(.editCancel),
+            dialogScreen: .diaryWriting(.deletePhoto),
              size: .small,
              buttonType: .twoBtn,
              titleText: "사진을 삭제하시겠어요?",
