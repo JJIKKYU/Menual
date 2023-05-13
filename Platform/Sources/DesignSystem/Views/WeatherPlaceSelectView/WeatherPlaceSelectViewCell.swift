@@ -130,8 +130,6 @@ class WeatherPlaceSelectViewCell: UICollectionViewCell {
                 buttonImageView.image = Asset._24px.Weather.cloud.image.withRenderingMode(.alwaysTemplate)
             case .snow:
                 buttonImageView.image = Asset._24px.Weather.snow.image.withRenderingMode(.alwaysTemplate)
-            case .thunder:
-                buttonImageView.image = Asset._24px.Weather.thunder.image.withRenderingMode(.alwaysTemplate)
             case .wind:
                 buttonImageView.image = Asset._24px.Weather.wind.image.withRenderingMode(.alwaysTemplate)
             }
