@@ -141,14 +141,5 @@ public class BoxButton: UIButton {
         case false:
             print("BoxButton :: isSelecteed! - false")
         }
-        
-//        if btnStatus == .inactive { return }
-//        switch btnSelected {
-//        case true:
-//            btnStatus = .pressed
-//
-//        case false:
-//            btnStatus = .active
-//        }
     }
 }
