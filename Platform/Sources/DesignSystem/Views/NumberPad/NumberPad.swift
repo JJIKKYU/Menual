@@ -27,20 +27,18 @@ public class NumberPad: UIView {
         $0.dataSource = self
         $0.backgroundColor = Colors.background
         
-        let flowlayout = CustomCollectionViewFlowLayout.init()
-        let width = bounds.width / 3
-        let height = width * 0.78
-        flowlayout.itemSize = CGSize(width: width, height: height)
-        flowlayout.minimumLineSpacing = 0
-        flowlayout.minimumInteritemSpacing = 0
-        $0.setCollectionViewLayout(flowlayout, animated: true)
-        
         $0.register(NumberPadCell.self, forCellWithReuseIdentifier: "NumberPadCell")
+    }
+    
+    private let flowlayout = UICollectionViewFlowLayout.init().then {
+        $0.minimumLineSpacing = 0
+        $0.minimumInteritemSpacing = 0
     }
 
     public init() {
         super.init(frame: CGRect.zero)
         setViews()
+        collectionView.setCollectionViewLayout(flowlayout, animated: true)
     }
     
     required init?(coder: NSCoder) {
@@ -65,23 +63,26 @@ public class NumberPad: UIView {
 // MARK: - UICollectionView Delegate
 extension NumberPad: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("numberPadData.count = \(numberPadData.count)")
         return numberPadData.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        print("index1 = \(indexPath.row)")
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "NumberPadCell", for: indexPath) as? NumberPadCell else { return UICollectionViewCell() }
         
         let index = indexPath.row
         cell.number = numberPadData[index]
+        print("index = \(index)")
         
         return cell
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        let width = bounds.width / 3
-        let height = width * 0.78
-        return CGSize(width: width , height: height )
+        let width: CGFloat = floor(bounds.width / 3) - 1
+        let height: CGFloat = 100
+        return CGSize(width: width, height: height)
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
