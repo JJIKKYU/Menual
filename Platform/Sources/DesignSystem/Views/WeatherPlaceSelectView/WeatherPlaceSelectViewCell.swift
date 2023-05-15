@@ -98,12 +98,20 @@ class WeatherPlaceSelectViewCell: UICollectionViewCell {
             switch placeIconType {
             case .place:
                 buttonImageView.image = Asset._24px.place.image.withRenderingMode(.alwaysTemplate)
+            case .car:
+                buttonImageView.image = Asset._24px.Place.car.image.withRenderingMode(.alwaysTemplate)
             case .company:
                 buttonImageView.image = Asset._24px.Place.company.image.withRenderingMode(.alwaysTemplate)
             case .home:
                 buttonImageView.image = Asset._24px.Place.home.image.withRenderingMode(.alwaysTemplate)
             case .school:
                 buttonImageView.image = Asset._24px.Place.school.image.withRenderingMode(.alwaysTemplate)
+            case .bus:
+                buttonImageView.image = Asset._20px.Place.bus.image.withRenderingMode(.alwaysTemplate)
+            case .subway:
+                buttonImageView.image = Asset._20px.Place.subway.image.withRenderingMode(.alwaysTemplate)
+            case .store:
+                buttonImageView.image = Asset._20px.Place.store.image.withRenderingMode(.alwaysTemplate)
             case .travel:
                 buttonImageView.image = Asset._20px.Place.luggage.image.withRenderingMode(.alwaysTemplate)
             }
@@ -122,6 +130,8 @@ class WeatherPlaceSelectViewCell: UICollectionViewCell {
                 buttonImageView.image = Asset._24px.Weather.cloud.image.withRenderingMode(.alwaysTemplate)
             case .snow:
                 buttonImageView.image = Asset._24px.Weather.snow.image.withRenderingMode(.alwaysTemplate)
+            case .thunder:
+                buttonImageView.image = Asset._24px.Weather.thunder.image.withRenderingMode(.alwaysTemplate)
             case .wind:
                 buttonImageView.image = Asset._24px.Weather.wind.image.withRenderingMode(.alwaysTemplate)
             }

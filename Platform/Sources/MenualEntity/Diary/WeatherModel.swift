@@ -13,6 +13,7 @@ public enum Weather: String, PersistableEnum, Codable {
     case sun = "맑음"
     case rain = "비"
     case cloud = "흐림"
+    case thunder = "천둥번개"
     case snow = "눈"
     case wind = "바람"
     
@@ -21,6 +22,8 @@ public enum Weather: String, PersistableEnum, Codable {
         switch weather {
         case .sun:
             text = "맑음"
+        case .thunder:
+            text = "천둥번개"
         case .cloud:
             text = "흐림"
         case .rain:
@@ -35,7 +38,7 @@ public enum Weather: String, PersistableEnum, Codable {
     }
     
     public func getVariation() -> [Weather] {
-        return [.sun, .cloud, .rain, .snow, .wind]
+        return [.sun, .cloud, .rain, .snow, .wind, .thunder]
     }
 }
 

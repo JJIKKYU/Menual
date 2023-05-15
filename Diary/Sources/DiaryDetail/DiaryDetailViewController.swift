@@ -218,14 +218,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         setViews()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        MenualLog.logEventAction("detail_willappear")
-        
-        weatherSelectView.selectTextView.centerVerticalText()
-        locationSelectView.selectTextView.centerVerticalText()
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         MenualLog.logEventAction("detail_appear")

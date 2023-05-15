@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var launchRouter: LaunchRouting?
     private var urlHandler: URLHandler?
     private let diaryUUIDRelay = BehaviorRelay<String>(value: "")
-    
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         
@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // 1. config 설정(이전 버전에서 다음 버전으로 마이그레이션될때 어떻게 변경될것인지)
         let config = Realm.Configuration(
-            schemaVersion: 11, // 새로운 스키마 버전 설정
+            schemaVersion: 10, // 새로운 스키마 버전 설정
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion <= 2 {
                     // 1-1. 마이그레이션 수행(버전 2보다 작은 경우 버전 2에 맞게 데이터베이스 수정)
@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         newObject!["icon"] = "120px/book/open"
                     }
                 }
-                
+
                 if oldSchemaVersion <= 3 {
                     migration.enumerateObjects(ofType: MomentsRealm.className()) { oldObject, newObject in
                         newObject!["onboardingClearDate"] = nil
@@ -69,24 +69,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                 }
                 
-                // Weather, Place 일부 모델 삭제 Migration
-                if oldSchemaVersion <= 11 {
-                    migration.enumerateObjects(ofType: WeatherModelRealm.className()) { oldObject, newObject in
-                        guard let oldValue = oldObject?["weather"] as? String else { return }
-                        if oldValue == "천둥번개" {
-                         newObject?["weather"] = Weather.sun.rawValue
-                        }
-                    }
-                    
-                    migration.enumerateObjects(ofType: PlaceModelRealm.className()) { oldObject, newObject in
-                        guard let oldValue = oldObject?["place"] as? String else { return }
-                        
-                        if oldValue == "차 안" || oldValue == "버스" || oldValue == "가게" || oldValue == "지하철" {
-                            newObject?["place"] = Place.place.rawValue
-                        }
-                    }
-                }
-                
             }
         )
         
@@ -94,10 +76,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Realm.Configuration.defaultConfiguration = config
         
         let realm = Realm.safeInit()
-        print("Realm Location = \(String(describing: realm?.configuration.fileURL))")
+         print("Realm Location = \(String(describing: realm?.configuration.fileURL))")
         
         print("AppDelegate :: 앱을 실행한다꿍")
-        
+
         let component = AppComponent(diaryUUIDRelay: self.diaryUUIDRelay)
         let result = AppRootBuilder(dependency: component).build(diaryUUIDRelay: self.diaryUUIDRelay)
         self.launchRouter = result.launchRouter
@@ -111,7 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 protocol URLHandler: AnyObject {
-    func handle(_ url: URL)
+  func handle(_ url: URL)
 }
 
 
@@ -125,11 +107,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         // 사용자가 push 알림을 터치하면 이 메서드가 호출된다.
-        
+
         // deep link 처리
         let userInfo = response.notification.request.content.userInfo
         print("Reminder :: url! = \(userInfo), \(userInfo["diaryUUID"])")
-        
+
         guard let pushModel = try? PushModel(decoding: userInfo) else { return }
         
         diaryUUIDRelay.accept(pushModel.diaryUUID)

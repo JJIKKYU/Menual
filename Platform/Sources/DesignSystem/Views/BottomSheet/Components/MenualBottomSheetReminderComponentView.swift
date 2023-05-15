@@ -258,7 +258,6 @@ public class MenualBottomSheetReminderComponentView: UIView {
                 guard let selectedDate = selectedDate else {
                     print("Reminder :: 선택한 날이 없습니다.")
                     self.selectBtn.btnStatus = .inactive
-                    self.selectBtn.isEnabled = false
                     self.selectBtn.isUserInteractionEnabled = false
                     return
                 }
@@ -266,13 +265,11 @@ public class MenualBottomSheetReminderComponentView: UIView {
                 if selectedDate == self.delegate?.reminderRequestDateRelay?.value?.requestDateComponents?.day ?? 0 {
                     print("Reminder :: 이미 선택했던 날짜와 같을 경우")
                     self.selectBtn.btnStatus = .inactive
-                    self.selectBtn.isEnabled = false
                     self.selectBtn.isUserInteractionEnabled = false
                     return
                 }
                 
                 self.selectBtn.btnStatus = .active
-                self.selectBtn.isEnabled = true
                 self.selectBtn.isUserInteractionEnabled = true
                 print("Reminder :: selectedDate = \(selectedDate)")
                 
