@@ -1184,7 +1184,7 @@
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Alpha-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Menual;
+				INFOPLIST_KEY_CFBundleDisplayName = MenualAlpha;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하여 메뉴얼에 첨부하는 기능 사용을 위해 카메라 권한을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 선택하여 메뉴얼에 첨부하는 기능 사용을 위해 사진 라이브러리에 접근하도록 허용합니다.";
@@ -1226,7 +1226,7 @@
 				DEVELOPMENT_TEAM = V237TD2AXA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Alpha-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Menual;
+				INFOPLIST_KEY_CFBundleDisplayName = MenualAlpha;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하여 메뉴얼에 첨부하는 기능 사용을 위해 카메라 권한을 허용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 선택하여 메뉴얼에 첨부하는 기능 사용을 위해 사진 라이브러리에 접근하도록 허용합니다.";
