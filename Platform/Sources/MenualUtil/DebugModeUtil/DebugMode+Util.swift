@@ -9,6 +9,9 @@ import Foundation
 
 public class DebugMode {
     static public var isDebugMode: Bool {
+        #if Deubg
+            return true
+        #endif
         let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
         return isDebugMode
     }
