@@ -27,7 +27,9 @@ public enum BoxButtonIsFiltered {
 }
 
 public class BoxButton: UIButton {
-    public var btnStatus: BoxButtonStatus = .inactive
+    public var btnStatus: BoxButtonStatus = .inactive {
+        didSet { setNeedsLayout() }
+    }
     
     public var btnSize: BoxButtonSize = .large {
         didSet { setNeedsLayout() }
@@ -45,12 +47,10 @@ public class BoxButton: UIButton {
         didSet { setNeedsLayout() }
     }
     
-    public override var isHighlighted: Bool {
+    public override open var isHighlighted: Bool {
         didSet {
             if isHighlighted && btnStatus != .inactive {
-                btnStatus = .pressed
-            } else {
-                setNeedsLayout()
+                btnStatus = isHighlighted == true ? BoxButtonStatus.pressed : BoxButtonStatus.active
             }
         }
     }

@@ -18,12 +18,16 @@ public class DebugMode {
     }
     
     static public var isAlpha: Bool {
-        if let bundleIdentifier = Bundle.main.bundleIdentifier {
-            if bundleIdentifier == "com.jjikkyu.menualAlpha" {
-                return true
+        #if S_ATTR_DEBUG
+            return true
+        #else
+            if let bundleIdentifier = Bundle.main.bundleIdentifier {
+                if bundleIdentifier == "com.jjikkyu.menualAlpha" {
+                    return true
+                }
             }
-        }
-        
-        return false
+            
+            return false
+        #endif
     }
 }
