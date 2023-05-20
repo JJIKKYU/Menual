@@ -9,11 +9,12 @@ import Foundation
 
 public class DebugMode {
     static public var isDebugMode: Bool {
-        #if Deubg
+        #if DEBUG
             return true
+        #else
+            let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
+            return isDebugMode
         #endif
-        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
-        return isDebugMode
     }
     
     static public var isAlpha: Bool {
