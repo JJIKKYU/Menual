@@ -220,8 +220,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.backgroundColor = .clear
     }
     
-    private lazy var adLoader = GADAdLoader(
-        adUnitID: "ca-app-pub-3940256099942544/3986624511",
+    private lazy var adLoader: GADAdLoader = .init(
+        adUnitID: ADUtil.diaryHomeUnitID,
         rootViewController: self,
         adTypes: [.native],
         options: []

@@ -158,8 +158,9 @@ public final class IAPService: IAPServiceProtocol {
                     let receiptInfo = SwiftyStoreKit.verifyReceipt(using: appleValidator) { receiptResult in
                         switch receiptResult {
                         case .success(let receipt):
+                            
                             let isPurchased = SwiftyStoreKit.verifyPurchase(productId: productID, inReceipt: receipt)
-                            print("iapService :: isPurchased = \(isPurchased)")
+                            print("iapService :: isPurchased = \(isPurchased), receipt.values = \(receipt.values)")
                             
                         case .error(let error):
                             observer.onError(IAPServiceError.failedFetchReceipt(error))
