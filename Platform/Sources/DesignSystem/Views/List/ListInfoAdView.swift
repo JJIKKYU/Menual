@@ -55,7 +55,7 @@ public class ListInfoAdView: UIView {
             make.leading.equalToSuperview()
             make.centerY.equalToSuperview()
             make.width.equalTo(30)
-            make.height.equalTo(20)
+            make.height.equalTo(15)
         }
         
         adTextLabel.snp.makeConstraints { make in
