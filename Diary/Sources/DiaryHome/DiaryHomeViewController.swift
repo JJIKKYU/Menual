@@ -1161,20 +1161,20 @@ extension DiaryHomeViewController {
 extension DiaryHomeViewController: MFMailComposeViewControllerDelegate {
     /// 리뷰 팝업에서 건의하기 버튼을 눌렀을 경우
     func presentMailVC() {
-        print("DiaryHome :: pressedReviewQABtn")
         if MFMailComposeViewController.canSendMail() {
             let composeViewController = MFMailComposeViewController()
             composeViewController.mailComposeDelegate = self
             
             let bodyString = """
-                             이곳에 내용을 작성해주세요.
-                             
-                             오타 발견 문의 시 아래 양식에 맞춰 작성해주세요.
-                             
-                             <예시>
-                             글귀 ID : 글귀 4 (글귀 클릭 시 상단에 표시)
-                             수정 전 : 실수해도 되.
-                             수정 후 : 실수해도 돼.
+                             Q. 메뉴얼을 사용해주셔서 감사합니다. 어떤 주제의 건의사항 인가요? ( 기능제안, 오류제보, 기타 등등 )
+
+                             :
+
+                             Q. 내용을 간단히 설명해 주세요. 사진을 첨부해주셔도 좋습니다.
+
+                             :
+
+                             건의해주셔서 감사합니다. 빠른 시일 내 조치하여 업데이트 하도록 하겠습니다.
                              
                              -------------------
                              
@@ -1186,7 +1186,7 @@ extension DiaryHomeViewController: MFMailComposeViewControllerDelegate {
                              """
             
             composeViewController.setToRecipients(["jjikkyu@naver.com"])
-            composeViewController.setSubject("<메뉴얼> 문의 및 의견")
+            composeViewController.setSubject("<메뉴얼> 건의하기")
             composeViewController.setMessageBody(bodyString, isHTML: false)
             
             self.present(composeViewController, animated: true, completion: nil)

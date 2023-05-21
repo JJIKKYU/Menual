@@ -202,9 +202,14 @@ public class ListCell: UITableViewCell {
 
         adView.isHidden = true
         removeSectionSeparators()
-        listInfoView.isHidden = false
+        
+        listTitleView.isHidden = false
         listTitleView.titleText = title
+        
+        listBodyView.isHidden = false
         listBodyView.bodyText = body
+        
+        listInfoView.isHidden = false
         listInfoView.date = date
         listInfoView.time = time
         listInfoView.pageCount = pageCount
