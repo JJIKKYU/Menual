@@ -16,6 +16,7 @@ public class ListTitleView: UIView {
         case titlePicture
         case titleHide
         case titleBodyText
+        case adTitleBodyText
     }
     
     public var listTitleType: ListTitleType = .title {
@@ -56,6 +57,7 @@ public class ListTitleView: UIView {
         $0.textColor = Colors.grey.g400
         $0.font = UIFont.AppBodyOnlyFont(.body_3)
         $0.text = "내용 노출 영역입니다. 최대 1줄 초과 시 말 줄임표를 사용합니다."
+        $0.setLineHeight(lineHeight: 1.14)
         $0.numberOfLines = 1
         $0.isHidden = true
     }
@@ -140,6 +142,15 @@ public class ListTitleView: UIView {
             titleLabel.textColor = Colors.grey.g200
             bodyLabel.textColor = Colors.grey.g400
             bodyLabel.isHidden = false
+            bodyLabel.numberOfLines = 1
+            
+        case .adTitleBodyText:
+            titleLeftImageView.isHidden = true
+            
+            titleLabel.textColor = Colors.grey.g200
+            bodyLabel.textColor = Colors.grey.g400
+            bodyLabel.isHidden = false
+            bodyLabel.numberOfLines = 2
             
         }
         

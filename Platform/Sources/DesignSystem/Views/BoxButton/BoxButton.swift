@@ -47,7 +47,7 @@ public class BoxButton: UIButton {
         didSet { setNeedsLayout() }
     }
     
-    public override open var isHighlighted: Bool {
+    public override var isHighlighted: Bool {
         didSet {
             if isHighlighted && btnStatus != .inactive {
                 btnStatus = isHighlighted == true ? BoxButtonStatus.pressed : BoxButtonStatus.active
@@ -141,12 +141,12 @@ public class BoxButton: UIButton {
         }
         
         if btnStatus == .inactive { return }
-        switch btnSelected {
-        case true:
-            btnStatus = .pressed
-
-        case false:
-            btnStatus = .active
-        }
+//        switch btnSelected {
+//        case true:
+//            btnStatus = .pressed
+//
+//        case false:
+//            btnStatus = .active
+//        }
     }
 }

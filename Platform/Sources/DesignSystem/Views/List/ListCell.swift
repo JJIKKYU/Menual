@@ -10,6 +10,7 @@ import Then
 import SnapKit
 import MenualUtil
 import MenualEntity
+import GoogleMobileAds
 
 public enum ListScreen {
     case home
@@ -24,6 +25,7 @@ public enum ListType {
     case bodyText
     case bodyTextImage
     case hide
+    case adBodyTextImage
 }
 
 public enum ListStatus {
@@ -56,10 +58,32 @@ public class ListCell: UITableViewCell {
         didSet { setNeedsLayout() }
     }
     
+    public var adText: String = "" {
+        didSet { setNeedsLayout() }
+    }
+    
+    public var nativeAd: GADNativeAd? {
+        didSet {
+            adView.nativeAd = nativeAd
+            nativeAd?.register(self,
+                               clickableAssetViews: [GADNativeAssetIdentifier.callToActionAsset : self.contentView], nonclickableAssetViews: [:])
+        }
+    }
+    
 //    override func setSelected(_ selected: Bool, animated: Bool) {
 //       super.setSelected(selected, animated: animated)
 //        listStatus = selected ? .pressed : .default_
 //   }
+    
+    public lazy var adView: ADListView = .init().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.bodyView = listBodyView
+        $0.headlineView = listTitleView
+        $0.iconView = menualImageView
+        $0.advertiserView = listAdView
+        $0.nativeAd = nativeAd
+        $0.callToActionView = self.contentView
+    }
        
     public override func setHighlighted(_ highlighted: Bool, animated: Bool) {
        super.setHighlighted(highlighted, animated: animated)
@@ -111,6 +135,11 @@ public class ListCell: UITableViewCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
     
+    private let listAdView = ListInfoAdView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isHidden = true
+    }
+    
     private let listBodyView = ListTitleView(type: .titleBodyText).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isHidden = true
@@ -137,11 +166,17 @@ public class ListCell: UITableViewCell {
     
     func setViews() {
         backgroundColor = Colors.background
+        addSubview(adView)
         addSubview(listTitleView)
         addSubview(menualImageView)
         addSubview(listInfoView)
         addSubview(listBodyView)
+        addSubview(listAdView)
         addSubview(divider)
+        
+        adView.snp.makeConstraints { make in
+            make.leading.width.bottom.top.equalToSuperview()
+        }
 
         menualImageView.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
@@ -170,6 +205,13 @@ public class ListCell: UITableViewCell {
             make.height.equalTo(15)
         }
         
+        listAdView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(listBodyView.snp.bottom).offset(10)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(15)
+        }
+        
         divider.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
             make.leading.equalToSuperview().offset(20)
@@ -182,6 +224,9 @@ public class ListCell: UITableViewCell {
         super.layoutSubviews()
         
         removeSectionSeparators()
+        listAdView.isHidden = true
+        listAdView.adText = adText
+        listInfoView.isHidden = false
         listTitleView.titleText = title
         listBodyView.bodyText = body
         listInfoView.date = date
@@ -322,6 +367,40 @@ public class ListCell: UITableViewCell {
             listInfoView.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(20)
                 make.top.equalTo(listBodyView.snp.bottom).offset(8)
+                make.width.equalToSuperview().inset(20)
+                make.height.equalTo(15)
+            }
+            
+        case .adBodyTextImage:
+            listBodyView.isHidden = false
+            listBodyView.listTitleType = .adTitleBodyText
+            menualImageView.isHidden = false
+            listTitleView.listTitleType = .title
+            listInfoView.isHidden = true
+            listAdView.isHidden = false
+            if let image = image {
+                menualImageView.image = image
+            }
+            menualImageView.snp.makeConstraints { make in
+                make.trailing.equalToSuperview().inset(20)
+                make.top.equalToSuperview().offset(12)
+                make.width.height.equalTo(48)
+            }
+            listBodyView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().inset(80)
+                make.top.equalTo(listTitleView.snp.bottom).offset(6)
+                make.height.equalTo(36)
+            }
+            listTitleView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.top.equalToSuperview().offset(16)
+                make.trailing.equalToSuperview().inset(80)
+                make.height.equalTo(18)
+            }
+            listAdView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.top.equalTo(listBodyView.snp.bottom).offset(10)
                 make.width.equalToSuperview().inset(20)
                 make.height.equalTo(15)
             }

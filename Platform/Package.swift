@@ -39,7 +39,8 @@ let package = Package(
         .package(url: "https://github.com/JJIKKYU/FlexLayoutForSPM", branch: "master"),
         .package(url: "https://github.com/layoutBox/PinLayout", exact: Version("1.10.3")),
         .package(url: "https://github.com/bizz84/SwiftyStoreKit", exact: Version("0.16.4")),
-        .package(url: "https://github.com/Swinject/Swinject", from: "2.8.0")
+        .package(url: "https://github.com/Swinject/Swinject", from: "2.8.0"),
+        .package(url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git", exact: Version("9.14.0")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -55,6 +56,7 @@ let package = Package(
                 .product(name: "CropViewController", package: "TOCropViewController"),
                 .product(name: "FlexLayout", package: "FlexLayoutForSPM"),
                 .product(name: "PinLayout", package: "PinLayout"),
+                .product(name: "GoogleMobileAds", package: "swift-package-manager-google-mobile-ads"),
             ],
             resources: [.process("Resources")]
         ),

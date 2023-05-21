@@ -159,6 +159,15 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
                 
             })
             .disposed(by: disposeBag)
+        
+        dependency.iapService?
+            .checkIfPurchased(productID: "com.jjikkyu.menual")
+            .subscribe(onNext: { [weak self] state in
+                guard let self = self else { return }
+                
+            })
+            .disposed(by: disposeBag)
+        
     }
 
     func bindRealm() {

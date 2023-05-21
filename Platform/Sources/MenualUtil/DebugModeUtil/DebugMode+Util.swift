@@ -18,7 +18,7 @@ public class DebugMode {
     }
     
     static public var isAlpha: Bool {
-        #if S_ATTR_DEBUG
+        #if DEBUG
             return true
         #else
             if let bundleIdentifier = Bundle.main.bundleIdentifier {

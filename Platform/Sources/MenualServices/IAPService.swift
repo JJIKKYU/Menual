@@ -18,6 +18,7 @@ public protocol IAPServiceProtocol {
     func restorePurchaseObservable() -> Observable<Void>
     func purchase(productID: String) -> Observable<Void>
     func checkPurchasedProducts() -> Observable<Void>
+    func checkIfPurchased(productID: String) -> Observable<Void>
 }
 
 public final class IAPService: IAPServiceProtocol {
@@ -124,7 +125,7 @@ public final class IAPService: IAPServiceProtocol {
         .create { observer in
             if !DebugMode.isAlpha { return Disposables.create() }
 
-            let appleValidator = AppleReceiptValidator(service: .sandbox)
+            let appleValidator = AppleReceiptValidator(service: .production)
 
             SwiftyStoreKit.verifyReceipt(using: appleValidator) { result in
                 switch result {
@@ -137,6 +138,36 @@ public final class IAPService: IAPServiceProtocol {
                 case .error(let error):
                     // 영수증 검증 실패
                     observer.onError(IAPServiceError.unknown(error))
+                }
+            }
+            return Disposables.create()
+        }
+    }
+    
+    public func checkIfPurchased(productID: String) -> RxSwift.Observable<Void> {
+        .create { observer in
+            if !DebugMode.isAlpha { return Disposables.create() }
+            
+            SwiftyStoreKit.fetchReceipt(forceRefresh: false) { result in
+                switch result {
+                case .success(let receiptData):
+                    let encryptedReceipt = receiptData.base64EncodedString(options: [])
+                    print("iapService :: Fetch receipt success:\n\(encryptedReceipt)")
+                    
+                    let appleValidator = AppleReceiptValidator(service: .production)
+                    let receiptInfo = SwiftyStoreKit.verifyReceipt(using: appleValidator) { receiptResult in
+                        switch receiptResult {
+                        case .success(let receipt):
+                            let isPurchased = SwiftyStoreKit.verifyPurchase(productId: productID, inReceipt: receipt)
+                            print("iapService :: isPurchased = \(isPurchased)")
+                            
+                        case .error(let error):
+                            observer.onError(IAPServiceError.failedFetchReceipt(error))
+                        }
+                    }
+                    
+                case .error(let error):
+                    observer.onError(IAPServiceError.failedFetchReceipt(error))
                 }
             }
             return Disposables.create()

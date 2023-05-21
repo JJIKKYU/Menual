@@ -36,6 +36,8 @@ public protocol DiaryHomePresentableListener: AnyObject {
     func pressedFilterResetBtn()
     func pressedDateFilterBtn()
     
+    func needUpdateAdBanner() -> Int?
+    
     var lastPageNumRelay: BehaviorRelay<Int> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var diaryDictionary: [String: DiaryHomeSectionModel] { get }
@@ -539,14 +541,30 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     func deleteTableViewRow(section: Int, row: Int) {
+        var filteredRow: Int = row
+        if let adIndex: Int = listener?.needUpdateAdBanner(),
+           section == 0 && isShowAd{
+            if row >= adIndex {
+                filteredRow = row + 1
+            }
+        }
+
         myMenualTableView.beginUpdates()
-        myMenualTableView.deleteRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        myMenualTableView.deleteRows(at: [IndexPath(row: filteredRow, section: section)], with: .automatic)
         myMenualTableView.endUpdates()
     }
     
     func reloadTableViewRow(section: Int, row: Int) {
+        var filteredRow: Int = row
+        if let adIndex: Int = listener?.needUpdateAdBanner(),
+           section == 0 && isShowAd{
+            if row >= adIndex {
+                filteredRow = row + 1
+            }
+        }
+
         myMenualTableView.beginUpdates()
-        myMenualTableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        myMenualTableView.reloadRows(at: [IndexPath(row: filteredRow, section: section)], with: .automatic)
         myMenualTableView.endUpdates()
     }
     
@@ -559,8 +577,16 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     func insertTableViewRow(section: Int, row: Int) {
+        var filteredRow: Int = row
+        if let adIndex: Int = listener?.needUpdateAdBanner(),
+           section == 0 && isShowAd {
+            if row >= adIndex {
+                filteredRow = row + 1
+            }
+        }
+        
         myMenualTableView.beginUpdates()
-        myMenualTableView.insertRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        myMenualTableView.insertRows(at: [IndexPath(row: filteredRow, section: section)], with: .automatic)
         myMenualTableView.endUpdates()
     }
     
@@ -573,6 +599,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     func showRestoreSuccessToast() {
         _ = showToast(message: "메뉴얼 가져오기가 완료되었습니다.")
+    }
+    
+    func insertAdBanner(row: Int) {
+        myMenualTableView.beginUpdates()
+        myMenualTableView.insertRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+        myMenualTableView.endUpdates()
     }
 }
 
@@ -748,11 +780,10 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let index: Int = indexPath.row
         let section: Int = indexPath.section
-        guard let diaryDictionary = listener?.diaryDictionary else { return 0 }
-        guard let findDict = diaryDictionary.filter({ $0.value.sectionIndex == section }).first else { return 0 }
         
-        if isShowAd && index == findDict.value.diaries.count {
-            return 98
+        if let adIndex = listener?.needUpdateAdBanner(),
+           adIndex == index && isShowAd && section == 0 {
+            return 114
         }
         
         return 72
@@ -779,7 +810,9 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard let findDict = diaryDictionary.filter({ $0.value.sectionIndex == section }).first else { return 0 }
             
             // 광고 로딩이 완료되었을 경우
-            if isShowAd {
+            // 첫번재 섹션만 +1
+            if let _ = listener?.needUpdateAdBanner(),
+               isShowAd && section == 0 {
                 return findDict.value.diaries.count + 1
             }
             
@@ -800,9 +833,16 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath) as? ListCell else { return UITableViewCell() }
-        let index: Int = indexPath.row
-        var lastIndex: Int = 0
+        var index: Int = indexPath.row
+        var dataIndex: Int = indexPath.row
         let section: Int = indexPath.section
+        
+        if let adIndex: Int = listener?.needUpdateAdBanner(),
+           isShowAd && section == 0 {
+            if index >= adIndex {
+                dataIndex -= 1
+            }
+        }
 
         var dataModel: DiaryModelRealm?
         var nativeAd: GADNativeAd?
@@ -814,34 +854,33 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard let diaryDictionry: [String: DiaryHomeSectionModel] = listener?.filteredDiaryDic.value?.diarySectionModelDic else { return defaultCell }
             guard let dataDictionary = diaryDictionry.filter ({ $0.value.sectionIndex == section }).first else { return defaultCell }
             guard let data = dataDictionary.value.diaries[safe: index] else { return defaultCell }
-            lastIndex = dataDictionary.value.diaries.count
             dataModel = data
 
         case false:
             guard let diaryDictionry: [String: DiaryHomeSectionModel] = listener?.diaryDictionary else { return defaultCell }
             guard let dataDictionary = diaryDictionry.filter ({ $0.value.sectionIndex == section }).first else { return defaultCell }
-            lastIndex = dataDictionary.value.diaries.count
             
-            // 광고 업로드가 가능한 상황에서는, 가장 마지막 Cell일 경우에는 광고 노출
-            if isShowAd && index == lastIndex {
-                // 광고 셀일 경우에는 data 바인딩이 불가능
+            // 광고 업로드가 가능한 상황에서는
+            // 첫번째 섹션 3번째 인덱스(4번째 셀)에서만 광고 노출
+            if let adIndex: Int = listener?.needUpdateAdBanner(),
+               isShowAd && section == 0 && index == adIndex {
                 guard let data = self.nativeAd else { return defaultCell }
                 nativeAd = data
             } else {
-                guard let data = dataDictionary.value.diaries[safe: index] else { return defaultCell }
+                guard let data = dataDictionary.value.diaries[safe: dataIndex] else { return defaultCell }
                 dataModel = data
             }
         }
         
         // 광고 셀일 경우
         if let nativeAd = nativeAd {
-            cell.listType = .bodyTextImage
+            cell.listType = .adBodyTextImage
             cell.title = nativeAd.headline ?? "광고"
             cell.image = nativeAd.images?.first?.image ?? UIImage()
             cell.body = nativeAd.body ?? "바디"
-            cell.date = nativeAd.advertiser ?? "Advertiser"
-            cell.time = nativeAd.store ?? "Store"
-            cell.pageCount = nativeAd.price ?? "Price"
+            cell.adText = nativeAd.advertiser ?? "Advertiser"
+            cell.nativeAd = nativeAd
+            print("callToAction :: \(nativeAd.callToAction)")
             return cell
         }
         
@@ -879,14 +918,6 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         cell.reviewCount = replies
         cell.testModel = dataModel
         
-        // 마지막 셀일 경우에는 divider 제거
-        // 광고가 있을 때는 제거하지 않음
-        if index == lastIndex - 1 && isShowAd == false {
-            cell.divider.isHidden = true
-        } else {
-            cell.divider.isHidden = false
-        }
-        
         cell.actionName = "cell"
         
         return cell
@@ -895,8 +926,9 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
         // 광고 셀일 경우
-        if cell.listType == .bodyTextImage {
-            nativeAd?.callToAction
+        if cell.listType == .adBodyTextImage {
+            print("광고입니다.")
+            return
         }
         
         // 메뉴얼 셀일 경우
@@ -1220,14 +1252,17 @@ extension DiaryHomeViewController: GADNativeAdLoaderDelegate, GADNativeAdDelegat
     
     func adLoader(_ adLoader: GADAdLoader, didReceive nativeAd: GADNativeAd) {
         if !DebugMode.isAlpha { return }
-
-        print("Admob :: !! \(nativeAd.body)")
         if isShowAd { return }
         
+        // 광고 업데이트가 가능한 지 체크
+        guard let needUpdateIndex: Int = listener?.needUpdateAdBanner() else {
+            return
+        }
+        
+        isShowAd = true
         self.nativeAd = nativeAd
         nativeAd.delegate = self
-        isShowAd = true
-        reloadTableView()
+        insertAdBanner(row: needUpdateIndex)
     }
     
     func nativeAdDidRecordClick(_ nativeAd: GADNativeAd) {

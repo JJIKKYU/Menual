@@ -16,4 +16,5 @@ public enum IAPServiceError: Error {
     case noRestorePurchases
     case noProducts
     case canceledPayment
+    case failedFetchReceipt(Error?)
 }
