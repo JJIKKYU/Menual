@@ -70,6 +70,7 @@ public class ListCell: UITableViewCell {
     
     public lazy var adView: ADListView = .init().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.callToActionView = self.contentView
     }
        
     public override func setHighlighted(_ highlighted: Bool, animated: Bool) {

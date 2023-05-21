@@ -62,7 +62,6 @@ public class ADListView: GADNativeAdView {
         iconView = menualImageView
         advertiserView = listAdView
         nativeAd = nativeAd
-        callToActionView = self
     }
     
     required init?(coder: NSCoder) {
