@@ -243,9 +243,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         print("DiaryHome!")
         setViews()
         bind()
-        
-        adLoader.delegate = self
-        adLoader.load(GADRequest())
+        adRequest()
     }
     
     convenience init(screenName3: String) {
@@ -809,14 +807,21 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard let diaryDictionary = listener?.diaryDictionary else { return 0 }
             guard let findDict = diaryDictionary.filter({ $0.value.sectionIndex == section }).first else { return 0 }
             
+            var diaryCount: Int = findDict.value.diaries.count
+            findDict.value.diaries.forEach {
+                if $0.isInvalidated {
+                    diaryCount -= 1
+                }
+            }
+            
             // 광고 로딩이 완료되었을 경우
             // 첫번재 섹션만 +1
             if let _ = listener?.needUpdateAdBanner(),
                isShowAd && section == 0 {
-                return findDict.value.diaries.count + 1
+                return diaryCount + 1
             }
             
-            return findDict.value.diaries.count
+            return diaryCount
         }
     }
     
@@ -1246,6 +1251,14 @@ extension DiaryHomeViewController {
 }
 
 extension DiaryHomeViewController: GADNativeAdLoaderDelegate, GADNativeAdDelegate {
+    // 광고 노출 유저에게 광고를 노출하기 위해서 서버에 요청하는 함수
+    func adRequest() {
+        if !DebugMode.isAlpha { return }
+        
+        adLoader.delegate = self
+        adLoader.load(GADRequest())
+    }
+    
     func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: Error) {
         print("Admob :: error \(error)")
     }

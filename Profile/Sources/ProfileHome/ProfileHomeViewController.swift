@@ -79,7 +79,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
     
     private lazy var demoAdmobView = GADBannerView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+        $0.adUnitID = ADUtil.profileHomeUnitID
         $0.rootViewController = self
         $0.load(GADRequest())
         $0.delegate = self

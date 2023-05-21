@@ -218,7 +218,6 @@ public class ListCell: UITableViewCell {
         listInfoView.infoType = .info
         
         if reviewCount != "" {
-            print("revieCount = \(reviewCount)")
             listInfoView.infoType = .infoReview
         }
         

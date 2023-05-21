@@ -110,7 +110,7 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         
         let date: Date = Date()
         let diaryCount: Int = diaryModelRealm.count
-        let diaryPageCount: Int = diaryModelRealm.first?.pageNum ?? 0
+        let diaryPageCount: Int = diaryModelRealm.last?.pageNum ?? 0
         
         if let backupHistory = realm.objects(BackupHistoryModelRealm.self).first {
             realm.safeWrite {

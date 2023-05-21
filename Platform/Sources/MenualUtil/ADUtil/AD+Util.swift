@@ -15,4 +15,12 @@ public class ADUtil {
             
         return "ca-app-pub-3940256099942544/3986624511"
     }
+    
+    static public var profileHomeUnitID: String {
+        if DebugMode.isAlpha || DebugMode.isDebugMode {
+            return "ca-app-pub-3940256099942544/2934735716"
+        }
+        
+        return "ca-app-pub-1168603177352985/9525410653"
+    }
 }

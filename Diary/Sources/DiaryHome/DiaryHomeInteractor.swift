@@ -32,6 +32,7 @@ public protocol DiaryHomePresentable: Presentable {
     var listener: DiaryHomePresentableListener? { get set }
     var isFilteredRelay: BehaviorRelay<Bool> { get }
     var isShowToastDiaryResultRelay: BehaviorRelay<ShowToastType?> { get }
+    var isShowAd: Bool { get set }
     
     func reloadTableView()
     func reloadCollectionView()
@@ -153,7 +154,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             .observe { result in
                 switch result {
                 case .initial(let model):
-                    print("DiaryHome :: realmObserve = initial! = \(model)")
+//                    print("DiaryHome :: realmObserve = initial! = \(model)")
                     self.diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
                     let filteredModel = model
                         .toArray(type: DiaryModelRealm.self)
@@ -195,7 +196,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
                     if insertions.count > 0 {
                         // 복원 중이고 많은 양의 메뉴얼이 복원될 경우
-                        if self.dependency.backupRestoreRepository.isRestoring && insertions.count > 1 {
+                        if self.dependency.backupRestoreRepository.isRestoring {
+                            self.presenter.isShowAd = false
                             let filteredModel = model
                                 .toArray(type: DiaryModelRealm.self)
                                 .filter ({ $0.isDeleted == false })
@@ -307,8 +309,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     else if deletions.count > 0 {
                         let lastPageNum = 0
                         print("DiaryHome :: lastPageNumRelay = \(self.lastPageNumRelay.value)")
-                        self.lastPageNumRelay.accept(lastPageNum)
+                        self.presenter.isShowAd = false
                         self.diaryDictionary = [:]
+                        self.lastPageNumRelay.accept(lastPageNum)
                         self.setOnboardingDiaries()
                         self.presenter.reloadTableView()
                     }
@@ -626,6 +629,9 @@ extension DiaryHomeInteractor {
 extension DiaryHomeInteractor {
     
     func needUpdateAdBanner() -> Int? {
+        // 복원 중일 경우에는 광고 노출 X
+        if dependency.backupRestoreRepository.isRestoring { return nil }
+        
         // 글을 하나도 작성하지 않았을 경우 return
         if lastPageNumRelay.value == 0 { return nil }
         
