@@ -106,7 +106,7 @@ public class ADListView: GADNativeAdView {
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview().inset(60)
             make.top.equalTo(listTitleView.snp.bottom).offset(6)
-            make.height.equalTo(18)
+            make.height.equalTo(36)
         }
         
         listAdView.snp.makeConstraints { make in
