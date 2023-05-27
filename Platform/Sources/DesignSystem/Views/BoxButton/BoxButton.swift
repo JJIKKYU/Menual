@@ -157,14 +157,5 @@ public class BoxButton: UIButton {
                 backgroundColor = Colors.tint.sub.n400
             }
         }
-        
-        if btnStatus == .inactive { return }
-//        switch btnSelected {
-//        case true:
-//            btnStatus = .pressed
-//
-//        case false:
-//            btnStatus = .active
-//        }
     }
 }

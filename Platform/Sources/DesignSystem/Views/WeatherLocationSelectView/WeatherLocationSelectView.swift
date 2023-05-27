@@ -179,7 +179,7 @@ public class WeatherLocationSelectView: UIView {
             case .school:
                 selectImageView.image = Asset._24px.Place.school.image.withRenderingMode(.alwaysTemplate)
             case .travel:
-                selectImageView.image = Asset._20px.Place.luggage.image.withRenderingMode(.alwaysTemplate)
+                selectImageView.image = Asset._24px.Place.luggage.image.withRenderingMode(.alwaysTemplate)
             }
         } else {
             if selectedWeatherLocationType == .location {
