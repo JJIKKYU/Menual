@@ -309,10 +309,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
 
         case .SETTING2:
             guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return }
-            if data.title == "개발자 도구" {
-                print("ProfileHome :: 개발자 도구 호출!")
-                listener?.pressedProfileDeveloperCell()
-            } else if data.title == MenualString.profile_button_openSource {
+            if data.title == MenualString.profile_button_openSource {
                 print("ProfileHome :: 오픈 소스 라이브러리 보기 호출!")
                 listener?.pressedProfileOpensourceCell()
             } else if data.title == MenualString.profile_button_mail {
@@ -329,7 +326,10 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             
         case .DEV:
             guard let data = listener?.profileHomeDevDataArr[safe: index] else { return }
-            if data.title == "디자인 시스템" {
+            if data.title == "개발자 도구" {
+                print("ProfileHome :: 개발자 도구 호출!")
+                listener?.pressedProfileDeveloperCell()
+            } else if data.title == "디자인 시스템" {
                 print("ProfileHome :: 디자인 시스템 호출!")
                 listener?.pressedDesignSystemCell()
             } else if data.title == "리뷰 요청" {

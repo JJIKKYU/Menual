@@ -11,6 +11,8 @@ import RxRelay
 import Foundation
 import MenualEntity
 import MenualRepository
+import MenualServices
+import SwiftyStoreKit
 
 public protocol ProfileDeveloperRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
@@ -29,12 +31,14 @@ public protocol ProfileDeveloperListener: AnyObject {
 
 protocol ProfileDeveloperInteractorDependency {
     var diaryRepository: DiaryRepository { get }
+    var iapService: IAPServiceProtocol? { get }
 }
 
 public final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeveloperPresentable>, ProfileDeveloperInteractable, ProfileDeveloperPresentableListener {
 
     public var tempMenualSetRelay = BehaviorRelay<Bool?>(value: nil)
     public var reminderDataCallRelay = BehaviorRelay<Bool?>(value: nil)
+    public var receiptRelay = BehaviorRelay<ReceiptInfo?>(value: nil)
     
     
     weak var router: ProfileDeveloperRouting?
@@ -42,8 +46,6 @@ public final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeve
     private let disposeBag = DisposeBag()
     private let dependency: ProfileDeveloperInteractorDependency
 
-    // TODO: Add additional dependencies to constructor. Do not perform any logic
-    // in constructor.
     init(
         presenter: ProfileDeveloperPresentable,
         dependency: ProfileDeveloperInteractorDependency
@@ -65,66 +67,11 @@ public final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeve
     }
     
     func bind() {
-        tempMenualSetRelay
-            .subscribe(onNext: { [weak self] isStarted in
+        dependency.iapService?
+            .checkPurchasedProducts()
+            .subscribe(onNext: { [weak self] receipt in
                 guard let self = self else { return }
-                guard let isStarted = isStarted else { return }
-                if isStarted == false { return }
-                
-                // let diaryModelArr = []
-                let intervale: Double = 1200000
-                var unixTime = Date().timeIntervalSinceNow - (intervale * 30)
-                // var date = Date(timeIntervalSince1970: unixTime)
-                
-                for idx in 0..<30  {
-                    var weatherModel = WeatherModelRealm(weather: nil, detailText: "")
-                    var placeModel = PlaceModelRealm(place: nil, detailText: "")
-                    let weatherValue = idx % Weather().getVariation().count
-                    switch weatherValue {
-                    case 0:
-                        weatherModel = WeatherModelRealm(weather: .sun, detailText: "디테일 텍스트입니다.")
-                        placeModel = PlaceModelRealm(place: .company, detailText: "디테일 디테일 텍스트입니다.")
-                    case 1:
-                        weatherModel = WeatherModelRealm(weather: .rain, detailText: "디테일 텍스트입니다.")
-                        placeModel = PlaceModelRealm(place: .company, detailText: "디테일 디테일 텍스트입니다.")
-                    case 2:
-                        weatherModel = WeatherModelRealm(weather: .snow, detailText: "디테일 텍스트입니다.")
-                        placeModel = PlaceModelRealm(place: .home, detailText: "디테일 디테일 텍스트입니다.")
-                    case 3:
-                        weatherModel = WeatherModelRealm(weather: .rain, detailText: "디테일 텍스트입니다.")
-                        placeModel = PlaceModelRealm(place: .place, detailText: "디테일 디테일 텍스트입니다.")
-                    case 4:
-                        placeModel = PlaceModelRealm(place: .school, detailText: "디테일 디테일 텍스트입니다.")
-                        weatherModel = WeatherModelRealm(weather: .cloud, detailText: "디테일 텍스트입니다.")
-                    default:
-                        placeModel = PlaceModelRealm(place: .place, detailText: "디테일 디테일 텍스트입니다.")
-                        weatherModel = WeatherModelRealm(weather: .sun, detailText: "디테일 텍스트입니다.")
-                    }
-                    
-                    unixTime += intervale
-                    
-                    let diaryModel = DiaryModelRealm(
-                                                pageNum: 0,
-                                                title: "테스트용 게시글입니다 \(idx)",
-                                                weather: weatherModel,
-                                                place: placeModel,
-                                                 desc: "테스트용 디테일 텍스트입니다.",
-                                                image: false,
-                                                readCount: 0,
-                                                createdAt: Date(timeIntervalSinceNow: unixTime),
-                                                replies: [],
-                                                isDeleted: false,
-                                                isHide: false
-                    )
-                     print("Dev :: \(idx)개 게시글 추가 - \(diaryModel.createdAt)")
-
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-                        print("ProfileDevelper :: !!")
-                        self.dependency.diaryRepository.addDiary(info: diaryModel)
-                    }
-                }
-                
-                self.tempMenualSetRelay.accept(false)
+                self.receiptRelay.accept(receipt)
             })
             .disposed(by: disposeBag)
     }

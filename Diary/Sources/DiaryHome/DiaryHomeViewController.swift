@@ -21,7 +21,6 @@ import AppTrackingTransparency
 import AdSupport
 import GoogleMobileAds
 
-
 public enum TableCollectionViewTag: Int {
     case MomentsCollectionView = 0
     case MyMenualTableView = 1

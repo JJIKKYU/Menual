@@ -85,6 +85,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     var profileHomeDevDataArr: [ProfileHomeModel] {
         let arr: [ProfileHomeModel] = [
+            ProfileHomeModel(section: .DEV, type: .arrow, title: "개발자 도구", actionName: "devTools"),
             ProfileHomeModel(section: .DEV, type: .arrow, title: "디자인 시스템", actionName: "designSystem"),
             ProfileHomeModel(section: .DEV, type: .arrow, title: "리뷰 요청", actionName: "review"),
             ProfileHomeModel(section: .DEV, type: .arrow, title: "구독 확인", actionName: "storeCheck"),
@@ -150,13 +151,6 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
                 default:
                     break
                 }
-            })
-            .disposed(by: disposeBag)
-        
-        dependency.iapService?
-            .checkPurchasedProducts()
-            .subscribe(onNext: { [weak self] _ in
-                
             })
             .disposed(by: disposeBag)
         

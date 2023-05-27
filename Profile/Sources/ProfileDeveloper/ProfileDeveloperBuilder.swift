@@ -7,16 +7,18 @@
 
 import RIBs
 import MenualRepository
+import MenualServices
 
 public protocol ProfileDeveloperDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
     var diaryRepository: DiaryRepository { get }
+    var iapService: IAPServiceProtocol? { get }
 }
 
 public final class ProfileDeveloperComponent: Component<ProfileDeveloperDependency>, ProfileDeveloperInteractorDependency {
-
-    // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
+    
+    var iapService: IAPServiceProtocol? { dependency.iapService }
     var diaryRepository: DiaryRepository { dependency.diaryRepository }
 }
 

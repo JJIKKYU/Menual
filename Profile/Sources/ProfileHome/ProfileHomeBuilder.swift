@@ -33,7 +33,7 @@ public final class ProfileHomeComponent: Component<ProfileHomeDependency>, Profi
     public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     public var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     public var filterResetBtnRelay: BehaviorRelay<Bool>?
-    var iapService: IAPServiceProtocol? {
+    public var iapService: IAPServiceProtocol? {
         containerRepository.container.resolve(IAPServiceProtocol.self)
     }
     

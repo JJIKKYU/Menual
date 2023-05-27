@@ -17,7 +17,7 @@ public protocol IAPServiceProtocol {
     func getLocalPriceObservable(productID: String) -> Observable<String>
     func restorePurchaseObservable() -> Observable<Void>
     func purchase(productID: String) -> Observable<Void>
-    func checkPurchasedProducts() -> Observable<Void>
+    func checkPurchasedProducts() -> Observable<ReceiptInfo>
     func checkIfPurchased(productID: String) -> Observable<Void>
 }
 
@@ -121,19 +121,20 @@ public final class IAPService: IAPServiceProtocol {
         }
     }
     
-    public func checkPurchasedProducts() -> Observable<Void> {
+    public func checkPurchasedProducts() -> Observable<ReceiptInfo> {
         .create { observer in
             if !DebugMode.isAlpha { return Disposables.create() }
 
             let appleValidator = AppleReceiptValidator(service: .production)
 
-            SwiftyStoreKit.verifyReceipt(using: appleValidator) { result in
+            SwiftyStoreKit.verifyReceipt(using: appleValidator, forceRefresh: false) { result in
                 switch result {
                 case .success(let receipt):
                     // 영수증 검증 성공
                     
                     // 결제 정보 추출
                     print("iapService :: receipt = \(receipt)")
+                    observer.onNext(receipt)
 
                 case .error(let error):
                     // 영수증 검증 실패
