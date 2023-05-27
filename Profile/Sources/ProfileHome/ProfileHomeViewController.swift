@@ -13,6 +13,7 @@ import RxRelay
 import MessageUI
 import DesignSystem
 import MenualUtil
+import GoogleMobileAds
 
 protocol ProfileHomePresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
@@ -42,6 +43,10 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // 리뷰 요청
     func pressedReviewCell()
+    
+    // 구독/구매
+    func pressedPurchaseCheckCell()
+    func pressedPurchaseCell()
 }
 
 enum ProfileHomeSection: Int {
@@ -63,13 +68,21 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
     lazy var settingTableView = UITableView(frame: CGRect.zero, style: .grouped).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
-        $0.contentInset = UIEdgeInsets(top: UIApplication.topSafeAreaHeight + 24, left: 0, bottom: 0, right: 0)
+        $0.contentInset = UIEdgeInsets(top: UIApplication.topSafeAreaHeight + 24, left: 0, bottom: 40, right: 0)
         $0.sectionHeaderHeight = 34
         $0.delegate = self
         $0.dataSource = self
         $0.register(ProfileHomeCell.self, forCellReuseIdentifier: "ProfileHomeCell")
         $0.rowHeight = 56
         $0.separatorStyle = .none
+    }
+    
+    private lazy var demoAdmobView = GADBannerView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.adUnitID = ADUtil.profileHomeUnitID
+        $0.rootViewController = self
+        $0.load(GADRequest())
+        $0.delegate = self
     }
     
     init() {
@@ -95,6 +108,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
     func setViews() {
         self.view.addSubview(naviView)
         self.view.addSubview(settingTableView)
+        self.view.addSubview(demoAdmobView)
         self.view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
@@ -106,6 +120,13 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         
         settingTableView.snp.makeConstraints { make in
             make.leading.width.top.bottom.equalToSuperview()
+        }
+        
+        demoAdmobView.snp.makeConstraints { make in
+            make.width.equalTo(GADAdSizeBanner.size.width)
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(GADAdSizeBanner.size.height)
         }
     }
     
@@ -288,10 +309,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
 
         case .SETTING2:
             guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return }
-            if data.title == "개발자 도구" {
-                print("ProfileHome :: 개발자 도구 호출!")
-                listener?.pressedProfileDeveloperCell()
-            } else if data.title == MenualString.profile_button_openSource {
+            if data.title == MenualString.profile_button_openSource {
                 print("ProfileHome :: 오픈 소스 라이브러리 보기 호출!")
                 listener?.pressedProfileOpensourceCell()
             } else if data.title == MenualString.profile_button_mail {
@@ -308,11 +326,18 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             
         case .DEV:
             guard let data = listener?.profileHomeDevDataArr[safe: index] else { return }
-            if data.title == "디자인 시스템" {
+            if data.title == "개발자 도구" {
+                print("ProfileHome :: 개발자 도구 호출!")
+                listener?.pressedProfileDeveloperCell()
+            } else if data.title == "디자인 시스템" {
                 print("ProfileHome :: 디자인 시스템 호출!")
                 listener?.pressedDesignSystemCell()
             } else if data.title == "리뷰 요청" {
                 listener?.pressedReviewCell()
+            } else if data.title == "구독 확인" {
+                listener?.pressedPurchaseCheckCell()
+            }  else if data.title == "결제하기" {
+                listener?.pressedPurchaseCell()
             }
             
         }
@@ -322,20 +347,20 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
 // MARK: - MessageUI
 extension ProfileHomeViewController: MFMailComposeViewControllerDelegate {
     func pressedDeveloperQACell() {
-        print("ProfileHome :: 개발자에게 문의하기!")
         if MFMailComposeViewController.canSendMail() {
             let composeViewController = MFMailComposeViewController()
             composeViewController.mailComposeDelegate = self
             
             let bodyString = """
-                             이곳에 내용을 작성해주세요.
-                             
-                             오타 발견 문의 시 아래 양식에 맞춰 작성해주세요.
-                             
-                             <예시>
-                             글귀 ID : 글귀 4 (글귀 클릭 시 상단에 표시)
-                             수정 전 : 실수해도 되.
-                             수정 후 : 실수해도 돼.
+                             Q. 메뉴얼을 사용해주셔서 감사합니다. 어떤 주제의 문의사항 인가요? ( 불편접수, 질문사항, 오류제보, 기타 등등 )
+
+                             :
+
+                             Q. 내용을 간단히 설명해 주세요. 사진을 첨부해주셔도 좋습니다.
+
+                             :
+
+                             문의해주셔서 감사합니다. 빠른 시일 내 조치하여 업데이트 하도록 하겠습니다.
                              
                              -------------------
                              
@@ -347,7 +372,7 @@ extension ProfileHomeViewController: MFMailComposeViewControllerDelegate {
                              """
             
             composeViewController.setToRecipients(["jjikkyu@naver.com"])
-            composeViewController.setSubject("<메뉴얼> 문의 및 의견")
+            composeViewController.setSubject("<메뉴얼> 개발자에게 문의하기")
             composeViewController.setMessageBody(bodyString, isHTML: false)
             
             self.present(composeViewController, animated: true, completion: nil)
@@ -379,5 +404,10 @@ extension ProfileHomeViewController: MFMailComposeViewControllerDelegate {
 
 // MARK: - UIDocumentPickerDelegate
 extension ProfileHomeViewController: UIDocumentPickerDelegate {
+    
+}
+
+// MARK: - GoogleAds Delegate
+extension ProfileHomeViewController: GADBannerViewDelegate {
     
 }

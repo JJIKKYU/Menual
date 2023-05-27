@@ -12,6 +12,7 @@ import RealmSwift
 import DesignSystem
 import MenualRepository
 import MenualEntity
+import MenualServices
 
 public protocol ProfileHomeRouting: ViewableRouting {
     func attachProfilePassword(isPasswordChange: Bool, isPaswwordDisabled: Bool)
@@ -51,6 +52,8 @@ public protocol ProfileHomeListener: AnyObject {
 
 protocol ProfileHomeInteractorDependency {
     var diaryRepository: DiaryRepository { get }
+    var containerRepository: ContainerRepository { get }
+    var iapService: IAPServiceProtocol? { get }
 }
 
 final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>, ProfileHomeInteractable, ProfileHomePresentableListener {
@@ -82,8 +85,11 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     var profileHomeDevDataArr: [ProfileHomeModel] {
         let arr: [ProfileHomeModel] = [
+            ProfileHomeModel(section: .DEV, type: .arrow, title: "개발자 도구", actionName: "devTools"),
             ProfileHomeModel(section: .DEV, type: .arrow, title: "디자인 시스템", actionName: "designSystem"),
             ProfileHomeModel(section: .DEV, type: .arrow, title: "리뷰 요청", actionName: "review"),
+            ProfileHomeModel(section: .DEV, type: .arrow, title: "구독 확인", actionName: "storeCheck"),
+            ProfileHomeModel(section: .DEV, type: .arrow, title: "결제하기", actionName: "storeBuy"),
             
         ]
         
@@ -159,22 +165,6 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
                     print("ProfileHome :: PasswordError! = \(error)")
                 }
             })
-//            .observe({ [weak self] changes in
-//                guard let self = self else { return }
-//                switch changes {
-//                case .change(let model, let propertyChanges):
-//                    print("ProfileHome :: change! = \(model), \(propertyChanges) - 1")
-//                    guard let model = model as? PasswordModelRealm else { return }
-//                    print("ProfileHome :: change! = \(model), \(propertyChanges) - 2")
-//                    self.isEnabledPasswordRelay.accept(model.isEnabled)
-//                case .deleted:
-//                    self.isEnabledPasswordRelay.accept(false)
-//                case .error(let error):
-//                    print("ProfileHome :: error! = \(error)")
-//                }
-//            })
-            
-            
     }
     
     // MARK: - ProfilePassword
@@ -282,6 +272,35 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     func reviewCompoentViewPresentQA() {
         presenter.pressedDeveloperQACell()
+    }
+    
+    func pressedPurchaseCell() {
+        dependency.iapService?
+            .getLocalPriceObservable(productID: "com.jjikkyu.menual.ad2")
+            .subscribe(onNext: { [weak self] price in
+                guard let self = self else { return }
+                
+                print("iapService :: price = \(price)")
+            })
+            .disposed(by: disposeBag)
+        
+        dependency.iapService?
+            .purchase(productID: "com.jjikkyu.menual.ad2")
+            .subscribe(onNext: { [weak self] result in
+                guard let self = self else { return }
+                print("iapService :: result = \(result)")
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    func pressedPurchaseCheckCell() {
+        dependency.iapService?
+            .restorePurchaseObservable()
+            .subscribe(onNext: { [weak self] result in
+                guard let self = self else { return }
+                print("iapService :: result = \(result)")
+            })
+            .disposed(by: disposeBag)
     }
 }
 

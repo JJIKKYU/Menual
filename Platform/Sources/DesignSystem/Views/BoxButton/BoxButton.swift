@@ -50,9 +50,7 @@ public class BoxButton: UIButton {
     public override var isHighlighted: Bool {
         didSet {
             if isHighlighted && btnStatus != .inactive {
-                btnStatus = .pressed
-            } else {
-                setNeedsLayout()
+                btnStatus = isHighlighted == true ? BoxButtonStatus.pressed : BoxButtonStatus.active
             }
         }
     }
@@ -136,10 +134,28 @@ public class BoxButton: UIButton {
         
         switch isHighlighted {
         case true:
-            print("BoxButton :: isSelecteed! - true")
+            if btnSize == .xLarge {
+                switch isFiltered {
+                case .enabled:
+                    backgroundColor = Colors.tint.main.v600
+                case .disabled:
+                    backgroundColor = Colors.tint.sub.n600
+                }
+            } else {
+                backgroundColor = Colors.tint.sub.n600
+            }
 
         case false:
-            print("BoxButton :: isSelecteed! - false")
+            if btnSize == .xLarge {
+                switch isFiltered {
+                case .enabled:
+                    backgroundColor = Colors.tint.main.v400
+                case .disabled:
+                    backgroundColor = Colors.tint.sub.n400
+                }
+            } else {
+                backgroundColor = Colors.tint.sub.n400
+            }
         }
     }
 }

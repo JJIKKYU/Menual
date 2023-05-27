@@ -12,6 +12,7 @@ import Then
 import SnapKit
 import RxRelay
 import DesignSystem
+import SwiftyStoreKit
 
 public protocol ProfileDeveloperPresentableListener: AnyObject {
     // TODO: Declare properties and methods that the view controller can invoke to perform
@@ -19,17 +20,18 @@ public protocol ProfileDeveloperPresentableListener: AnyObject {
     // interactor class.
     func pressedBackBtn(isOnlyDetach: Bool)
     
-    var tempMenualSetRelay: BehaviorRelay<Bool?> { get }
     var reminderDataCallRelay: BehaviorRelay<Bool?> { get }
+    var receiptRelay: BehaviorRelay<ReceiptInfo?> { get }
+    var originalVersionRelay: BehaviorRelay<String> { get }
     func allMenualRemove()
 }
 
 final class ProfileDeveloperViewController: UIViewController, ProfileDeveloperPresentable, ProfileDeveloperViewControllable {
     
     private let tableviewDataArr = [
-        "테스트 게시글 30개 세팅",
         "리마인더 적용 데이터 목록",
-        "게시글 모두 삭제"
+        "레시피 검증",
+        "오리지날 앱버전"
     ]
 
     weak var listener: ProfileDeveloperPresentableListener?
@@ -108,17 +110,7 @@ final class ProfileDeveloperViewController: UIViewController, ProfileDeveloperPr
     }
     
     func bind() {
-        listener?.tempMenualSetRelay
-            .subscribe(onNext: { [weak self] data in
-                guard let self = self else { return }
-                guard let data = data else { return }
-
-                // 완료되었다
-                if data == false {
-                    self.textView.text = "테스트 게시글 세팅을 요청합니다 -> 완료되었습니다."
-                }
-            })
-            .disposed(by: disposeBag)
+        
     }
     
     @objc
@@ -145,15 +137,11 @@ extension ProfileDeveloperViewController: UITableViewDelegate, UITableViewDataSo
         guard let text: String = cell.textLabel?.text else { return }
         
         // 테스트 게시글 30개 세팅
-        if text == tableviewDataArr[0] {
-            textView.text = "테스트 게시글 세팅을 요청합니다"
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) {
-                self.listener?.tempMenualSetRelay.accept(true)
-            }
-            
+        if text == "레시피 검증" {
+            self.textView.text = listener?.receiptRelay.value?.description
         }
         // 리마인더 적용 데이터 목록
-        else if text == tableviewDataArr[1] {
+        else if text == "리마인더 적용 데이터 목록" {
             let center = UNUserNotificationCenter.current()
             var localPushCount: Int = 0
             var text: String = ""
@@ -171,12 +159,8 @@ extension ProfileDeveloperViewController: UITableViewDelegate, UITableViewDataSo
                 }
             }
         }
-        // 게시글 모두 삭제
-        else if text == tableviewDataArr[2] {
-            textView.text = "테스트 게시글을 모두 삭제합니다."
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) {
-                self.listener?.allMenualRemove()
-            }
+        else if text == "오리지날 앱버전" {
+            textView.text = listener?.originalVersionRelay.value ?? ""
         }
     }
 }

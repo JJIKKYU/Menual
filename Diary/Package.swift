@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Diary",
     defaultLocalization: "ko",
-    platforms: [.iOS(.v14), .macOS(.v10_15)],
+    platforms: [.iOS(.v16), .macOS(.v10_15)],
     products: [
         .library(
             name: "DiaryDetailImage",
@@ -38,6 +38,7 @@ let package = Package(
         .package(url: "https://github.com/ReactiveX/RxSwift", exact: Version("6.0.0")),
         .package(path: "../Platform"),
         .package(url: "https://github.com/ZipArchive/ZipArchive", exact: Version("2.4.3")),
+        .package(url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git", exact: Version("9.14.0")),
     ],
     targets: [
         .target(
@@ -98,7 +99,8 @@ let package = Package(
                 .product(name: "RxCocoa", package: "RxSwift"),
                 .product(name: "Realm", package: "realm-swift"),
                 .product(name: "RealmSwift", package: "realm-swift"),
-                .product(name: "ZipArchive", package: "ZipArchive")
+                .product(name: "ZipArchive", package: "ZipArchive"),
+                .product(name: "GoogleMobileAds", package: "swift-package-manager-google-mobile-ads"),
             ]
         ),
         .target(

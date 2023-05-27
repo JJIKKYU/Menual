@@ -17,6 +17,9 @@ import MenualUtil
 import MenualEntity
 import DesignSystem
 import MessageUI
+import AppTrackingTransparency
+import AdSupport
+import GoogleMobileAds
 
 public enum TableCollectionViewTag: Int {
     case MomentsCollectionView = 0
@@ -33,6 +36,8 @@ public protocol DiaryHomePresentableListener: AnyObject {
     func pressedFilterResetBtn()
     func pressedDateFilterBtn()
     
+    func needUpdateAdBanner() -> Int?
+    
     var lastPageNumRelay: BehaviorRelay<Int> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var diaryDictionary: [String: DiaryHomeSectionModel] { get }
@@ -46,11 +51,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     // 스크롤 위치 저장하는 Dictionary
     var disposeBag = DisposeBag()
     
-    var cellsectionNumberDic: [String: Int] = [:]
-    var cellsectionNumberDic2: [Int: Int] = [:]
-    
     let isFilteredRelay = BehaviorRelay<Bool>(value: false)
     var isShowToastDiaryResultRelay = BehaviorRelay<ShowToastType?>(value: nil)
+
+    var isShowAd: Bool = false
+    var nativeAd: GADNativeAd?
     private weak var weakToastView: ToastView?
     
     // MARK: - UI 코드
@@ -215,6 +220,13 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.backgroundColor = .clear
     }
     
+    private lazy var adLoader: GADAdLoader = .init(
+        adUnitID: ADUtil.diaryHomeUnitID,
+        rootViewController: self,
+        adTypes: [.native],
+        options: []
+    )
+    
     // MARK: - VC 코드
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -231,6 +243,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         print("DiaryHome!")
         setViews()
         bind()
+        adRequest()
     }
     
     convenience init(screenName3: String) {
@@ -243,6 +256,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         MenualLog.logEventAction("writing_appear")
         actionSplashView()
+        askTracking()
         
         print("DiaryHome :: PushList!")
         
@@ -525,14 +539,30 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     func deleteTableViewRow(section: Int, row: Int) {
+        var filteredRow: Int = row
+        if let adIndex: Int = listener?.needUpdateAdBanner(),
+           section == 0 && isShowAd{
+            if row >= adIndex {
+                filteredRow = row + 1
+            }
+        }
+
         myMenualTableView.beginUpdates()
-        myMenualTableView.deleteRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        myMenualTableView.deleteRows(at: [IndexPath(row: filteredRow, section: section)], with: .automatic)
         myMenualTableView.endUpdates()
     }
     
     func reloadTableViewRow(section: Int, row: Int) {
+        var filteredRow: Int = row
+        if let adIndex: Int = listener?.needUpdateAdBanner(),
+           section == 0 && isShowAd{
+            if row >= adIndex {
+                filteredRow = row + 1
+            }
+        }
+
         myMenualTableView.beginUpdates()
-        myMenualTableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        myMenualTableView.reloadRows(at: [IndexPath(row: filteredRow, section: section)], with: .automatic)
         myMenualTableView.endUpdates()
     }
     
@@ -545,8 +575,16 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     }
     
     func insertTableViewRow(section: Int, row: Int) {
+        var filteredRow: Int = row
+        if let adIndex: Int = listener?.needUpdateAdBanner(),
+           section == 0 && isShowAd {
+            if row >= adIndex {
+                filteredRow = row + 1
+            }
+        }
+        
         myMenualTableView.beginUpdates()
-        myMenualTableView.insertRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+        myMenualTableView.insertRows(at: [IndexPath(row: filteredRow, section: section)], with: .automatic)
         myMenualTableView.endUpdates()
     }
     
@@ -559,6 +597,12 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
     
     func showRestoreSuccessToast() {
         _ = showToast(message: "메뉴얼 가져오기가 완료되었습니다.")
+    }
+    
+    func insertAdBanner(row: Int) {
+        myMenualTableView.beginUpdates()
+        myMenualTableView.insertRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+        myMenualTableView.endUpdates()
     }
 }
 
@@ -731,6 +775,18 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
 
 // MARK: - UITableView Deleagte, Datasource
 extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let index: Int = indexPath.row
+        let section: Int = indexPath.section
+        
+        if let adIndex = listener?.needUpdateAdBanner(),
+           adIndex == index && isShowAd && section == 0 {
+            return 114
+        }
+        
+        return 72
+    }
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // 첫번재 섹션일 경우에는 넓게 안띄움
         if section == 0 {
@@ -742,7 +798,6 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.isFilteredRelay.value {
-            // guard let monthMenualCount = filteredCellsectionNumberDic2[section] else { return 0 }\
             guard let diaryDictionary = listener?.filteredDiaryDic.value?.diarySectionModelDic else { return 0 }
             guard let findDict = diaryDictionary.filter ({ $0.value.sectionIndex == section }).first
             else { return 0 }
@@ -752,7 +807,21 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             guard let diaryDictionary = listener?.diaryDictionary else { return 0 }
             guard let findDict = diaryDictionary.filter({ $0.value.sectionIndex == section }).first else { return 0 }
             
-            return findDict.value.diaries.count
+            var diaryCount: Int = findDict.value.diaries.count
+            findDict.value.diaries.forEach {
+                if $0.isInvalidated {
+                    diaryCount -= 1
+                }
+            }
+            
+            // 광고 로딩이 완료되었을 경우
+            // 첫번재 섹션만 +1
+            if let _ = listener?.needUpdateAdBanner(),
+               isShowAd && section == 0 {
+                return diaryCount + 1
+            }
+            
+            return diaryCount
         }
     }
     
@@ -763,34 +832,64 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
 
             guard let diaryDictionary = listener?.diaryDictionary else { return 0 }
-            print("DiaryHome :: diaryDictionary.count = \(diaryDictionary.count)")
             return diaryDictionary.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath) as? ListCell else { return UITableViewCell() }
-        let index: Int = indexPath.row
-        var lastIndex: Int = 0
+        var index: Int = indexPath.row
+        var dataIndex: Int = indexPath.row
         let section: Int = indexPath.section
+        
+        if let adIndex: Int = listener?.needUpdateAdBanner(),
+           isShowAd && section == 0 {
+            if index >= adIndex {
+                dataIndex -= 1
+            }
+        }
 
         var dataModel: DiaryModelRealm?
+        var nativeAd: GADNativeAd?
         let defaultCell = UITableViewCell()
+        
+        // 필터 여부에 따라서 참조하는 Cell과 Data 변경
         switch self.isFilteredRelay.value {
         case true:
             guard let diaryDictionry: [String: DiaryHomeSectionModel] = listener?.filteredDiaryDic.value?.diarySectionModelDic else { return defaultCell }
             guard let dataDictionary = diaryDictionry.filter ({ $0.value.sectionIndex == section }).first else { return defaultCell }
             guard let data = dataDictionary.value.diaries[safe: index] else { return defaultCell }
-            lastIndex = dataDictionary.value.diaries.count
             dataModel = data
 
         case false:
             guard let diaryDictionry: [String: DiaryHomeSectionModel] = listener?.diaryDictionary else { return defaultCell }
             guard let dataDictionary = diaryDictionry.filter ({ $0.value.sectionIndex == section }).first else { return defaultCell }
-            guard let data = dataDictionary.value.diaries[safe: index] else { return defaultCell }
-            lastIndex = dataDictionary.value.diaries.count
-            dataModel = data
+            
+            // 광고 업로드가 가능한 상황에서는
+            // 첫번째 섹션 3번째 인덱스(4번째 셀)에서만 광고 노출
+            if let adIndex: Int = listener?.needUpdateAdBanner(),
+               isShowAd && section == 0 && index == adIndex {
+                guard let data = self.nativeAd else { return defaultCell }
+                nativeAd = data
+            } else {
+                guard let data = dataDictionary.value.diaries[safe: dataIndex] else { return defaultCell }
+                dataModel = data
+            }
         }
+        
+        // 광고 셀일 경우
+        if let nativeAd = nativeAd {
+            cell.listType = .adBodyTextImage
+            cell.title = nativeAd.headline ?? "광고"
+            cell.image = nativeAd.images?.first?.image ?? UIImage()
+            cell.body = nativeAd.body ?? "바디"
+            cell.adText = nativeAd.advertiser ?? "Advertiser"
+            cell.nativeAd = nativeAd
+            print("callToAction :: \(nativeAd.callToAction)")
+            return cell
+        }
+        
+        // 광고가 아닐 경우
         guard let dataModel = dataModel else { return UITableViewCell() }
         
               
@@ -812,6 +911,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         cell.title = dataModel.title
         cell.date = dataModel.createdAt.toString()
         cell.time = dataModel.createdAt.toStringHourMin()
+        cell.body = ""
         
         let pageCount = "\(dataModel.pageNum)"
         var replies = ""
@@ -823,22 +923,21 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         cell.reviewCount = replies
         cell.testModel = dataModel
         
-        // 마지막 셀일 경우에는 divider 제거
-        if index == lastIndex - 1 {
-            cell.divider.isHidden = true
-        } else {
-            cell.divider.isHidden = false
-        }
-        
         cell.actionName = "cell"
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) as? ListCell,
-              let data = cell.testModel
-        else { return }
+        guard let cell = tableView.cellForRow(at: indexPath) as? ListCell else { return }
+        // 광고 셀일 경우
+        if cell.listType == .adBodyTextImage {
+            print("광고입니다.")
+            return
+        }
+        
+        // 메뉴얼 셀일 경우
+        guard let data = cell.testModel else { return }
 
         let parameter: [String: Any] = [
             "page" : data.pageNum,
@@ -1067,20 +1166,20 @@ extension DiaryHomeViewController {
 extension DiaryHomeViewController: MFMailComposeViewControllerDelegate {
     /// 리뷰 팝업에서 건의하기 버튼을 눌렀을 경우
     func presentMailVC() {
-        print("DiaryHome :: pressedReviewQABtn")
         if MFMailComposeViewController.canSendMail() {
             let composeViewController = MFMailComposeViewController()
             composeViewController.mailComposeDelegate = self
             
             let bodyString = """
-                             이곳에 내용을 작성해주세요.
-                             
-                             오타 발견 문의 시 아래 양식에 맞춰 작성해주세요.
-                             
-                             <예시>
-                             글귀 ID : 글귀 4 (글귀 클릭 시 상단에 표시)
-                             수정 전 : 실수해도 되.
-                             수정 후 : 실수해도 돼.
+                             Q. 메뉴얼을 사용해주셔서 감사합니다. 어떤 주제의 건의사항 인가요? ( 기능제안, 오류제보, 기타 등등 )
+
+                             :
+
+                             Q. 내용을 간단히 설명해 주세요. 사진을 첨부해주셔도 좋습니다.
+
+                             :
+
+                             건의해주셔서 감사합니다. 빠른 시일 내 조치하여 업데이트 하도록 하겠습니다.
                              
                              -------------------
                              
@@ -1092,7 +1191,7 @@ extension DiaryHomeViewController: MFMailComposeViewControllerDelegate {
                              """
             
             composeViewController.setToRecipients(["jjikkyu@naver.com"])
-            composeViewController.setSubject("<메뉴얼> 문의 및 의견")
+            composeViewController.setSubject("<메뉴얼> 건의하기")
             composeViewController.setMessageBody(bodyString, isHTML: false)
             
             self.present(composeViewController, animated: true, completion: nil)
@@ -1122,5 +1221,64 @@ extension DiaryHomeViewController: MFMailComposeViewControllerDelegate {
 extension DiaryHomeViewController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return navigationController?.viewControllers.count ?? 0 > 1
+    }
+}
+
+// MARK: - Admob
+
+extension DiaryHomeViewController {
+    func askTracking() {
+        ATTrackingManager.requestTrackingAuthorization { status in
+            switch status {
+            case .authorized:
+                // 사용자가 권한을 허용한 경우, IDFA 사용 가능
+                let idfaString = ASIdentifierManager.shared().advertisingIdentifier.uuidString
+                print("adsupport : \(idfaString)")
+                // IDFA 값을 사용하거나 저장하거나 필요한 처리를 진행합니다.
+            case .denied:
+                // 사용자가 권한을 거부한 경우, IDFA 사용 불가
+                // 권한 거부에 따른 대체 로직이나 처리를 수행합니다.
+                break
+            case .restricted, .notDetermined:
+                // 사용자가 권한을 설정하지 않은 경우 또는 제한된 경우, IDFA 사용 불가
+                // 대체 로직이나 처리를 수행합니다.
+                break
+            @unknown default:
+                break
+            }
+        }
+    }
+}
+
+extension DiaryHomeViewController: GADNativeAdLoaderDelegate, GADNativeAdDelegate {
+    // 광고 노출 유저에게 광고를 노출하기 위해서 서버에 요청하는 함수
+    func adRequest() {
+        if !DebugMode.isAlpha { return }
+        
+        adLoader.delegate = self
+        adLoader.load(GADRequest())
+    }
+    
+    func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: Error) {
+        print("Admob :: error \(error)")
+    }
+    
+    func adLoader(_ adLoader: GADAdLoader, didReceive nativeAd: GADNativeAd) {
+        if !DebugMode.isAlpha { return }
+        if isShowAd { return }
+        
+        // 광고 업데이트가 가능한 지 체크
+        guard let needUpdateIndex: Int = listener?.needUpdateAdBanner() else {
+            return
+        }
+        
+        isShowAd = true
+        self.nativeAd = nativeAd
+        nativeAd.delegate = self
+        insertAdBanner(row: needUpdateIndex)
+    }
+    
+    func nativeAdDidRecordClick(_ nativeAd: GADNativeAd) {
+        print("Admob :: click!")
     }
 }

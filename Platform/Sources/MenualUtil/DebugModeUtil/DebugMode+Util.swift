@@ -9,7 +9,25 @@ import Foundation
 
 public class DebugMode {
     static public var isDebugMode: Bool {
-        let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
-        return isDebugMode
+        #if DEBUG
+            return true
+        #else
+            let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
+            return isDebugMode
+        #endif
+    }
+    
+    static public var isAlpha: Bool {
+        #if DEBUG
+            return true
+        #else
+            if let bundleIdentifier = Bundle.main.bundleIdentifier {
+                if bundleIdentifier == "com.jjikkyu.menualAlpha" {
+                    return true
+                }
+            }
+            
+            return false
+        #endif
     }
 }

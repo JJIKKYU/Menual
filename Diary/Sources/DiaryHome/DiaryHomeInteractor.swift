@@ -32,6 +32,7 @@ public protocol DiaryHomePresentable: Presentable {
     var listener: DiaryHomePresentableListener? { get set }
     var isFilteredRelay: BehaviorRelay<Bool> { get }
     var isShowToastDiaryResultRelay: BehaviorRelay<ShowToastType?> { get }
+    var isShowAd: Bool { get set }
     
     func reloadTableView()
     func reloadCollectionView()
@@ -89,6 +90,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     // filter 적용할 때, 원래 PageNum을 저장해놓고 필터가 끝났을때 다시 쓸 수 있도록
     var prevLastPageNum: Int = 0
+    
+    // 광고 업데이트가 필요할 때 true를 accept하는 Relay
+    let adUpdateRelay = BehaviorRelay<Bool>(value: false)
     
     // Moments
     var momentsRealm: MomentsRealm?
@@ -150,7 +154,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
             .observe { result in
                 switch result {
                 case .initial(let model):
-                    print("DiaryHome :: realmObserve = initial! = \(model)")
+//                    print("DiaryHome :: realmObserve = initial! = \(model)")
                     self.diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
                     let filteredModel = model
                         .toArray(type: DiaryModelRealm.self)
@@ -192,7 +196,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
 
                     if insertions.count > 0 {
                         // 복원 중이고 많은 양의 메뉴얼이 복원될 경우
-                        if self.dependency.backupRestoreRepository.isRestoring && insertions.count > 1 {
+                        if self.dependency.backupRestoreRepository.isRestoring {
+                            self.presenter.isShowAd = false
                             let filteredModel = model
                                 .toArray(type: DiaryModelRealm.self)
                                 .filter ({ $0.isDeleted == false })
@@ -304,8 +309,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                     else if deletions.count > 0 {
                         let lastPageNum = 0
                         print("DiaryHome :: lastPageNumRelay = \(self.lastPageNumRelay.value)")
-                        self.lastPageNumRelay.accept(lastPageNum)
+                        self.presenter.isShowAd = false
                         self.diaryDictionary = [:]
+                        self.lastPageNumRelay.accept(lastPageNum)
                         self.setOnboardingDiaries()
                         self.presenter.reloadTableView()
                     }
@@ -470,10 +476,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     func pressedDateFilterBtn() {
         router?.attachBottomSheet(type: .dateFilter)
-        
-//        if filteredDateRelay.value == nil {
-//            filteredDateRelay.accept(Date())
-//        }
     }
     
     // filterComponenetView
@@ -481,13 +483,9 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         print("diaryHome :: \(weatherArr), \(placeArr)")
         if weatherArr.count == 0 && placeArr.count == 0 {
             print("diaryHome :: Interactor -> isFiltered = false")
-//            filteredWeatherArrRelay.accept([])
-//            filteredPlaceArrRelay.accept([])
             filteredDiaryCountRelay.accept(-1)
         } else if weatherArr.count > 0 || placeArr.count > 0 {
             print("diaryHome :: Interactor -> isFiltered = true")
-            // filteredWeatherArrRelay.accept(weatherArr)
-            // filteredPlaceArrRelay.accept(placeArr)
             
             let filterCount: Int = dependency.diaryRepository
                 .filterDiary(weatherTypes: weatherArr,
@@ -521,7 +519,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         filteredWeatherArrRelay.accept([])
         filteredPlaceArrRelay.accept([])
         presenter.isFilteredRelay.accept(false)
-        // filteredDateRelay.accept(nil)
         filteredDiaryCountRelay.accept(-1)
         
         // double check
@@ -543,13 +540,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     // DateFilter
     func filterDatePressedFilterBtn(yearDateFormatString: String) {
-        print("DiaryHome :: filterBtn!, yearDateFormatString = \(yearDateFormatString)")
-        // guard let date = filteredDateRelay.value else { return }
-
-        // presenter.isFilteredRelay.accept(true)
-//        _ = dependency.diaryRepository
-//            .filterDiary(date: date, isOnlyFilterCount: false)
-        // filteredDateRelay.accept(nil)
         presenter.scrollToDateFilter(yearDateFormatString: yearDateFormatString)
         router?.detachBottomSheet()
     }
@@ -634,19 +624,36 @@ extension DiaryHomeInteractor {
     }
 }
 
+// MARK: - Ad
+
+extension DiaryHomeInteractor {
+    
+    func needUpdateAdBanner() -> Int? {
+        // 복원 중일 경우에는 광고 노출 X
+        if dependency.backupRestoreRepository.isRestoring { return nil }
+        
+        // 글을 하나도 작성하지 않았을 경우 return
+        if lastPageNumRelay.value == 0 { return nil }
+        
+        // 첫번째 섹션이 없다면 return
+        let firstSectionName: String = self.arraySerction.first ?? ""
+        if firstSectionName.isEmpty { return nil }
+        
+        let firstSectionDiaryCount: Int = self.diaryDictionary[firstSectionName]?.diaries.count ?? 0
+        
+        // 메뉴얼을 하나도 작성하지 않았을 경우에는 광고를 나타내지 않음
+        if firstSectionDiaryCount == 0 { return nil }
+        
+        // 첫번째 섹션의 메뉴얼 카운트가 3개 이하일 경우에는, 가장 마지막에 작성한 메뉴얼 + 1 위치에 광고를 위치하게 함
+        if firstSectionDiaryCount < 4 {
+            return firstSectionDiaryCount
+        }
+        
+        return 3
+    }
+}
+
 // MARK: - 미사용
 extension DiaryHomeInteractor {
     func reminderCompViewshowToast(isEding: Bool) { }
-}
-
-protocol PropertyReflectable { }
-
-extension PropertyReflectable {
-    subscript(key: String) -> Any? {
-        let m = Mirror(reflecting: self)
-        for child in m.children {
-            if child.label == key { return child.value }
-        }
-        return nil
-    }
 }

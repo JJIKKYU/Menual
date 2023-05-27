@@ -12,6 +12,8 @@ import FirebaseAnalytics
 import RealmSwift
 import RxRelay
 import MenualEntity
+import GoogleMobileAds
+import AdSupport
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -105,6 +107,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         launchRouter?.launch(from: window)
         UNUserNotificationCenter.current().delegate = self
+        
+        // 구글 광고 세팅
+        GADMobileAds.sharedInstance().start()
+        GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [ "fceedc2659fc6ddc60f3b83665d87bc9" ]
+        print("addsuprt :: \(ASIdentifierManager.shared().advertisingIdentifier)")
         
         return true
     }

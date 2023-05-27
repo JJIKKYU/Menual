@@ -16,11 +16,13 @@ import ProfileBackup
 import ProfileRestore
 import ProfileDesignSystem
 import DiaryBottomSheet
+import MenualServices
 
 public protocol ProfileHomeDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
     var diaryRepository: DiaryRepository { get }
+    var containerRepository: ContainerRepository { get }
     var appstoreReviewRepository: AppstoreReviewRepository { get }
     var backupRestoreRepository: BackupRestoreRepository { get }
 }
@@ -31,10 +33,14 @@ public final class ProfileHomeComponent: Component<ProfileHomeDependency>, Profi
     public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     public var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     public var filterResetBtnRelay: BehaviorRelay<Bool>?
+    public var iapService: IAPServiceProtocol? {
+        containerRepository.container.resolve(IAPServiceProtocol.self)
+    }
     
 
     public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
+    public var containerRepository: ContainerRepository { dependency.containerRepository }
     public var appstoreReviewRepository: AppstoreReviewRepository { dependency.appstoreReviewRepository }
 }
 
