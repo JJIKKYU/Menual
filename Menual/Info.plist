@@ -2,10 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>GADNativeAdValidatorEnabled</key>
-	<false/>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-1168603177352985~4524419310</string>
+	<key>GADNativeAdValidatorEnabled</key>
+	<false/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>UIAppFonts</key>

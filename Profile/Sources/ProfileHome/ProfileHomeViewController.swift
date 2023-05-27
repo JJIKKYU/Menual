@@ -81,8 +81,10 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.adUnitID = ADUtil.profileHomeUnitID
         $0.rootViewController = self
-        $0.load(GADRequest())
-        $0.delegate = self
+        if DebugMode.isDebugMode {
+            $0.load(GADRequest())
+            $0.delegate = self
+        }
     }
     
     init() {
