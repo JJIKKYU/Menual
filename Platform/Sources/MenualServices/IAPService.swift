@@ -19,6 +19,7 @@ public protocol IAPServiceProtocol {
     func purchase(productID: String) -> Observable<Void>
     func checkPurchasedProducts() -> Observable<ReceiptInfo>
     func checkIfPurchased(productID: String) -> Observable<Void>
+    func getOriginalAppVersion() async -> String
 }
 
 public final class IAPService: IAPServiceProtocol {
@@ -176,7 +177,18 @@ public final class IAPService: IAPServiceProtocol {
         }
     }
     
-    func test() async {
-        // let result: VerificationResult<AppTransaction> = try await AppTransaction.shared
+    public func getOriginalAppVersion() async -> String {
+        guard let result: VerificationResult<AppTransaction> = try? await AppTransaction.shared else { return "" }
+        
+        switch result {
+        case .unverified(let appTransaction, let error):
+            return "unverified"
+            
+        case .verified(let appTransaction):
+            let originalAppVersion = appTransaction.originalAppVersion
+            let freeAppVersion = "2,2"
+            return originalAppVersion
+            // print("originalAppVersion = \(originalAppVersion)")
+        }
     }
 }

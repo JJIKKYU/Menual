@@ -39,6 +39,7 @@ public final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeve
     public var tempMenualSetRelay = BehaviorRelay<Bool?>(value: nil)
     public var reminderDataCallRelay = BehaviorRelay<Bool?>(value: nil)
     public var receiptRelay = BehaviorRelay<ReceiptInfo?>(value: nil)
+    public var originalVersionRelay = BehaviorRelay<String>(value: "")
     
     
     weak var router: ProfileDeveloperRouting?
@@ -74,6 +75,12 @@ public final class ProfileDeveloperInteractor: PresentableInteractor<ProfileDeve
                 self.receiptRelay.accept(receipt)
             })
             .disposed(by: disposeBag)
+        
+        Task {
+            let originalAppVersion = await dependency.iapService?
+                .getOriginalAppVersion()
+            originalVersionRelay.accept(originalAppVersion ?? "")
+        }
     }
     
     public func pressedBackBtn(isOnlyDetach: Bool) {

@@ -140,28 +140,6 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
 //                self.isEnabledPasswordRelay.accept(isEnabled)
 //            })
 //            .disposed(by: disposeBag)
-        dependency.iapService?
-            .getPaymentStateObservable()
-            .subscribe(onNext: { [weak self] state in
-                print("iapService :: test! = \(state)")
-                switch state {
-                case .purchased, .restored:
-                    break
-                    
-                default:
-                    break
-                }
-            })
-            .disposed(by: disposeBag)
-        
-        dependency.iapService?
-            .checkIfPurchased(productID: "com.jjikkyu.menual")
-            .subscribe(onNext: { [weak self] state in
-                guard let self = self else { return }
-                
-            })
-            .disposed(by: disposeBag)
-        
     }
 
     func bindRealm() {
@@ -187,22 +165,6 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
                     print("ProfileHome :: PasswordError! = \(error)")
                 }
             })
-//            .observe({ [weak self] changes in
-//                guard let self = self else { return }
-//                switch changes {
-//                case .change(let model, let propertyChanges):
-//                    print("ProfileHome :: change! = \(model), \(propertyChanges) - 1")
-//                    guard let model = model as? PasswordModelRealm else { return }
-//                    print("ProfileHome :: change! = \(model), \(propertyChanges) - 2")
-//                    self.isEnabledPasswordRelay.accept(model.isEnabled)
-//                case .deleted:
-//                    self.isEnabledPasswordRelay.accept(false)
-//                case .error(let error):
-//                    print("ProfileHome :: error! = \(error)")
-//                }
-//            })
-            
-            
     }
     
     // MARK: - ProfilePassword

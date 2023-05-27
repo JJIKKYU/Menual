@@ -22,6 +22,7 @@ public protocol ProfileDeveloperPresentableListener: AnyObject {
     
     var reminderDataCallRelay: BehaviorRelay<Bool?> { get }
     var receiptRelay: BehaviorRelay<ReceiptInfo?> { get }
+    var originalVersionRelay: BehaviorRelay<String> { get }
     func allMenualRemove()
 }
 
@@ -29,7 +30,8 @@ final class ProfileDeveloperViewController: UIViewController, ProfileDeveloperPr
     
     private let tableviewDataArr = [
         "리마인더 적용 데이터 목록",
-        "레시피 검증"
+        "레시피 검증",
+        "오리지날 앱버전"
     ]
 
     weak var listener: ProfileDeveloperPresentableListener?
@@ -157,12 +159,8 @@ extension ProfileDeveloperViewController: UITableViewDelegate, UITableViewDataSo
                 }
             }
         }
-        // 게시글 모두 삭제
-        else if text == tableviewDataArr[2] {
-            textView.text = "테스트 게시글을 모두 삭제합니다."
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(1)) {
-                self.listener?.allMenualRemove()
-            }
+        else if text == "오리지날 앱버전" {
+            textView.text = listener?.originalVersionRelay.value ?? ""
         }
     }
 }
