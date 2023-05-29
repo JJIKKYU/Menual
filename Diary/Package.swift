@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Diary",
     defaultLocalization: "ko",
-    platforms: [.iOS(.v16), .macOS(.v10_15)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "DiaryDetailImage",

@@ -7,13 +7,25 @@
 
 import Foundation
 import RealmSwift
+import MenualEntity
 
-class RealmSyncRepository {
+public class RealmSyncRepository {
     
-    func test() async {
-        let app = App(id: "")
-        let user = app.currentUser
-        let partitionValue = RealmSyncConfigurations.
+    public init () {
+        
+    }
+    
+    public func test() async {
+        let app = App(id: "menual-hfjcn")
+        guard let user = try? await app.login(credentials: Credentials.anonymous) else { return }
+        var config = user.flexibleSyncConfiguration()
+        
+        config.objectTypes = [BackupHistoryModelRealm.self]
+        guard let realm = try? await Realm(
+            configuration: config,
+            downloadBeforeOpen: .always
+        ) else { return }
+        print("Successfully opened realm: \(realm)")
     }
     
 }
