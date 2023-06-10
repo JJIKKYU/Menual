@@ -40,7 +40,7 @@ final class BackupRestoreRepositoryTests: XCTestCase {
                                 detailText: "cloud_\(i)"
                             ),
                             place: PlaceModelRealm(
-                                place: .bus,
+                                place: .company,
                                 detailText: "bus_\(i)"
                             ),
                             desc: "desc_\(i)",
