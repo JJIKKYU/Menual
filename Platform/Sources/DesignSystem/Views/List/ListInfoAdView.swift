@@ -15,12 +15,12 @@ public class ListInfoAdView: UIView {
         didSet { setNeedsLayout() }
     }
     
-    
     private let adBadge: InsetLabel = .init().then {
         $0.font = UIFont.AppBodyOnlyFont(.body_1)
         $0.textColor = Colors.grey.g400
         $0.backgroundColor = Colors.grey.g700
         $0.AppCorner(._2pt)
+        $0.textAlignment = .center
         $0.text = "AD"
     }
     
@@ -53,14 +53,13 @@ public class ListInfoAdView: UIView {
         
         adBadge.snp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.centerY.equalToSuperview()
-            make.width.equalTo(30)
-            make.height.equalTo(15)
+            make.top.bottom.equalToSuperview()
+            make.width.lessThanOrEqualTo(29)
         }
         
         adTextLabel.snp.makeConstraints { make in
             make.leading.equalTo(adBadge.snp.trailing).offset(8)
-            make.centerY.equalToSuperview()
+            make.top.bottom.equalToSuperview()
             make.trailing.equalToSuperview()
         }
     }

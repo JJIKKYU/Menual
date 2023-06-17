@@ -68,7 +68,10 @@ public class ListCell: UITableViewCell {
         }
     }
     
+    public var adViewHeight: CGFloat = 0
+    
     public lazy var adView: ADListView = .init().then {
+        $0.isHidden = true
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.callToActionView = self.contentView
     }
@@ -132,6 +135,12 @@ public class ListCell: UITableViewCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = Colors.grey.g800
     }
+    
+    public let adViewDivider = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.backgroundColor = Colors.grey.g800
+        $0.isHidden = true
+    }
 
     public override func awakeFromNib() {
         super.awakeFromNib()
@@ -155,13 +164,7 @@ public class ListCell: UITableViewCell {
         addSubview(listInfoView)
         addSubview(listBodyView)
         addSubview(divider)
-        
-        adView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.top.equalToSuperview()
-            make.bottom.equalToSuperview()
-        }
+        addSubview(adViewDivider)
 
         menualImageView.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
@@ -195,6 +198,21 @@ public class ListCell: UITableViewCell {
             make.leading.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(20)
             make.height.equalTo(1)
+        }
+        
+        adView.snp.remakeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalToSuperview()
+//            make.bottom.equalToSuperview()
+        }
+
+        adViewDivider.snp.makeConstraints { make in
+//            make.top.equalTo(adView.snp.bottom).offset(14)
+            make.bottom.equalToSuperview()
+            make.height.equalTo(1)
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
         }
     }
     
@@ -358,6 +376,8 @@ public class ListCell: UITableViewCell {
             listBodyView.isHidden = true
             menualImageView.isHidden = true
             listInfoView.isHidden = true
+            divider.isHidden = true
+            adViewDivider.isHidden = false
 
             adView.image = image
             adView.title = title

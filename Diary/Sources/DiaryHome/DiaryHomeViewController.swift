@@ -133,7 +133,7 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.backgroundColor = .clear
         $0.register(ListCell.self, forCellReuseIdentifier: "ListCell")
         $0.estimatedRowHeight = 72
-        $0.rowHeight = 72
+        $0.rowHeight = UITableView.automaticDimension
         $0.showsVerticalScrollIndicator = true
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 72, right: 0)
         $0.tag = TableCollectionViewTag.MyMenualTableView.rawValue
@@ -586,7 +586,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         if let adIndex = listener?.needUpdateAdBanner(),
            adIndex == index && isShowAd && section == 0 {
-            return 114
+            return 120
         }
         
         return 72

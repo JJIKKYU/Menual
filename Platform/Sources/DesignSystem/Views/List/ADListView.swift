@@ -48,7 +48,7 @@ public class ADListView: GADNativeAdView {
         $0.isHidden = false
     }
     
-    private let listBodyView = ListTitleView(type: .adTitleBodyText).then {
+    public let listBodyView = ListTitleView(type: .adTitleBodyText).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isHidden = false
     }
@@ -71,13 +71,38 @@ public class ADListView: GADNativeAdView {
     public override func layoutSubviews() {
         super.layoutSubviews()
     
+        // 이미지가 있을 경우 layout 변경
         if let image = image {
             self.menualImageView.image = image
+            
+            listTitleView.snp.updateConstraints { make in
+                make.width.equalToSuperview().inset(60)
+            }
+            
+            listBodyView.snp.updateConstraints { make in
+                make.trailing.equalToSuperview().inset(60)
+            }
+            
+            listAdView.snp.updateConstraints { make in
+                make.width.equalToSuperview().inset(60)
+            }
         }
         
         listTitleView.titleText = title
         listBodyView.bodyText = body
         listAdView.adText = adText
+        
+        
+        // UILabel 크기 조정
+//        listBodyView.bodyLabel.sizeToFit()
+//        let labelSize = listBodyView.bodyLabel.sizeThatFits(
+//            CGSize(width: listBodyView.frame.width,
+//                   height: CGFloat.greatestFiniteMagnitude)
+//        )
+//        listBodyView.bodyLabel.frame.size = CGSize(width: labelSize.width, height: labelSize.height)
+//        listBodyView.snp.updateConstraints { make in
+//            make.height.equalTo(listBodyView.bodyLabel.frame.height)
+//        }
     }
     
     func setViews() {
@@ -87,7 +112,7 @@ public class ADListView: GADNativeAdView {
         addSubview(menualImageView)
         addSubview(listBodyView)
         addSubview(listAdView)
-        
+
         menualImageView.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
             make.top.equalToSuperview().offset(12)
@@ -103,7 +128,7 @@ public class ADListView: GADNativeAdView {
         
         listBodyView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.trailing.equalToSuperview().inset(60)
+            make.trailing.equalToSuperview().inset(20)
             make.top.equalTo(listTitleView.snp.bottom).offset(6)
             make.height.equalTo(36)
         }
@@ -113,6 +138,7 @@ public class ADListView: GADNativeAdView {
             make.top.equalTo(listBodyView.snp.bottom).offset(10)
             make.width.equalToSuperview()
             make.height.equalTo(20)
+            make.bottom.equalToSuperview()
         }
     }
 }

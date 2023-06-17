@@ -9,7 +9,7 @@ import UIKit
 
 public class InsetLabel: UILabel {
     public override func drawText(in rect: CGRect) {
-        let insets = UIEdgeInsets(top: 2, left: 8, bottom: 2, right: 8) // 원하는 여백을 설정합니다.
+        let insets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8) // 원하는 여백을 설정합니다.
         super.drawText(in: rect.inset(by: insets))
     }
 }
