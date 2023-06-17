@@ -35,7 +35,7 @@ public enum Place: String, PersistableEnum {
     }
     
     public func getVariation() -> [Place] {
-        return [.place, .home, .company, .school, .travel]
+        return [.place, .home, .school, .company, .travel]
     }
 }
 
