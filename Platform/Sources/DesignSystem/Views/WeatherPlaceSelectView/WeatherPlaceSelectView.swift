@@ -96,13 +96,7 @@ public class WeatherPlaceSelectView: UIView {
         } else {
             collectionView.allowsMultipleSelection = false
         }
-        
-//        switch weatherPlaceType {
-//        case .weather:
-//            collectionView.reloadData()
-//        case .place:
-//            collectionView.reloadData()
-//        }
+
         collectionView.reloadData()
         collectionView.layoutIfNeeded()
         
@@ -183,20 +177,10 @@ public class WeatherPlaceSelectView: UIView {
     }
     
     func selectCells() {
-        print("WeatherPlaceSelectView :: selectCells")
-        
-        print("WeatherPlaceSelectView :: selectedPlaceTypes = \(selectedPlaceTypes)")
-
-        
-//         collectionView.reloadData()
-//         collectionView.layoutIfNeeded()
-        print("WeatherPlaceSelectView :: collectionView.numberOfItems(inSection: 0) = \(collectionView.numberOfItems(inSection: 0))")
-
         for row in 0..<collectionView.numberOfItems(inSection: 0) {
             let currentIndexPath = IndexPath(row: row, section: 0)
             guard let cell = collectionView.cellForItem(at: currentIndexPath) as? WeatherPlaceSelectViewCell else { return }
 
-            // var willSelectIndexPath: IndexPath?
             switch weatherPlaceType {
             case .weather:
                 guard let selectedWeatherTypes = selectedWeatherTypes else {
@@ -208,7 +192,6 @@ public class WeatherPlaceSelectView: UIView {
                     if cell.weatherIconType == weatherType {
                         let willSelectIndexPath = IndexPath(row: row, section: 0)
                         self.collectionView.selectItem(at: willSelectIndexPath, animated: false, scrollPosition: .top)
-//                        self.collectionView(self.collectionView, didSelectItemAt: willSelectIndexPath)
                     }
                 }
 
@@ -216,15 +199,12 @@ public class WeatherPlaceSelectView: UIView {
                 guard let selectedPlaceTypes = selectedPlaceTypes else {
                     return
                 }
-
-
                 for placeType in selectedPlaceTypes {
                     print("WeatherPlaceSelectView :: placeType = \(placeType)")
                     if cell.placeIconType == placeType {
                         print("WeatherPlaceSelectView :: placeType == cell.placeIconType")
                         let willSelectIndexPath = IndexPath(row: row, section: 0)
                         self.collectionView.selectItem(at: willSelectIndexPath, animated: false, scrollPosition: .top)
-//                         self.collectionView(self.collectionView, didSelectItemAt: willSelectIndexPath)
                     }
                 }
             }
@@ -257,22 +237,11 @@ extension WeatherPlaceSelectView: UICollectionViewDelegate, UICollectionViewData
             guard let placeType = Place().getVariation()[safe: index] else { return UICollectionViewCell() }
             cell.placeIconType = placeType
             cell.weatherPlaceSelectViewCellType = .place
-//            if let selectedPlaceType = selectedPlaceType,
-//               selectedPlaceType == placeType {
-//                print("WeatherPlaceSelectView :: cellForItemAt = \(selectedPlaceType) 기본 선택!")
-//                cell.isSelected = true
-//                delegate?.placeSendData(placeType: selectedPlaceType, isSelected: true)
-//            }
+
         case .weather:
             guard let weatherType = Weather().getVariation()[safe: index] else { return UICollectionViewCell() }
             cell.weatherIconType = weatherType
             cell.weatherPlaceSelectViewCellType = .weather
-//            if let selectedWeatherType = selectedWeatherType,
-//               selectedWeatherType == weatherType {
-//                print("WeatherPlaceSelectView :: cellForItemAt = \(selectedWeatherType) 기본 선택!")
-//                cell.isSelected = true
-//                delegate?.weatherSendData(weatherType: selectedWeatherType, isSelected: true)
-//            }
         }
         
         return cell
