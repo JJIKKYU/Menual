@@ -102,7 +102,7 @@ public class ADListView: GADNativeAdView {
         addSubview(listAdView)
 
         menualImageView.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(20)
+            make.trailing.equalToSuperview()
             make.top.equalToSuperview().offset(12)
             make.width.height.equalTo(48)
         }
@@ -110,7 +110,7 @@ public class ADListView: GADNativeAdView {
         listTitleView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
             make.leading.equalToSuperview()
-            make.width.equalToSuperview()
+            make.width.equalToSuperview().inset(20)
             make.height.equalTo(18)
         }
         
