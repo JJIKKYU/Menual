@@ -355,6 +355,14 @@ public final class DiaryRepositoryImp: DiaryRepository {
             }
         }
         
+        // 같은 Diary를 검색했을 경우 중복으로 List에 추가되지 않도록 예외처리
+        if let existModel = diarySearchRealmArr.filter ({ $0.diaryUuid == info.uuid }).first {
+            realm.safeWrite {
+                existModel.createdAt = Date()
+            }
+            return
+        }
+        
         guard let diary = realm.objects(DiaryModelRealm.self).filter ({ $0.uuid == info.uuid}).first else { return }
         let diarySearchModel = DiarySearchModelRealm(diaryUuid: info.uuid,
                                                      diary: diary,
