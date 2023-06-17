@@ -586,7 +586,7 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         if let adIndex = listener?.needUpdateAdBanner(),
            adIndex == index && isShowAd && section == 0 {
-            return 120
+            return 104
         }
         
         return 72

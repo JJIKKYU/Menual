@@ -150,7 +150,7 @@ public class ListTitleView: UIView {
             titleLabel.textColor = Colors.grey.g200
             bodyLabel.textColor = Colors.grey.g400
             bodyLabel.isHidden = false
-            bodyLabel.numberOfLines = 2
+            bodyLabel.numberOfLines = 1
             
         }
         
