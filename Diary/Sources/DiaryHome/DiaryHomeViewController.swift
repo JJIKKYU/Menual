@@ -1032,7 +1032,7 @@ extension DiaryHomeViewController {
 extension DiaryHomeViewController: GADNativeAdLoaderDelegate, GADNativeAdDelegate {
     // 광고 노출 유저에게 광고를 노출하기 위해서 서버에 요청하는 함수
     func adRequest() {
-        if !DebugMode.isAlpha { return }
+        if !DebugMode.isDebugMode { return }
         
         adLoader.delegate = self
         adLoader.load(GADRequest())
@@ -1043,7 +1043,7 @@ extension DiaryHomeViewController: GADNativeAdLoaderDelegate, GADNativeAdDelegat
     }
     
     func adLoader(_ adLoader: GADAdLoader, didReceive nativeAd: GADNativeAd) {
-        if !DebugMode.isAlpha { return }
+        if !DebugMode.isDebugMode { return }
         if isShowAd { return }
         
         // 광고 업데이트가 가능한 지 체크
