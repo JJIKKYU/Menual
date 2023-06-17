@@ -24,7 +24,6 @@ public protocol DiaryBottomSheetPresentable: Presentable {
 
     func setFilterBtnCount(count: Int)
     func setViews(type: MenualBottomSheetType)
-    func setCurrentFilteredBtn(weatherArr: [Weather], placeArr: [Place])
     func setCurrentReminderData(isEnabled: Bool, dateComponets: DateComponents?)
     func setHideBtnTitle(isHide: Bool)
     func goReviewPage()
@@ -37,7 +36,6 @@ public protocol DiaryBottomSheetListener: AnyObject {
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place])
     func filterWithWeatherPlacePressedFilterBtn()
     func reminderCompViewshowToast(isEding: Bool)
-    func filterDatePressedFilterBtn(yearDateFormatString: String)
     
     // 개발자에게 문의하기
     func reviewCompoentViewPresentQA()
@@ -47,7 +45,6 @@ public protocol DiaryBottomSheetInteractorDependency {
     var diaryRepository: DiaryRepository { get }
     var appstoreReviewRepository: AppstoreReviewRepository { get }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
-    var filterResetBtnRelay: BehaviorRelay<Bool>? { get }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
@@ -66,11 +63,9 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { dependency.filteredDiaryCountRelay }
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { dependency.filteredWeatherArrRelay }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { dependency.filteredPlaceArrRelay }
-    var filterResetBtnRelay: BehaviorRelay<Bool>? { dependency.filterResetBtnRelay }
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { dependency.reminderRequestDateRelay }
     var isHideMenualRelay: BehaviorRelay<Bool>? { dependency.isHideMenualRelay }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { dependency.isEnabledReminderRelay }
-    var dateFilterModelRelay: RxRelay.BehaviorRelay<[DateFilterModel]?>? = BehaviorRelay<[DateFilterModel]?>(value: nil)
 
     private let dependency: DiaryBottomSheetInteractorDependency
 
@@ -89,7 +84,6 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         }
         print("menualBottomSheetType = \(bottomSheetType)")
         super.init(presenter: presenter)
-        self.setDateFilter()
         presenter.listener = self
         presenter.setViews(type: bottomSheetType)
     }
@@ -97,68 +91,10 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     override func didBecomeActive() {
         super.didBecomeActive()
         bind()
-        setDateFilter()
     }
 
     override func willResignActive() {
         super.willResignActive()
-    }
-
-    // DateFilter일 경우 메뉴얼 갯수 세팅 필요
-    func setDateFilter() {
-        if bottomSheetType != .dateFilter { return }
-        guard let realm = Realm.safeInit() else { return }
-        let diaryArr = realm.objects(DiaryModelRealm.self)
-            .toArray(type: DiaryModelRealm.self)
-            .sorted(by: ({ $0.createdAt < $1.createdAt }))
-        
-        
-        // 월을 세팅해보자
-        var monthSet: [Int: [Int: Int]] = [:]
-        var yearDateFilterMonthsModel = [Int: [DateFilterMonthsModel]]()
-        diaryArr
-            .forEach { diary in
-                print("diary :: diary! = \(diary)")
-                let year: Int = Int(diary.createdAt.toStringWithYYYY()) ?? 0
-                let month: Int = Int(diary.createdAt.toStringWithMM()) ?? 0
-                if monthSet[year] == nil {
-                    monthSet[year] = [:]
-                }
-                if monthSet[year]![month] == nil {
-                    monthSet[year]![month] = 0
-                }
-
-                monthSet[year]![month]! += 1
-            }
-        
-        for data in monthSet {
-            let year = data.key
-            let monthDic = data.value
-            if yearDateFilterMonthsModel[year] == nil {
-                yearDateFilterMonthsModel[year] = []
-            }
-
-            var dateFilterMonthsModelArr: [DateFilterMonthsModel] = []
-            for value in monthDic {
-                let month = value.key
-                let monthCount = value.value
-                dateFilterMonthsModelArr.append(DateFilterMonthsModel(month: month, diaryCount: monthCount))
-                // yearDateFilterMonthsModel[year]?.append(DateFilterMonthsModel(month: month, diaryCount: monthCount))
-            }
-            
-            let result = dateFilterMonthsModelArr.sorted(by: ({ $0.month < $1.month }))
-            yearDateFilterMonthsModel[year] = result
-        }
-        var dateFilterModelArr = [DateFilterModel]()
-        print("DiaryBottomSheet :: yearDateFilterMonthsModel \(yearDateFilterMonthsModel)")
-        
-        // 2023년, 2022년.. 순서대로 들어갈 수 있도록 소팅
-        let sortedYearDateFilterMonthsModel = Array(yearDateFilterMonthsModel).sorted(by: { $0.key > $1.key })
-        for value in sortedYearDateFilterMonthsModel {
-            dateFilterModelArr.insert(DateFilterModel(year: value.key, months: value.value), at: 0)
-        }
-        print("DiaryBottomSheet :: dateFilterModelArr = \(dateFilterModelArr)")
-        self.dateFilterModelRelay?.accept(dateFilterModelArr)
     }
     
     func bind() {
@@ -181,7 +117,6 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
                 
                 print("DiaryBottomSheet :: !!! \(weatherArr), \(placeArr)")
                 self.listener?.filterWithWeatherPlace(weatherArr: weatherArr, placeArr: placeArr)
-                self.presenter.setCurrentFilteredBtn(weatherArr: weatherArr, placeArr: placeArr)
             })
             .disposed(by: disposeBag)
         }
@@ -234,12 +169,6 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
 
     func reminderCompViewSetReminder(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date) {
         // self.reminderRequestDateRelay?.accept(requestDateComponents)
-    }
-    
-    
-    // MARK: - DateFilater
-    func filterDatePressedFilterBtn(yearDateFormatString: String) {
-        listener?.filterDatePressedFilterBtn(yearDateFormatString: yearDateFormatString)
     }
     
     // MARK: - ReviewComponenet

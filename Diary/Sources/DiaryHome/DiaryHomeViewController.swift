@@ -34,7 +34,6 @@ public protocol DiaryHomePresentableListener: AnyObject {
     func pressedMomentsCell(momentsItem: MomentsItemRealm)
     func pressedFilterBtn()
     func pressedFilterResetBtn()
-    func pressedDateFilterBtn()
     
     func needUpdateAdBanner() -> Int?
     
@@ -82,25 +81,17 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.menualTitleImage.addGestureRecognizer(gesture)
         // #endif
     }
-
-    lazy var writeBoxBtn = BoxButton(frame: CGRect.zero, btnStatus: .active, btnSize: .xLarge).then {
-        $0.actionName = "write"
-        $0.title = "N번째 메뉴얼 작성하기"
-        $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
+    
+    lazy var filterFAB = FAB(fabType: .primaryFilter, fabStatus: .default_).then {
+        $0.actionName = "filter"
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.addTarget(self, action: #selector(pressedFilterBtn), for: .touchUpInside)
     }
     
     lazy var writeFAB = FAB(fabType: .primary, fabStatus: .default_).then {
         $0.actionName = "write"
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
-        $0.isHidden = true
-    }
-    
-    lazy var scrollToTopFAB = FAB(fabType: .secondary, fabStatus: .default_).then {
-        $0.actionName = "scrollToTop"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.addTarget(self, action: #selector(pressedScrollToTopFAB), for: .touchUpInside)
-        $0.isHidden = true
     }
 
     lazy var momentsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout()).then {
@@ -127,14 +118,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.numberOfPages = 5
     }
     
-    lazy var myMenualTitleView = ListHeader(type: .main, rightIconType: .filterAndCalender).then {
+    lazy var myMenualTitleView = ListHeader(type: .main, rightIconType: .none).then {
         $0.categoryName = "menualTitle"
         $0.isUserInteractionEnabled = true
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = MenualString.home_title_myMenual
-        // $0.layer.zPosition = -1
-        $0.rightCalenderBtn.addTarget(self, action: #selector(pressedDateFilterBtn), for: .touchUpInside)
-        $0.rightFilterBtn.addTarget(self, action: #selector(pressedFilterBtn), for: .touchUpInside)
+        $0.title = MenualString.home_title_total_page
     }
     
     lazy var myMenualTableView = UITableView(frame: CGRect.zero, style: .grouped).then {
@@ -150,34 +138,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         $0.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 72, right: 0)
         $0.tag = TableCollectionViewTag.MyMenualTableView.rawValue
         $0.separatorStyle = .none
-    }
-    
-    private let filterEmptyView = UIView().then {
-        let filterEmpty = Empty().then {
-            $0.screenType = .main
-            $0.mainType = .filter
-        }
-        let filterEmptyHeaderDivider = Divider(type: ._2px).then {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-        $0.addSubview(filterEmpty)
-        $0.addSubview(filterEmptyHeaderDivider)
-        
-        filterEmptyHeaderDivider.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalToSuperview().offset(38)
-            make.height.equalTo(2)
-        }
-        
-        filterEmpty.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(filterEmptyHeaderDivider.snp.bottom).offset(50)
-            make.width.equalToSuperview()
-            make.height.equalTo(180)
-        }
-        
-        $0.isHidden = true
     }
     
     private let emptyView = UIView().then {
@@ -257,35 +217,16 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
         MenualLog.logEventAction("writing_appear")
         actionSplashView()
         askTracking()
-        
-        print("DiaryHome :: PushList!")
-        
-        let center = UNUserNotificationCenter.current()
-        var localPushCount: Int = 0
-        var text: String = ""
-        center.getPendingNotificationRequests { (notifications) in
-            print("DiaryDetail :: LocalPush :: Count: \(notifications.count)")
-            localPushCount = notifications.count
-            text += "현재 적용된 푸쉬 = \(localPushCount)\n\n\n"
-            for item in notifications {
-                text += "고유ID = \(item.identifier)\n트리거 = \(item.trigger.debugDescription)\n타이틀 =  \(item.content.title)\n바디 = \(item.content.body)\n담긴정보 =  \(item.content.userInfo)\n\n"
-                print("DiaryHome :: text = \(item.content), --! \(text)")
-            }
-        }
-        
-        print("DiaryHome :: text = \(text)")
     }
     
     func setViews() {
         self.view.backgroundColor = Colors.background
         
         self.view.addSubview(naviView)
-        self.view.addSubview(writeBoxBtn)
         
         self.view.addSubview(myMenualTableView)
-        self.view.addSubview(filterEmptyView)
         self.view.addSubview(writeFAB)
-        self.view.addSubview(scrollToTopFAB)
+        self.view.addSubview(filterFAB)
         self.view.addSubview(emptyView)
         self.view.addSubview(momentsEmptyView)
         self.view.addSubview(myMenualTitleView)
@@ -302,10 +243,9 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
         }
         
-        self.view.bringSubviewToFront(writeBoxBtn)
         self.view.bringSubviewToFront(tableViewHeaderView)
         self.view.bringSubviewToFront(writeFAB)
-        self.view.bringSubviewToFront(scrollToTopFAB)
+        self.view.bringSubviewToFront(filterFAB)
         self.view.bringSubviewToFront(myMenualTitleView)
         self.view.bringSubviewToFront(naviView)
         
@@ -366,29 +306,15 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
             make.height.equalTo(22)
         }
         
-        writeBoxBtn.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.height.equalTo(56)
-            make.bottom.equalToSuperview().inset(34)
-        }
-        
-        filterEmptyView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalTo(tableViewHeaderView.snp.bottom)
-            make.bottom.equalToSuperview()
-        }
-        
         writeFAB.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.bottom.equalToSuperview().inset(34)
             make.width.height.equalTo(56)
         }
         
-        scrollToTopFAB.snp.makeConstraints { make in
-            make.trailing.equalTo(writeFAB)
-            make.bottom.equalTo(writeFAB.snp.top).inset(-16)
+        filterFAB.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(114)
             make.width.height.equalTo(56)
         }
         
@@ -424,29 +350,11 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                     }
 
                     let realNumber: Int = num == -1 || num == 0 ? 0 : num
-                    self.writeBoxBtn.title = String(format: MenualString.home_button_writing, realNumber + 1)
-
                     self.myMenualTitleView.pageNumber = realNumber
                     self.reloadTableView()
                 }
             })
             .disposed(by: self.disposeBag)
-        
-        listener?.filteredDiaryDic
-            .subscribe(onNext: { [weak self] diarySectionModel in
-                guard let self = self else { return }
-                guard let diarySectionModel = diarySectionModel else { return }
-                if self.isFilteredRelay.value == false { return }
-                
-                if diarySectionModel.allCount == 0 {
-                    self.filterEmptyView.isHidden = false
-                } else {
-                    self.filterEmptyView.isHidden = true
-                }
-                
-                self.reloadTableView()
-            })
-            .disposed(by: disposeBag)
         
         isFilteredRelay
             .subscribe(onNext: { [weak self] isFiltered in
@@ -512,22 +420,6 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
 
         case false:
             emptyView.isHidden = true
-        }
-    }
-    
-    func scrollToDateFilter(yearDateFormatString: String) {
-        let isFiltered: Bool = isFilteredRelay.value
-        switch isFiltered {
-        case true:
-            guard let diaryDictionary = listener?.filteredDiaryDic.value?.diarySectionModelDic else { return }
-            guard let data = diaryDictionary.filter ({ $0.value.sectionName == yearDateFormatString }).first else { return }
-            myMenualTableView.scrollToRow(at: IndexPath(row: 0, section: data.value.sectionIndex), at: .middle, animated: true)
-
-        case false:
-            guard let diaryDictionary = listener?.diaryDictionary else { return }
-            guard let data = diaryDictionary.filter ({ $0.value.sectionName == yearDateFormatString }).first else { return }
-            print("DiaryHome :: data = \(data)")
-            myMenualTableView.scrollToRow(at: IndexPath(row: 0, section: data.value.sectionIndex), at: .middle, animated: true)
         }
     }
     
@@ -625,23 +517,12 @@ extension DiaryHomeViewController {
         print("FABWritingBtn Pressed!, button = \(button)")
         listener?.pressedWritingBtn()
         button.actionName = "write"
-        if button == writeBoxBtn {
-            MenualLog.logEventAction(responder: button, parameter: ["type" : "box"])
-        } else if button == writeFAB {
-            MenualLog.logEventAction(responder: button, parameter: ["type" : "fab"])
-        }
+        MenualLog.logEventAction(responder: button, parameter: ["type" : "fab"])
     }
     
     @objc
     func pressedMenualBtn(_ button: UIButton) {
         print("메뉴얼 버튼 눌렀니?")
-    }
-    
-    @objc
-    func pressedDateFilterBtn(_ button: UIButton) {
-        print("pressedLightCalenderBtn")
-        listener?.pressedDateFilterBtn()
-        MenualLog.logEventAction(responder: button)
     }
     
     @objc
@@ -658,13 +539,6 @@ extension DiaryHomeViewController {
         listener?.pressedFilterResetBtn()
         MenualLog.logEventAction(responder: button)
     }
-    
-    @objc
-    func pressedScrollToTopFAB(_ button: UIButton) {
-        print("DiaryHome :: pressedScrollToTopFAB!!")
-        myMenualTableView.setContentOffset(.zero, animated: true)
-        MenualLog.logEventAction(responder: button)
-    }
 }
 
 // MARK: - Scroll View
@@ -677,76 +551,7 @@ extension DiaryHomeViewController: UIScrollViewDelegate {
             momentsPagination(scrollView)
 
         case .MyMenualTableView:
-            attachTopMyMenualTitleView(scrollView)
-        }
-    }
-    
-    // 스크롤시 상단에 titleView가 고정되도록
-    func attachTopMyMenualTitleView(_ scrollView: UIScrollView) {
-        guard let tableCollectionViewTag = TableCollectionViewTag(rawValue: scrollView.tag) else { return }
-        // myMenualTableView일때만 작동하도록
-        if case .MyMenualTableView = tableCollectionViewTag {
-            // print("DiaryHome :: contents offset = \(scrollView.contentOffset.y)")
-            let offset: CGFloat = scrollView.contentOffset.y
-            
-            // 상단 콘텐츠 높이에 따라서 Attach 되는 목표 offset 변경
-            var maxOffsetValue: CGFloat = 0
-            if listener?.onboardingDiarySet.value != nil {
-               maxOffsetValue = 230
-            } else {
-                maxOffsetValue = 165
-            }
-            
-            // TitleView를 넘어서 스크롤할 경우
-            if offset > maxOffsetValue {
-                // print("DiaryHome :: contents > 155")
-                setFABMode(isEnabled: true)
-                myMenualTitleView.AppShadow(.shadow_6)
-                myMenualTitleView.backgroundColor = Colors.background
-                myMenualTitleView.titleLabel.snp.remakeConstraints { make in
-                    make.leading.equalToSuperview().offset(20)
-                    make.centerY.equalToSuperview()
-                    make.height.equalTo(22)
-                }
-                myMenualTitleView.snp.remakeConstraints { make in
-                    make.leading.equalToSuperview()
-                    make.width.equalToSuperview()
-                    make.top.equalTo(naviView.snp.bottom)
-                    make.height.equalTo(44)
-                }
-            } else {
-                // print("DiaryHome :: contents <= 155")
-                setFABMode(isEnabled: false)
-                myMenualTitleView.AppShadow(.shadow_0)
-                myMenualTitleView.backgroundColor = .clear
-                myMenualTitleView.titleLabel.snp.remakeConstraints { make in
-                    make.leading.equalToSuperview().offset(20)
-                    make.top.equalToSuperview()
-                    make.height.equalTo(22)
-                }
-                myMenualTitleView.snp.remakeConstraints { make in
-                    make.leading.equalToSuperview()
-                    make.width.equalToSuperview()
-                    make.top.equalTo(tableViewHeaderView.snp.bottom)
-                    make.height.equalTo(22)
-                }
-            }
-        }
-    }
-
-    // isEnabled == true : FABMode
-    // isEnabled == false : FABMode 해제
-    func setFABMode(isEnabled: Bool) {
-        switch isEnabled {
-        case true:
-            writeBoxBtn.isHidden = true
-            scrollToTopFAB.isHidden = false
-            writeFAB.isHidden = false
-
-        case false:
-            writeBoxBtn.isHidden = false
-            scrollToTopFAB.isHidden = true
-            writeFAB.isHidden = true
+            break
         }
     }
 
@@ -953,8 +758,6 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
     //reloadJJIKKYU() -> JJIKKYU Love YangSSuz <3 진균이는 내가 아는 사람중에 제일 멋져!!! ~v~
     func reloadTableView() {
         print("reloadTableView!")
-        // self.isFiltered = isFiltered
-        // self.isFilteredRelay.accept(isFiltered)
         myMenualTableView.reloadData()
         momentsCollectionView.reloadData()
     }
@@ -1095,41 +898,17 @@ extension DiaryHomeViewController: UICollectionViewDelegate, UICollectionViewDel
 // MARK: - Filter
 extension DiaryHomeViewController {
     func setFilterStatus(isFiltered: Bool) {
-        print("diaryHome :: setFilterStatus = \(isFiltered)")
-        // 이미 적용된 target 제거
-        self.writeBoxBtn.removeTarget(nil, action: nil, for: .allEvents)
-        self.writeFAB.removeTarget(nil, action: nil, for: .allEvents)
-
         switch isFiltered {
         case true:
-            print("diaryHome :: isFiltered! = true")
-            self.myMenualTitleView.title = MenualString.home_title_total_page
-            self.myMenualTitleView.rightFilterBtnIsEnabled = true
-            
-            self.writeBoxBtn.title = MenualString.home_button_filter_reset
-            self.writeBoxBtn.isFiltered = .enabled
-            
-            self.writeFAB.isFiltered = .enabled
-
-            self.writeBoxBtn.addTarget(self, action: #selector(pressedFilterResetBtn), for: .touchUpInside)
-            self.writeFAB.addTarget(self, action: #selector(pressedFilterResetBtn), for: .touchUpInside)
+            filterFAB.isFiltered = .enabled
             
             
         case false:
-            print("diaryHome :: isFiltered! = false")
-            self.myMenualTitleView.title = MenualString.home_title_myMenual
-            self.myMenualTitleView.rightFilterBtnIsEnabled = false
-            self.writeBoxBtn.isFiltered = .disabled
-            self.writeFAB.isFiltered = .disabled
+            filterFAB.isFiltered = .disabled
             
             let lastPageNum: Int = self.listener?.lastPageNumRelay.value ?? 0
-            self.writeBoxBtn.title = String(format: MenualString.home_button_writing, lastPageNum + 1)
-            self.myMenualTitleView.pageNumber = lastPageNum
-
-            self.writeBoxBtn.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
-            self.writeFAB.addTarget(self, action: #selector(pressedFABWritingBtn), for: .touchUpInside)
-            self.filterEmptyView.isHidden = true
-            self.reloadTableView()
+            myMenualTitleView.pageNumber = lastPageNum
+            reloadTableView()
         }
     }
 }

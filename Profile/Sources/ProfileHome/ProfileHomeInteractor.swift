@@ -317,8 +317,4 @@ extension ProfileHomeInteractor {
     func reminderCompViewshowToast(isEding: Bool) {
         
     }
-    
-    func filterDatePressedFilterBtn(yearDateFormatString: String) {
-        
-    }
 }

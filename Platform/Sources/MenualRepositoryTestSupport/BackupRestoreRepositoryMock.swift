@@ -53,4 +53,10 @@ public final class BackupRestoreRepositoryMock: BackupRestoreRepository {
         clearRestoreJsonCallCount += 1
         completion(true)
     }
+    
+    public var getPasswordCallCount: Int = 0
+    public func getPassword() -> String {
+        getPasswordCallCount += 1
+        return "Password"
+    }
 }

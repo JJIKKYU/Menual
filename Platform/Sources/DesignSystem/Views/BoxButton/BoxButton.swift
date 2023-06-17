@@ -134,6 +134,7 @@ public class BoxButton: UIButton {
         
         switch isHighlighted {
         case true:
+            if btnStatus == .inactive { break }
             if btnSize == .xLarge {
                 switch isFiltered {
                 case .enabled:
@@ -146,6 +147,7 @@ public class BoxButton: UIButton {
             }
 
         case false:
+            if btnStatus == .inactive { break }
             if btnSize == .xLarge {
                 switch isFiltered {
                 case .enabled:

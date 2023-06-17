@@ -16,20 +16,11 @@ import MenualUtil
 public protocol MenualBottomSheetFilterComponentDelegate: AnyObject {
     var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]>? { get }
     var filterPlaceSelectedArrRelay: BehaviorRelay<[Place]>? { get }
-    var filteredMenaulCountsObservable: Observable<Int> { get }
-    var filterResetBtnRelay: BehaviorRelay<Bool>? { get }
 }
 
 public class MenualBottomSheetFilterComponentView: UIView {
-    // var weatherSelectedArr: [Weather] = []
-    
-    // var placeSelectedArr: [Place] = []
-    
-    public weak var delegate: MenualBottomSheetFilterComponentDelegate? {
-        didSet {
-            print("델리게이트 불림!")
-        }
-    }
+
+    public weak var delegate: MenualBottomSheetFilterComponentDelegate?
     var disposeBag = DisposeBag()
     
     public var filteredCount: Int = 0 {
@@ -51,13 +42,13 @@ public class MenualBottomSheetFilterComponentView: UIView {
     private let weatherSelectNumTitle = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppTitle(.title_1)
-        $0.textColor = Colors.grey.g500
+        $0.textColor = Colors.tint.sub.n400
         $0.text = "0개 선택"
+        $0.isHidden = true
     }
     
     private lazy var weatherSelectView = WeatherPlaceSelectView(type: .weather).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-//        $0.isUserInteractionEnabled = true
         $0.delegate = self
         $0.selectionLimit = Weather().getVariation().count
     }
@@ -77,13 +68,13 @@ public class MenualBottomSheetFilterComponentView: UIView {
     private let placeSelectNumTitle = UILabel().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppTitle(.title_1)
-        $0.textColor = Colors.grey.g500
+        $0.textColor = Colors.tint.sub.n400
         $0.text = "0개 선택"
+        $0.isHidden = true
     }
     
     private lazy var placeSelectView = WeatherPlaceSelectView(type: .place).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-//        $0.isUserInteractionEnabled = false
         $0.delegate = self
         $0.selectionLimit = Place().getVariation().count
     }
@@ -108,40 +99,22 @@ public class MenualBottomSheetFilterComponentView: UIView {
     public lazy var filterBtn = BoxButton(frame: .zero, btnStatus: .inactive, btnSize: .large).then {
         $0.actionName = "confirm"
         $0.title = MenualString.filter_button_all_menual
-        $0.isEnabled = false
+        $0.isEnabled = true
     }
 
     public init() {
         super.init(frame: CGRect.zero)
         setViews()
-        setBindRelay()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // bind는 delegate setting을 한 후에 사용하는 곳에서 직접 수행
     public func bind() {
-        print("bind!")
-        delegate?.filteredMenaulCountsObservable
-            .subscribe(onNext: { [weak self] count in
-                guard let self = self else { return }
-                
-                print("DiaryBottomSheet :: filteredMenaulCountsObservable 구독! = \(count)")
-                let title: String = "\(count)개의 메뉴얼 보기"
-                self.filterBtn.title = title
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    public func setBindRelay() {
-        print("DiaryBottomSheet :: setBindRelay! = \(delegate?.filterWeatherSelectedArrRelay), \(delegate?.filterPlaceSelectedArrRelay)")
-        
         delegate?.filterWeatherSelectedArrRelay?
             .subscribe(onNext: { [weak self] weatherArr in
                 guard let self = self else { return }
-                print("DiaryBottomSheet :: filterWeatherSelectedArrRelay! \(weatherArr)")
                 self.weatherSelectView.selectedWeatherTypes = weatherArr
                 self.weatherSelectView.selectCells()
                 self.setNeedsLayout()
@@ -151,7 +124,6 @@ public class MenualBottomSheetFilterComponentView: UIView {
         delegate?.filterPlaceSelectedArrRelay?
             .subscribe(onNext: { [weak self] placeArr in
                 guard let self = self else { return }
-                print("DiaryBottomSheet :: filterPlaceSelectedArrRelay! \(placeArr)")
                 self.placeSelectView.selectedPlaceTypes = placeArr
                 self.placeSelectView.selectCells()
                 self.setNeedsLayout()
@@ -226,14 +198,12 @@ public class MenualBottomSheetFilterComponentView: UIView {
         guard let weatherSelectedArr = delegate?.filterWeatherSelectedArrRelay?.value,
               let placeSelectedArr = delegate?.filterPlaceSelectedArrRelay?.value
         else { return }
-        
-        print("DiaryBottomSheet :: layoutSubviews")
 
+        weatherSelectNumTitle.isHidden = weatherSelectedArr.count == 0 ? true : false
         weatherSelectNumTitle.text = String(format: MenualString.filter_button_select_with_count, weatherSelectedArr.count)
-        placeSelectNumTitle.text = String(format: MenualString.filter_button_select_with_count, placeSelectedArr.count)
         
-        filterBtn.btnStatus = .active
-        filterBtn.isEnabled = true
+        placeSelectNumTitle.isHidden = placeSelectedArr.count == 0 ? true : false
+        placeSelectNumTitle.text = String(format: MenualString.filter_button_select_with_count, placeSelectedArr.count)
         
         // 초기화 버튼, 필터 버튼 변환 로직
         // 하나라도 선택될 경우 초기화 버튼 활성화
@@ -266,46 +236,24 @@ public class MenualBottomSheetFilterComponentView: UIView {
         // 필터버튼 카운트
         if filteredCount == -1 {
             filterBtn.title = MenualString.filter_button_all_menual
+            filterBtn.isEnabled = true
+            filterBtn.btnStatus = .active
+        } else if filteredCount == 0  {
+            filterBtn.title = String(format: MenualString.filter_button_watch_with_menaul_count, filteredCount)
+            filterBtn.isEnabled = false
+            filterBtn.btnStatus = .inactive
         } else {
             filterBtn.title = String(format: MenualString.filter_button_watch_with_menaul_count, filteredCount)
+            filterBtn.isEnabled = true
+            filterBtn.btnStatus = .active
         }
-    }
-
-    func setCurrentFilterBtn(weatherArr: [Weather], placeArr: [Place]) {
-        print("DiaryBottomSheet :: 1. setCurrentFilterBtn, weatherArr = \(weatherArr), placeArr = \(placeArr)")
-        
-        weatherSelectView.selectedWeatherTypes = weatherArr
-        weatherSelectView.selectCells()
-        placeSelectView.selectedPlaceTypes = placeArr
-        placeSelectView.selectCells()
-        
-        setNeedsLayout()
-        // delegate?.filterPlaceSelectedArrRelay.accept(placeArr)
-//        if weatherArr.count != 0 {
-//            weatherSelectView.selectedWeatherTypes = weatherArr
-//        }
-//
-//        if placeArr.count != 0 {
-//            placeSelectView.selectedPlaceTypes = placeArr
-//        }
-        /*
-        
-        
-        
-        */
-        
-        
-        // delegate?.filterPlaceSelectedArrRelay.accept(placeArr)
-        // placeSelectView.selectedPlaceType = .company
-    }
-}
+    }}
 
 // MARK: - IBAction
 extension MenualBottomSheetFilterComponentView {
     @objc
     func pressedWeatherTitleBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
-        print("bottomSheet :: pressedWeatherTitleBtn!")
         delegate?.filterWeatherSelectedArrRelay?.accept([])
         weatherSelectView.selctAllCells()
         setNeedsLayout()
@@ -314,7 +262,6 @@ extension MenualBottomSheetFilterComponentView {
     @objc
     func pressedPlaceTitleBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
-        print("bottomSheet :: pressedPlaceTitleBtn!")
         delegate?.filterPlaceSelectedArrRelay?.accept([])
         placeSelectView.selctAllCells()
         setNeedsLayout()
@@ -323,12 +270,10 @@ extension MenualBottomSheetFilterComponentView {
     @objc
     func pressedResetFilterBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
-        print("bottomSheet :: pressedResetFilterBtn!")
-//        delegate?.filterWeatherSelectedArrRelay?.accept([])
-//        delegate?.filterPlaceSelectedArrRelay?.accept([])
-//        weatherSelectView.resetCells()
-//        placeSelectView.resetCells()
-        delegate?.filterResetBtnRelay?.accept(true)
+        delegate?.filterWeatherSelectedArrRelay?.accept([])
+        delegate?.filterPlaceSelectedArrRelay?.accept([])
+        weatherSelectView.resetCells()
+        placeSelectView.resetCells()
         setNeedsLayout()
     }
 }
@@ -346,15 +291,10 @@ extension MenualBottomSheetFilterComponentView: WeatherPlaceSelectViewDelegate {
         switch isSelected {
         // 선택되었다면 어레이에 추가
         case true:
-            // weatherSelectedArr.append(weatherType)
             weatherSelectedArr.append(weatherType)
         
         // 해제되었다면 어레이에서 제거
         case false:
-//            if let idx = weatherSelectedArr.firstIndex(where: { $0 == weatherType }) {
-//                weatherSelectedArr.remove(at: idx)
-//            }
-            
             if let idx = weatherSelectedArr.firstIndex(where: { $0 == weatherType }) {
                 weatherSelectedArr.remove(at: idx)
             }
@@ -372,15 +312,10 @@ extension MenualBottomSheetFilterComponentView: WeatherPlaceSelectViewDelegate {
         switch isSelected {
         // 선택되었다면 어레이에 추가
         case true:
-            // placeSelectedArr.append(placeType)
             placeSelectedArr.append(placeType)
         
         // 해제되었다면 어레이에서 제거
         case false:
-//            if let idx = placeSelectedArr.firstIndex(where: { $0 == placeType }) {
-//                placeSelectedArr.remove(at: idx)
-//            }
-            
             if let idx = placeSelectedArr.firstIndex(where: { $0 == placeType }) {
                 placeSelectedArr.remove(at: idx)
             }

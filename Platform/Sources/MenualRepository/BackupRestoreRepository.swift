@@ -382,4 +382,8 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
             completion(false)
         }
     }
+    
+    public func getPassword() -> String {
+        return "MenualJJIKKYU"
+    }
 }

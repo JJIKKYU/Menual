@@ -13,6 +13,7 @@ import MenualUtil
 
 public enum FABType {
     case primary
+    case primaryFilter
     case secondary
     case spacRequired
 }
@@ -93,6 +94,11 @@ public class FAB: UIButton {
         $0.textColor = Colors.tint.main.v500
     }
     
+    public let btnBadge = Badges().then {
+        $0.badgeType = .dot
+        $0.isHidden = true
+    }
+    
     override open var isHighlighted: Bool {
         didSet {
             fabStatus = isHighlighted ? .pressed : .default_
@@ -123,6 +129,7 @@ public class FAB: UIButton {
         addSubview(spaceRequiredLeftArrowBtn)
         addSubview(spaceRequiredRightArrowBtn)
         addSubview(spaceRequiredCurrentPageLabel)
+        addSubview(btnBadge)
         
         fabIconImageView.snp.makeConstraints { make in
             make.centerX.centerY.equalToSuperview()
@@ -145,6 +152,11 @@ public class FAB: UIButton {
             make.centerY.equalToSuperview()
             make.width.height.equalTo(20)
         }
+        
+        btnBadge.snp.makeConstraints { make in
+            make.trailing.top.equalTo(fabIconImageView)
+            make.width.height.equalTo(4)
+        }
     }
     
     public override func layoutSubviews() {
@@ -155,31 +167,33 @@ public class FAB: UIButton {
             fabIconImageView.tintColor = Colors.grey.g800
             fabIconImageView.isHidden = false
             
-            switch isFiltered {
-            case .enabled:
-                fabIconImageView.image = Asset._24px.Circle.front .image.withRenderingMode(.alwaysTemplate)
-                backgroundColor = Colors.tint.main.v400
-            case .disabled:
-                fabIconImageView.image = Asset._24px.write.image.withRenderingMode(.alwaysTemplate)
+            switch fabStatus {
+            case .default_:
                 backgroundColor = Colors.tint.sub.n400
+
+            case .pressed:
+                backgroundColor = Colors.tint.sub.n600
             }
+            
+        case .primaryFilter:
+            fabIconImageView.image = Asset._24px.filter.image.withRenderingMode(.alwaysTemplate)
+            fabIconImageView.tintColor = Colors.grey.g800
+            fabIconImageView.isHidden = false
             
             switch fabStatus {
             case .default_:
-                switch isFiltered {
-                case .enabled:
-                    backgroundColor = Colors.tint.main.v400
-                case .disabled:
-                    backgroundColor = Colors.tint.sub.n400
-                }
+                backgroundColor = Colors.tint.main.v400
 
             case .pressed:
-                switch isFiltered {
-                case .enabled:
-                    backgroundColor = Colors.tint.main.v600
-                case .disabled:
-                    backgroundColor = Colors.tint.sub.n600
-                }
+                backgroundColor = Colors.tint.main.v600
+            }
+            
+            switch isFiltered {
+            case .enabled:
+                btnBadge.isHidden = false
+
+            case .disabled:
+                btnBadge.isHidden = true
             }
             
         case .secondary:

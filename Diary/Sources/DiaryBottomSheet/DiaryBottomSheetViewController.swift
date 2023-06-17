@@ -31,14 +31,12 @@ public enum MenualBottomSheetType {
     case calender
     case reminder
     case filter
-    case dateFilter
     case review
 }
 
 public protocol DiaryBottomSheetPresentableListener: AnyObject {
     var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { get }
     var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { get }
-    var filterResetBtnRelay: BehaviorRelay<Bool>? { get }
     var isHideMenualRelay: BehaviorRelay<Bool>? { get }
     
     func pressedCloseBtn()
@@ -48,16 +46,12 @@ public protocol DiaryBottomSheetPresentableListener: AnyObject {
     var menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>? { get set }
     
     func filterWithWeatherPlacePressedFilterBtn()
-    func filterDatePressedFilterBtn(yearDateFormatString: String)
     
     // MenualBottomSheetReminderComponentView
     func reminderCompViewshowToast(isEding: Bool)
     func reminderCompViewSetReminder(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date)
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
-    
-    var dateFilterModelRelay: BehaviorRelay<[DateFilterModel]?>? { get }
-    // var filteredDiaryCountRelay: BehaviorRelay<Int>? { get set }
     
     // ReviewComponentView
     func pressedReviewBtn()
@@ -70,9 +64,6 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     var disposeBag = DisposeBag()
     var keyHeight: CGFloat?
     public var bottomSheetHeight: CGFloat = 400
-    
-    // Filter 선택시 필터링된 메뉴얼 개수 넘겨주는 Relay
-    var filteredMenaulCountsRelay = BehaviorRelay<Int>(value: 0)
     
     var bottomSheetTitle: String = "" {
         didSet { layoutUpdate() }
@@ -154,25 +145,10 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     private lazy var filterComponentView = MenualBottomSheetFilterComponentView().then {
         $0.categoryName = "filter"
         $0.translatesAutoresizingMaskIntoConstraints = false
-//        $0.isUserInteractionEnabled = false
         $0.delegate = self
         $0.bind()
         $0.isHidden = true
         $0.filterBtn.addTarget(self, action: #selector(pressedFilterBtn), for: .touchUpInside)
-        // $0.delegate = self
-    }
-    
-    // 날짜 필터 컴포넌트
-    private lazy var dateFilterComponentView = MenualDateFilterComponentView().then {
-        $0.categoryName = "dateFilter"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.delegate = self
-        $0.prevMonthArrowBtn.addTarget(self, action: #selector(pressedPrevMonthBtn), for: .touchUpInside)
-        $0.nextMonthArrowBtn.addTarget(self, action: #selector(pressedNextMonthBtn), for: .touchUpInside)
-        $0.prevYearArrowBtn.addTarget(self, action: #selector(pressedPrevYearBtn), for: .touchUpInside)
-        $0.nextYearArrowBtn.addTarget(self, action: #selector(pressedNextYearBtn), for: .touchUpInside)
-        $0.filterBtn.addTarget(self, action: #selector(pressedDateFilterBtn), for: .touchUpInside)
-        $0.isHidden = true
     }
     
     // 리마인더 컴포넌트
@@ -195,7 +171,6 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         // setViews()
         bottomSheetView.backgroundColor = Colors.background
         
-        filterBind()
         isModalInPresentation = true
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -215,7 +190,6 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
 //        weatherPlaceSelectView.delegate = nil
         filterComponentView.delegate = nil
         reminderComponentView.delegate = nil
-        dateFilterComponentView.delegate = nil
         // listener?.pressedCloseBtn()
     }
     
@@ -321,21 +295,6 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
 
             bottomSheetTitle = MenualString.filter_title
             filterComponentView.isHidden = false
-            menualBottomSheetRightBtnType = .close
-            rightBtn.actionName = "close"
-            rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
-            
-        case .dateFilter:
-            bottomSheetView.addSubview(dateFilterComponentView)
-            dateFilterComponentView.snp.makeConstraints { make in
-                make.top.equalTo(self.divider.snp.bottom).offset(64)
-                make.leading.equalToSuperview().offset(20)
-                make.width.equalToSuperview().inset(20)
-                make.height.equalTo(260)
-            }
-
-            bottomSheetTitle = MenualString.filter_title_date
-            dateFilterComponentView.isHidden = false
             menualBottomSheetRightBtnType = .close
             rightBtn.actionName = "close"
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
@@ -495,7 +454,7 @@ extension DiaryBottomSheetViewController {
             bottomSheetTitle = MenualString.filter_title_date
             bottomSheetHeight = 375
             
-        case .filter, .dateFilter:
+        case .filter:
             bottomSheetTitle = MenualString.filter_title
             bottomSheetHeight = 392
             
@@ -525,19 +484,12 @@ extension DiaryBottomSheetViewController {
 
 // MARK: - MenualBottomSheetFilterComponentView
 extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelegate {
-    var filterResetBtnRelay: BehaviorRelay<Bool>? {
-        listener?.filterResetBtnRelay
-    }
     var filterWeatherSelectedArrRelay: BehaviorRelay<[Weather]>? {
         listener?.filteredWeatherArrRelay
     }
     
     var filterPlaceSelectedArrRelay: BehaviorRelay<[Place]>? {
         listener?.filteredPlaceArrRelay
-    }
-    
-    var filteredMenaulCountsObservable: Observable<Int> {
-        return filteredMenaulCountsRelay.asObservable()
     }
     
     @objc
@@ -548,78 +500,6 @@ extension DiaryBottomSheetViewController: MenualBottomSheetFilterComponentDelega
     
     func setFilterBtnCount(count: Int) {
         filterComponentView.filteredCount = count
-    }
-    
-    func setCurrentFilteredBtn(weatherArr: [Weather], placeArr: [Place]) {
-        print("DiaryBottomSheet :: setCurrentFilteredBtn, weatherArr = \(weatherArr), placeArr = \(placeArr)")
-        filterComponentView.setBindRelay()
-        // listener?.weatherFilterSelectedArrRelay.accept(weatherArr)
-        // filterComponentView.setCurrentFilterBtn(weatherArr: weatherArr, placeArr: placeArr)
-        // filterComponentView.placeSelectedArr = placeArr
-        // filterComponentView.placeSelectedArr
-        // filterComponentView.delegate?.filterPlaceSelectedArrRelay
-        // filterComponentView.placeSelectedArr = placeArr
-        //filterComponentView.weatherse
-        // listener?.placeFilterSelectedArrRelay.accept(placeArr)
-    }
-}
-
-// MARK: - MenualBottomSheetDateFilterComponentView
-extension DiaryBottomSheetViewController: MenualDateFilterComponentDelegate {
-    var dateFilterModelRelay: BehaviorRelay<[DateFilterModel]?>? {
-        listener?.dateFilterModelRelay
-    }
-
-    @objc
-    func pressedPrevMonthBtn(_ button: UIButton) {
-        MenualLog.logEventAction(responder: button)
-        let currentIdx = dateFilterComponentView.monthArrowIdxRelay.value
-        dateFilterComponentView.monthArrowIdxRelay.accept(currentIdx - 1)
-    }
-    
-    @objc
-    func pressedNextMonthBtn(_ button: UIButton) {
-        MenualLog.logEventAction(responder: button)
-        let currentIdx = dateFilterComponentView.monthArrowIdxRelay.value
-        dateFilterComponentView.monthArrowIdxRelay.accept(currentIdx + 1)
-    }
-    
-    @objc
-    func pressedPrevYearBtn(_ button: UIButton) {
-        MenualLog.logEventAction(responder: button)
-        print("DiaryBottomSheet :: pressedPrevYearBtn!")
-        let currentIdx = dateFilterComponentView.yearArrowIdxRelay.value
-        dateFilterComponentView.yearArrowIdxRelay.accept(currentIdx - 1)
-        dateFilterComponentView.monthArrowIdxRelay.accept(0)
-    }
-    
-    @objc
-    func pressedNextYearBtn(_ button: UIButton) {
-        MenualLog.logEventAction(responder: button)
-        print("DiaryBottomSheet :: pressedNextYearBtn!")
-        let currentIdx = dateFilterComponentView.yearArrowIdxRelay.value
-        dateFilterComponentView.yearArrowIdxRelay.accept(currentIdx + 1)
-        dateFilterComponentView.monthArrowIdxRelay.accept(0)
-    }
-    
-    @objc
-    func pressedDateFilterBtn(_ button: UIButton) {
-        MenualLog.logEventAction(responder: button)
-        print("DiaryBottomSheet :: pressedDateFilterBtn!")
-        // let month = dateFilterComponentView.month
-        // let filteredDate =
-        listener?.filterDatePressedFilterBtn(yearDateFormatString: dateFilterComponentView.yearEngMonth)
-    }
-    
-    func filterBind() {
-        listener?.filterResetBtnRelay?
-            .subscribe(onNext: { [weak self] isReset in
-                guard let self = self else { return }
-                if isReset == false { return }
-                self.listener?.filterResetBtnRelay?.accept(false)
-                self.hideBottomSheetAndGoBack()
-            })
-            .disposed(by: disposeBag)
     }
 }
 

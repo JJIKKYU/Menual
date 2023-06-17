@@ -525,5 +525,4 @@ extension DiaryDetailInteractor {
 // MARK: - 미사용
 extension DiaryDetailInteractor {
     func filterWithWeatherPlacePressedFilterBtn() { }
-    func filterDatePressedFilterBtn(yearDateFormatString: String) {}
 }

@@ -483,5 +483,4 @@ extension DiaryWritingInteractor {
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) { }
     func filterWithWeatherPlacePressedFilterBtn() { }
     func reminderCompViewshowToast(isEding: Bool) { }
-    func filterDatePressedFilterBtn(yearDateFormatString: String) {}
 }

@@ -32,7 +32,6 @@ public final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHo
     public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
     public var diaryUUIDRelay: BehaviorRelay<String> { dependency.diaryUUIDRelay }
     public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
-    public var filterResetBtnRelay: BehaviorRelay<Bool>?
     public var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     public var filteredDiaryCountRelay: BehaviorRelay<Int>?
     // 부모(AppRoot)에서 받아온 걸 받아서 사용만 함.
@@ -86,7 +85,6 @@ public final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuil
         component.filteredDiaryCountRelay = interactor.filteredDiaryCountRelay
         component.filteredPlaceArrRelay = interactor.filteredPlaceArrRelay
         component.filteredWeatherArrRelay = interactor.filteredWeatherArrRelay
-        component.filterResetBtnRelay = interactor.filterResetBtnRelay
         
         return DiaryHomeRouter(
             interactor: interactor,
