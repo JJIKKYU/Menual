@@ -33,11 +33,11 @@ public protocol DiaryHomePresentableListener: AnyObject {
     func pressedDiaryCell(diaryModel: DiaryModelRealm)
     func pressedMomentsCell(momentsItem: MomentsItemRealm)
     func pressedFilterBtn()
-    func pressedFilterResetBtn()
     
     func needUpdateAdBanner() -> Int?
     
     var lastPageNumRelay: BehaviorRelay<Int> { get }
+    var filterLastPageNumRelay: BehaviorRelay<Int> { get }
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var diaryDictionary: [String: DiaryHomeSectionModel] { get }
     var onboardingDiarySet: BehaviorRelay<[Int: String]?> { get }
@@ -531,14 +531,6 @@ extension DiaryHomeViewController {
         listener?.pressedFilterBtn()
         MenualLog.logEventAction(responder: button)
     }
-    
-    @objc
-    func pressedFilterResetBtn(_ button: UIButton) {
-        print("DiaryHome :: filterReset!!")
-        button.actionName = "filterReset"
-        listener?.pressedFilterResetBtn()
-        MenualLog.logEventAction(responder: button)
-    }
 }
 
 // MARK: - Scroll View
@@ -901,7 +893,8 @@ extension DiaryHomeViewController {
         switch isFiltered {
         case true:
             filterFAB.isFiltered = .enabled
-            
+            let lastPageNum: Int = self.listener?.filterLastPageNumRelay.value ?? 0
+            myMenualTitleView.pageNumber = lastPageNum
             
         case false:
             filterFAB.isFiltered = .disabled

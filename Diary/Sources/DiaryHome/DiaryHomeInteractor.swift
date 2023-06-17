@@ -71,6 +71,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     private var disposebag: DisposeBag
 
     var lastPageNumRelay = BehaviorRelay<Int>(value: 0)
+    var filterLastPageNumRelay = BehaviorRelay<Int>(value: 0)
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?>
     let filteredDiaryCountRelay = BehaviorRelay<Int>(value: -1)
     
@@ -139,8 +140,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 guard let self = self else { return }
                 guard let diarySectionModel = diarySectionModel else { return }
 
-                self.prevLastPageNum = self.lastPageNumRelay.value
-                self.lastPageNumRelay.accept(diarySectionModel.allCount)
+                self.filterLastPageNumRelay.accept(diarySectionModel.allCount)
                 self.presenter.isFilteredRelay.accept(true)
                 self.presenter.reloadTableView()
             })
@@ -320,6 +320,8 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         fatalError("\(error)")
                 }
             }
+        
+        
     }
     
     func bindMoments() {
@@ -493,31 +495,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 )
         }
         router?.detachBottomSheet()
-    }
-    
-    // interactor에 저장된 필터 목록을 제거하고, repository에서 새로 fetch
-    func pressedFilterResetBtn() {
-        print("diaryHome :: Inetactor -> filterReset!")
-        filteredWeatherArrRelay.accept([])
-        filteredPlaceArrRelay.accept([])
-        presenter.isFilteredRelay.accept(false)
-        filteredDiaryCountRelay.accept(-1)
-        
-        // double check
-        if prevLastPageNum == 0 {
-            guard let realm = Realm.safeInit() else { return }
-            let pageNum = realm.objects(DiaryModelRealm.self)
-                .toArray(type: DiaryModelRealm.self)
-                .filter ({ $0.isDeleted == false })
-                .sorted(by: { $0.createdAt > $1.createdAt })
-                .first?.pageNum ?? 0
-
-            self.lastPageNumRelay.accept(pageNum)
-        } else {
-            self.lastPageNumRelay.accept(prevLastPageNum)
-        }
-
-        self.presenter.reloadTableView()
     }
 }
 
