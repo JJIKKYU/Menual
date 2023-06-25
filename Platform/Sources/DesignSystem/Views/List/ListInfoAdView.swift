@@ -11,25 +11,15 @@ import Then
 
 public class ListInfoAdView: UIView {
     
-    public var adText: String = "" {
+    public var adText: String = "스폰서 노출 영역" {
         didSet { setNeedsLayout() }
-    }
-    
-    private let adBadge: InsetLabel = .init().then {
-        $0.font = UIFont.AppBodyOnlyFont(.body_1)
-        $0.textColor = Colors.grey.g400
-        $0.backgroundColor = Colors.grey.g700
-        $0.AppCorner(._2pt)
-        $0.textAlignment = .center
-        $0.text = "AD"
-        $0.layer.masksToBounds = true
     }
     
     private let adTextLabel: UILabel = .init().then {
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
         $0.textColor = Colors.grey.g600
         $0.numberOfLines = 1
-        $0.text = "스폰서"
+        $0.text = "스폰서 노출 영역"
     }
     
     
@@ -49,17 +39,10 @@ public class ListInfoAdView: UIView {
     }
     
     func setViews() {
-        addSubview(adBadge)
         addSubview(adTextLabel)
-        
-        adBadge.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.top.bottom.equalToSuperview()
-            make.width.lessThanOrEqualTo(29)
-        }
-        
+
         adTextLabel.snp.makeConstraints { make in
-            make.leading.equalTo(adBadge.snp.trailing).offset(8)
+            make.leading.equalToSuperview()
             make.top.bottom.equalToSuperview()
             make.trailing.equalToSuperview()
         }

@@ -17,6 +17,7 @@ public class ListTitleView: UIView {
         case titleHide
         case titleBodyText
         case adTitleBodyText
+        case adTitle
     }
     
     public var listTitleType: ListTitleType = .title {
@@ -33,6 +34,17 @@ public class ListTitleView: UIView {
     
     public var searchKeyword: String = "" {
         didSet { setNeedsLayout() }
+    }
+    
+    private let adBadge: InsetLabel = .init().then {
+        $0.font = UIFont.AppBodyOnlyFont(.body_1)
+        $0.textColor = Colors.grey.g400
+        $0.backgroundColor = Colors.grey.g700
+        $0.AppCorner(._2pt)
+        $0.textAlignment = .center
+        $0.text = "AD"
+        $0.layer.masksToBounds = true
+        $0.isHidden = true
     }
     
     public let titleLabel = UILabel().then {
@@ -73,12 +85,20 @@ public class ListTitleView: UIView {
     }
     
     func setViews() {
+        addSubview(adBadge)
         addSubview(titleLabel)
         addSubview(titleLeftImageView)
         addSubview(bodyLabel)
         
+        adBadge.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalTo(29)
+            make.top.bottom.equalToSuperview()
+        }
+        
         titleLabel.snp.makeConstraints { make in
-            make.leading.width.equalToSuperview()
+            make.leading.equalTo(adBadge.snp.trailing).offset(8)
+            make.width.equalToSuperview()
             make.centerY.equalToSuperview()
         }
         
@@ -150,8 +170,19 @@ public class ListTitleView: UIView {
             titleLabel.textColor = Colors.grey.g200
             bodyLabel.textColor = Colors.grey.g400
             bodyLabel.isHidden = false
-            bodyLabel.numberOfLines = 1
+            bodyLabel.numberOfLines = bodyText.count > 50 ? 2 : 1
             
+        case .adTitle:
+            adBadge.isHidden = false
+            titleLabel.isHidden = false
+            
+            titleLabel.snp.remakeConstraints { make in
+                make.leading.equalTo(adBadge.snp.trailing).offset(8)
+                make.trailing.equalToSuperview()
+                make.centerY.equalToSuperview()
+            }
+
+            titleLabel.textColor = Colors.grey.g200
         }
         
         highlightText(keyword: searchKeyword)

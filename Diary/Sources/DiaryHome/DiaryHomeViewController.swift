@@ -578,7 +578,8 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         if let adIndex = listener?.needUpdateAdBanner(),
            adIndex == index && isShowAd && section == 0 {
-            return 104
+            let adDescriptionCount: Int = nativeAd?.body?.count ?? 0
+            return adDescriptionCount > 50 ? 115 : 104
         }
         
         return 72
@@ -680,9 +681,8 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.title = nativeAd.headline ?? "광고"
             cell.image = nativeAd.images?.first?.image ?? UIImage()
             cell.body = nativeAd.body ?? ""
-            cell.adText = nativeAd.advertiser ?? ""
+            cell.adText = nativeAd.advertiser ?? "스폰서"
             cell.nativeAd = nativeAd
-            print("callToAction :: \(nativeAd.callToAction)")
             return cell
         }
         

@@ -30,7 +30,7 @@ public class ADListView: GADNativeAdView {
         didSet { setNeedsLayout() }
     }
     
-    private let listTitleView = ListTitleView(type: .title).then {
+    private let listTitleView = ListTitleView(type: .adTitle).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
 
@@ -88,6 +88,17 @@ public class ADListView: GADNativeAdView {
             }
         }
         
+        // 글자 수를 체크해서 Description Height 조절
+        if body.count > 50 {
+            listBodyView.snp.updateConstraints { make in
+                make.height.equalTo(36)
+            }
+        } else {
+            listBodyView.snp.updateConstraints { make in
+                make.height.equalTo(18)
+            }
+        }
+        
         listTitleView.titleText = title
         listBodyView.bodyText = body
         listAdView.adText = adText
@@ -123,9 +134,9 @@ public class ADListView: GADNativeAdView {
         
         listAdView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
-            make.top.equalTo(listBodyView.snp.bottom).offset(10)
+            make.top.equalTo(listBodyView.snp.bottom).offset(6)
             make.width.equalToSuperview().inset(20)
-            make.height.equalTo(20)
+            make.height.equalTo(18)
             make.bottom.equalToSuperview()
         }
     }
