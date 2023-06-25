@@ -679,8 +679,8 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.listType = .adBodyTextImage
             cell.title = nativeAd.headline ?? "광고"
             cell.image = nativeAd.images?.first?.image ?? UIImage()
-            cell.body = nativeAd.body ?? "바디"
-            cell.adText = nativeAd.advertiser ?? "Advertiser"
+            cell.body = nativeAd.body ?? ""
+            cell.adText = nativeAd.advertiser ?? ""
             cell.nativeAd = nativeAd
             print("callToAction :: \(nativeAd.callToAction)")
             return cell

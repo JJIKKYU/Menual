@@ -22,13 +22,14 @@ public class ListInfoAdView: UIView {
         $0.AppCorner(._2pt)
         $0.textAlignment = .center
         $0.text = "AD"
+        $0.layer.masksToBounds = true
     }
     
     private let adTextLabel: UILabel = .init().then {
         $0.font = UIFont.AppBodyOnlyFont(.body_2)
         $0.textColor = Colors.grey.g600
         $0.numberOfLines = 1
-        $0.text = "스폰서 노출 영역"
+        $0.text = "스폰서"
     }
     
     
