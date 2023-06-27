@@ -11,5 +11,14 @@ struct ProfileHomeModel {
     let section: ProfileHomeSection
     let type: ProfileHomeCellType
     let title: String
+    let description: String?
     let actionName: String
+    
+    init(section: ProfileHomeSection, type: ProfileHomeCellType, title: String, description: String? = nil, actionName: String) {
+        self.section = section
+        self.type = type
+        self.title = title
+        self.description = description
+        self.actionName = actionName
+    }
 }

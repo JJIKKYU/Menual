@@ -16,10 +16,10 @@ public class ADUtil {
         }
         #else
         if DebugMode.isDebugMode {
-            return "ca-app-pub-1168603177352985/9261740670"
+            return "ca-app-pub-3940256099942544/3986624511"
         }
         #endif
-        return "ca-app-pub-3940256099942544/3986624511"
+        return "ca-app-pub-1168603177352985/9261740670"
     }
     
     static public var profileHomeUnitID: String {
@@ -30,9 +30,9 @@ public class ADUtil {
         }
         #else
         if DebugMode.isDebugMode {
-            return "ca-app-pub-1168603177352985/9525410653"
+            return "ca-app-pub-3940256099942544/2934735716"
         }
         #endif
-        return "ca-app-pub-3940256099942544/2934735716"
+        return "ca-app-pub-1168603177352985/9525410653"
     }
 }

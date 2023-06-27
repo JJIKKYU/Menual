@@ -88,6 +88,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
             ProfileHomeModel(section: .DEV, type: .arrow, title: "개발자 도구", actionName: "devTools"),
             ProfileHomeModel(section: .DEV, type: .arrow, title: "디자인 시스템", actionName: "designSystem"),
             ProfileHomeModel(section: .DEV, type: .arrow, title: "리뷰 요청", actionName: "review"),
+            ProfileHomeModel(section: .DEV, type: .toggleWithDescription, title: "일기 작성 알림 설정하기", description: "일기를 꾸준히 쓸 수 있도록 알림을 보내드릴게요", actionName: "review"),
             ProfileHomeModel(section: .DEV, type: .arrow, title: "구독 확인", actionName: "storeCheck"),
             ProfileHomeModel(section: .DEV, type: .arrow, title: "결제하기", actionName: "storeBuy"),
             

@@ -73,7 +73,8 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         $0.delegate = self
         $0.dataSource = self
         $0.register(ProfileHomeCell.self, forCellReuseIdentifier: "ProfileHomeCell")
-        $0.rowHeight = 56
+        $0.rowHeight = UITableView.automaticDimension
+        $0.estimatedRowHeight = 88
         $0.separatorStyle = .none
     }
     
@@ -81,10 +82,8 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.adUnitID = ADUtil.profileHomeUnitID
         $0.rootViewController = self
-        if DebugMode.isDebugMode {
-            $0.load(GADRequest())
-            $0.delegate = self
-        }
+        $0.load(GADRequest())
+        $0.delegate = self
     }
     
     init() {
@@ -258,6 +257,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         case .SETTING1:
             guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return UITableViewCell() }
             cell.title = data.title
+            cell.desc = data.description
             cell.profileHomeCellType = data.type
             cell.switchIsOn = listener?.isEnabledPasswordRelay.value ?? false
             cell.actionName = data.actionName
@@ -266,6 +266,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         case .SETTING2:
             guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return UITableViewCell() }
             cell.title = data.title
+            cell.desc = data.description
             cell.profileHomeCellType = data.type
             cell.actionName = data.actionName
             return cell
@@ -275,6 +276,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             guard let data = listener?.profileHomeDevDataArr[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.profileHomeCellType = data.type
+            cell.desc = data.description
             
             cell.actionName = data.actionName
             return cell
@@ -340,9 +342,15 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 listener?.pressedPurchaseCheckCell()
             }  else if data.title == "결제하기" {
                 listener?.pressedPurchaseCell()
+            } else if data.title == "일기 작성 알림 설정하기" {
+                
             }
             
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 }
 
