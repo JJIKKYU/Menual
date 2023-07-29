@@ -33,7 +33,7 @@ public class Badges: UIView {
         didSet { setNeedsLayout() }
     }
     
-    private let digitLabel = UILabel().then {
+    private let digitLabel: UILabel = .init().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = Colors.grey.g800
         $0.text = "+9"

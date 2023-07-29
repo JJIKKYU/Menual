@@ -49,6 +49,7 @@ let package = Package(
             name: "DesignSystem",
             dependencies: [
                 "MenualUtil",
+                "MenualEntity",
                 .product(name: "SnapKit", package: "SnapKit"),
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),

@@ -100,13 +100,13 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     weak var router: ProfileHomeRouting?
     weak var listener: ProfileHomeListener?
     private let disposeBag = DisposeBag()
-    private let dependency: ProfileHomeInteractorDependency
+    private let dependency: ProfileHomeInteractorDependency?
     
     var passwordNotificationToken: NotificationToken? // passwordRealm Noti
 
     init(
         presenter: ProfileHomePresentable,
-        dependency: ProfileHomeInteractorDependency
+        dependency: ProfileHomeInteractorDependency?
     ) {
         self.isEnabledPasswordRelay = BehaviorRelay<Bool>(value: false)
         self.dependency = dependency
@@ -171,7 +171,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     // MARK: - ProfilePassword
     func setEnabledPassword() {
         var isEnabledPassword: Bool = false
-        if let passwordModel = dependency.diaryRepository.password.value {
+        if let passwordModel = dependency?.diaryRepository.password.value {
             isEnabledPassword = passwordModel.isEnabled
         }
         isEnabledPasswordRelay.accept(isEnabledPassword)
@@ -276,7 +276,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     }
     
     func pressedPurchaseCell() {
-        dependency.iapService?
+        dependency?.iapService?
             .getLocalPriceObservable(productID: "com.jjikkyu.menual.ad2")
             .subscribe(onNext: { [weak self] price in
                 guard let self = self else { return }
@@ -285,7 +285,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
             })
             .disposed(by: disposeBag)
         
-        dependency.iapService?
+        dependency?.iapService?
             .purchase(productID: "com.jjikkyu.menual.ad2")
             .subscribe(onNext: { [weak self] result in
                 guard let self = self else { return }
@@ -295,7 +295,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     }
     
     func pressedPurchaseCheckCell() {
-        dependency.iapService?
+        dependency?.iapService?
             .restorePurchaseObservable()
             .subscribe(onNext: { [weak self] result in
                 guard let self = self else { return }

@@ -40,11 +40,6 @@ final class ListHeaderViewController: UIViewController, ListHeaderPresentable, L
         $0.title = "LIST HEADER"
     }
     
-    lazy var listHeaderDatepageandicon = ListHeader(type: .datepageandicon, rightIconType: .filter).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.title = "PAGE.999"
-    }
-    
     lazy var scrollView = UIScrollView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -78,7 +73,6 @@ final class ListHeaderViewController: UIViewController, ListHeaderPresentable, L
         self.view.addSubview(scrollView)
         scrollView.addSubview(listHeaderTextandicon)
         scrollView.addSubview(listHeaderText)
-        scrollView.addSubview(listHeaderDatepageandicon)
         self.view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
@@ -106,13 +100,6 @@ final class ListHeaderViewController: UIViewController, ListHeaderPresentable, L
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.top.equalTo(listHeaderTextandicon.snp.bottom).offset(20)
-            make.height.equalTo(24)
-        }
-        
-        listHeaderDatepageandicon.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalTo(listHeaderText.snp.bottom).offset(20)
             make.height.equalTo(24)
         }
     }

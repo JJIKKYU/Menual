@@ -173,6 +173,7 @@
 
 /* Begin PBXFileReference section */
 		98281EC9278AC6A900736D59 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9828C77E2A74D0F30065F3F8 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProfileRepository.swift; path = Platform/Sources/MenualRepository/ProfileRepository.swift; sourceTree = "<group>"; };
 		98763D80299A811200EFA01B /* splashMenual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splashMenual.png; sourceTree = "<group>"; };
 		98763D81299A811200EFA01B /* splashMenual@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splashMenual@2x.png"; sourceTree = "<group>"; };
 		98763D82299A811200EFA01B /* splashMenual@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "splashMenual@3x.png"; sourceTree = "<group>"; };
@@ -341,6 +342,7 @@
 		9888DDD027646EFF0091918F = {
 			isa = PBXGroup;
 			children = (
+				9828C77E2A74D0F30065F3F8 /* ProfileRepository.swift */,
 				98AD776F2975A878002E5BD8 /* Diary */,
 				98C59F35297443B1002703C6 /* Platform */,
 				98C59F3429744366002703C6 /* Profile */,

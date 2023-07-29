@@ -22,16 +22,14 @@ public enum ListHeaderType {
 
 public enum DetailType {
     case none
-    case filter
     case arrow
     case searchDelete
-    case filterAndCalender
     
     // 공통
     case empty
 }
 
-public class ListHeader: UIView {
+public final class ListHeader: UIView {
     
     private var type: ListHeaderType = .datepageandicon {
         didSet { setNeedsLayout() }
@@ -41,7 +39,7 @@ public class ListHeader: UIView {
         didSet { setNeedsLayout() }
     }
     
-    public var title: String = "        " {
+    public var title: String = "" {
         didSet { setNeedsLayout() }
     }
     
@@ -49,67 +47,16 @@ public class ListHeader: UIView {
         didSet { setNeedsLayout() }
     }
     
-    public var rightFilterBtnIsEnabled: Bool = false {
-        didSet { setFilterIcon() }
-    }
-    
-    public var rightCalendarBtnIsEnabled: Bool = false {
-        didSet { setNeedsLayout() }
-    }
-    
-    public let titleLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    public let rightArrowBtn = BaseButton().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setImage(Asset._24px.Arrow.right.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = Colors.grey.g400
-        $0.contentMode = .scaleAspectFit
-        $0.contentHorizontalAlignment = .fill
-        $0.contentVerticalAlignment = .fill
-    }
-    
-    public let rightFilterBtnBadge = Badges().then {
-        $0.badgeType = .dot
-    }
-    public let rightFilterBtn = BaseButton().then {
-        $0.actionName = "filter"
-        $0.isUserInteractionEnabled = true
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setImage(Asset._24px.filter.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = Colors.grey.g600
-        $0.contentMode = .scaleAspectFit
-        $0.contentHorizontalAlignment = .fill
-        $0.contentVerticalAlignment = .fill
-    }
-    
-    public let rightTextBtn = BaseButton().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setTitle(MenualString.search_button_delete_all_search_menual, for: .normal)
-        $0.titleLabel?.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
-        $0.setTitleColor(Colors.grey.g500, for: .normal)
-    }
-    
-    public let rightCalenderBtnBadge = Badges().then {
-        $0.badgeType = .dot
-    }
-    public let rightCalenderBtn = BaseButton().then {
-        $0.actionName = "calendarFilter"
-        $0.isUserInteractionEnabled = true
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setImage(Asset._24px.calendar.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = Colors.grey.g600
-        $0.contentMode = .scaleAspectFit
-        $0.contentHorizontalAlignment = .fill
-        $0.contentVerticalAlignment = .fill
-    }
+    public let titleLabel: UILabel = .init()
+    public let rightArrowBtn: BaseButton = .init()
+    public let rightTextBtn: BaseButton = .init()
 
     public init(type: ListHeaderType, rightIconType: DetailType) {
         self.type = type
         self.detailType = rightIconType
         super.init(frame: CGRect.zero)
         isUserInteractionEnabled = true
+        configureUI()
         setViews()
     }
     
@@ -117,14 +64,26 @@ public class ListHeader: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setViews() {
+    private func configureUI() {
+        rightArrowBtn.do {
+            $0.setImage(Asset._24px.Arrow.right.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            $0.tintColor = Colors.grey.g400
+            $0.contentMode = .scaleAspectFit
+            $0.contentHorizontalAlignment = .fill
+            $0.contentVerticalAlignment = .fill
+        }
+
+        rightTextBtn.do {
+            $0.setTitle(MenualString.search_button_delete_all_search_menual, for: .normal)
+            $0.titleLabel?.font = .AppBodyOnlyFont(.body_2).withSize(12)
+            $0.setTitleColor(Colors.grey.g500, for: .normal)
+        }
+    }
+    
+    private func setViews() {
         addSubview(titleLabel)
         addSubview(rightArrowBtn)
-        addSubview(rightFilterBtn)
-        rightFilterBtn.addSubview(rightFilterBtnBadge)
         addSubview(rightTextBtn)
-        addSubview(rightCalenderBtn)
-        rightCalenderBtn.addSubview(rightCalenderBtnBadge)
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -140,18 +99,6 @@ public class ListHeader: UIView {
             // make.top.bottom.equalToSuperview()
         }
         
-        rightFilterBtn.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(20)
-            make.width.height.equalTo(24)
-            make.centerY.equalTo(titleLabel)
-            // make.top.bottom.equalToSuperview()
-        }
-        
-        rightFilterBtnBadge.snp.makeConstraints { make in
-            make.trailing.top.equalToSuperview()
-            make.width.height.equalTo(4)
-        }
-        
         rightTextBtn.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.centerY.equalTo(titleLabel)
@@ -159,16 +106,6 @@ public class ListHeader: UIView {
             make.height.equalTo(15)
         }
         rightTextBtn.sizeToFit()
-        
-        rightCalenderBtnBadge.snp.makeConstraints { make in
-            make.trailing.top.equalToSuperview()
-            make.width.height.equalTo(4)
-        }
-        rightCalenderBtn.snp.makeConstraints { make in
-            make.trailing.equalTo(rightFilterBtn.snp.leading).offset(-11)
-            make.width.height.equalTo(24)
-            make.centerY.equalTo(titleLabel)
-        }
     }
     
     public override func layoutSubviews() {
@@ -254,56 +191,26 @@ public class ListHeader: UIView {
         
         switch detailType {
         case .none:
-            rightFilterBtn.isHidden = true
             rightArrowBtn.isHidden = true
             rightTextBtn.isHidden = true
-            rightCalenderBtn.isHidden = true
 
         case .arrow:
-            rightFilterBtn.isHidden = true
             rightArrowBtn.isHidden = false
             rightTextBtn.isHidden = true
-            rightCalenderBtn.isHidden = true
-            
-        case .filter:
-            rightFilterBtn.isHidden = false
-            rightArrowBtn.isHidden = true
-            rightTextBtn.isHidden = true
-            rightCalenderBtn.isHidden = true
             
         case .searchDelete:
-            rightFilterBtn.isHidden = true
             rightArrowBtn.isHidden = true
             rightTextBtn.isHidden = false
-            rightCalenderBtn.isHidden = true
-            
-        case .filterAndCalender:
-            rightFilterBtn.isHidden = false
-            rightArrowBtn.isHidden = true
-            rightTextBtn.isHidden = true
-            rightCalenderBtn.isHidden = false
 
         case .empty:
             break
         }
     }
-    
-    // filter가 되었을 경우 우측 상단에 dot이 표시되도록
-    func setFilterIcon() {
-        print("ListHeader :: setFilterIcon -> \(rightFilterBtnIsEnabled)")
-        switch rightFilterBtnIsEnabled {
-        case true:
-            rightFilterBtnBadge.show()
-
-        case false:
-            rightFilterBtnBadge.hide()
-        }
-        
-        switch rightCalendarBtnIsEnabled {
-        case true:
-            rightCalenderBtnBadge.show()
-        case false:
-            rightCalenderBtnBadge.hide()
-        }
-    }
 }
+
+@available(iOS 17.0, *)
+#Preview(traits: .sizeThatFitsLayout, body: {
+    let listHeader = ListHeader(type: .text, rightIconType: .arrow)
+    listHeader.title = "안녕하세요!"
+    return listHeader
+})

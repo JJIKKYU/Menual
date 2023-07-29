@@ -133,18 +133,18 @@ extension UIFont {
     }
     
     // 디자인 시스템에 정의되어 있는 타이틀 리턴
-    public class func AppBodyOnlyFont(_ body: BodyType) -> UIFont! {
+    public class func AppBodyOnlyFont(_ body: BodyType) -> UIFont {
         switch body {
         case .body_5:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 16)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 16) ?? .systemFont(ofSize: 16)
         case .body_4:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 14)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 14) ?? .systemFont(ofSize: 14)
         case .body_3:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 13)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 13) ?? .systemFont(ofSize: 13)
         case .body_2:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 12)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 12) ?? .systemFont(ofSize: 12)
         case .body_1:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 10)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 10) ?? .systemFont(ofSize: 10)
         }
     }
     
