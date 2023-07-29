@@ -11,6 +11,7 @@ import UIKit
 public enum CornerType {
     case _2pt
     case _4pt
+    case _6pt
     case tiny
     case small
     case base
@@ -28,6 +29,8 @@ public extension UIView {
             layer.cornerRadius = 2
         case ._4pt:
             layer.cornerRadius = 4
+        case ._6pt:
+            layer.cornerRadius = 6
         case .tiny:
             layer.cornerRadius = 8
         case .small:

@@ -9,7 +9,15 @@ import SnapKit
 import Then
 import UIKit
 
+public protocol AlarmComponentDelegate: AnyObject {
+    func pressedConfirmBtn(date: Date, days: [String])
+}
+
 public class MenualBottomSheetAlarmComponentView: UIView {
+    public weak var deleagete: AlarmComponentDelegate?
+    private var selectedDays: [String] = [] {
+        didSet { setNeedsLayout() }
+    }
     private let days: [String] = ["월", "화", "수", "목", "금", "토", "일"]
     private let dayTitleLabel: UILabel = .init()
     private let dayCollectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
@@ -30,10 +38,6 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public func layoutSubviews() {
-        super.layoutSubviews()
-    }
-    
     private func configureUI() {
         dayTitleLabel.do {
             $0.text = "요일 선택"
@@ -50,6 +54,7 @@ public class MenualBottomSheetAlarmComponentView: UIView {
             flowlayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
             $0.setCollectionViewLayout(flowlayout, animated: true)
             $0.backgroundColor = .clear
+            $0.allowsMultipleSelection = true
             $0.delegate = self
             $0.dataSource = self
         }
@@ -63,10 +68,12 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         timePicker.do {
             $0.datePickerMode = .time
             $0.preferredDatePickerStyle = .wheels
+            $0.minuteInterval = 5
         }
         
         confirmBtn.do {
             $0.title = "설정하기"
+            $0.addTarget(self, action: #selector(pressedConfirmBtn), for: .touchUpInside)
         }
     }
     
@@ -108,13 +115,23 @@ public class MenualBottomSheetAlarmComponentView: UIView {
             make.height.equalTo(48)
         }
     }
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if selectedDays.count == 0 {
+            confirmBtn.btnStatus = .inactive
+        } else {
+            confirmBtn.btnStatus = .active
+        }
+    }
 }
 
 // MARK: - CollectionView
 
 extension MenualBottomSheetAlarmComponentView: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 7
+        return days.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -123,6 +140,31 @@ extension MenualBottomSheetAlarmComponentView: UICollectionViewDelegate, UIColle
         guard let day: String = days[safe: indexPath.row] else { return UICollectionViewCell() }
         cell.date = day
         return cell
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let day: String = days[safe: indexPath.row] else { return }
+        print("Alarm :: Selected! \(day)")
+        selectedDays.append(day)
+        print("Alarm :: selectedDays = \(selectedDays)")
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        guard let day: String = days[safe: indexPath.row] else { return }
+        print("Alarm :: DeSelected! \(day)")
+        selectedDays = selectedDays.filter { $0 != day }
+        print("Alarm :: selectedDays = \(selectedDays)")
+    }
+}
+
+// MARK: - IBAction
+
+extension MenualBottomSheetAlarmComponentView {
+    @objc
+    func pressedConfirmBtn() {
+        let date: Date = timePicker.date
+        print("Alarm :: pressedConfirmBtn! date: \(date), selectedDays = \(selectedDays)")
+        deleagete?.pressedConfirmBtn(date: date, days: selectedDays)
     }
 }
 
