@@ -1,0 +1,134 @@
+//
+//  MenualBottomSheetAlarmComponentView.swift
+//  Menual
+//
+//  Created by 정진균 on 2023/07/29.
+//
+
+import SnapKit
+import Then
+import UIKit
+
+public class MenualBottomSheetAlarmComponentView: UIView {
+    private let days: [String] = ["월", "화", "수", "목", "금", "토", "일"]
+    private let dayTitleLabel: UILabel = .init()
+    private let dayCollectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
+    
+    private let timeTitleLabel: UILabel = .init()
+    private let timePicker: UIDatePicker = .init(frame: .zero)
+    
+    private let confirmBtn: BoxButton = .init(frame: .zero, btnStatus: .active, btnSize: .large)
+    
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
+        configureUI()
+        setViews()
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+    }
+    
+    private func configureUI() {
+        dayTitleLabel.do {
+            $0.text = "요일 선택"
+            $0.font = .AppTitle(.title_2)
+            $0.textColor = .white
+        }
+        
+        dayCollectionView.do {
+            $0.register(DateCell.self, forCellWithReuseIdentifier: "DateCell")
+            let flowlayout: UICollectionViewFlowLayout = .init()
+            flowlayout.itemSize = .init(width: 48, height: 48)
+            flowlayout.scrollDirection = .horizontal
+            flowlayout.minimumLineSpacing = 0
+            flowlayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+            $0.setCollectionViewLayout(flowlayout, animated: true)
+            $0.backgroundColor = .clear
+            $0.delegate = self
+            $0.dataSource = self
+        }
+        
+        timeTitleLabel.do {
+            $0.text = "시간 선택"
+            $0.font = .AppTitle(.title_2)
+            $0.textColor = .white
+        }
+        
+        timePicker.do {
+            $0.datePickerMode = .time
+            $0.preferredDatePickerStyle = .wheels
+        }
+        
+        confirmBtn.do {
+            $0.title = "설정하기"
+        }
+    }
+    
+    private func setViews() {
+        addSubview(dayTitleLabel)
+        addSubview(dayCollectionView)
+        addSubview(timeTitleLabel)
+        addSubview(timePicker)
+        addSubview(confirmBtn)
+        
+        dayTitleLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalToSuperview()
+        }
+        
+        dayCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(dayTitleLabel.snp.bottom).offset(8)
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(48)
+        }
+        
+        timeTitleLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(dayCollectionView.snp.bottom).offset(22)
+        }
+        
+        timePicker.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(timeTitleLabel.snp.bottom).offset(16)
+            make.trailing.equalToSuperview().inset(20)
+            make.height.equalTo(200)
+        }
+        
+        confirmBtn.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.top.equalTo(timePicker.snp.bottom).offset(32)
+            make.height.equalTo(48)
+        }
+    }
+}
+
+// MARK: - CollectionView
+
+extension MenualBottomSheetAlarmComponentView: UICollectionViewDelegate, UICollectionViewDataSource {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 7
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DateCell", for: indexPath) as? DateCell else { return UICollectionViewCell() }
+        
+        guard let day: String = days[safe: indexPath.row] else { return UICollectionViewCell() }
+        cell.date = day
+        return cell
+    }
+}
+
+// MARK: - Preview
+
+@available(iOS 17.0, *)
+#Preview {
+    MenualBottomSheetAlarmComponentView()
+}
