@@ -102,12 +102,10 @@ extension UIViewController {
     
     public var screenName: String? {
         get {
-            print("Log :: UIVIewController :: get!")
             return (objc_getAssociatedObject(self, &AssociatedKeys.screenName) as? String)
         }
         set(newValue) {
             guard let newValue = newValue as String? else { return }
-            print("Log :: setValue = \(newValue)")
             objc_setAssociatedObject(self,
                                      &AssociatedKeys.screenName,
                                      newValue,
@@ -152,7 +150,7 @@ public class MenualLog {
         let isDebugMode: Bool = UserDefaults.standard.bool(forKey: "debug")
         if isDebugMode { return }
 
-        print("Log :: 🍎 \(log), parameter = \(parameter)")
+        // print("Log :: 🍎 \(log), parameter = \(parameter)")
         Analytics.logEvent(log, parameters: parameter)
     }
     
@@ -181,7 +179,7 @@ public class MenualLog {
         var categoryName: String = ""
         
         while(responder != nil) {
-            print("Log :: responder = \(responder)")
+            // print("Log :: responder = \(responder)")
             if let responder = responder as? UIViewController,
                let _screenName = responder.screenName,
                !_screenName.isEmpty
@@ -209,7 +207,7 @@ public class MenualLog {
             logName += "_\(actioName)"
         }
         
-        print("Log :: 🍎 \(logName), parameter = \(parameter)")
+        // print("Log :: 🍎 \(logName), parameter = \(parameter)")
         
         Analytics.logEvent(logName, parameters: parameter)
     }

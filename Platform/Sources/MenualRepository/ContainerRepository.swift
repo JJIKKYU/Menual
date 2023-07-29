@@ -45,5 +45,9 @@ public class ContainerRepositoryImp: ContainerRepository {
         container.register(MomentsRepository.self) { _ in
             MomentsRepositoryImp()
         }.inObjectScope(.container)
+        
+        container.register(ProfileRepository.self) { _ in
+            ProfileRepositoryImp()
+        }.inObjectScope(.container)
     }
 }

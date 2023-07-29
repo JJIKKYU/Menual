@@ -54,11 +54,6 @@ protocol ProfileHomePresentableListener: AnyObject {
 }
 
 final class ProfileHomeViewController: UIViewController, ProfileHomePresentable, ProfileHomeViewControllable {
-    
-    var profileHomeDataArr_Setting1: [ProfileHomeMenuModel] = []
-    var profileHomeDataArr_Setting2: [ProfileHomeMenuModel]  = []
-    var profileHomeDevDataArr: [ProfileHomeMenuModel] = []
-
     weak var listener: ProfileHomePresentableListener?
     private let disposeBag: DisposeBag = .init()
 
@@ -180,7 +175,6 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
 extension ProfileHomeViewController {
     @objc
     func selectedSwitchBtn(_ sender: UISwitch) {
-        print("!!")
         switch sender.isOn {
         case true:
             print("isOn!")
@@ -236,7 +230,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         guard let sections = ProfileHomeSection(rawValue: section) else { return 0 }
         switch sections {
         case .setting1:
-            var count = profileHomeDataArr_Setting1.count
+            var count = listener?.profileHomeDataArr_Setting1.count ?? 0
             if listener?.isEnabledPasswordRelay.value ?? false == false {
                 count -= 1
             }
@@ -245,11 +239,11 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             
 
         case .setting2:
-            return profileHomeDataArr_Setting2.count
+            return listener?.profileHomeDataArr_Setting2.count ?? 0
 
         case .devMode:
             if !DebugMode.isDebugMode { return 0 }
-            return profileHomeDevDataArr.count
+            return listener?.profileHomeDevDataArr.count ?? 0
         }
     }
     
@@ -263,97 +257,105 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         guard let sections = ProfileHomeSection(rawValue: section) else { return UITableViewCell() }
         switch sections {
         case .setting1:
-            guard let data = profileHomeDataArr_Setting1[safe: index] else { return UITableViewCell() }
+            guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.desc = data.description
             cell.profileHomeCellType = data.cellType
             cell.switchIsOn = listener?.isEnabledPasswordRelay.value ?? false
             cell.actionName = data.actionName
+            cell.menuType = data.menuType
+            cell.section = data.section
+            cell.sizeToFit()
+            cell.layoutIfNeeded()
             return cell
 
         case .setting2:
-            guard let data = profileHomeDataArr_Setting2[safe: index] else { return UITableViewCell() }
+            guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.desc = data.description
             cell.profileHomeCellType = data.cellType
             cell.actionName = data.actionName
+            cell.menuType = data.menuType
+            cell.section = data.section
+            cell.sizeToFit()
+            cell.layoutIfNeeded()
             return cell
             
         case .devMode:
             if !DebugMode.isDebugMode { return UITableViewCell() }
-            guard let data = profileHomeDevDataArr[safe: index] else { return UITableViewCell() }
+            guard let data = listener?.profileHomeDevDataArr[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.profileHomeCellType = data.cellType
             cell.desc = data.description
-            
             cell.actionName = data.actionName
+            cell.menuType = data.menuType
+            cell.section = data.section
+            cell.sizeToFit()
+            cell.layoutIfNeeded()
             return cell
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         guard let cell = tableView.cellForRow(at: indexPath) as? ProfileHomeCell else { return }
         MenualLog.logEventAction(responder: cell)
-
-        let section = indexPath.section
-        let index = indexPath.row
-        print("ProfileHome :: indexpath = \(indexPath)")
-
-        guard let sections = ProfileHomeSection(rawValue: section) else { return }
-        switch sections {
-        case .setting1:
-            guard let data = profileHomeDataArr_Setting1[safe: index] else { return }
-
-            if data.title == MenualString.profile_button_set_password {
-                print("ProfileHome :: 비밀번호 설정하기")
-                // cell.switchIsOn = !cell.switchIsOn
-                // cell.switchBtn.isOn = listener?.isEnabledPasswordRelay.value ?? false
-                listener?.pressedProfilePasswordCell()
-            } else if data.title == MenualString.profile_button_change_password {
-                listener?.pressedProfilePasswordChangeCell()
-            } else if data.title == MenualString.profile_button_guide {
+        guard let menuType: ProfileHomeMenuType = cell.menuType else { return }
+        
+        switch menuType {
+        case .setting1(let profileHomeSetting1):
+            switch profileHomeSetting1 {
+            case .guide:
+                print("ProfileHome :: Guide!")
                 //사파리로 링크열기
                 if let url = URL(string: "https://hill-license-fb3.notion.site/589e7606d7f642378d11a94ea0344cfd") {
                     UIApplication.shared.open(url, options: [:])
                 }
+
+            case .password:
+                print("ProfileHome :: Passowrd")
+                listener?.pressedProfilePasswordCell()
+                
+            case .passwordChange:
+                print("ProfileHome :: passwordChange!")
+                listener?.pressedProfilePasswordChangeCell()
             }
 
-        case .setting2:
-            guard let data = profileHomeDataArr_Setting2[safe: index] else { return }
-            if data.title == MenualString.profile_button_openSource {
-                print("ProfileHome :: 오픈 소스 라이브러리 보기 호출!")
-                listener?.pressedProfileOpensourceCell()
-            } else if data.title == MenualString.profile_button_mail {
-                self.pressedDeveloperQACell()
-            } else if data.title == "iCloud 동기화하기" {
-                print("ProfileHome :: iCloud 동기화하기!")
-            } else if data.title == MenualString.profile_button_backup {
+        case .setting2(let profileHomeSetting2):
+            switch profileHomeSetting2 {
+            case .backup:
                 print("ProfileHome :: backup!")
                 listener?.pressedProfileBackupCell()
-            } else if data.title == MenualString.profile_button_restore {
-                print("ProfileHome :: restore")
-                listener?.pressedProfileRestoreCell()
-            }
-            
-        case .devMode:
-            guard let data = profileHomeDevDataArr[safe: index] else { return }
-            if data.title == "개발자 도구" {
-                print("ProfileHome :: 개발자 도구 호출!")
-                listener?.pressedProfileDeveloperCell()
-            } else if data.title == "디자인 시스템" {
-                print("ProfileHome :: 디자인 시스템 호출!")
-                listener?.pressedDesignSystemCell()
-            } else if data.title == "리뷰 요청" {
-                listener?.pressedReviewCell()
-            } else if data.title == "구독 확인" {
-                listener?.pressedPurchaseCheckCell()
-            }  else if data.title == "결제하기" {
-                listener?.pressedPurchaseCell()
-            } else if data.title == "일기 작성 알림 설정하기" {
                 
+            case .restore:
+                print("ProfileHome :: restore!")
+                listener?.pressedProfileRestoreCell()
+                
+            case .mail:
+                print("ProfileHome :: mail")
+                self.pressedDeveloperQACell()
+                
+            case .openSource:
+                print("ProfileHome :: openSource")
+                listener?.pressedProfileOpensourceCell()
             }
-            
+
+        case .devMode(let profileHomeDevMode):
+            switch profileHomeDevMode {
+            case .tools:
+                print("ProfileHome :: tools")
+                listener?.pressedProfileDeveloperCell()
+                
+            case .designSystem:
+                print("ProfileHome :: designSystem")
+                listener?.pressedDesignSystemCell()
+                
+            case .review:
+                print("ProfileHome :: review")
+                listener?.pressedReviewCell()
+                
+            case .alarm:
+                print("ProfileHome :: alarm")
+            }
         }
     }
     
@@ -428,15 +430,4 @@ extension ProfileHomeViewController: UIDocumentPickerDelegate {
 // MARK: - GoogleAds Delegate
 extension ProfileHomeViewController: GADBannerViewDelegate {
     
-}
-
-// MARK: - Preview
-
-@available(iOS 17.0, *)
-#Preview {
-    let vc = ProfileHomeViewController()
-    vc.profileHomeDataArr_Setting1 = ProfileRepositoryImp().fetchSetting1ProfileMenu()
-    vc.profileHomeDataArr_Setting2 = ProfileRepositoryImp().fetchSetting2ProfileMenu()
-    vc.profileHomeDevDataArr = ProfileRepositoryImp().fetchSettingDevModeMenu()
-    return vc
 }

@@ -13,19 +13,22 @@ import UIKit
 
 public class ProfileHomeCell: UITableViewCell {
     
-    var profileHomeCellType: ProfileHomeCellType = .arrow {
+    public var profileHomeCellType: ProfileHomeCellType = .arrow {
         didSet { setNeedsLayout() }
     }
     
-    var title: String = "" {
+    public var section: ProfileHomeSection?
+    public var menuType: ProfileHomeMenuType?
+    
+    public  var title: String = "" {
         didSet { setNeedsLayout() }
     }
     
-    var desc: String? {
+    public var desc: String? {
         didSet { setNeedsLayout() }
     }
     
-    var switchIsOn: Bool = false {
+    public var switchIsOn: Bool = false {
         didSet { setNeedsLayout() }
     }
     
@@ -108,16 +111,6 @@ public class ProfileHomeCell: UITableViewCell {
             make.bottom.equalToSuperview()
         }
         
-//        titleLabel.snp.makeConstraints { make in
-//            make.height.equalTo(21)
-//            make.bottom.equalToSuperview()
-//        }
-//
-//        descLabel.snp.makeConstraints { make in
-//            make.height.equalTo(18)
-//            make.bottom.equalToSuperview()
-//        }
-        
         arrowImageView.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.width.height.equalTo(24)
@@ -140,7 +133,7 @@ public class ProfileHomeCell: UITableViewCell {
     
     override public func layoutSubviews() {
         titleLabel.text = title
-        descLabel.text = desc ?? "1"
+        descLabel.text = desc ?? ""
 
         switch profileHomeCellType {
         case .arrow:
