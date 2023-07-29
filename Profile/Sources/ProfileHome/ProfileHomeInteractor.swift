@@ -53,6 +53,7 @@ public protocol ProfileHomeListener: AnyObject {
 protocol ProfileHomeInteractorDependency {
     var diaryRepository: DiaryRepository { get }
     var containerRepository: ContainerRepository { get }
+    var profileRepository: ProfileRepository? { get }
     var iapService: IAPServiceProtocol? { get }
 }
 
@@ -60,42 +61,9 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
 
     var isEnabledPasswordRelay: BehaviorRelay<Bool>
     
-    var profileHomeDataArr_Setting1: [ProfileHomeModel] {
-        let arr: [ProfileHomeModel] = [
-            ProfileHomeModel(section: .SETTING1, type: .arrow, title: MenualString.profile_button_guide, actionName: "showGuide"),
-            ProfileHomeModel(section: .SETTING1, type: .toggle, title: MenualString.profile_button_set_password, actionName: "setPassword"),
-            ProfileHomeModel(section: .SETTING1, type: .arrow, title: MenualString.profile_button_change_password, actionName: "changePassword"),
-        ]
-
-        return arr
-    }
-    
-    var profileHomeDataArr_Setting2: [ProfileHomeModel] {
-        let arr: [ProfileHomeModel] = [
-            // profileHomeModel(section: .SETTING2, type: .arrow, title: "iCloud 동기화하기"),
-            ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_backup, actionName: "backup"),
-            ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_restore, actionName: "load"),
-            ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_mail, actionName: "mail"),
-            ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_openSource, actionName: "openSource"),
-            // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자 도구"),
-        ]
-
-        return arr
-    }
-    
-    var profileHomeDevDataArr: [ProfileHomeModel] {
-        let arr: [ProfileHomeModel] = [
-            ProfileHomeModel(section: .DEV, type: .arrow, title: "개발자 도구", actionName: "devTools"),
-            ProfileHomeModel(section: .DEV, type: .arrow, title: "디자인 시스템", actionName: "designSystem"),
-            ProfileHomeModel(section: .DEV, type: .arrow, title: "리뷰 요청", actionName: "review"),
-            ProfileHomeModel(section: .DEV, type: .toggleWithDescription, title: "일기 작성 알림 설정하기", description: "일기를 꾸준히 쓸 수 있도록 알림을 보내드릴게요", actionName: "review"),
-            ProfileHomeModel(section: .DEV, type: .arrow, title: "구독 확인", actionName: "storeCheck"),
-            ProfileHomeModel(section: .DEV, type: .arrow, title: "결제하기", actionName: "storeBuy"),
-            
-        ]
-        
-        return arr
-    }
+    var profileHomeDataArr_Setting1: [ProfileHomeMenuModel] = []
+    var profileHomeDataArr_Setting2: [ProfileHomeMenuModel] = []
+    var profileHomeDevDataArr: [ProfileHomeMenuModel] = []
     
     weak var router: ProfileHomeRouting?
     weak var listener: ProfileHomeListener?
@@ -109,6 +77,12 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         dependency: ProfileHomeInteractorDependency?
     ) {
         self.isEnabledPasswordRelay = BehaviorRelay<Bool>(value: false)
+        
+        // ProfileHome Menu 세팅
+        self.profileHomeDataArr_Setting1 = dependency?.profileRepository?.fetchSetting1ProfileMenu() ?? []
+        self.profileHomeDataArr_Setting2 = dependency?.profileRepository?.fetchSetting2ProfileMenu() ?? []
+        self.profileHomeDevDataArr = dependency?.profileRepository?.fetchSettingDevModeMenu() ?? []
+
         self.dependency = dependency
         super.init(presenter: presenter)
         presenter.listener = self

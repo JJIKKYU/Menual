@@ -5,18 +5,13 @@
 //  Created by 정진균 on 2022/06/25.
 //
 
-import UIKit
+import DesignSystem
+import MenualEntity
 import SnapKit
 import Then
-import DesignSystem
+import UIKit
 
-enum ProfileHomeCellType {
-    case toggle
-    case toggleWithDescription
-    case arrow
-}
-
-class ProfileHomeCell: UITableViewCell {
+public class ProfileHomeCell: UITableViewCell {
     
     var profileHomeCellType: ProfileHomeCellType = .arrow {
         didSet { setNeedsLayout() }
@@ -79,9 +74,8 @@ class ProfileHomeCell: UITableViewCell {
         $0.transform = CGAffineTransform(scaleX: 0.78, y: 0.78)
     }
     
-    override func awakeFromNib() {
+    override public func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -93,13 +87,13 @@ class ProfileHomeCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
+    override public func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         // Configure the view for the selected state
     }
     
-    func setViews() {
+    private func setViews() {
         addSubview(stackView)
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(descLabel)
@@ -111,7 +105,7 @@ class ProfileHomeCell: UITableViewCell {
             make.leading.equalToSuperview().offset(20)
             make.top.equalToSuperview()
             make.width.equalToSuperview().inset(60)
-//            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
         
 //        titleLabel.snp.makeConstraints { make in
@@ -144,7 +138,7 @@ class ProfileHomeCell: UITableViewCell {
         }
     }
     
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         titleLabel.text = title
         descLabel.text = desc ?? "1"
 
@@ -180,4 +174,15 @@ extension ProfileHomeCell {
             print("isOff!")
         }
     }
+}
+
+// MARK: - Preview
+
+@available(iOS 17.0, *)
+#Preview {
+    let cell = ProfileHomeCell()
+    cell.title = "안녕하세요"
+    cell.profileHomeCellType = .toggleWithDescription
+    cell.desc = "description입니다."
+    return cell
 }

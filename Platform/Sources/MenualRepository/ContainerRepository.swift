@@ -32,18 +32,18 @@ public class ContainerRepositoryImp: ContainerRepository {
     public func registerRepository() {
         container.register(AppstoreReviewRepository.self) { _ in
             AppstoreReviewRepositoryImp()
-        }
+        }.inObjectScope(.container)
         
         container.register(BackupRestoreRepository.self) { _ in
             BackupRestoreRepositoryImp()
-        }
+        }.inObjectScope(.container)
         
         container.register(DiaryRepository.self) { _ in
             DiaryRepositoryImp()
-        }
+        }.inObjectScope(.container)
         
         container.register(MomentsRepository.self) { _ in
             MomentsRepositoryImp()
-        }
+        }.inObjectScope(.container)
     }
 }

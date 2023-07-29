@@ -5,21 +5,25 @@
 //  Created by 정진균 on 2022/03/20.
 //
 
-import RIBs
-import RxSwift
-import UIKit
-import SnapKit
-import RxRelay
-import MessageUI
 import DesignSystem
-import MenualUtil
 import GoogleMobileAds
+import MenualEntity
+import MenualUtil
+import MessageUI
+import RIBs
+import RxRelay
+import RxSwift
+import SnapKit
+import UIKit
+#if DEBUG
+import MenualRepository
+#endif
 
 protocol ProfileHomePresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
-    var profileHomeDataArr_Setting1: [ProfileHomeModel] { get }
-    var profileHomeDataArr_Setting2: [ProfileHomeModel] { get }
-    var profileHomeDevDataArr: [ProfileHomeModel] { get }
+    var profileHomeDataArr_Setting1: [ProfileHomeMenuModel] { get }
+    var profileHomeDataArr_Setting2: [ProfileHomeMenuModel] { get }
+    var profileHomeDevDataArr: [ProfileHomeMenuModel] { get }
     
     // ProfilePassword
     func pressedProfilePasswordCell()
@@ -49,38 +53,11 @@ protocol ProfileHomePresentableListener: AnyObject {
     func pressedPurchaseCell()
 }
 
-enum ProfileHomeSection: Int {
-    case SETTING1 = 0
-    case SETTING2 = 1
-    case DEV
-}
-
 final class ProfileHomeViewController: UIViewController, ProfileHomePresentable, ProfileHomeViewControllable {
     
-    var profileHomeDataArr_Setting1: [ProfileHomeModel] = [
-        ProfileHomeModel(section: .SETTING1, type: .arrow, title: MenualString.profile_button_guide, actionName: "showGuide"),
-        ProfileHomeModel(section: .SETTING1, type: .toggle, title: MenualString.profile_button_set_password, actionName: "setPassword"),
-        ProfileHomeModel(section: .SETTING1, type: .arrow, title: MenualString.profile_button_change_password, actionName: "changePassword"),
-    ]
-    
-    var profileHomeDataArr_Setting2: [ProfileHomeModel]  = [
-        // profileHomeModel(section: .SETTING2, type: .arrow, title: "iCloud 동기화하기"),
-        ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_backup, actionName: "backup"),
-        ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_restore, actionName: "load"),
-        ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_mail, actionName: "mail"),
-        ProfileHomeModel(section: .SETTING2, type: .arrow, title: MenualString.profile_button_openSource, actionName: "openSource"),
-        // ProfileHomeModel(section: .SETTING2, type: .arrow, title: "개발자 도구"),
-    ]
-    
-    var profileHomeDevDataArr: [ProfileHomeModel] = [
-        ProfileHomeModel(section: .DEV, type: .arrow, title: "개발자 도구", actionName: "devTools"),
-        ProfileHomeModel(section: .DEV, type: .arrow, title: "디자인 시스템", actionName: "designSystem"),
-        ProfileHomeModel(section: .DEV, type: .arrow, title: "리뷰 요청", actionName: "review"),
-        ProfileHomeModel(section: .DEV, type: .toggleWithDescription, title: "일기 작성 알림 설정하기", description: "일기를 꾸준히 쓸 수 있도록 알림을 보내드릴게요", actionName: "review"),
-        ProfileHomeModel(section: .DEV, type: .arrow, title: "구독 확인", actionName: "storeCheck"),
-        ProfileHomeModel(section: .DEV, type: .arrow, title: "결제하기", actionName: "storeBuy"),
-        
-    ]
+    var profileHomeDataArr_Setting1: [ProfileHomeMenuModel] = []
+    var profileHomeDataArr_Setting2: [ProfileHomeMenuModel]  = []
+    var profileHomeDevDataArr: [ProfileHomeMenuModel] = []
 
     weak var listener: ProfileHomePresentableListener?
     private let disposeBag: DisposeBag = .init()
@@ -240,15 +217,15 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         guard let sections = ProfileHomeSection(rawValue: section) else { return UIView() }
         
         switch sections {
-        case .SETTING1:
+        case .setting1:
             headerView.title = "메뉴얼 설정"
             return headerView
 
-        case .SETTING2:
+        case .setting2:
             headerView.title = "기타"
             return headerView
 
-        case .DEV:
+        case .devMode:
             if !DebugMode.isDebugMode { return UIView() }
             headerView.title = "개발자 도구"
             return headerView
@@ -258,8 +235,8 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sections = ProfileHomeSection(rawValue: section) else { return 0 }
         switch sections {
-        case .SETTING1:
-            var count = profileHomeDataArr_Setting1.count ?? 0
+        case .setting1:
+            var count = profileHomeDataArr_Setting1.count
             if listener?.isEnabledPasswordRelay.value ?? false == false {
                 count -= 1
             }
@@ -267,10 +244,10 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             return count
             
 
-        case .SETTING2:
+        case .setting2:
             return profileHomeDataArr_Setting2.count
 
-        case .DEV:
+        case .devMode:
             if !DebugMode.isDebugMode { return 0 }
             return profileHomeDevDataArr.count
         }
@@ -285,28 +262,28 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         
         guard let sections = ProfileHomeSection(rawValue: section) else { return UITableViewCell() }
         switch sections {
-        case .SETTING1:
+        case .setting1:
             guard let data = profileHomeDataArr_Setting1[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.desc = data.description
-            cell.profileHomeCellType = data.type
+            cell.profileHomeCellType = data.cellType
             cell.switchIsOn = listener?.isEnabledPasswordRelay.value ?? false
             cell.actionName = data.actionName
             return cell
 
-        case .SETTING2:
+        case .setting2:
             guard let data = profileHomeDataArr_Setting2[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.desc = data.description
-            cell.profileHomeCellType = data.type
+            cell.profileHomeCellType = data.cellType
             cell.actionName = data.actionName
             return cell
             
-        case .DEV:
+        case .devMode:
             if !DebugMode.isDebugMode { return UITableViewCell() }
             guard let data = profileHomeDevDataArr[safe: index] else { return UITableViewCell() }
             cell.title = data.title
-            cell.profileHomeCellType = data.type
+            cell.profileHomeCellType = data.cellType
             cell.desc = data.description
             
             cell.actionName = data.actionName
@@ -325,7 +302,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
 
         guard let sections = ProfileHomeSection(rawValue: section) else { return }
         switch sections {
-        case .SETTING1:
+        case .setting1:
             guard let data = profileHomeDataArr_Setting1[safe: index] else { return }
 
             if data.title == MenualString.profile_button_set_password {
@@ -342,7 +319,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 }
             }
 
-        case .SETTING2:
+        case .setting2:
             guard let data = profileHomeDataArr_Setting2[safe: index] else { return }
             if data.title == MenualString.profile_button_openSource {
                 print("ProfileHome :: 오픈 소스 라이브러리 보기 호출!")
@@ -359,7 +336,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 listener?.pressedProfileRestoreCell()
             }
             
-        case .DEV:
+        case .devMode:
             guard let data = profileHomeDevDataArr[safe: index] else { return }
             if data.title == "개발자 도구" {
                 print("ProfileHome :: 개발자 도구 호출!")
@@ -453,8 +430,13 @@ extension ProfileHomeViewController: GADBannerViewDelegate {
     
 }
 
+// MARK: - Preview
+
 @available(iOS 17.0, *)
 #Preview {
     let vc = ProfileHomeViewController()
+    vc.profileHomeDataArr_Setting1 = ProfileRepositoryImp().fetchSetting1ProfileMenu()
+    vc.profileHomeDataArr_Setting2 = ProfileRepositoryImp().fetchSetting2ProfileMenu()
+    vc.profileHomeDevDataArr = ProfileRepositoryImp().fetchSettingDevModeMenu()
     return vc
 }

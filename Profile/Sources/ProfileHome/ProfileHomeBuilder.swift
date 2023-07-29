@@ -35,6 +35,9 @@ public final class ProfileHomeComponent: Component<ProfileHomeDependency>, Profi
     public var iapService: IAPServiceProtocol? {
         containerRepository.container.resolve(IAPServiceProtocol.self)
     }
+    public var profileRepository: ProfileRepository? {
+        containerRepository.container.resolve(ProfileRepository.self)
+    }
     
 
     public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }

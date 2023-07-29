@@ -87,6 +87,7 @@ let package = Package(
                 "MenualUtil",
                 "Swinject",
                 "MenualServices",
+                "DesignSystem",
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxRelay", package: "RxSwift"),
                 .product(name: "Realm", package: "realm-swift"),
