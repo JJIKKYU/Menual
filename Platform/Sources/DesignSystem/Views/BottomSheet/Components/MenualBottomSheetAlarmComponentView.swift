@@ -5,20 +5,21 @@
 //  Created by 정진균 on 2023/07/29.
 //
 
+import MenualEntity
 import SnapKit
 import Then
 import UIKit
 
 public protocol AlarmComponentDelegate: AnyObject {
-    func pressedConfirmBtn(date: Date, days: [String])
+    func pressedConfirmBtn(date: Date, days: [Weekday])
 }
 
 public class MenualBottomSheetAlarmComponentView: UIView {
     public weak var deleagete: AlarmComponentDelegate?
-    private var selectedDays: [String] = [] {
+    private var selectedDays: [Weekday] = [] {
         didSet { setNeedsLayout() }
     }
-    private let days: [String] = ["월", "화", "수", "목", "금", "토", "일"]
+    private let days: [Weekday] = Weekday.getWeekdays()
     private let dayTitleLabel: UILabel = .init()
     private let dayCollectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
     
@@ -69,6 +70,10 @@ public class MenualBottomSheetAlarmComponentView: UIView {
             $0.datePickerMode = .time
             $0.preferredDatePickerStyle = .wheels
             $0.minuteInterval = 5
+            $0.isSelected = false
+            $0.setValue(UIColor.white, forKeyPath: "textColor")
+            $0.setValue(UIColor.white, forKeyPath: "tintColor")
+            $0.setValue(false, forKeyPath: "highlightsToday")
         }
         
         confirmBtn.do {
@@ -137,20 +142,20 @@ extension MenualBottomSheetAlarmComponentView: UICollectionViewDelegate, UIColle
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DateCell", for: indexPath) as? DateCell else { return UICollectionViewCell() }
         
-        guard let day: String = days[safe: indexPath.row] else { return UICollectionViewCell() }
-        cell.date = day
+        guard let day: Weekday = days[safe: indexPath.row] else { return UICollectionViewCell() }
+        cell.date = day.rawValue
         return cell
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let day: String = days[safe: indexPath.row] else { return }
+        guard let day: Weekday = days[safe: indexPath.row] else { return }
         print("Alarm :: Selected! \(day)")
         selectedDays.append(day)
         print("Alarm :: selectedDays = \(selectedDays)")
     }
     
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        guard let day: String = days[safe: indexPath.row] else { return }
+        guard let day: Weekday = days[safe: indexPath.row] else { return }
         print("Alarm :: DeSelected! \(day)")
         selectedDays = selectedDays.filter { $0 != day }
         print("Alarm :: selectedDays = \(selectedDays)")

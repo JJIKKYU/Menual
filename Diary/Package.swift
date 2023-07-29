@@ -109,6 +109,7 @@ let package = Package(
                 .product(name: "RIBs", package: "RIBs"),
                 .product(name: "MenualEntity", package: "Platform"),
                 .product(name: "DesignSystem", package: "Platform"),
+                .product(name: "MenualRepository", package: "Platform"),
             ]
         ),
         .target(

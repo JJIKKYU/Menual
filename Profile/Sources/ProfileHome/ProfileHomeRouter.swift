@@ -258,13 +258,13 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
     }
     
     // MARK: - DevMode
-    func attachReviewBottomSheet() {
+    func attachBottomSheet(type: MenualBottomSheetType) {
         if bottomSheetRouting != nil {
             return
         }
         
         let router = bottomSheetBuildable.build(withListener: interactor,
-                                                bottomSheetType: .review,
+                                                bottomSheetType: type,
                                                 menuComponentRelay: nil
         )
         viewController.present(router.viewControllable, animated: false, completion: nil)
@@ -273,7 +273,7 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
         attachChild(router)
     }
     
-    func detachReviewBottomSheet(isOnlyDetach: Bool) {
+    func detachBottomSheet(isOnlyDetach: Bool) {
         guard let router = bottomSheetRouting,
         let diaryBottomSheetRouter = router as? DiaryBottomSheetRouting else {
             return

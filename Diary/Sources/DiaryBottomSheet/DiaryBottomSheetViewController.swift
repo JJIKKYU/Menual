@@ -32,6 +32,7 @@ public enum MenualBottomSheetType {
     case reminder
     case filter
     case review
+    case alarm
 }
 
 public protocol DiaryBottomSheetPresentableListener: AnyObject {
@@ -56,6 +57,9 @@ public protocol DiaryBottomSheetPresentableListener: AnyObject {
     // ReviewComponentView
     func pressedReviewBtn()
     func pressedInquiryBtn()
+    
+    // AlarmComponentView
+    func pressedAlarmConfirmBtn(date: Date, days: [Weekday])
 }
 
 final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPresentable, DiaryBottomSheetViewControllable {
@@ -163,6 +167,12 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.isHidden = true
         $0.delegate = self
+    }
+    
+    // 다시알람 컴포넌트
+    private lazy var alarmComponentView: MenualBottomSheetAlarmComponentView = .init().then {
+        $0.deleagete = self
+        $0.isHidden = true
     }
     
     
@@ -315,7 +325,18 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             rightBtn.actionName = "close"
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
-        
+        case .alarm:
+            bottomSheetView.addSubview(alarmComponentView)
+            alarmComponentView.isHidden = false
+            alarmComponentView.snp.makeConstraints { make in
+                make.leading.width.equalToSuperview()
+                make.top.equalTo(self.divider.snp.bottom).offset(24)
+                make.height.equalTo(434)
+            }
+            bottomSheetTitle = "알림 시간 설정"
+            menualBottomSheetRightBtnType = .close
+            rightBtn.actionName = "close"
+            rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
         }
     }
     
@@ -469,6 +490,10 @@ extension DiaryBottomSheetViewController {
         case .review:
             bottomSheetTitle = ""
             bottomSheetHeight = 622
+            
+        case .alarm:
+            bottomSheetTitle = "알림 시간 설정"
+            bottomSheetHeight = 553
         }
     }
 
@@ -704,5 +729,13 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReviewComponentViewDe
     
     func pressedInquiryBtn() {
         listener?.pressedInquiryBtn()
+    }
+}
+
+// MARK: - Alarmcomponent
+
+extension DiaryBottomSheetViewController: AlarmComponentDelegate {
+    func pressedConfirmBtn(date: Date, days: [Weekday]) {
+        listener?.pressedAlarmConfirmBtn(date: date, days: days)
     }
 }

@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
-        
+        self.window?.overrideUserInterfaceStyle = .dark
         // 1. config 설정(이전 버전에서 다음 버전으로 마이그레이션될때 어떻게 변경될것인지)
         let config = Realm.Configuration(
             schemaVersion: 11, // 새로운 스키마 버전 설정

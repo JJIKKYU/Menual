@@ -33,16 +33,18 @@ public final class ProfileHomeComponent: Component<ProfileHomeDependency>, Profi
     public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     public var filteredPlaceArrRelay: BehaviorRelay<[Place]>?
     public var iapService: IAPServiceProtocol? {
-        containerRepository.container.resolve(IAPServiceProtocol.self)
+        dependency.containerRepository.container.resolve(IAPServiceProtocol.self)
     }
     public var profileRepository: ProfileRepository? {
-        containerRepository.container.resolve(ProfileRepository.self)
+        dependency.containerRepository.container.resolve(ProfileRepository.self)
+    }
+    public var notificationRepository: NotificationRepository? {
+        dependency.containerRepository.container.resolve(NotificationRepository.self)
     }
     
 
     public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
-    public var containerRepository: ContainerRepository { dependency.containerRepository }
     public var appstoreReviewRepository: AppstoreReviewRepository { dependency.appstoreReviewRepository }
 }
 

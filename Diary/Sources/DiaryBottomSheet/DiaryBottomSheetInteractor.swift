@@ -30,15 +30,16 @@ public protocol DiaryBottomSheetPresentable: Presentable {
 }
 
 public protocol DiaryBottomSheetListener: AnyObject {
-    // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func diaryBottomSheetPressedCloseBtn()
     
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place])
     func filterWithWeatherPlacePressedFilterBtn()
     func reminderCompViewshowToast(isEding: Bool)
-    
     // 개발자에게 문의하기
     func reviewCompoentViewPresentQA()
+    
+    // 알람
+    func setAlarm(date: Date, days: [Weekday])
 }
 
 public protocol DiaryBottomSheetInteractorDependency {
@@ -153,16 +154,19 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     }
     
     // MARK: - Place/Weahter Filter
+    
     func filterWithWeatherPlacePressedFilterBtn() {
         listener?.filterWithWeatherPlacePressedFilterBtn()
     }
     
     // MARK: - DiaryWritingVC
+    
     func diaryWritingPressedBackBtn(isOnlyDetach: Bool) {
         print("diaryWritingPressedBackBtn!")
     }
     
     // MARK: - ReminderComponentView
+    
     func reminderCompViewshowToast(isEding: Bool) {
         listener?.reminderCompViewshowToast(isEding: isEding)
     }
@@ -172,6 +176,7 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     }
     
     // MARK: - ReviewComponenet
+    
     func pressedReviewBtn() {
         presenter.goReviewPage()
         dependency.appstoreReviewRepository
@@ -184,6 +189,12 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
             .rejectReview()
         listener?.diaryBottomSheetPressedCloseBtn()
         listener?.reviewCompoentViewPresentQA()
+    }
+    
+    // MARK: - AlarmComponent
+    
+    func pressedAlarmConfirmBtn(date: Date, days: [Weekday]) {
+        listener?.setAlarm(date: date, days: days)
     }
 }
 

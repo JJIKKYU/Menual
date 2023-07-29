@@ -525,4 +525,5 @@ extension DiaryDetailInteractor {
 // MARK: - 미사용
 extension DiaryDetailInteractor {
     func filterWithWeatherPlacePressedFilterBtn() { }
+    func setAlarm(date: Date, days: [Weekday]) {}
 }

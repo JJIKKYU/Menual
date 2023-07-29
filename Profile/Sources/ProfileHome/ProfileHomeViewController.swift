@@ -48,6 +48,9 @@ protocol ProfileHomePresentableListener: AnyObject {
     // 구독/구매
     func pressedPurchaseCheckCell()
     func pressedPurchaseCell()
+    
+    // 알람
+    func pressedAlarmCell()
 }
 
 final class ProfileHomeViewController: UIViewController, ProfileHomePresentable, ProfileHomeViewControllable {
@@ -107,11 +110,11 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         }
     }
     
-    func setViews() {
-        self.view.addSubview(naviView)
-        self.view.addSubview(settingTableView)
-        self.view.addSubview(admobView)
-        self.view.bringSubviewToFront(naviView)
+    private func setViews() {
+        view.addSubview(naviView)
+        view.addSubview(settingTableView)
+        view.addSubview(admobView)
+        view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -133,7 +136,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         }
     }
     
-    func bind() {
+    private func bind() {
         listener?.isEnabledPasswordRelay
             .subscribe(onNext: { [weak self] isEnabledPassword in
                 guard let self = self else { return }
@@ -159,7 +162,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
     }
     
     @objc
-    func pressedBackBtn() {
+    private func pressedBackBtn() {
         print("ProfileHomeVC :: pressedBackBtn!")
         listener?.pressedBackBtn(isOnlyDetach: false)
     }
@@ -169,10 +172,11 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
     }
 }
 
-// MARK: - IBaction
+// MARK: - IBAction
+
 extension ProfileHomeViewController {
     @objc
-    func selectedSwitchBtn(_ sender: UISwitch) {
+    private func selectedSwitchBtn(_ sender: UISwitch) {
         switch sender.isOn {
         case true:
             print("isOn!")
@@ -183,6 +187,7 @@ extension ProfileHomeViewController {
 }
 
 // MARK: - UITableView
+
 extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         // 디버그 모드가 아닐 경우에는 2개만 노출
@@ -310,49 +315,40 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 }
 
             case .password:
-                print("ProfileHome :: Passowrd")
                 listener?.pressedProfilePasswordCell()
                 
             case .passwordChange:
-                print("ProfileHome :: passwordChange!")
                 listener?.pressedProfilePasswordChangeCell()
             }
 
         case .setting2(let profileHomeSetting2):
             switch profileHomeSetting2 {
             case .backup:
-                print("ProfileHome :: backup!")
                 listener?.pressedProfileBackupCell()
                 
             case .restore:
-                print("ProfileHome :: restore!")
                 listener?.pressedProfileRestoreCell()
                 
             case .mail:
-                print("ProfileHome :: mail")
                 self.pressedDeveloperQACell()
                 
             case .openSource:
-                print("ProfileHome :: openSource")
                 listener?.pressedProfileOpensourceCell()
             }
 
         case .devMode(let profileHomeDevMode):
             switch profileHomeDevMode {
             case .tools:
-                print("ProfileHome :: tools")
                 listener?.pressedProfileDeveloperCell()
                 
             case .designSystem:
-                print("ProfileHome :: designSystem")
                 listener?.pressedDesignSystemCell()
                 
             case .review:
-                print("ProfileHome :: review")
                 listener?.pressedReviewCell()
                 
             case .alarm:
-                print("ProfileHome :: alarm")
+                listener?.pressedAlarmCell()
             }
         }
     }
@@ -363,6 +359,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
 }
 
 // MARK: - MessageUI
+
 extension ProfileHomeViewController: MFMailComposeViewControllerDelegate {
     func pressedDeveloperQACell() {
         if MFMailComposeViewController.canSendMail() {
@@ -421,11 +418,9 @@ extension ProfileHomeViewController: MFMailComposeViewControllerDelegate {
 }
 
 // MARK: - UIDocumentPickerDelegate
-extension ProfileHomeViewController: UIDocumentPickerDelegate {
-    
-}
+
+extension ProfileHomeViewController: UIDocumentPickerDelegate {}
 
 // MARK: - GoogleAds Delegate
-extension ProfileHomeViewController: GADBannerViewDelegate {
-    
-}
+
+extension ProfileHomeViewController: GADBannerViewDelegate {}

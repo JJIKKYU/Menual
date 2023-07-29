@@ -5,14 +5,16 @@
 //  Created by 정진균 on 2022/03/20.
 //
 
-import RIBs
-import RxSwift
-import RxRelay
-import RealmSwift
 import DesignSystem
-import MenualRepository
+import DiaryBottomSheet
+import Foundation
 import MenualEntity
+import MenualRepository
 import MenualServices
+import RealmSwift
+import RIBs
+import RxRelay
+import RxSwift
 
 public protocol ProfileHomeRouting: ViewableRouting {
     func attachProfilePassword(isPasswordChange: Bool, isPaswwordDisabled: Bool)
@@ -33,8 +35,8 @@ public protocol ProfileHomeRouting: ViewableRouting {
     func attachDesignSystem()
     func detachDesignSystem(isOnlyDetach: Bool)
     
-    func attachReviewBottomSheet()
-    func detachReviewBottomSheet(isOnlyDetach: Bool)
+    func attachBottomSheet(type: MenualBottomSheetType)
+    func detachBottomSheet(isOnlyDetach: Bool)
 }
 
 protocol ProfileHomePresentable: Presentable {
@@ -52,13 +54,12 @@ public protocol ProfileHomeListener: AnyObject {
 
 protocol ProfileHomeInteractorDependency {
     var diaryRepository: DiaryRepository { get }
-    var containerRepository: ContainerRepository { get }
     var profileRepository: ProfileRepository? { get }
+    var notificationRepository: NotificationRepository? { get }
     var iapService: IAPServiceProtocol? { get }
 }
 
 final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>, ProfileHomeInteractable, ProfileHomePresentableListener {
-
     var isEnabledPasswordRelay: BehaviorRelay<Bool>
     
     var profileHomeDataArr_Setting1: [ProfileHomeMenuModel] = []
@@ -184,6 +185,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     }
     
     // MARK: - ProfileDeveloper (개발자 도구)
+    
     func profileDeveloperPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachProfileDeveloper(isOnlyDetach: isOnlyDetach)
     }
@@ -193,6 +195,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     }
     
     // MARK: - ProfileOpensource (오픈 소스 라이브러리 보기)
+    
     func profileOpensourcePressedBackBtn(isOnlyDetach: Bool) {
         router?.detachProfileOpensource(isOnlyDetach: isOnlyDetach)
     }
@@ -204,6 +207,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     func goDiaryHome() { }
     
     // MARK: - ProfileRestore
+    
     func pressedProfileRestoreBackBtn(isOnlyDetach: Bool) {
         router?.detachProfileRestore(isOnlyDetach: isOnlyDetach, isAnimated: true)
     }
@@ -219,6 +223,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     }
     
     // MARK: - ProfileBackup
+    
     func pressedProfileBackupCell() {
         router?.attachProfileBackup()
     }
@@ -228,6 +233,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     }
     
     // MARK: - DesignSystem
+    
     func pressedDesignSystemCell() {
         router?.attachDesignSystem()
     }
@@ -237,12 +243,13 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     }
     
     // MARK: - DEVMode
+    
     func pressedReviewCell() {
-        router?.attachReviewBottomSheet()
+        router?.attachBottomSheet(type: .review)
     }
     
     func diaryBottomSheetPressedCloseBtn() {
-        router?.detachReviewBottomSheet(isOnlyDetach: false)
+        router?.detachBottomSheet(isOnlyDetach: false)
     }
     
     func reviewCompoentViewPresentQA() {
@@ -277,19 +284,25 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
             })
             .disposed(by: disposeBag)
     }
+    
+    // MARK: - Alarm
+    
+    func pressedAlarmCell() {
+        router?.attachBottomSheet(type: .alarm)
+    }
+    
+    func setAlarm(date: Date, days: [Weekday]) {
+        print("ProfileHome :: date = \(date), days = \(days)")
+        dependency?.notificationRepository?
+            .setAlarm(date: date, days: days)
+    }
 }
 
 
 // MARK: - 미사용
+
 extension ProfileHomeInteractor {
-    func filterWithWeatherPlace(weatherArr: [MenualEntity.Weather], placeArr: [MenualEntity.Place]) {
-    }
-    
-    func filterWithWeatherPlacePressedFilterBtn() {
-        
-    }
-    
-    func reminderCompViewshowToast(isEding: Bool) {
-        
-    }
+    func filterWithWeatherPlace(weatherArr: [MenualEntity.Weather], placeArr: [MenualEntity.Place]) {}
+    func filterWithWeatherPlacePressedFilterBtn() {}
+    func reminderCompViewshowToast(isEding: Bool) {}
 }
