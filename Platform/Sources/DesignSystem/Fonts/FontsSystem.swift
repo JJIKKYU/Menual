@@ -115,20 +115,20 @@ extension UIFont {
     }
     
     // 디자인 시스템에 정의되어 있는 타이틀 리턴
-    public class func AppTitle(_ title: TitleType) -> UIFont! {
+    public class func AppTitle(_ title: TitleType) -> UIFont {
         switch title {
         case .title_1:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 12)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 12) ?? .systemFont(ofSize: 12, weight: .bold)
         case .title_2:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 14)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 14) ?? .systemFont(ofSize: 14, weight: .bold)
         case .title_3:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 16)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 16) ?? .systemFont(ofSize: 16, weight: .bold)
         case .title_4:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 18)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 18) ?? .systemFont(ofSize: 18, weight: .bold)
         case .title_5:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 21)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 21) ?? .systemFont(ofSize: 21, weight: .bold)
         case .title_6:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 24)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Bold), size: 24) ?? .systemFont(ofSize: 24, weight: .bold)
         }
     }
     
@@ -136,15 +136,15 @@ extension UIFont {
     public class func AppBodyOnlyFont(_ body: BodyType) -> UIFont {
         switch body {
         case .body_5:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 16) ?? .systemFont(ofSize: 16)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 16) ?? .systemFont(ofSize: 16, weight: .regular)
         case .body_4:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 14) ?? .systemFont(ofSize: 14)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 14) ?? .systemFont(ofSize: 14, weight: .regular)
         case .body_3:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 13) ?? .systemFont(ofSize: 13)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 13) ?? .systemFont(ofSize: 13, weight: .regular)
         case .body_2:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 12) ?? .systemFont(ofSize: 12)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 12) ?? .systemFont(ofSize: 12, weight: .regular)
         case .body_1:
-            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 10) ?? .systemFont(ofSize: 10)
+            return UIFont(name: UIFont.SpoqaHanSansNeo(.Regular), size: 10) ?? .systemFont(ofSize: 10, weight: .regular)
         }
     }
     
