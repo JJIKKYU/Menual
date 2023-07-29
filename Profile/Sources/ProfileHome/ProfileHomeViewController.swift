@@ -15,9 +15,6 @@ import RxRelay
 import RxSwift
 import SnapKit
 import UIKit
-#if DEBUG
-import MenualRepository
-#endif
 
 protocol ProfileHomePresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
@@ -91,13 +88,13 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         settingTableView.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.backgroundColor = .clear
-            $0.contentInset = UIEdgeInsets(top: UIApplication.topSafeAreaHeight + 24, left: 0, bottom: 40, right: 0)
+            $0.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 40, right: 0)
             $0.sectionHeaderHeight = 34
             $0.delegate = self
             $0.dataSource = self
             $0.register(ProfileHomeCell.self, forCellReuseIdentifier: "ProfileHomeCell")
             $0.rowHeight = UITableView.automaticDimension
-            $0.estimatedRowHeight = 88
+            $0.estimatedRowHeight = 120
             $0.separatorStyle = .none
         }
         
@@ -124,7 +121,8 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         }
         
         settingTableView.snp.makeConstraints { make in
-            make.leading.width.top.bottom.equalToSuperview()
+            make.top.equalTo(naviView.snp.bottom)
+            make.leading.width.bottom.equalToSuperview()
         }
         
         admobView.snp.makeConstraints { make in
