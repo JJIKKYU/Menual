@@ -39,7 +39,7 @@ public protocol DiaryBottomSheetListener: AnyObject {
     func reviewCompoentViewPresentQA()
     
     // 알람
-    func setAlarm(date: Date, days: [Weekday])
+    func setAlarm(date: Date, days: [Weekday]) async
 }
 
 public protocol DiaryBottomSheetInteractorDependency {
@@ -194,7 +194,9 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     // MARK: - AlarmComponent
     
     func pressedAlarmConfirmBtn(date: Date, days: [Weekday]) {
-        listener?.setAlarm(date: date, days: days)
+        Task {
+            await listener?.setAlarm(date: date, days: days)
+        }
     }
 }
 

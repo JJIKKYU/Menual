@@ -609,5 +609,5 @@ extension DiaryHomeInteractor {
 // MARK: - 미사용
 extension DiaryHomeInteractor {
     func reminderCompViewshowToast(isEding: Bool) { }
-    func setAlarm(date: Date, days: [Weekday]) {}
+    func setAlarm(date: Date, days: [Weekday]) async {}
 }

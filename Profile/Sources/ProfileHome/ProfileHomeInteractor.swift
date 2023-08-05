@@ -291,9 +291,9 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         router?.attachBottomSheet(type: .alarm)
     }
     
-    func setAlarm(date: Date, days: [Weekday]) {
+    func setAlarm(date: Date, days: [Weekday]) async {
         print("ProfileHome :: date = \(date), days = \(days)")
-        dependency?.notificationRepository?
+        await dependency?.notificationRepository?
             .setAlarm(date: date, days: days)
     }
 }

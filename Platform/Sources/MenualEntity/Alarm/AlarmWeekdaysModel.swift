@@ -8,13 +8,13 @@
 import Foundation
 
 public enum Weekday: String, CaseIterable {
-    case monday = "월요일"
-    case tuesday = "화요일"
-    case wednesday = "수요일"
-    case thursday = "목요일"
-    case friday = "금요일"
-    case saturday = "토요일"
-    case sunday = "일요일"
+    case monday = "월"
+    case tuesday = "화"
+    case wednesday = "수"
+    case thursday = "목"
+    case friday = "금"
+    case saturday = "토"
+    case sunday = "일"
 
     var intValue: Int {
         switch self {
