@@ -59,10 +59,10 @@ public class ProfileHomeCell: UITableViewCell {
     }
     
     lazy var switchBtn = UISwitch().then {
-        $0.addTarget(self, action: #selector(selectedSwitchBtn), for: .touchUpInside)
         $0.onTintColor = Colors.tint.main.v400
         $0.tintColor = Colors.grey.g700
         $0.transform = CGAffineTransform(scaleX: 0.78, y: 0.78)
+        $0.isUserInteractionEnabled = false
     }
     
     override public func awakeFromNib() {
@@ -142,19 +142,6 @@ public class ProfileHomeCell: UITableViewCell {
         titleLabel.sizeToFit()
         descLabel.sizeToFit()
         stackView.sizeToFit()
-    }
-}
-
-// MARK: - Toggle
-extension ProfileHomeCell {
-    @objc
-    func selectedSwitchBtn(_ sender: UISwitch) {
-        switch sender.isOn {
-        case true:
-            print("isOn!")
-        case false:
-            print("isOff!")
-        }
     }
 }
 

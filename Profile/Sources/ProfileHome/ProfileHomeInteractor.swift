@@ -61,6 +61,7 @@ protocol ProfileHomeInteractorDependency {
 
 final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>, ProfileHomeInteractable, ProfileHomePresentableListener {
     var isEnabledPasswordRelay: BehaviorRelay<Bool>
+    var isEnabledNotificationRelay: BehaviorRelay<Bool>?
     
     var profileHomeDataArr_Setting1: [ProfileHomeMenuModel] = []
     var profileHomeDataArr_Setting2: [ProfileHomeMenuModel] = []
@@ -77,6 +78,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         presenter: ProfileHomePresentable,
         dependency: ProfileHomeInteractorDependency?
     ) {
+        self.isEnabledNotificationRelay = dependency?.notificationRepository?.isEnabledNotificationRelay
         self.isEnabledPasswordRelay = BehaviorRelay<Bool>(value: false)
         
         // ProfileHome Menu 세팅

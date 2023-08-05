@@ -14,27 +14,24 @@ import UserNotifications
 
 public protocol NotificationRepository: AnyObject {
     var notificationCenter: UNUserNotificationCenter { get }
-    var isNotificationEnabledRelay: BehaviorRelay<Bool> { get }
+    var isEnabledNotificationRelay: BehaviorRelay<Bool> { get }
     
     func requestAuthorization() async throws -> Bool
     func setAlarm(date: Date, days: [Weekday]) async
     func getCurrentNotifications() async -> [UNNotificationRequest]
     func getCurrentWeekdays() async -> [Weekday]
     func removeAlarmNotification() async
+    func checkAlarmIsEnabled()
 }
 
 // MARK: - NotificationRepositoryImp
 
 public class NotificationRepositoryImp: NotificationRepository {
     public var notificationCenter: UNUserNotificationCenter = .current()
-    public var isNotificationEnabledRelay: BehaviorRelay<Bool> = .init(value: false)
+    public var isEnabledNotificationRelay: BehaviorRelay<Bool> = .init(value: false)
     
     public init() {
-        Task {
-            let notifications: [UNNotificationRequest] = await getCurrentNotifications()
-            let isNotificationEnabled: Bool = notifications.count == 0 ? false : true
-            isNotificationEnabledRelay.accept(isNotificationEnabled)
-        }
+        checkAlarmIsEnabled()
     }
     
     public func requestAuthorization() async throws -> Bool {
@@ -93,6 +90,9 @@ public class NotificationRepositoryImp: NotificationRepository {
                 print("NotificationRepository :: Notification Add가 정상적으로 되지 못했습니다. \(error.localizedDescription)")
             }
         }
+        
+        // 최종적으로 알람이 등록되어 있는지 UI 반영을 위해 Relay에 Aceept
+        checkAlarmIsEnabled()
     }
     
     // 현재 등록된 Notification을 획득하는 함수
@@ -131,5 +131,14 @@ public class NotificationRepositoryImp: NotificationRepository {
         notificationCenter.removePendingNotificationRequests(
             withIdentifiers: willRemoveIdentifiers
         )
+    }
+    
+    // 알람이 등록되어 있는지 체크하는 함수
+    public func checkAlarmIsEnabled() {
+        Task {
+            let notifications: [UNNotificationRequest] = await getCurrentNotifications()
+            let isNotificationEnabled: Bool = notifications.count == 0 ? false : true
+            isEnabledNotificationRelay.accept(isNotificationEnabled)
+        }
     }
 }

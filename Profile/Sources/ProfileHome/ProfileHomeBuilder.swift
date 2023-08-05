@@ -39,14 +39,19 @@ public final class ProfileHomeComponent: Component<ProfileHomeDependency>, Profi
     public var profileRepository: ProfileRepository? {
         dependency.containerRepository.container.resolve(ProfileRepository.self)
     }
-    public var notificationRepository: NotificationRepository? {
-        dependency.containerRepository.container.resolve(NotificationRepository.self)
-    }
-    
+    public var notificationRepository: NotificationRepository?
 
     public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
     public var appstoreReviewRepository: AppstoreReviewRepository { dependency.appstoreReviewRepository }
+    
+    public override init(
+        dependency: ProfileHomeDependency
+    ) {
+        super.init(dependency: dependency)
+        
+        self.notificationRepository = dependency.containerRepository.container.resolve(NotificationRepository.self)
+    }
 }
 
 // MARK: - Builder

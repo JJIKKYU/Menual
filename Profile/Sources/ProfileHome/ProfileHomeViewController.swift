@@ -51,6 +51,7 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // 알람
     func pressedAlarmCell()
+    var isEnabledNotificationRelay: BehaviorRelay<Bool>? { get }
 }
 
 final class ProfileHomeViewController: UIViewController, ProfileHomePresentable, ProfileHomeViewControllable {
@@ -291,6 +292,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             guard let data = listener?.profileHomeDevDataArr[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.profileHomeCellType = data.cellType
+            cell.switchIsOn = listener?.isEnabledNotificationRelay?.value ?? false
             cell.desc = data.description
             cell.actionName = data.actionName
             cell.menuType = data.menuType
