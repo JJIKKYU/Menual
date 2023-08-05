@@ -208,9 +208,13 @@ public final class ListHeader: UIView {
     }
 }
 
+/*
+ 
 @available(iOS 17.0, *)
 #Preview(traits: .sizeThatFitsLayout, body: {
     let listHeader = ListHeader(type: .text, rightIconType: .arrow)
     listHeader.title = "안녕하세요!"
     return listHeader
 })
+
+*/

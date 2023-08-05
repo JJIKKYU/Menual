@@ -10,18 +10,18 @@ import MenualRepository
 import DiaryDetail
 
 public protocol DiarySearchDependency: Dependency {
-    // TODO: Declare the set of dependencies required by this RIB, but cannot be
-    // created by this RIB.
+    var containerRepository: ContainerRepository { get }
     var diaryRepository: DiaryRepository { get }
     var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
 
 public final class DiarySearchComponent: Component<DiarySearchDependency>, DiaryDetailDependency, DiarySearchInteractorDependency
 {
+    public var containerRepository: ContainerRepository {
+        dependency.containerRepository
+    }
     public var diaryRepository: DiaryRepository { dependency.diaryRepository }
     public var appstoreReviewRepository: AppstoreReviewRepository { dependency.appstoreReviewRepository }
-
-    // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
 
 // MARK: - Builder

@@ -59,6 +59,7 @@ public protocol DiaryBottomSheetPresentableListener: AnyObject {
     func pressedInquiryBtn()
     
     // AlarmComponentView
+    func getCurrentNotifications() async -> [Weekday]
     func pressedAlarmConfirmBtn(date: Date, days: [Weekday])
 }
 
@@ -170,10 +171,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     }
     
     // 다시알람 컴포넌트
-    private lazy var alarmComponentView: MenualBottomSheetAlarmComponentView = .init().then {
-        $0.deleagete = self
-        $0.isHidden = true
-    }
+    private var alarmComponentView: MenualBottomSheetAlarmComponentView?
     
     
     override func viewDidLoad() {
@@ -190,7 +188,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        // showBottomSheet()
+        showBottomSheet()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -206,7 +204,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.view.layoutIfNeeded()
-        showBottomSheet()
+        // showBottomSheet()
     }
     
     func setViews() {
@@ -258,7 +256,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
          resignFirstResponder()
     }
     
-    func setViews(type: MenualBottomSheetType) {
+    func setViews(type: MenualBottomSheetType) async {
         setViews()
         print("DiaryBottomSheet :: menualBottomSheetType = \(type)")
         menualBottomSheetType = type
@@ -326,6 +324,11 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
             
         case .alarm:
+            let currentNotifications: [Weekday]? = await listener?.getCurrentNotifications()
+            let alarmComponentView: MenualBottomSheetAlarmComponentView = .init(currentWeekdays: currentNotifications)
+            alarmComponentView.deleagete = self
+
+            self.alarmComponentView = alarmComponentView
             bottomSheetView.addSubview(alarmComponentView)
             alarmComponentView.isHidden = false
             alarmComponentView.snp.makeConstraints { make in
@@ -460,7 +463,7 @@ extension DiaryBottomSheetViewController {
             make.top.equalTo(view.snp.bottom).inset(bottomSheetHeight)
         }
         
-        UIView.animate(withDuration: 0.35, delay: 0, options: .curveEaseInOut) {
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
             self.dimmedView.alpha = 0.1
             self.view.layoutIfNeeded()
         } completion: { isShow in
@@ -714,6 +717,7 @@ extension DiaryBottomSheetViewController: DialogDelegate {
 }
 
 // MARK: - ReviewComponenet
+
 extension DiaryBottomSheetViewController: MenualBottomSheetReviewComponentViewDelegate {
     func goReviewPage() {
         let appID = "1617404636" // 앱스토어 Connect에서 확인 가능한 앱 ID를 입력하세요.

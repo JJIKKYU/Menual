@@ -167,8 +167,10 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
         listener?.pressedBackBtn(isOnlyDetach: false)
     }
     
-    func showToastRestoreSuccess() {
-        _ = showToast(message: "메뉴얼 가져오기를 완료했어요")
+    func presentToast(_ message: String) {
+        DispatchQueue.main.async {
+            _ = self.showToast(message: message)
+        }
     }
 }
 

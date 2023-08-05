@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum Weekday: String, CaseIterable {
+public enum Weekday: String, CaseIterable, Equatable {
     case monday = "월"
     case tuesday = "화"
     case wednesday = "수"
@@ -32,6 +32,28 @@ public enum Weekday: String, CaseIterable {
             return 5
         case .sunday:
             return 6
+        }
+    }
+    
+    // 정수값을 Weekday enum으로 변환하는 함수
+    public static func fromInt(_ intValue: Int) -> Weekday? {
+        switch intValue {
+        case 0:
+            return .monday
+        case 1:
+            return .tuesday
+        case 2:
+            return .wednesday
+        case 3:
+            return .thursday
+        case 4:
+            return .friday
+        case 5:
+            return .saturday
+        case 6:
+            return .sunday
+        default:
+            return nil
         }
     }
 

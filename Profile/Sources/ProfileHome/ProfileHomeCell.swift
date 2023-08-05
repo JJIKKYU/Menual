@@ -160,6 +160,7 @@ extension ProfileHomeCell {
 
 // MARK: - Preview
 
+/*
 @available(iOS 17.0, *)
 #Preview {
     let cell = ProfileHomeCell()
@@ -168,3 +169,4 @@ extension ProfileHomeCell {
     cell.desc = "description입니다."
     return cell
 }
+*/

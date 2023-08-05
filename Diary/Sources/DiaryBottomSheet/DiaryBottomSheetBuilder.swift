@@ -21,8 +21,7 @@ public extension DiaryBottomSheetDependency {
 }
 
 public protocol DiaryBottomSheetDependency: Dependency {
-    // TODO: Declare the set of dependencies required by this RIB, but cannot be
-    // created by this RIB.
+    var containerRepository: ContainerRepository { get }
     var diaryRepository: DiaryRepository { get }
     var appstoreReviewRepository: AppstoreReviewRepository { get }
     var filteredDiaryCountRelay: BehaviorRelay<Int>? { get }
@@ -34,7 +33,6 @@ public protocol DiaryBottomSheetDependency: Dependency {
 }
 
 public final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependency>, DiaryWritingDependency, DiaryBottomSheetInteractorDependency {
-
     public var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { dependency.reminderRequestDateRelay }
     public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>? { dependency.filteredWeatherArrRelay }
     public var filteredPlaceArrRelay: BehaviorRelay<[Place]>? { dependency.filteredPlaceArrRelay }
@@ -43,12 +41,14 @@ public final class DiaryBottomSheetComponent: Component<DiaryBottomSheetDependen
     public var isHideMenualRelay: BehaviorRelay<Bool>? { dependency.isHideMenualRelay }
     public var isEnabledReminderRelay: BehaviorRelay<Bool?>? { dependency.isEnabledReminderRelay }
     public var appstoreReviewRepository: AppstoreReviewRepository { dependency.appstoreReviewRepository }
+    public var notificationRepository: NotificationRepository?
 
-    // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
     public override init(
         dependency: DiaryBottomSheetDependency
     ) {
         super.init(dependency: dependency)
+        
+        self.notificationRepository = dependency.containerRepository.container.resolve(NotificationRepository.self)
     }
 }
 

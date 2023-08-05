@@ -250,6 +250,7 @@ public class MenualBottomSheetFilterComponentView: UIView {
     }}
 
 // MARK: - IBAction
+
 extension MenualBottomSheetFilterComponentView {
     @objc
     func pressedWeatherTitleBtn(_ button: UIButton) {
@@ -279,6 +280,7 @@ extension MenualBottomSheetFilterComponentView {
 }
 
 // MARK: - WeatherPlaceSelectViewDelegate
+
 extension MenualBottomSheetFilterComponentView: WeatherPlaceSelectViewDelegate {
     public func isSelected(_ isSelected: Bool) {
         print("isSelected!")

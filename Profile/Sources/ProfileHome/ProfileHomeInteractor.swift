@@ -42,8 +42,8 @@ public protocol ProfileHomeRouting: ViewableRouting {
 protocol ProfileHomePresentable: Presentable {
     var listener: ProfileHomePresentableListener? { get set }
     
-    func showToastRestoreSuccess()
     func pressedDeveloperQACell()
+    func presentToast(_ message: String)
 }
 
 public protocol ProfileHomeListener: AnyObject {
@@ -218,8 +218,6 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     func restoreSuccess() {
         router?.detachProfileRestore(isOnlyDetach: false, isAnimated: false)
         listener?.restoreSuccess()
-        // listener?.profileHomePressedBackBtn(isOnlyDetach: false)
-        // presenter.showToastRestoreSuccess()
     }
     
     // MARK: - ProfileBackup
@@ -295,6 +293,7 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         print("ProfileHome :: date = \(date), days = \(days)")
         await dependency?.notificationRepository?
             .setAlarm(date: date, days: days)
+        presenter.presentToast("약속한 시간에 알려드릴게요")
     }
 }
 

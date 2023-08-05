@@ -14,14 +14,16 @@ import DiaryWriting
 import DiaryDetailImage
 
 public protocol DiaryDetailDependency: Dependency {
-    // TODO: Declare the set of dependencies required by this RIB, but cannot be
-    // created by this RIB.
+    var containerRepository: ContainerRepository { get }
     var diaryRepository: DiaryRepository { get }
     var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
 
 public final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency, DiaryDetailImageDependency {
 
+    public var containerRepository: ContainerRepository {
+        dependency.containerRepository
+    }
     public var isEnabledReminderRelay: BehaviorRelay<Bool?>?
     public var isHideMenualRelay: BehaviorRelay<Bool>?
     public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?

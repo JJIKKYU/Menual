@@ -19,8 +19,6 @@ import DiaryBottomSheet
 import MenualServices
 
 public protocol ProfileHomeDependency: Dependency {
-    // TODO: Declare the set of dependencies required by this RIB, but cannot be
-    // created by this RIB.
     var diaryRepository: DiaryRepository { get }
     var containerRepository: ContainerRepository { get }
     var appstoreReviewRepository: AppstoreReviewRepository { get }
@@ -29,6 +27,9 @@ public protocol ProfileHomeDependency: Dependency {
 
 public final class ProfileHomeComponent: Component<ProfileHomeDependency>, ProfilePasswordDependency, ProfileDeveloperDependency, ProfileHomeInteractorDependency, ProfileOpensourceDependency, ProfileBackupDependency, ProfileRestoreDependency, DesignSystemDependency, DiaryBottomSheetDependency {
 
+    public var containerRepository: ContainerRepository {
+        dependency.containerRepository
+    }
     public var filteredDiaryCountRelay: BehaviorRelay<Int>?
     public var filteredWeatherArrRelay: BehaviorRelay<[Weather]>?
     public var filteredPlaceArrRelay: BehaviorRelay<[Place]>?

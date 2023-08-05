@@ -15,19 +15,25 @@ import MenualEntity
 import DesignSystem
 import MenualRepository
 
+// MARK: - DiaryBottomSheetRouting
+
 public protocol DiaryBottomSheetRouting: ViewableRouting {
     
 }
+
+// MARK: - DiaryBottomSheetPresentable
 
 public protocol DiaryBottomSheetPresentable: Presentable {
     var listener: DiaryBottomSheetPresentableListener? { get set }
 
     func setFilterBtnCount(count: Int)
-    func setViews(type: MenualBottomSheetType)
+    func setViews(type: MenualBottomSheetType) async
     func setCurrentReminderData(isEnabled: Bool, dateComponets: DateComponents?)
     func setHideBtnTitle(isHide: Bool)
     func goReviewPage()
 }
+
+// MARK: - DiaryBottomSheetListener
 
 public protocol DiaryBottomSheetListener: AnyObject {
     func diaryBottomSheetPressedCloseBtn()
@@ -42,6 +48,8 @@ public protocol DiaryBottomSheetListener: AnyObject {
     func setAlarm(date: Date, days: [Weekday]) async
 }
 
+// MARK: - DiaryBottomSheetInteractorDependency
+
 public protocol DiaryBottomSheetInteractorDependency {
     var diaryRepository: DiaryRepository { get }
     var appstoreReviewRepository: AppstoreReviewRepository { get }
@@ -51,7 +59,10 @@ public protocol DiaryBottomSheetInteractorDependency {
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
     var isHideMenualRelay: BehaviorRelay<Bool>? { get }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
+    var notificationRepository: NotificationRepository? { get }
 }
+
+// MARK: - DiaryBottomSheetInteractor
 
 final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPresentable>, DiaryBottomSheetInteractable, DiaryBottomSheetPresentableListener {
     
@@ -70,8 +81,6 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
 
     private let dependency: DiaryBottomSheetInteractorDependency
 
-    // TODO: Add additional dependencies to constructor. Do not perform any logic
-    // in constructor.
     init(
         presenter: DiaryBottomSheetPresentable,
         dependency: DiaryBottomSheetInteractorDependency,
@@ -86,7 +95,9 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
         print("menualBottomSheetType = \(bottomSheetType)")
         super.init(presenter: presenter)
         presenter.listener = self
-        presenter.setViews(type: bottomSheetType)
+        Task {
+            await presenter.setViews(type: bottomSheetType)
+        }
     }
 
     override func didBecomeActive() {
@@ -196,11 +207,19 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     func pressedAlarmConfirmBtn(date: Date, days: [Weekday]) {
         Task {
             await listener?.setAlarm(date: date, days: days)
+            listener?.diaryBottomSheetPressedCloseBtn()
         }
+    }
+    
+    func getCurrentNotifications() async -> [Weekday] {
+        guard let weekdays = await dependency.notificationRepository?
+            .getCurrentWeekdays() else { return [] }
+        return weekdays
     }
 }
 
 // MARK: - 미사용
+
 extension DiaryBottomSheetInteractor {
     func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: ShowToastType) {
     }

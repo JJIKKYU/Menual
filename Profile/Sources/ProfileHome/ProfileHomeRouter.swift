@@ -5,15 +5,16 @@
 //  Created by 정진균 on 2022/03/20.
 //
 
-import RIBs
+import DiaryBottomSheet
+import Foundation
 import MenualUtil
+import ProfileBackup
+import ProfileDesignSystem
+import ProfileDeveloper
 import ProfileOpensource
 import ProfilePassword
-import ProfileDeveloper
-import ProfileBackup
 import ProfileRestore
-import ProfileDesignSystem
-import DiaryBottomSheet
+import RIBs
 
 protocol ProfileHomeInteractable: Interactable, ProfilePasswordListener, ProfileDeveloperListener, ProfileOpensourceListener, ProfileBackupListener, ProfileRestoreListener, DesignSystemListener, DiaryBottomSheetListener {
     var router: ProfileHomeRouting? { get set }
@@ -279,7 +280,10 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
             return
         }
         
-        diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
+        DispatchQueue.main.async {
+            diaryBottomSheetRouter.viewControllable.dismiss(completion: nil)
+        }
+
         detachChild(router)
         bottomSheetRouting = nil
     }
