@@ -6,6 +6,7 @@
 //
 
 import MenualEntity
+import MenualUtil
 import RxCocoa
 import RxSwift
 import SnapKit
@@ -60,6 +61,8 @@ public class MenualBottomSheetAlarmComponentView: UIView {
     }
     
     private func configureUI() {
+        self.categoryName = "alarm"
+        
         dayTitleLabel.do {
             $0.text = "요일 선택"
             $0.font = .AppTitle(.title_2)
@@ -97,6 +100,7 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         }
         
         confirmBtn.do {
+            $0.actionName = "confirm"
             $0.title = "설정하기"
             $0.addTarget(self, action: #selector(pressedConfirmBtn), for: .touchUpInside)
         }
@@ -220,7 +224,10 @@ extension MenualBottomSheetAlarmComponentView: UICollectionViewDelegate, UIColle
 
 extension MenualBottomSheetAlarmComponentView {
     @objc
-    func pressedConfirmBtn() {
+    func pressedConfirmBtn(sender: UIButton) {
+        MenualLog.logEventAction(responder: sender, parameter: [
+            "weekDays": selectedDays
+        ])
         let date: Date = timePicker.date
         print("Alarm :: pressedConfirmBtn! date: \(date), selectedDays = \(selectedDays)")
         deleagete?.pressedConfirmBtn(date: date, days: selectedDays)

@@ -35,8 +35,10 @@ public class ProfileHomeCell: UITableViewCell {
     private let stackView: UIStackView = .init().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.axis = .vertical
-        $0.distribution = .fillProportionally
+        $0.distribution = .fill
         $0.alignment = .fill
+        $0.layoutMargins = UIEdgeInsets(top: 20, left: .zero, bottom: 20, right: 0)
+        $0.isLayoutMarginsRelativeArrangement = true
     }
     
     private let titleLabel: UILabel = .init().then {
@@ -97,9 +99,9 @@ public class ProfileHomeCell: UITableViewCell {
         
         stackView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.top.equalToSuperview().offset(20)
+            make.top.equalToSuperview()
             make.width.equalToSuperview().inset(60)
-            make.bottom.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview()
         }
         
         arrowImageView.snp.makeConstraints { make in
@@ -124,24 +126,24 @@ public class ProfileHomeCell: UITableViewCell {
         case .arrow:
             arrowImageView.isHidden = false
             switchBtn.isHidden = true
-            stackView.spacing = 0
+            stackView.spacing = 1
             
         case .toggle:
             switchBtn.isOn = switchIsOn
             arrowImageView.isHidden = true
             switchBtn.isHidden = false
-            stackView.spacing = 0
+            stackView.spacing = 1
             
         case .toggleWithDescription:
             switchBtn.isOn = switchIsOn
             arrowImageView.isHidden = true
             switchBtn.isHidden = false
-            stackView.spacing = 8
+            stackView.spacing = 4
         }
         
-        titleLabel.sizeToFit()
-        descLabel.sizeToFit()
-        stackView.sizeToFit()
+//        titleLabel.sizeToFit()
+//        descLabel.sizeToFit()
+//        stackView.sizeToFit()
     }
 }
 

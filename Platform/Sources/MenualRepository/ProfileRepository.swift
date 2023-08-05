@@ -99,7 +99,7 @@ public final class ProfileRepositoryImp: ProfileRepository {
                 menuType: .devMode(.alarm),
                 title: "일기 작성 알림 설정하기",
                 description: "일기를 꾸준히 쓸 수 있도록 알림을 보내드릴게요",
-                actionName: "review"
+                actionName: "alarm"
             ),
         ]
     }

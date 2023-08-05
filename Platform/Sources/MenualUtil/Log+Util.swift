@@ -207,7 +207,7 @@ public class MenualLog {
             logName += "_\(actioName)"
         }
         
-        // print("Log :: 🍎 \(logName), parameter = \(parameter)")
+        print("Log :: 🍎 \(logName), parameter = \(parameter)")
         
         Analytics.logEvent(logName, parameters: parameter)
     }

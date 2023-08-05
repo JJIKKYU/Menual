@@ -139,12 +139,19 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
     
     private func bind() {
         listener?.isEnabledPasswordRelay
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isEnabledPassword in
                 guard let self = self else { return }
                 print("ProfileHome :: isEnabledPasswordRelay = \(isEnabledPassword)")
-                DispatchQueue.main.async {
-                    self.settingTableView.reloadData()
-                }
+                self.settingTableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        listener?.isEnabledNotificationRelay?
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isEnabled in
+                guard let self = self else { return }
+                self.settingTableView.reloadData()
             })
             .disposed(by: disposeBag)
     }
