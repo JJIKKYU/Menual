@@ -92,7 +92,7 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         timePicker.do {
             $0.datePickerMode = .time
             $0.preferredDatePickerStyle = .wheels
-            $0.minuteInterval = 5
+            $0.minuteInterval = 1
             $0.isSelected = false
             $0.setValue(UIColor.white, forKeyPath: "textColor")
             $0.setValue(UIColor.white, forKeyPath: "tintColor")
@@ -161,7 +161,7 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         
         // 선택한 날짜만큼 CollectionView에서 선택된 상태로 제공
         for weekday in currentWeekdays {
-            let row: Int = weekday.transformIntWeekday()
+            let row: Int = weekday.transformIntWeekday() - 1
             print("Alarm :: row! = \(row)")
             dayCollectionView.selectItem(
                 at: IndexPath(row: row, section: 0),

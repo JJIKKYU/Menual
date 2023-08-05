@@ -60,6 +60,8 @@ public class NotificationRepositoryImp: NotificationRepository {
         let content: UNMutableNotificationContent = .init()
         content.title = "오늘 일기를 작성해볼까요?"
         content.body = "바디입니다."
+        content.badge = 1
+        content.sound = .default
         
         // 선택한 날에 맞추어 각각 알림 등록
         for day in days {
@@ -70,6 +72,8 @@ public class NotificationRepositoryImp: NotificationRepository {
 
             var dateComp: DateComponents = calendar.dateComponents([.hour, .minute], from: date)
             dateComp.weekday = day.transformIntWeekday()
+            dateComp.timeZone = TimeZone.current
+            print("NotificationRepository :: dateComp = \(dateComp)")
             
             let identifier: String = "Alarm_\(day.rawValue)"
             

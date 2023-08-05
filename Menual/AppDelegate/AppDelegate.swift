@@ -127,7 +127,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         // 앱이 foreground에 있을 때 push 알림이 오면 이 메서드가 호출된다.
         // diaryUUIDRelay.accept("diaryUUID!!!")
-        completionHandler([.list, .banner])
+        completionHandler([.badge, .list, .banner])
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
