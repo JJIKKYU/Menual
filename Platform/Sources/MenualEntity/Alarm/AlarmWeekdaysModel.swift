@@ -65,4 +65,24 @@ public enum Weekday: String, CaseIterable, Equatable {
     public static func getWeekdays() -> [Weekday] {
         return [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
     }
+    
+    // 월화수목금토일로 보여주면서 Idx를 static하게 지정해주어야 함
+    public func getIdx() -> Int {
+        switch self {
+        case .sunday:
+            return 6
+        case .monday:
+            return 0
+        case .tuesday:
+            return 1
+        case .wednesday:
+            return 2
+        case .thursday:
+            return 3
+        case .friday:
+            return 4
+        case .saturday:
+            return 5
+        }
+    }
 }

@@ -161,7 +161,7 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         
         // 선택한 날짜만큼 CollectionView에서 선택된 상태로 제공
         for weekday in currentWeekdays {
-            let row: Int = weekday.transformIntWeekday() - 1
+            let row: Int = weekday.getIdx()
             print("Alarm :: row! = \(row)")
             dayCollectionView.selectItem(
                 at: IndexPath(row: row, section: 0),

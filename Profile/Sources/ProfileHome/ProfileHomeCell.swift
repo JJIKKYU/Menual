@@ -11,6 +11,14 @@ import SnapKit
 import Then
 import UIKit
 
+// MARK: - ProfileHomeCell Delegate
+
+public protocol ProfileHomeCellDelegate: AnyObject {
+    func pressedToggleBtn(menuType: ProfileHomeMenuType, section: ProfileHomeSection)
+}
+
+// MARK: - ProfileHomeCell
+
 public class ProfileHomeCell: UITableViewCell {
     
     public var profileHomeCellType: ProfileHomeCellType = .arrow {
@@ -19,6 +27,7 @@ public class ProfileHomeCell: UITableViewCell {
     
     public var section: ProfileHomeSection?
     public var menuType: ProfileHomeMenuType?
+    public weak var delegate: ProfileHomeCellDelegate?
     
     public  var title: String = "" {
         didSet { setNeedsLayout() }
@@ -64,7 +73,8 @@ public class ProfileHomeCell: UITableViewCell {
         $0.onTintColor = Colors.tint.main.v400
         $0.tintColor = Colors.grey.g700
         $0.transform = CGAffineTransform(scaleX: 0.78, y: 0.78)
-        $0.isUserInteractionEnabled = false
+        $0.addTarget(self, action: #selector(pressedToggleBtn), for: .touchUpInside)
+        $0.isUserInteractionEnabled = true
     }
     
     override public func awakeFromNib() {
@@ -136,14 +146,28 @@ public class ProfileHomeCell: UITableViewCell {
             
         case .toggleWithDescription:
             switchBtn.isOn = switchIsOn
+            // Toggle On은 셀을 직접 클릭해야만 활성화할 수 있음 (서비스에서 변경)
+            switchBtn.isUserInteractionEnabled = switchBtn.isOn
             arrowImageView.isHidden = true
             switchBtn.isHidden = false
             stackView.spacing = 4
         }
-        
-//        titleLabel.sizeToFit()
-//        descLabel.sizeToFit()
-//        stackView.sizeToFit()
+    }
+}
+
+// MARK: - IBAction
+
+extension ProfileHomeCell {
+    @objc
+    func pressedToggleBtn() {
+        guard let menuType: ProfileHomeMenuType = menuType,
+              let section: ProfileHomeSection = section
+        else { return }
+
+        delegate?.pressedToggleBtn(
+            menuType: menuType,
+            section: section
+        )
     }
 }
 

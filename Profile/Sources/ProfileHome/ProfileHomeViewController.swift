@@ -51,6 +51,7 @@ protocol ProfileHomePresentableListener: AnyObject {
     
     // 알람
     func pressedAlarmCell() async
+    func disableAllAlarms() async
     var isEnabledNotificationRelay: BehaviorRelay<Bool>? { get }
 }
 
@@ -306,6 +307,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             cell.actionName = data.actionName
             cell.menuType = data.menuType
             cell.section = data.section
+            cell.delegate = self
             cell.sizeToFit()
             cell.layoutIfNeeded()
             return cell
@@ -318,6 +320,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             cell.actionName = data.actionName
             cell.menuType = data.menuType
             cell.section = data.section
+            cell.delegate = self
             cell.sizeToFit()
             cell.layoutIfNeeded()
             return cell
@@ -332,6 +335,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             cell.actionName = data.actionName
             cell.menuType = data.menuType
             cell.section = data.section
+            cell.delegate = self
             cell.sizeToFit()
             cell.layoutIfNeeded()
             return cell
@@ -483,6 +487,32 @@ extension ProfileHomeViewController: DialogDelegate {
             switch profileHomeDialog {
             case .notificationAuthorization:
                 break
+            }
+        }
+    }
+}
+
+// MARK: - ProfileHomeCell Delegate
+
+extension ProfileHomeViewController: ProfileHomeCellDelegate {
+    func pressedToggleBtn(menuType: ProfileHomeMenuType, section: ProfileHomeSection) {
+        switch menuType {
+        case .setting1(_):
+            break
+
+        case .setting2(_):
+            break
+
+        case .devMode(let profileHomeDevMode):
+            switch profileHomeDevMode {
+            case .tools, .designSystem, .review:
+                break
+
+            case .alarm:
+                print("ProfileHome :: Alarm!")
+                Task {
+                    await listener?.disableAllAlarms()
+                }
             }
         }
     }

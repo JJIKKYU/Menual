@@ -105,14 +105,16 @@ public class NotificationRepositoryImp: NotificationRepository {
     public func getCurrentNotifications() async -> [UNNotificationRequest] {
         let notifications: [UNNotificationRequest] = await notificationCenter.pendingNotificationRequests()
 
-        print("NotificationRepository :: Notis = \(notifications)")
-        return notifications
+        let alarmNotifications: [UNNotificationRequest] = notifications.filter { $0.identifier.contains("Alarm_") }
+
+        print("NotificationRepository :: Notis = \(alarmNotifications)")
+        return alarmNotifications
     }
     
     // 현재 등록된 Notification을 Weekday로 변환해서 리턴하는 함수
     public func getCurrentWeekdays() async -> [Weekday] {
         let currentNotifications: [UNNotificationRequest] = await getCurrentNotifications()
-        let weekdays: [Weekday] = currentNotifications.compactMap{ request in
+        let weekdays: [Weekday] = currentNotifications.compactMap { request in
             // userInfo에 저장된 weekDay를 획득
             // 그 값으로 WeekDay로 형변환
             guard let dayIntValue: Int = request.content.userInfo["weekDay"] as? Int,
@@ -137,6 +139,8 @@ public class NotificationRepositoryImp: NotificationRepository {
         notificationCenter.removePendingNotificationRequests(
             withIdentifiers: willRemoveIdentifiers
         )
+        
+        isEnabledNotificationRelay.accept(false)
     }
     
     // 알람이 등록되어 있는지 체크하는 함수

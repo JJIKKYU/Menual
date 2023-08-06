@@ -315,6 +315,12 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
         // 등록이 정상적으로 되었을 경우
         presenter.presentToast("약속한 시간에 알려드릴게요")
     }
+    
+    func disableAllAlarms() async {
+        await dependency?.notificationRepository?
+            .removeAlarmNotification()
+        print("ProfileHome :: disableAllArams!")
+    }
 }
 
 
