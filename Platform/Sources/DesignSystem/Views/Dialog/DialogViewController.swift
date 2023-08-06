@@ -54,7 +54,6 @@ public enum DiarySearchDialog {
 public enum DiaryBottomSheetDialog {
     case hide
     case diaryDelete
-    case reminderQuestion
     case reminderAuth
     case reminderEnable
 }

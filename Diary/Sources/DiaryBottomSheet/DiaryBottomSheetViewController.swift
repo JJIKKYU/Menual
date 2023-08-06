@@ -49,7 +49,7 @@ public protocol DiaryBottomSheetPresentableListener: AnyObject {
     func filterWithWeatherPlacePressedFilterBtn()
     
     // MenualBottomSheetReminderComponentView
-    func reminderCompViewshowToast(isEding: Bool)
+    func reminderCompViewshowToast(type: ReminderToastType)
     func reminderCompViewSetReminder(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date)
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
@@ -595,7 +595,7 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
         listener?.reminderRequestDateRelay
     }
     
-    func pressedSelectBtn(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date) {
+    func pressedSelectBtn(type: ReminderToastType, requestDateComponents: DateComponents, requestDate: Date) {
         switch isEditing {
         case true:
             print("DiaryBottomSheet :: 수정모드 이므로 팝업 띄웁니다")
@@ -604,36 +604,27 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReminderComponentView
             print("DiaryBottomSheet :: 새로 등록하므로 팝업 안띄웁니다.")
         }
         
-        listener?.reminderCompViewshowToast(isEding: isEditing)
+        listener?.reminderCompViewshowToast(type: type)
+        let isEditing: Bool = type == .edit ? true : false
         
-        let model = ReminderRequsetModel(isEditing: isEditing,
-                                         requestDateComponents: requestDateComponents,
-                                         requestDate: requestDate
+        let model = ReminderRequsetModel(
+            isEditing: isEditing,
+            requestDateComponents: requestDateComponents,
+            requestDate: requestDate
         )
         listener?.reminderRequestDateRelay?.accept(model)
         hideBottomSheetAndGoBack()
     }
     
-    func pressedQuestionBtn() {
-        print("DiaryBottomSheet :: pressedReminderQuestionBtn")
-
-        showDialog(
-             dialogScreen: .diaryBottomSheet(.reminderQuestion),
-             size: .large,
-             buttonType: .oneBtn,
-             titleText: MenualString.reminder_alert_title_qna,
-             subTitleText: MenualString.reminder_alert_desc_qna,
-             confirmButtonText: MenualString.reminder_alert_confirm_qna)
-    }
-    
     func isNeedReminderAuthorization() {
         showDialog(
-             dialogScreen: .diaryBottomSheet(.reminderAuth),
-             size: .large,
-             buttonType: .oneBtn,
-             titleText: MenualString.reminder_alert_title_reminder_auth,
-             subTitleText: MenualString.reminder_alert_desc_reminder,
-             confirmButtonText: MenualString.reminder_alert_confirm_reminder
+            dialogScreen: .diaryBottomSheet(.reminderAuth),
+            size: .large,
+            buttonType: .twoBtn,
+            titleText: MenualString.alarm_alert_authorization_title,
+            subTitleText: MenualString.alarm_alert_authorization_subtitle,
+            cancelButtonText: MenualString.alarm_alert_cancel,
+            confirmButtonText: MenualString.alarm_alert_confirm
         )
     }
     
@@ -671,7 +662,9 @@ extension DiaryBottomSheetViewController: DialogDelegate {
         if case .diaryBottomSheet(let diaryBottomSheetDialog) = dialogScreen {
             switch diaryBottomSheetDialog {
             case .reminderEnable:
+                listener?.reminderCompViewshowToast(type: .delete)
                 listener?.isEnabledReminderRelay?.accept(false)
+                hideBottomSheetAndGoBack()
                 
             case .hide:
                 listener?.menuComponentRelay?.accept(.hide)
@@ -680,9 +673,6 @@ extension DiaryBottomSheetViewController: DialogDelegate {
             case .diaryDelete:
                 listener?.menuComponentRelay?.accept(.delete)
                 hideBottomSheetAndGoBack()
-                
-            case .reminderQuestion:
-                break
                 
             case .reminderAuth:
                 guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
@@ -705,9 +695,6 @@ extension DiaryBottomSheetViewController: DialogDelegate {
                 
             case .diaryDelete:
                 hideBottomSheetAndGoBack()
-                
-            case .reminderQuestion:
-                break
                 
             case .reminderAuth:
                 break

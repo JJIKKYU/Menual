@@ -42,6 +42,7 @@ final class DiaryDetailImageViewController: UIViewController, DiaryDetailImagePr
         $0.minimumZoomScale = 1.0
         $0.maximumZoomScale = 10.0
         $0.delegate = self
+        $0.backgroundColor = Colors.background
     }
     
     init() {
@@ -92,7 +93,7 @@ final class DiaryDetailImageViewController: UIViewController, DiaryDetailImagePr
         
         scrollView.snp.makeConstraints { make in
             make.leading.width.equalToSuperview()
-            make.top.equalToSuperview()
+            make.top.equalTo(naviView.snp.bottom)
             make.bottom.equalToSuperview()
         }
         

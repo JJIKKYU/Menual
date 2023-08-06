@@ -572,13 +572,17 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         self.replyTableView.reloadData()
     }
     
-    func reminderCompViewshowToast(isEding: Bool) {
+    func reminderCompViewshowToast(type: ReminderToastType) {
         var message: String = ""
-        switch isEding {
-        case true:
-            message = MenualString.reminder_toast_edit
-        case false:
+        switch type {
+        case .write:
             message = MenualString.reminder_toast_set
+            
+        case .edit:
+            message = MenualString.reminder_toast_edit
+            
+        case .delete:
+            message = MenualString.reminder_toast_delete
         }
         let toast = showToast(message: message)
         MenualLog.logEventAction(responder: toast)

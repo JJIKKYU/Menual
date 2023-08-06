@@ -98,7 +98,7 @@ public struct MenualString {
     public static let menu_button_delete = "menu_button_delete".localized
     public static let menu_button_unlock = "menu_button_unlock".localized
     public static let reminder_title = "reminder_title".localized
-    public static let reminder_desc_qna = "reminder_desc_qna".localized
+    public static let reminder_desc_setting_title = "reminder_desc_setting_title".localized
     public static let reminder_alert_title_qna = "reminder_alert_title_qna".localized
     public static let reminder_alert_desc_qna = "reminder_alert_desc_qna".localized
     public static let reminder_alert_confirm_qna = "reminder_alert_confirm_qna".localized
@@ -157,4 +157,7 @@ public struct MenualString {
     public static let profile_button_alarm_subtitle = "profile_button_alarm_subtitle".localized
     public static let profile_button_dev = "profile_button_dev".localized
     public static let profile_button_designsystem = "profile_button_designsystem".localized
+    public static let detail_placeholder_reply = "detail_placeholder_reply".localized
+    public static let reminder_desc_setting_subtitle = "reminder_desc_setting_subtitle".localized
+    public static let reminder_toast_delete = "reminder_toast_delete".localized
 }

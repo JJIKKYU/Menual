@@ -329,5 +329,5 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
 extension ProfileHomeInteractor {
     func filterWithWeatherPlace(weatherArr: [MenualEntity.Weather], placeArr: [MenualEntity.Place]) {}
     func filterWithWeatherPlacePressedFilterBtn() {}
-    func reminderCompViewshowToast(isEding: Bool) {}
+    func reminderCompViewshowToast(type: ReminderToastType) {}
 }

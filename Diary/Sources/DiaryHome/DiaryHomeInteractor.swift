@@ -608,6 +608,6 @@ extension DiaryHomeInteractor {
 
 // MARK: - 미사용
 extension DiaryHomeInteractor {
-    func reminderCompViewshowToast(isEding: Bool) { }
+    func reminderCompViewshowToast(type: ReminderToastType) { }
     func setAlarm(date: Date, days: [Weekday]) async {}
 }

@@ -16,9 +16,8 @@ import MenualUtil
 
 public protocol MenualBottomSheetReminderComponentViewDelegate: AnyObject {
     var reminderRequestDateRelay: BehaviorRelay<ReminderRequsetModel?>? { get }
-    func pressedQuestionBtn()
     func pressedIsEnabledSwitchBtn(isEnabled: Bool)
-    func pressedSelectBtn(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date)
+    func pressedSelectBtn(type: ReminderToastType, requestDateComponents: DateComponents, requestDate: Date)
     func isNeedReminderAuthorization()
     var isEnabledReminderRelay: BehaviorRelay<Bool?>? { get }
 }
@@ -60,26 +59,19 @@ public class MenualBottomSheetReminderComponentView: UIView {
     private let disposedBag = DisposeBag()
     
     private let reminderTitleLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
         $0.textColor = Colors.grey.g200
-        $0.font = UIFont.AppBodyOnlyFont(.body_3)
-        $0.text = MenualString.reminder_desc_qna
+        $0.font = UIFont.AppBodyOnlyFont(.body_4)
+        $0.text = MenualString.reminder_desc_setting_title
     }
     
-    private lazy var reminderTitleQuestionBtn = UIButton().then {
-        $0.actionName = "q&a"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setImage(Asset._24px.question.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = Colors.grey.g500
-        $0.addTarget(self, action: #selector(pressedQuestionBtn), for: .touchUpInside)
-        $0.contentMode = .scaleAspectFit
-        $0.contentHorizontalAlignment = .fill
-        $0.contentVerticalAlignment = .fill
+    private let reminderSubTitleLabel: UILabel = .init().then {
+        $0.text = MenualString.reminder_desc_setting_subtitle
+        $0.font = .AppBodyOnlyFont(.body_2)
+        $0.textColor = Colors.grey.g500
     }
     
     lazy var switchBtn = UISwitch().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-        // $0.addTarget(self, action: #selector(selectedSwitchBtn), for: .touchUpInside)
         $0.onTintColor = Colors.tint.main.v400
         $0.tintColor = Colors.grey.g700
         $0.transform = CGAffineTransform(scaleX: 0.78, y: 0.78)
@@ -92,10 +84,6 @@ public class MenualBottomSheetReminderComponentView: UIView {
         $0.addTarget(self, action: #selector(selectedSwitchBtn), for: .touchUpInside)
     }
     
-    private let divider = Divider(type: ._1px).then {
-        $0.backgroundColor = Colors.grey.g700
-    }
-    
     private lazy var monthView = MonthView().then { (view: MonthView) in
         view.categoryName = "yearMonth"
         view.yearAndMonth = "2022.12"
@@ -105,11 +93,6 @@ public class MenualBottomSheetReminderComponentView: UIView {
     
     private lazy var calendarCollectionView = UICollectionView(frame: .zero, collectionViewLayout: .init()).then {
         $0.categoryName = "calendar"
-//        $0.register(DateCell.self, forCellWithReuseIdentifier: "DateCell")
-//        $0.translatesAutoresizingMaskIntoConstraints = false
-//        $0.delegate = self
-//        $0.dataSource = self
-        
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.delegate = self
         $0.dataSource = self
@@ -150,26 +133,21 @@ public class MenualBottomSheetReminderComponentView: UIView {
     
     func setViews() {
         addSubview(reminderTitleLabel)
-        addSubview(reminderTitleQuestionBtn)
+        addSubview(reminderSubTitleLabel)
         addSubview(switchBtn)
         addSubview(switchBtnImp)
-        addSubview(divider)
-        
         addSubview(monthView)
         addSubview(calendarCollectionView)
-        
         addSubview(selectBtn)
 
         reminderTitleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.top.equalToSuperview().offset(16)
-            make.height.equalTo(18)
         }
         
-        reminderTitleQuestionBtn.snp.makeConstraints { make in
-            make.leading.equalTo(reminderTitleLabel.snp.trailing).offset(2)
-            make.centerY.equalTo(reminderTitleLabel)
-            make.width.height.equalTo(16)
+        reminderSubTitleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(reminderTitleLabel)
+            make.top.equalTo(reminderTitleLabel.snp.bottom).offset(5)
         }
 
         switchBtn.snp.makeConstraints { make in
@@ -182,19 +160,12 @@ public class MenualBottomSheetReminderComponentView: UIView {
             make.centerY.equalTo(switchBtn)
             make.width.height.equalTo(switchBtn)
         }
-
-        divider.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.top.equalTo(reminderTitleLabel.snp.bottom).offset(19)
-            make.width.equalToSuperview()
-            make.height.equalTo(1)
-        }
         
         monthView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.height.equalTo(24)
-            make.top.equalTo(divider.snp.bottom).offset(32)
+            make.top.equalTo(reminderSubTitleLabel.snp.bottom).offset(32)
         }
 
         calendarCollectionView.snp.makeConstraints { make in
@@ -387,13 +358,8 @@ public class MenualBottomSheetReminderComponentView: UIView {
 }
 
 // MARK: - IBAction
+
 extension MenualBottomSheetReminderComponentView {
-    @objc
-    func pressedQuestionBtn(_ button: UIButton) {
-        MenualLog.logEventAction(responder: button)
-        delegate?.pressedQuestionBtn()
-    }
-    
     @objc
     func selectedSwitchBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button, parameter: ["isOn":"\(switchBtn.isOn)"])
@@ -454,7 +420,8 @@ extension MenualBottomSheetReminderComponentView {
         print("Reminder :: requestDate = \(requestDate)")
         
         pressedSelctBtn = true
-        delegate?.pressedSelectBtn(isEditing: isEditingMode,
+        let type: ReminderToastType = isEditingMode ? .edit : .write
+        delegate?.pressedSelectBtn(type: type,
                                    requestDateComponents: dateComponents,
                                    requestDate: requestDate
         )
@@ -467,6 +434,7 @@ extension MenualBottomSheetReminderComponentView {
 }
 
 // MARK: - Calendar UICollectionVIew Delegate
+
 extension MenualBottomSheetReminderComponentView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print("Reminder :: firstWeekDayOfMonth = \(firstWeekDayOfMonth)")

@@ -40,7 +40,7 @@ public protocol DiaryBottomSheetListener: AnyObject {
     
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place])
     func filterWithWeatherPlacePressedFilterBtn()
-    func reminderCompViewshowToast(isEding: Bool)
+    func reminderCompViewshowToast(type: ReminderToastType)
     // 개발자에게 문의하기
     func reviewCompoentViewPresentQA()
     
@@ -178,8 +178,8 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
     
     // MARK: - ReminderComponentView
     
-    func reminderCompViewshowToast(isEding: Bool) {
-        listener?.reminderCompViewshowToast(isEding: isEding)
+    func reminderCompViewshowToast(type: ReminderToastType) {
+        listener?.reminderCompViewshowToast(type: type)
     }
 
     func reminderCompViewSetReminder(isEditing: Bool, requestDateComponents: DateComponents, requestDate: Date) {

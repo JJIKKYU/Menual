@@ -182,6 +182,7 @@ public class MenualNaviView: UIView {
             backButton.tintColor = Colors.grey.g100
             backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
             titleLabel.isHidden = false
+            
         case .myPage:
             titleLabel.text = MenualString.profile_title_myPage
             titleLabel.font = UIFont.AppHead(.head_4)
@@ -190,12 +191,14 @@ public class MenualNaviView: UIView {
             backButton.tintColor = Colors.grey.g100
             backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
             titleLabel.isHidden = false
+            
         case .myPageCancel:
             titleLabel.isHidden = true
             backButton.isHidden = true
             rightButton1.isHidden = false
             rightButton1.tintColor = Colors.grey.g100
             rightButton1.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            
         case .search:
             titleLabel.text = MenualString.search_title
             titleLabel.font = UIFont.AppHead(.head_4)
@@ -204,6 +207,7 @@ public class MenualNaviView: UIView {
             backButton.tintColor = Colors.grey.g100
             backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
             titleLabel.isHidden = false
+            
         case .write:
             titleLabel.isHidden = false
             titleLabel.font = UIFont.AppTitle(.title_3)
@@ -218,6 +222,7 @@ public class MenualNaviView: UIView {
             rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
             rightButton1.tintColor = Colors.grey.g600
             rightButton1.actionName = "upload"
+            
         case .menualDetail:
             titleLabel.isHidden = false
             titleLabel.text = MenualString.detail_title
@@ -233,7 +238,7 @@ public class MenualNaviView: UIView {
             rightButton2.isHidden = false
             rightButton2.tintColor = Colors.grey.g100
             rightButton2.setImage(Asset._24px.Alert.unactive.image.withRenderingMode(.alwaysTemplate), for: .normal)
-            break
+
         case .edit:
             titleLabel.isHidden = false
             titleLabel.text = MenualString.writing_title_edit
@@ -245,7 +250,7 @@ public class MenualNaviView: UIView {
             rightButton1.tintColor = Colors.grey.g600
             rightButton1.setImage(Asset._24px.check.image.withRenderingMode(.alwaysTemplate), for: .normal)
             rightButton1.isUserInteractionEnabled = false
-            break
+            
         case .temporarySave:
             titleLabel.isHidden = false
             titleLabel.text = MenualString.tempsave_title
@@ -278,11 +283,12 @@ public class MenualNaviView: UIView {
         case .detailImage:
             titleLabel.isHidden = false
             titleLabel.text = ""
-            backgroundColor = .clear
+            backgroundColor = Colors.background
             backButton.isHidden = true
             rightButton1.isHidden = false
             rightButton1.tintColor = Colors.grey.g100
             rightButton1.setImage(Asset._24px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            
         case .backup:
             titleLabel.isHidden = false
             titleLabel.text = MenualString.backup_title
@@ -290,6 +296,7 @@ public class MenualNaviView: UIView {
             backButton.isHidden = false
             backButton.tintColor = Colors.grey.g100
             backButton.setImage(Asset._24px.Arrow.back.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            
         case .restore:
             titleLabel.isHidden = false
             titleLabel.text = MenualString.restore_title

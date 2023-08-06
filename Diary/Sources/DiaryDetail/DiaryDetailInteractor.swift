@@ -35,7 +35,7 @@ public protocol DiaryDetailPresentable: Presentable {
 
     func reloadTableView()
     func loadDiaryDetail(model: DiaryModelRealm?)
-    func reminderCompViewshowToast(isEding: Bool)
+    func reminderCompViewshowToast(type: ReminderToastType)
     func setReminderIconEnabled(isEnabled: Bool)
     func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool)
     func enableBackSwipe()
@@ -399,8 +399,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             .hideDiary(isHide: isHide, info: diaryModel)
     }
     
-    func reminderCompViewshowToast(isEding: Bool) {
-        presenter.reminderCompViewshowToast(isEding: isEding)
+    func reminderCompViewshowToast(type: ReminderToastType) {
+        presenter.reminderCompViewshowToast(type: type)
     }
     
     func deleteReminderDate() {
