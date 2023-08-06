@@ -17,7 +17,7 @@ public protocol NotificationRepository: AnyObject {
     var isEnabledNotificationRelay: BehaviorRelay<Bool> { get }
     
     func requestAuthorization() async throws -> Bool
-    func setAlarm(date: Date, days: [Weekday]) async
+    func setAlarm(date: Date, days: [Weekday]) async -> Bool
     func getCurrentNotifications() async -> [UNNotificationRequest]
     func getCurrentWeekdays() async -> [Weekday]
     func removeAlarmNotification() async
@@ -36,20 +36,21 @@ public class NotificationRepositoryImp: NotificationRepository {
     
     public func requestAuthorization() async throws -> Bool {
         guard let granted: Bool = try? await notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) else {
-            print("NotificationRepository :: 권한이 없습니다.")
             return false
         }
         return granted
     }
     
     // 알람을 등록하는 함수
-    public func setAlarm(date: Date, days: [Weekday]) async {
+    // 알람이 정상적으로 등록 되었다면 true 리턴
+    // 정상적으로 등록되지 않았을 경우 false 리턴
+    public func setAlarm(date: Date, days: [Weekday]) async -> Bool {
         print("NotificationRepository :: setAlarm! = \(date), \(days)")
         guard let granted: Bool = try? await requestAuthorization() else {
             print("NotificationRepository :: 권한이 없습니다.")
-            return
+            return false
         }
-        if !granted { return }
+        if !granted { return false }
         
         let calendar: Calendar = .current
         
@@ -60,7 +61,6 @@ public class NotificationRepositoryImp: NotificationRepository {
         let content: UNMutableNotificationContent = .init()
         content.title = "오늘 일기를 작성해볼까요?"
         content.body = "바디입니다."
-        content.badge = 1
         content.sound = .default
         
         // 선택한 날에 맞추어 각각 알림 등록
@@ -92,11 +92,13 @@ public class NotificationRepositoryImp: NotificationRepository {
                 try await notificationCenter.add(request)
             } catch {
                 print("NotificationRepository :: Notification Add가 정상적으로 되지 못했습니다. \(error.localizedDescription)")
+                return false
             }
         }
         
         // 최종적으로 알람이 등록되어 있는지 UI 반영을 위해 Relay에 Aceept
         checkAlarmIsEnabled()
+        return true
     }
     
     // 현재 등록된 Notification을 획득하는 함수

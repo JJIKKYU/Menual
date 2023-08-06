@@ -50,7 +50,7 @@ protocol ProfileHomePresentableListener: AnyObject {
     func pressedPurchaseCell()
     
     // 알람
-    func pressedAlarmCell()
+    func pressedAlarmCell() async
     var isEnabledNotificationRelay: BehaviorRelay<Bool>? { get }
 }
 
@@ -192,6 +192,34 @@ extension ProfileHomeViewController {
             print("isOn!")
         case false:
             print("isOff!")
+        }
+    }
+}
+
+// MARK: - Notification
+
+extension ProfileHomeViewController {
+    func requestNotificationPermmision() async {
+        DispatchQueue.main.async {
+            self.showDialog(
+                dialogScreen: .profileHome(.notificationAuthorization),
+                size: .large,
+                buttonType: .twoBtn,
+                titleText: "디바이스 알림 권한이 필요해요",
+                subTitleText: "알림을 받으시려면 설정에서 Menual 알림을 허용 상태로 변경해 주세요",
+                cancelButtonText: "닫기",
+                confirmButtonText: "설정하러 가기"
+            )
+        }
+    }
+    
+    private func goAppSettings() {
+        guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+           
+        if UIApplication.shared.canOpenURL(settingsURL) {
+            UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
         }
     }
 }
@@ -359,7 +387,9 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 listener?.pressedReviewCell()
                 
             case .alarm:
-                listener?.pressedAlarmCell()
+                Task {
+                    await listener?.pressedAlarmCell()
+                }
             }
         }
     }
@@ -435,3 +465,25 @@ extension ProfileHomeViewController: UIDocumentPickerDelegate {}
 // MARK: - GoogleAds Delegate
 
 extension ProfileHomeViewController: GADBannerViewDelegate {}
+
+// MARK: - Dialog Delegate
+
+extension ProfileHomeViewController: DialogDelegate {
+    func action(dialogScreen: DesignSystem.DialogScreen) {
+        if case .profileHome(let profileHomeDialog) = dialogScreen {
+            switch profileHomeDialog {
+            case .notificationAuthorization:
+                goAppSettings()
+            }
+        }
+    }
+    
+    func exit(dialogScreen: DesignSystem.DialogScreen) {
+        if case .profileHome(let profileHomeDialog) = dialogScreen {
+            switch profileHomeDialog {
+            case .notificationAuthorization:
+                break
+            }
+        }
+    }
+}

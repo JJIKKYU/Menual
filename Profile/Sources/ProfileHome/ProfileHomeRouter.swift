@@ -268,7 +268,9 @@ final class ProfileHomeRouter: ViewableRouter<ProfileHomeInteractable, ProfileHo
                                                 bottomSheetType: type,
                                                 menuComponentRelay: nil
         )
-        viewController.present(router.viewControllable, animated: false, completion: nil)
+        DispatchQueue.main.async {
+            self.viewController.present(router.viewControllable, animated: false, completion: nil)
+        }
         
         bottomSheetRouting = router
         attachChild(router)

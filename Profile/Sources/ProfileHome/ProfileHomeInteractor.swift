@@ -44,6 +44,7 @@ protocol ProfileHomePresentable: Presentable {
     
     func pressedDeveloperQACell()
     func presentToast(_ message: String)
+    func requestNotificationPermmision() async
 }
 
 public protocol ProfileHomeListener: AnyObject {
@@ -287,14 +288,31 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
     
     // MARK: - Alarm
     
-    func pressedAlarmCell() {
+    func pressedAlarmCell() async {
+        guard let granted: Bool = try? await dependency?.notificationRepository?.requestAuthorization() else { return }
+        
+        // 권한이 없을 경우에는 권한 요청 팝업을 띄움
+        if granted == false {
+            await presenter.requestNotificationPermmision()
+            return
+        }
+        
+        // 권한이 있을 경우에 BottomSheet을 띄움
         router?.attachBottomSheet(type: .alarm)
     }
     
     func setAlarm(date: Date, days: [Weekday]) async {
-        print("ProfileHome :: date = \(date), days = \(days)")
-        await dependency?.notificationRepository?
-            .setAlarm(date: date, days: days)
+        guard let notificationRepository: NotificationRepository = dependency?.notificationRepository else { return }
+
+        let success: Bool = await notificationRepository.setAlarm(date: date, days: days)
+        
+        // 등록이 안되었을 경우에는 오류 토스트 노출
+        if success == false {
+            presenter.presentToast("오류가 발생했습니다.")
+            return
+        }
+        
+        // 등록이 정상적으로 되었을 경우
         presenter.presentToast("약속한 시간에 알려드릴게요")
     }
 }

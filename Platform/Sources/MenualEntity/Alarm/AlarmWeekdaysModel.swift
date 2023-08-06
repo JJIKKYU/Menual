@@ -63,6 +63,6 @@ public enum Weekday: String, CaseIterable, Equatable {
 
     // '월~일'을 리턴하는 함수
     public static func getWeekdays() -> [Weekday] {
-        return [.sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday]
+        return [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
     }
 }
