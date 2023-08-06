@@ -82,15 +82,15 @@ final class NumberPadViewController: UIViewController, NumberPadPresentable, Num
         numberPad.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
-            make.height.equalTo(452)
+            make.height.equalTo(352)
             make.bottom.equalToSuperview()
         }
         
         passwordView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(140)
+            make.top.equalTo(naviView.snp.bottom).offset(50)
             make.centerX.equalToSuperview()
             make.width.equalTo(228)
-            make.height.equalTo(206)
+            make.height.equalTo(210)
         }
     }
     

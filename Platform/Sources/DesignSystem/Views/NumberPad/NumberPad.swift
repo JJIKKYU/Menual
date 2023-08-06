@@ -81,7 +81,7 @@ extension NumberPad: UICollectionViewDelegate, UICollectionViewDelegateFlowLayou
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         let width: CGFloat = floor(bounds.width / 3) - 1
-        let height: CGFloat = 100
+        let height: CGFloat = 87
         return CGSize(width: width, height: height)
     }
     
