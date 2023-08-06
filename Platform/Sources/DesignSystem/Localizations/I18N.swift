@@ -145,4 +145,16 @@ public struct MenualString {
     public static let restore_desc_date = "restore_desc_date".localized
     public static let restore_desc_file_name = "restore_desc_file_name".localized
     public static let restore_title_last_confirm = "restore_title_last_confirm".localized
+    public static let restore_title_test_title = "restore_title_test_title".localized
+    public static let alarm_title_day = "alarm_title_day".localized
+    public static let alarm_title_time = "alarm_title_time".localized
+    public static let alarm_button_confirm = "alarm_button_confirm".localized
+    public static let profile_button_alarm = "profile_button_alarm".localized
+    public static let alarm_alert_authorization_title = "alarm_alert_authorization_title".localized
+    public static let alarm_alert_authorization_subtitle = "alarm_alert_authorization_subtitle".localized
+    public static let alarm_alert_cancel = "alarm_alert_cancel".localized
+    public static let alarm_alert_confirm = "alarm_alert_confirm".localized
+    public static let profile_button_alarm_subtitle = "profile_button_alarm_subtitle".localized
+    public static let profile_button_dev = "profile_button_dev".localized
+    public static let profile_button_designsystem = "profile_button_designsystem".localized
 }

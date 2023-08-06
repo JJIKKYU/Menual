@@ -64,7 +64,7 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         self.categoryName = "alarm"
         
         dayTitleLabel.do {
-            $0.text = "요일 선택"
+            $0.text = MenualString.alarm_title_day
             $0.font = .AppTitle(.title_2)
             $0.textColor = .white
         }
@@ -84,7 +84,7 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         }
         
         timeTitleLabel.do {
-            $0.text = "시간 선택"
+            $0.text = MenualString.alarm_title_time
             $0.font = .AppTitle(.title_2)
             $0.textColor = .white
         }
@@ -101,7 +101,7 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         
         confirmBtn.do {
             $0.actionName = "confirm"
-            $0.title = "설정하기"
+            $0.title = MenualString.alarm_button_confirm
             $0.addTarget(self, action: #selector(pressedConfirmBtn), for: .touchUpInside)
         }
     }

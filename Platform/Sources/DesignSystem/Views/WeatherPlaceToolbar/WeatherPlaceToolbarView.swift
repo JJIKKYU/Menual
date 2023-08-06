@@ -37,7 +37,6 @@ public class WeatherPlaceToolbarView: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.font = UIFont.AppTitle(.title_3)
         $0.textColor = Colors.grey.g100
-        $0.text = "날씨를 선택해 주세요"
     }
     private let divider = Divider(type: ._1px).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -96,7 +95,7 @@ public class WeatherPlaceToolbarView: UIView {
         case .weather:
             print("WeatherPlcaeToolbarView :: .weather")
             weatherPlaceSelectView.weatherPlaceType = .weather
-            titleLabel.text = "날씨를 선택해주세요"
+            titleLabel.text = MenualString.writing_placeholder_weather
             if let selectedWeatherType = selectedWeatherType {
                 print("WeatherPlcaeToolbarView :: weather를 선택한 적이 있습니다.")
                 weatherPlaceSelectView.selectedWeatherType = selectedWeatherType
@@ -104,7 +103,7 @@ public class WeatherPlaceToolbarView: UIView {
         case .place:
             print("WeatherPlcaeToolbarView :: .place")
             weatherPlaceSelectView.weatherPlaceType = .place
-            titleLabel.text = "장소를 선택해주세요"
+            titleLabel.text = MenualString.writing_placeholder_place
             if let selectedPlaceType = selectedPlaceType {
                 print("WeatherPlcaeToolbarView :: place를 선택한 적이 있습니다.")
                 weatherPlaceSelectView.selectedPlaceType = selectedPlaceType

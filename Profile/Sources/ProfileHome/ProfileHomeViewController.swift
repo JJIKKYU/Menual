@@ -206,10 +206,10 @@ extension ProfileHomeViewController {
                 dialogScreen: .profileHome(.notificationAuthorization),
                 size: .large,
                 buttonType: .twoBtn,
-                titleText: "디바이스 알림 권한이 필요해요",
-                subTitleText: "알림을 받으시려면 설정에서 Menual 알림을 허용 상태로 변경해 주세요",
-                cancelButtonText: "닫기",
-                confirmButtonText: "설정하러 가기"
+                titleText: MenualString.alarm_alert_authorization_title,
+                subTitleText: MenualString.alarm_alert_authorization_subtitle,
+                cancelButtonText: MenualString.alarm_alert_cancel,
+                confirmButtonText: MenualString.alarm_alert_confirm
             )
         }
     }

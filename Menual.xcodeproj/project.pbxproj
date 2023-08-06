@@ -731,7 +731,7 @@
 		};
 		985A52B227F0244F00B10829 /* Localized */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -743,7 +743,7 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "echo \"generating I18N.swift\"\n\ntouch tempI18N.swift\necho \"import Foundation\n\npublic extension String {\n    var localized: String {\n            return NSLocalizedString(self, tableName: nil, bundle: Bundle.module, value: \\\"\\\", comment: \\\"\\\")\n    }\n}\n\" >> tempI18N.swift\n\necho \"public struct MenualString {\" >> tempI18N.swift\n\ninputfile=${PROJECT_DIR}/Platform/Sources/DesignSystem/Resources/ko.lproj/Localizable.strings\nwhile IFS= read -r line\n\ndo\necho $line\npattern='^[a-zA-Z]+(.*)[\\\\s]*=[\\\\s]*(.*)$'\n\ncomment='\\/\\/.+'\n\nif [[ $line =~ $pattern ]]\nthen\n    echo \"Yes👌\"\n    variableName=$(echo ${line%%=*})\n    echo $variableName\n    if [ \"$variableName\" != \"\" ]; then\n        echo \"    public static let $variableName = \\\"$variableName\\\".localized\" >> tempI18N.swift\n    fi\nelse\n    if [[ $line =~ $comment ]]\n    then\n        echo \"Comment 📝\"\n        echo \"\\n    $line\" >> tempI18N.swift\n    else\n        echo \"No👎\"\n    fi\nfi\ndone <\"$inputfile\"\n\necho \"}\" >> tempI18N.swift\ncat tempI18N.swift > ${PROJECT_DIR}/Platform/Sources/DesignSystem/Localizations/I18N.swift\nrm tempI18N.swift\n\necho \"-------------\"\ncat $inputfile\ncat ${PROJECT_DIR}/Platform/Sources/DesignSystem/Localizations/I18N.swift\necho \"-------------\"\n";
 		};

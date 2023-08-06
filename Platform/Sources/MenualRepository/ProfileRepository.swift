@@ -83,22 +83,22 @@ public final class ProfileRepositoryImp: ProfileRepository {
                 section: .devMode,
                 cellType: .arrow,
                 menuType: .devMode(.tools),
-                title: "개발자 도구",
+                title: MenualString.profile_button_dev,
                 actionName: "devTools"
             ),
             .init(
                 section: .devMode,
                 cellType: .arrow,
                 menuType: .devMode(.designSystem),
-                title: "디자인 시스템",
+                title: MenualString.profile_button_designsystem,
                 actionName: "designSystem"
             ),
             .init(
                 section: .devMode,
                 cellType: .toggleWithDescription,
                 menuType: .devMode(.alarm),
-                title: "일기 작성 알림 설정하기",
-                description: "일기를 꾸준히 쓸 수 있도록 알림을 보내드릴게요",
+                title: MenualString.profile_button_alarm,
+                description: MenualString.profile_button_alarm_subtitle,
                 actionName: "alarm"
             ),
         ]
