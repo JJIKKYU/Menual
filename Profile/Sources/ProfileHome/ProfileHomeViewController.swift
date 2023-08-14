@@ -303,11 +303,23 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             cell.title = data.title
             cell.desc = data.description
             cell.profileHomeCellType = data.cellType
-            cell.switchIsOn = listener?.isEnabledPasswordRelay.value ?? false
             cell.actionName = data.actionName
             cell.menuType = data.menuType
             cell.section = data.section
             cell.delegate = self
+            
+            if case .setting1(let profileHomeSetting1) = data.menuType {
+                switch profileHomeSetting1 {
+                case .guide:
+                    break
+
+                case .password:
+                    cell.switchIsOn = listener?.isEnabledPasswordRelay.value ?? false
+
+                case .passwordChange:
+                    break
+                }
+            }
             cell.sizeToFit()
             cell.layoutIfNeeded()
             return cell

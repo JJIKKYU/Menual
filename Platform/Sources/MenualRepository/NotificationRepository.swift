@@ -59,8 +59,9 @@ public class NotificationRepositoryImp: NotificationRepository {
         
         // 발송할 알림의 content 작성
         let content: UNMutableNotificationContent = .init()
-        content.title = "오늘 일기를 작성해볼까요?"
-        content.body = "바디입니다."
+        content.title = "Menual"
+        content.body = "오늘 일기를 작성해볼까요?"
+//        content.body = "바디입니다."
         content.sound = .default
         
         // 선택한 날에 맞추어 각각 알림 등록

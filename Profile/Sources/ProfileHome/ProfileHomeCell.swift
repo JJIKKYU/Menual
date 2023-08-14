@@ -152,6 +152,17 @@ public class ProfileHomeCell: UITableViewCell {
             switchBtn.isHidden = false
             stackView.spacing = 4
         }
+        
+        guard let menuType: ProfileHomeMenuType = menuType else { return }
+        if case .setting1(let profileHomeSetting1) = menuType {
+            switch profileHomeSetting1 {
+            case .guide, .passwordChange:
+                break
+
+            case .password:
+                switchBtn.isUserInteractionEnabled = false
+            }
+        }
     }
 }
 

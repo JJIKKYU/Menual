@@ -155,10 +155,25 @@ public class MenualBottomSheetAlarmComponentView: UIView {
             .disposed(by: disposeBag)
     }
     
+    // 최근에 알림 설정한 날짜가 있을 경우에 세팅
+    // 최근에 설정한 날짜가 없을 경우에는 모두 선택된 상태로 재공
     private func setCurrentWeekdays() {
         // nil 체크
         guard let currentWeekdays: [Weekday] = currentWeekdays else { return }
-        
+
+        // 설정한 날짜가 없을 경우에는 모두 선택하도록
+        if currentWeekdays.isEmpty {
+            for idx in 0..<7 {
+                dayCollectionView.selectItem(
+                    at: IndexPath(row: idx, section: 0),
+                    animated: false,
+                    scrollPosition: .top
+                )
+            }
+            self.selectedDays = Weekday.getWeekdays()
+            return
+        }
+
         // 선택한 날짜만큼 CollectionView에서 선택된 상태로 제공
         for weekday in currentWeekdays {
             let row: Int = weekday.getIdx()

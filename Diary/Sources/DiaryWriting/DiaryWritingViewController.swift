@@ -599,8 +599,8 @@ extension DiaryWritingViewController {
             
             if isAuthorized == true {
                 print("DiaryWriting :: TakeImage!")
-                self.testImagePicker.sourceType = .camera
                 DispatchQueue.main.async {
+                    self.testImagePicker.sourceType = .camera
                     self.present(self.testImagePicker, animated: true, completion: nil)
                 }
             }
