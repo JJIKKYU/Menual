@@ -28,10 +28,6 @@ public class MenualBottomSheetAlarmComponentView: UIView {
     
     // 이미 이전에 알람 설정을 했을 경우
     private var currentWeekdays: [Weekday]?
-    
-    private var isUserInteractioned: Bool = false {
-        didSet { setNeedsLayout() }
-    }
 
     private var selectedDays: [Weekday] = [] {
         didSet { setNeedsLayout() }
@@ -52,7 +48,6 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         configureUI()
         setViews()
         setCurrentWeekdays()
-        bind()
     }
     
     @available(*, unavailable)
@@ -145,16 +140,6 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         }
     }
     
-    private func bind() {
-        timePicker.rx.date
-            .changed
-            .subscribe(onNext: { [weak self] isChanged in
-                guard let self = self else { return }
-                self.isUserInteractioned = true
-            })
-            .disposed(by: disposeBag)
-    }
-    
     // 최근에 알림 설정한 날짜가 있을 경우에 세팅
     // 최근에 설정한 날짜가 없을 경우에는 모두 선택된 상태로 재공
     private func setCurrentWeekdays() {
@@ -192,13 +177,11 @@ public class MenualBottomSheetAlarmComponentView: UIView {
     override public func layoutSubviews() {
         super.layoutSubviews()
 
-        // 유저가 인터랙션을 했을 경우에만 BottomBtn 활성화
-        switch isUserInteractioned {
-        case true:
-            confirmBtn.btnStatus = .active
-            
-        case false:
+        // 아무것도 선택하지 않으면 버튼 비활성화
+        if selectedDays.isEmpty {
             confirmBtn.btnStatus = .inactive
+        } else {
+            confirmBtn.btnStatus = .active
         }
     }
 }
@@ -221,7 +204,6 @@ extension MenualBottomSheetAlarmComponentView: UICollectionViewDelegate, UIColle
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let day: Weekday = days[safe: indexPath.row] else { return }
         print("Alarm :: Selected! \(day)")
-        isUserInteractioned = true
         selectedDays.append(day)
         print("Alarm :: selectedDays = \(selectedDays)")
     }
@@ -229,7 +211,6 @@ extension MenualBottomSheetAlarmComponentView: UICollectionViewDelegate, UIColle
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         guard let day: Weekday = days[safe: indexPath.row] else { return }
         print("Alarm :: DeSelected! \(day)")
-        isUserInteractioned = true
         selectedDays = selectedDays.filter { $0 != day }
         print("Alarm :: selectedDays = \(selectedDays)")
     }

@@ -181,6 +181,12 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
             _ = self.showToast(message: message)
         }
     }
+    
+    func reloadTableView() {
+        DispatchQueue.main.async {
+            self.settingTableView.reloadData()
+        }
+    }
 }
 
 // MARK: - IBAction
@@ -254,11 +260,11 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         
         switch sections {
         case .setting1:
-            headerView.title = "메뉴얼 설정"
+            headerView.title = MenualString.profile_title_setting
             return headerView
 
         case .setting2:
-            headerView.title = "기타"
+            headerView.title = MenualString.profile_title_etc
             return headerView
 
         case .devMode:
@@ -272,13 +278,8 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
         guard let sections = ProfileHomeSection(rawValue: section) else { return 0 }
         switch sections {
         case .setting1:
-            var count = listener?.profileHomeDataArr_Setting1.count ?? 0
-            if listener?.isEnabledPasswordRelay.value ?? false == false {
-                count -= 1
-            }
-
+            let count = listener?.profileHomeDataArr_Setting1.count ?? 0
             return count
-            
 
         case .setting2:
             return listener?.profileHomeDataArr_Setting2.count ?? 0
@@ -318,6 +319,9 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
 
                 case .passwordChange:
                     break
+                    
+                case .alarm:
+                    cell.switchIsOn = listener?.isEnabledNotificationRelay?.value ?? false
                 }
             }
             cell.sizeToFit()
@@ -342,7 +346,6 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             guard let data = listener?.profileHomeDevDataArr[safe: index] else { return UITableViewCell() }
             cell.title = data.title
             cell.profileHomeCellType = data.cellType
-            cell.switchIsOn = listener?.isEnabledNotificationRelay?.value ?? false
             cell.desc = data.description
             cell.actionName = data.actionName
             cell.menuType = data.menuType
@@ -374,6 +377,11 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 
             case .passwordChange:
                 listener?.pressedProfilePasswordChangeCell()
+                
+            case .alarm:
+                Task {
+                    await listener?.pressedAlarmCell()
+                }
             }
 
         case .setting2(let profileHomeSetting2):
@@ -401,11 +409,6 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                 
             case .review:
                 listener?.pressedReviewCell()
-                
-            case .alarm:
-                Task {
-                    await listener?.pressedAlarmCell()
-                }
             }
         }
     }
@@ -490,6 +493,12 @@ extension ProfileHomeViewController: DialogDelegate {
             switch profileHomeDialog {
             case .notificationAuthorization:
                 goAppSettings()
+                
+            case .disableAlarm:
+                _ = showToast(message: "일기 작성 알림을 해제했어요")
+                Task {
+                    await listener?.disableAllAlarms()
+                }
             }
         }
     }
@@ -498,6 +507,9 @@ extension ProfileHomeViewController: DialogDelegate {
         if case .profileHome(let profileHomeDialog) = dialogScreen {
             switch profileHomeDialog {
             case .notificationAuthorization:
+                break
+                
+            case .disableAlarm:
                 break
             }
         }
@@ -509,8 +521,28 @@ extension ProfileHomeViewController: DialogDelegate {
 extension ProfileHomeViewController: ProfileHomeCellDelegate {
     func pressedToggleBtn(menuType: ProfileHomeMenuType, section: ProfileHomeSection) {
         switch menuType {
-        case .setting1(_):
-            break
+        case .setting1(let profileHomeSetting1):
+            switch profileHomeSetting1 {
+            case .guide:
+                break
+                
+            case .password:
+                break
+                
+            case .passwordChange:
+                break
+
+            case .alarm:
+                print("ProfileHome :: Alarm!")
+                showDialog(
+                    dialogScreen: .profileHome(.disableAlarm),
+                    size: .small,
+                    buttonType: .twoBtn,
+                    titleText: "일기 작성 알림을 해제하시겠어요?",
+                    cancelButtonText: MenualString.reminder_alert_cancel,
+                    confirmButtonText: MenualString.reminder_alert_confirm_reminder
+                )
+            }
 
         case .setting2(_):
             break
@@ -519,12 +551,6 @@ extension ProfileHomeViewController: ProfileHomeCellDelegate {
             switch profileHomeDevMode {
             case .tools, .designSystem, .review:
                 break
-
-            case .alarm:
-                print("ProfileHome :: Alarm!")
-                Task {
-                    await listener?.disableAllAlarms()
-                }
             }
         }
     }

@@ -44,11 +44,11 @@ protocol ProfileHomePresentable: Presentable {
     
     func pressedDeveloperQACell()
     func presentToast(_ message: String)
+    func reloadTableView()
     func requestNotificationPermmision() async
 }
 
 public protocol ProfileHomeListener: AnyObject {
-    // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func profileHomePressedBackBtn(isOnlyDetach: Bool)
     func restoreSuccess()
 }
@@ -139,6 +139,10 @@ final class ProfileHomeInteractor: PresentableInteractor<ProfileHomePresentable>
                     print("ProfileHome :: modifications = \(modifications), \(model)")
                     guard let model = model.first else { return }
                     self.isEnabledPasswordRelay.accept(model.isEnabled)
+              
+                    // 변경점이 생겼을 경우에는 다시 menu를 fetch하고 tableView 업데이트
+                    self.profileHomeDataArr_Setting1 = self.dependency?.profileRepository?.fetchSetting1ProfileMenu() ?? []
+                    self.presenter.reloadTableView()
 
                 case .error(let error):
                     print("ProfileHome :: PasswordError! = \(error)")

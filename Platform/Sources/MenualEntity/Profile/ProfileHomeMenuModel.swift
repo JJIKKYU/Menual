@@ -35,6 +35,7 @@ public enum ProfileHomeSetting1: String {
     case guide
     case password
     case passwordChange
+    case alarm
 }
 
 public enum ProfileHomeSetting2: String {
@@ -48,7 +49,6 @@ public enum ProfileHomeDevMode: String {
     case tools
     case designSystem
     case review
-    case alarm
 }
 
 // MARK: - ProfileHomeMenuModel

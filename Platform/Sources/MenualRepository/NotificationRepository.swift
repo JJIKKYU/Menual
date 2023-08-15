@@ -29,6 +29,7 @@ public protocol NotificationRepository: AnyObject {
 public class NotificationRepositoryImp: NotificationRepository {
     public var notificationCenter: UNUserNotificationCenter = .current()
     public var isEnabledNotificationRelay: BehaviorRelay<Bool> = .init(value: false)
+    private let alarmMessageModel: AlarmMessageModel = .init()
     
     public init() {
         checkAlarmIsEnabled()
@@ -60,12 +61,11 @@ public class NotificationRepositoryImp: NotificationRepository {
         // 발송할 알림의 content 작성
         let content: UNMutableNotificationContent = .init()
         content.title = "Menual"
-        content.body = "오늘 일기를 작성해볼까요?"
-//        content.body = "바디입니다."
         content.sound = .default
         
         // 선택한 날에 맞추어 각각 알림 등록
         for day in days {
+            content.body = alarmMessageModel.getRandomMessage()
             // 등록된 알람, 삭제할 알람 체크를 위해서 userInfo 체크
             content.userInfo = [
                 "weekDay": day.transformIntWeekday()

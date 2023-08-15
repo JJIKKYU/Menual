@@ -160,4 +160,15 @@ public struct MenualString {
     public static let detail_placeholder_reply = "detail_placeholder_reply".localized
     public static let reminder_desc_setting_subtitle = "reminder_desc_setting_subtitle".localized
     public static let reminder_toast_delete = "reminder_toast_delete".localized
+    public static let alarm_alert_body1 = "alarm_alert_body1".localized
+    public static let alarm_alert_body2 = "alarm_alert_body2".localized
+    public static let alarm_alert_body3 = "alarm_alert_body3".localized
+    public static let alarm_alert_body4 = "alarm_alert_body4".localized
+    public static let alarm_alert_body5 = "alarm_alert_body5".localized
+    public static let alarm_alert_body6 = "alarm_alert_body6".localized
+    public static let alarm_alert_body7 = "alarm_alert_body7".localized
+    public static let alarm_alert_body8 = "alarm_alert_body8".localized
+    public static let alarm_alert_body9 = "alarm_alert_body9".localized
+    public static let alarm_alert_body10 = "alarm_alert_body10".localized
+    public static let alarm_toast_disable = "alarm_toast_disable".localized
 }

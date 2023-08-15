@@ -70,6 +70,7 @@ public enum ProfileRestoreDialog {
 
 public enum ProfileHomeDialog {
     case notificationAuthorization
+    case disableAlarm
 }
 
 // Dialog의 버튼의 액션을 처리하는 Delegate입니다.

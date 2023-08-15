@@ -73,8 +73,13 @@ public class ProfileHomeCell: UITableViewCell {
         $0.onTintColor = Colors.tint.main.v400
         $0.tintColor = Colors.grey.g700
         $0.transform = CGAffineTransform(scaleX: 0.78, y: 0.78)
+        $0.isUserInteractionEnabled = false
+    }
+    
+    lazy var switchWrapperBtn: UIButton = .init().then {
         $0.addTarget(self, action: #selector(pressedToggleBtn), for: .touchUpInside)
         $0.isUserInteractionEnabled = true
+        $0.backgroundColor = .clear
     }
     
     override public func awakeFromNib() {
@@ -83,8 +88,8 @@ public class ProfileHomeCell: UITableViewCell {
     
     public override func prepareForReuse() {
         super.prepareForReuse()
-        stackView.layoutIfNeeded()
-        stackView.sizeToFit()
+//        stackView.layoutIfNeeded()
+//        stackView.sizeToFit()
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -106,6 +111,7 @@ public class ProfileHomeCell: UITableViewCell {
         stackView.addArrangedSubview(descLabel)
         contentView.addSubview(arrowImageView)
         contentView.addSubview(switchBtn)
+        contentView.addSubview(switchWrapperBtn)
         
         stackView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -126,11 +132,17 @@ public class ProfileHomeCell: UITableViewCell {
             make.height.equalTo(24)
             make.centerY.equalToSuperview()
         }
+        
+        switchWrapperBtn.snp.makeConstraints { make in
+            make.edges.equalTo(switchBtn)
+        }
     }
     
     override public func layoutSubviews() {
         titleLabel.text = title
-        descLabel.text = desc ?? ""
+        let desc: String = self.desc ?? ""
+        descLabel.isHidden = desc.isEmpty ? true : false
+        descLabel.text = desc
 
         switch profileHomeCellType {
         case .arrow:
@@ -147,7 +159,7 @@ public class ProfileHomeCell: UITableViewCell {
         case .toggleWithDescription:
             switchBtn.isOn = switchIsOn
             // Toggle On은 셀을 직접 클릭해야만 활성화할 수 있음 (서비스에서 변경)
-            switchBtn.isUserInteractionEnabled = switchBtn.isOn
+            switchWrapperBtn.isUserInteractionEnabled = switchBtn.isOn
             arrowImageView.isHidden = true
             switchBtn.isHidden = false
             stackView.spacing = 4
@@ -156,7 +168,7 @@ public class ProfileHomeCell: UITableViewCell {
         guard let menuType: ProfileHomeMenuType = menuType else { return }
         if case .setting1(let profileHomeSetting1) = menuType {
             switch profileHomeSetting1 {
-            case .guide, .passwordChange:
+            case .guide, .passwordChange, .alarm:
                 break
 
             case .password:
