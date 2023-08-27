@@ -28,6 +28,7 @@ public class MenualBottomSheetAlarmComponentView: UIView {
     
     // 이미 이전에 알람 설정을 했을 경우
     private var currentWeekdays: [Weekday]?
+    private var currentTime: Date?
 
     private var selectedDays: [Weekday] = [] {
         didSet { setNeedsLayout() }
@@ -42,12 +43,14 @@ public class MenualBottomSheetAlarmComponentView: UIView {
     
     private let confirmBtn: BoxButton = .init(frame: .zero, btnStatus: .active, btnSize: .large)
     
-    public init(currentWeekdays: [Weekday]?) {
+    public init(currentWeekdays: [Weekday]?, currentTime: Date?) {
         self.currentWeekdays = currentWeekdays
+        self.currentTime = currentTime
         super.init(frame: .zero)
         configureUI()
         setViews()
         setCurrentWeekdays()
+        setCurrentTime()
     }
     
     @available(*, unavailable)
@@ -172,6 +175,12 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         
         // 이전에 선택한 것도 Select한 것으로 간주
         selectedDays.append(contentsOf: currentWeekdays)
+    }
+
+    // 최근에 설정한 알람의 시간이 있을 경우 기본적으로 시간 세팅되도록
+    private func setCurrentTime() {
+        guard let date = currentTime else { return }
+        timePicker.date = date
     }
     
     override public func layoutSubviews() {

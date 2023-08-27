@@ -60,6 +60,7 @@ public protocol DiaryBottomSheetPresentableListener: AnyObject {
     
     // AlarmComponentView
     func getCurrentNotifications() async -> [Weekday]
+    func getCurrentNotificationTime() async -> Date?
     func pressedAlarmConfirmBtn(date: Date, days: [Weekday])
 }
 
@@ -325,7 +326,12 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             
         case .alarm:
             let currentNotifications: [Weekday]? = await listener?.getCurrentNotifications()
-            let alarmComponentView: MenualBottomSheetAlarmComponentView = .init(currentWeekdays: currentNotifications)
+            let currentNotificationTime: Date? = await listener?.getCurrentNotificationTime()
+
+            let alarmComponentView: MenualBottomSheetAlarmComponentView = .init(
+                currentWeekdays: currentNotifications,
+                currentTime: currentNotificationTime
+            )
             alarmComponentView.deleagete = self
 
             self.alarmComponentView = alarmComponentView

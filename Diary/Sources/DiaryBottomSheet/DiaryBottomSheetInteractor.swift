@@ -216,6 +216,12 @@ final class DiaryBottomSheetInteractor: PresentableInteractor<DiaryBottomSheetPr
             .getCurrentWeekdays() else { return [] }
         return weekdays
     }
+
+    func getCurrentNotificationTime() async -> Date? {
+        guard let time = await dependency.notificationRepository?
+            .getCurrentNotificationTime() else { return nil }
+        return time
+    }
 }
 
 // MARK: - 미사용

@@ -20,6 +20,7 @@ public protocol NotificationRepository: AnyObject {
     func setAlarm(date: Date, days: [Weekday]) async -> Bool
     func getCurrentNotifications() async -> [UNNotificationRequest]
     func getCurrentWeekdays() async -> [Weekday]
+    func getCurrentNotificationTime() async -> Date?
     func removeAlarmNotification() async
     func checkAlarmIsEnabled()
 }
@@ -151,5 +152,18 @@ public class NotificationRepositoryImp: NotificationRepository {
             let isNotificationEnabled: Bool = notifications.count == 0 ? false : true
             isEnabledNotificationRelay.accept(isNotificationEnabled)
         }
+    }
+
+    // 알람이 등록되어 있을 경우 시간을 return하는 함수
+    public func getCurrentNotificationTime() async -> Date? {
+        let currentNotifications: [UNNotificationRequest] = await getCurrentNotifications()
+        let time = currentNotifications.compactMap { request in
+            if let trigger: UNCalendarNotificationTrigger = request.trigger as? UNCalendarNotificationTrigger {
+                let date: Date? = trigger.nextTriggerDate()
+                return date
+            }
+            return nil
+        }.first
+        return time
     }
 }
