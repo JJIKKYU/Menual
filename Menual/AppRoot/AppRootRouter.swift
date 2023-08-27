@@ -111,7 +111,6 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
 //        }
         
          viewController.setViewController(navigation)
-        
     }
     
     func cleanupViews() {
@@ -140,14 +139,14 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
     func attachProfilePassword() {
         print("AppRoot :: attachProfilePassword!")
         
-        let profilePasswordRouting = profilePassword.build(
-            withListener: interactor,
-            isMainScreen: true,
-            isPasswordChange: false,
-            isPaswwordDisabled: false
-        )
-        self.profilePasswordRouting = profilePasswordRouting
-        attachChild(profilePasswordRouting)
+//        let profilePasswordRouting = profilePassword.build(
+//            withListener: interactor,
+//            isMainScreen: true,
+//            isPasswordChange: false,
+//            isPaswwordDisabled: false
+//        )
+        // self.profilePasswordRouting = profilePasswordRouting
+        // attachChild(profilePasswordRouting)
         
         let diaryHomeRouting = diaryHome.build(
             withListener: interactor,
@@ -162,7 +161,9 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
         viewController.setViewController(navigation)
         
         // presentInsideNavigation(profilePasswordRouting.viewControllable)
-        navigation.present(profilePasswordRouting.viewControllable, animated: false, completion: nil)
+        // navigation.present(profilePasswordRouting.viewControllable, animated: false, completion: nil)
+        // diaryHomeRouting.attachBottomSheet(type: .update)
+        diaryHomeRouting.attachProfilePassword()
     }
 
 }

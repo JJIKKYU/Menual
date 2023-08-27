@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import MenualEntity
+import MenualUtil
 import RxRelay
 import RxSwift
-import MenualEntity
 
 // MARK: - AppUpdateInfoRepository
 
@@ -41,7 +42,10 @@ public class AppUpdateInfoRepositoryImp: AppUpdateInfoRepository {
 
     // 업데이트 내역을 표시할 필요가 있는지 체크하는 함수
     public func checkNeedUpdateLog() {
-        UserDefaults().setValue("2.2.1", forKey: UserDefaultsModel.appVersion.rawValue)
+        // DebugMode일 경우 나타나는 것 강제 세팅
+        if DebugMode.isDebugMode || DebugMode.isAlpha {
+            UserDefaults().setValue("2.2.1", forKey: UserDefaultsModel.appVersion.rawValue)
+        }
 
         // 설치된 버전이 저장된 버전보다 클 경우에 표시해야 함
         let result: ComparisonResult = compareVersions(getInstalledAppVersion(), getSavedAppVersion())
@@ -115,7 +119,12 @@ public class AppUpdateInfoRepositoryImp: AppUpdateInfoRepository {
 
     // 현재 앱스토어에 업데이트 되어 있는 최신 버전
     public func getAppStoreVersion() async -> String? {
-        let bundleIdentifier: String = "com.jjikkyu.menual"
+        var bundleIdentifier: String = ""
+        if DebugMode.isAlpha {
+            bundleIdentifier = "com.jjikkyu.menualAlpha"
+        } else {
+            bundleIdentifier = "com.jjikkyu.menual"
+        }
 
         guard let url = URL(string: "https://itunes.apple.com/lookup?bundleId=\(bundleIdentifier)"),
               let (data, _) = try? await URLSession.shared.data(from: url),

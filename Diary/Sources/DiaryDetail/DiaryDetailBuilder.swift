@@ -5,13 +5,14 @@
 //  Created by 정진균 on 2022/04/16.
 //
 
-import RIBs
-import RxRelay
+import DiaryBottomSheet
+import DiaryDetailImage
+import DiaryWriting
 import MenualEntity
 import MenualRepository
-import DiaryBottomSheet
-import DiaryWriting
-import DiaryDetailImage
+import ProfilePassword
+import RIBs
+import RxRelay
 
 public protocol DiaryDetailDependency: Dependency {
     var containerRepository: ContainerRepository { get }
@@ -19,7 +20,7 @@ public protocol DiaryDetailDependency: Dependency {
     var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
 
-public final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency, DiaryDetailImageDependency {
+public final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency, DiaryDetailImageDependency, ProfilePasswordDependency {
 
     public var containerRepository: ContainerRepository {
         dependency.containerRepository
@@ -50,12 +51,12 @@ public final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDeta
     public override init(dependency: DiaryDetailDependency) {
         super.init(dependency: dependency)
     }
-    
+
     public func build(withListener listener: DiaryDetailListener, diaryModel: DiaryModelRealm) -> DiaryDetailRouting {
         let component = DiaryDetailComponent(
             dependency: dependency
         )
-        
+
         let diaryBottomSheetBuildable = DiaryBottomSheetBuilder(dependency: component)
         let diaryWritingBuildable = DiaryWritingBuilder(dependency: component)
         let diaryDetailImageBuildable = DiaryDetailImageBuilder(dependency: component)
@@ -67,12 +68,12 @@ public final class DiaryDetailBuilder: Builder<DiaryDetailDependency>, DiaryDeta
             diaryModel: diaryModel,
             dependency: component
         )
-        
+
         interactor.listener = listener
         component.reminderRequestDateRelay = interactor.reminderRequestDateRelay
         component.isHideMenualRelay = interactor.isHideMenualRelay
         component.isEnabledReminderRelay = interactor.isEnabledReminderRelay
-        
+
         return DiaryDetailRouter(
             interactor: interactor,
             viewController: viewController,

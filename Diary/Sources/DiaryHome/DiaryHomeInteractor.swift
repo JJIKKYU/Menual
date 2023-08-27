@@ -26,6 +26,8 @@ public protocol DiaryHomeRouting: ViewableRouting {
     func detachDiaryDetail(isOnlyDetach: Bool)
     func attachBottomSheet(type: MenualBottomSheetType)
     func detachBottomSheet()
+    func attachProfilePassword()
+    func detachProfilePasswrod()
 }
 
 public protocol DiaryHomePresentable: Presentable {
@@ -508,6 +510,15 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 )
         }
         router?.detachBottomSheet()
+    }
+
+    // MARK: - Password
+    func profilePasswordPressedBackBtn(isOnlyDetach: Bool) {
+        router?.detachProfilePasswrod()
+    }
+
+    func goDiaryHome() {
+        router?.detachProfilePasswrod()
     }
 }
 

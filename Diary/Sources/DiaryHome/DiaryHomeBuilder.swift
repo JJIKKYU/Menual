@@ -16,6 +16,7 @@ import DiaryWriting
 import DiaryDetail
 import DiaryBottomSheet
 import ProfileHome
+import ProfilePassword
 
 public protocol DiaryHomeDependency: Dependency {
     // AppRootComponent에서 생성해서, 부모(AppRoot RIBs)로부터 받아옴
@@ -27,7 +28,7 @@ public protocol DiaryHomeDependency: Dependency {
     var diaryUUIDRelay: BehaviorRelay<String> { get }
 }
 
-public final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DiaryBottomSheetDependency {
+public final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHomeDependency, DiarySearchDependency, DiaryWritingDependency, DiaryHomeInteractorDependency, DiaryDetailDependency, DiaryBottomSheetDependency, ProfilePasswordDependency {
     
     public var backupRestoreRepository: BackupRestoreRepository { dependency.backupRestoreRepository }
     public var diaryUUIDRelay: BehaviorRelay<String> { dependency.diaryUUIDRelay }
@@ -77,6 +78,7 @@ public final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuil
         let diaryWritingBuildable = DiaryWritingBuilder(dependency: component)
         let diaryDetailBuildable = DiaryDetailBuilder(dependency: component)
         let diaryBottomSheetBuildable = DiaryBottomSheetBuilder(dependency: component)
+        let profilePasswordBuildable = ProfilePasswordBuilder(dependency: component)
         
         let viewController = DiaryHomeViewController()
         viewController.screenName = "home"
@@ -96,7 +98,8 @@ public final class DiaryHomeBuilder: Builder<DiaryHomeDependency>, DiaryHomeBuil
             diarySearchBuildable: diarySearchBuildable,
             diaryWritingBuildable: diaryWritingBuildable,
             diaryDetailBuildable: diaryDetailBuildable,
-            diarybottomSheetBuildable: diaryBottomSheetBuildable
+            diarybottomSheetBuildable: diaryBottomSheetBuildable,
+            profilePasswordBuildable: profilePasswordBuildable
         )
     }
 }

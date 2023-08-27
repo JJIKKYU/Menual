@@ -13,9 +13,10 @@ import Foundation
 import MenualEntity
 import MenualUtil
 import ProfileHome
+import ProfilePassword
 import RIBs
 
-protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryWritingListener, DiaryDetailListener, DiaryBottomSheetListener {
+protocol DiaryHomeInteractable: Interactable, ProfileHomeListener, DiarySearchListener, DiaryWritingListener, DiaryDetailListener, DiaryBottomSheetListener, ProfilePasswordListener {
     var router: DiaryHomeRouting? { get set }
     var listener: DiaryHomeListener? { get set }
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
@@ -46,6 +47,9 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
     private let diaryBottomSheetBuildable: DiaryBottomSheetBuildable
     private var diaryBottomSheetRouting: Routing?
 
+    private let profilePasswordBuildable: ProfilePasswordBuildable
+    private var profilePasswordRouting: Routing?
+
     // TODO: Constructor inject child builder protocols to allow building children.
     init(
         interactor: DiaryHomeInteractable,
@@ -54,13 +58,15 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         diarySearchBuildable: DiarySearchBuildable,
         diaryWritingBuildable: DiaryWritingBuildable,
         diaryDetailBuildable: DiaryDetailBuildable,
-        diarybottomSheetBuildable: DiaryBottomSheetBuildable
+        diarybottomSheetBuildable: DiaryBottomSheetBuildable,
+        profilePasswordBuildable: ProfilePasswordBuildable
     ) {
         self.profileHomeBuildable = profileHomeBuildable
         self.diarySearchBuildable = diarySearchBuildable
         self.diaryWritingBuildable = diaryWritingBuildable
         self.diaryDetailBuildable = diaryDetailBuildable
         self.diaryBottomSheetBuildable = diarybottomSheetBuildable
+        self.profilePasswordBuildable = profilePasswordBuildable
 
         super.init(
             interactor: interactor,
@@ -221,6 +227,11 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
             return
         }
 
+        // update 팝업의 경우 비밀번호가 있을 경우 노출 되지 않아야 함
+        if case .update = type {
+            if profilePasswordRouting != nil { return }
+        }
+
         DispatchQueue.main.async {
             let router = self.diaryBottomSheetBuildable.build(
                 withListener: self.interactor,
@@ -248,5 +259,31 @@ final class DiaryHomeRouter: ViewableRouter<DiaryHomeInteractable, DiaryHomeView
         }
         detachChild(router)
         diaryBottomSheetRouting = nil
+    }
+
+    // MARK: - ProfilePassword
+
+    func attachProfilePassword() {
+        if profilePasswordRouting != nil { return }
+
+        let router = profilePasswordBuildable.build(
+            withListener: interactor,
+            isMainScreen: true,
+            isPasswordChange: false,
+            isPaswwordDisabled: false
+        )
+        presentInsideNavigation(router.viewControllable)
+
+        profilePasswordRouting = router
+        attachChild(router)
+    }
+
+    func detachProfilePasswrod() {
+        guard let router = profilePasswordRouting else { return }
+
+        dismissPresentedNavigation(completion: nil)
+        detachChild(router)
+
+        profilePasswordRouting = nil
     }
 }
