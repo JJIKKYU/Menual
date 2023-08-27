@@ -98,8 +98,8 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
             $0.delegate = self
             $0.dataSource = self
             $0.register(ProfileHomeCell.self, forCellReuseIdentifier: "ProfileHomeCell")
-            $0.rowHeight = UITableView.automaticDimension
-            $0.estimatedRowHeight = 120
+            $0.rowHeight = 72
+            $0.estimatedRowHeight = 300
             $0.separatorStyle = .none
         }
         
@@ -144,7 +144,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
             .subscribe(onNext: { [weak self] isEnabledPassword in
                 guard let self = self else { return }
                 print("ProfileHome :: isEnabledPasswordRelay = \(isEnabledPassword)")
-                self.settingTableView.reloadData()
+                self.reloadTableView()
             })
             .disposed(by: disposeBag)
         
@@ -152,7 +152,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isEnabled in
                 guard let self = self else { return }
-                self.settingTableView.reloadData()
+                self.reloadTableView()
             })
             .disposed(by: disposeBag)
     }
@@ -184,7 +184,7 @@ final class ProfileHomeViewController: UIViewController, ProfileHomePresentable,
     
     func reloadTableView() {
         DispatchQueue.main.async {
-            self.settingTableView.reloadData()
+             self.settingTableView.reloadData()
         }
     }
 }
@@ -324,7 +324,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
                     cell.switchIsOn = listener?.isEnabledNotificationRelay?.value ?? false
                 }
             }
-            cell.sizeToFit()
+            cell.setNeedsLayout()
             cell.layoutIfNeeded()
             return cell
 
@@ -337,7 +337,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             cell.menuType = data.menuType
             cell.section = data.section
             cell.delegate = self
-            cell.sizeToFit()
+            cell.setNeedsLayout()
             cell.layoutIfNeeded()
             return cell
             
@@ -351,7 +351,7 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
             cell.menuType = data.menuType
             cell.section = data.section
             cell.delegate = self
-            cell.sizeToFit()
+            cell.setNeedsLayout()
             cell.layoutIfNeeded()
             return cell
         }
@@ -414,7 +414,35 @@ extension ProfileHomeViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        let index: Int = indexPath.row
+        let section: Int = indexPath.section
+
+        guard let sections = ProfileHomeSection(rawValue: section) else { return 0 }
+        var cellType: ProfileHomeCellType?
+
+        switch sections {
+        case .setting1:
+            guard let data = listener?.profileHomeDataArr_Setting1[safe: index] else { return 0 }
+            cellType = data.cellType
+
+        case .setting2:
+            guard let data = listener?.profileHomeDataArr_Setting2[safe: index] else { return 0 }
+            cellType = data.cellType
+
+        case .devMode:
+            guard let data = listener?.profileHomeDevDataArr[safe: index] else { return 0 }
+            cellType = data.cellType
+        }
+
+        guard let cellType: ProfileHomeCellType = cellType else { return 0 }
+
+        switch cellType {
+        case .toggle, .arrow:
+            return 57
+
+        case .toggleWithDescription:
+            return 78
+        }
     }
 }
 

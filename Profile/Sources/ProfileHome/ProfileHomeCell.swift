@@ -46,8 +46,8 @@ public class ProfileHomeCell: UITableViewCell {
         $0.axis = .vertical
         $0.distribution = .fill
         $0.alignment = .fill
-        $0.layoutMargins = UIEdgeInsets(top: 20, left: .zero, bottom: 20, right: 0)
-        $0.isLayoutMarginsRelativeArrangement = true
+        // $0.layoutMargins = UIEdgeInsets(top: 20, left: .zero, bottom: 20, right: 0)
+        // $0.isLayoutMarginsRelativeArrangement = true
     }
     
     private let titleLabel: UILabel = .init().then {
@@ -56,7 +56,7 @@ public class ProfileHomeCell: UITableViewCell {
         $0.numberOfLines = 1
     }
     
-    private let descLabel = UILabel().then {
+    private let descLabel: UILabel = .init().then {
         $0.font = .AppBodyOnlyFont(.body_2)
         $0.textColor = Colors.grey.g500
         $0.isHidden = false
@@ -88,8 +88,10 @@ public class ProfileHomeCell: UITableViewCell {
     
     public override func prepareForReuse() {
         super.prepareForReuse()
-//        stackView.layoutIfNeeded()
-//        stackView.sizeToFit()
+        title = ""
+        desc = ""
+        stackView.layoutIfNeeded()
+        stackView.sizeToFit()
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -115,9 +117,9 @@ public class ProfileHomeCell: UITableViewCell {
         
         stackView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(20)
             make.width.equalToSuperview().inset(60)
-            make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview().inset(20)
         }
         
         arrowImageView.snp.makeConstraints { make in
@@ -141,20 +143,19 @@ public class ProfileHomeCell: UITableViewCell {
     override public func layoutSubviews() {
         titleLabel.text = title
         let desc: String = self.desc ?? ""
-        descLabel.isHidden = desc.isEmpty ? true : false
         descLabel.text = desc
 
         switch profileHomeCellType {
         case .arrow:
             arrowImageView.isHidden = false
             switchBtn.isHidden = true
-            stackView.spacing = 1
+            stackView.spacing = 0
             
         case .toggle:
             switchBtn.isOn = switchIsOn
             arrowImageView.isHidden = true
             switchBtn.isHidden = false
-            stackView.spacing = 1
+            stackView.spacing = 0
             
         case .toggleWithDescription:
             switchBtn.isOn = switchIsOn
@@ -163,6 +164,8 @@ public class ProfileHomeCell: UITableViewCell {
             arrowImageView.isHidden = true
             switchBtn.isHidden = false
             stackView.spacing = 4
+            titleLabel.layoutIfNeeded()
+            descLabel.layoutIfNeeded()
         }
         
         guard let menuType: ProfileHomeMenuType = menuType else { return }
