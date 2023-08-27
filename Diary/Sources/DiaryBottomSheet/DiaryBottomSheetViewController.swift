@@ -33,6 +33,7 @@ public enum MenualBottomSheetType {
     case filter
     case review
     case alarm
+    case update
 }
 
 public protocol DiaryBottomSheetPresentableListener: AnyObject {
@@ -342,7 +343,11 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
                 make.top.equalTo(self.divider.snp.bottom).offset(24)
                 make.height.equalTo(434)
             }
-            bottomSheetTitle = "알림 시간 설정"
+            menualBottomSheetRightBtnType = .close
+            rightBtn.actionName = "close"
+            rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
+
+        case .update:
             menualBottomSheetRightBtnType = .close
             rightBtn.actionName = "close"
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
@@ -448,7 +453,7 @@ extension DiaryBottomSheetViewController {
         }
         
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
-            self.dimmedView.alpha = 0
+            // self.dimmedView.alpha = 0
             self.view.layoutIfNeeded()
         } completion: { [weak self] isShow in
             guard let self = self else { return }
@@ -470,7 +475,7 @@ extension DiaryBottomSheetViewController {
         }
         
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseInOut) {
-            self.dimmedView.alpha = 0.1
+            // self.dimmedView.alpha = 1.0
             self.view.layoutIfNeeded()
         } completion: { isShow in
             print("DiaryBottomSheet :: bottomSheet isShow!")
@@ -503,6 +508,10 @@ extension DiaryBottomSheetViewController {
         case .alarm:
             bottomSheetTitle = "알림 시간 설정"
             bottomSheetHeight = 553
+
+        case .update:
+            bottomSheetTitle = "Menual 업데이트"
+            bottomSheetHeight = 551
         }
     }
 

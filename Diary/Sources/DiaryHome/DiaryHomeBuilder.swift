@@ -40,6 +40,9 @@ public final class DiaryHomeComponent: Component<DiaryHomeDependency>, ProfileHo
     public var containerRepository: ContainerRepository { dependency.containerRepository }
     public var appstoreReviewRepository: AppstoreReviewRepository { dependency.appstoreReviewRepository }
     public var momentsRepository: MomentsRepository { dependency.momentsRepository }
+    public var appUpdateInfoRepository: AppUpdateInfoRepository? {
+        containerRepository.container.resolve(AppUpdateInfoRepository.self)
+    }
     
     public override init(
         dependency: DiaryHomeDependency

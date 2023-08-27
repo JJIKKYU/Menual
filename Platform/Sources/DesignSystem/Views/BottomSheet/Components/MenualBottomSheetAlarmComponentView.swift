@@ -189,8 +189,10 @@ public class MenualBottomSheetAlarmComponentView: UIView {
         // 아무것도 선택하지 않으면 버튼 비활성화
         if selectedDays.isEmpty {
             confirmBtn.btnStatus = .inactive
+            confirmBtn.isUserInteractionEnabled = false
         } else {
             confirmBtn.btnStatus = .active
+            confirmBtn.isUserInteractionEnabled = true
         }
     }
 }

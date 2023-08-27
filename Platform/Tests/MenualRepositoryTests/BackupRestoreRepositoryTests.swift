@@ -1,35 +1,37 @@
 //
 //  BackupRestoreRepositoryTests.swift
-//  
+//
 //
 //  Created by 정진균 on 2023/03/18.
 //
 
 import Foundation
-import XCTest
 import MenualEntity
-import RxSwift
-import RxRelay
+import MenualUtil
+import Realm
 import RealmSwift
+import RxRelay
+import RxSwift
+import XCTest
 @testable import MenualRepositoryTestSupport
 @testable import MenualRepository
 
 
 final class BackupRestoreRepositoryTests: XCTestCase {
-    
+
     private var sut: BackupRestoreRepositoryImp!
 
     override func setUp() {
         sut = BackupRestoreRepositoryImp()
     }
-    
+
     /// backup이 잘 진행되고 있는지 테스트
     func testBackup() {
         guard let realm = Realm.safeInit() else { return }
         // given
         var backupDataDic: [String: Data] = [:]
         var backupDataArr: [Data] = []
-        
+
         // DiaryModelRealm 추가
         var diaryModelRealmArr: [DiaryModelRealm] = []
         for i in 0..<5 {
@@ -49,7 +51,7 @@ final class BackupRestoreRepositoryTests: XCTestCase {
                            )
             diaryModelRealmArr.append(model)
         }
-        
+
         // Moments 추가
         var momentsModelRealmArr: [MomentsRealm] = []
         let momentsModelRealm = MomentsRealm(
@@ -68,7 +70,7 @@ final class BackupRestoreRepositoryTests: XCTestCase {
             ]
         )
         momentsModelRealmArr.append(momentsModelRealm)
-        
+
         // TempSave 추가
         var tempSaveModelRealmArr: [TempSaveModelRealm] = []
         let tempSaveModelRealm = TempSaveModelRealm(
@@ -86,7 +88,7 @@ final class BackupRestoreRepositoryTests: XCTestCase {
             isDeleted: false
         )
         tempSaveModelRealmArr.append(tempSaveModelRealm)
-        
+
         // DiarySearch 추가
         var diarySearchModelRealmArr: [DiarySearchModelRealm] = []
         let diarySearchModelRealm = DiarySearchModelRealm(
@@ -96,7 +98,7 @@ final class BackupRestoreRepositoryTests: XCTestCase {
             isDeleted: false
         )
         diarySearchModelRealmArr.append(diarySearchModelRealm)
-        
+
         // Password 추가
         var passwordModelRealmArr: [PasswordModelRealm] = []
         let passwordModelRealm = PasswordModelRealm(
@@ -104,7 +106,7 @@ final class BackupRestoreRepositoryTests: XCTestCase {
             isEnabled: true
         )
         passwordModelRealmArr.append(passwordModelRealm)
-        
+
         if let diaryData = sut.makeBackupData(of: DiaryModelRealm.self) {
             backupDataDic["diary"] = diaryData
             backupDataArr.append(diaryData)
@@ -125,7 +127,7 @@ final class BackupRestoreRepositoryTests: XCTestCase {
             backupDataDic["password"] = passwordData
             backupDataArr.append(passwordData)
         }
-        
+
         realm.safeWrite {
             realm.delete(realm.objects(DiaryModelRealm.self))
             realm.delete(realm.objects(MomentsRealm.self))
@@ -139,10 +141,10 @@ final class BackupRestoreRepositoryTests: XCTestCase {
             realm.add(diarySearchModelRealmArr)
             realm.add(passwordModelRealmArr)
         }
-        
+
         // when
         let testTargetDataDic = sut.backUp()
-        
+
         XCTAssertEqual(
             testTargetDataDic["moments"]?.count,
             backupDataDic["moments"]?.count
@@ -152,30 +154,30 @@ final class BackupRestoreRepositoryTests: XCTestCase {
             testTargetDataDic["diary"]?.count,
             backupDataDic["diary"]?.count
         )
-        
+
         XCTAssertEqual(
             testTargetDataDic["diarySearch"]?.count,
             backupDataDic["diarySearch"]?.count
         )
-        
+
         XCTAssertEqual(
             testTargetDataDic["tempSave"]?.count,
             backupDataDic["tempSave"]?.count
         )
-        
+
         XCTAssertEqual(
             testTargetDataDic["password"]?.count,
             backupDataDic["password"]?.count
         )
     }
-    
+
     /// 백업 파일이 정상적으로 저장되는지 확인
     /// - 파일이 있거나 없거나, 기본적으로 모든 백업파일은 1:1로 생성되므로, 생성이 되지 않으면 fail
     func testAlreadyBackupFileExist() {
         // given
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        
+
         let checkFileNameArr: [String] = [
             "diary",
             "moments",
@@ -183,10 +185,10 @@ final class BackupRestoreRepositoryTests: XCTestCase {
             "diarySearch",
             "password"
         ]
-        
+
         // when
         _ = sut.backUp()
-        
+
         // then
         for name in checkFileNameArr {
             let fileURL = documentsURL.appendingPathComponent("\(name).json")

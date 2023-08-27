@@ -59,6 +59,7 @@ public protocol DiaryHomeInteractorDependency {
     var momentsRepository: MomentsRepository { get }
     var backupRestoreRepository: BackupRestoreRepository { get }
     var appstoreReviewRepository: AppstoreReviewRepository { get }
+    var appUpdateInfoRepository: AppUpdateInfoRepository? { get }
 }
 
 final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, DiaryHomeInteractable, DiaryHomePresentableListener, AdaptivePresentationControllerDelegate {
@@ -96,6 +97,11 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     // Moments
     var momentsRealm: MomentsRealm?
 
+    // 업데이트 내역
+    var shouldShowUpdateObservable: Observable<Bool>? {
+        dependency.appUpdateInfoRepository?.shouldShowUpdateObservable
+    }
+
     init(
         presenter: DiaryHomePresentable,
         dependency: DiaryHomeInteractorDependency
@@ -113,6 +119,10 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
         super.didBecomeActive()
         bind()
         bindMoments()
+        dependency.appUpdateInfoRepository?.getInstalledAppVersion()
+        Task {
+            await self.dependency.appUpdateInfoRepository?.getAppStoreVersion()
+        }
     }
 
     override func willResignActive() {
@@ -320,8 +330,6 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                         fatalError("\(error)")
                 }
             }
-        
-        
     }
     
     func bindMoments() {
@@ -478,6 +486,11 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
                 )
             filteredDiaryCountRelay.accept(filterCount)
         }
+    }
+
+    // AppUpdateLogComponentView
+    func showUpdateLogBottomSheet() {
+        router?.attachBottomSheet(type: .update)
     }
     
     // 필터를 적용하고 확인 버튼을 눌렀을 경우 최종적으로 필터 적용

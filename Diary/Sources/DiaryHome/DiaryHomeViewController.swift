@@ -26,6 +26,8 @@ public enum TableCollectionViewTag: Int {
     case MyMenualTableView = 1
 }
 
+// MARK: - DiaryHomePresentableListener
+
 public protocol DiaryHomePresentableListener: AnyObject {
     func pressedSearchBtn()
     func pressedMyPageBtn()
@@ -42,7 +44,13 @@ public protocol DiaryHomePresentableListener: AnyObject {
     var diaryDictionary: [String: DiaryHomeSectionModel] { get }
     var onboardingDiarySet: BehaviorRelay<[Int: String]?> { get }
     var momentsRealm: MomentsRealm? { get }
+
+    // Update 내역
+    var shouldShowUpdateObservable: Observable<Bool>? { get }
+    func showUpdateLogBottomSheet()
 }
+
+// MARK: - DiaryHomeViewController
 
 final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, DiaryHomeViewControllable {
 
@@ -388,7 +396,8 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 }
             })
             .disposed(by: disposeBag)
-        
+
+
         listener?.onboardingDiarySet
             .subscribe(onNext: { [weak self] data in
                 guard let self = self else { return }
@@ -410,6 +419,19 @@ final class DiaryHomeViewController: UIViewController, DiaryHomePresentable, Dia
                 self.myMenualTableView.reloadData()
             })
             .disposed(by: disposeBag)
+
+        // 업데이트 내역
+        if let shouldShowUpdateObservable: Observable<Bool> = listener?.shouldShowUpdateObservable {
+            rx.viewDidAppear
+                .withLatestFrom(shouldShowUpdateObservable)
+                .subscribe(onNext: { [weak self] needShowUpdate in
+                    guard let self = self else { return }
+                    print("DiaryHome :: AppUpdateInfoRepository :: needShowUpdate = \(needShowUpdate)")
+                    if needShowUpdate == false { return }
+                    listener?.showUpdateLogBottomSheet()
+                })
+                .disposed(by: disposeBag)
+        }
     }
     
     func setEmptyView(isEnabled: Bool) {
