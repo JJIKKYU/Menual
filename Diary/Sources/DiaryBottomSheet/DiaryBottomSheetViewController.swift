@@ -174,6 +174,9 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
     
     // 다시알람 컴포넌트
     private var alarmComponentView: MenualBottomSheetAlarmComponentView?
+
+    // 업데이트내역 컴포넌트
+    private var appUpdateLogComponentView: MenualBottomSheetAppUpdateLogComponentView?
     
     
     override func viewDidLoad() {
@@ -348,6 +351,23 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
 
         case .update:
+            let appUpdateLogComponentView: MenualBottomSheetAppUpdateLogComponentView = .init(
+                updateImages: [
+                    Asset.UpdateImages.updateImage01.image,
+                    Asset.UpdateImages.updateimage02.image,
+                    Asset.UpdateImages.updateImage03.image,
+                ]
+            )
+            appUpdateLogComponentView.delegate = self
+            bottomSheetView.addSubview(appUpdateLogComponentView)
+            appUpdateLogComponentView.snp.makeConstraints { make in
+                make.leading.width.equalToSuperview()
+                make.top.equalTo(self.divider.snp.bottom).offset(24)
+                make.height.equalTo(610)
+            }
+
+            self.appUpdateLogComponentView = appUpdateLogComponentView
+
             menualBottomSheetRightBtnType = .close
             rightBtn.actionName = "close"
             rightBtn.addTarget(self, action: #selector(closeBottomSheet), for: .touchUpInside)
@@ -511,7 +531,7 @@ extension DiaryBottomSheetViewController {
 
         case .update:
             bottomSheetTitle = "Menual 업데이트"
-            bottomSheetHeight = 551
+            bottomSheetHeight = 610
         }
     }
 
@@ -743,5 +763,13 @@ extension DiaryBottomSheetViewController: MenualBottomSheetReviewComponentViewDe
 extension DiaryBottomSheetViewController: AlarmComponentDelegate {
     func pressedConfirmBtn(date: Date, days: [Weekday]) {
         listener?.pressedAlarmConfirmBtn(date: date, days: days)
+    }
+}
+
+// MARK: - AppUpdateComponenet
+
+extension DiaryBottomSheetViewController: AppUpdateLogComponentDelegate {
+    func pressedConfirmBtn() {
+        listener?.pressedCloseBtn()
     }
 }

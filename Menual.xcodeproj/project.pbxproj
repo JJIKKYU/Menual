@@ -713,7 +713,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		98239BEA27E43DA500E216F1 /* Run swiftgen */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -725,7 +725,7 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "PATH=/opt/homebrew/bin:$PATH\nswiftgen config run\n";
 		};
