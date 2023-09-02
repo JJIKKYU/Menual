@@ -11,18 +11,22 @@ import SnapKit
 import Then
 import UIKit
 
+// MARK: - ImageUploadViewDelegate
+
+public protocol ImageUploadViewDelegate: AnyObject {
+    func pressedTakeImageButton()
+    func pressedUploadImageButton()
+}
+
+// MARK: - ImageUploadView
+
 public final class ImageUploadView: UIView {
-    var image: UIImage? {
+    var images: [Data] = [] {
         didSet { setNeedsLayout() }
     }
 
-    public let uploadedImageView: UIImageView = .init()
-    private let uploadBtn: UIButton = .init()
-    private let centerView: UIView = .init()
-    private let placeHolderImageView: UIImageView = .init()
-    private let placeHolderTextLabel: UILabel = .init()
-    public lazy var deleteBtn: UIButton = .init()
-    public lazy var editBtn: UIButton = .init()
+    public weak var delegate: ImageUploadViewDelegate?
+    private let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
 
     init() {
         super.init(frame: CGRect.zero)
@@ -35,130 +39,77 @@ public final class ImageUploadView: UIView {
     }
 
     private func configureUI() {
-        uploadedImageView.do {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.isHidden = true
-            $0.contentMode = .scaleAspectFill
-            $0.layer.masksToBounds = true
-            $0.AppCorner(._4pt)
-        }
-
-        uploadBtn.do {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.setTitle("", for: .normal)
+        collectionView.do {
+            $0.register(ImageUploadCell.self, forCellWithReuseIdentifier: "ImageUploadCell")
+            $0.delegate = self
+            $0.dataSource = self
             $0.backgroundColor = .clear
-            $0.backgroundColor = Colors.grey.g800.withAlphaComponent(0.4)
-        }
 
-        centerView.do {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-
-        placeHolderImageView.do {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.image = Asset._24px.picture.image.withRenderingMode(.alwaysTemplate)
-            $0.tintColor = Colors.grey.g700
-            $0.AppCorner(._4pt)
-        }
-
-        placeHolderTextLabel.do {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.textColor = Colors.grey.g600
-            $0.font = UIFont.AppBodyOnlyFont(.body_2)
-            $0.text = MenualString.writing_button_add_image
-        }
-
-        deleteBtn.do {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.contentMode = .scaleAspectFit
-            $0.contentHorizontalAlignment = .fill
-            $0.contentVerticalAlignment = .fill
-            $0.setImage(Asset._20px.delete.image.withRenderingMode(.alwaysTemplate), for: .normal)
-            $0.tintColor = Colors.grey.g600
-            $0.isHidden = true
-        }
-
-        editBtn.do {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.contentMode = .scaleAspectFit
-            $0.contentHorizontalAlignment = .fill
-            $0.contentVerticalAlignment = .fill
-            $0.setImage(Asset._20px.modify.image.withRenderingMode(.alwaysTemplate), for: .normal)
-            $0.tintColor = Colors.grey.g600
-            $0.isHidden = true
+            let flowlayout = UICollectionViewFlowLayout.init()
+            flowlayout.itemSize = .init(width: 100, height: 100)
+            flowlayout.scrollDirection = .horizontal
+            flowlayout.minimumLineSpacing = 8
+            flowlayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+            $0.setCollectionViewLayout(flowlayout, animated: true)
+            $0.showsHorizontalScrollIndicator = false
         }
     }
 
     private func setViews() {
-        addSubview(centerView)
-        addSubview(uploadBtn)
-        addSubview(uploadedImageView)
-        addSubview(editBtn)
-        addSubview(deleteBtn)
+        addSubview(collectionView)
 
-        centerView.addSubview(placeHolderImageView)
-        centerView.addSubview(placeHolderTextLabel)
-
-        placeHolderImageView.snp.makeConstraints { make in
-            make.width.height.equalTo(24)
-            make.centerY.equalToSuperview()
+        collectionView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
-
-        placeHolderTextLabel.snp.makeConstraints { make in
-            make.leading.equalTo(placeHolderImageView.snp.trailing).offset(4)
-            make.width.equalTo(47)
-            make.height.equalTo(15)
-            make.centerY.equalToSuperview()
-        }
-
-        centerView.snp.makeConstraints { make in
-            make.width.equalTo(75)
-            make.height.equalTo(24)
-            make.centerX.equalToSuperview()
-            make.centerY.equalTo(uploadBtn)
-        }
-
-        uploadBtn.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalToSuperview()
-            make.height.equalTo(80)
-        }
-
-        uploadedImageView.snp.makeConstraints { make in
-            make.leading.width.top.equalToSuperview()
-            make.height.equalTo(80)
-        }
-
-        deleteBtn.snp.makeConstraints { make in
-            make.trailing.equalToSuperview()
-            make.top.equalTo(uploadedImageView.snp.bottom).offset(10)
-            make.width.equalTo(20)
-        }
-
-        editBtn.snp.makeConstraints { make in
-            make.trailing.equalTo(deleteBtn.snp.leading).offset(-8)
-            make.top.equalTo(uploadedImageView.snp.bottom).offset(10)
-            make.width.equalTo(20)
-        }
-
-
     }
 
     override public func layoutSubviews() {
         super.layoutSubviews()
+        collectionView.reloadData()
+    }
+}
 
-        if let image = image {
-            print("DiaryWriting :: ImageUploadView :: image!")
-            uploadedImageView.image = image
-            uploadedImageView.isHidden = false
-            editBtn.isHidden = false
-            deleteBtn.isHidden = false
+// MARK: - CollectionViewDelegate
+
+extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return images.count + 1
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell: ImageUploadCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageUploadCell", for: indexPath) as? ImageUploadCell else { return UICollectionViewCell() }
+
+        let index: Int = indexPath.row
+        // 첫번째 셀은 이미지 추가 버튼이므로 1씩 빼주어서 접근
+        let imageData: Data = images[safe: index - 1] ?? Data()
+
+        // 첫번째 Cell의 경우 추가하기 Cell로 세팅
+        if index == 0 {
+            cell.parameters.status = .addImage
         } else {
-            uploadedImageView.image = nil
-            uploadedImageView.isHidden = true
-            editBtn.isHidden = true
-            deleteBtn.isHidden = true
+            cell.parameters.status = .image
         }
+        cell.delegate = self
+        cell.parameters.imageData = imageData
+
+        return cell
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+    }
+}
+
+// MARK: - ImageUploadCellDelegate
+
+extension ImageUploadView: ImageUploadCellDelegate {
+    public func pressedTakeImageButton() {
+        print("ImageUploadView :: pressedTakeImageButton")
+        delegate?.pressedTakeImageButton()
+    }
+
+    public func pressedUploadImageButton() {
+        print("ImageUploadView :: pressedUploadImageButton")
+        delegate?.pressedUploadImageButton()
     }
 }

@@ -81,9 +81,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     let notificationIdentifier: String = "StartCamera"
     
     // delegate 저장 후 VC 삭제시 해제 용도
-    private weak var cropVC: CustomCropViewController?
-    private weak var uploadImageAction: UIAction?
-    private weak var takeImageAction: UIAction?
+    // private weak var cropVC: CustomCropViewController?
     
     private lazy var naviView = MenualNaviView(type: .write)
     private lazy var weatherPlaceToolbarView = WeatherPlaceToolbarView()
@@ -104,6 +102,9 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     private var phpickerConfiguration = PHPickerConfiguration()
     private weak var weakImagePicker: PHPickerViewController?
     private lazy var testImagePicker = UIImagePickerController()
+
+    // 선택한 이미지
+    private var selecteedImages: [Data] = []
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -145,7 +146,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         weatherSelectView.selectTextView.centerVerticalText()
         locationSelectView.selectTextView.delegate = self
         locationSelectView.selectTextView.centerVerticalText()
-        cropVC?.delegate = self
         setImageButtonUIActionMenu()
     }
     
@@ -164,7 +164,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         descriptionTextView.delegate = nil
         weatherSelectView.selectTextView.delegate = nil
         locationSelectView.selectTextView.delegate = nil
-        cropVC?.delegate = nil
         pullDownImageButton.menu = nil
         pullDownImageButtonEditBtn.menu = nil
         // testImagePicker.delegate = nil
@@ -221,16 +220,16 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
             .bind(to: listener.weatherDescRelay)
             .disposed(by: disposeBag)
 
-        listener.cropImageDataRelay
-            .map { data -> UIImage? in
-                if let data = data {
-                    return UIImage(data: data)
-                } else {
-                    return nil
-                }
-            }
-            .bind(to: imageUploadView.rx.image)
-            .disposed(by: disposeBag)
+//        listener.cropImageDataRelay
+//            .map { data -> UIImage? in
+//                if let data = data {
+//                    return UIImage(data: data)
+//                } else {
+//                    return nil
+//                }
+//            }
+//            .bind(to: imageUploadView.rx.image)
+//            .disposed(by: disposeBag)
 
         descriptionTextView.rx.text
             .orEmpty
@@ -561,13 +560,17 @@ extension DiaryWritingViewController {
         MenualLog.logEventAction("writing_image_upload")
 
         phpickerConfiguration.filter = .images
-        phpickerConfiguration.selectionLimit = 1
-        let imagePicker = PHPickerViewController(configuration: phpickerConfiguration)
+        phpickerConfiguration.selectionLimit = 10
+        let imagePicker: PHPickerViewController = .init(
+            configuration: phpickerConfiguration
+        )
         weakImagePicker = imagePicker
         imagePicker.isEditing = true
         imagePicker.delegate = self
         
-        let navigationController = UINavigationController(rootViewController: imagePicker)
+        let navigationController: UINavigationController = .init(
+            rootViewController: imagePicker
+        )
         navigationController.modalPresentationStyle = .overFullScreen
         navigationController.navigationBar.isHidden = true
         navigationController.isNavigationBarHidden = true
@@ -799,8 +802,47 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
 extension DiaryWritingViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         print("DiaryWriting :: didFinishPicking!!")
-        // picker.dismiss(animated: true)
-        
+
+        if results.count == 0 {
+            DispatchQueue.main.async {
+                picker.dismiss(animated: true)
+            }
+        }
+
+        picker.dismiss(animated: true)
+        var order: Int = 0
+
+        for result in results {
+            // 이미지 업로드가 불가능한 경우
+            if result.itemProvider.canLoadObject(ofClass: UIImage.self) == false {
+                continue
+            }
+            
+
+            result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+                guard let self = self else { return }
+                guard let image: UIImage = image as? UIImage,
+                      let imageData: Data = image.pngData()
+                else { return }
+
+                DispatchQueue.main.async {
+                    self.selecteedImages.append(imageData)
+                    self.imageUploadView.images.append(imageData)
+                    order += 1
+                }
+                print("DiaryHome :: loading! order = \(order)")
+
+//                if self.selecteedImages.count == results.count {
+//                    print("DiaryHome :: loading! 이미지 로딩이 완료되었습니다.")
+//                    DispatchQueue.main.async {
+//                        picker.dismiss(animated: true)
+//                        self.imageUploadView.images = self.selecteedImages
+//                    }
+//                }
+            }
+        }
+
+        /*
         let itemProvider = results.first?.itemProvider
         
         if let itemProvider = itemProvider {
@@ -840,6 +882,8 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
             self.isEdittedIamge = false
             dismiss(animated: true)
         }
+
+         */
     }
     
     func fixImageOrientation(_ image: UIImage) -> UIImage {
@@ -853,6 +897,7 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
 
 extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        /*
         print("DiaryWriting :: didFinishPickingMediaWithInfo!")
         var newImage: UIImage?
         
@@ -881,6 +926,7 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
         dismiss(animated: true) {
             self.present(cropVC, animated: true, completion: nil)
         }
+        */
     }
 }
 
@@ -951,7 +997,7 @@ extension DiaryWritingViewController: CropViewControllerDelegate {
         let resizeImage = UIImage().imageWithImage(sourceImage: image, scaledToWidth: UIScreen.main.bounds.width * 2)
         // self.selectedImage = resizeImage
 
-        listener?.cropImageDataRelay.accept(resizeImage.jpeg(.medium))
+        // listener?.cropImageDataRelay.accept(resizeImage.jpeg(.medium))
         self.isEdittedIamge = true
 
         // 텍스트는 기본 텍스트고 이미지만 변경했을 경우에는 업로드 불가능
@@ -977,7 +1023,7 @@ extension DiaryWritingViewController: DialogDelegate {
                 listener?.pressedBackBtn(isOnlyDetach: false)
                 
             case .deletePhoto:
-                imageUploadView.image = nil
+                // imageUploadView.image = nil
                 isEditBeginRelay.accept(true)
                 
             case .camera:
@@ -1117,10 +1163,7 @@ extension DiaryWritingViewController {
         imageUploadView.do {
             $0.categoryName = "image"
             $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.deleteBtn.actionName = "delete"
-            $0.deleteBtn.addTarget(self, action: #selector(pressedImageUploadViewDeleteBtn), for: .touchUpInside)
-            $0.editBtn.actionName = "edit"
-            $0.editBtn.addTarget(self, action: #selector(pressedImageUploadViewEditBtn), for: .touchUpInside)
+            $0.delegate = self
         }
         
         pullDownImageButton.do {
@@ -1168,8 +1211,6 @@ extension DiaryWritingViewController {
         scrollView.addSubview(datePageTextCountView)
         scrollView.addSubview(divider4)
         scrollView.addSubview(imageUploadView)
-        scrollView.addSubview(pullDownImageButton)
-        scrollView.addSubview(pullDownImageButtonEditBtn)
         self.view.bringSubviewToFront(naviView)
         
         naviView.snp.makeConstraints { make in
@@ -1248,20 +1289,11 @@ extension DiaryWritingViewController {
         }
         
         imageUploadView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
             make.top.equalTo(divider4.snp.bottom).offset(16)
-            make.height.equalTo(110)
+            make.height.equalTo(100)
             make.bottom.equalToSuperview().inset(40)
-        }
-        
-        pullDownImageButton.snp.makeConstraints { make in
-            make.leading.width.height.top.equalTo(imageUploadView.uploadedImageView)
-        }
-        
-        pullDownImageButtonEditBtn.snp.makeConstraints { make in
-            make.leading.top.equalTo(imageUploadView.editBtn)
-            make.width.height.equalTo(24)
         }
         
         weatherPlaceToolbarView.snp.makeConstraints { make in
@@ -1269,5 +1301,19 @@ extension DiaryWritingViewController {
             make.bottom.equalToSuperview()
             make.height.equalTo(130)
         }
+    }
+}
+
+// MARK: - ImageUploadViewDelegate
+
+extension DiaryWritingViewController: ImageUploadViewDelegate {
+    func pressedTakeImageButton() {
+        print("DiaryHome :: pressedTakeImageButton")
+        pressedTakeImagePullDownBtn()
+    }
+
+    func pressedUploadImageButton() {
+        print("DiaryHome :: pressedUploadImageButton")
+        pressedImageUploadPullDownBtn()
     }
 }
