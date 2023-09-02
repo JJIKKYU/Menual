@@ -21,7 +21,7 @@ public protocol DiaryWritingRouting: ViewableRouting {
 
 public protocol DiaryWritingPresentable: Presentable {
     var listener: DiaryWritingPresentableListener? { get set }
-    
+
     func setWeatherView(model: WeatherModelRealm)
     func setPlaceView(model: PlaceModelRealm)
     func setUI(writeType: WritingType)
@@ -40,32 +40,32 @@ public protocol DiaryWritingInteractorDependency {
 final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentable>, DiaryWritingInteractable, DiaryWritingPresentableListener {
 
     var page: Int
-    
+
     var diaryWritingMode: WritingType = .writing
 
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
-    
+
     weak var router: DiaryWritingRouting?
     weak var listener: DiaryWritingListener?
-    
+
     let dependency: DiaryWritingInteractorDependency
     var disposebag: DisposeBag
-    
+
     // Editing 일때 ViewController를 세팅하기 위한 Relay
     let weatherModelRelay = BehaviorRelay<WeatherModelRealm?>(value: nil)
     let placeModelRelay = BehaviorRelay<PlaceModelRealm?>(value: nil)
-    
+
     // 수정하기일 경우에는 내용을 세팅해야하기 때문에 릴레이에 작접 accept 해줌
     let diaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
-    
+
     // TempSave <-> DiaryWrtiting으로 전달하기 위한 Relay
     let tempSaveDiaryModelRelay = BehaviorRelay<TempSaveModelRealm?>(value: nil)
     // TempSave 적용되었던 메뉴얼을 초기화해야 할 경우
     let tempSaveResetRelay = BehaviorRelay<Bool>(value: false)
-    
+
     // 이미지 업로드 후 updateDiary 하기 위해 관리하는 Relay
     let updateDiaryModelRelay = BehaviorRelay<DiaryModelRealm?>(value: nil)
-    
+
     // 다이어리 작성 값 바인딩
     let titleRelay = BehaviorRelay<String>(value: "")
     let descRelay = BehaviorRelay<String>(value: "")
@@ -82,7 +82,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
 //    {
 //        cropImageDataRelay.value == nil ? false : true
 //    }
-    
+
     // 이미지를 저장할 경우 모두 저장이 되었는지 확인하는 Relay
     // 1. croppedImage, 2. originalImage
     // 저장이 모두 완료되었을 경우 true
@@ -116,7 +116,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     override func willResignActive() {
         super.willResignActive()
     }
-    
+
     func bind() {
         weatherModelRelay
             .subscribe(onNext: { [weak self] model in
@@ -127,7 +127,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                 self.presenter.setWeatherView(model: model)
             })
             .disposed(by: disposebag)
-        
+
         placeModelRelay
             .subscribe(onNext: { [weak self] model in
                 guard let self = self,
@@ -214,7 +214,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                 desc = tempSaveModel.desc
                 writingType = .tempSave
             }
-            
+
             self.titleRelay.accept(title)
             self.weatherRelay.accept(weather)
             self.placeRelay.accept(place)
@@ -225,11 +225,11 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             self.diaryWritingMode = writingType
         })
         .disposed(by: disposebag)
-        
+
         tempSaveResetRelay
             .subscribe(onNext: { [weak self] needReset in
                 guard let self = self else { return }
-                
+
                 switch needReset {
                 case true:
                     self.titleRelay.accept("")
@@ -245,7 +245,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                 }
             })
             .disposed(by: disposebag)
-        
+
         Observable.combineLatest(
             weatherRelay,
             weatherDescRelay
@@ -255,7 +255,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             self.weatherModelRealm = WeatherModelRealm(weather: weather, detailText: desc)
         })
         .disposed(by: disposebag)
-        
+
         Observable.combineLatest(
             placeRelay,
             placeDescRelay
@@ -266,7 +266,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         })
         .disposed(by: disposebag)
     }
-    
+
     func pressedBackBtn(isOnlyDetach: Bool) {
         listener?.diaryWritingPressedBackBtn(isOnlyDetach: isOnlyDetach, isNeedToast: false, mode: .none)
     }
@@ -279,43 +279,43 @@ extension DiaryWritingInteractor {
     func writeDiary() {
         guard let weatherModel = self.weatherModelRealm,
               let placeModel = self.placeModelRealm else { return }
-        
+
         let title = titleRelay.value.count == 0 ? Date().toString() : titleRelay.value
         let diaryModelRealm = DiaryModelRealm(
             pageNum: 0,
-                                              title: title,
-                                              weather: weatherModel,
-                                              place: placeModel,
-                                              desc: descRelay.value,
-                                              image: isImage,
-                                              createdAt: Date()
+            title: title,
+            weather: weatherModel,
+            place: placeModel,
+            desc: descRelay.value,
+            image: isImage,
+            createdAt: Date()
         )
-        
+
         let uuid: String = diaryModelRealm.uuid
         saveImage(uuid: uuid)
-        
+
         dependency.diaryRepository
             .addDiary(info: diaryModelRealm)
-        
+
         // 임시 저장된 메뉴얼이 있을 경우 삭제
         if let tempSaveModel = tempSaveDiaryModelRelay.value {
             print("DiaryWriting :: 임시저장된 메뉴얼이 있습니다. 같이 삭제를 진행합니다.")
             let uuid = tempSaveModel.uuid
             dependency.diaryRepository
                 .deleteTempSave(uuidArr: [uuid])
-            
+
             dependency.diaryRepository
                 .deleteImageFromDocumentDirectory(diaryUUID: uuid) { isDeleted in
                     print("DiaryWriting :: 삭제가 완료되었습니다.")
                 }
         }
-        
+
         listener?.diaryWritingPressedBackBtn(isOnlyDetach: false,
                                              isNeedToast: true,
                                              mode: .writing
         )
     }
-    
+
     /// cropImage, originalIamge, ThumbImage 저장
     /// TODO : - 쓰레드 변경해서 ThreadSafe하게 저장할 수 있도록 수정
     func saveImage(uuid: String) {
@@ -326,7 +326,7 @@ extension DiaryWritingInteractor {
         saveOriginalImage(diaryUUID: uuid, imageData: originalImage)
         saveThumbImage(diaryUUID: uuid, imageData: thumbImage)
     }
-    
+
     /// 글 수정할 때
     /// - DiaryModelRelay에 있는 값이 수정할 DiaryModel
     func updateDiary(isUpdateImage: Bool) {
@@ -339,19 +339,20 @@ extension DiaryWritingInteractor {
         else { return }
 
         let title = titleRelay.value.count == 0 ? Date().toString() : titleRelay.value
-        let newDiaryModel = DiaryModelRealm(pageNum: originalDiaryModel.pageNum,
-                                            title: title,
-                                            weather: weatherModel,
-                                            place: placeModel,
-                                            desc: descRelay.value,
-                                            image: isImage,
-                                            readCount: originalDiaryModel.readCount,
-                                            createdAt: originalDiaryModel.createdAt,
-                                            replies: originalDiaryModel.repliesArr,
-                                            isDeleted: originalDiaryModel.isDeleted,
-                                            isHide: originalDiaryModel.isHide
+        let newDiaryModel = DiaryModelRealm(
+            pageNum: originalDiaryModel.pageNum,
+            title: title,
+            weather: weatherModel,
+            place: placeModel,
+            desc: descRelay.value,
+            image: isImage,
+            readCount: originalDiaryModel.readCount,
+            createdAt: originalDiaryModel.createdAt,
+            replies: originalDiaryModel.repliesArr,
+            isDeleted: originalDiaryModel.isDeleted,
+            isHide: originalDiaryModel.isHide
         )
-        
+
         // 이미지가 업데이트 된 경우
         if isUpdateImage {
             saveImage(uuid: originalDiaryModel.uuid)
@@ -367,7 +368,7 @@ extension DiaryWritingInteractor {
 extension DiaryWritingInteractor {
     func saveOriginalImage(diaryUUID: String, imageData: Data) {
         print("DiaryWriting :: interactor -> saveOriginalImage!")
-        
+
         // originalImage는 {uuid}Original이 imageName
         let imageName: String = diaryUUID + "Original"
         print("DiaryWriting :: interactor -> imageName = \(imageName)")
@@ -377,7 +378,7 @@ extension DiaryWritingInteractor {
                 self.imageSaveRelay.accept((self.imageSaveRelay.value.0, isSaved, self.imageSaveRelay.value.2))
             }
     }
-    
+
     func saveThumbImage(diaryUUID: String, imageData: Data) {
         print("DiaryWriting :: interactor -> saveThumbImage!")
         let imageName: String = diaryUUID + "Thumb"
@@ -388,7 +389,7 @@ extension DiaryWritingInteractor {
                 self.imageSaveRelay.accept((self.imageSaveRelay.value.0, self.imageSaveRelay.value.1 ,isSaved))
             }
     }
-    
+
     func deleteAllImages(diaryUUID: String) {
         print("DiaryWriting :: deleteAllImages!")
         dependency.diaryRepository
@@ -405,11 +406,11 @@ extension DiaryWritingInteractor {
                                     tempSaveResetRelay: tempSaveResetRelay
         )
     }
-    
+
     func diaryTempSavePressentBackBtn(isOnlyDetach: Bool) {
         router?.detachDiaryTempSave(isOnlyDetach: isOnlyDetach)
     }
-    
+
     /// 임시저장 데이터로 변경하기 위한 함수
     func zipDiaryModelForTempSave() -> DiaryModelRealm? {
         // 만약 타이틀을 하나도 안썼을 경우, 쓰려고 했다가 모두 지워서 하나도 안쓴 것처럼 되었을 경우
@@ -418,28 +419,29 @@ extension DiaryWritingInteractor {
         if titleRelay.value.count == 0 {
             fixedTitle = Date().toString()
         }
-        
+
         guard let weatherModel = weatherModelRealm,
               let placeModel = placeModelRealm else { return nil }
-        
-        let diaryModelRealm = DiaryModelRealm(pageNum: 0,
-                                              title: fixedTitle,
-                                              weather: weatherModel,
-                                              place: placeModel,
-                                              desc: descRelay.value,
-                                              image: isImage,
-                                              createdAt: Date()
+
+        let diaryModelRealm = DiaryModelRealm(
+            pageNum: 0,
+            title: fixedTitle,
+            weather: weatherModel,
+            place: placeModel,
+            desc: descRelay.value,
+            image: isImage,
+            createdAt: Date()
         )
-        
+
         return diaryModelRealm
     }
-    
+
     // tempSaveRealm에 저장
     func saveTempSave() {
         guard let diaryModel = zipDiaryModelForTempSave() else { return }
         // 임시저장 이미지를 위해서 uuid를 미리 알고 있어야함
         let uuid: String = UUID().uuidString
-        
+
         saveImage(uuid: uuid)
         // 이미 임시저장이 있을 경우 임시저장 데이터에 업데이트
         if let tempSaveModel = tempSaveDiaryModelRelay.value {

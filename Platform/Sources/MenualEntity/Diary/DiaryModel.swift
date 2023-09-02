@@ -26,6 +26,11 @@ public class DiaryModelRealm: Object, Codable {
     @Persisted public var desc: String = ""
     // 이미지가 1개라도 있을 경우 true/false 반환
     @Persisted public var image: Bool
+    public var images: [Data] {
+        if image == false { return [] }
+
+        return []
+    }
     public var originalImage: Data? {
         get {
             if image == false { return nil }
