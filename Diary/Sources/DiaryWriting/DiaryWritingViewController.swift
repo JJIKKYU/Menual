@@ -33,7 +33,6 @@ public protocol DiaryWritingPresentableListener: AnyObject {
     var placeRelay: BehaviorRelay<Place?> { get }
     var weatherDescRelay: BehaviorRelay<String> { get }
     var weatherRelay: BehaviorRelay<Weather?> { get }
-    var cropImageDataRelay: BehaviorRelay<Data?> { get }
     var originalImageDataRelay: BehaviorRelay<Data?> { get }
     var thumbImageDataRelay: BehaviorRelay<Data?> { get }
 }
@@ -96,8 +95,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     private lazy var datePageTextCountView = DatePageTextCountView()
     private let divider4 = Divider(type: ._1px)
     private lazy var imageUploadView = ImageUploadView()
-    private lazy var pullDownImageButton = UIButton(frame: .zero)
-    private lazy var pullDownImageButtonEditBtn = UIButton(frame: .zero)
     private let imageView = UIImageView()
     private var phpickerConfiguration = PHPickerConfiguration()
     private weak var weakImagePicker: PHPickerViewController?
@@ -133,9 +130,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
         // keyboard observer등록
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-                
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(setDelegate), name: NSNotification.Name(rawValue: notificationIdentifier), object: nil)
 
         // Delegate 등록
@@ -146,7 +141,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         weatherSelectView.selectTextView.centerVerticalText()
         locationSelectView.selectTextView.delegate = self
         locationSelectView.selectTextView.centerVerticalText()
-        setImageButtonUIActionMenu()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -164,9 +158,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
         descriptionTextView.delegate = nil
         weatherSelectView.selectTextView.delegate = nil
         locationSelectView.selectTextView.delegate = nil
-        pullDownImageButton.menu = nil
-        pullDownImageButtonEditBtn.menu = nil
-        // testImagePicker.delegate = nil
         
         if isMovingFromParent || isBeingDismissed {
             listener?.pressedBackBtn(isOnlyDetach: true)
@@ -219,17 +210,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
             }
             .bind(to: listener.weatherDescRelay)
             .disposed(by: disposeBag)
-
-//        listener.cropImageDataRelay
-//            .map { data -> UIImage? in
-//                if let data = data {
-//                    return UIImage(data: data)
-//                } else {
-//                    return nil
-//                }
-//            }
-//            .bind(to: imageUploadView.rx.image)
-//            .disposed(by: disposeBag)
 
         descriptionTextView.rx.text
             .orEmpty
@@ -318,23 +298,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
             print("PressedCheckBtn! edit!")
             listener?.updateDiary(isUpdateImage: isEdittedIamge)
         }
-    }
-    
-    func setImageButtonUIActionMenu() {
-        let uploadImage = UIAction(title: MenualString.writing_button_select_picture,
-                                   image: Asset._24px.album.image.withRenderingMode(.alwaysTemplate)) { action in
-            print("DiaryWriting :: action! = \(action)")
-            self.pressedImageUploadPullDownBtn()
-        }
-
-        let takeImage = UIAction(title: MenualString.writing_button_take_picture,
-                                 image: Asset._24px.camera.image.withRenderingMode(.alwaysTemplate)) { action in
-             print("DiaryWriting :: action! = \(action)")
-            self.pressedTakeImagePullDownBtn()
-        }
-
-        pullDownImageButton.menu = UIMenu(children: [takeImage, uploadImage])
-        pullDownImageButtonEditBtn.menu = UIMenu(children: [takeImage, uploadImage])
     }
 }
 
@@ -803,12 +766,6 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         print("DiaryWriting :: didFinishPicking!!")
 
-        if results.count == 0 {
-            DispatchQueue.main.async {
-                picker.dismiss(animated: true)
-            }
-        }
-
         picker.dismiss(animated: true)
         var order: Int = 0
 
@@ -1164,18 +1121,6 @@ extension DiaryWritingViewController {
             $0.categoryName = "image"
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.delegate = self
-        }
-        
-        pullDownImageButton.do {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.backgroundColor = .clear
-            $0.showsMenuAsPrimaryAction = true
-        }
-        
-        pullDownImageButtonEditBtn.do {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.backgroundColor = .clear
-            $0.showsMenuAsPrimaryAction = true
         }
         
         imageView.do {

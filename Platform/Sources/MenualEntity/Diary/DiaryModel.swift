@@ -18,11 +18,13 @@ public class DiaryModelRealm: Object, Codable {
             return _id.stringValue
         }
     }
+    @Persisted public var diaryVer: Int
     @Persisted public var pageNum: Int
     @Persisted public var title = ""
     @Persisted public var weather: WeatherModelRealm?
     @Persisted public var place: PlaceModelRealm?
     @Persisted public var desc: String = ""
+    // 이미지가 1개라도 있을 경우 true/false 반환
     @Persisted public var image: Bool
     public var originalImage: Data? {
         get {
@@ -31,7 +33,7 @@ public class DiaryModelRealm: Object, Codable {
             let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
             let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
             let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-            
+
             if let directoryPath = path.first {
                 // 2. 이미지 URL 찾기
                 let originalImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Original")
@@ -48,7 +50,7 @@ public class DiaryModelRealm: Object, Codable {
             let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
             let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
             let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-            
+
             if let directoryPath = path.first {
                 // 2. 이미지 URL 찾기
                 let thumbImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Thumb")
@@ -65,7 +67,7 @@ public class DiaryModelRealm: Object, Codable {
             let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
             let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
             let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-            
+
             if let directoryPath = path.first {
                 // 2. 이미지 URL 찾기
                 let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid)
@@ -91,22 +93,25 @@ public class DiaryModelRealm: Object, Codable {
     @Persisted public var lastMomentsDate: Date?
     @Persisted public var isHide: Bool
     @Persisted public var reminder: ReminderModelRealm?
-    
-    public convenience init(pageNum: Int,
-                            title: String,
-                            weather: WeatherModelRealm?,
-                            place: PlaceModelRealm?,
-                            desc: String,
-                            image: Bool,
-                            readCount: Int = 0,
-                            createdAt: Date,
-                            replies: [DiaryReplyModelRealm] = [],
-                            isDeleted: Bool = false,
-                            lastMomentsDate: Date? = nil,
-                            isHide: Bool = false,
-                            reminder: ReminderModelRealm? = nil
+
+    public convenience init(
+        diaryVer: Int = 1,
+        pageNum: Int,
+        title: String,
+        weather: WeatherModelRealm?,
+        place: PlaceModelRealm?,
+        desc: String,
+        image: Bool,
+        readCount: Int = 0,
+        createdAt: Date,
+        replies: [DiaryReplyModelRealm] = [],
+        isDeleted: Bool = false,
+        lastMomentsDate: Date? = nil,
+        isHide: Bool = false,
+        reminder: ReminderModelRealm? = nil
     ) {
         self.init()
+        self.diaryVer = diaryVer
         self.pageNum = pageNum
         self.title = title
         self.weather = weather
@@ -122,16 +127,17 @@ public class DiaryModelRealm: Object, Codable {
         self.isHide = isHide
         self.reminder = reminder
     }
-    
+
     public convenience init(backupDic: [[String: Any]]) {
         self.init()
     }
-    
+
     public func updatePageNum(pageNum: Int) {
         self.pageNum = pageNum + 1
     }
-    
+
     enum CodingKeys: String,CodingKey {
+        case diaryVer
         case _id
         case pageNum
         case title
@@ -147,16 +153,17 @@ public class DiaryModelRealm: Object, Codable {
         case isHide
         case reminder
     }
-    
+
     public override init() {
         super.init()
     }
-    
+
     public required init(from decoder: Decoder) throws {
         super.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         _id = try container.decode(ObjectId.self, forKey: ._id)
+        diaryVer = try container.decode(Int.self, forKey: .diaryVer)
         pageNum = try container.decode(Int.self, forKey: .pageNum)
         title = try container.decode(String.self, forKey: .title)
         weather = try container.decode(WeatherModelRealm?.self, forKey: .weather)
@@ -171,10 +178,11 @@ public class DiaryModelRealm: Object, Codable {
         isHide = try container.decode(Bool.self, forKey: .isHide)
         reminder = try container.decode(ReminderModelRealm?.self, forKey: .reminder)
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(_id, forKey: ._id)
+        try container.encode(diaryVer, forKey: .diaryVer)
         try container.encode(pageNum, forKey: .pageNum)
         try container.encode(title, forKey: .title)
         try container.encode(weather, forKey: .weather)

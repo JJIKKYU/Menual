@@ -70,6 +70,18 @@ public final class ImageUploadCell: UICollectionViewCell {
 
         deleteBtn.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = Colors.grey.g800.withAlphaComponent(0.7)
+            $0.setImage(Asset._20px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            $0.tintColor = Colors.grey.g400
+
+            let corners: CACornerMask = [
+                .layerMinXMinYCorner,
+                .layerMaxXMaxYCorner
+            ]
+
+            $0.layer.cornerRadius = 8
+            $0.layer.maskedCorners = corners
+            $0.layer.masksToBounds = true
         }
 
         addImageStackView.do {
@@ -103,6 +115,7 @@ public final class ImageUploadCell: UICollectionViewCell {
 
     private func setViews() {
         addSubview(imageView)
+        addSubview(deleteBtn)
         addSubview(addImagePullDownButton)
         addSubview(addImageStackView)
         addImageStackView.addArrangedSubview(addImageView)
@@ -110,6 +123,12 @@ public final class ImageUploadCell: UICollectionViewCell {
 
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+
+        deleteBtn.snp.makeConstraints { make in
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.width.height.equalTo(28)
         }
 
         addImageStackView.snp.makeConstraints { make in
@@ -138,12 +157,14 @@ public final class ImageUploadCell: UICollectionViewCell {
             backgroundColor = Colors.grey.g800
             addImageStackView.isHidden = false
             addImagePullDownButton.isUserInteractionEnabled = true
+            deleteBtn.isHidden = true
             break
 
         case .image:
             imageView.isHidden = false
             addImageStackView.isHidden = true
             addImagePullDownButton.isUserInteractionEnabled = false
+            deleteBtn.isHidden = false
             break
         }
     }
@@ -172,5 +193,14 @@ extension ImageUploadCell {
         }
 
         addImagePullDownButton.menu = UIMenu(children: [takeImage, uploadImage])
+    }
+}
+
+// MARK: - IABAction
+
+extension ImageUploadCell {
+    @objc
+    private func pressedDeleteBtn(responder: UIResponder) {
+
     }
 }
