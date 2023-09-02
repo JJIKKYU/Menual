@@ -176,8 +176,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     
     @objc
     func setDelegate() {
-        print("setDelegate!")
-        
         dismiss(animated: false) {
             self.pressedTakeImagePullDownBtn()
         }
