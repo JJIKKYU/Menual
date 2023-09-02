@@ -14,7 +14,6 @@ protocol AppRootRouting: Routing {
     func cleanupViews()
     func attachMainHome()
     func attachProfilePassword()
-    func detachProfilePassword()
 }
 
 protocol AppRootPresentable: Presentable {
@@ -71,28 +70,13 @@ final class AppRootInteractor: PresentableInteractor<AppRootPresentable>,
                 } else {
                     self.router?.attachProfilePassword()
                 }
-                print("AppRoot :: model! \(model)")
             })
             .disposed(by: disposeBag)
-    }
-    
-    func goDiaryHome() {
-        print("AppRoot :: goDiaryHome!")
-        router?.detachProfilePassword()
-//        router?.attachMainHome()
     }
 
     override func willResignActive() {
         super.willResignActive()
 
         router?.cleanupViews()
-        // TODO: Pause any business logic.
-        
-        
-        
-    }
-    
-    func profilePasswordPressedBackBtn(isOnlyDetach: Bool) {
-        print("AppRoot :: profilePasswordPressedBackBtn!")
     }
 }

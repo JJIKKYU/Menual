@@ -7,7 +7,6 @@
 
 import RIBs
 import RxRelay
-import ProfilePassword
 import DiaryHome
 
 protocol AppRootDependency: Dependency {
@@ -48,7 +47,6 @@ final class AppRootBuilder: Builder<AppRootDependency>, AppRootBuildable {
             presenter: viewController,
             dependency: component
         )
-        let profilePassword = ProfilePasswordBuilder(dependency: component)
         let diaryHome = DiaryHomeBuilder(dependency: component)
         let splash = SplashBuilder(dependency: component)
         
@@ -56,7 +54,6 @@ final class AppRootBuilder: Builder<AppRootDependency>, AppRootBuildable {
             interactor: interactor,
             viewController: viewController,
             diaryHome: diaryHome,
-            profilePassword: profilePassword,
             diaryUUIDRelay: diaryUUIDRelay,
             splash: splash
         )

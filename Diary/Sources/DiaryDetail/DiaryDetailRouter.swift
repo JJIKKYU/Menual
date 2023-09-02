@@ -11,7 +11,6 @@ import DiaryDetailImage
 import DiaryWriting
 import MenualEntity
 import MenualUtil
-import ProfilePassword
 import RIBs
 import RxRelay
 import UIKit

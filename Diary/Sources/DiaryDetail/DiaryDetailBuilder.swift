@@ -10,7 +10,6 @@ import DiaryDetailImage
 import DiaryWriting
 import MenualEntity
 import MenualRepository
-import ProfilePassword
 import RIBs
 import RxRelay
 
@@ -20,7 +19,7 @@ public protocol DiaryDetailDependency: Dependency {
     var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
 
-public final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency, DiaryDetailImageDependency, ProfilePasswordDependency {
+public final class DiaryDetailComponent: Component<DiaryDetailDependency>, DiaryDetailInteractorDependency, DiaryBottomSheetDependency, DiaryWritingDependency, DiaryDetailImageDependency {
 
     public var containerRepository: ContainerRepository {
         dependency.containerRepository

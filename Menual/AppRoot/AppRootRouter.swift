@@ -8,13 +8,11 @@
 import RIBs
 import RxRelay
 import MenualUtil
-import ProfilePassword
 import DiaryHome
 import Foundation
 
 protocol AppRootInteractable: Interactable,
                               DiaryHomeListener,
-                              ProfilePasswordListener,
                               SplashListener
 {
     var router: AppRootRouting? { get set }
@@ -30,12 +28,10 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
     var navigationController: NavigationControllerable?
     
     private let diaryHome: DiaryHomeBuildable
-    private let profilePassword: ProfilePasswordBuildable
     
     private var registerHomeRouting: ViewableRouting?
     private var loginHomeRouting: ViewableRouting?
     private var diaryHomeRouting: ViewableRouting?
-    private var profilePasswordRouting: ViewableRouting?
     private let diaryUUIDRelay: BehaviorRelay<String>
     
     private let splash: SplashBuildable
@@ -45,13 +41,11 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
         interactor: AppRootInteractable,
         viewController: AppRootViewControllable,
         diaryHome: DiaryHomeBuildable,
-        profilePassword: ProfilePasswordBuildable,
         diaryUUIDRelay: BehaviorRelay<String>,
         splash: SplashBuildable
     ) {
         self.diaryUUIDRelay = diaryUUIDRelay
         self.diaryHome = diaryHome
-        self.profilePassword = profilePassword
         self.splash = splash
         
         super.init(interactor: interactor, viewController: viewController)
@@ -114,39 +108,10 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
     }
     
     func cleanupViews() {
-        // TODO: Since this router does not own its view, it needs to cleanup the views
-        // it may have added to the view hierarchy, when its interactor is deactivated.
-    }
-    
-    func detachProfilePassword() {
-        print("AppRoot :: detachProfilePassword!")
-        
-        guard let router = profilePasswordRouting else {
-            return
-        }
-        
-        // viewController.popViewController(animated: true)
-//        let diaryHomeRouting = diaryHome.build(withListener: interactor)
-//        attachChild(diaryHomeRouting)
-//        self.navigationController?.pushViewController(diaryHomeRouting.viewControllable, animated: true)
-        // self.navigationController?.popViewController(animated: true)
-        navigationController?.dismiss(completion: nil)
-
-        detachChild(router)
-        profilePasswordRouting = nil
     }
     
     func attachProfilePassword() {
         print("AppRoot :: attachProfilePassword!")
-        
-//        let profilePasswordRouting = profilePassword.build(
-//            withListener: interactor,
-//            isMainScreen: true,
-//            isPasswordChange: false,
-//            isPaswwordDisabled: false
-//        )
-        // self.profilePasswordRouting = profilePasswordRouting
-        // attachChild(profilePasswordRouting)
         
         let diaryHomeRouting = diaryHome.build(
             withListener: interactor,
@@ -159,10 +124,7 @@ final class AppRootRouter: LaunchRouter<AppRootInteractable, AppRootViewControll
         
         navigation.navigationController.modalPresentationStyle = .fullScreen
         viewController.setViewController(navigation)
-        
-        // presentInsideNavigation(profilePasswordRouting.viewControllable)
-        // navigation.present(profilePasswordRouting.viewControllable, animated: false, completion: nil)
-        // diaryHomeRouting.attachBottomSheet(type: .update)
+
         diaryHomeRouting.attachProfilePassword()
     }
 
