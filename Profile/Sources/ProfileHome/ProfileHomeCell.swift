@@ -147,12 +147,15 @@ public class ProfileHomeCell: UITableViewCell {
 
         switch profileHomeCellType {
         case .arrow:
+            switchWrapperBtn.isUserInteractionEnabled = false
             arrowImageView.isHidden = false
             switchBtn.isHidden = true
             stackView.spacing = 0
             
         case .toggle:
             switchBtn.isOn = switchIsOn
+            // Toggle On은 셀을 직접 클릭해야만 활성화할 수 있음 (서비스에서 변경)
+            switchWrapperBtn.isUserInteractionEnabled = false
             arrowImageView.isHidden = true
             switchBtn.isHidden = false
             stackView.spacing = 0

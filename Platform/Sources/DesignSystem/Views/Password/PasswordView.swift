@@ -122,8 +122,8 @@ public class PasswordView: UIView {
         }
         
         subTitleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().inset(16)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
             make.top.equalTo(password1.snp.bottom).offset(24)
         }
     }
