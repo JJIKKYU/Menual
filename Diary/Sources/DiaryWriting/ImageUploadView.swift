@@ -16,6 +16,7 @@ import UIKit
 public protocol ImageUploadViewDelegate: AnyObject {
     func pressedTakeImageButton()
     func pressedUploadImageButton()
+    func pressedDeleteButton(cell: ImageUploadCell)
 }
 
 // MARK: - ImageUploadView
@@ -24,6 +25,8 @@ public final class ImageUploadView: UIView {
     var images: [Data] = [] {
         didSet { setNeedsLayout() }
     }
+    // 썸네일 이미지 Index
+    var thumbImageIndex: Int = 0
 
     public weak var delegate: ImageUploadViewDelegate?
     private let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
@@ -69,6 +72,28 @@ public final class ImageUploadView: UIView {
     }
 }
 
+// MARK: - Images
+
+extension ImageUploadView {
+    public func deleteImage(cell: ImageUploadCell) {
+        guard let indexPath: IndexPath = collectionView.indexPath(for: cell) else { return }
+
+        // 첫번째 Cell은 이미지 추가 Cell이므로 1을 빼서 진행
+        let imageIndex: Int = indexPath.row - 1
+        images.remove(at: imageIndex)
+        collectionView.deleteItems(at: [indexPath])
+
+        // 지우고자 하는 Cell이 썸네일일 경우
+        if cell.parameters.isThumb {
+            // 첫번째 Index의 Cell이 있을 경우
+            // (처음 Cell은 사진추가하기 Cell이므로 index는 1로 세팅)
+            let firstIndexPath: IndexPath = .init(row: 1, section: 0)
+            guard let firstCell: ImageUploadCell = collectionView.cellForItem(at: firstIndexPath) as? ImageUploadCell else { return }
+            firstCell.parameters.isThumb = true
+        }
+    }
+}
+
 // MARK: - CollectionViewDelegate
 
 extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -89,6 +114,12 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
         } else {
             cell.parameters.status = .image
         }
+
+        // 기본적으로 첫번째 이미지는 썸네일로 변경
+        if index == 1 {
+            cell.parameters.isThumb = true
+        }
+
         cell.delegate = self
         cell.parameters.imageData = imageData
 
@@ -96,7 +127,16 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell: ImageUploadCell = collectionView.cellForItem(at: indexPath) as? ImageUploadCell else { return }
 
+        let visibleCells = collectionView.visibleCells
+            .map { $0 as? ImageUploadCell }
+
+        visibleCells.forEach { visibleCell in
+            visibleCell?.parameters.isThumb = false
+        }
+
+        cell.parameters.isThumb = true
     }
 }
 
@@ -104,12 +144,17 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
 
 extension ImageUploadView: ImageUploadCellDelegate {
     public func pressedTakeImageButton() {
-        print("ImageUploadView :: pressedTakeImageButton")
+        print("ImageUpload :: pressedTakeImageButton")
         delegate?.pressedTakeImageButton()
     }
 
     public func pressedUploadImageButton() {
-        print("ImageUploadView :: pressedUploadImageButton")
+        print("ImageUpload :: pressedUploadImageButton")
         delegate?.pressedUploadImageButton()
+    }
+
+    public func pressedDeleteButton(cell: ImageUploadCell) {
+        print("ImageUpload :: pressedDeleteButton")
+        delegate?.pressedDeleteButton(cell: cell)
     }
 }

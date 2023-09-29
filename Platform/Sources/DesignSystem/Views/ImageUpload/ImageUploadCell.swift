@@ -9,10 +9,15 @@ import UIKit
 import Then
 import SnapKit
 
+// MARK: - ImageUploadCellDelegate
+
 public protocol ImageUploadCellDelegate: AnyObject {
     func pressedTakeImageButton()
     func pressedUploadImageButton()
+    func pressedDeleteButton(cell: ImageUploadCell)
 }
+
+// MARK: - ImageUploadCell
 
 public final class ImageUploadCell: UICollectionViewCell {
     public enum Status {
@@ -34,6 +39,8 @@ public final class ImageUploadCell: UICollectionViewCell {
 
     private let imageView: UIImageView = .init()
     private let deleteBtn: UIButton = .init()
+    private let thumbLabelView: UIView = .init()
+    private let thumbLabel: UILabel = .init()
 
     // 이미지 추가하기 버튼일 경우 사용하는 View
     private let addImageStackView: UIStackView = .init()
@@ -57,6 +64,13 @@ public final class ImageUploadCell: UICollectionViewCell {
         super.awakeFromNib()
     }
 
+    override public func prepareForReuse() {
+        super.prepareForReuse()
+
+        parameters.imageData = nil
+        parameters.isThumb = false
+    }
+
     private func configureUI() {
         layer.cornerRadius = 8
         layer.masksToBounds = true
@@ -73,15 +87,39 @@ public final class ImageUploadCell: UICollectionViewCell {
             $0.backgroundColor = Colors.grey.g800.withAlphaComponent(0.7)
             $0.setImage(Asset._20px.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
             $0.tintColor = Colors.grey.g400
+            $0.addTarget(self, action: #selector(pressedDeleteBtn(responder:)), for: .touchUpInside)
 
             let corners: CACornerMask = [
                 .layerMinXMinYCorner,
                 .layerMaxXMaxYCorner
             ]
 
-            $0.layer.cornerRadius = 8
+            $0.layer.cornerRadius = 4
             $0.layer.maskedCorners = corners
             $0.layer.masksToBounds = true
+        }
+
+        thumbLabelView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = Colors.tint.sub.n400
+
+            let corners: CACornerMask = [
+                .layerMinXMinYCorner,
+                .layerMaxXMaxYCorner
+            ]
+
+            $0.layer.cornerRadius = 4
+            $0.layer.maskedCorners = corners
+            $0.layer.masksToBounds = true
+
+            $0.isHidden = true
+        }
+
+        thumbLabel.do {
+            $0.text = "대표"
+            $0.font = .AppBodyOnlyFont(.body_2)
+            $0.textAlignment = .center
+            $0.textColor = Colors.grey.g600
         }
 
         addImageStackView.do {
@@ -115,6 +153,8 @@ public final class ImageUploadCell: UICollectionViewCell {
 
     private func setViews() {
         addSubview(imageView)
+        addSubview(thumbLabelView)
+        thumbLabelView.addSubview(thumbLabel)
         addSubview(deleteBtn)
         addSubview(addImagePullDownButton)
         addSubview(addImageStackView)
@@ -123,6 +163,16 @@ public final class ImageUploadCell: UICollectionViewCell {
 
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+
+        thumbLabelView.snp.makeConstraints { make in
+            make.leading.top.equalToSuperview()
+            make.width.equalTo(40)
+            make.height.equalTo(26)
+        }
+
+        thumbLabel.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
         }
 
         deleteBtn.snp.makeConstraints { make in
@@ -149,6 +199,19 @@ public final class ImageUploadCell: UICollectionViewCell {
 
         if parameters.isThumb {
             print("UploadImageCell :: thumb입니다!")
+        }
+
+        // 썸네일 여부에 따라 다르게
+        switch parameters.isThumb {
+        case true:
+            layer.borderColor = Colors.tint.sub.n400.cgColor
+            layer.borderWidth = 1
+            thumbLabelView.isHidden = false
+
+        case false:
+            layer.borderColor = .none
+            layer.borderWidth = 0
+            thumbLabelView.isHidden = true
         }
 
         switch parameters.status {
@@ -201,6 +264,7 @@ extension ImageUploadCell {
 extension ImageUploadCell {
     @objc
     private func pressedDeleteBtn(responder: UIResponder) {
-
+        print("ImageUpload :: pressedDeleteBtn")
+        delegate?.pressedDeleteButton(cell: self)
     }
 }
