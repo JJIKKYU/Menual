@@ -18,6 +18,7 @@ import MenualUtil
 import MessageUI
 
 public protocol DiaryDetailPresentableListener: AnyObject {
+
     func pressedBackBtn(isOnlyDetach: Bool)
     func pressedReplySubmitBtn(desc: String)
     func pressedIndicatorButton(offset: Int, isInitMode: Bool)
@@ -31,6 +32,7 @@ public protocol DiaryDetailPresentableListener: AnyObject {
     
     var diaryReplyArr: [DiaryReplyModelRealm] { get }
     var currentDiaryPage: Int { get }
+    var imagesDataRelay: BehaviorRelay<[Data]> { get }
 }
 
 final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable, DiaryDetailViewControllable {
@@ -132,6 +134,11 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     private let divider4 = Divider(type: ._1px).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+    }
+
+    lazy var imageUploadView: ImageUploadView = .init(state: .detail).then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.delegate = self
     }
     
     lazy var imageView = UIImageView().then {
@@ -274,7 +281,9 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         var enabledImageViewHeight: CGFloat = 0
 
         if isEnableImageView == true {
-            enabledImageViewHeight = 16 + divider4.frame.height + 12 + imageView.frame.height
+            // enabledImageViewHeight = 16 + divider4.frame.height + 12 + imageView.frame.height
+
+            enabledImageViewHeight = 16 + divider4.frame.height + 12 + imageUploadView.frame.height
         }
 
         print("DiaryDetail :: isEnableImageView = \(isEnableImageView), enabledImageViewHeight = \(enabledImageViewHeight)")
@@ -319,7 +328,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         weatherLocationStackView.addArrangedSubview(divider3)
         tableViewHeaderView.addSubview(descriptionTextView)
         tableViewHeaderView.addSubview(divider4)
-        tableViewHeaderView.addSubview(imageView)
+        // tableViewHeaderView.addSubview(imageView)
+        tableViewHeaderView.addSubview(imageUploadView)
         tableViewHeaderView.addSubview(hideView)
         
         self.view.bringSubviewToFront(naviView)
@@ -415,11 +425,11 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             make.top.equalTo(descriptionTextView.snp.bottom).offset(20)
         }
         
-        imageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
+        imageUploadView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
             make.top.equalTo(divider4.snp.bottom).offset(12)
-            make.height.equalTo(80)
+            make.height.equalTo(100)
         }
 
         hideView.snp.makeConstraints { make in
@@ -440,7 +450,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         // FAB Button
         spaceRequiredFAB.spaceRequiredCurrentPage = String(model.pageNum)
         
-        setImageConstraint(image: model.cropImage)
+        setImageConstraint(images: model.images)
         
         // cell 생성에 필요한 정보 임시 저장
         pageNum = model.pageNum
@@ -506,6 +516,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             createdAtPageView.isHidden = true
             divider4.isHidden = true
             imageView.isHidden = true
+            imageUploadView.isHidden = true
             
             tableViewHeaderView.snp.updateConstraints { make in
                 make.height.equalTo(400)
@@ -528,9 +539,11 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             if isEnableImageView == true {
                 divider4.isHidden = false
                 imageView.isHidden = false
+                imageUploadView.isHidden = false
             } else {
                 divider4.isHidden = true
                 imageView.isHidden = true
+                imageUploadView.isHidden = true
             }
             
             hideView.isHidden = true
@@ -538,32 +551,31 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         }
     }
     
-    func setImageConstraint(image: Data?) {
-        let isImageEnabled: Bool = image != nil ? true : false
+    func setImageConstraint(images: [Data]) {
+        let isImageEnabled: Bool = images.count != 0 ? true : false
 
         print("DiaryDetail :: isImageEnabled = \(isEnableImageView)")
 
         switch isImageEnabled {
         case true:
-            guard let image = image else {
-                return
-            }
-            
             isEnableImageView = true
             divider4.isHidden = false
             imageView.isHidden = false
+            imageUploadView.isHidden = false
             
             DispatchQueue.main.async {
-                self.imageView.image = UIImage(data: image)
+                // self.imageView.image = UIImage(data: image)
+                self.imageUploadView.reloadCollectionView()
             }
         case false:
             divider4.isHidden = true
             imageView.isHidden = true
+            imageUploadView.isHidden = true
             isEnableImageView = false
             
-            DispatchQueue.main.async {
-                self.imageView.image = nil
-            }
+//            DispatchQueue.main.async {
+//                self.imageView.image = nil
+//            }
         }
     }
     
@@ -997,5 +1009,17 @@ extension DiaryDetailViewController: MFMailComposeViewControllerDelegate {
             sendMailErrorAlert.addAction(cancleAction)
             self.present(sendMailErrorAlert, animated: true, completion: nil)
         }
+    }
+}
+
+// MARK: - UploadImageViewDelegate
+
+extension DiaryDetailViewController: ImageUploadViewDelegate {
+    var uploadImagesRelay: BehaviorRelay<[Data]>? {
+        listener?.imagesDataRelay
+    }
+
+    var thumbImageIndexRelay: BehaviorRelay<Int>? {
+        return nil
     }
 }

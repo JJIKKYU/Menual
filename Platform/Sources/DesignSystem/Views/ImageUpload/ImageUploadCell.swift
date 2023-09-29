@@ -23,6 +23,7 @@ public final class ImageUploadCell: UICollectionViewCell {
     public enum Status {
         case addImage
         case image
+        case detailImage // 상세보기에서 보는 이미지 타입
     }
 
     public struct Parameters {
@@ -78,7 +79,7 @@ public final class ImageUploadCell: UICollectionViewCell {
 
         imageView.do {
             $0.contentMode = .scaleAspectFill
-            $0.backgroundColor = .cyan
+            $0.backgroundColor = .clear
             $0.isUserInteractionEnabled = false
         }
 
@@ -194,7 +195,9 @@ public final class ImageUploadCell: UICollectionViewCell {
         super.layoutSubviews()
 
         if let imageData: Data = parameters.imageData {
-            imageView.image = UIImage(data: imageData)
+            DispatchQueue.main.async {
+                self.imageView.image = UIImage(data: imageData)
+            }
         }
 
         if parameters.isThumb {
@@ -221,14 +224,18 @@ public final class ImageUploadCell: UICollectionViewCell {
             addImageStackView.isHidden = false
             addImagePullDownButton.isUserInteractionEnabled = true
             deleteBtn.isHidden = true
-            break
 
         case .image:
             imageView.isHidden = false
             addImageStackView.isHidden = true
             addImagePullDownButton.isUserInteractionEnabled = false
             deleteBtn.isHidden = false
-            break
+
+        case .detailImage:
+            imageView.isHidden = false
+            addImageStackView.isHidden = true
+            deleteBtn.isHidden = true
+            addImagePullDownButton.isUserInteractionEnabled = false
         }
     }
 }

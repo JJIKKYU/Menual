@@ -36,7 +36,7 @@ public class AppUpdateInfoRepositoryImp: AppUpdateInfoRepository {
         // let result = compareVersions(getInstalledAppVersion(), getSavedAppVersion())
         // print("AppUpdateInfoRepository :: compareResult = \(result)")
 
-        checkNeedUpdateLog()
+        // checkNeedUpdateLog()
         // saveAppVersion()
     }
 

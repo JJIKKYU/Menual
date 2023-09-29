@@ -113,7 +113,7 @@ public final class DiaryRepositoryImp: DiaryRepository {
         // 이미지를 도큐먼트에 저장
         do {
             for (index, imageData) in imagesData.enumerated() {
-                let imageName: String = "\(imageName)_\(index)"
+                let imageName: String = "\(imageName)_images_\(index)"
                 let imageURL: URL = documentDirectory.appendingPathComponent(imageName)
 
                 // 이미지 파일이 이미 존재한다면 삭제

@@ -16,6 +16,7 @@ import UIKit
 
 public protocol ImageUploadViewDelegate: AnyObject {
     var uploadImagesRelay: BehaviorRelay<[Data]>? { get }
+    var thumbImageIndexRelay: BehaviorRelay<Int>? { get }
 
     func pressedTakeImageButton()
     func pressedUploadImageButton()
@@ -23,23 +24,40 @@ public protocol ImageUploadViewDelegate: AnyObject {
     func pressedAllImagesDeleteButton()
 }
 
+public extension ImageUploadViewDelegate {
+    func pressedTakeImageButton() {}
+    func pressedUploadImageButton() {}
+    func pressedDeleteButton(cell: ImageUploadCell) {}
+    func pressedAllImagesDeleteButton() {}
+}
+
 // MARK: - ImageUploadView
 
 public final class ImageUploadView: UIView {
+
+    public enum ImageUploadViewState {
+        case writing
+        case edit
+        case detail
+    }
     // 썸네일 이미지 Index
     var thumbImageIndex: Int = 0
 
-    public weak var delegate: ImageUploadViewDelegate?
+    public weak var delegate: ImageUploadViewDelegate? {
+        didSet { bind() }
+    }
+    public var state: ImageUploadViewState
     private let currentImageCountLabel: UILabel = .init()
     private let deleteButton: UIButton = .init()
     private let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
     private let disPoseBag: DisposeBag = .init()
 
-    init() {
+    public init(state: ImageUploadViewState) {
+        self.state = state
         super.init(frame: CGRect.zero)
+
         configureUI()
         setViews()
-        bind()
     }
 
     required init?(coder: NSCoder) {
@@ -78,29 +96,39 @@ public final class ImageUploadView: UIView {
             $0.setTitleColor(Colors.grey.g600, for: .highlighted)
             $0.tintColor = Colors.grey.g400
             $0.addTarget(self, action: #selector(pressedAllImagesDeleteButton), for: .touchUpInside)
+            $0.isHidden = true
         }
     }
 
     private func setViews() {
         addSubview(collectionView)
-        addSubview(currentImageCountLabel)
-        addSubview(deleteButton)
 
-        collectionView.snp.makeConstraints { make in
-            make.leading.trailing.top.equalToSuperview()
-            make.height.equalTo(100)
-        }
+        switch state {
+        case .writing, .edit:
+            addSubview(currentImageCountLabel)
+            addSubview(deleteButton)
 
-        currentImageCountLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.top.equalTo(collectionView.snp.bottom).offset(13)
-            make.bottom.equalToSuperview()
-        }
+            collectionView.snp.makeConstraints { make in
+                make.leading.trailing.top.equalToSuperview()
+                make.height.equalTo(100)
+            }
 
-        deleteButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(20)
-            make.top.equalTo(collectionView.snp.bottom).offset(13)
-            make.bottom.equalToSuperview()
+            currentImageCountLabel.snp.makeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.top.equalTo(collectionView.snp.bottom).offset(13)
+                make.bottom.equalToSuperview()
+            }
+
+            deleteButton.snp.makeConstraints { make in
+                make.trailing.equalToSuperview().inset(20)
+                make.top.equalTo(collectionView.snp.bottom).offset(13)
+                make.bottom.equalToSuperview()
+            }
+
+        case .detail:
+            collectionView.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
         }
     }
 
@@ -110,12 +138,27 @@ public final class ImageUploadView: UIView {
                 guard let self = self else { return }
 
                 self.currentImageCountLabel.text = "\(images.count)/10개"
+
+                if images.isEmpty {
+                    deleteButton.isHidden = true
+                } else {
+                    deleteButton.isHidden = false
+                }
             })
             .disposed(by: disPoseBag)
     }
 
     override public func layoutSubviews() {
         super.layoutSubviews()
+
+        switch state {
+        case .writing, .edit:
+            currentImageCountLabel.isHidden = false
+
+        case .detail:
+            deleteButton.isHidden = true
+            currentImageCountLabel.isHidden = true
+        }
         collectionView.reloadData()
     }
 }
@@ -158,30 +201,47 @@ extension ImageUploadView {
 extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let imageCount: Int = delegate?.uploadImagesRelay?.value.count ?? 0
-        return imageCount + 1
+
+        switch state {
+        case .writing, .edit:
+            return imageCount + 1
+
+        case .detail:
+            return imageCount
+        }
+
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell: ImageUploadCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageUploadCell", for: indexPath) as? ImageUploadCell else { return UICollectionViewCell() }
 
         let index: Int = indexPath.row
+        var imageData: Data
+        switch state {
         // 첫번째 셀은 이미지 추가 버튼이므로 1씩 빼주어서 접근
-        let imageData: Data = delegate?.uploadImagesRelay?.value[safe: index - 1] ?? Data()
+        case .writing, .edit:
+            imageData = delegate?.uploadImagesRelay?.value[safe: index - 1] ?? Data()
+            if index == 0 {
+                cell.parameters.status = .addImage
+            } else {
+                cell.parameters.status = .image
+            }
 
-        // 첫번째 Cell의 경우 추가하기 Cell로 세팅
-        if index == 0 {
-            cell.parameters.status = .addImage
-        } else {
-            cell.parameters.status = .image
-        }
+            // 기본적으로 첫번째 이미지는 썸네일로 변경
+            if index == 1 {
+                cell.parameters.isThumb = true
+            }
 
-        // 기본적으로 첫번째 이미지는 썸네일로 변경
-        if index == 1 {
-            cell.parameters.isThumb = true
+        // 상세보기의 경우는 제대로 접근
+        case .detail:
+            imageData = delegate?.uploadImagesRelay?.value[safe: index] ?? Data()
+            cell.parameters.status = .detailImage
         }
 
         cell.delegate = self
-        cell.parameters.imageData = imageData
+        DispatchQueue.main.async {
+            cell.parameters.imageData = imageData
+        }
 
         return cell
     }
@@ -197,6 +257,7 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
         }
 
         cell.parameters.isThumb = true
+        delegate?.thumbImageIndexRelay?.accept(indexPath.row - 1)
     }
 }
 

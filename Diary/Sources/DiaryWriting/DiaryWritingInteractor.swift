@@ -78,6 +78,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     let originalImageDataRelay = BehaviorRelay<Data?>(value: nil)
     let thumbImageDataRelay = BehaviorRelay<Data?>(value: nil)
     let uploadImagesRelay = BehaviorRelay<[Data]>(value: [])
+    let thumbImageIndexRelay = BehaviorRelay<Int>(value: 0)
     var isImage: Bool  = true
 
     // 이미지를 저장할 경우 모두 저장이 되었는지 확인하는 Relay
@@ -133,6 +134,13 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                 else { return }
                 print("placeModelRelay: model = \(model)")
                 self.presenter.setPlaceView(model: model)
+            })
+            .disposed(by: disposebag)
+
+        thumbImageIndexRelay
+            .subscribe(onNext: { [weak self] thumbIndex in
+                guard let self = self else { return }
+                print("Thumb! = \(thumbIndex)")
             })
             .disposed(by: disposebag)
 
@@ -313,6 +321,8 @@ extension DiaryWritingInteractor {
             place: placeModel,
             desc: descRelay.value,
             image: isImage,
+            imageCount: uploadImagesRelay.value.count,
+            thumbImageIndex: thumbImageIndexRelay.value,
             createdAt: Date()
         )
 
@@ -376,6 +386,8 @@ extension DiaryWritingInteractor {
             place: placeModel,
             desc: descRelay.value,
             image: isImage,
+            imageCount: uploadImagesRelay.value.count,
+            thumbImageIndex: thumbImageIndexRelay.value,
             readCount: originalDiaryModel.readCount,
             createdAt: originalDiaryModel.createdAt,
             replies: originalDiaryModel.repliesArr,
@@ -473,6 +485,8 @@ extension DiaryWritingInteractor {
             place: placeModel,
             desc: descRelay.value,
             image: isImage,
+            imageCount: uploadImagesRelay.value.count,
+            thumbImageIndex: thumbImageIndexRelay.value,
             createdAt: Date()
         )
 

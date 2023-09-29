@@ -62,6 +62,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     private var disposebag = DisposeBag()
     private let changeCurrentDiarySubject = BehaviorSubject<Bool>(value: false)
     private let imageDataRelay = BehaviorRelay<Data>(value: Data())
+    internal let imagesDataRelay: BehaviorRelay<[Data]> = .init(value: [])
     
     // Reminder 관련
     let reminderRequestDateRelay = BehaviorRelay<ReminderRequsetModel?>(value: nil)
@@ -114,6 +115,10 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         guard let realm = Realm.safeInit() else { return }
         guard let diaryModel = self.diaryModel else { return }
         let diary = realm.object(ofType: DiaryModelRealm.self, forPrimaryKey: diaryModel._id)
+
+        let imagesData: [Data] = diaryModel.images
+        self.imagesDataRelay.accept(imagesData)
+
         if let imageData: Data = diaryModel.originalImage {
             self.imageDataRelay.accept(imageData)
         }
@@ -151,6 +156,10 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
             case .change(let model, let proertyChanges):
                 print("DiaryDetail :: model = \(model as? DiaryModelRealm)")
                 guard let model = model as? DiaryModelRealm else { return }
+
+                if let imagesData: [Data] = self.diaryModel?.images {
+                    self.imagesDataRelay.accept(imagesData)
+                }
                 if let imageData: Data = self.diaryModel?.originalImage {
                     self.imageDataRelay.accept(imageData)
                 }

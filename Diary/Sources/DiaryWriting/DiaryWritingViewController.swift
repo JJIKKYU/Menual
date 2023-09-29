@@ -36,6 +36,7 @@ public protocol DiaryWritingPresentableListener: AnyObject {
     var originalImageDataRelay: BehaviorRelay<Data?> { get }
     var thumbImageDataRelay: BehaviorRelay<Data?> { get }
     var uploadImagesRelay: BehaviorRelay<[Data]> { get }
+    var thumbImageIndexRelay: BehaviorRelay<Int> { get }
 }
 
 public enum WritingType {
@@ -93,7 +94,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
     private lazy var descriptionTextView = UITextView()
     private lazy var datePageTextCountView = DatePageTextCountView()
     private let divider4 = Divider(type: ._1px)
-    private lazy var imageUploadView = ImageUploadView()
+    private lazy var imageUploadView = ImageUploadView(state: .writing)
     private let imageView = UIImageView()
     private var phpickerConfiguration = PHPickerConfiguration()
     private weak var weakImagePicker: PHPickerViewController?
@@ -1245,6 +1246,10 @@ extension DiaryWritingViewController {
 extension DiaryWritingViewController: ImageUploadViewDelegate {
     var uploadImagesRelay: BehaviorRelay<[Data]>? {
         listener?.uploadImagesRelay
+    }
+
+    var thumbImageIndexRelay: BehaviorRelay<Int>? {
+        listener?.thumbImageIndexRelay
     }
 
     func pressedTakeImageButton() {

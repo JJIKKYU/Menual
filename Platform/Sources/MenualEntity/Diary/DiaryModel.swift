@@ -26,11 +26,35 @@ public class DiaryModelRealm: Object, Codable {
     @Persisted public var desc: String = ""
     // 이미지가 1개라도 있을 경우 true/false 반환
     @Persisted public var image: Bool
+    @Persisted public var thumbImageIndex: Int
+    @Persisted public var imageCount: Int
     public var images: [Data] {
-        if image == false { return [] }
+        get {
+            if image == false { return [] }
 
-        return []
+            // 1. 도큐먼트 폴더 경로가져오기
+            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+
+            var imagesData: [Data] = []
+            for index in 0..<imageCount {
+                guard let directoryPath: String = path.first else { return [] }
+                // 2. 이미지 URL 찾기
+                let originalImageURL: URL = .init(fileURLWithPath: directoryPath)
+                    .appendingPathComponent(uuid + "_images_" + "\(index)")
+
+                // 3. UIImage로 불러오고 Data로 Return
+                let imageData: Data = UIImage(contentsOfFile: originalImageURL.path)?
+                    .jpegData(compressionQuality: 0.4) ?? Data()
+
+                imagesData.append(imageData)
+            }
+
+            return imagesData
+        }
     }
+
     public var originalImage: Data? {
         get {
             if image == false { return nil }
@@ -107,6 +131,8 @@ public class DiaryModelRealm: Object, Codable {
         place: PlaceModelRealm?,
         desc: String,
         image: Bool,
+        imageCount: Int,
+        thumbImageIndex: Int,
         readCount: Int = 0,
         createdAt: Date,
         replies: [DiaryReplyModelRealm] = [],
@@ -123,6 +149,8 @@ public class DiaryModelRealm: Object, Codable {
         self.place = place
         self.desc = desc
         self.image = image
+        self.imageCount = imageCount
+        self.thumbImageIndex = thumbImageIndex
         self.readCount = readCount
         self.createdAt = createdAt
         self.isDeleted = isDeleted
@@ -150,6 +178,8 @@ public class DiaryModelRealm: Object, Codable {
         case place
         case desc
         case image
+        case imageCount
+        case thumbImageIndex
         case readCount
         case createdAt
         case isDeleted
@@ -175,6 +205,8 @@ public class DiaryModelRealm: Object, Codable {
         place = try container.decode(PlaceModelRealm?.self, forKey: .place)
         desc = try container.decode(String.self, forKey: .desc)
         image = try container.decode(Bool.self, forKey: .image)
+        imageCount = try container.decode(Int.self, forKey: .imageCount)
+        thumbImageIndex = try container.decode(Int.self, forKey: .thumbImageIndex)
         readCount = try container.decode(Int.self, forKey: .readCount)
         createdAt = try container.decode(Date.self, forKey: .createdAt)
         isDeleted = try container.decode(Bool.self, forKey: .isDeleted)
@@ -194,6 +226,8 @@ public class DiaryModelRealm: Object, Codable {
         try container.encode(place, forKey: .place)
         try container.encode(desc, forKey: .desc)
         try container.encode(image, forKey: .image)
+        try container.encode(imageCount, forKey: .imageCount)
+        try container.encode(thumbImageIndex, forKey: .thumbImageIndex)
         try container.encode(readCount, forKey: .readCount)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(isDeleted, forKey: .isDeleted)
