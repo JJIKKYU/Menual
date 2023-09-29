@@ -17,6 +17,7 @@ public protocol ImageUploadViewDelegate: AnyObject {
     func pressedTakeImageButton()
     func pressedUploadImageButton()
     func pressedDeleteButton(cell: ImageUploadCell)
+    func pressedAllImagesDeleteButton()
 }
 
 // MARK: - ImageUploadView
@@ -29,6 +30,8 @@ public final class ImageUploadView: UIView {
     var thumbImageIndex: Int = 0
 
     public weak var delegate: ImageUploadViewDelegate?
+    private let currentImageCountLabel: UILabel = .init()
+    private let deleteButton: UIButton = .init()
     private let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
 
     init() {
@@ -56,19 +59,53 @@ public final class ImageUploadView: UIView {
             $0.setCollectionViewLayout(flowlayout, animated: true)
             $0.showsHorizontalScrollIndicator = false
         }
+
+        currentImageCountLabel.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.font = .AppBodyOnlyFont(.body_2)
+            $0.textColor = Colors.grey.g600
+            $0.text = "0/10개"
+        }
+
+        deleteButton.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.setImage(Asset._16px.delete.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            $0.setTitle("전체삭제", for: .normal)
+            $0.titleLabel?.font = .AppBodyOnlyFont(.body_2)
+            $0.titleLabel?.textColor = Colors.grey.g400
+            $0.tintColor = Colors.grey.g400
+            $0.addTarget(self, action: #selector(pressedAllImagesDeleteButton), for: .touchUpInside)
+        }
     }
 
     private func setViews() {
         addSubview(collectionView)
+        addSubview(currentImageCountLabel)
+        addSubview(deleteButton)
 
         collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.leading.trailing.top.equalToSuperview()
+            make.height.equalTo(100)
+        }
+
+        currentImageCountLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(collectionView.snp.bottom).offset(13)
+            make.bottom.equalToSuperview()
+        }
+
+        deleteButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(20)
+            make.top.equalTo(collectionView.snp.bottom).offset(13)
+            make.bottom.equalToSuperview()
         }
     }
 
     override public func layoutSubviews() {
         super.layoutSubviews()
         collectionView.reloadData()
+
+        currentImageCountLabel.text = "\(images.count)/10개"
     }
 }
 
@@ -91,6 +128,11 @@ extension ImageUploadView {
             guard let firstCell: ImageUploadCell = collectionView.cellForItem(at: firstIndexPath) as? ImageUploadCell else { return }
             firstCell.parameters.isThumb = true
         }
+    }
+
+    public func deleteAllImages() {
+        images = []
+        collectionView.reloadData()
     }
 }
 
@@ -156,5 +198,10 @@ extension ImageUploadView: ImageUploadCellDelegate {
     public func pressedDeleteButton(cell: ImageUploadCell) {
         print("ImageUpload :: pressedDeleteButton")
         delegate?.pressedDeleteButton(cell: cell)
+    }
+
+    @objc
+    func pressedAllImagesDeleteButton() {
+        delegate?.pressedAllImagesDeleteButton()
     }
 }

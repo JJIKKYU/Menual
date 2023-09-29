@@ -529,7 +529,7 @@ extension DiaryWritingViewController {
         let navigationController: UINavigationController = .init(
             rootViewController: imagePicker
         )
-        navigationController.modalPresentationStyle = .overFullScreen
+        navigationController.modalPresentationStyle = .automatic
         navigationController.navigationBar.isHidden = true
         navigationController.isNavigationBarHidden = true
         present(navigationController, animated: true, completion: nil)
@@ -964,7 +964,8 @@ extension DiaryWritingViewController: DialogDelegate {
                 isEditBeginRelay.accept(true)
 
             case .deleteAllPhotos:
-                break
+                imageUploadView.deleteAllImages()
+                isEditBeginRelay.accept(true)
 
             case .camera:
                 break
@@ -1223,7 +1224,7 @@ extension DiaryWritingViewController {
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.top.equalTo(divider4.snp.bottom).offset(16)
-            make.height.equalTo(100)
+            make.height.equalTo(130)
             make.bottom.equalToSuperview().inset(40)
         }
 
@@ -1254,6 +1255,17 @@ extension DiaryWritingViewController: ImageUploadViewDelegate {
             size: .small,
             buttonType: .twoBtn,
             titleText: "해당 사진을 삭제하시겠어요?",
+            cancelButtonText: MenualString.writing_alert_cancel,
+            confirmButtonText: "삭제하기"
+        )
+    }
+
+    func pressedAllImagesDeleteButton() {
+        showDialog(
+            dialogScreen: .diaryWriting(.deleteAllPhotos),
+            size: .small,
+            buttonType: .twoBtn,
+            titleText: "모든 사진을 삭제하시겠어요?",
             cancelButtonText: MenualString.writing_alert_cancel,
             confirmButtonText: "삭제하기"
         )
