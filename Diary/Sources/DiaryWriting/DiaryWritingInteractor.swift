@@ -77,6 +77,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
     var weatherModelRealm: WeatherModelRealm?
     let originalImageDataRelay = BehaviorRelay<Data?>(value: nil)
     let thumbImageDataRelay = BehaviorRelay<Data?>(value: nil)
+    let uploadImagesRelay = BehaviorRelay<[Data]>(value: [])
     var isImage: Bool  = true
 
 //    {

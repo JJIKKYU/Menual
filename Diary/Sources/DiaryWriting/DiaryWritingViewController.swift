@@ -35,6 +35,7 @@ public protocol DiaryWritingPresentableListener: AnyObject {
     var weatherRelay: BehaviorRelay<Weather?> { get }
     var originalImageDataRelay: BehaviorRelay<Data?> { get }
     var thumbImageDataRelay: BehaviorRelay<Data?> { get }
+    var uploadImagesRelay: BehaviorRelay<[Data]> { get }
 }
 
 public enum WritingType {
@@ -509,7 +510,7 @@ extension DiaryWritingViewController {
         phpickerConfiguration.filter = .images
 
         // 선택 가능한 이미지 개수 체크
-        let currentImageCount: Int = imageUploadView.images.count
+        let currentImageCount: Int = imageUploadView.imagesRelay.value.count
         let availableIamgeCount: Int = selectionLimit - currentImageCount
 
         // 선택 가능한 이미지 개수가 없을 경우
@@ -783,7 +784,10 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
 
                 DispatchQueue.main.async {
                     self.selecteedImages.append(imageData)
-                    self.imageUploadView.images.append(imageData)
+                    var images: [Data] = self.listener?.uploadImagesRelay.value ?? []
+                    images.append(imageData)
+                    self.listener?.uploadImagesRelay.accept(images)
+                    self.imageUploadView.reloadCollectionView()
                     order += 1
                 }
                 print("DiaryHome :: loading! order = \(order)")
@@ -1239,6 +1243,10 @@ extension DiaryWritingViewController {
 // MARK: - ImageUploadViewDelegate
 
 extension DiaryWritingViewController: ImageUploadViewDelegate {
+    var uploadImagesRelay: BehaviorRelay<[Data]>? {
+        listener?.uploadImagesRelay
+    }
+
     func pressedTakeImageButton() {
         print("DiaryHome :: pressedTakeImageButton")
         pressedTakeImagePullDownBtn()

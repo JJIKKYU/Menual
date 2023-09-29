@@ -7,6 +7,8 @@
 
 import DesignSystem
 import MenualUtil
+import RxRelay
+import RxSwift
 import SnapKit
 import Then
 import UIKit
@@ -14,6 +16,8 @@ import UIKit
 // MARK: - ImageUploadViewDelegate
 
 public protocol ImageUploadViewDelegate: AnyObject {
+    var uploadImagesRelay: BehaviorRelay<[Data]>? { get }
+
     func pressedTakeImageButton()
     func pressedUploadImageButton()
     func pressedDeleteButton(cell: ImageUploadCell)
@@ -23,9 +27,7 @@ public protocol ImageUploadViewDelegate: AnyObject {
 // MARK: - ImageUploadView
 
 public final class ImageUploadView: UIView {
-    var images: [Data] = [] {
-        didSet { setNeedsLayout() }
-    }
+    var imagesRelay: BehaviorRelay<[Data]> = .init(value: [])
     // 썸네일 이미지 Index
     var thumbImageIndex: Int = 0
 
@@ -33,11 +35,13 @@ public final class ImageUploadView: UIView {
     private let currentImageCountLabel: UILabel = .init()
     private let deleteButton: UIButton = .init()
     private let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
+    private let disPoseBag: DisposeBag = .init()
 
     init() {
         super.init(frame: CGRect.zero)
         configureUI()
         setViews()
+        bind()
     }
 
     required init?(coder: NSCoder) {
@@ -72,7 +76,8 @@ public final class ImageUploadView: UIView {
             $0.setImage(Asset._16px.delete.image.withRenderingMode(.alwaysTemplate), for: .normal)
             $0.setTitle("전체삭제", for: .normal)
             $0.titleLabel?.font = .AppBodyOnlyFont(.body_2)
-            $0.titleLabel?.textColor = Colors.grey.g400
+            $0.setTitleColor(Colors.grey.g400, for: .normal)
+            $0.setTitleColor(Colors.grey.g600, for: .highlighted)
             $0.tintColor = Colors.grey.g400
             $0.addTarget(self, action: #selector(pressedAllImagesDeleteButton), for: .touchUpInside)
         }
@@ -101,11 +106,19 @@ public final class ImageUploadView: UIView {
         }
     }
 
+    private func bind() {
+        delegate?.uploadImagesRelay?
+            .subscribe(onNext: { [weak self] images in
+                guard let self = self else { return }
+
+                self.currentImageCountLabel.text = "\(images.count)/10개"
+            })
+            .disposed(by: disPoseBag)
+    }
+
     override public func layoutSubviews() {
         super.layoutSubviews()
         collectionView.reloadData()
-
-        currentImageCountLabel.text = "\(images.count)/10개"
     }
 }
 
@@ -117,7 +130,9 @@ extension ImageUploadView {
 
         // 첫번째 Cell은 이미지 추가 Cell이므로 1을 빼서 진행
         let imageIndex: Int = indexPath.row - 1
+        var images: [Data] = delegate?.uploadImagesRelay?.value ?? []
         images.remove(at: imageIndex)
+        delegate?.uploadImagesRelay?.accept(images)
         collectionView.deleteItems(at: [indexPath])
 
         // 지우고자 하는 Cell이 썸네일일 경우
@@ -131,7 +146,11 @@ extension ImageUploadView {
     }
 
     public func deleteAllImages() {
-        images = []
+        delegate?.uploadImagesRelay?.accept([])
+        collectionView.reloadData()
+    }
+
+    public func reloadCollectionView() {
         collectionView.reloadData()
     }
 }
@@ -140,7 +159,8 @@ extension ImageUploadView {
 
 extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return images.count + 1
+        let imageCount: Int = delegate?.uploadImagesRelay?.value.count ?? 0
+        return imageCount + 1
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -148,7 +168,7 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
 
         let index: Int = indexPath.row
         // 첫번째 셀은 이미지 추가 버튼이므로 1씩 빼주어서 접근
-        let imageData: Data = images[safe: index - 1] ?? Data()
+        guard let imageData: Data = delegate?.uploadImagesRelay?.value[safe: index - 1] else { return UICollectionViewCell() }
 
         // 첫번째 Cell의 경우 추가하기 Cell로 세팅
         if index == 0 {
