@@ -13,6 +13,7 @@ import MenualEntity
 import MenualRepository
 
 public final class DiaryRepositoryMock: DiaryRepository {
+
     public init() {
 
     }
@@ -53,6 +54,12 @@ public final class DiaryRepositoryMock: DiaryRepository {
     public var saveImageToDocumentDirectoryCallCount = 0
     public func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void) {
         saveImageToDocumentDirectoryCallCount += 1
+        completionHandler(true)
+    }
+
+    public var saveImageToDocumentDirectory2CallCount: Int = 0
+    public func saveImageToDocumentDirectory(imageName: String, imagesData: [Data], completionHandler: @escaping (Bool) -> Void) {
+        saveImageToDocumentDirectory2CallCount += 1
         completionHandler(true)
     }
 

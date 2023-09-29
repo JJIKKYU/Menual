@@ -26,6 +26,7 @@ public protocol DiaryRepository {
     
     // Image
     func saveImageToDocumentDirectory(imageName: String, imageData: Data, completionHandler: @escaping (Bool) -> Void)
+    func saveImageToDocumentDirectory(imageName: String, imagesData: [Data], completionHandler: @escaping (Bool) -> Void)
     func deleteImageFromDocumentDirectory(diaryUUID: String, completionHandler: @escaping (Bool) -> Void)
     
     // 겹쓰기 로직
@@ -96,6 +97,33 @@ public final class DiaryRepositoryImp: DiaryRepository {
         do {
             try data.write(to: imageURL)
             print("DiaryWriting :: DiaryRepository :: 이미지 저장완료 -> \(imageURL)")
+            completionHandler(true)
+        } catch {
+            print("DiaryWriting :: DiaryRepository :: 이미지를 저장하지 못했습니다.")
+            completionHandler(false)
+        }
+    }
+
+    public func saveImageToDocumentDirectory(imageName: String, imagesData: [Data], completionHandler: @escaping (Bool) -> Void) {
+        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            completionHandler(false)
+            return
+        }
+
+        // 이미지를 도큐먼트에 저장
+        do {
+            for (index, imageData) in imagesData.enumerated() {
+                let imageName: String = "\(imageName)_\(index)"
+                let imageURL: URL = documentDirectory.appendingPathComponent(imageName)
+
+                // 이미지 파일이 이미 존재한다면 삭제
+                if FileManager.default.fileExists(atPath: imageURL.path) {
+                    try FileManager.default.removeItem(at: imageURL)
+                }
+
+                try imageData.write(to: imageURL)
+                print("DiaryWriting :: DiaryRepository :: 이미지 저장완료 -> \(imageURL), \(index)")
+            }
             completionHandler(true)
         } catch {
             print("DiaryWriting :: DiaryRepository :: 이미지를 저장하지 못했습니다.")

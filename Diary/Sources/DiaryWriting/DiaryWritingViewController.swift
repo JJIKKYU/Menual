@@ -510,7 +510,7 @@ extension DiaryWritingViewController {
         phpickerConfiguration.filter = .images
 
         // 선택 가능한 이미지 개수 체크
-        let currentImageCount: Int = imageUploadView.imagesRelay.value.count
+        let currentImageCount: Int = listener?.uploadImagesRelay.value.count ?? 0
         let availableIamgeCount: Int = selectionLimit - currentImageCount
 
         // 선택 가능한 이미지 개수가 없을 경우

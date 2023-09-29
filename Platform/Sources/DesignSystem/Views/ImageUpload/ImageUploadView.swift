@@ -5,7 +5,6 @@
 //  Created by 정진균 on 2022/06/26.
 //
 
-import DesignSystem
 import MenualUtil
 import RxRelay
 import RxSwift
@@ -27,7 +26,6 @@ public protocol ImageUploadViewDelegate: AnyObject {
 // MARK: - ImageUploadView
 
 public final class ImageUploadView: UIView {
-    var imagesRelay: BehaviorRelay<[Data]> = .init(value: [])
     // 썸네일 이미지 Index
     var thumbImageIndex: Int = 0
 
@@ -168,7 +166,7 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
 
         let index: Int = indexPath.row
         // 첫번째 셀은 이미지 추가 버튼이므로 1씩 빼주어서 접근
-        guard let imageData: Data = delegate?.uploadImagesRelay?.value[safe: index - 1] else { return UICollectionViewCell() }
+        let imageData: Data = delegate?.uploadImagesRelay?.value[safe: index - 1] ?? Data()
 
         // 첫번째 Cell의 경우 추가하기 Cell로 세팅
         if index == 0 {
