@@ -390,7 +390,17 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         }
 
         // 이미지뷰 세팅
-        imageUploadView.state = .edit
+        switch writeType {
+        case .writing:
+            imageUploadView.state = .writing
+
+        case .edit:
+            imageUploadView.state = .edit
+
+        case .tempSave:
+            imageUploadView.state = .edit
+        }
+
         imageUploadView.reloadCollectionView()
 
         self.view.layoutIfNeeded()

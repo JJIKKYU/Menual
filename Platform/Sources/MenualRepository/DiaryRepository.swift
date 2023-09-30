@@ -224,7 +224,11 @@ public final class DiaryRepositoryImp: DiaryRepository {
             if data.image != info.image {
                 data.image = info.image
             }
-            
+
+            if data.thumbImageIndex != info.thumbImageIndex {
+                data.thumbImageIndex = info.thumbImageIndex
+            }
+
             if data.weather?.weather != info.weather?.weather ||
                 data.weather?.detailText != info.weather?.detailText {
                 data.weather = info.weather

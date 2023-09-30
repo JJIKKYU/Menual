@@ -353,8 +353,7 @@ extension DiaryWritingInteractor {
     /// TODO : - 쓰레드 변경해서 ThreadSafe하게 저장할 수 있도록 수정
     func saveImage(uuid: String) {
         if isImage == false { return }
-        let imagesData: [Data] = uploadImagesRelay.value
-        saveImages(diaryUUID: uuid, imagesData: imagesData)
+        saveImages(diaryUUID: uuid)
         /*
         guard let originalImage = originalImageDataRelay.value,
               let thumbImage = thumbImageDataRelay.value else { return }
@@ -393,12 +392,15 @@ extension DiaryWritingInteractor {
         )
 
         // 이미지가 업데이트 된 경우
+        saveImages(diaryUUID: originalDiaryModel.uuid)
+        /*
         if isUpdateImage {
             saveImage(uuid: originalDiaryModel.uuid)
             print("DiaryWriting :: image가 변경되었습니다.")
         } else {
             imageSaveRelay.accept((true, true, true))
         }
+         */
         updateDiaryModelRelay.accept(newDiaryModel)
     }
 }
@@ -418,7 +420,8 @@ extension DiaryWritingInteractor {
             }
     }
 
-    func saveImages(diaryUUID: String, imagesData: [Data]) {
+    func saveImages(diaryUUID: String) {
+        let imagesData: [Data] = uploadImagesRelay.value
         print("DiaryWriting :: interactor -> saveImages!")
         // originalImage는 {uuid}Original이 imageName
 
