@@ -40,8 +40,6 @@ public final class ImageUploadView: UIView {
         case edit
         case detail
     }
-    // 썸네일 이미지 Index
-    var thumbImageIndex: Int = 0
 
     public weak var delegate: ImageUploadViewDelegate? {
         didSet { bind() }
@@ -70,6 +68,7 @@ public final class ImageUploadView: UIView {
             $0.delegate = self
             $0.dataSource = self
             $0.backgroundColor = .clear
+            $0.allowsSelection = true
 
             let flowlayout = UICollectionViewFlowLayout.init()
             flowlayout.itemSize = .init(width: 100, height: 100)
@@ -194,6 +193,12 @@ extension ImageUploadView {
     public func reloadCollectionView() {
         collectionView.reloadData()
     }
+
+    public func appendImage(imageData: Data) {
+        let currentImageCount: Int = delegate?.uploadImagesRelay?.value.count ?? 0
+        let indexPath: IndexPath = .init(row: currentImageCount, section: 0)
+        collectionView.insertItems(at: [indexPath])
+    }
 }
 
 // MARK: - CollectionViewDelegate
@@ -216,10 +221,10 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
         guard let cell: ImageUploadCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageUploadCell", for: indexPath) as? ImageUploadCell else { return UICollectionViewCell() }
 
         let index: Int = indexPath.row
-        var imageData: Data
+        var imageData: Data = .init()
         switch state {
         // 첫번째 셀은 이미지 추가 버튼이므로 1씩 빼주어서 접근
-        case .writing, .edit:
+        case .writing:
             imageData = delegate?.uploadImagesRelay?.value[safe: index - 1] ?? Data()
             if index == 0 {
                 cell.parameters.status = .addImage
@@ -232,6 +237,21 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
                 cell.parameters.isThumb = true
             }
 
+        // 수정모드
+        case .edit:
+            imageData = delegate?.uploadImagesRelay?.value[safe: index - 1] ?? Data()
+            let thumbIndex: Int = delegate?.thumbImageIndexRelay?.value ?? 0
+
+            if index == 0 {
+                cell.parameters.status = .addImage
+            } else {
+                cell.parameters.status = .image
+            }
+
+            if index == thumbIndex + 1 {
+                cell.parameters.isThumb = true
+            }
+
         // 상세보기의 경우는 제대로 접근
         case .detail:
             imageData = delegate?.uploadImagesRelay?.value[safe: index] ?? Data()
@@ -239,6 +259,7 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
         }
 
         cell.delegate = self
+        cell.isUserInteractionEnabled = true
         DispatchQueue.main.async {
             cell.parameters.imageData = imageData
         }
@@ -247,6 +268,7 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("ImageUpload :: didSelect! \(indexPath)")
         guard let cell: ImageUploadCell = collectionView.cellForItem(at: indexPath) as? ImageUploadCell else { return }
 
         let visibleCells = collectionView.visibleCells

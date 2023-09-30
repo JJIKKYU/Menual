@@ -137,13 +137,6 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             })
             .disposed(by: disposebag)
 
-        thumbImageIndexRelay
-            .subscribe(onNext: { [weak self] thumbIndex in
-                guard let self = self else { return }
-                print("Thumb! = \(thumbIndex)")
-            })
-            .disposed(by: disposebag)
-
         /*
         Observable.combineLatest (
             imageSaveRelay,
@@ -209,11 +202,15 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             if let diaryModel = diaryModel {
                 print("DiaryWriting :: 다이어리 수정모드입니다.")
                 if diaryModel.image == true {
+                    /*
                     guard let originalImage = diaryModel.originalImage,
                           let cropImage = diaryModel.cropImage,
                           let thumbImage = diaryModel.thumbImage else { return }
-                    self.originalImageDataRelay.accept(originalImage)
-                    self.thumbImageDataRelay.accept(thumbImage)
+                    */
+                    // self.originalImageDataRelay.accept(originalImage)
+                    // self.thumbImageDataRelay.accept(thumbImage)
+                    self.uploadImagesRelay.accept(diaryModel.images)
+                    self.thumbImageIndexRelay.accept(diaryModel.thumbImageIndex)
                 }
                 title = diaryModel.title
                 weather = diaryModel.weather?.weather

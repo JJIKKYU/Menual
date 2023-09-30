@@ -389,6 +389,10 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
             }
         }
 
+        // 이미지뷰 세팅
+        imageUploadView.state = .edit
+        imageUploadView.reloadCollectionView()
+
         self.view.layoutIfNeeded()
     }
 
@@ -788,7 +792,8 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                     var images: [Data] = self.listener?.uploadImagesRelay.value ?? []
                     images.append(imageData)
                     self.listener?.uploadImagesRelay.accept(images)
-                    self.imageUploadView.reloadCollectionView()
+                    self.imageUploadView.appendImage(imageData: imageData)
+                    // self.imageUploadView.reloadCollectionView()
                     order += 1
                 }
                 print("DiaryHome :: loading! order = \(order)")

@@ -73,6 +73,7 @@ public final class ImageUploadCell: UICollectionViewCell {
     }
 
     private func configureUI() {
+        isUserInteractionEnabled = true
         layer.cornerRadius = 8
         layer.masksToBounds = true
         backgroundColor = .clear
@@ -229,6 +230,7 @@ public final class ImageUploadCell: UICollectionViewCell {
             imageView.isHidden = false
             addImageStackView.isHidden = true
             addImagePullDownButton.isUserInteractionEnabled = false
+            addImagePullDownButton.isHidden = true
             deleteBtn.isHidden = false
 
         case .detailImage:
@@ -236,6 +238,7 @@ public final class ImageUploadCell: UICollectionViewCell {
             addImageStackView.isHidden = true
             deleteBtn.isHidden = true
             addImagePullDownButton.isUserInteractionEnabled = false
+            addImagePullDownButton.isHidden = true
         }
     }
 }

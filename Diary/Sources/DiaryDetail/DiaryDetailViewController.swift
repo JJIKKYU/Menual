@@ -53,6 +53,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
 //        $0.backgroundColor = Colors.background
+        $0.isUserInteractionEnabled = true
         $0.backgroundColor = .clear
     }
     
@@ -138,6 +139,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
 
     lazy var imageUploadView: ImageUploadView = .init(state: .detail).then {
         $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isUserInteractionEnabled = true
         $0.delegate = self
     }
     
