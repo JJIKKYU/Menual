@@ -38,7 +38,7 @@ extension UINavigationController {
 public class NavigationController: UINavigationController {
     public override func viewDidLoad() {
         super.viewDidLoad()
-        setupFullWidthBackGesture()
+        // setupFullWidthBackGesture()
         print("Navi :: viewDidLoad!")
     }
     

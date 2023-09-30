@@ -5,17 +5,19 @@
 //  Created by 정진균 on 2022/04/16.
 //
 
-import RIBs
-import RxSwift
-import RxRelay
-import UIKit
-import Then
-import SnapKit
-import RealmSwift
-import MenualEntity
 import DesignSystem
+import MenualEntity
 import MenualUtil
 import MessageUI
+import RealmSwift
+import RIBs
+import RxRelay
+import RxSwift
+import SnapKit
+import Then
+import UIKit
+
+// MARK: - DiaryDetailPresentableListener
 
 public protocol DiaryDetailPresentableListener: AnyObject {
 
@@ -25,7 +27,7 @@ public protocol DiaryDetailPresentableListener: AnyObject {
     func pressedMenuMoreBtn()
     func pressedReminderBtn()
     
-    func pressedImageView()
+    func pressedImageView(index: Int)
     
     func hideDiary()
     func deleteReply(replyModel: DiaryReplyModelRealm)
@@ -34,6 +36,8 @@ public protocol DiaryDetailPresentableListener: AnyObject {
     var currentDiaryPage: Int { get }
     var imagesDataRelay: BehaviorRelay<[Data]> { get }
 }
+
+// MARK: - DiaryDetailViewController
 
 final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable, DiaryDetailViewControllable {
     
@@ -52,7 +56,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     private let tableViewHeaderView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
-//        $0.backgroundColor = Colors.background
         $0.isUserInteractionEnabled = true
         $0.backgroundColor = .clear
     }
@@ -143,15 +146,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         $0.delegate = self
     }
     
-    lazy var imageView = UIImageView().then {
-        $0.contentMode = .scaleAspectFill
-        $0.layer.masksToBounds = true
-        $0.backgroundColor = Colors.background
-        $0.AppCorner(._4pt)
-    }
-    
-    private lazy var imageViewGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(pressedImageView))
-    
     lazy var replyTableView = UITableView(frame: .zero, style: .grouped).then {
         $0.categoryName = "replyList"
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -241,10 +235,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         replyTableView.delegate = self
         replyBottomView.replyTextView.delegate = self
-        
-        imageViewGesture.numberOfTapsRequired = 1
-        imageView.isUserInteractionEnabled = true
-        imageView.addGestureRecognizer(imageViewGesture)
 
         // keyboard observer등록
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -252,8 +242,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         // 바깥쪽 터치했을때 키보드 내려가게
-        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
-        view.addGestureRecognizer(tap)
+        // let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        // view.addGestureRecognizer(tap)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -265,44 +255,31 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         replyTableView.delegate = nil
         replyBottomView.replyTextView.delegate = nil
-        imageView.removeGestureRecognizer(imageViewGesture)
         
         // Keyboard observer해제
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
                 
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        print("DiaryDetail :: presentingVC = \(presentingViewController?.classForCoder)")
     }
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        print("DiaryDetail :: ViewWillLayoutSubviews!")
         
         var changedHeight: CGFloat = 0
         var enabledImageViewHeight: CGFloat = 0
 
         if isEnableImageView == true {
-            // enabledImageViewHeight = 16 + divider4.frame.height + 12 + imageView.frame.height
-
             enabledImageViewHeight = 16 + divider4.frame.height + 12 + imageUploadView.frame.height
         }
 
-        print("DiaryDetail :: isEnableImageView = \(isEnableImageView), enabledImageViewHeight = \(enabledImageViewHeight)")
-
-
         // 숨김처리가 아닐 경우에만
         if isHide == false {
-//            changedHeight += 24 + titleLabel.frame.height + 16 + createdAtPageView.frame.height + 8 + divider1.frame.height + 12 + weatherSelectView.frame.height + 12 + divider2.frame.height + 12 + locationSelectView.frame.height + 12 + divider3.frame.height + 16 + descriptionTextView.frame.height + enabledImageViewHeight
             changedHeight += 24 + titleLabel.frame.height + 16 + createdAtPageView.frame.height + 8 + weatherLocationStackView.frame.height + 16 + descriptionTextView.frame.height + enabledImageViewHeight + 28
 
             tableViewHeaderView.snp.updateConstraints { make in
                 make.height.equalTo(changedHeight)
             }
         }
-        print("DiaryDetail :: changedHeight = \(changedHeight)")
-
-
 
         DispatchQueue.main.async {
              self.replyTableView.reloadData()
@@ -330,7 +307,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         weatherLocationStackView.addArrangedSubview(divider3)
         tableViewHeaderView.addSubview(descriptionTextView)
         tableViewHeaderView.addSubview(divider4)
-        // tableViewHeaderView.addSubview(imageView)
         tableViewHeaderView.addSubview(imageUploadView)
         tableViewHeaderView.addSubview(hideView)
         
@@ -517,7 +493,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             descriptionTextView.isHidden = true
             createdAtPageView.isHidden = true
             divider4.isHidden = true
-            imageView.isHidden = true
             imageUploadView.isHidden = true
             
             tableViewHeaderView.snp.updateConstraints { make in
@@ -540,11 +515,9 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             print("DiaryDetail :: isHide! -> isEnableImageView = \(isEnableImageView)")
             if isEnableImageView == true {
                 divider4.isHidden = false
-                imageView.isHidden = false
                 imageUploadView.isHidden = false
             } else {
                 divider4.isHidden = true
-                imageView.isHidden = true
                 imageUploadView.isHidden = true
             }
             
@@ -562,16 +535,13 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         case true:
             isEnableImageView = true
             divider4.isHidden = false
-            imageView.isHidden = false
             imageUploadView.isHidden = false
             
             DispatchQueue.main.async {
-                // self.imageView.image = UIImage(data: image)
                 self.imageUploadView.reloadCollectionView()
             }
         case false:
             divider4.isHidden = true
-            imageView.isHidden = true
             imageUploadView.isHidden = true
             isEnableImageView = false
             
@@ -689,14 +659,7 @@ extension DiaryDetailViewController {
         )
         
     }
-    
-    @objc
-    func pressedImageView(_ button: UIButton) {
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        MenualLog.logEventAction("detail_image")
-        print("DiaryDetail :: pressedImageView!")
-        listener?.pressedImageView()
-    }
+
     func enableBackSwipe() {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
@@ -1023,5 +986,9 @@ extension DiaryDetailViewController: ImageUploadViewDelegate {
 
     var thumbImageIndexRelay: BehaviorRelay<Int>? {
         return nil
+    }
+
+    func pressedDetailImage(index: Int) {
+        listener?.pressedImageView(index: index)
     }
 }

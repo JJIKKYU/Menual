@@ -22,6 +22,7 @@ public protocol ImageUploadViewDelegate: AnyObject {
     func pressedUploadImageButton()
     func pressedDeleteButton(cell: ImageUploadCell)
     func pressedAllImagesDeleteButton()
+    func pressedDetailImage(index: Int)
 }
 
 public extension ImageUploadViewDelegate {
@@ -29,6 +30,7 @@ public extension ImageUploadViewDelegate {
     func pressedUploadImageButton() {}
     func pressedDeleteButton(cell: ImageUploadCell) {}
     func pressedAllImagesDeleteButton() {}
+    func pressedDetailImage(index: Int) {}
 }
 
 // MARK: - ImageUploadView
@@ -269,17 +271,24 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("ImageUpload :: didSelect! \(indexPath)")
-        guard let cell: ImageUploadCell = collectionView.cellForItem(at: indexPath) as? ImageUploadCell else { return }
 
-        let visibleCells = collectionView.visibleCells
-            .map { $0 as? ImageUploadCell }
+        switch state {
+        case .writing, .edit:
+            guard let cell: ImageUploadCell = collectionView.cellForItem(at: indexPath) as? ImageUploadCell else { return }
 
-        visibleCells.forEach { visibleCell in
-            visibleCell?.parameters.isThumb = false
+            let visibleCells = collectionView.visibleCells
+                .map { $0 as? ImageUploadCell }
+
+            visibleCells.forEach { visibleCell in
+                visibleCell?.parameters.isThumb = false
+            }
+
+            cell.parameters.isThumb = true
+            delegate?.thumbImageIndexRelay?.accept(indexPath.row - 1)
+
+        case .detail:
+            delegate?.pressedDetailImage(index: indexPath.row)
         }
-
-        cell.parameters.isThumb = true
-        delegate?.thumbImageIndexRelay?.accept(indexPath.row - 1)
     }
 }
 

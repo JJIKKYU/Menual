@@ -13,7 +13,9 @@ import MenualEntity
 import MenualUtil
 import UserNotifications
 
-public protocol DiaryRepository {
+// MARK: - DiaryRepository
+
+public protocol DiaryRepository: AnyObject {
     var filteredDiaryDic: BehaviorRelay<DiaryHomeFilteredSectionModel?> { get }
     var password: BehaviorRelay<PasswordModelRealm?> { get }
     
@@ -51,6 +53,8 @@ public protocol DiaryRepository {
     func addPassword(model: PasswordModelRealm)
     func updatePassword(password: Int, isEnabled: Bool)
 }
+
+// MARK: - DiaryRepositoryImp
 
 public final class DiaryRepositoryImp: DiaryRepository {
     

@@ -17,6 +17,8 @@ import MenualUtil
 import MenualRepository
 import DiaryBottomSheet
 
+// MARK: - DiaryDetailRouting
+
 public protocol DiaryDetailRouting: ViewableRouting {
     func attachBottomSheet(type: MenualBottomSheetType, menuComponentRelay: BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>?)
     func detachBottomSheet(isWithDiaryDetatil: Bool)
@@ -26,9 +28,11 @@ public protocol DiaryDetailRouting: ViewableRouting {
     func detachDiaryWriting(isOnlyDetach: Bool)
     
     // 이미지 자세히 보기
-    func attachDiaryDetailImage(imageDataRelay: BehaviorRelay<Data>)
+    func attachDiaryDetailImage(imagesDataRelay: BehaviorRelay<[Data]>, selectedIndex: Int)
     func detachDiaryDetailImage(isOnlyDetach: Bool)
 }
+
+// MARK: - DiaryDetailPresentable
 
 public protocol DiaryDetailPresentable: Presentable {
     var listener: DiaryDetailPresentableListener? { get set }
@@ -41,15 +45,22 @@ public protocol DiaryDetailPresentable: Presentable {
     func enableBackSwipe()
     func presentMailVC()
 }
+
+// MARK: - DiaryDetailInteractorDependency
+
 public protocol DiaryDetailInteractorDependency {
     var diaryRepository: DiaryRepository { get }
     var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
 
+// MARK: - DiaryDetailListener
+
 public protocol DiaryDetailListener: AnyObject {
     func diaryDetailPressedBackBtn(isOnlyDetach: Bool)
     func diaryDeleteNeedToast(isNeedToast: Bool)
 }
+
+// MARK: - DiaryDetailInteractor
 
 final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>, DiaryDetailInteractable, DiaryDetailPresentableListener, AdaptivePresentationControllerDelegate {
     
@@ -493,10 +504,14 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         presenter.enableBackSwipe()
     }
     
-    func pressedImageView() {
+    func pressedImageView(index: Int) {
         print("DiaryDetail :: interactor -> pressedImageView!")
+        /*
         guard let _: Data = diaryModel?.originalImage else { return }
         router?.attachDiaryDetailImage(imageDataRelay: self.imageDataRelay)
+         */
+
+        router?.attachDiaryDetailImage(imagesDataRelay: self.imagesDataRelay, selectedIndex: index)
     }
 
     func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: ShowToastType) {

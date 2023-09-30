@@ -24,7 +24,8 @@ public final class DiaryDetailImageComponent: Component<DiaryDetailImageDependen
 public protocol DiaryDetailImageBuildable: Buildable {
     func build(
         withListener listener: DiaryDetailImageListener,
-        imageDataRelay: BehaviorRelay<Data>
+        imagesDataRelay: BehaviorRelay<[Data]>,
+        selectedIndex: Int
     ) -> DiaryDetailImageRouting
 }
 
@@ -36,13 +37,15 @@ public final class DiaryDetailImageBuilder: Builder<DiaryDetailImageDependency>,
 
     public func build(
         withListener listener: DiaryDetailImageListener,
-        imageDataRelay: BehaviorRelay<Data>
+        imagesDataRelay: BehaviorRelay<[Data]>,
+        selectedIndex: Int
     ) -> DiaryDetailImageRouting {
         let component = DiaryDetailImageComponent(dependency: dependency)
         let viewController = DiaryDetailImageViewController()
         let interactor = DiaryDetailImageInteractor(
             presenter: viewController,
-            imageDataRelay: imageDataRelay
+            imagesDataRelay: imagesDataRelay,
+            selectedIndex: selectedIndex
         )
         interactor.listener = listener
         return DiaryDetailImageRouter(interactor: interactor, viewController: viewController)
