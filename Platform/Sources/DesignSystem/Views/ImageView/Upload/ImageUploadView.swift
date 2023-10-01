@@ -72,6 +72,9 @@ public final class ImageUploadView: UIView {
             $0.dataSource = self
             $0.backgroundColor = .clear
             $0.allowsSelection = true
+            $0.dragInteractionEnabled = true
+            $0.dragDelegate = self
+            $0.dropDelegate = self
 
             let flowlayout = UICollectionViewFlowLayout.init()
             flowlayout.itemSize = .init(width: 100, height: 100)
@@ -206,7 +209,8 @@ extension ImageUploadView {
 
 // MARK: - CollectionViewDelegate
 
-extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource {
+extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
+
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let imageCount: Int = delegate?.uploadImagesRelay?.value.count ?? 0
 
@@ -232,12 +236,13 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
             if index == 0 {
                 cell.parameters.status = .addImage
             } else {
-                cell.parameters.status = .image
-            }
+                // 기본적으로 첫번째 이미지는 썸네일로 변경
+                let thumbIndex: Int = delegate?.thumbImageIndexRelay?.value ?? 0
+                if index == thumbIndex + 1 {
+                    cell.parameters.isThumb = true
+                }
 
-            // 기본적으로 첫번째 이미지는 썸네일로 변경
-            if index == 1 {
-                cell.parameters.isThumb = true
+                cell.parameters.status = .image
             }
 
         // 수정모드
@@ -290,6 +295,52 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource 
         case .detail:
             delegate?.pressedDetailImage(index: indexPath.row)
         }
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        return []
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        guard let destinationIndexPath: IndexPath = coordinator.destinationIndexPath,
+              let sourceIndexPath: IndexPath = coordinator.items.first?.sourceIndexPath
+        else { return }
+
+        guard let itemToMoveImageData: Data =  delegate?.uploadImagesRelay?.value[safe: sourceIndexPath.row - 1] else { return }
+
+        let thumbIndex: Int = delegate?.thumbImageIndexRelay?.value ?? 0
+        if thumbIndex == sourceIndexPath.row - 1 {
+            delegate?.thumbImageIndexRelay?.accept(destinationIndexPath.row - 1)
+        } else if thumbIndex == destinationIndexPath.row - 1 {
+            delegate?.thumbImageIndexRelay?.accept(sourceIndexPath.row - 1)
+        }
+
+        let index: Int = sourceIndexPath.row
+        var imagesData: [Data] = delegate?.uploadImagesRelay?.value ?? []
+        imagesData.remove(at: index - 1)
+        imagesData.insert(itemToMoveImageData, at: destinationIndexPath.row - 1)
+        delegate?.uploadImagesRelay?.accept(imagesData)
+
+        collectionView.performBatchUpdates {
+            collectionView.deleteItems(at: [sourceIndexPath])
+            collectionView.insertItems(at: [destinationIndexPath])
+        }
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        // 데이터 소스에서 아이템을 이동
+        guard let itemToMoveImageData: Data =  delegate?.uploadImagesRelay?.value[safe: sourceIndexPath.row - 1] else { return }
+
+        let index: Int = sourceIndexPath.row - 1
+        var imagesData: [Data] = delegate?.uploadImagesRelay?.value ?? []
+        imagesData.remove(at: index - 1)
+        imagesData.insert(itemToMoveImageData, at: destinationIndexPath.row)
+        delegate?.uploadImagesRelay?.accept(imagesData)
+        collectionView.moveItem(at: sourceIndexPath, to: destinationIndexPath)
     }
 }
 

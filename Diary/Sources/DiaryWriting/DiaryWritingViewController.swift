@@ -811,18 +811,9 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                     images.append(imageData)
                     self.listener?.uploadImagesRelay.accept(images)
                     self.imageUploadView.appendImage(imageData: imageData)
-                    // self.imageUploadView.reloadCollectionView()
                     order += 1
                 }
                 print("DiaryHome :: loading! order = \(order)")
-
-//                if self.selecteedImages.count == results.count {
-//                    print("DiaryHome :: loading! 이미지 로딩이 완료되었습니다.")
-//                    DispatchQueue.main.async {
-//                        picker.dismiss(animated: true)
-//                        self.imageUploadView.images = self.selecteedImages
-//                    }
-//                }
             }
         }
     }
@@ -858,6 +849,8 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
         images.append(newImageData)
         self.listener?.uploadImagesRelay.accept(images)
         self.imageUploadView.appendImage(imageData: newImageData)
+
+        picker.dismiss(animated: true)
     }
 }
 
