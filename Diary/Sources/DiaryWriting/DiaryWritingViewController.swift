@@ -18,6 +18,8 @@ import MenualEntity
 import MenualUtil
 import DesignSystem
 
+// MARK: - DiaryWritingPresentableListener
+
 public protocol DiaryWritingPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
     func writeDiary()
@@ -39,11 +41,15 @@ public protocol DiaryWritingPresentableListener: AnyObject {
     var thumbImageIndexRelay: BehaviorRelay<Int> { get }
 }
 
+// MARK: - WritingType
+
 public enum WritingType {
     case writing
     case edit
     case tempSave
 }
+
+// MARK: - DiaryWritingViewController
 
 final class DiaryWritingViewController: UIViewController, DiaryWritingViewControllable {
 
@@ -302,6 +308,7 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 }
 
 // MARK: - Interactor Dependency Function
+
 extension DiaryWritingViewController: DiaryWritingPresentable {
     func setUI(writeType: WritingType) {
         switch writeType {
@@ -426,7 +433,8 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
     }
 }
 
-// MARK: - IBACtion
+// MARK: - IBAction
+
 extension DiaryWritingViewController {
     @objc
     func pressedBackBtn(_ button: UIButton) {
@@ -517,6 +525,7 @@ extension DiaryWritingViewController {
 }
 
 // MARK: - ImageUpload
+
 extension DiaryWritingViewController {
     // 앨범
     func pressedImageUploadPullDownBtn() {
@@ -586,6 +595,7 @@ extension DiaryWritingViewController {
 }
 
 // MARK: - UITextField
+
 extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         print("DiaryWriting :: textViewShouldBeginEditing")
@@ -777,6 +787,7 @@ extension DiaryWritingViewController: UITextFieldDelegate, UITextViewDelegate {
 }
 
 // MARK: - PHPicker & ImagePicker
+
 extension DiaryWritingViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         print("DiaryWriting :: didFinishPicking!!")
@@ -825,9 +836,10 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
     }
 }
 
+// MARK: - UIImagePickerControllerDelegate
+
 extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        /*
         print("DiaryWriting :: didFinishPickingMediaWithInfo!")
         var newImage: UIImage?
 
@@ -837,30 +849,20 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
             newImage = image
         }
 
-        guard let newImage = newImage else { return }
-        // let cropVC = CropViewController(image: newImage!)
-        // picker.pushViewController(cropVC, animated: true)
-        let cropVC = CustomCropViewController(image: newImage)
-        cropVC.cropVCNaviViewType = .close
+        guard let newImage: UIImage = newImage,
+              let newImageData: Data = newImage.jpegData(compressionQuality: 0.1)
+        else { return }
 
-        switch writingType {
-        case .writing, .tempSave:
-            cropVC.cropVCButtonType = .add
-        case .edit:
-            cropVC.cropVCButtonType = .edit
-        }
-
-        // self.cropVC = cropVC
-        cropVC.delegate = self
-        // self.selectedOriginalImage = newImage
-        dismiss(animated: true) {
-            self.present(cropVC, animated: true, completion: nil)
-        }
-        */
+        self.selecteedImages.append(newImageData)
+        var images: [Data] = self.listener?.uploadImagesRelay.value ?? []
+        images.append(newImageData)
+        self.listener?.uploadImagesRelay.accept(images)
+        self.imageUploadView.appendImage(imageData: newImageData)
     }
 }
 
 // MARK: - Keyboard Extension
+
 extension DiaryWritingViewController {
     @objc
     func keyboardWillShow(_ notification: NSNotification) {
@@ -894,6 +896,7 @@ extension DiaryWritingViewController {
 }
 
 // MARK: - WeatherPlaceToolbarView Delegate
+
 extension DiaryWritingViewController: WeatherPlaceToolbarViewDelegate {
     func close() {
         weatherPlaceToolbarView.isHidden = true
@@ -971,6 +974,7 @@ extension DiaryWritingViewController: DialogDelegate {
 }
 
 // MARK: - UI Setting
+
 extension DiaryWritingViewController {
     func initUI() {
         naviView.do {
