@@ -200,15 +200,15 @@ public class DiaryModelRealm: Object, Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         _id = try container.decode(ObjectId.self, forKey: ._id)
-        diaryVer = try container.decode(Int.self, forKey: .diaryVer)
+        diaryVer = try container.decodeIfPresent(Int.self, forKey: .diaryVer) ?? 0
         pageNum = try container.decode(Int.self, forKey: .pageNum)
         title = try container.decode(String.self, forKey: .title)
         weather = try container.decode(WeatherModelRealm?.self, forKey: .weather)
         place = try container.decode(PlaceModelRealm?.self, forKey: .place)
         desc = try container.decode(String.self, forKey: .desc)
         image = try container.decode(Bool.self, forKey: .image)
-        imageCount = try container.decode(Int.self, forKey: .imageCount)
-        thumbImageIndex = try container.decode(Int.self, forKey: .thumbImageIndex)
+        imageCount = try container.decodeIfPresent(Int.self, forKey: .imageCount) ?? 1
+        thumbImageIndex = try container.decodeIfPresent(Int.self, forKey: .thumbImageIndex) ?? 0
         readCount = try container.decode(Int.self, forKey: .readCount)
         createdAt = try container.decode(Date.self, forKey: .createdAt)
         isDeleted = try container.decode(Bool.self, forKey: .isDeleted)
@@ -221,15 +221,15 @@ public class DiaryModelRealm: Object, Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(_id, forKey: ._id)
-        try container.encode(diaryVer, forKey: .diaryVer)
+        try container.encodeIfPresent(diaryVer, forKey: .diaryVer)
         try container.encode(pageNum, forKey: .pageNum)
         try container.encode(title, forKey: .title)
         try container.encode(weather, forKey: .weather)
         try container.encode(place, forKey: .place)
         try container.encode(desc, forKey: .desc)
         try container.encode(image, forKey: .image)
-        try container.encode(imageCount, forKey: .imageCount)
-        try container.encode(thumbImageIndex, forKey: .thumbImageIndex)
+        try container.encodeIfPresent(imageCount, forKey: .imageCount)
+        try container.encodeIfPresent(thumbImageIndex, forKey: .thumbImageIndex)
         try container.encode(readCount, forKey: .readCount)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(isDeleted, forKey: .isDeleted)

@@ -225,11 +225,15 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             if let tempSaveModel = tempSaveModel {
                 print("DiaryWriting :: 임시저장 불러오기.")
                 if tempSaveModel.image == true {
+                    /*
                     guard let originalImage = tempSaveModel.originalImage,
                           let cropImage = tempSaveModel.cropImage,
                           let thumbImage = tempSaveModel.thumbImage else { return }
                     self.originalImageDataRelay.accept(originalImage)
                     self.thumbImageDataRelay.accept(thumbImage)
+                    */
+                    self.uploadImagesRelay.accept(tempSaveModel.images)
+                    self.thumbImageIndexRelay.accept(tempSaveModel.thumbImageIndex)
                 }
                 title = tempSaveModel.title
                 weather = tempSaveModel.weather
@@ -263,6 +267,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
                     self.weatherDescRelay.accept("")
                     self.placeDescRelay.accept("")
                     self.descRelay.accept("")
+                    self.uploadImagesRelay.accept([])
                     self.presenter.setUI(writeType: .tempSave)
 
                 case false:
@@ -271,6 +276,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
             })
             .disposed(by: disposebag)
 
+        // Weahter, WeatherDesc를 합쳐서 저장하는 Observable
         Observable.combineLatest(
             weatherRelay,
             weatherDescRelay
@@ -281,6 +287,7 @@ final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentabl
         })
         .disposed(by: disposebag)
 
+        // Place, PlaceDesc를 합쳐서 저장하는 Observable
         Observable.combineLatest(
             placeRelay,
             placeDescRelay
@@ -457,8 +464,9 @@ extension DiaryWritingInteractor {
 // MARK: - TempSave
 extension DiaryWritingInteractor {
     func pressedTempSaveBtn() {
-        router?.attachDiaryTempSave(tempSaveDiaryModelRelay: tempSaveDiaryModelRelay,
-                                    tempSaveResetRelay: tempSaveResetRelay
+        router?.attachDiaryTempSave(
+            tempSaveDiaryModelRelay: tempSaveDiaryModelRelay,
+            tempSaveResetRelay: tempSaveResetRelay
         )
     }
 
@@ -499,18 +507,25 @@ extension DiaryWritingInteractor {
         // 임시저장 이미지를 위해서 uuid를 미리 알고 있어야함
         let uuid: String = UUID().uuidString
 
-        saveImage(uuid: uuid)
+        // saveImage(uuid: uuid)
+        saveImages(diaryUUID: uuid)
         // 이미 임시저장이 있을 경우 임시저장 데이터에 업데이트
         if let tempSaveModel = tempSaveDiaryModelRelay.value {
             print("DiaryWriting :: interactor -> TempSaveModel이 이미 있으므로 업데이트합니다. \(diaryModel.desc)")
             dependency.diaryRepository
-                .updateTempSave(diaryModel: diaryModel, tempSaveUUID: tempSaveModel.uuid)
+                .updateTempSave(
+                    diaryModel: diaryModel,
+                    tempSaveUUID: tempSaveModel.uuid
+                )
         }
         // 임시저장 데이터가 없을 경우 새로 저장
         else {
             print("DiaryWriting :: interactor -> TempSaveModel이 없으므로 새로 저장합니다.")
             dependency.diaryRepository
-                .addTempSave(diaryModel: diaryModel, tempSaveUUID: uuid)
+                .addTempSave(
+                    diaryModel: diaryModel,
+                    tempSaveUUID: uuid
+                )
         }
     }
 }

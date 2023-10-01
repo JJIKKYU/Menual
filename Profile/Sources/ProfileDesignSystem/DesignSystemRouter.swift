@@ -8,7 +8,7 @@
 import RIBs
 import MenualUtil
 
-protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener, FABListener, PaginationListener, EmptyViewListener, MetaDataListener, NumberPadListener, ProgressListener {
+protocol DesignSystemInteractable: Interactable, BoxButtonListener, GNBHeaderListener, ListHeaderListener, MomentsListener, DividerListener, CapsuleButtonListener, ListListener, FABListener, PaginationListener, EmptyViewListener, MetaDataListener, ProgressListener {
     var router: DesignSystemRouting? { get set }
     var listener: DesignSystemListener? { get set }
 }
@@ -53,9 +53,6 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
     private let metaDataBuildable: MetaDataBuildable
     private var metaDataRouting: Routing?
     
-    private let numberPadBuildable: NumberPadBuildable
-    private var numberPadRouting: Routing?
-    
     private let progressBuildable: ProgressBuildable
     private var progressRouting: Routing?
     
@@ -74,7 +71,6 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         paginationBuildable: PaginationBuildable,
         emptyBuildable: EmptyViewBuildable,
         metaDataBuildable: MetaDataBuildable,
-        numberPadBuildable: NumberPadBuildable,
         progressBuildable: ProgressBuildable
     ) {
         self.boxButtonBuildable = boxButtonBuildable
@@ -88,7 +84,6 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         self.paginationBuildable = paginationBuildable
         self.emptyBuildable = emptyBuildable
         self.metaDataBuildable = metaDataBuildable
-        self.numberPadBuildable = numberPadBuildable
         self.progressBuildable = progressBuildable
         super.init(interactor: interactor,
                    viewController: viewController
@@ -382,35 +377,9 @@ final class DesignSystemRouter: ViewableRouter<DesignSystemInteractable, DesignS
         metaDataRouting = nil
     }
     
-    // MARK: - NumberPad
-    func attachNumberPadVC() {
-        if numberPadRouting != nil {
-            return
-        }
-        
-        let router = numberPadBuildable.build(withListener: interactor)
-        viewController.pushViewController(router.viewControllable, animated: true)
-        
-        numberPadRouting = router
-        attachChild(router)
-    }
-    
-    func detachNumberPadVC(isOnlyDetach: Bool) {
-        guard let router = numberPadRouting else {
-            return
-        }
-        
-        if !isOnlyDetach {
-            viewController.popViewController(animated: true)
-        }
-        
-        detachChild(router)
-        numberPadRouting = nil
-    }
-    
     // MARK: - Progress
     func attachProgressVC() {
-        if numberPadRouting != nil {
+        if progressRouting != nil {
             return
         }
         

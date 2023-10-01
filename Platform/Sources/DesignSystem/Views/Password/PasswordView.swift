@@ -10,8 +10,19 @@ import Then
 import SnapKit
 import MenualUtil
 
+// MARK: - PasswordViewDelegate
+
+public protocol PasswordViewDelegate: AnyObject {
+    func deleteNumber()
+    func selectNumber(number: Int)
+}
+
+// MARK: - PasswordView
+
 public class PasswordView: UIView {
-    
+
+    public weak var delegate: PasswordViewDelegate?
+
     public enum PasswordViewType {
         case check // 비밀번호 변경시에 사용
         case first
@@ -36,51 +47,71 @@ public class PasswordView: UIView {
     public var numberArr: [Int] = [] {
         didSet { setNeedsLayout() }
     }
-    
-    private let titleLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = MenualString.password_title_type
-        $0.font = UIFont.AppTitle(.title_5)
-        $0.textColor = Colors.grey.g200
+
+    var _inputView: UIView?
+
+    override public var canBecomeFirstResponder: Bool { return true }
+    override public var canResignFirstResponder: Bool { return true }
+
+    override public var inputView: UIView? {
+        set { _inputView = newValue }
+        get { return _inputView }
     }
-    
-    private let subTitleLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = MenualString.password_desc_help
-        $0.setLineHeight(lineHeight: 1.14)
-        $0.font = UIFont.AppBodyOnlyFont(.body_3)
-        $0.textColor = Colors.tint.main.v400
-        $0.numberOfLines = 2
-        $0.lineBreakStrategy = .standard
-        $0.textAlignment = .center
-    }
-    
-    private let password1 = PasswordIconView(type: ._default).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private let password2 = PasswordIconView(type: ._default).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private let password3 = PasswordIconView(type: ._default).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private let password4 = PasswordIconView(type: ._default).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
+
+    private let titleLabel: UILabel = .init()
+    private let subTitleLabel: UILabel = . init()
+    private let password1: PasswordIconView = .init(type: ._default)
+    private let password2: PasswordIconView = .init(type: ._default)
+    private let password3: PasswordIconView = .init(type: ._default)
+    private let password4: PasswordIconView = .init(type: ._default)
     
     public init() {
         super.init(frame: CGRect.zero)
+        configureUI()
         setViews()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func setViews() {
+
+    private func configureUI() {
+        titleLabel.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.text = MenualString.password_title_type
+            $0.font = UIFont.AppTitle(.title_5)
+            $0.textColor = Colors.grey.g200
+        }
+
+        subTitleLabel.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.text = MenualString.password_desc_help
+            $0.setLineHeight(lineHeight: 1.14)
+            $0.font = UIFont.AppBodyOnlyFont(.body_3)
+            $0.textColor = Colors.tint.main.v400
+            $0.numberOfLines = 2
+            $0.lineBreakStrategy = .standard
+            $0.textAlignment = .center
+        }
+
+        password1.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+
+        password2.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+
+        password3.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+
+        password4.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+    }
+
+    private func setViews() {
         addSubview(titleLabel)
         addSubview(subTitleLabel)
         addSubview(password1)
@@ -207,5 +238,26 @@ public class PasswordView: UIView {
             password4.type = .error
         }
         
+    }
+}
+
+// MARK: - UIKeyInput
+
+extension PasswordView: UIKeyInput {
+    public var hasText: Bool { return false }
+
+    // 키보드로 숫자를 눌렀을 경우
+    public func insertText(_ text: String) {
+        guard let number: Int = Int(text) else { return }
+        delegate?.selectNumber(number: number)
+    }
+
+    // 키보드로 삭제 버튼을 눌렀을 경우
+    public func deleteBackward() {
+        delegate?.deleteNumber()
+    }
+    public var keyboardType: UIKeyboardType {
+        get { .numberPad }
+        set { }
     }
 }

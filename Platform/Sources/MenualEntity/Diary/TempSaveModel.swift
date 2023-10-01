@@ -16,6 +16,34 @@ public class TempSaveModelRealm: Object, Codable {
     @Persisted public var title: String = ""
     @Persisted public var desc: String = ""
     @Persisted public var image: Bool
+    @Persisted public var thumbImageIndex: Int
+    @Persisted public var imageCount: Int
+    public var images: [Data] {
+        get {
+            if image == false { return [] }
+
+            // 1. 도큐먼트 폴더 경로가져오기
+            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
+            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+
+            var imagesData: [Data] = []
+            for index in 0..<imageCount {
+                guard let directoryPath: String = path.first else { return [] }
+                // 2. 이미지 URL 찾기
+                let imageURL: URL = .init(fileURLWithPath: directoryPath)
+                    .appendingPathComponent(uuid + "_images_" + "\(index)")
+
+                // 3. UIImage로 불러오고 Data로 Return
+                let imageData: Data = UIImage(contentsOfFile: imageURL.path)?
+                    .jpegData(compressionQuality: 0.4) ?? Data()
+
+                imagesData.append(imageData)
+            }
+
+            return imagesData
+        }
+    }
     public var originalImage: Data? {
         get {
             if image == false { return nil }
@@ -80,6 +108,8 @@ public class TempSaveModelRealm: Object, Codable {
         self.title = diaryModel.title
         self.desc = diaryModel.desc
         self.image = diaryModel.image
+        self.thumbImageIndex = diaryModel.thumbImageIndex
+        self.imageCount = diaryModel.imageCount
         self.weather = diaryModel.weather?.weather
         self.weatherDetailText = diaryModel.weather?.detailText
         self.place = diaryModel.place?.place
@@ -98,6 +128,8 @@ public class TempSaveModelRealm: Object, Codable {
         case title
         case desc
         case image
+        case thumbImageIndex
+        case imageCount
         case weather
         case weatherDetailText
         case place
@@ -114,6 +146,8 @@ public class TempSaveModelRealm: Object, Codable {
         title = try container.decode(String.self, forKey: .title)
         desc = try container.decode(String.self, forKey: .desc)
         image = try container.decode(Bool.self, forKey: .image)
+        thumbImageIndex = try container.decodeIfPresent(Int.self, forKey: .thumbImageIndex) ?? 0
+        imageCount = try container.decodeIfPresent(Int.self, forKey: .imageCount) ?? 1
         // weather = try container.decodeIfPresent(Weather.self, forKey: .weather)
         if let weatherRawValue = try container.decodeIfPresent(String.self, forKey: .weather),
             let weather = Weather(rawValue: weatherRawValue) {
@@ -142,6 +176,8 @@ public class TempSaveModelRealm: Object, Codable {
         try container.encode(title, forKey: .title)
         try container.encode(desc, forKey: .desc)
         try container.encode(image, forKey: .image)
+        try container.encodeIfPresent(thumbImageIndex, forKey: .thumbImageIndex)
+        try container.encodeIfPresent(imageCount, forKey: .imageCount)
         try container.encodeIfPresent(weather?.rawValue ?? "", forKey: .weather)
         try container.encodeIfPresent(weatherDetailText, forKey: .weatherDetailText)
         try container.encodeIfPresent(place?.rawValue ?? "", forKey: .place)

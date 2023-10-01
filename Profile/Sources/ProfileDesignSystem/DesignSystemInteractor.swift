@@ -44,9 +44,6 @@ public protocol DesignSystemRouting: ViewableRouting {
     func attachMetaDataVC()
     func detachMetaDataVC(isOnlyDetach: Bool)
     
-    func attachNumberPadVC()
-    func detachNumberPadVC(isOnlyDetach: Bool)
-    
     func attachProgressVC()
     func detachProgressVC(isOnlyDetach: Bool)
 }
@@ -80,7 +77,6 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
         "List",
         "Empty",
         "MetaData",
-        "NumberPad",
         "Progress"
     ]
 
@@ -191,14 +187,6 @@ final class DesignSystemInteractor: PresentableInteractor<DesignSystemPresentabl
     
     func metaDataPressedBackBtn(isOnlyDetach: Bool) {
         router?.detachMetaDataVC(isOnlyDetach: isOnlyDetach)
-    }
-    
-    func pressedNumberPadCell() {
-        router?.attachNumberPadVC()
-    }
-    
-    func numberPadPressedBackBtn(isOnlyDetach: Bool) {
-        router?.detachNumberPadVC(isOnlyDetach: isOnlyDetach)
     }
     func pressedProgressCell() {
         router?.attachProgressVC()
