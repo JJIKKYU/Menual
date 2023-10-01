@@ -12,6 +12,7 @@ import RealmSwift
 import MenualEntity
 import MenualUtil
 import UserNotifications
+import Photos
 
 // MARK: - DiaryRepository
 
@@ -108,6 +109,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
         }
     }
 
+    /// 여러개 이미지 저장하는 함수
+    /// - diaryVer 0.1과 다르게 이미지는 UUID 폴더를 생성해서 저장
     public func saveImageToDocumentDirectory(imageName: String, imagesData: [Data], completionHandler: @escaping (Bool) -> Void) {
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             completionHandler(false)

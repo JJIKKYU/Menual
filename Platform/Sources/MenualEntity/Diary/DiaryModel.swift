@@ -6,6 +6,8 @@
 //
 
 import Foundation
+// import MenualUtil
+import Photos
 import RealmSwift
 import UIKit
 
@@ -41,11 +43,11 @@ public class DiaryModelRealm: Object, Codable {
             for index in 0..<imageCount {
                 guard let directoryPath: String = path.first else { return [] }
                 // 2. 이미지 URL 찾기
-                let originalImageURL: URL = .init(fileURLWithPath: directoryPath)
+                let imageURL: URL = .init(fileURLWithPath: directoryPath)
                     .appendingPathComponent(uuid + "_images_" + "\(index)")
 
                 // 3. UIImage로 불러오고 Data로 Return
-                let imageData: Data = UIImage(contentsOfFile: originalImageURL.path)?
+                let imageData: Data = UIImage(contentsOfFile: imageURL.path)?
                     .jpegData(compressionQuality: 0.4) ?? Data()
 
                 imagesData.append(imageData)

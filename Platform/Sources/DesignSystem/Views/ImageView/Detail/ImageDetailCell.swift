@@ -5,6 +5,7 @@
 //  Created by 정진균 on 9/30/23.
 //
 
+import PhotosUI
 import SnapKit
 import Then
 import UIKit
@@ -41,7 +42,7 @@ public class ImageDetailCell: UICollectionViewCell {
 
     private func configureUI() {
         backgroundColor = .clear
-        
+
         imageView.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.contentMode = .scaleAspectFit

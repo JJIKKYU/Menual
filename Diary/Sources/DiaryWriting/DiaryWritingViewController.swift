@@ -782,16 +782,13 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
         print("DiaryWriting :: didFinishPicking!!")
 
         picker.dismiss(animated: true)
+
         var order: Int = 0
 
         for result in results {
-            // 이미지 업로드가 불가능한 경우
-            if result.itemProvider.canLoadObject(ofClass: UIImage.self) == false {
-                continue
-            }
+            let prov: NSItemProvider = result.itemProvider
 
-
-            result.itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
+            prov.loadObject(ofClass: UIImage.self) { [weak self] image, error in
                 guard let self = self else { return }
                 guard let image: UIImage = image as? UIImage,
                       let imageData: Data = image.jpegData(compressionQuality: 0.1)
@@ -817,49 +814,6 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
 //                }
             }
         }
-
-        /*
-        let itemProvider = results.first?.itemProvider
-
-        if let itemProvider = itemProvider {
-            if itemProvider.canLoadObject(ofClass: UIImage.self) {
-                itemProvider.loadObject(ofClass: UIImage.self) { [weak self] (image, error) in
-                    guard let self = self, let image = image as? UIImage else { return }
-                    DispatchQueue.main.async {
-                        let cropVC = CustomCropViewController(image: image)
-                        cropVC.cropVCNaviViewType = .backArrow
-
-                        switch self.writingType {
-                        case .writing, .tempSave:
-                            cropVC.cropVCButtonType = .add
-                        case .edit:
-                            cropVC.cropVCButtonType = .edit
-                        }
-
-                        self.cropVC = cropVC
-                        cropVC.delegate = self
-                        print("DiaryWriting :: selectedOriginalImage = \(image)")
-                        // self.selectedOriginalImage = self.fixImageOrientation(image)
-
-                        // OriginalImage ViewModel에 넘기기
-                        self.listener?.originalImageDataRelay.accept(self.fixImageOrientation(image).jpeg(.low))
-                        // OriginalImage를 줄여서 Thumbnail을 만들어서 ViewModel에 넘기기
-                        if let thumbImageData = UIImage().imageWithImage(sourceImage: self.fixImageOrientation(image), scaledToWidth: 150).jpeg(.high) {
-                            self.listener?.thumbImageDataRelay.accept(thumbImageData)
-                        }
-
-                        picker.navigationController?.pushViewController(cropVC, animated: true)
-                    }
-                }
-            }
-        } else {
-            // TODO: Handle empty results or item provider not being able load UIImage
-            print("DiaryWriting :: 이미지가 없습니다!")
-            self.isEdittedIamge = false
-            dismiss(animated: true)
-        }
-
-         */
     }
 
     func fixImageOrientation(_ image: UIImage) -> UIImage {

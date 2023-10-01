@@ -11,6 +11,7 @@ import RxSwift
 import SnapKit
 import Then
 import UIKit
+import Photos
 
 // MARK: - ImageUploadViewDelegate
 
