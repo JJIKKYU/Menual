@@ -158,9 +158,11 @@ public final class ImageUploadView: UIView {
 
         switch state {
         case .writing, .edit:
+            collectionView.dragInteractionEnabled = true
             currentImageCountLabel.isHidden = false
 
         case .detail:
+            collectionView.dragInteractionEnabled = false
             deleteButton.isHidden = true
             currentImageCountLabel.isHidden = true
         }
