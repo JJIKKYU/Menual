@@ -35,8 +35,6 @@ public protocol DiaryWritingPresentableListener: AnyObject {
     var placeRelay: BehaviorRelay<Place?> { get }
     var weatherDescRelay: BehaviorRelay<String> { get }
     var weatherRelay: BehaviorRelay<Weather?> { get }
-    var originalImageDataRelay: BehaviorRelay<Data?> { get }
-    var thumbImageDataRelay: BehaviorRelay<Data?> { get }
     var uploadImagesRelay: BehaviorRelay<[Data]> { get }
     var thumbImageIndexRelay: BehaviorRelay<Int> { get }
 }
@@ -76,8 +74,6 @@ final class DiaryWritingViewController: UIViewController, DiaryWritingViewContro
 
     // 수정하기 상태에서 이미지를 수정했을때만 저장할 수 있도록 하는 플래그
     private var isEdittedIamge: Bool = false
-    // 업로드할 오리지날 이미지
-    private var selectedOriginalImage: UIImage?
 
     private let defaultTitleText: String = MenualString.writing_placeholder_title
     private let defaultDescriptionText: String = MenualString.writing_placeholder_desc
@@ -498,13 +494,6 @@ extension DiaryWritingViewController {
     func pressedTempSaveBtn(_ button: UIButton) {
         MenualLog.logEventAction(responder: button)
         listener?.pressedTempSaveBtn()
-    }
-
-    @objc
-    func pressedImageUploadViewEditBtn(_ button: UIButton) {
-        print("DiaryWriting :: pressedImageUploadViewEditBtn")
-        // 따로 추가 기능이 없으므로 그대로 랜딩
-        // pressedImageUploadView()
     }
 
     @objc

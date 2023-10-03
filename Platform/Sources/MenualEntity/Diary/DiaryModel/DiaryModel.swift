@@ -53,56 +53,15 @@ public class DiaryModelRealm: Object, Codable {
         }
     }
 
-    public var originalImage: Data? {
-        get {
-            if image == false { return nil }
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-
-            if let directoryPath = path.first {
-                // 2. 이미지 URL 찾기
-                let originalImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Original")
-                // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: originalImageURL.path)?.jpegData(compressionQuality: 0.9)
-            }
-            return nil
-        }
-    }
-
     public var thumbImage: Data? {
         get {
             if image == false { return nil }
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
 
-            if let directoryPath = path.first {
-                // 2. 이미지 URL 찾기
-                let thumbImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Thumb")
-                // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: thumbImageURL.path)?.jpegData(compressionQuality: 0.9)
-            }
-            return nil
-        }
-    }
-    public var cropImage: Data? {
-        get {
-            if image == false { return nil }
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+            guard let directoryPath: String = getDiaryFolderPath() else { return nil }
 
-            if let directoryPath = path.first {
-                // 2. 이미지 URL 찾기
-                let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid)
-                // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: imageURL.path)?.jpegData(compressionQuality: 1.0)
-            }
-            return nil
+            let thumbImageURL: URL = URL(filePath: directoryPath).appendingPathComponent("images_\(thumbImageIndex)")
+
+            return UIImage(contentsOfFile: thumbImageURL.path)? .jpegData(compressionQuality: 0.5)
         }
     }
     @Persisted public var readCount: Int

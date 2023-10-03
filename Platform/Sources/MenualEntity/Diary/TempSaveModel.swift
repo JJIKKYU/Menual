@@ -22,17 +22,13 @@ public class TempSaveModelRealm: Object, Codable {
         get {
             if image == false { return [] }
 
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+            guard let directoryPath: String = getDiaryFolderPath() else { return [] }
 
             var imagesData: [Data] = []
             for index in 0..<imageCount {
-                guard let directoryPath: String = path.first else { return [] }
                 // 2. 이미지 URL 찾기
                 let imageURL: URL = .init(fileURLWithPath: directoryPath)
-                    .appendingPathComponent(uuid + "_images_" + "\(index)")
+                    .appendingPathComponent("images_" + "\(index).jpg")
 
                 // 3. UIImage로 불러오고 Data로 Return
                 let imageData: Data = UIImage(contentsOfFile: imageURL.path)?
@@ -44,57 +40,19 @@ public class TempSaveModelRealm: Object, Codable {
             return imagesData
         }
     }
-    public var originalImage: Data? {
-        get {
-            if image == false { return nil }
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-            
-            if let directoryPath = path.first {
-                // 2. 이미지 URL 찾기
-                let originalImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Original")
-                // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: originalImageURL.path)?.jpegData(compressionQuality: 0.5)
-            }
-            return nil
-        }
-    }
-    public var cropImage: Data? {
-        get {
-            if image == false { return nil }
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-            
-            if let directoryPath = path.first {
-                // 2. 이미지 URL 찾기
-                let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid)
-                // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: imageURL.path)?.jpegData(compressionQuality: 0.8)
-            }
-            return nil
-        }
-    }
+
     public var thumbImage: Data? {
         get {
             if image == false { return nil }
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
 
-            if let directoryPath = path.first {
-            // 2. 이미지 URL 찾기
-                let thumbImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Thumb")
-                // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: thumbImageURL.path)?.jpegData(compressionQuality: 0.9)
-            }
-            return nil
+            guard let directoryPath: String = getDiaryFolderPath() else { return nil }
+
+            let thumbImageURL: URL = URL(filePath: directoryPath).appendingPathComponent("images_\(thumbImageIndex)")
+
+            return UIImage(contentsOfFile: thumbImageURL.path)? .jpegData(compressionQuality: 0.5)
         }
     }
+
     @Persisted public var weather: Weather?
     @Persisted public var weatherDetailText: String?
     @Persisted public var place: Place?
@@ -184,5 +142,19 @@ public class TempSaveModelRealm: Object, Codable {
         try container.encodeIfPresent(placeDetailText, forKey: .placeDetailText)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(isDeleted, forKey: .isDeleted)
+    }
+}
+
+// MARK: - Extension
+
+extension TempSaveModelRealm {
+    private func getDiaryFolderPath() -> String? {
+        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+
+        let folderURL: URL = documentDirectory.appendingPathComponent(self.uuid)
+
+        return folderURL.path
     }
 }

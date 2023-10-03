@@ -39,6 +39,8 @@ final class DiaryWritingInteractorTests: XCTestCase {
             place: PlaceModelRealm(place: .company, detailText: "textBus"),
             desc: "testDesc",
             image: false,
+            imageCount: 1,
+            thumbImageIndex: 0,
             createdAt: Date()
         )
 
@@ -120,6 +122,8 @@ final class DiaryWritingInteractorTests: XCTestCase {
             place: nil,
             desc: "tempSaveTestDesc",
             image: false,
+            imageCount: 1,
+            thumbImageIndex: 0,
             createdAt: Date(),
             lastMomentsDate: nil
         )
@@ -176,14 +180,17 @@ final class DiaryWritingInteractorTests: XCTestCase {
     /// 정상적인 값이 들어갔을 경우
     func testUpdateDiary() {
         // given
-        let diaryModelRealm = DiaryModelRealm(pageNum: 999,
-                                              title: "testTitle",
-                                              weather: nil,
-                                              place: nil,
-                                              desc: "testDesc",
-                                              image: false,
-                                              createdAt: Date(),
-                                              lastMomentsDate: nil
+        let diaryModelRealm = DiaryModelRealm(
+            pageNum: 999,
+            title: "testTitle",
+            weather: nil,
+            place: nil,
+            desc: "testDesc",
+            image: false,
+            imageCount: 1,
+            thumbImageIndex: 0,
+            createdAt: Date(),
+            lastMomentsDate: nil
         )
 
         sut.activate()
@@ -201,7 +208,7 @@ final class DiaryWritingInteractorTests: XCTestCase {
         sut.updateDiary(isUpdateImage: false)
 
         Observable.combineLatest(
-            sut.imageSaveRelay,
+            sut.imagesSaveCompleteRelay,
             sut.updateDiaryModelRelay
         )
         .subscribe(onNext: { _, _ in
@@ -227,7 +234,7 @@ final class DiaryWritingInteractorTests: XCTestCase {
         sut.updateDiary(isUpdateImage: false)
 
         Observable.combineLatest(
-            sut.imageSaveRelay,
+            sut.imagesSaveCompleteRelay,
             sut.updateDiaryModelRelay
         )
         .subscribe(onNext: { _, _ in
@@ -240,26 +247,6 @@ final class DiaryWritingInteractorTests: XCTestCase {
 
         // then
         XCTAssertEqual(diaryRepository.updateDiaryCallCount1, 0)
-    }
-
-    func testsaveOriginalImage() {
-        // given
-
-        // when
-        sut.saveOriginalImage(diaryUUID: UUID().uuidString, imageData: Data())
-
-        // then
-        XCTAssertEqual(diaryRepository.saveImageToDocumentDirectoryCallCount, 1)
-    }
-
-    func testsaveThumbImage() {
-        // given
-
-        // when
-        sut.saveThumbImage(diaryUUID: UUID().uuidString, imageData: Data())
-
-        // then
-        XCTAssertEqual(diaryRepository.saveImageToDocumentDirectoryCallCount, 1)
     }
 
     func testDeleteAllImages() {
@@ -282,6 +269,8 @@ final class DiaryWritingInteractorTests: XCTestCase {
             place: nil,
             desc: "testDesc",
             image: false,
+            imageCount: 1,
+            thumbImageIndex: 0,
             createdAt: Date(),
             lastMomentsDate: nil
         )
