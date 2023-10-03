@@ -149,6 +149,10 @@ public final class ImageUploadView: UIView {
                 } else {
                     deleteButton.isHidden = false
                 }
+
+                DispatchQueue.main.async {
+                    self.collectionView.reloadData()
+                }
             })
             .disposed(by: disPoseBag)
     }
@@ -166,7 +170,10 @@ public final class ImageUploadView: UIView {
             deleteButton.isHidden = true
             currentImageCountLabel.isHidden = true
         }
-        collectionView.reloadData()
+
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
+        }
     }
 }
 
