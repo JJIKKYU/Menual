@@ -20,7 +20,7 @@ public class DiaryModelRealm: Object, Codable {
             return _id.stringValue
         }
     }
-    @Persisted public var diaryVer: Int
+    @Persisted public var version: Double
     @Persisted public var pageNum: Int
     @Persisted public var title = ""
     @Persisted public var weather: WeatherModelRealm?
@@ -34,17 +34,13 @@ public class DiaryModelRealm: Object, Codable {
         get {
             if image == false { return [] }
 
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
+            guard let directoryPath: String = getDiaryFolderPath() else { return [] }
 
             var imagesData: [Data] = []
             for index in 0..<imageCount {
-                guard let directoryPath: String = path.first else { return [] }
                 // 2. 이미지 URL 찾기
                 let imageURL: URL = .init(fileURLWithPath: directoryPath)
-                    .appendingPathComponent(uuid + "_images_" + "\(index)")
+                    .appendingPathComponent("images_" + "\(index).jpg")
 
                 // 3. UIImage로 불러오고 Data로 Return
                 let imageData: Data = UIImage(contentsOfFile: imageURL.path)?
@@ -74,6 +70,7 @@ public class DiaryModelRealm: Object, Codable {
             return nil
         }
     }
+
     public var thumbImage: Data? {
         get {
             if image == false { return nil }
@@ -126,7 +123,7 @@ public class DiaryModelRealm: Object, Codable {
     @Persisted public var reminder: ReminderModelRealm?
 
     public convenience init(
-        diaryVer: Int = 1,
+        version: Double = 0.1,
         pageNum: Int,
         title: String,
         weather: WeatherModelRealm?,
@@ -144,7 +141,7 @@ public class DiaryModelRealm: Object, Codable {
         reminder: ReminderModelRealm? = nil
     ) {
         self.init()
-        self.diaryVer = diaryVer
+        self.version = version
         self.pageNum = pageNum
         self.title = title
         self.weather = weather
@@ -172,7 +169,7 @@ public class DiaryModelRealm: Object, Codable {
     }
 
     enum CodingKeys: String,CodingKey {
-        case diaryVer
+        case version
         case _id
         case pageNum
         case title
@@ -200,7 +197,7 @@ public class DiaryModelRealm: Object, Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         _id = try container.decode(ObjectId.self, forKey: ._id)
-        diaryVer = try container.decodeIfPresent(Int.self, forKey: .diaryVer) ?? 0
+        version = try container.decodeIfPresent(Double.self, forKey: .version) ?? 0.1
         pageNum = try container.decode(Int.self, forKey: .pageNum)
         title = try container.decode(String.self, forKey: .title)
         weather = try container.decode(WeatherModelRealm?.self, forKey: .weather)
@@ -221,7 +218,7 @@ public class DiaryModelRealm: Object, Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(_id, forKey: ._id)
-        try container.encodeIfPresent(diaryVer, forKey: .diaryVer)
+        try container.encodeIfPresent(version, forKey: .version)
         try container.encode(pageNum, forKey: .pageNum)
         try container.encode(title, forKey: .title)
         try container.encode(weather, forKey: .weather)
@@ -237,5 +234,19 @@ public class DiaryModelRealm: Object, Codable {
         try container.encode(lastMomentsDate, forKey: .lastMomentsDate)
         try container.encode(isHide, forKey: .isHide)
         try container.encode(reminder, forKey: .reminder)
+    }
+}
+
+// MARK: - Extension
+
+extension DiaryModelRealm {
+    private func getDiaryFolderPath() -> String? {
+        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+
+        let folderURL: URL = documentDirectory.appendingPathComponent(self.uuid)
+
+        return folderURL.path
     }
 }

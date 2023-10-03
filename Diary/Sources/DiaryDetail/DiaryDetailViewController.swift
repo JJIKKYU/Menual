@@ -28,7 +28,7 @@ public protocol DiaryDetailPresentableListener: AnyObject {
     func pressedReminderBtn()
     
     func pressedImageView(index: Int)
-    
+
     func hideDiary()
     func deleteReply(replyModel: DiaryReplyModelRealm)
     
@@ -54,160 +54,39 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     private var willDeleteReplyUUID: String?
     private var willDeleteReplyModel: DiaryReplyModelRealm?
     
-    private let tableViewHeaderView = UIView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isUserInteractionEnabled = true
-        $0.backgroundColor = .clear
-    }
-    
-    private lazy var replyBottomView = ReplyBottomView().then {
-        $0.categoryName = "reply"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.writeBtn.addTarget(self, action: #selector(pressedSubmitReplyBtn), for: .touchUpInside)
-        $0.replyTextView.delegate = self
-    }
+    private let tableViewHeaderView: UIView = .init()
+    private let replyBottomView: ReplyBottomView = .init()
 
-    lazy var naviView = MenualNaviView(type: .menualDetail).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
-        
-        $0.rightButton1.addTarget(self, action: #selector(pressedMenuMoreBtn), for: .touchUpInside)
-        $0.rightButton2.addTarget(self, action: #selector(pressedReminderBtn), for: .touchUpInside)
-    }
+    private let naviView: MenualNaviView = .init(type: .menualDetail)
     
-    private let titleLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.font = UIFont.AppTitle(.title_5)
-        $0.textColor = Colors.grey.g200
-        $0.text = "텍스트입ㄴ다"
-        $0.numberOfLines = 0
-    }
+    private let titleLabel: UILabel = .init()
+    private let createdAtPageView: CreatedAtPageView = .init()
+    private let weatherLocationStackView: UIStackView = .init(frame: .zero)
+    private let divider1: Divider = .init(type: ._1px)
     
-    private let createdAtPageView = CreatedAtPageView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
+    private let weatherSelectView: WeatherLocationSelectView = .init(type: .weather)
+    private let divider2: Divider = .init(type: ._1px)
     
-    private let weatherLocationStackView = UIStackView(frame: .zero).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .clear
-        $0.axis = .vertical
-        $0.alignment = .fill
-        $0.spacing = 13
-        $0.distribution = .fill
-    }
+    private let locationSelectView: WeatherLocationSelectView = .init(type: .location)
     
-    private let divider1 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
+    private let divider3: Divider = .init(type: ._1px)
+    private let descriptionTextView: UITextView = .init()
     
-    private lazy var weatherSelectView = WeatherLocationSelectView(type: .weather).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isUserInteractionEnabled = false
-        $0.selected = true
-        $0.selectedWeatherType = .rain
-        $0.selectTitle = ""
-        $0.isDeleteBtnEnabled = false
-    }
-    
-    private let divider2 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private lazy var locationSelectView = WeatherLocationSelectView(type: .location).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isUserInteractionEnabled = false
-        $0.selected = true
-        $0.selectedPlaceType = .company
-        $0.selectTitle = ""
-        $0.isDeleteBtnEnabled = false
-    }
-    
-    private let divider3 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    lazy var descriptionTextView = UITextView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = ""
-        $0.isScrollEnabled = false
-        $0.isEditable = false
-        $0.backgroundColor = .clear
-        $0.textContainerInset = .zero
-        $0.textContainer.lineFragmentPadding = 0
-    }
-    
-    private let divider4 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
+    private let divider4: Divider = .init(type: ._1px)
 
-    lazy var imageUploadView: ImageUploadView = .init(state: .detail).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isUserInteractionEnabled = true
-        $0.delegate = self
-    }
+    private let imageUploadView: ImageUploadView = .init(state: .detail)
     
-    lazy var replyTableView = UITableView(frame: .zero, style: .grouped).then {
-        $0.categoryName = "replyList"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.delegate = self
-        $0.dataSource = self
-        $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 100, right: 0)
-        $0.register(ReplyCell.self, forCellReuseIdentifier: "ReplyCell")
-        
-        $0.estimatedRowHeight = 44
-        $0.rowHeight = UITableView.automaticDimension
-        
-        // $0.sectionHeaderHeight = UITableView.automaticDimension
-        // $0.estimatedSectionHeaderHeight = 64
-        
-        $0.showsVerticalScrollIndicator = false
-        $0.backgroundColor = Colors.background
-        
-        $0.tableFooterView = nil
-        $0.separatorStyle = .none
-    }
+    private let replyTableView: UITableView = .init(frame: .zero, style: .grouped)
     
-    lazy var spaceRequiredFAB = FAB(fabType: .spacRequired, fabStatus: .default_).then {
-        $0.categoryName = "inddicator"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.spaceRequiredRightArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
-        $0.spaceRequiredLeftArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
-    }
-    
-    lazy var hideView = UIView().then {
-        $0.categoryName = "hide"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        let lockEmptyView = Empty().then {
-            $0.screenType = .writing
-            $0.writingType = .lock
-        }
-        lazy var btn = CapsuleButton(frame: .zero, includeType: .iconText).then {
-            $0.actionName = "unhide"
-            $0.title = "숨김 해제하기"
-            $0.image = Asset._16px.Circle.front.image.withRenderingMode(.alwaysTemplate)
-        }
-        btn.addTarget(self, action: #selector(pressedLockBtn), for: .touchUpInside)
-        $0.addSubview(lockEmptyView)
-        $0.addSubview(btn)
-
-        lockEmptyView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(81)
-            make.width.equalTo(160)
-            make.height.equalTo(180)
-            make.centerX.equalToSuperview()
-        }
-        btn.snp.makeConstraints { make in
-            make.top.equalTo(lockEmptyView.snp.bottom).offset(12)
-            make.width.equalTo(113)
-            make.height.equalTo(28)
-            make.centerX.equalToSuperview()
-        }
-        $0.isHidden = true
-    }
+    private let spaceRequiredFAB: FAB = .init(fabType: .spacRequired, fabStatus: .default_)
+    private let hideView: UIView = .init()
     
     init() {
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
+
+        configureUI()
+        setViews()
     }
     
     required init?(coder: NSCoder) {
@@ -218,7 +97,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Colors.background
-        setViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -248,8 +126,8 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+
         if isMovingFromParent || isBeingDismissed {
-            print("!!?")
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
         
@@ -286,136 +164,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         }
     }
     
-    func setViews() {
-        navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        
-        self.view.addSubview(replyTableView)
-        replyTableView.tableHeaderView = tableViewHeaderView
-
-        self.view.addSubview(replyBottomView)
-        self.view.addSubview(spaceRequiredFAB)
-        
-        self.view.addSubview(naviView)
-        
-        tableViewHeaderView.addSubview(titleLabel)
-        tableViewHeaderView.addSubview(createdAtPageView)
-        tableViewHeaderView.addSubview(weatherLocationStackView)
-        weatherLocationStackView.addArrangedSubview(divider1)
-        weatherLocationStackView.addArrangedSubview(weatherSelectView)
-        weatherLocationStackView.addArrangedSubview(divider2)
-        weatherLocationStackView.addArrangedSubview(locationSelectView)
-        weatherLocationStackView.addArrangedSubview(divider3)
-        tableViewHeaderView.addSubview(descriptionTextView)
-        tableViewHeaderView.addSubview(divider4)
-        tableViewHeaderView.addSubview(imageUploadView)
-        tableViewHeaderView.addSubview(hideView)
-        
-        self.view.bringSubviewToFront(naviView)
-        self.view.bringSubviewToFront(replyBottomView)
-        self.view.bringSubviewToFront(spaceRequiredFAB)
-        
-        naviView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
-            make.top.equalToSuperview()
-            make.width.equalToSuperview()
-        }
-        
-        replyTableView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.top.equalToSuperview()
-        }
-        
-        tableViewHeaderView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalToSuperview()
-            make.height.equalTo(350)
-        }
-        
-        replyBottomView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.height.equalTo(106)
-        }
-        
-        spaceRequiredFAB.snp.makeConstraints { make in
-            make.bottom.equalTo(replyBottomView.snp.top).offset(-20)
-            make.width.equalTo(160)
-            make.height.equalTo(40)
-            make.centerX.equalToSuperview()
-        }
-        
-        titleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalToSuperview().offset(24)
-        }
-
-        createdAtPageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview()
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
-            make.height.equalTo(15)
-        }
-        
-        weatherLocationStackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(createdAtPageView.snp.bottom).offset(8)
-        }
-        
-        divider1.snp.makeConstraints { make in
-            make.height.equalTo(1)
-        }
-        
-        weatherSelectView.snp.makeConstraints { make in
-            make.height.equalTo(24)
-            make.leading.equalToSuperview()
-        }
-        
-        divider2.snp.makeConstraints { make in
-            make.height.equalTo(1)
-        }
-        
-        locationSelectView.snp.makeConstraints { make in
-            make.height.equalTo(24)
-            make.leading.equalToSuperview()
-        }
-        
-        divider3.snp.makeConstraints { make in
-            make.height.equalTo(1)
-        }
-
-        descriptionTextView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(weatherLocationStackView.snp.bottom).offset(20)
-        }
-        
-        divider4.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.height.equalTo(1)
-            make.top.equalTo(descriptionTextView.snp.bottom).offset(20)
-        }
-        
-        imageUploadView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalTo(divider4.snp.bottom).offset(12)
-            make.height.equalTo(100)
-        }
-
-        hideView.snp.makeConstraints { make in
-            make.top.bottom.width.height.equalToSuperview()
-        }
-
-    }
-    
     func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool) {
         spaceRequiredFAB.leftArrowIsEnabled = leftArrowIsEnabled
         spaceRequiredFAB.rightArrowIsEnabled = rightArrowIsEnabled
@@ -423,8 +171,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     func loadDiaryDetail(model: DiaryModelRealm?) {
         guard let model = model else { return }
-        print("DiaryDetail :: loadDiaryDetail!")
-        print("DiaryDetail :: model.isHide = \(model.isHide)")
+
         // FAB Button
         spaceRequiredFAB.spaceRequiredCurrentPage = String(model.pageNum)
         
@@ -432,7 +179,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         
         // cell 생성에 필요한 정보 임시 저장
         pageNum = model.pageNum
-        print("pageNum = \(pageNum)")
         
         isHide = model.isHide
         isHideMenual(isHide: model.isHide)
@@ -990,5 +736,291 @@ extension DiaryDetailViewController: ImageUploadViewDelegate {
 
     func pressedDetailImage(index: Int) {
         listener?.pressedImageView(index: index)
+    }
+}
+
+// MARK: - UI Setting
+
+extension DiaryDetailViewController {
+    private func configureUI() {
+        tableViewHeaderView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.isUserInteractionEnabled = true
+            $0.backgroundColor = .clear
+        }
+
+        replyBottomView.do {
+            $0.categoryName = "reply"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.writeBtn.addTarget(self, action: #selector(pressedSubmitReplyBtn), for: .touchUpInside)
+            $0.replyTextView.delegate = self
+        }
+
+        naviView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+
+            $0.rightButton1.addTarget(self, action: #selector(pressedMenuMoreBtn), for: .touchUpInside)
+            $0.rightButton2.addTarget(self, action: #selector(pressedReminderBtn), for: .touchUpInside)
+        }
+
+        titleLabel.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.font = UIFont.AppTitle(.title_5)
+            $0.textColor = Colors.grey.g200
+            $0.text = "텍스트입ㄴ다"
+            $0.numberOfLines = 0
+        }
+
+        createdAtPageView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+
+        weatherLocationStackView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = .clear
+            $0.axis = .vertical
+            $0.alignment = .fill
+            $0.spacing = 13
+            $0.distribution = .fill
+        }
+
+        divider1.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+
+        weatherSelectView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.isUserInteractionEnabled = false
+            $0.selected = true
+            $0.selectedWeatherType = .rain
+            $0.selectTitle = ""
+            $0.isDeleteBtnEnabled = false
+        }
+
+        divider2.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+
+        locationSelectView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.isUserInteractionEnabled = false
+            $0.selected = true
+            $0.selectedPlaceType = .company
+            $0.selectTitle = ""
+            $0.isDeleteBtnEnabled = false
+        }
+
+        divider3.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+
+        descriptionTextView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.text = ""
+            $0.isScrollEnabled = false
+            $0.isEditable = false
+            $0.backgroundColor = .clear
+            $0.textContainerInset = .zero
+            $0.textContainer.lineFragmentPadding = 0
+        }
+
+        divider4.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+
+        imageUploadView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.isUserInteractionEnabled = true
+            $0.delegate = self
+        }
+
+        replyTableView.do {
+            $0.categoryName = "replyList"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.delegate = self
+            $0.dataSource = self
+            $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 100, right: 0)
+            $0.register(ReplyCell.self, forCellReuseIdentifier: "ReplyCell")
+
+            $0.estimatedRowHeight = 44
+            $0.rowHeight = UITableView.automaticDimension
+
+            // $0.sectionHeaderHeight = UITableView.automaticDimension
+            // $0.estimatedSectionHeaderHeight = 64
+
+            $0.showsVerticalScrollIndicator = false
+            $0.backgroundColor = Colors.background
+
+            $0.tableFooterView = nil
+            $0.separatorStyle = .none
+        }
+
+        spaceRequiredFAB.do {
+            $0.categoryName = "inddicator"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.spaceRequiredRightArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
+            $0.spaceRequiredLeftArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
+        }
+
+        hideView.do {
+            $0.categoryName = "hide"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            let lockEmptyView = Empty().then {
+                $0.screenType = .writing
+                $0.writingType = .lock
+            }
+            lazy var btn = CapsuleButton(frame: .zero, includeType: .iconText).then {
+                $0.actionName = "unhide"
+                $0.title = "숨김 해제하기"
+                $0.image = Asset._16px.Circle.front.image.withRenderingMode(.alwaysTemplate)
+            }
+            btn.addTarget(self, action: #selector(pressedLockBtn), for: .touchUpInside)
+            $0.addSubview(lockEmptyView)
+            $0.addSubview(btn)
+
+            lockEmptyView.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(81)
+                make.width.equalTo(160)
+                make.height.equalTo(180)
+                make.centerX.equalToSuperview()
+            }
+            btn.snp.makeConstraints { make in
+                make.top.equalTo(lockEmptyView.snp.bottom).offset(12)
+                make.width.equalTo(113)
+                make.height.equalTo(28)
+                make.centerX.equalToSuperview()
+            }
+            $0.isHidden = true
+        }
+    }
+
+    private func setViews() {
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
+
+        self.view.addSubview(replyTableView)
+        replyTableView.tableHeaderView = tableViewHeaderView
+
+        self.view.addSubview(replyBottomView)
+        self.view.addSubview(spaceRequiredFAB)
+
+        self.view.addSubview(naviView)
+
+        tableViewHeaderView.addSubview(titleLabel)
+        tableViewHeaderView.addSubview(createdAtPageView)
+        tableViewHeaderView.addSubview(weatherLocationStackView)
+        weatherLocationStackView.addArrangedSubview(divider1)
+        weatherLocationStackView.addArrangedSubview(weatherSelectView)
+        weatherLocationStackView.addArrangedSubview(divider2)
+        weatherLocationStackView.addArrangedSubview(locationSelectView)
+        weatherLocationStackView.addArrangedSubview(divider3)
+        tableViewHeaderView.addSubview(descriptionTextView)
+        tableViewHeaderView.addSubview(divider4)
+        tableViewHeaderView.addSubview(imageUploadView)
+        tableViewHeaderView.addSubview(hideView)
+
+        self.view.bringSubviewToFront(naviView)
+        self.view.bringSubviewToFront(replyBottomView)
+        self.view.bringSubviewToFront(spaceRequiredFAB)
+
+        naviView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+
+        replyTableView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.top.equalToSuperview()
+        }
+
+        tableViewHeaderView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalToSuperview()
+            make.height.equalTo(350)
+        }
+
+        replyBottomView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(106)
+        }
+
+        spaceRequiredFAB.snp.makeConstraints { make in
+            make.bottom.equalTo(replyBottomView.snp.top).offset(-20)
+            make.width.equalTo(160)
+            make.height.equalTo(40)
+            make.centerX.equalToSuperview()
+        }
+
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalToSuperview().offset(24)
+        }
+
+        createdAtPageView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview()
+            make.top.equalTo(titleLabel.snp.bottom).offset(20)
+            make.height.equalTo(15)
+        }
+
+        weatherLocationStackView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(createdAtPageView.snp.bottom).offset(8)
+        }
+
+        divider1.snp.makeConstraints { make in
+            make.height.equalTo(1)
+        }
+
+        weatherSelectView.snp.makeConstraints { make in
+            make.height.equalTo(24)
+            make.leading.equalToSuperview()
+        }
+
+        divider2.snp.makeConstraints { make in
+            make.height.equalTo(1)
+        }
+
+        locationSelectView.snp.makeConstraints { make in
+            make.height.equalTo(24)
+            make.leading.equalToSuperview()
+        }
+
+        divider3.snp.makeConstraints { make in
+            make.height.equalTo(1)
+        }
+
+        descriptionTextView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.top.equalTo(weatherLocationStackView.snp.bottom).offset(20)
+        }
+
+        divider4.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.width.equalToSuperview().inset(20)
+            make.height.equalTo(1)
+            make.top.equalTo(descriptionTextView.snp.bottom).offset(20)
+        }
+
+        imageUploadView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalTo(divider4.snp.bottom).offset(12)
+            make.height.equalTo(100)
+        }
+
+        hideView.snp.makeConstraints { make in
+            make.top.bottom.width.height.equalToSuperview()
+        }
     }
 }

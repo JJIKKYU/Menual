@@ -58,7 +58,7 @@ public final class DiaryRepositoryMock: DiaryRepository {
     }
 
     public var saveImageToDocumentDirectory2CallCount: Int = 0
-    public func saveImageToDocumentDirectory(imageName: String, imagesData: [Data], completionHandler: @escaping (Bool) -> Void) {
+    public func saveImageToDocumentDirectory(diaryUUID: String, imagesData: [Data], completionHandler: @escaping (Bool) -> Void) {
         saveImageToDocumentDirectory2CallCount += 1
         completionHandler(true)
     }

@@ -432,9 +432,8 @@ extension DiaryWritingInteractor {
         print("DiaryWriting :: interactor -> saveImages!")
         // originalImage는 {uuid}Original이 imageName
 
-        let imageName: String = diaryUUID
         dependency.diaryRepository
-            .saveImageToDocumentDirectory(imageName: imageName, imagesData: imagesData, completionHandler: { [weak self] isSaved in
+            .saveImageToDocumentDirectory(diaryUUID: diaryUUID, imagesData: imagesData, completionHandler: { [weak self] isSaved in
                 guard let self = self else { return }
                 print("DiaryWriting :: interactor -> 저장완료? \(isSaved)")
                 self.imagesSaveCompleteRelay.accept(isSaved)

@@ -5,15 +5,15 @@
 //  Created by 정진균 on 2021/12/11.
 //
 
-import UIKit
-import RIBs
+import AdSupport
 import Firebase
 import FirebaseAnalytics
-import RealmSwift
-import RxRelay
-import MenualEntity
 import GoogleMobileAds
-import AdSupport
+import MenualEntity
+import RealmSwift
+import RIBs
+import RxRelay
+import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -89,10 +89,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                 }
 
-                // 이미지 개수 증가로 인한 마이그레이션 작업 DiaryVer 추가
+                // 이미지 개수 증가로 인한 마이그레이션 작업 Diary Version 추가
                 if oldSchemaVersion <= 12 {
                     migration.enumerateObjects(ofType: DiaryModelRealm.className()) { oldObject, newObject in
-                        oldObject?["diaryVer"] = 0
+                        oldObject?["version"] = 0.1
                     }
                 }
             }

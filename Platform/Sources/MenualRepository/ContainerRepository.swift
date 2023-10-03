@@ -9,11 +9,15 @@ import Foundation
 import Swinject
 import MenualServices
 
+// MARK: - ContainerRepository
+
 public protocol ContainerRepository {
     var container: Container { get }
     func registerService()
     func registerRepository()
 }
+
+// MARK: - ContainerRepositoryImp
 
 public class ContainerRepositoryImp: ContainerRepository {
     public let container = Container()
@@ -56,6 +60,10 @@ public class ContainerRepositoryImp: ContainerRepository {
 
         container.register(AppUpdateInfoRepository.self) { _ in
             AppUpdateInfoRepositoryImp()
+        }.inObjectScope(.container)
+
+        container.register(MigrationRepository.self) { _ in
+            MigrationRepositoryImp()
         }.inObjectScope(.container)
     }
 }

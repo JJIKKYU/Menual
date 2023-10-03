@@ -72,7 +72,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     private var disposebag = DisposeBag()
     private let changeCurrentDiarySubject = BehaviorSubject<Bool>(value: false)
-    private let imageDataRelay = BehaviorRelay<Data>(value: Data())
     internal let imagesDataRelay: BehaviorRelay<[Data]> = .init(value: [])
     
     // Reminder 관련
@@ -130,10 +129,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         let imagesData: [Data] = diaryModel.images
         self.imagesDataRelay.accept(imagesData)
 
-        if let imageData: Data = diaryModel.originalImage {
-            self.imageDataRelay.accept(imageData)
-        }
-
         // Reminder가 있을 경우 처리하는 로직
         if let reminder = diaryModel.reminder {
             // reminder를 선택한 날짜보다 시간이 지났을 경우 비활성화
@@ -171,9 +166,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 if let imagesData: [Data] = self.diaryModel?.images {
                     self.imagesDataRelay.accept(imagesData)
                 }
-                if let imageData: Data = self.diaryModel?.originalImage {
-                    self.imageDataRelay.accept(imageData)
-                }
                 
                 print("DiaryDetail :: propertyChanges = \(proertyChanges)")
 
@@ -193,8 +185,10 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 }
 
                 self.presenter.loadDiaryDetail(model: self.diaryModel)
+
             case .error(let error):
                 fatalError("\(error)")
+
             case .deleted:
                 break
             }
@@ -506,11 +500,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     func pressedImageView(index: Int) {
         print("DiaryDetail :: interactor -> pressedImageView!")
-        /*
-        guard let _: Data = diaryModel?.originalImage else { return }
-        router?.attachDiaryDetailImage(imageDataRelay: self.imageDataRelay)
-         */
-
         router?.attachDiaryDetailImage(imagesDataRelay: self.imagesDataRelay, selectedIndex: index)
     }
 
