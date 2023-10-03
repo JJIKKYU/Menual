@@ -14,10 +14,14 @@ import FlexLayout
 import PinLayout
 import MenualUtil
 
+// MARK: - SelectedWeatherLocationType
+
 public enum SelectedWeatherLocationType {
     case weather
     case location
 }
+
+// MARK: - WeatherLocationSelectView
 
 public class WeatherLocationSelectView: UIView {
     
@@ -51,55 +55,17 @@ public class WeatherLocationSelectView: UIView {
     public var isDeleteBtnEnabled: Bool = false {
         didSet { setNeedsLayout() }
     }
-    
-    private let selectImageView = UIImageView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.contentMode = .scaleAspectFit
-    }
-    
-    public var selectTextView = UITextView().then {
-        $0.font = UIFont.AppBodyOnlyFont(.body_2)
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .clear
-        $0.textContainerInset = UIEdgeInsets.zero
-        $0.textContainer.maximumNumberOfLines = 1
-    }
-    
-    public lazy var deleteBtn = BaseButton().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setImage(Asset._24px.Circle.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
-        $0.tintColor = Colors.grey.g700
-    }
-    
-    private let selectLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
-    }
-    
+
+    private let selectImageView: UIImageView = .init()
+    public var selectTextView: UITextView = .init()
+    public let deleteBtn: BaseButton = .init()
+    private let selectLabel: UILabel = .init()
+
     public init() {
         super.init(frame: CGRect.zero)
-        addSubview(rootFlexContainer)
-        rootFlexContainer.flex
-            .direction(.row)
-            .justifyContent(.spaceBetween)
-            .alignContent(.center)
-            .wrap(.noWrap)
-            .define { flex in
-                flex.addItem(selectImageView)
-                    .width(24)
-                    .height(24)
-                    .grow(0)
 
-                flex.addItem(selectTextView)
-                    .marginLeft(8)
-                    .grow(1)
-
-                flex.addItem(deleteBtn)
-                    .width(24)
-                    .height(24)
-                    .right(0)
-                    .grow(0)
-            }
+        configureUI()
+        setViews()
         bind()
     }
     
@@ -122,13 +88,68 @@ public class WeatherLocationSelectView: UIView {
             })
             .disposed(by: disposeBag)
     }
-    
+
+    private func configureUI() {
+        selectImageView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.contentMode = .scaleAspectFit
+        }
+
+        selectTextView.do {
+            $0.font = UIFont.AppBodyOnlyFont(.body_2)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = .clear
+            $0.textContainerInset = UIEdgeInsets.zero
+            $0.textContainer.maximumNumberOfLines = 1
+        }
+
+        deleteBtn.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.setImage(Asset._24px.Circle.close.image.withRenderingMode(.alwaysTemplate), for: .normal)
+            $0.tintColor = Colors.grey.g700
+        }
+
+        selectLabel.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.font = UIFont.AppBodyOnlyFont(.body_2).withSize(12)
+        }
+    }
+
+    private func setViews() {
+        addSubview(rootFlexContainer)
+
+        rootFlexContainer.flex
+            .direction(.row)
+            .justifyContent(.spaceBetween)
+            // .alignContent(.center)
+            .alignItems(.center)
+            // .alignSelf(.center)
+            // .wrap(.noWrap)
+            .define { flex in
+                flex.addItem(selectImageView)
+                    .width(24)
+                    .height(24)
+                    .grow(0)
+
+                flex.addItem(selectTextView)
+                    .marginLeft(8)
+                    .grow(1)
+
+                flex.addItem(deleteBtn)
+                    .width(24)
+                    .height(24)
+                    .right(0)
+                    .grow(0)
+            }
+    }
+
     public override func layoutSubviews() {
         super.layoutSubviews()
         
         rootFlexContainer.pin.all()
-        rootFlexContainer.flex.layout(mode: .adjustHeight)
-        
+        rootFlexContainer.flex
+            .layout(mode: .fitContainer)
+
         switch selectedWeatherLocationType {
         case .weather:
             switch selected {

@@ -20,6 +20,7 @@ import UIKit
 // MARK: - DiaryDetailPresentableListener
 
 public protocol DiaryDetailPresentableListener: AnyObject {
+    var diaryModelArrRelay: BehaviorRelay<[DiaryModelRealm]> { get }
 
     func pressedBackBtn(isOnlyDetach: Bool)
     func pressedReplySubmitBtn(desc: String)
@@ -42,6 +43,9 @@ public protocol DiaryDetailPresentableListener: AnyObject {
 final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable, DiaryDetailViewControllable {
     
     weak var listener: DiaryDetailPresentableListener?
+
+    private let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
+
     private var pageNum: Int = 0
     private var isEnableImageView: Bool = false
     // 기본 크기 40에서 추가된 사이즈만큼 Height 조절
@@ -102,7 +106,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         MenualLog.logEventAction("detail_willappear")
-        
+
         weatherSelectView.selectTextView.centerVerticalText()
         locationSelectView.selectTextView.centerVerticalText()
     }
@@ -110,7 +114,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         MenualLog.logEventAction("detail_appear")
-        
+
         replyTableView.delegate = self
         replyBottomView.replyTextView.delegate = self
 
@@ -299,6 +303,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     func reloadTableView() {
         print("diaryDetailViewController reloadTableView!")
+        setCurrentPageDiary()
         self.replyTableView.reloadData()
     }
     
@@ -893,11 +898,47 @@ extension DiaryDetailViewController {
             }
             $0.isHidden = true
         }
+
+        collectionView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = Colors.background
+
+            let layout: UICollectionViewFlowLayout = .init()
+            layout.scrollDirection = .horizontal
+            layout.minimumLineSpacing = 0
+            layout.minimumLineSpacing = 0
+            $0.setCollectionViewLayout(layout, animated: true)
+
+            $0.isPagingEnabled = true
+            $0.showsHorizontalScrollIndicator = false
+
+            $0.delegate = self
+            $0.dataSource = self
+            $0.register(DiaryDetailCell.self, forCellWithReuseIdentifier: "DiaryDetailCell")
+        }
     }
 
     private func setViews() {
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        view.addSubview(naviView)
+        view.addSubview(collectionView)
+        view.bringSubviewToFront(naviView)
 
+        naviView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(naviView.snp.bottom)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+
+        /*
         self.view.addSubview(replyTableView)
         replyTableView.tableHeaderView = tableViewHeaderView
 
@@ -1022,5 +1063,64 @@ extension DiaryDetailViewController {
         hideView.snp.makeConstraints { make in
             make.top.bottom.width.height.equalToSuperview()
         }
+         */
     }
+}
+
+// MARK: - CollectionViewDelegate
+
+extension DiaryDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return listener?.diaryModelArrRelay.value.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell: DiaryDetailCell = collectionView.dequeueReusableCell(withReuseIdentifier: "DiaryDetailCell", for: indexPath) as? DiaryDetailCell else { return UICollectionViewCell() }
+
+        guard let diaryModel: DiaryModelRealm = listener?.diaryModelArrRelay.value[safe: indexPath.row] else { return UICollectionViewCell() }
+
+        cell.diaryModel = diaryModel
+        cell.delegate = self
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return .init(width: collectionView.frame.width, height: collectionView.frame.height)
+    }
+}
+
+// MARK: - CollectionViewType DiaryDetail
+
+extension DiaryDetailViewController {
+    private func findCurrentPageIndex() -> Int? {
+        guard let currentDiaryPage: Int = listener?.currentDiaryPage else { return nil }
+
+        guard let diaryModelArr: [DiaryModelRealm] = listener?.diaryModelArrRelay.value else { return nil }
+
+        guard let currentIndex: Int = diaryModelArr
+            .enumerated()
+            .filter ({ $0.element.pageNum == currentDiaryPage })
+            .first?
+            .offset
+        else { return nil }
+
+        print("currentIndex = \(currentIndex)")
+        return currentIndex
+    }
+
+    private func setCurrentPageDiary() {
+        guard let currentPageIndex: Int = findCurrentPageIndex() else { return }
+
+        let destinationIndexPath: IndexPath = .init(item: currentPageIndex, section: 0)
+
+        collectionView.isPagingEnabled = false
+        collectionView.scrollToItem(at: destinationIndexPath, at: .centeredHorizontally, animated: false)
+        collectionView.isPagingEnabled = true
+    }
+}
+
+// MARK: - DiaryDetailCellDelegate
+
+extension DiaryDetailViewController: DiaryDetailCellDelegate {
+
 }

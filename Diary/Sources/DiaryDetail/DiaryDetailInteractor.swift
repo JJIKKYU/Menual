@@ -82,7 +82,9 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     weak var router: DiaryDetailRouting?
     weak var listener: DiaryDetailListener?
     private let dependency: DiaryDetailInteractorDependency
-    
+
+    let diaryModelArrRelay: BehaviorRelay<[DiaryModelRealm]> = .init(value: [])
+
     // BottomSheet에서 메뉴를 눌렀을때 사용하는 Relay
     var menuComponentRelay = BehaviorRelay<MenualBottomSheetMenuComponentView.MenuComponent>(value: .none)
     var notificationToken: NotificationToken?
@@ -100,6 +102,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         super.init(presenter: presenter)
         presenter.listener = self
         
+        getDiaryModelArr()
         self.presentationDelegateProxy.delegate = self
         presenter.loadDiaryDetail(model: diaryModel)
         pressedIndicatorButton(offset: 0, isInitMode: true)
@@ -107,14 +110,14 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     override func didBecomeActive() {
         super.didBecomeActive()
-        // TODO: Implement business logic here.
+
         bind()
         setDiaryModelRealmOb()
     }
 
     override func willResignActive() {
         super.willResignActive()
-        // TODO: Pause any business logic.
+
         print("DiaryDetail :: WillResignActive")
         notificationToken?.invalidate()
         replyNotificationToken?.invalidate()
@@ -385,11 +388,13 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     }
     
     // MARK: - FilterComponentView
+
     func filterWithWeatherPlace(weatherArr: [Weather], placeArr: [Place]) {
         print("filterWithWeatherPlace!, \(weatherArr), \(placeArr)")
     }
     
     // MARK: - BottomSheet Menu
+
     func pressedMenuMoreBtn() {
         guard let diaryModel = self.diaryModel else { return }
         isHideMenualRelay.accept(diaryModel.isHide)
@@ -534,7 +539,24 @@ extension DiaryDetailInteractor {
         presenter.presentMailVC()
     }
 }
- 
+
+// MARK: - CollectionView Type DiaryDetail
+
+extension DiaryDetailInteractor {
+    private func getDiaryModelArr() {
+        guard let realm: Realm = .safeInit() else { return }
+
+        let diaryArr: [DiaryModelRealm] = realm.objects(DiaryModelRealm.self)
+            .toArray(type: DiaryModelRealm.self)
+            .filter ({ $0.isDeleted == false })
+            .sorted(by: { $0.createdAt < $1.createdAt })
+
+        diaryModelArrRelay.accept(diaryArr)
+
+        print("DiaryDetail :: getDiaryModelArr = \(diaryArr)")
+    }
+}
+
 // MARK: - 미사용
 extension DiaryDetailInteractor {
     func filterWithWeatherPlacePressedFilterBtn() { }

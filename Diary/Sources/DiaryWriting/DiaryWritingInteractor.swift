@@ -14,10 +14,14 @@ import MenualEntity
 import MenualUtil
 import MenualRepository
 
+// MARK: - DiaryWritingRouting
+
 public protocol DiaryWritingRouting: ViewableRouting {
     func attachDiaryTempSave(tempSaveDiaryModelRelay: BehaviorRelay<TempSaveModelRealm?>, tempSaveResetRelay: BehaviorRelay<Bool>)
     func detachDiaryTempSave(isOnlyDetach: Bool)
 }
+
+// MARK: - DiaryWritingPresentable
 
 public protocol DiaryWritingPresentable: Presentable {
     var listener: DiaryWritingPresentableListener? { get set }
@@ -27,15 +31,21 @@ public protocol DiaryWritingPresentable: Presentable {
     func setUI(writeType: WritingType)
 }
 
+// MARK: - DiaryWritingListener
+
 public protocol DiaryWritingListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: ShowToastType)
 }
 
+// MARK: - DiaryWritingInteractorDependency
+
 public protocol DiaryWritingInteractorDependency {
     var diaryRepository: DiaryRepository { get }
     var appstoreReviewRepository: AppstoreReviewRepository { get }
 }
+
+// MARK: - DiaryWritingInteractor
 
 final class DiaryWritingInteractor: PresentableInteractor<DiaryWritingPresentable>, DiaryWritingInteractable, DiaryWritingPresentableListener {
 
