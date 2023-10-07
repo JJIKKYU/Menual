@@ -196,9 +196,12 @@ public final class ImageUploadCell: UICollectionViewCell {
     override public func layoutSubviews() {
         super.layoutSubviews()
 
-        if let imageData: Data = parameters.imageData {
+        if let imageData: Data = parameters.imageData,
+           let image: UIImage = .init(data: imageData) {
+
+            let resizingImage: UIImage = UIImage().imageWithImage(sourceImage: image, scaledToWidth: 100)
             DispatchQueue.main.async {
-                self.imageView.image = UIImage(data: imageData)
+                self.imageView.image = resizingImage
             }
         }
 

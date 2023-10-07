@@ -148,6 +148,9 @@ extension DiaryDetailImageViewController: UICollectionViewDelegate, UICollection
     }
 
     func scrollToItemAtIndex() {
+
+        collectionView.reloadData()
+        print("DiaryDetailImage :: listener?.selectedIndex = \(listener?.selectedIndex)")
         let indexPath: IndexPath = .init(row: listener?.selectedIndex ?? 0, section: 0)
 
         collectionView.isPagingEnabled = false

@@ -16,7 +16,7 @@ import UIKit
 // MARK: - DiaryDetailCellDelegate
 
 public protocol DiaryDetailCellDelegate: AnyObject {
-    func pressedDetailImage(index: Int)
+    func pressedDetailImage(index: Int, uuid: String)
     func pressedReplyCloseBtn(sender: UIButton)
 }
 
@@ -217,63 +217,11 @@ public final class DiaryDetailCell: UICollectionViewCell {
             }
         }
 
-        /*
-        weatherSelectView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.top.equalTo(divider1.snp.bottom)
-            make.height.equalTo(56)
-        }
-
-        divider2.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.top.equalTo(weatherSelectView.snp.bottom)
-            make.height.equalTo(1)
-        }
-
-        locationSelectView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.top.equalTo(divider2.snp.bottom)
-            make.height.equalTo(56)
-        }
-
-        divider3.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.top.equalTo(locationSelectView.snp.bottom)
-            make.height.equalTo(1)
-        }
-         */
-
-        descriptionTextView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.top.equalTo(divider3.snp.bottom).offset(17)
-        }
-
-        divider4.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().inset(20)
-            make.top.equalTo(descriptionTextView.snp.bottom).offset(24)
-            make.height.equalTo(1)
-        }
-
-        imageUploadView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
-            make.top.equalTo(divider4.snp.bottom).offset(16)
-            make.height.equalTo(100)
-            make.bottom.equalToSuperview().inset(20)
-        }
-
         tableViewHeaderView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalToSuperview()
             make.top.equalToSuperview()
             make.bottom.equalToSuperview()
-            // make.height.equalTo(300)
         }
 
         tableView.snp.makeConstraints { make in
@@ -288,8 +236,72 @@ public final class DiaryDetailCell: UICollectionViewCell {
         super.layoutSubviews()
 
         guard let diaryModel: DiaryModelRealm = diaryModel else { return }
+
+        configureWeatherPlace(diaryModel)
         titleLabel.text = diaryModel.title
 
+        descriptionTextView.text = diaryModel.desc
+
+        createdAtPageView.createdAt = diaryModel.createdAt.toString()
+        createdAtPageView.page = String(diaryModel.pageNum)
+        configureImages(diaryModel)
+
+        tableViewHeaderView.sizeToFit()
+        tableViewHeaderView.layoutIfNeeded()
+
+        tableView.layoutIfNeeded()
+        tableView.reloadData()
+    }
+
+    /// 이미지 여부에 따라서 Constraint를 다시 세팅하도록
+    private func configureImages(_ diaryModel: DiaryModelRealm) {
+        // 이미지가 없을 경우
+        if diaryModel.images.isEmpty {
+            descriptionTextView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview().offset(20)
+                make.trailing.equalToSuperview().inset(20)
+                make.top.equalTo(divider3.snp.bottom).offset(17)
+                make.bottom.equalToSuperview().inset(20)
+            }
+
+            imageUploadView.isHidden = true
+            imageUploadView.snp.removeConstraints()
+            divider4.snp.removeConstraints()
+            divider4.isHidden = true
+            uploadImagesRelay?.accept([])
+            thumbImageIndexRelay?.accept(0)
+            return
+        }
+
+        imageUploadView.isHidden = false
+        divider4.isHidden = false
+        descriptionTextView.snp.remakeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.top.equalTo(divider3.snp.bottom).offset(17)
+        }
+
+        imageUploadView.snp.remakeConstraints { make in
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.top.equalTo(divider4.snp.bottom).offset(16)
+            make.height.equalTo(100)
+            make.bottom.equalToSuperview().inset(20)
+        }
+
+        divider4.snp.remakeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.top.equalTo(descriptionTextView.snp.bottom).offset(24)
+            make.height.equalTo(1)
+        }
+
+        uploadImagesRelay?.accept(diaryModel.images)
+        thumbImageIndexRelay?.accept(diaryModel.thumbImageIndex)
+    }
+
+    /// Weather, Place 데이터가 있을 경우 세팅하는 함수
+    private func configureWeatherPlace(_ diaryModel: DiaryModelRealm) {
         if let weather: Weather = diaryModel.weather?.weather,
            let detailText: String = diaryModel.weather?.detailText {
             weatherSelectView.do {
@@ -299,6 +311,9 @@ public final class DiaryDetailCell: UICollectionViewCell {
                 $0.isHidden = false
             }
             divider2.isHidden = false
+        } else {
+            weatherSelectView.isHidden = true
+            divider2.isHidden = true
         }
 
         if let place: Place = diaryModel.place?.place,
@@ -310,20 +325,10 @@ public final class DiaryDetailCell: UICollectionViewCell {
                 $0.isHidden = false
             }
             divider3.isHidden = false
+        } else {
+            placeSelectView.isHidden = true
+            divider3.isHidden = true
         }
-
-        descriptionTextView.text = diaryModel.desc
-
-        createdAtPageView.createdAt = diaryModel.createdAt.toString()
-        createdAtPageView.page = String(diaryModel.pageNum)
-
-        uploadImagesRelay?.accept(diaryModel.images)
-        thumbImageIndexRelay?.accept(diaryModel.thumbImageIndex)
-
-        tableViewHeaderView.sizeToFit()
-        tableViewHeaderView.layoutIfNeeded()
-
-        tableView.layoutIfNeeded()
     }
 }
 
@@ -331,7 +336,8 @@ public final class DiaryDetailCell: UICollectionViewCell {
 
 extension DiaryDetailCell: ImageUploadViewDelegate {
     public func pressedDetailImage(index: Int) {
-        delegate?.pressedDetailImage(index: index)
+        guard let diaryModel: DiaryModelRealm = diaryModel else { return }
+        delegate?.pressedDetailImage(index: index, uuid: diaryModel.uuid)
     }
 }
 
@@ -362,6 +368,8 @@ extension DiaryDetailCell: UITableViewDelegate, UITableViewDataSource {
             $0.closeBtn.tag = index
             $0.closeBtn.addTarget(self, action: #selector(pressedReplyCloseBtn(sender:)), for: .touchUpInside)
             $0.actionName = "reply"
+            $0.sizeToFit()
+            $0.layoutIfNeeded()
         }
 
         return cell
@@ -374,5 +382,15 @@ extension DiaryDetailCell {
     @objc
     func pressedReplyCloseBtn(sender: UIButton) {
         delegate?.pressedReplyCloseBtn(sender: sender)
+    }
+}
+
+// MARK: - Interface
+
+extension DiaryDetailCell {
+    public func reloadTableView() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 }
