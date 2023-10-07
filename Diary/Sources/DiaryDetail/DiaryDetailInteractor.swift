@@ -41,7 +41,6 @@ public protocol DiaryDetailPresentable: Presentable {
     func loadDiaryDetail(model: DiaryModelRealm?)
     func reminderCompViewshowToast(type: ReminderToastType)
     func setReminderIconEnabled(isEnabled: Bool)
-    func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool)
     func enableBackSwipe()
     func presentMailVC()
 }
@@ -105,7 +104,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         getDiaryModelArr()
         self.presentationDelegateProxy.delegate = self
         presenter.loadDiaryDetail(model: diaryModel)
-        pressedIndicatorButton(offset: 0, isInitMode: true)
     }
     
     override func didBecomeActive() {
@@ -319,57 +317,6 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 
         self.dependency.diaryRepository
             .addReply(info: diaryReplyModelRealm, diaryModel: diaryModel)
-    }
-
-    // Diary 이동
-    func pressedIndicatorButton(offset: Int, isInitMode: Bool) {
-        guard let diaryModel = diaryModel else { return }
-        // 1. 현재 diaryNum을 기준으로
-        // 2. 왼쪽 or 오른쪽으로 이동 (pageNum이 현재 diaryNum기준 -1, +1)
-        // 3. 삭제된 놈이면 건너뛰고 (isDeleted가 true일 경우)
-        guard let realm = Realm.safeInit() else { return }
-        let diaries = realm.objects(DiaryModelRealm.self)
-            .toArray(type: DiaryModelRealm.self)
-            .filter { $0.isDeleted != true }
-            .sorted(by: { $0.createdAt < $1.createdAt })
-
-        guard let currentIndex = diaries.firstIndex(of: diaryModel) else { return }
-        let willChangedIdx = diaries.index(currentIndex, offsetBy: offset)
-
-        print("willChangedIdx = \(willChangedIdx)")
-        let willChangedDiaryModel = diaries[safe: willChangedIdx]
-        
-        // 이전 메뉴얼이 있는지 체크
-        var leftArrowIsEnabled: Bool = false
-        if let _ = diaries[safe: willChangedIdx - 1] {
-            print("DiaryDetail :: prevDiaryModel이 있습니다.")
-            leftArrowIsEnabled = true
-        }
-
-        // 다음 메뉴얼이 있는지 체크
-        var rightArrowIsEnabled: Bool = false
-        if let _ = diaries[safe: willChangedIdx + 1] {
-            print("DiaryDetail :: nextDiaryModel이 있습니다.")
-            rightArrowIsEnabled = true
-        }
-        
-        // 최초 초기화 모드일 경우에는 fab만 세팅
-        if isInitMode == true {
-            presenter.setFAB(leftArrowIsEnabled: leftArrowIsEnabled, rightArrowIsEnabled: rightArrowIsEnabled)
-        } else {
-            self.diaryModel = willChangedDiaryModel
-            self.currentDiaryPage = willChangedDiaryModel?.pageNum ?? 0
-            presenter.loadDiaryDetail(model: self.diaryModel)
-            notificationToken = nil
-            replyNotificationToken = nil
-            self.setDiaryModelRealmOb()
-            print("willChangedDiaryModel = \(willChangedDiaryModel?.pageNum)")
-            
-            // self.changeCurrentDiarySubject.onNext(true)
-            presenter.setFAB(leftArrowIsEnabled: leftArrowIsEnabled, rightArrowIsEnabled: rightArrowIsEnabled)
-            print("pass true!")
-        }
-        
     }
     
     func deleteReply(replyModel: DiaryReplyModelRealm) {

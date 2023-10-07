@@ -16,6 +16,8 @@ import UIKit
 // MARK: - DiaryDetailCellDelegate
 
 public protocol DiaryDetailCellDelegate: AnyObject {
+    func pressedDetailImage(index: Int)
+    func pressedReplyCloseBtn(sender: UIButton)
 }
 
 // MARK: - DiaryDetailCell
@@ -33,14 +35,19 @@ public final class DiaryDetailCell: UICollectionViewCell {
 
     private let titleLabel: UILabel = .init()
     private let createdAtPageView: CreatedAtPageView = .init()
+
+    private let weatherPlaceStackView: UIStackView = .init()
     private let divider1: Divider = .init(type: ._1px)
     private let weatherSelectView: WeatherLocationSelectView = .init(type: .weather)
     private let divider2: Divider = .init(type: ._1px)
-    private let locationSelectView: WeatherLocationSelectView = .init(type: .location)
+    private let placeSelectView: WeatherLocationSelectView = .init(type: .location)
     private let divider3: Divider = .init(type: ._1px)
     private let descriptionTextView: UITextView = .init()
     private let divider4: Divider = .init(type: ._1px)
     private let imageUploadView: ImageUploadView = .init(state: .detail)
+
+    private let tableViewHeaderView: UIView = .init()
+    private let tableView: UITableView = .init(frame: .zero, style: .grouped)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -57,6 +64,10 @@ public final class DiaryDetailCell: UICollectionViewCell {
     override public func prepareForReuse() {
         super.prepareForReuse()
 
+        weatherSelectView.isHidden = true
+        divider2.isHidden = true
+        placeSelectView.isHidden = true
+        divider3.isHidden = true
         delegate = nil
     }
 
@@ -80,35 +91,41 @@ public final class DiaryDetailCell: UICollectionViewCell {
             $0.page = "P.15"
         }
 
+        weatherPlaceStackView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = .clear
+            $0.axis = .vertical
+            $0.alignment = .fill
+            $0.distribution = .fill
+        }
+
         weatherSelectView.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.isUserInteractionEnabled = false
-            $0.selected = true
-            $0.selectedWeatherType = .rain
-            $0.selectTitle = "날씨가 참 좋구나"
+            $0.selected = false
             $0.isDeleteBtnEnabled = false
         }
 
         divider2.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.isHidden = true
         }
 
-        locationSelectView.do {
+        placeSelectView.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.isUserInteractionEnabled = false
-            $0.selected = true
-            $0.selectedPlaceType = .company
-            $0.selectTitle = "장소가 참 좋구나"
+            $0.selected = false
             $0.isDeleteBtnEnabled = false
         }
 
         divider3.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.isHidden = true
         }
 
         descriptionTextView.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.text = "작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다. 작성한 내용이 보여집니다."
+            $0.text = " "
             $0.isScrollEnabled = false
             $0.isEditable = false
             $0.backgroundColor = .clear
@@ -123,23 +140,55 @@ public final class DiaryDetailCell: UICollectionViewCell {
             $0.isUserInteractionEnabled = true
             $0.delegate = self
         }
+
+        tableViewHeaderView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.isUserInteractionEnabled = true
+            $0.backgroundColor = .clear
+        }
+
+        tableView.do {
+            $0.categoryName = "replyList"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.delegate = self
+            $0.dataSource = self
+
+            $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 100, right: 0)
+            $0.estimatedRowHeight = 44
+            $0.rowHeight = UITableView.automaticDimension
+
+            $0.showsVerticalScrollIndicator = false
+            $0.backgroundColor = Colors.background
+
+            $0.tableFooterView = nil
+            $0.separatorStyle = .none
+
+            $0.isScrollEnabled = true
+
+            $0.register(ReplyCell.self, forCellReuseIdentifier: "ReplyCell")
+        }
     }
 
     private func setViews() {
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(createdAtPageView)
-        contentView.addSubview(divider1)
-        contentView.addSubview(weatherSelectView)
-        contentView.addSubview(divider2)
-        contentView.addSubview(locationSelectView)
-        contentView.addSubview(divider3)
-        contentView.addSubview(descriptionTextView)
-        contentView.addSubview(divider4)
-        contentView.addSubview(imageUploadView)
+        tableView.tableHeaderView = tableViewHeaderView
+
+        [divider1, weatherSelectView, divider2, placeSelectView, divider3].forEach {
+            weatherPlaceStackView.addArrangedSubview($0)
+        }
+
+        tableViewHeaderView.do {
+            $0.addSubview(titleLabel)
+            $0.addSubview(createdAtPageView)
+            $0.addSubview(weatherPlaceStackView)
+            $0.addSubview(descriptionTextView)
+            $0.addSubview(divider4)
+            $0.addSubview(imageUploadView)
+        }
+        contentView.addSubview(tableView)
 
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.top.equalToSuperview().offset(24)
+            make.top.equalToSuperview()
             make.trailing.equalToSuperview().inset(20)
         }
 
@@ -150,13 +199,25 @@ public final class DiaryDetailCell: UICollectionViewCell {
             make.trailing.equalToSuperview().inset(20)
         }
 
-        divider1.snp.makeConstraints { make in
+        weatherPlaceStackView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().inset(20)
             make.top.equalTo(createdAtPageView.snp.bottom).offset(9)
-            make.height.equalTo(1)
         }
 
+        [divider1, divider2, divider3, divider4].forEach {
+            $0.snp.makeConstraints { make in
+                make.height.equalTo(1)
+            }
+        }
+
+        [weatherSelectView, placeSelectView].forEach {
+            $0.snp.makeConstraints { make in
+                make.height.equalTo(56)
+            }
+        }
+
+        /*
         weatherSelectView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().inset(20)
@@ -184,6 +245,7 @@ public final class DiaryDetailCell: UICollectionViewCell {
             make.top.equalTo(locationSelectView.snp.bottom)
             make.height.equalTo(1)
         }
+         */
 
         descriptionTextView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
@@ -203,6 +265,22 @@ public final class DiaryDetailCell: UICollectionViewCell {
             make.trailing.equalToSuperview()
             make.top.equalTo(divider4.snp.bottom).offset(16)
             make.height.equalTo(100)
+            make.bottom.equalToSuperview().inset(20)
+        }
+
+        tableViewHeaderView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+            // make.height.equalTo(300)
+        }
+
+        tableView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
         }
     }
 
@@ -212,13 +290,27 @@ public final class DiaryDetailCell: UICollectionViewCell {
         guard let diaryModel: DiaryModelRealm = diaryModel else { return }
         titleLabel.text = diaryModel.title
 
-        weatherSelectView.selectedWeatherType = diaryModel.weather?.weather
-        weatherSelectView.selectTitle = diaryModel.weather?.detailText ?? ""
-        weatherSelectView.selected = true
+        if let weather: Weather = diaryModel.weather?.weather,
+           let detailText: String = diaryModel.weather?.detailText {
+            weatherSelectView.do {
+                $0.selectedWeatherType = weather
+                $0.selectTitle = detailText
+                $0.selected = true
+                $0.isHidden = false
+            }
+            divider2.isHidden = false
+        }
 
-        locationSelectView.selectedPlaceType = diaryModel.place?.place
-        locationSelectView.selectTitle = diaryModel.place?.detailText ?? ""
-        locationSelectView.selected = true
+        if let place: Place = diaryModel.place?.place,
+           let detailText: String = diaryModel.place?.detailText {
+            placeSelectView.do {
+                $0.selectedPlaceType = place
+                $0.selectTitle = detailText
+                $0.selected = true
+                $0.isHidden = false
+            }
+            divider3.isHidden = false
+        }
 
         descriptionTextView.text = diaryModel.desc
 
@@ -227,10 +319,60 @@ public final class DiaryDetailCell: UICollectionViewCell {
 
         uploadImagesRelay?.accept(diaryModel.images)
         thumbImageIndexRelay?.accept(diaryModel.thumbImageIndex)
+
+        tableViewHeaderView.sizeToFit()
+        tableViewHeaderView.layoutIfNeeded()
+
+        tableView.layoutIfNeeded()
     }
 }
 
 // MARK: - ImageUploadViewDelegate
 
 extension DiaryDetailCell: ImageUploadViewDelegate {
+    public func pressedDetailImage(index: Int) {
+        delegate?.pressedDetailImage(index: index)
+    }
+}
+
+// MARK: - UITableViewDelegate, UITableviewDataSource
+
+extension DiaryDetailCell: UITableViewDelegate, UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return diaryModel?.repliesArr.count ?? 0
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        let defaultCell: UITableViewCell = .init()
+        guard let cell: ReplyCell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell", for: indexPath) as? ReplyCell else { return defaultCell }
+
+        let index: Int = indexPath.row
+
+        guard let model: DiaryReplyModelRealm = diaryModel?.repliesArr[safe: index] else { return defaultCell }
+
+        cell.backgroundColor = .clear
+        cell.selectionStyle = .none
+
+        cell.do {
+            $0.replyText = model.desc
+            $0.replyNum = model.replyNum
+            $0.createdAt = model.createdAt
+            $0.replyUUID = model.uuid
+            $0.closeBtn.tag = index
+            $0.closeBtn.addTarget(self, action: #selector(pressedReplyCloseBtn(sender:)), for: .touchUpInside)
+            $0.actionName = "reply"
+        }
+
+        return cell
+    }
+}
+
+// MARK: - IBAction
+
+extension DiaryDetailCell {
+    @objc
+    func pressedReplyCloseBtn(sender: UIButton) {
+        delegate?.pressedReplyCloseBtn(sender: sender)
+    }
 }

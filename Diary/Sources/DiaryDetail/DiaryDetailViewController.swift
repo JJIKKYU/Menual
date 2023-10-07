@@ -24,7 +24,6 @@ public protocol DiaryDetailPresentableListener: AnyObject {
 
     func pressedBackBtn(isOnlyDetach: Bool)
     func pressedReplySubmitBtn(desc: String)
-    func pressedIndicatorButton(offset: Int, isInitMode: Bool)
     func pressedMenuMoreBtn()
     func pressedReminderBtn()
     
@@ -82,7 +81,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     
     private let replyTableView: UITableView = .init(frame: .zero, style: .grouped)
     
-    private let spaceRequiredFAB: FAB = .init(fabType: .spacRequired, fabStatus: .default_)
+    private let replyView: FAB = .init(fabType: .spacRequired, fabStatus: .default_)
     private let hideView: UIView = .init()
     
     init() {
@@ -115,7 +114,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         super.viewDidAppear(animated)
         MenualLog.logEventAction("detail_appear")
 
-        replyTableView.delegate = self
         replyBottomView.replyTextView.delegate = self
 
         // keyboard observer등록
@@ -134,8 +132,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         if isMovingFromParent || isBeingDismissed {
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
-        
-        replyTableView.delegate = nil
+
         replyBottomView.replyTextView.delegate = nil
         
         // Keyboard observer해제
@@ -164,20 +161,12 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         }
 
         DispatchQueue.main.async {
-             self.replyTableView.reloadData()
+             // self.replyTableView.reloadData()
         }
-    }
-    
-    func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool) {
-        spaceRequiredFAB.leftArrowIsEnabled = leftArrowIsEnabled
-        spaceRequiredFAB.rightArrowIsEnabled = rightArrowIsEnabled
     }
     
     func loadDiaryDetail(model: DiaryModelRealm?) {
         guard let model = model else { return }
-
-        // FAB Button
-        spaceRequiredFAB.spaceRequiredCurrentPage = String(model.pageNum)
         
         setImageConstraint(images: model.images)
         
@@ -227,7 +216,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         createdAtPageView.createdAt = model.createdAt.toString()
         createdAtPageView.page = String(model.pageNum)
         
-        replyTableView.reloadData()
+        // replyTableView.reloadData()
     }
     
     func isHideMenual(isHide: Bool) {
@@ -249,7 +238,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
                 make.height.equalTo(400)
             }
             hideView.isHidden = false
-            replyTableView.reloadData()
+            // replyTableView.reloadData()
 
         case false:
             print("DiaryDetail :: isHide! = \(isHide)")
@@ -272,7 +261,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
             }
             
             hideView.isHidden = true
-            replyTableView.reloadData()
+            // replyTableView.reloadData()
         }
     }
     
@@ -304,7 +293,7 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     func reloadTableView() {
         print("diaryDetailViewController reloadTableView!")
         setCurrentPageDiary()
-        self.replyTableView.reloadData()
+        // self.replyTableView.reloadData()
     }
     
     func reminderCompViewshowToast(type: ReminderToastType) {
@@ -383,16 +372,6 @@ extension DiaryDetailViewController {
              cancelButtonText: "취소",
              confirmButtonText: "확인"
         )
-    }
-    
-    @objc
-    func pressedIndicatorBtn(sender: UIButton) {
-        MenualLog.logEventAction(responder: sender)
-        print("DiaryDetail :: sender.s tag = \(sender.tag)")
-        listener?.pressedIndicatorButton(offset: sender.tag, isInitMode: false)
-        DispatchQueue.main.async {
-            self.replyTableView.reloadData()
-        }
     }
     
     // 숨김 해제하기 버튼
@@ -506,13 +485,12 @@ extension DiaryDetailViewController {
     func keyboardWillShow(_ notification: NSNotification) {
         guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
         print("keyboardWillShow! - \(keyboardHeight)")
-        
-        spaceRequiredFAB.isHidden = true
+
         isShowKeboard = true
         
-        replyTableView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview().inset(keyboardHeight)
-        }
+//        replyTableView.snp.updateConstraints { make in
+//            make.bottom.equalToSuperview().inset(keyboardHeight)
+//        }
         
         replyBottomView.snp.updateConstraints { make in
             make.bottom.equalToSuperview().inset(keyboardHeight)
@@ -525,11 +503,10 @@ extension DiaryDetailViewController {
         print("keyboardWillHide!")
         
         isShowKeboard = false
-        spaceRequiredFAB.isHidden = false
         
-        replyTableView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview()
-        }
+//        replyTableView.snp.updateConstraints { make in
+//            make.bottom.equalToSuperview()
+//        }
         
         replyBottomView.snp.updateConstraints { make in
             make.bottom.equalToSuperview()
@@ -728,22 +705,6 @@ extension DiaryDetailViewController: MFMailComposeViewControllerDelegate {
     }
 }
 
-// MARK: - UploadImageViewDelegate
-
-extension DiaryDetailViewController: ImageUploadViewDelegate {
-    var uploadImagesRelay: BehaviorRelay<[Data]>? {
-        listener?.imagesDataRelay
-    }
-
-    var thumbImageIndexRelay: BehaviorRelay<Int>? {
-        return nil
-    }
-
-    func pressedDetailImage(index: Int) {
-        listener?.pressedImageView(index: index)
-    }
-}
-
 // MARK: - UI Setting
 
 extension DiaryDetailViewController {
@@ -861,13 +822,6 @@ extension DiaryDetailViewController {
             $0.separatorStyle = .none
         }
 
-        spaceRequiredFAB.do {
-            $0.categoryName = "inddicator"
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.spaceRequiredRightArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
-            $0.spaceRequiredLeftArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
-        }
-
         hideView.do {
             $0.categoryName = "hide"
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -922,6 +876,7 @@ extension DiaryDetailViewController {
         navigationController?.interactivePopGestureRecognizer?.delegate = nil
         view.addSubview(naviView)
         view.addSubview(collectionView)
+        view.addSubview(replyBottomView)
         view.bringSubviewToFront(naviView)
 
         naviView.snp.makeConstraints { make in
@@ -936,6 +891,13 @@ extension DiaryDetailViewController {
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
+        }
+
+        replyBottomView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(106)
         }
 
         /*
@@ -1081,10 +1043,14 @@ extension DiaryDetailViewController: UICollectionViewDelegate, UICollectionViewD
 
         cell.diaryModel = diaryModel
         cell.delegate = self
+
+        cell.sizeToFit()
+        cell.layoutIfNeeded()
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
         return .init(width: collectionView.frame.width, height: collectionView.frame.height)
     }
 }
@@ -1119,8 +1085,18 @@ extension DiaryDetailViewController {
     }
 }
 
-// MARK: - DiaryDetailCellDelegate
+// MARK: - UploadImageViewDelegate, DiaryDetailCellDelegate
 
-extension DiaryDetailViewController: DiaryDetailCellDelegate {
+extension DiaryDetailViewController: ImageUploadViewDelegate, DiaryDetailCellDelegate {
+    var uploadImagesRelay: BehaviorRelay<[Data]>? {
+        listener?.imagesDataRelay
+    }
 
+    var thumbImageIndexRelay: BehaviorRelay<Int>? {
+        return nil
+    }
+
+    func pressedDetailImage(index: Int) {
+        listener?.pressedImageView(index: index)
+    }
 }

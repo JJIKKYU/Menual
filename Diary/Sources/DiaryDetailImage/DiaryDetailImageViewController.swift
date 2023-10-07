@@ -66,7 +66,6 @@ final class DiaryDetailImageViewController: UIViewController, DiaryDetailImagePr
         super.viewDidDisappear(animated)
 
         if isMovingFromParent || isBeingDismissed {
-            print("Navi :: !!?")
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
     }
@@ -152,7 +151,7 @@ extension DiaryDetailImageViewController: UICollectionViewDelegate, UICollection
         let indexPath: IndexPath = .init(row: listener?.selectedIndex ?? 0, section: 0)
 
         collectionView.isPagingEnabled = false
-        collectionView.scrollToItem(at: indexPath, at: .right, animated: true)
+        collectionView.scrollToItem(at: indexPath, at: .right, animated: false)
         collectionView.isPagingEnabled = true
 
         isFirstSetPage = false
