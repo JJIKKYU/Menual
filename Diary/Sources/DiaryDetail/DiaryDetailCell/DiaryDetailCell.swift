@@ -18,6 +18,7 @@ import UIKit
 public protocol DiaryDetailCellDelegate: AnyObject {
     func pressedDetailImage(index: Int, uuid: String)
     func pressedReplyCloseBtn(sender: UIButton)
+    func pressedLockBtn(_ button: UIButton)
 }
 
 // MARK: - DiaryDetailCell
@@ -32,6 +33,8 @@ public final class DiaryDetailCell: UICollectionViewCell {
     public var diaryModel: DiaryModelRealm? {
         didSet { setNeedsLayout() }
     }
+
+    private let hideView: UIView = .init()
 
     private let titleLabel: UILabel = .init()
     private let createdAtPageView: CreatedAtPageView = .init()
@@ -167,6 +170,37 @@ public final class DiaryDetailCell: UICollectionViewCell {
 
             $0.register(ReplyCell.self, forCellReuseIdentifier: "ReplyCell")
         }
+
+        hideView.do {
+            $0.categoryName = "hide"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            let lockEmptyView = Empty().then {
+                $0.screenType = .writing
+                $0.writingType = .lock
+            }
+            lazy var btn = CapsuleButton(frame: .zero, includeType: .iconText).then {
+                $0.actionName = "unhide"
+                $0.title = "숨김 해제하기"
+                $0.image = Asset._16px.Circle.front.image.withRenderingMode(.alwaysTemplate)
+            }
+            btn.addTarget(self, action: #selector(pressedLockBtn), for: .touchUpInside)
+            $0.addSubview(lockEmptyView)
+            $0.addSubview(btn)
+
+            lockEmptyView.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(81)
+                make.width.equalTo(160)
+                make.height.equalTo(180)
+                make.centerX.equalToSuperview()
+            }
+            btn.snp.makeConstraints { make in
+                make.top.equalTo(lockEmptyView.snp.bottom).offset(12)
+                make.width.equalTo(113)
+                make.height.equalTo(28)
+                make.centerX.equalToSuperview()
+            }
+            $0.isHidden = true
+        }
     }
 
     private func setViews() {
@@ -183,6 +217,7 @@ public final class DiaryDetailCell: UICollectionViewCell {
             $0.addSubview(descriptionTextView)
             $0.addSubview(divider4)
             $0.addSubview(imageUploadView)
+            $0.addSubview(hideView)
         }
         contentView.addSubview(tableView)
 
@@ -230,6 +265,11 @@ public final class DiaryDetailCell: UICollectionViewCell {
             make.top.equalToSuperview()
             make.bottom.equalToSuperview()
         }
+
+        hideView.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.centerX.equalToSuperview()
+        }
     }
 
     override public func layoutSubviews() {
@@ -245,12 +285,59 @@ public final class DiaryDetailCell: UICollectionViewCell {
         createdAtPageView.createdAt = diaryModel.createdAt.toString()
         createdAtPageView.page = String(diaryModel.pageNum)
         configureImages(diaryModel)
+        setHideUI(diaryModel)
 
         tableViewHeaderView.sizeToFit()
         tableViewHeaderView.layoutIfNeeded()
 
         tableView.layoutIfNeeded()
         tableView.reloadData()
+    }
+
+    private func setHideUI(_ diaryModel: DiaryModelRealm) {
+        switch diaryModel.isHide {
+        case true:
+            titleLabel.isHidden = true
+            divider1.isHidden = true
+            weatherPlaceStackView.isHidden = true
+            descriptionTextView.isHidden = true
+            createdAtPageView.isHidden = true
+            divider4.isHidden = true
+            imageUploadView.isHidden = true
+            hideView.isHidden = false
+
+            tableViewHeaderView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview()
+                make.width.equalToSuperview()
+                make.top.equalToSuperview()
+                make.height.equalTo(400)
+                make.bottom.equalToSuperview()
+            }
+            // replyTableView.reloadData()
+
+        case false:
+            titleLabel.isHidden = false
+            divider1.isHidden = false
+            weatherPlaceStackView.isHidden = false
+            descriptionTextView.isHidden = false
+            createdAtPageView.isHidden = false
+
+            if !diaryModel.images.isEmpty {
+                divider4.isHidden = false
+                imageUploadView.isHidden = false
+            } else {
+                divider4.isHidden = true
+                imageUploadView.isHidden = true
+            }
+            tableViewHeaderView.snp.remakeConstraints { make in
+                make.leading.equalToSuperview()
+                make.width.equalToSuperview()
+                make.top.equalToSuperview()
+                make.bottom.equalToSuperview()
+            }
+            hideView.isHidden = true
+            // replyTableView.reloadData()
+        }
     }
 
     /// 이미지 여부에 따라서 Constraint를 다시 세팅하도록
@@ -380,8 +467,13 @@ extension DiaryDetailCell: UITableViewDelegate, UITableViewDataSource {
 
 extension DiaryDetailCell {
     @objc
-    func pressedReplyCloseBtn(sender: UIButton) {
+    private func pressedReplyCloseBtn(sender: UIButton) {
         delegate?.pressedReplyCloseBtn(sender: sender)
+    }
+
+    @objc
+    private func pressedLockBtn(sender: UIButton) {
+        delegate?.pressedLockBtn(sender)
     }
 }
 
@@ -391,6 +483,11 @@ extension DiaryDetailCell {
     public func reloadTableView() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
+            self.layoutSubviews()
         }
+    }
+
+    public func reloadLayout() {
+        self.layoutSubviews()
     }
 }

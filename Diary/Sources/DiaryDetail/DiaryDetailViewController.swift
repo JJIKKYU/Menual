@@ -130,54 +130,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    func isHideMenual(isHide: Bool) {
-        /*
-        switch isHide {
-        case true:
-            print("DiaryDetail :: isHide! = \(isHide)")
-            titleLabel.isHidden = true
-            divider1.isHidden = true
-            weatherSelectView.isHidden = true
-            divider2.isHidden = true
-            locationSelectView.isHidden = true
-            divider3.isHidden = true
-            descriptionTextView.isHidden = true
-            createdAtPageView.isHidden = true
-            divider4.isHidden = true
-            imageUploadView.isHidden = true
-            
-            tableViewHeaderView.snp.updateConstraints { make in
-                make.height.equalTo(400)
-            }
-            hideView.isHidden = false
-            // replyTableView.reloadData()
-
-        case false:
-            print("DiaryDetail :: isHide! = \(isHide)")
-            titleLabel.isHidden = false
-            divider1.isHidden = false
-            weatherSelectView.isHidden = false
-            divider2.isHidden = false
-            locationSelectView.isHidden = false
-            divider3.isHidden = false
-            descriptionTextView.isHidden = false
-            createdAtPageView.isHidden = false
-            
-            print("DiaryDetail :: isHide! -> isEnableImageView = \(isEnableImageView)")
-            if isEnableImageView == true {
-                divider4.isHidden = false
-                imageUploadView.isHidden = false
-            } else {
-                divider4.isHidden = true
-                imageUploadView.isHidden = true
-            }
-            
-            hideView.isHidden = true
-            // replyTableView.reloadData()
-        }
-         */
-    }
-    
     func reloadTableView() {
         print("DiaryDetail :: reloadTableView!")
         collectionView.reloadData()
@@ -656,7 +608,10 @@ extension DiaryDetailViewController: UICollectionViewDelegate, UICollectionViewD
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        return .init(width: collectionView.frame.width, height: collectionView.frame.height)
+        return .init(
+            width: collectionView.frame.width,
+            height: collectionView.frame.height
+        )
     }
 }
 

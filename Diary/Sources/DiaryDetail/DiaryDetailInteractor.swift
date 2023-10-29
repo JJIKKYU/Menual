@@ -113,7 +113,8 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         super.didBecomeActive()
 
         bind()
-        // setDiaryModelRealmOb()
+        // 메뉴얼 진입시에 최초 한 번 Notification 등록
+        setDiaryModelRealmOb()
     }
 
     override func willResignActive() {
@@ -124,13 +125,15 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         replyNotificationToken?.invalidate()
     }
     
+    /// Realm 변경점에 대해서 Notification을 받기 위해서 토큰 등록 함수
     func setDiaryModelRealmOb() {
         // MARK: - DiaryModel Init 세팅
-        guard let realm = Realm.safeInit() else { return }
+        guard let realm: Realm = Realm.safeInit() else { return }
         guard let diaryModel: DiaryModelRealm = currentDiaryModelRelay.value else { return }
-        // guard let diaryModel = self.diaryModel else { return }
+
         let diary = realm.object(ofType: DiaryModelRealm.self, forPrimaryKey: diaryModel._id)
 
+        // 현재 메뉴얼의 images를 View에 적용하기 위해서 accept
         let imagesData: [Data] = diaryModel.images
         self.imagesDataRelay.accept(imagesData)
 
@@ -163,6 +166,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         self.notificationToken = diary?.observe({ [weak self] changes in
             print("DiaryDetail :: changes = \(changes)")
             guard let self = self else { return }
+
             switch changes {
             case .change(let model, let proertyChanges):
                 print("DiaryDetail :: model = \(model as? DiaryModelRealm)")
@@ -201,24 +205,21 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 break
             }
         })
+
         // MARK: - DiaryModel의 Reply(겹쓰기)가 업데이트되었을경우
         self.replyNotificationToken = diary?.replies.observe({ [weak self] changes in
             guard let self = self else { return }
+
             switch changes {
             case .initial(let model):
-                // print("DiaryDetail :: realmObserve2 = initial! = \(model)")
                 self.diaryReplyArr = Array(model)
-//                self.presenter.reloadTableView()
                 self.presenter.reloadCurrentCell()
 
             case .update(let model, let deletions, let insertions, _):
-                // print("DiaryDetail :: update! = \(model)")
+                print("DiaryDetail :: update! = \(model)")
                 if deletions.count > 0 {
                     guard let deletionRow: Int = deletions.first else { return }
-                    // print("DiaryDetail :: realmObserve2 = deleteRow = \(deletions)")
                     self.diaryReplyArr.remove(at: deletionRow)
-                    // self.presenter.reloadTableView()
-                    self.presenter.reloadCurrentCell()
                 }
                 
                 if insertions.count > 0 {
@@ -228,10 +229,9 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                     guard let insertionRow: Int = insertions.first else { return }
                     let replyModelRealm = model[insertionRow]
                     self.diaryReplyArr.append(replyModelRealm)
-                    // self.presenter.reloadTableView()
-                    self.presenter.reloadCurrentCell()
-                    // print("DiaryDetail :: realmObserve2 = insertion = \(insertions)")
                 }
+
+                self.presenter.reloadCurrentCell()
 
             case .error(let error):
                 fatalError("\(error)")
@@ -239,7 +239,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         })
     }
     
-    func bind() {
+    private func bind() {
         menuComponentRelay
             .subscribe(onNext: { [weak self] comp in
                 guard let self = self else { return }
