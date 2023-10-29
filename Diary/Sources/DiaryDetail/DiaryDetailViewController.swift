@@ -112,7 +112,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
 
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
-//        setCurrentPageDiary()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -133,7 +132,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     func reloadTableView() {
         print("DiaryDetail :: reloadTableView!")
         collectionView.reloadData()
-        // setCurrentPageDiary()
     }
 
     func reloadCurrentCell() {
@@ -635,15 +633,20 @@ extension DiaryDetailViewController {
     }
 
     internal func setCurrentPageDiary() {
+        print("DiaryDetail :: setCurrentPageDiary")
         guard let currentPageIndex: Int = findCurrentPageIndex() else { return }
         if !isFirstCurrentPage { return }
 
         let destinationIndexPath: IndexPath = .init(item: currentPageIndex, section: 0)
 
+        // 해당 페이지까지 애니메이션 없는 스크롤 처리
         collectionView.isPagingEnabled = false
         collectionView.scrollToItem(at: destinationIndexPath, at: .centeredHorizontally, animated: false)
         collectionView.isPagingEnabled = true
         isFirstCurrentPage = false
+
+        // 노티피케이션 등록을 위한 index aceept
+        listener?.currentDiaryModelIndexRelay.accept(currentPageIndex)
     }
 }
 
@@ -678,6 +681,11 @@ extension DiaryDetailViewController: UIScrollViewDelegate {
         print("DiaryDetail :: currentPage = \(currentIdx)")
 
         guard let currentDiaryModel: DiaryModelRealm = listener?.diaryModelArrRelay.value[safe: currentIdx] else { return }
+
+        // 이전과 같은 index를 가지고 있다면 2번 refresh할 필요 없음
+        if let beforeIdx: Int = listener?.currentDiaryModelIndexRelay.value {
+            if beforeIdx == currentIdx { return }
+        }
 
         listener?.currentDiaryModelRelay.accept(currentDiaryModel)
         listener?.currentDiaryModelIndexRelay.accept(currentIdx)

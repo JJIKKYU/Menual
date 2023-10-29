@@ -114,7 +114,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 
         bind()
         // 메뉴얼 진입시에 최초 한 번 Notification 등록
-        setDiaryModelRealmOb()
+        // setDiaryModelRealmOb()
     }
 
     override func willResignActive() {
@@ -227,7 +227,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                     self.showReviewPopupIfNeeded()
 
                     guard let insertionRow: Int = insertions.first else { return }
-                    let replyModelRealm = model[insertionRow]
+                    let replyModelRealm: DiaryReplyModelRealm = model[insertionRow]
                     self.diaryReplyArr.append(replyModelRealm)
                 }
 
@@ -310,6 +310,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         currentDiaryModelRelay
             .subscribe(onNext: { [weak self] currentDiaryModel in
                 guard let self = self else { return }
+                print("DiaryDetail :: currentDiaryModelRelay! = \(currentDiaryModel?.title)")
                 self.notificationToken = nil
                 self.replyNotificationToken = nil
                 self.setDiaryModelRealmOb()

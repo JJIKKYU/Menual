@@ -791,7 +791,7 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
             prov.loadObject(ofClass: UIImage.self) { [weak self] image, error in
                 guard let self = self else { return }
                 guard let image: UIImage = image as? UIImage,
-                      let imageData: Data = image.jpegData(compressionQuality: 0.1)
+                      let imageData: Data = image.jpegData(compressionQuality: 1.0)
                 else { return }
 
                 DispatchQueue.main.async {
@@ -799,7 +799,7 @@ extension DiaryWritingViewController: PHPickerViewControllerDelegate {
                     var images: [Data] = self.listener?.uploadImagesRelay.value ?? []
                     images.append(imageData)
                     self.listener?.uploadImagesRelay.accept(images)
-                    self.imageUploadView.appendImage(imageData: imageData)
+                    self.imageUploadView.reloadCollectionView()
                     order += 1
                 }
                 print("DiaryHome :: loading! order = \(order)")
@@ -837,7 +837,7 @@ extension DiaryWritingViewController: UIImagePickerControllerDelegate, UINavigat
         var images: [Data] = self.listener?.uploadImagesRelay.value ?? []
         images.append(newImageData)
         self.listener?.uploadImagesRelay.accept(images)
-        self.imageUploadView.appendImage(imageData: newImageData)
+        self.imageUploadView.reloadCollectionView()
 
         picker.dismiss(animated: true)
     }

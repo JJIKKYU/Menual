@@ -50,13 +50,14 @@ public final class ImageUploadView: UIView {
     public var state: ImageUploadViewState
     private let currentImageCountLabel: UILabel = .init()
     private let deleteButton: UIButton = .init()
-    private let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
+    private let collectionView: MenualCollectionView = .init(frame: .zero, collectionViewLayout: .init())
     private let disPoseBag: DisposeBag = .init()
 
     public init(state: ImageUploadViewState) {
         self.state = state
         super.init(frame: CGRect.zero)
 
+        print("ImageUpload :: init!")
         configureUI()
         setViews()
     }
@@ -83,6 +84,10 @@ public final class ImageUploadView: UIView {
             flowlayout.sectionInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
             $0.setCollectionViewLayout(flowlayout, animated: true)
             $0.showsHorizontalScrollIndicator = false
+
+            if state == .detail {
+                $0.layer.opacity = 0
+            }
         }
 
         currentImageCountLabel.do {
@@ -139,6 +144,8 @@ public final class ImageUploadView: UIView {
 
     private func bind() {
         delegate?.uploadImagesRelay?
+            // .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] images in
                 guard let self = self else { return }
 
@@ -151,7 +158,7 @@ public final class ImageUploadView: UIView {
                 }
 
                 DispatchQueue.main.async {
-                    self.collectionView.reloadData()
+                    self.reloadDataWithAnimation()
                 }
             })
             .disposed(by: disPoseBag)
@@ -171,9 +178,9 @@ public final class ImageUploadView: UIView {
             currentImageCountLabel.isHidden = true
         }
 
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
+//        DispatchQueue.main.async {
+//            self.collectionView.reloadData()
+//        }
     }
 }
 
@@ -207,12 +214,6 @@ extension ImageUploadView {
 
     public func reloadCollectionView() {
         collectionView.reloadData()
-    }
-
-    public func appendImage(imageData: Data) {
-        let currentImageCount: Int = delegate?.uploadImagesRelay?.value.count ?? 0
-        let indexPath: IndexPath = .init(row: currentImageCount, section: 0)
-        collectionView.insertItems(at: [indexPath])
     }
 }
 
@@ -374,5 +375,31 @@ extension ImageUploadView: ImageUploadCellDelegate {
     @objc
     func pressedAllImagesDeleteButton() {
         delegate?.pressedAllImagesDeleteButton()
+    }
+}
+
+// MARK: - CollectionView Animation
+
+extension ImageUploadView {
+    private func reloadDataWithAnimation() {
+        if state != .detail { return }
+
+        collectionView.layer.removeAllAnimations()
+
+        collectionView.reloadDataWithCompletion { [weak self] in
+            guard let self = self else { return }
+
+            UIView.animate(withDuration: 0.5) {
+                self.collectionView.layer.opacity = 1
+            } completion: { isAnimated in
+                print("ImageUpload :: isAnimated! = \(isAnimated)")
+            }
+
+        }
+    }
+
+    public func hideCollectionView() {
+        collectionView.layer.removeAllAnimations()
+        collectionView.layer.opacity = 0
     }
 }

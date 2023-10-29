@@ -72,6 +72,7 @@ public final class DiaryDetailCell: UICollectionViewCell {
         placeSelectView.isHidden = true
         divider3.isHidden = true
         delegate = nil
+        imageUploadView.hideCollectionView()
     }
 
     override public func awakeFromNib() {
