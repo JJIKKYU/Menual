@@ -339,6 +339,9 @@ extension DiaryWritingInteractor {
         else { return }
 
         let title = titleRelay.value.count == 0 ? Date().toString() : titleRelay.value
+
+        let isImage: Bool = uploadImagesRelay.value.count != 0
+
         let newDiaryModel = DiaryModelRealm(
             pageNum: originalDiaryModel.pageNum,
             title: title,

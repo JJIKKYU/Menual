@@ -597,6 +597,7 @@ extension DiaryDetailViewController: UICollectionViewDelegate, UICollectionViewD
 
         print("DiaryDetail :: cureent Index = \(indexPath.row)")
         cell.diaryModel = diaryModel
+        cell.hideImageUploadCollectionView()
         cell.delegate = self
 
         cell.sizeToFit()

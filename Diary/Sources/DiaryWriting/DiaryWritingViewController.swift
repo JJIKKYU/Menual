@@ -366,9 +366,11 @@ extension DiaryWritingViewController: DiaryWritingPresentable {
         // desc 세팅
         let fixedDesc = desc.count == 0 ? defaultDescriptionText : desc
         if fixedDesc == desc {
-            self.descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
-                                                                             Colors.grey.g100,
-                                                                             text: desc)
+            self.descriptionTextView.attributedText = UIFont.AppBodyWithText(
+                .body_4,
+                Colors.grey.g100,
+                text: desc
+            )
         } else {
             descriptionTextView.text = defaultDescriptionText
             descriptionTextView.textColor = Colors.grey.g600

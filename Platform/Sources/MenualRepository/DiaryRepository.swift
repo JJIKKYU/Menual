@@ -240,6 +240,10 @@ public final class DiaryRepositoryImp: DiaryRepository {
                 data.image = info.image
             }
 
+            if data.imageCount != info.imageCount {
+                data.imageCount = info.imageCount
+            }
+
             if data.thumbImageIndex != info.thumbImageIndex {
                 data.thumbImageIndex = info.thumbImageIndex
             }

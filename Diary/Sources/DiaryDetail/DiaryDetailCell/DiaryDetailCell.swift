@@ -281,7 +281,11 @@ public final class DiaryDetailCell: UICollectionViewCell {
         configureWeatherPlace(diaryModel)
         titleLabel.text = diaryModel.title
 
-        descriptionTextView.text = diaryModel.desc
+        descriptionTextView.attributedText = UIFont.AppBodyWithText(
+            .body_4,
+            Colors.grey.g100,
+            text: diaryModel.desc
+        )
 
         createdAtPageView.createdAt = diaryModel.createdAt.toString()
         createdAtPageView.page = String(diaryModel.pageNum)
@@ -490,5 +494,9 @@ extension DiaryDetailCell {
 
     public func reloadLayout() {
         self.layoutSubviews()
+    }
+
+    public func hideImageUploadCollectionView() {
+        self.imageUploadView.hideCollectionView()
     }
 }

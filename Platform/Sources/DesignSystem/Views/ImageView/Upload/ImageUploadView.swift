@@ -384,7 +384,7 @@ extension ImageUploadView {
     private func reloadDataWithAnimation() {
         if state != .detail { return }
 
-        collectionView.layer.removeAllAnimations()
+        hideCollectionView()
 
         collectionView.reloadDataWithCompletion { [weak self] in
             guard let self = self else { return }
@@ -394,12 +394,12 @@ extension ImageUploadView {
             } completion: { isAnimated in
                 print("ImageUpload :: isAnimated! = \(isAnimated)")
             }
-
         }
     }
 
     public func hideCollectionView() {
         collectionView.layer.removeAllAnimations()
         collectionView.layer.opacity = 0
+        collectionView.layer.layoutIfNeeded()
     }
 }
