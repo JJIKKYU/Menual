@@ -297,7 +297,7 @@ extension DiaryWritingInteractor {
         )
 
         let uuid: String = diaryModelRealm.uuid
-        saveImage(uuid: uuid)
+        saveImages(diaryUUID: uuid)
 
         dependency.diaryRepository
             .addDiary(info: diaryModelRealm)
@@ -320,11 +320,6 @@ extension DiaryWritingInteractor {
             isNeedToast: true,
             mode: .writing
         )
-    }
-
-    func saveImage(uuid: String) {
-        if isImage == false { return }
-        saveImages(diaryUUID: uuid)
     }
 
     /// 글 수정할 때
@@ -360,14 +355,6 @@ extension DiaryWritingInteractor {
 
         // 이미지가 업데이트 된 경우
         saveImages(diaryUUID: originalDiaryModel.uuid)
-        /*
-        if isUpdateImage {
-            saveImage(uuid: originalDiaryModel.uuid)
-            print("DiaryWriting :: image가 변경되었습니다.")
-        } else {
-            imageSaveRelay.accept((true, true, true))
-        }
-         */
         updateDiaryModelRelay.accept(newDiaryModel)
     }
 }
@@ -376,6 +363,8 @@ extension DiaryWritingInteractor {
 extension DiaryWritingInteractor {
     func saveImages(diaryUUID: String) {
         let imagesData: [Data] = uploadImagesRelay.value
+        if imagesData.count == 0 { return }
+
         print("DiaryWriting :: interactor -> saveImages!")
 
         dependency.diaryRepository
@@ -420,6 +409,8 @@ extension DiaryWritingInteractor {
         guard let weatherModel = weatherModelRealm,
               let placeModel = placeModelRealm else { return nil }
 
+        let isImage: Bool = uploadImagesRelay.value.count != 0
+
         let diaryModelRealm = DiaryModelRealm(
             pageNum: 0,
             title: fixedTitle,
@@ -441,7 +432,6 @@ extension DiaryWritingInteractor {
         // 임시저장 이미지를 위해서 uuid를 미리 알고 있어야함
         let uuid: String = UUID().uuidString
 
-        // saveImage(uuid: uuid)
         saveImages(diaryUUID: uuid)
         // 이미 임시저장이 있을 경우 임시저장 데이터에 업데이트
         if let tempSaveModel = tempSaveDiaryModelRelay.value {

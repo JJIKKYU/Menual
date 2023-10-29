@@ -501,10 +501,11 @@ public final class DiaryRepositoryImp: DiaryRepository {
             return
         }
 
-        let realmModel: TempSaveModelRealm = TempSaveModelRealm(uuid: tempSaveUUID,
-                                                                diaryModel: diaryModel,
-                                                                createdAt: Date(),
-                                                                isDeleted: false
+        let realmModel: TempSaveModelRealm = TempSaveModelRealm(
+            uuid: tempSaveUUID,
+            diaryModel: diaryModel,
+            createdAt: Date(),
+            isDeleted: false
         )
 
         realm.safeWrite {
@@ -552,6 +553,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
             data.placeDetailText = model.placeDetailText
             data.place = model.place
             data.image = model.image
+            data.imageCount = model.imageCount
+            data.thumbImageIndex = model.thumbImageIndex
             data.createdAt = model.createdAt
             data.isDeleted = model.isDeleted
             data.desc = model.desc
