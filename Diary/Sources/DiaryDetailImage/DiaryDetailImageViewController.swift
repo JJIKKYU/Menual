@@ -28,7 +28,6 @@ final class DiaryDetailImageViewController: UIViewController, DiaryDetailImagePr
 
     weak var listener: DiaryDetailImagePresentableListener?
 
-    private var isFirstSetPage: Bool = true
     lazy var naviView = MenualNaviView(type: .detailImage)
     private let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
 
@@ -56,10 +55,12 @@ final class DiaryDetailImageViewController: UIViewController, DiaryDetailImagePr
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    }
 
-        if isFirstSetPage {
-            self.scrollToItemAtIndex()
-        }
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+
+        self.scrollToItemAtIndex()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -92,6 +93,8 @@ final class DiaryDetailImageViewController: UIViewController, DiaryDetailImagePr
             $0.isPagingEnabled = true
             $0.delegate = self
             $0.dataSource = self
+            $0.showsHorizontalScrollIndicator = false
+            $0.showsVerticalScrollIndicator = false
         }
     }
 
@@ -148,15 +151,13 @@ extension DiaryDetailImageViewController: UICollectionViewDelegate, UICollection
     }
 
     func scrollToItemAtIndex() {
-
         collectionView.reloadData()
         print("DiaryDetailImage :: listener?.selectedIndex = \(listener?.selectedIndex)")
         let indexPath: IndexPath = .init(row: listener?.selectedIndex ?? 0, section: 0)
 
+        collectionView.layoutIfNeeded()
         collectionView.isPagingEnabled = false
         collectionView.scrollToItem(at: indexPath, at: .right, animated: false)
         collectionView.isPagingEnabled = true
-
-        isFirstSetPage = false
     }
 }
