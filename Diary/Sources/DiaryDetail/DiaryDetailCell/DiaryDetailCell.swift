@@ -327,7 +327,7 @@ public final class DiaryDetailCell: UICollectionViewCell {
             descriptionTextView.isHidden = false
             createdAtPageView.isHidden = false
 
-            if !diaryModel.images.isEmpty {
+            if diaryModel.image {
                 divider4.isHidden = false
                 imageUploadView.isHidden = false
             } else {
@@ -348,7 +348,7 @@ public final class DiaryDetailCell: UICollectionViewCell {
     /// 이미지 여부에 따라서 Constraint를 다시 세팅하도록
     private func configureImages(_ diaryModel: DiaryModelRealm) {
         // 이미지가 없을 경우
-        if diaryModel.images.isEmpty {
+        if diaryModel.image == false {
             descriptionTextView.snp.remakeConstraints { make in
                 make.leading.equalToSuperview().offset(20)
                 make.trailing.equalToSuperview().inset(20)
@@ -388,8 +388,15 @@ public final class DiaryDetailCell: UICollectionViewCell {
             make.height.equalTo(1)
         }
 
-        uploadImagesRelay?.accept(diaryModel.images)
-        thumbImageIndexRelay?.accept(diaryModel.thumbImageIndex)
+        // 이미지 처리는 sync하게 진행할 경우 Cell 진입 속도가 현저하게 느려지는 문제 발생
+        DispatchQueue.main.async {
+            diaryModel.getImages { [weak self] imageDataArr in
+                guard let self = self else { return }
+                self.uploadImagesRelay?.accept(imageDataArr)
+            }
+            // self.uploadImagesRelay?.accept(diaryModel.images)
+            self.thumbImageIndexRelay?.accept(diaryModel.thumbImageIndex)
+        }
     }
 
     /// Weather, Place 데이터가 있을 경우 세팅하는 함수

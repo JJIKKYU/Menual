@@ -44,13 +44,40 @@ public class DiaryModelRealm: Object, Codable {
 
                 // 3. UIImage로 불러오고 Data로 Return
                 let imageData: Data = UIImage(contentsOfFile: imageURL.path)?
-                    .jpegData(compressionQuality: 0.4) ?? Data()
+                    .jpegData(compressionQuality: 0.9) ?? Data()
 
                 imagesData.append(imageData)
             }
 
             return imagesData
         }
+    }
+
+    public func getImages(completion: @escaping ([Data]) -> ()) {
+        if image == false {
+            completion([])
+            return
+        }
+
+        guard let directoryPath: String = getDiaryFolderPath() else {
+            completion([])
+            return
+        }
+
+        var imagesData: [Data] = []
+        for index in 0..<imageCount {
+            // 2. 이미지 URL 찾기
+            let imageURL: URL = .init(fileURLWithPath: directoryPath)
+                .appendingPathComponent("images_" + "\(index).jpg")
+
+            // 3. UIImage로 불러오고 Data로 Return
+            let imageData: Data = UIImage(contentsOfFile: imageURL.path)?
+                .jpegData(compressionQuality: 0.9) ?? Data()
+
+            imagesData.append(imageData)
+        }
+
+        completion(imagesData)
     }
 
     public var thumbImage: Data? {
@@ -61,7 +88,11 @@ public class DiaryModelRealm: Object, Codable {
 
             let thumbImageURL: URL = URL(filePath: directoryPath).appendingPathComponent("images_\(thumbImageIndex)")
 
-            return UIImage(contentsOfFile: thumbImageURL.path)? .jpegData(compressionQuality: 0.5)
+            guard let thumbImage: UIImage = UIImage(contentsOfFile: thumbImageURL.path) else { return Data() }
+
+//            let resizeImage: UIImage = UIImage().imageWithImage(sourceImage: thumbImage, scaledToWidth: 100)
+
+            return thumbImage.jpegData(compressionQuality: 0.9)
         }
     }
     @Persisted public var readCount: Int

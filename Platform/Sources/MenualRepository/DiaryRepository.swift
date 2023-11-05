@@ -136,6 +136,8 @@ public final class DiaryRepositoryImp: DiaryRepository {
                     try FileManager.default.removeItem(at: imageURL)
                 }
 
+                // let compressedImageData: Data = imageData.jpegData
+
                 try imageData.write(to: imageURL)
                 print("DiaryWriting :: DiaryRepository :: 이미지 저장완료 -> \(imageURL), \(index)")
             }

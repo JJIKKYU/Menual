@@ -134,8 +134,12 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         let diary = realm.object(ofType: DiaryModelRealm.self, forPrimaryKey: diaryModel._id)
 
         // 현재 메뉴얼의 images를 View에 적용하기 위해서 accept
-        let imagesData: [Data] = diaryModel.images
-        self.imagesDataRelay.accept(imagesData)
+        diaryModel.getImages { [weak self] imageDataArr in
+            guard let self = self else { return }
+            self.imagesDataRelay.accept(imageDataArr)
+        }
+        // let imagesData: [Data] = diaryModel.images
+        // self.imagesDataRelay.accept(imagesData)
 
         // Reminder가 있을 경우 처리하는 로직
         if let reminder = diaryModel.reminder {
@@ -172,9 +176,13 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 print("DiaryDetail :: model = \(model as? DiaryModelRealm)")
                 guard let model = model as? DiaryModelRealm else { return }
 
-                if let imagesData: [Data] = self.diaryModel?.images {
-                    self.imagesDataRelay.accept(imagesData)
-                }
+                self.diaryModel?.getImages(completion: { [weak self] imageeDataArr in
+                    guard let self = self else { return }
+                    self.imagesDataRelay.accept(imageeDataArr)
+                })
+//                if let imagesData: [Data] = self.diaryModel?.images {
+//                    self.imagesDataRelay.accept(imagesData)
+//                }
                 
                 print("DiaryDetail :: propertyChanges = \(proertyChanges)")
 

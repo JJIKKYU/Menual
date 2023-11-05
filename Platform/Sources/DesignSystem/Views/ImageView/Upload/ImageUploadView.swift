@@ -145,7 +145,8 @@ public final class ImageUploadView: UIView {
     private func bind() {
         delegate?.uploadImagesRelay?
             // .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(500), scheduler: MainScheduler.asyncInstance)
+            .subscribe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] images in
                 guard let self = self else { return }
 
@@ -239,6 +240,7 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource,
 
         let index: Int = indexPath.row
         var imageData: Data = .init()
+        var resizeImageData: Data?
         switch state {
         // 첫번째 셀은 이미지 추가 버튼이므로 1씩 빼주어서 접근
         case .writing:
@@ -273,13 +275,24 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource,
         // 상세보기의 경우는 제대로 접근
         case .detail:
             imageData = delegate?.uploadImagesRelay?.value[safe: index] ?? Data()
+            if let image: UIImage = .init(data: imageData) {
+                resizeImageData = UIImage().imageWithImage(
+                    sourceImage: image,
+                    scaledToWidth: 150
+                ).jpegData(compressionQuality: 1.0)
+            }
+
             cell.parameters.status = .detailImage
         }
 
         cell.delegate = self
         cell.isUserInteractionEnabled = true
         DispatchQueue.main.async {
-            cell.parameters.imageData = imageData
+            if let resizeImageData {
+                cell.parameters.imageData = resizeImageData
+            } else {
+                cell.parameters.imageData = imageData
+            }
         }
 
         return cell
