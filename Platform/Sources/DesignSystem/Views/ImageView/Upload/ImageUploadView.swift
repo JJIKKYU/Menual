@@ -278,8 +278,10 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource,
             if let image: UIImage = .init(data: imageData) {
                 resizeImageData = UIImage().imageWithImage(
                     sourceImage: image,
-                    scaledToWidth: 150
-                ).jpegData(compressionQuality: 1.0)
+                    scaledToWidth: 500
+                ).pngData()
+
+                // .jpegData(compressionQuality: 1.0)
             }
 
             cell.parameters.status = .detailImage

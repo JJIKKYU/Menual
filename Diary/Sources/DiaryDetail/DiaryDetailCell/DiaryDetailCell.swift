@@ -454,12 +454,15 @@ extension DiaryDetailCell: UITableViewDelegate, UITableViewDataSource {
 
         let index: Int = indexPath.row
 
-        guard let model: DiaryReplyModelRealm = diaryModel?.repliesArr[safe: index] else { return defaultCell }
+        guard let model: DiaryReplyModelRealm = diaryModel?.repliesArr[safe: index],
+              let diaryModel: DiaryModelRealm = diaryModel
+        else { return defaultCell }
 
         cell.backgroundColor = .clear
         cell.selectionStyle = .none
 
         cell.do {
+            $0.pageNum = diaryModel.pageNum
             $0.replyText = model.desc
             $0.replyNum = model.replyNum
             $0.createdAt = model.createdAt

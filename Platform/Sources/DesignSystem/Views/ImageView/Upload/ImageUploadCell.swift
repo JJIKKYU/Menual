@@ -199,7 +199,10 @@ public final class ImageUploadCell: UICollectionViewCell {
         if let imageData: Data = parameters.imageData,
            let image: UIImage = .init(data: imageData) {
 
-            let resizingImage: UIImage = UIImage().imageWithImage(sourceImage: image, scaledToWidth: 100)
+            let resizingImage: UIImage = UIImage().imageWithImage(
+                sourceImage: image,
+                scaledToWidth: 500
+            )
             DispatchQueue.main.async {
                 self.imageView.image = resizingImage
             }
