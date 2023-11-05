@@ -19,6 +19,8 @@ public protocol DiaryDetailCellDelegate: AnyObject {
     func pressedDetailImage(index: Int, uuid: String)
     func pressedReplyCloseBtn(sender: UIButton)
     func pressedLockBtn(_ button: UIButton)
+    // DetailCell에서 상/하로 스크롤 했을 경우
+    func didScroll()
 }
 
 // MARK: - DiaryDetailCell
@@ -508,5 +510,19 @@ extension DiaryDetailCell {
 
     public func hideImageUploadCollectionView() {
         self.imageUploadView.hideCollectionView()
+    }
+}
+
+// MARK: - ScrollView
+
+extension DiaryDetailCell: UIScrollViewDelegate {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        print("DiaryDetail :: scrollViewWillBeginDragging")
+        delegate?.didScroll()
+    }
+
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print("DiaryDetail :: scrollViewDidScroll")
+        delegate?.didScroll()
     }
 }

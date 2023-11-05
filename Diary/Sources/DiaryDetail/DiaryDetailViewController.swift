@@ -262,34 +262,37 @@ extension DiaryDetailViewController {
 extension DiaryDetailViewController {
     @objc
     private func keyboardWillShow(_ notification: NSNotification) {
-        guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
-        print("keyboardWillShow! - \(keyboardHeight)")
+        DispatchQueue.main.async {
+            guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
+            print("keyboardWillShow! - \(keyboardHeight)")
 
-        isShowKeboard = true
-        
-        collectionView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview().inset(keyboardHeight)
-        }
-        
-        replyBottomView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview().inset(keyboardHeight)
-            make.height.equalTo(84 + replyBottomViewPlusHeight)
+            self.isShowKeboard = true
+
+            self.collectionView.snp.updateConstraints { make in
+                make.bottom.equalToSuperview().inset(keyboardHeight)
+            }
+
+            self.replyBottomView.snp.updateConstraints { make in
+                make.bottom.equalToSuperview().inset(keyboardHeight)
+                make.height.equalTo(84 + self.replyBottomViewPlusHeight)
+            }
         }
     }
     
     @objc
     private func keyboardWillHide(_ notification: NSNotification) {
         print("keyboardWillHide!")
-        
-        isShowKeboard = false
-        
-        collectionView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview()
-        }
-        
-        replyBottomView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview()
-            make.height.equalTo(106 + replyBottomViewPlusHeight)
+        DispatchQueue.main.async {
+            self.isShowKeboard = false
+
+            self.collectionView.snp.updateConstraints { make in
+                make.bottom.equalToSuperview()
+            }
+
+            self.replyBottomView.snp.updateConstraints { make in
+                make.bottom.equalToSuperview()
+                make.height.equalTo(106 + self.replyBottomViewPlusHeight)
+            }
         }
     }
     
@@ -664,6 +667,10 @@ extension DiaryDetailViewController: ImageUploadViewDelegate, DiaryDetailCellDel
 
     func pressedDetailImage(index: Int, uuid: String) {
         listener?.pressedImageView(index: index)
+    }
+
+    func didScroll() {
+        view.endEditing(true)
     }
 }
 
