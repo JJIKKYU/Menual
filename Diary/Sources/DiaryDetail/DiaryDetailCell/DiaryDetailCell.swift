@@ -16,6 +16,7 @@ import UIKit
 // MARK: - DiaryDetailCellDelegate
 
 public protocol DiaryDetailCellDelegate: AnyObject {
+    var uploadImagesRelay: BehaviorRelay<[Data]>? { get }
     func pressedDetailImage(index: Int, uuid: String)
     func pressedReplyCloseBtn(sender: UIButton)
     func pressedLockBtn(_ button: UIButton)
@@ -27,9 +28,11 @@ public protocol DiaryDetailCellDelegate: AnyObject {
 
 public final class DiaryDetailCell: UICollectionViewCell {
 
-    public weak var delegate: DiaryDetailCellDelegate?
+    public weak var delegate: DiaryDetailCellDelegate? {
+        didSet { setOtherViewDelegate() }
+    }
 
-    public var uploadImagesRelay: BehaviorRelay<[Data]>? = .init(value: [])
+    // public var uploadImagesRelay: BehaviorRelay<[Data]>? = .init(value: [])
     public var thumbImageIndexRelay: BehaviorRelay<Int>? = .init(value: 0)
 
     public var diaryModel: DiaryModelRealm? {
@@ -49,7 +52,7 @@ public final class DiaryDetailCell: UICollectionViewCell {
     private let divider3: Divider = .init(type: ._1px)
     private let descriptionTextView: UITextView = .init()
     private let divider4: Divider = .init(type: ._1px)
-    private let imageUploadView: ImageUploadView = .init(state: .detail)
+    private lazy var imageUploadView: ImageUploadView = .init(state: .detail)
 
     private let tableViewHeaderView: UIView = .init()
     private let tableView: UITableView = .init(frame: .zero, style: .grouped)
@@ -144,7 +147,7 @@ public final class DiaryDetailCell: UICollectionViewCell {
         imageUploadView.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.isUserInteractionEnabled = true
-            $0.delegate = self
+            // $0.delegate = self
         }
 
         tableViewHeaderView.do {
@@ -362,7 +365,7 @@ public final class DiaryDetailCell: UICollectionViewCell {
             imageUploadView.snp.removeConstraints()
             divider4.snp.removeConstraints()
             divider4.isHidden = true
-            uploadImagesRelay?.accept([])
+            delegate?.uploadImagesRelay?.accept([])
             thumbImageIndexRelay?.accept(0)
             return
         }
@@ -394,7 +397,8 @@ public final class DiaryDetailCell: UICollectionViewCell {
         DispatchQueue.main.async {
             diaryModel.getImages { [weak self] imageDataArr in
                 guard let self = self else { return }
-                self.uploadImagesRelay?.accept(imageDataArr)
+                // self.uploadImagesRelay?.accept(imageDataArr)
+                self.imageUploadView.images = imageDataArr
             }
             // self.uploadImagesRelay?.accept(diaryModel.images)
             self.thumbImageIndexRelay?.accept(diaryModel.thumbImageIndex)
@@ -436,6 +440,10 @@ public final class DiaryDetailCell: UICollectionViewCell {
 // MARK: - ImageUploadViewDelegate
 
 extension DiaryDetailCell: ImageUploadViewDelegate {
+    public var uploadImagesRelay: RxRelay.BehaviorRelay<[Data]>? {
+        delegate?.uploadImagesRelay
+    }
+    
     public func pressedDetailImage(index: Int) {
         guard let diaryModel: DiaryModelRealm = diaryModel else { return }
         delegate?.pressedDetailImage(index: index, uuid: diaryModel.uuid)
@@ -524,5 +532,15 @@ extension DiaryDetailCell: UIScrollViewDelegate {
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print("DiaryDetail :: scrollViewDidScroll")
         delegate?.didScroll()
+    }
+}
+
+// MARK: - Delegate
+
+extension DiaryDetailCell {
+    private func setOtherViewDelegate() {
+        if imageUploadView.delegate == nil {
+            imageUploadView.delegate = self
+        }
     }
 }

@@ -47,6 +47,14 @@ public final class ImageUploadView: UIView {
     public weak var delegate: ImageUploadViewDelegate? {
         didSet { bind() }
     }
+    public var images: [Data] = [] {
+        didSet {
+            if oldValue != images {
+                collectionView.reloadData()
+            }
+        }
+    }
+
     public var state: ImageUploadViewState
     private let currentImageCountLabel: UILabel = .init()
     private let deleteButton: UIButton = .init()
@@ -85,9 +93,9 @@ public final class ImageUploadView: UIView {
             $0.setCollectionViewLayout(flowlayout, animated: true)
             $0.showsHorizontalScrollIndicator = false
 
-            if state == .detail {
-                $0.layer.opacity = 0
-            }
+//            if state == .detail {
+//                $0.layer.opacity = 0
+//            }
         }
 
         currentImageCountLabel.do {
@@ -145,7 +153,7 @@ public final class ImageUploadView: UIView {
     private func bind() {
         delegate?.uploadImagesRelay?
             // .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            .debounce(.milliseconds(500), scheduler: MainScheduler.asyncInstance)
+//            .debounce(.milliseconds(500), scheduler: MainScheduler.asyncInstance)
             .subscribe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] images in
                 guard let self = self else { return }
@@ -158,9 +166,11 @@ public final class ImageUploadView: UIView {
                     deleteButton.isHidden = false
                 }
 
-                DispatchQueue.main.async {
-                    self.reloadDataWithAnimation()
-                }
+//                DispatchQueue.main.async {
+//                    self.reloadDataWithAnimation()
+//                }
+                print("ImageUpload :: reloadData!")
+                // self.collectionView.reloadData()
             })
             .disposed(by: disPoseBag)
     }
@@ -223,7 +233,8 @@ extension ImageUploadView {
 extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let imageCount: Int = delegate?.uploadImagesRelay?.value.count ?? 0
+        // let imageCount: Int = delegate?.uploadImagesRelay?.value.count ?? 0
+        let imageCount: Int = images.count
 
         switch state {
         case .writing, .edit:
@@ -240,7 +251,6 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource,
 
         let index: Int = indexPath.row
         var imageData: Data = .init()
-        var resizeImageData: Data?
         switch state {
         // 첫번째 셀은 이미지 추가 버튼이므로 1씩 빼주어서 접근
         case .writing:
@@ -259,7 +269,8 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource,
 
         // 수정모드
         case .edit:
-            imageData = delegate?.uploadImagesRelay?.value[safe: index - 1] ?? Data()
+            // imageData = delegate?.uploadImagesRelay?.value[safe: index - 1] ?? Data()
+            imageData = images[safe: index - 1] ?? Data()
             let thumbIndex: Int = delegate?.thumbImageIndexRelay?.value ?? 0
 
             if index == 0 {
@@ -274,28 +285,14 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource,
 
         // 상세보기의 경우는 제대로 접근
         case .detail:
-            imageData = delegate?.uploadImagesRelay?.value[safe: index] ?? Data()
-            if let image: UIImage = .init(data: imageData) {
-                resizeImageData = UIImage().imageWithImage(
-                    sourceImage: image,
-                    scaledToWidth: 500
-                ).pngData()
-
-                // .jpegData(compressionQuality: 1.0)
-            }
-
+            // imageData = delegate?.uploadImagesRelay?.value[safe: index] ?? Data()
+            imageData = images[safe: index] ?? Data()
             cell.parameters.status = .detailImage
         }
 
         cell.delegate = self
         cell.isUserInteractionEnabled = true
-        DispatchQueue.main.async {
-            if let resizeImageData {
-                cell.parameters.imageData = resizeImageData
-            } else {
-                cell.parameters.imageData = imageData
-            }
-        }
+        cell.imageData = imageData
 
         return cell
     }
@@ -305,6 +302,11 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource,
 
         switch state {
         case .writing, .edit:
+            // 첫번재 Cell은 addImage로 thumb가 될 수 없음.
+            if indexPath.row == 0 {
+                return
+            }
+
             guard let cell: ImageUploadCell = collectionView.cellForItem(at: indexPath) as? ImageUploadCell else { return }
 
             let visibleCells = collectionView.visibleCells
@@ -413,8 +415,8 @@ extension ImageUploadView {
     }
 
     public func hideCollectionView() {
-        collectionView.layer.removeAllAnimations()
-        collectionView.layer.opacity = 0
-        collectionView.layer.layoutIfNeeded()
+        // collectionView.layer.removeAllAnimations()
+        // collectionView.layer.opacity = 0
+        // collectionView.layer.layoutIfNeeded()
     }
 }

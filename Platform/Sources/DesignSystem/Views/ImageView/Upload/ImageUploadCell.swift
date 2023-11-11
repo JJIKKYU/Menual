@@ -29,12 +29,15 @@ public final class ImageUploadCell: UICollectionViewCell {
 
     public struct Parameters {
         public var status: Status = .addImage
-        public var imageData: Data? = nil
         public var isThumb: Bool = false
     }
 
     public var parameters: ImageUploadCell.Parameters = .init() {
         didSet { setNeedsLayout() }
+    }
+
+    public var imageData: Data? = nil {
+        didSet { updateImage() }
     }
 
     public weak var delegate: ImageUploadCellDelegate?
@@ -69,7 +72,7 @@ public final class ImageUploadCell: UICollectionViewCell {
     override public func prepareForReuse() {
         super.prepareForReuse()
 
-        parameters.imageData = nil
+        imageData = Data()
         parameters.isThumb = false
     }
 
@@ -193,20 +196,28 @@ public final class ImageUploadCell: UICollectionViewCell {
         }
     }
 
-    override public func layoutSubviews() {
-        super.layoutSubviews()
+    private func updateImage() {
+        self.imageView.image = UIImage()
+        self.imageView.backgroundColor = Colors.grey.g800
 
-        if let imageData: Data = parameters.imageData,
-           let image: UIImage = .init(data: imageData) {
+        if imageData == nil { return }
 
-            let resizingImage: UIImage = UIImage().imageWithImage(
-                sourceImage: image,
-                scaledToWidth: 500
-            )
-            DispatchQueue.main.async {
-                self.imageView.image = resizingImage
+        DispatchQueue.main.async {
+            if let imageData: Data = self.imageData,
+               let image: UIImage = .init(data: imageData)
+            {
+                let resizingImageData: Data = UIImage().imageWithImage(
+                    sourceImage: image,
+                    scaledToWidth: 500)
+                    .jpegData(compressionQuality: 0.8) ?? Data()
+
+                self.imageView.image = UIImage(data: resizingImageData)
             }
         }
+    }
+
+    override public func layoutSubviews() {
+        super.layoutSubviews()
 
         if parameters.isThumb {
             print("UploadImageCell :: thumb입니다!")
@@ -231,6 +242,7 @@ public final class ImageUploadCell: UICollectionViewCell {
             backgroundColor = Colors.grey.g800
             addImageStackView.isHidden = false
             addImagePullDownButton.isUserInteractionEnabled = true
+            addImagePullDownButton.isHidden = false
             deleteBtn.isHidden = true
 
         case .image:

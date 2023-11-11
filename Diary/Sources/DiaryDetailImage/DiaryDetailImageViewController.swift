@@ -17,7 +17,7 @@ import UIKit
 
 public protocol DiaryDetailImagePresentableListener: AnyObject {
     var selectedIndex: Int { get }
-    var imagesDataRelay: BehaviorRelay<[Data]> { get }
+    var uploadImagesRelay: BehaviorRelay<[Data]> { get }
 
     func pressedBackBtn(isOnlyDetach: Bool)
 }
@@ -132,13 +132,13 @@ extension DiaryDetailImageViewController {
 
 extension DiaryDetailImageViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return listener?.imagesDataRelay.value.count ?? 0
+        return listener?.uploadImagesRelay.value.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell: ImageDetailCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageDetailCell", for: indexPath) as? ImageDetailCell else { return UICollectionViewCell() }
 
-        guard let imageData: Data = listener?.imagesDataRelay.value[safe: indexPath.row] else { return UICollectionViewCell() }
+        guard let imageData: Data = listener?.uploadImagesRelay.value[safe: indexPath.row] else { return UICollectionViewCell() }
 
         cell.imageData = imageData
 

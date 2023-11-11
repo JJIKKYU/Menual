@@ -63,21 +63,40 @@ public class DiaryModelRealm: Object, Codable {
             completion([])
             return
         }
-
         var imagesData: [Data] = []
-        for index in 0..<imageCount {
-            // 2. 이미지 URL 찾기
-            let imageURL: URL = .init(fileURLWithPath: directoryPath)
-                .appendingPathComponent("images_" + "\(index).jpg")
+        let imageCount: Int = self.imageCount
+        /*
+         for index in 0..<imageCount {
+             // 2. 이미지 URL 찾기
+             let imageURL: URL = .init(fileURLWithPath: directoryPath)
+                 .appendingPathComponent("images_" + "\(index).jpg")
 
-            // 3. UIImage로 불러오고 Data로 Return
-            let imageData: Data = UIImage(contentsOfFile: imageURL.path)?
-                .jpegData(compressionQuality: 0.9) ?? Data()
+             // 3. UIImage로 불러오고 Data로 Return
+             let imageData: Data = UIImage(contentsOfFile: imageURL.path)?
+                 .jpegData(compressionQuality: 0.9) ?? Data()
 
-            imagesData.append(imageData)
+             imagesData.append(imageData)
+         }
+
+         completion(imagesData)
+         */
+
+        let dispatchQueue = DispatchQueue.global(qos: .userInitiated)
+
+        dispatchQueue.async {
+            for index in 0..<imageCount {
+                let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent("images_\(index).jpg")
+
+                if let imageData = UIImage(contentsOfFile: imageURL.path)?.jpegData(compressionQuality: 0.9) {
+                    imagesData.append(imageData)
+                }
+            }
+
+            // Return to the main queue for completion
+            DispatchQueue.main.async {
+                completion(imagesData)
+            }
         }
-
-        completion(imagesData)
     }
 
     public var thumbImage: Data? {

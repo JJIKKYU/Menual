@@ -8,5 +8,9 @@
 	<array/>
 	<key>com.apple.developer.icloud-services</key>
 	<array/>
+	<key>com.apple.developer.journal.allow</key>
+	<array>
+		<string>suggestions</string>
+	</array>
 </dict>
 </plist>

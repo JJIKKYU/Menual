@@ -34,7 +34,7 @@ public protocol DiaryDetailPresentableListener: AnyObject {
     
     var diaryReplyArr: [DiaryReplyModelRealm] { get }
     var currentDiaryPage: Int { get }
-    var imagesDataRelay: BehaviorRelay<[Data]> { get }
+    var uploadImagesRelay: BehaviorRelay<[Data]> { get }
     var currentDiaryModelRelay: BehaviorRelay<DiaryModelRealm?> { get }
     var currentDiaryModelIndexRelay: BehaviorRelay<Int> { get }
 }
@@ -599,9 +599,9 @@ extension DiaryDetailViewController: UICollectionViewDelegate, UICollectionViewD
         guard let diaryModel: DiaryModelRealm = listener?.diaryModelArrRelay.value[safe: indexPath.row] else { return UICollectionViewCell() }
 
         print("DiaryDetail :: cureent Index = \(indexPath.row)")
-        cell.diaryModel = diaryModel
-        cell.hideImageUploadCollectionView()
         cell.delegate = self
+        cell.diaryModel = diaryModel
+        // cell.hideImageUploadCollectionView()
 
         cell.sizeToFit()
         cell.layoutIfNeeded()
@@ -657,8 +657,8 @@ extension DiaryDetailViewController {
 // MARK: - UploadImageViewDelegate, DiaryDetailCellDelegate
 
 extension DiaryDetailViewController: ImageUploadViewDelegate, DiaryDetailCellDelegate {
-    var uploadImagesRelay: BehaviorRelay<[Data]>? {
-        listener?.imagesDataRelay
+    var uploadImagesRelay: RxRelay.BehaviorRelay<[Data]>? {
+        listener?.uploadImagesRelay
     }
 
     var thumbImageIndexRelay: BehaviorRelay<Int>? {

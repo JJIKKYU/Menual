@@ -78,7 +78,9 @@ public class ImageDetailCell: UICollectionViewCell {
     override public func layoutSubviews() {
         super.layoutSubviews()
 
-        imageView.image = UIImage(data: imageData)
+        DispatchQueue.main.async {
+            self.imageView.image = UIImage(data: self.imageData)
+        }
     }
 }
 

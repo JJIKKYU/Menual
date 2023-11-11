@@ -158,14 +158,14 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
     }
 
     // MARK: - 이미지 자세히 보기
-    func attachDiaryDetailImage(imagesDataRelay: BehaviorRelay<[Data]>, selectedIndex: Int) {
+    func attachDiaryDetailImage(uploadImagesRelay: BehaviorRelay<[Data]>, selectedIndex: Int) {
         if diaryDetailImageRouting != nil {
             return
         }
 
         let router = diaryDetailImageBuildable.build(
             withListener: interactor,
-            imagesDataRelay: imagesDataRelay,
+            uploadImagesRelay: uploadImagesRelay,
             selectedIndex: selectedIndex
         )
 

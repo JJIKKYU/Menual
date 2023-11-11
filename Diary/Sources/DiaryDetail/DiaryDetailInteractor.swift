@@ -28,7 +28,7 @@ public protocol DiaryDetailRouting: ViewableRouting {
     func detachDiaryWriting(isOnlyDetach: Bool)
     
     // 이미지 자세히 보기
-    func attachDiaryDetailImage(imagesDataRelay: BehaviorRelay<[Data]>, selectedIndex: Int)
+    func attachDiaryDetailImage(uploadImagesRelay: BehaviorRelay<[Data]>, selectedIndex: Int)
     func detachDiaryDetailImage(isOnlyDetach: Bool)
 }
 
@@ -72,7 +72,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     private var disposebag = DisposeBag()
     private let changeCurrentDiarySubject = BehaviorSubject<Bool>(value: false)
-    internal let imagesDataRelay: BehaviorRelay<[Data]> = .init(value: [])
+    internal let uploadImagesRelay: BehaviorRelay<[Data]> = .init(value: [])
     
     // Reminder 관련
     let reminderRequestDateRelay = BehaviorRelay<ReminderRequsetModel?>(value: nil)
@@ -136,7 +136,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         // 현재 메뉴얼의 images를 View에 적용하기 위해서 accept
         diaryModel.getImages { [weak self] imageDataArr in
             guard let self = self else { return }
-            self.imagesDataRelay.accept(imageDataArr)
+            self.uploadImagesRelay.accept(imageDataArr)
         }
         // let imagesData: [Data] = diaryModel.images
         // self.imagesDataRelay.accept(imagesData)
@@ -178,7 +178,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
 
                 self.diaryModel?.getImages(completion: { [weak self] imageeDataArr in
                     guard let self = self else { return }
-                    self.imagesDataRelay.accept(imageeDataArr)
+                    self.uploadImagesRelay.accept(imageeDataArr)
                 })
 //                if let imagesData: [Data] = self.diaryModel?.images {
 //                    self.imagesDataRelay.accept(imagesData)
@@ -483,7 +483,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     
     func pressedImageView(index: Int) {
         print("DiaryDetail :: interactor -> pressedImageView!")
-        router?.attachDiaryDetailImage(imagesDataRelay: self.imagesDataRelay, selectedIndex: index)
+        router?.attachDiaryDetailImage(uploadImagesRelay: self.uploadImagesRelay, selectedIndex: index)
     }
 
     func diaryWritingPressedBackBtn(isOnlyDetach: Bool, isNeedToast: Bool, mode: ShowToastType) {

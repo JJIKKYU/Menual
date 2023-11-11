@@ -33,16 +33,16 @@ final class DiaryDetailImageInteractor: PresentableInteractor<DiaryDetailImagePr
     weak var router: DiaryDetailImageRouting?
     weak var listener: DiaryDetailImageListener?
     
-    let imagesDataRelay: BehaviorRelay<[Data]>
+    let uploadImagesRelay: BehaviorRelay<[Data]>
     let selectedIndex: Int
     private let disposeBag = DisposeBag()
 
     init(
         presenter: DiaryDetailImagePresentable,
-        imagesDataRelay: BehaviorRelay<[Data]>,
+        uploadImagesRelay: BehaviorRelay<[Data]>,
         selectedIndex: Int
     ) {
-        self.imagesDataRelay = imagesDataRelay
+        self.uploadImagesRelay = uploadImagesRelay
         self.selectedIndex = selectedIndex
         super.init(presenter: presenter)
         presenter.listener = self
