@@ -723,20 +723,24 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         if dataModel.isHide {
             cell.listType = .hide
         } else {
-            let thumbImageIndex: Int = dataModel.thumbImageIndex
-            if let imageData = dataModel.thumbImage,
-               let image: UIImage = UIImage(data: imageData) {
-                let resizeImageData = UIImage().imageWithImage(sourceImage: image, scaledToWidth: 150)
+            if dataModel.image {
                 cell.listType = .textAndImage
-                DispatchQueue.main.async {
-                    cell.image = resizeImageData
-                }
-            } else if let imageData: Data = dataModel.images[safe: thumbImageIndex],
-                      let image: UIImage = .init(data: imageData) {
-                let resizeImageData = UIImage().imageWithImage(sourceImage: image, scaledToWidth: 150)
-                cell.listType = .textAndImage
-                DispatchQueue.main.async {
-                    cell.image = resizeImageData
+                cell.image = nil
+                DiaryModelUtils.getThumbImage(
+                    uuid: dataModel.uuid,
+                    thumbIndex: dataModel.thumbImageIndex
+                ) { [weak cell] imageData in
+                    guard let cell = cell,
+                          let imageData: Data = imageData
+                    else { return }
+                        
+                    if let image: UIImage = UIImage(data: imageData) {
+                        let resizeImageData = UIImage().imageWithImage(
+                            sourceImage: image,
+                            scaledToWidth: 100
+                        )
+                        cell.image = resizeImageData
+                    }
                 }
             } else {
                 cell.image = nil

@@ -134,12 +134,13 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
         let diary = realm.object(ofType: DiaryModelRealm.self, forPrimaryKey: diaryModel._id)
 
         // 현재 메뉴얼의 images를 View에 적용하기 위해서 accept
-        diaryModel.getImages { [weak self] imageDataArr in
+        DiaryModelUtils.getImages(
+            uuid: diaryModel.uuid,
+            imageCount: diaryModel.imageCount
+        ) { [weak self] imageDataArr in
             guard let self = self else { return }
             self.uploadImagesRelay.accept(imageDataArr)
         }
-        // let imagesData: [Data] = diaryModel.images
-        // self.imagesDataRelay.accept(imagesData)
 
         // Reminder가 있을 경우 처리하는 로직
         if let reminder = diaryModel.reminder {

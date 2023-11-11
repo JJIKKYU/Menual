@@ -198,7 +198,6 @@ public final class ImageUploadCell: UICollectionViewCell {
 
     private func updateImage() {
         self.imageView.image = UIImage()
-        self.imageView.backgroundColor = Colors.grey.g800
 
         if imageData == nil { return }
 
@@ -209,7 +208,7 @@ public final class ImageUploadCell: UICollectionViewCell {
                 let resizingImageData: Data = UIImage().imageWithImage(
                     sourceImage: image,
                     scaledToWidth: 500)
-                    .jpegData(compressionQuality: 0.8) ?? Data()
+                    .jpegData(compressionQuality: 1.0) ?? Data()
 
                 self.imageView.image = UIImage(data: resizingImageData)
             }

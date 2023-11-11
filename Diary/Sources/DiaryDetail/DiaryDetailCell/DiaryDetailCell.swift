@@ -7,6 +7,7 @@
 
 import DesignSystem
 import MenualEntity
+import MenualUtil
 import RxRelay
 import RxSwift
 import SnapKit
@@ -77,6 +78,7 @@ public final class DiaryDetailCell: UICollectionViewCell {
         placeSelectView.isHidden = true
         divider3.isHidden = true
         delegate = nil
+        imageUploadView.images = []
         imageUploadView.hideCollectionView()
     }
 
@@ -395,12 +397,13 @@ public final class DiaryDetailCell: UICollectionViewCell {
 
         // 이미지 처리는 sync하게 진행할 경우 Cell 진입 속도가 현저하게 느려지는 문제 발생
         DispatchQueue.main.async {
-            diaryModel.getImages { [weak self] imageDataArr in
+            DiaryModelUtils.getImages(
+                uuid: diaryModel.uuid,
+                imageCount: diaryModel.imageCount
+            ) { [weak self] imageDataArr in
                 guard let self = self else { return }
-                // self.uploadImagesRelay?.accept(imageDataArr)
                 self.imageUploadView.images = imageDataArr
             }
-            // self.uploadImagesRelay?.accept(diaryModel.images)
             self.thumbImageIndexRelay?.accept(diaryModel.thumbImageIndex)
         }
     }
@@ -408,7 +411,8 @@ public final class DiaryDetailCell: UICollectionViewCell {
     /// Weather, Place 데이터가 있을 경우 세팅하는 함수
     private func configureWeatherPlace(_ diaryModel: DiaryModelRealm) {
         if let weather: Weather = diaryModel.weather?.weather,
-           let detailText: String = diaryModel.weather?.detailText {
+           let detailText: String = diaryModel.weather?.detailText,
+           !detailText.isEmpty {
             weatherSelectView.do {
                 $0.selectedWeatherType = weather
                 $0.selectTitle = detailText
@@ -422,7 +426,8 @@ public final class DiaryDetailCell: UICollectionViewCell {
         }
 
         if let place: Place = diaryModel.place?.place,
-           let detailText: String = diaryModel.place?.detailText {
+           let detailText: String = diaryModel.place?.detailText,
+           !detailText.isEmpty {
             placeSelectView.do {
                 $0.selectedPlaceType = place
                 $0.selectTitle = detailText

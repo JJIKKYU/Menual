@@ -169,7 +169,14 @@ public final class ImageUploadView: UIView {
 //                DispatchQueue.main.async {
 //                    self.reloadDataWithAnimation()
 //                }
-                print("ImageUpload :: reloadData!")
+                switch self.state {
+                case .edit, .writing:
+                    print("ImageUpload :: reload!")
+                    self.collectionView.reloadData()
+
+                case .detail:
+                    break
+                }
                 // self.collectionView.reloadData()
             })
             .disposed(by: disPoseBag)
@@ -233,14 +240,13 @@ extension ImageUploadView {
 extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // let imageCount: Int = delegate?.uploadImagesRelay?.value.count ?? 0
-        let imageCount: Int = images.count
-
         switch state {
         case .writing, .edit:
+            let imageCount: Int = delegate?.uploadImagesRelay?.value.count ?? 0
             return imageCount + 1
 
         case .detail:
+            let imageCount: Int = images.count
             return imageCount
         }
 
@@ -269,8 +275,7 @@ extension ImageUploadView: UICollectionViewDelegate, UICollectionViewDataSource,
 
         // 수정모드
         case .edit:
-            // imageData = delegate?.uploadImagesRelay?.value[safe: index - 1] ?? Data()
-            imageData = images[safe: index - 1] ?? Data()
+            imageData = delegate?.uploadImagesRelay?.value[safe: index - 1] ?? Data()
             let thumbIndex: Int = delegate?.thumbImageIndexRelay?.value ?? 0
 
             if index == 0 {

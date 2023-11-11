@@ -260,7 +260,9 @@ public class ListCell: UITableViewCell {
             listTitleView.listTitleType = .title
             menualImageView.isHidden = false
             if let image = image {
-                menualImageView.image = image
+                DispatchQueue.main.async {
+                    self.menualImageView.image = image
+                }
             }
             menualImageView.snp.remakeConstraints { make in
                 make.trailing.equalToSuperview().inset(20)
@@ -344,7 +346,9 @@ public class ListCell: UITableViewCell {
             menualImageView.isHidden = false
             listTitleView.listTitleType = .title
             if let image = image {
-                menualImageView.image = image
+                DispatchQueue.main.async {
+                    self.menualImageView.image = image
+                }
             }
             menualImageView.snp.remakeConstraints { make in
                 make.trailing.equalToSuperview().inset(20)

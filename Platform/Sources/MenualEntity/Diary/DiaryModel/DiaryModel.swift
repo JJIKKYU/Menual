@@ -65,25 +65,8 @@ public class DiaryModelRealm: Object, Codable {
         }
         var imagesData: [Data] = []
         let imageCount: Int = self.imageCount
-        /*
-         for index in 0..<imageCount {
-             // 2. 이미지 URL 찾기
-             let imageURL: URL = .init(fileURLWithPath: directoryPath)
-                 .appendingPathComponent("images_" + "\(index).jpg")
 
-             // 3. UIImage로 불러오고 Data로 Return
-             let imageData: Data = UIImage(contentsOfFile: imageURL.path)?
-                 .jpegData(compressionQuality: 0.9) ?? Data()
-
-             imagesData.append(imageData)
-         }
-
-         completion(imagesData)
-         */
-
-        let dispatchQueue = DispatchQueue.global(qos: .userInitiated)
-
-        dispatchQueue.async {
+        DispatchQueue.main.async {
             for index in 0..<imageCount {
                 let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent("images_\(index).jpg")
 
@@ -92,28 +75,42 @@ public class DiaryModelRealm: Object, Codable {
                 }
             }
 
-            // Return to the main queue for completion
             DispatchQueue.main.async {
                 completion(imagesData)
             }
         }
     }
 
-    public var thumbImage: Data? {
-        get {
-            if image == false { return nil }
+    public func getThumbImage(completion: @escaping (Data?) -> ()) {
+        if image == false {
+            completion(nil)
+            return
+        }
 
-            guard let directoryPath: String = getDiaryFolderPath() else { return nil }
+        guard let directoryPath: String = getDiaryFolderPath() else {
+            completion(nil)
+            return
+        }
+        let thumbImageIndex: Int = thumbImageIndex
 
-            let thumbImageURL: URL = URL(filePath: directoryPath).appendingPathComponent("images_\(thumbImageIndex)")
+        DispatchQueue.main.async {
+            let thumbImageURL: URL = URL(filePath: directoryPath).appendingPathComponent("images_\(thumbImageIndex).jpg")
 
-            guard let thumbImage: UIImage = UIImage(contentsOfFile: thumbImageURL.path) else { return Data() }
+            guard let thumbImage: UIImage = UIImage(contentsOfFile: thumbImageURL.path) else {
+                completion(nil)
+                return
+            }
 
-//            let resizeImage: UIImage = UIImage().imageWithImage(sourceImage: thumbImage, scaledToWidth: 100)
 
-            return thumbImage.jpegData(compressionQuality: 0.9)
+            let thumbImageData: Data? = thumbImage
+                .jpegData(compressionQuality: 0.9)
+
+            DispatchQueue.main.async {
+                completion(thumbImageData)
+            }
         }
     }
+
     @Persisted public var readCount: Int
     @Persisted public var createdAt: Date
     @Persisted public var isDeleted: Bool
