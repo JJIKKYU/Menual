@@ -35,3 +35,20 @@ public class CustomCollectionViewFlowLayout: UICollectionViewFlowLayout {
         return CGPoint(x: updatedOffset, y: proposedContentOffset.y)
     }
 }
+
+
+final public class MenualCollectionView: UICollectionView {
+    public var reloadDataCompletionBlock: (() -> Void)?
+
+    public func reloadDataWithCompletion(_ complete: @escaping () -> Void) {
+        reloadDataCompletionBlock = complete
+        super.reloadData()
+    }
+
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        if let block = reloadDataCompletionBlock {
+            block()
+        }
+    }
+}

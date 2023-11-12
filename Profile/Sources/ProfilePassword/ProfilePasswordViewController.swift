@@ -13,6 +13,8 @@ import SnapKit
 import RxRelay
 import DesignSystem
 
+// MARK: - ProfilePasswordPresentableListener
+
 protocol ProfilePasswordPresentableListener: AnyObject {
     func pressedBackBtn(isOnlyDetach: Bool)
     var prevPassword: [Int] { get set }
@@ -27,26 +29,15 @@ protocol ProfilePasswordPresentableListener: AnyObject {
     func checkPassword(passwordArr: [Int]) -> Bool
 }
 
+// MARK: - ProfilePasswordViewController
+
 final class ProfilePasswordViewController: UIViewController, ProfilePasswordPresentable, ProfilePasswordViewControllable {
 
     weak var listener: ProfilePasswordPresentableListener?
-    private let disposeBag = DisposeBag()
-    
-    lazy var naviView = MenualNaviView(type: .myPageCancel).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
+    private let disposeBag: DisposeBag = .init()
+    private let naviView: MenualNaviView = .init(type: .myPageCancel)
+    private let passwordView: PasswordView = .init()
 
-        $0.rightButton1.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
-    }
-    
-    private lazy var numberPad = NumberPad().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.delegate = self
-    }
-    
-    private lazy var passwordView = PasswordView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
     init() {
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
@@ -60,6 +51,10 @@ final class ProfilePasswordViewController: UIViewController, ProfilePasswordPres
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Colors.background
+
+        passwordView.becomeFirstResponder()
+
+        configureUI()
         setViews()
         bind()
 
@@ -77,10 +72,14 @@ final class ProfilePasswordViewController: UIViewController, ProfilePasswordPres
         if isMovingFromParent || isBeingDismissed {
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
-        numberPad.delegate = nil
+        passwordView.delegate = nil
     }
-    
-    func bind() {
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+
+    private func bind() {
         listener?.isMainScreen
             .subscribe(onNext: { [weak self] isMainScreen in
                 guard let self = self else { return }
@@ -107,11 +106,23 @@ final class ProfilePasswordViewController: UIViewController, ProfilePasswordPres
             })
             .disposed(by: disposeBag)
     }
-    
-    func setViews() {
+
+    private func configureUI() {
+        naviView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+
+            $0.rightButton1.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+        }
+
+        passwordView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.delegate = self
+        }
+    }
+
+    private func setViews() {
         view.addSubview(naviView)
-        self.view.addSubview(numberPad)
-        self.view.addSubview(passwordView)
+        view.addSubview(passwordView)
         
         naviView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
@@ -126,17 +137,11 @@ final class ProfilePasswordViewController: UIViewController, ProfilePasswordPres
             make.width.equalTo(228)
             make.height.equalTo(206)
         }
-        
-        numberPad.snp.makeConstraints { make in
-            make.top.equalTo(passwordView.snp.bottom).offset(48)
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.bottom.equalToSuperview()
-        }
     }
 }
 
 // MARK: - IBAction
+
 extension ProfilePasswordViewController {
     @objc
     func pressedBackBtn() {
@@ -145,7 +150,9 @@ extension ProfilePasswordViewController {
     }
 }
 
-extension ProfilePasswordViewController: NumberPadDelegate {
+// MARK: - PasswordViewDelegate
+
+extension ProfilePasswordViewController: PasswordViewDelegate {
     func deleteNumber() {
         if passwordView.numberArr.isEmpty { return }
         passwordView.numberArr.removeLast()
@@ -267,8 +274,6 @@ extension ProfilePasswordViewController: NumberPadDelegate {
                         listener?.setPassword(passwordArr: currentPassword)
                     }
                 }
-                
-
             }
         }
     }

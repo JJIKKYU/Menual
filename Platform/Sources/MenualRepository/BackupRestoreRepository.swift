@@ -12,7 +12,9 @@ import RealmSwift
 import RxSwift
 import RxRelay
 
-public protocol BackupRestoreRepository {
+// MARK: - BackupRestoreRepository
+
+public protocol BackupRestoreRepository: AnyObject {
     var isRestoring: Bool { get set }
 
     /// 백업 관련
@@ -26,6 +28,8 @@ public protocol BackupRestoreRepository {
     func clearRestoreJson(completion: @escaping (Bool) -> Void)
     func getPassword() -> String
 }
+
+// MARK: - BackupRestoreRepositoryImp
 
 public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
     public var isRestoring: Bool = false

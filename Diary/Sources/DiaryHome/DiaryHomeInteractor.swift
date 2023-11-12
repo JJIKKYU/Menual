@@ -83,8 +83,7 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     var notificationToken: NotificationToken? // DiaryModelRealm Noti
     var notificationTokenMoments: NotificationToken? // MomentsRealm Noti
-    
-    var diaryRealmArr: Results<DiaryModelRealm>?
+
     var diaryDictionary = Dictionary<String, DiaryHomeSectionModel>()
     var arraySerction: [String] = []
     
@@ -444,10 +443,12 @@ final class DiaryHomeInteractor: PresentableInteractor<DiaryHomePresentable>, Di
     
     // MARK: - Diary detaill 관련 함수
     func pressedDiaryCell(diaryModel: DiaryModelRealm) {
+        /*
         guard let realm = Realm.safeInit() else { return }
         realm.safeWrite {
             diaryModel.readCount += diaryModel.readCount + 1
         }
+        */
         router?.attachDiaryDetail(model: diaryModel)
     }
 

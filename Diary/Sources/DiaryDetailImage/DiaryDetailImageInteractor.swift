@@ -10,62 +10,56 @@ import RxSwift
 import RxRelay
 import Foundation
 
-public protocol DiaryDetailImageRouting: ViewableRouting {
-    // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
-}
+// MARK: - DiaryDetailImageRouting
+
+public protocol DiaryDetailImageRouting: ViewableRouting {}
+
+// MARK: - DiaryDetailImagePresentable
 
 public protocol DiaryDetailImagePresentable: Presentable {
     var listener: DiaryDetailImagePresentableListener? { get set }
-    // TODO: Declare methods the interactor can invoke the presenter to present data.
-    func setImage(imageData: Data)
 }
 
+// MARK: - DiaryDetailImageListener
+
 public protocol DiaryDetailImageListener: AnyObject {
-    // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
     func diaryDetailImagePressedBackBtn(isOnlyDetach: Bool)
 }
+
+// MARK: - DiaryDetailImageInteractor
 
 final class DiaryDetailImageInteractor: PresentableInteractor<DiaryDetailImagePresentable>, DiaryDetailImageInteractable, DiaryDetailImagePresentableListener {
 
     weak var router: DiaryDetailImageRouting?
     weak var listener: DiaryDetailImageListener?
     
-    let imageDataRelay: BehaviorRelay<Data>
+    let uploadImagesRelay: BehaviorRelay<[Data]>
+    let selectedIndex: Int
     private let disposeBag = DisposeBag()
 
-    // TODO: Add additional dependencies to constructor. Do not perform any logic
-    // in constructor.
     init(
         presenter: DiaryDetailImagePresentable,
-        imageDataRelay: BehaviorRelay<Data>
+        uploadImagesRelay: BehaviorRelay<[Data]>,
+        selectedIndex: Int
     ) {
-        self.imageDataRelay = imageDataRelay
+        self.uploadImagesRelay = uploadImagesRelay
+        self.selectedIndex = selectedIndex
         super.init(presenter: presenter)
         presenter.listener = self
-        // presenter.setImage(imageData: imageData)
     }
 
     override func didBecomeActive() {
         super.didBecomeActive()
-        // TODO: Implement business logic here.
+
         bind()
     }
 
     override func willResignActive() {
         super.willResignActive()
-        // TODO: Pause any business logic.
     }
     
-    func bind() {
-        imageDataRelay
-            .subscribe(onNext: { [weak self] imageData in
-                guard let self = self else { return }
-                print("DiaryDetailImage :: imageData = \(imageData)")
-                self.presenter.setImage(imageData: imageData)
-            })
-            .disposed(by: disposeBag)
-    }
-    
+    func bind() {}
+
     func pressedBackBtn(isOnlyDetach: Bool) {
         listener?.diaryDetailImagePressedBackBtn(isOnlyDetach: isOnlyDetach)
     }

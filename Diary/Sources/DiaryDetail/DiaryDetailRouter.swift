@@ -15,6 +15,8 @@ import RIBs
 import RxRelay
 import UIKit
 
+// MARK: - DiaryDetailInteractable
+
 protocol DiaryDetailInteractable: Interactable, DiaryBottomSheetListener, DiaryWritingListener, DiaryDetailImageListener {
     var router: DiaryDetailRouting? { get set }
     var listener: DiaryDetailListener? { get set }
@@ -23,9 +25,13 @@ protocol DiaryDetailInteractable: Interactable, DiaryBottomSheetListener, DiaryW
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
 }
 
+// MARK: - DiaryDetailViewControllable
+
 protocol DiaryDetailViewControllable: ViewControllable {
     // TODO: Declare methods the router invokes to manipulate the view hierarchy.
 }
+
+// MARK: - DiaryDetailRouter
 
 final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDetailViewControllable>, DiaryDetailRouting {
 
@@ -152,14 +158,15 @@ final class DiaryDetailRouter: ViewableRouter<DiaryDetailInteractable, DiaryDeta
     }
 
     // MARK: - 이미지 자세히 보기
-    func attachDiaryDetailImage(imageDataRelay: BehaviorRelay<Data>) {
+    func attachDiaryDetailImage(uploadImagesRelay: BehaviorRelay<[Data]>, selectedIndex: Int) {
         if diaryDetailImageRouting != nil {
             return
         }
 
         let router = diaryDetailImageBuildable.build(
             withListener: interactor,
-            imageDataRelay: imageDataRelay
+            uploadImagesRelay: uploadImagesRelay,
+            selectedIndex: selectedIndex
         )
 
 //        let navigation = NavigationControllerable(root: router.viewControllable)

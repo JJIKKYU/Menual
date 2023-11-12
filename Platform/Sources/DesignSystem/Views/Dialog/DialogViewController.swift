@@ -36,7 +36,8 @@ public enum DiaryWritingDialog {
     case writing
     case editCancel
     case edit
-    case deletePhoto
+    case deletePhoto(cell: ImageUploadCell)
+    case deleteAllPhotos
     case camera
 }
 

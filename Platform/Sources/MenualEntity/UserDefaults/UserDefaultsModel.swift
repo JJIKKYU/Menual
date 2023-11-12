@@ -9,4 +9,7 @@ import Foundation
 
 public enum UserDefaultsModel: String {
     case appVersion = "AppVersion"
+
+    // Migration
+    case migration = "ImageMultiSelect"
 }

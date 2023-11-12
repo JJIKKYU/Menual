@@ -30,7 +30,6 @@ public protocol DesignSystemPresentableListener: AnyObject {
     func pressedPaginationCell()
     func pressedEmptyCell()
     func pressedMetaDataCell()
-    func pressedNumberPadCell()
     func pressedProgressCell()
 }
 
@@ -182,8 +181,6 @@ extension DesignSystemViewController: UITableViewDelegate, UITableViewDataSource
             listener?.pressedEmptyCell()
         case "MetaData":
             listener?.pressedMetaDataCell()
-        case "NumberPad":
-            listener?.pressedNumberPadCell()
         case "Progress":
             listener?.pressedProgressCell()
         default:

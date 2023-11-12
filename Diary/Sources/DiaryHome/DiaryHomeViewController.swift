@@ -20,6 +20,8 @@ import MessageUI
 import AppTrackingTransparency
 import AdSupport
 import GoogleMobileAds
+// import JournalingSuggestions
+import SwiftUI
 
 public enum TableCollectionViewTag: Int {
     case MomentsCollectionView = 0
@@ -552,6 +554,12 @@ extension DiaryHomeViewController {
         print("pressedFilterBtn")
         listener?.pressedFilterBtn()
         MenualLog.logEventAction(responder: button)
+        /*
+        if #available(iOS 17.2, *) {
+            let vc = UIHostingController(rootView: Example())
+            navigationController?.pushViewController(vc, animated: true)
+        }
+         */
     }
 }
 
@@ -715,10 +723,24 @@ extension DiaryHomeViewController: UITableViewDelegate, UITableViewDataSource {
         if dataModel.isHide {
             cell.listType = .hide
         } else {
-            if let imageData = dataModel.thumbImage {
+            if dataModel.image {
                 cell.listType = .textAndImage
-                DispatchQueue.main.async {
-                    cell.image = UIImage(data: imageData)
+                cell.image = nil
+                DiaryModelUtils.getThumbImage(
+                    uuid: dataModel.uuid,
+                    thumbIndex: dataModel.thumbImageIndex
+                ) { [weak cell] imageData in
+                    guard let cell = cell,
+                          let imageData: Data = imageData
+                    else { return }
+                        
+                    if let image: UIImage = UIImage(data: imageData) {
+                        let resizeImageData = UIImage().imageWithImage(
+                            sourceImage: image,
+                            scaledToWidth: 100
+                        )
+                        cell.image = resizeImageData
+                    }
                 }
             } else {
                 cell.image = nil
@@ -1073,3 +1095,53 @@ extension DiaryHomeViewController: GADNativeAdLoaderDelegate, GADNativeAdDelegat
         print("Admob :: click!")
     }
 }
+
+/*
+@available(iOS 17.2, *)
+struct Example: View {
+    @State var suggestionPhotos = [JournalingSuggestion.Photo]()
+    @State var suggestionContacts = [JournalingSuggestion.Contact]()
+    @State var suggestionLocations = [JournalingSuggestion.Location]()
+    @State var suggestionTitle: String? = nil
+    var body: some View {
+        VStack {
+            Spacer().frame(height: 25)
+            JournalingSuggestionsPicker {
+                Text("title!")
+            } onCompletion: { suggestion in
+                // Parse the suggestion details.
+                print("suggestion = \(suggestion)")
+                suggestionTitle = suggestion.title
+                suggestionPhotos = await suggestion.content(forType: JournalingSuggestion.Photo.self)
+                suggestionContacts = await suggestion.content(forType: JournalingSuggestion.Contact.self)
+                suggestionLocations = await suggestion.content(forType: JournalingSuggestion.Location.self)
+            }
+            // Display the suggestion details.
+            Spacer().frame(height: 25)
+            Text(suggestionTitle ?? "")
+            List {
+                ForEach(suggestionPhotos, id: \.photo) { item in
+                    AsyncImage(url: item.photo) { image in
+                        image.image?
+                            .resizable ()
+                            .aspectRatio(contentMode: .fit)
+                    }
+                    .frame(maxHeight: 200)
+                }
+            }
+
+            List {
+                ForEach(suggestionContacts, id: \.name) { item in
+                    Text(item.name)
+                }
+            }
+
+            List {
+                ForEach(suggestionLocations, id: \.place) { item in
+                    Text(item.place ?? "")
+                }
+            }
+        }
+    }
+}
+*/

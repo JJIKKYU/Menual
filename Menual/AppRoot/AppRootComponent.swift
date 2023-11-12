@@ -15,6 +15,7 @@ final class AppRootComponent: Component<AppRootDependency> {
 
     private let rootViewController: ViewControllable
     var diaryRepository: DiaryRepository
+    var migrationRepository: MigrationRepository?
     var appstoreReviewRepository: AppstoreReviewRepository
     var momentsRepository: MomentsRepository
     var backupRestoreRepository: BackupRestoreRepository
@@ -34,16 +35,10 @@ final class AppRootComponent: Component<AppRootDependency> {
         self.appstoreReviewRepository = AppstoreReviewRepositoryImp()
         self.backupRestoreRepository = BackupRestoreRepositoryImp()
         self.momentsRepository.fetch()
+        self.migrationRepository = containerRepository.container.resolve(MigrationRepository.self)
         super.init(dependency: dependency)
     }
 }
 
-extension AppRootComponent: DiaryHomeDependency,
-                            AppRootInteractorDependency, SplashDependency
-{
-    
-    
-    
-
-    
-}
+extension AppRootComponent: DiaryHomeDependency, AppRootInteractorDependency, SplashDependency
+{}

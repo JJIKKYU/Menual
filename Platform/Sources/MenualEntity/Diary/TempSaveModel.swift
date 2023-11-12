@@ -16,57 +16,43 @@ public class TempSaveModelRealm: Object, Codable {
     @Persisted public var title: String = ""
     @Persisted public var desc: String = ""
     @Persisted public var image: Bool
-    public var originalImage: Data? {
+    @Persisted public var thumbImageIndex: Int
+    @Persisted public var imageCount: Int
+    public var images: [Data] {
         get {
-            if image == false { return nil }
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-            
-            if let directoryPath = path.first {
+            if image == false { return [] }
+
+            guard let directoryPath: String = getDiaryFolderPath() else { return [] }
+
+            var imagesData: [Data] = []
+            for index in 0..<imageCount {
                 // 2. 이미지 URL 찾기
-                let originalImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Original")
+                let imageURL: URL = .init(fileURLWithPath: directoryPath)
+                    .appendingPathComponent("images_" + "\(index).jpg")
+
                 // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: originalImageURL.path)?.jpegData(compressionQuality: 0.5)
+                let imageData: Data = UIImage(contentsOfFile: imageURL.path)?
+                    .jpegData(compressionQuality: 0.4) ?? Data()
+
+                imagesData.append(imageData)
             }
-            return nil
+
+            return imagesData
         }
     }
-    public var cropImage: Data? {
-        get {
-            if image == false { return nil }
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
-            
-            if let directoryPath = path.first {
-                // 2. 이미지 URL 찾기
-                let imageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid)
-                // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: imageURL.path)?.jpegData(compressionQuality: 0.8)
-            }
-            return nil
-        }
-    }
+
     public var thumbImage: Data? {
         get {
             if image == false { return nil }
-            // 1. 도큐먼트 폴더 경로가져오기
-            let documentDirectory = FileManager.SearchPathDirectory.documentDirectory
-            let userDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-            let path = NSSearchPathForDirectoriesInDomains(documentDirectory, userDomainMask, true)
 
-            if let directoryPath = path.first {
-            // 2. 이미지 URL 찾기
-                let thumbImageURL = URL(fileURLWithPath: directoryPath).appendingPathComponent(uuid + "Thumb")
-                // 3. UIImage로 불러오고 Data로 Return
-                return UIImage(contentsOfFile: thumbImageURL.path)?.jpegData(compressionQuality: 0.9)
-            }
-            return nil
+            guard let directoryPath: String = getDiaryFolderPath() else { return nil }
+
+            let thumbImageURL: URL = URL(filePath: directoryPath).appendingPathComponent("images_\(thumbImageIndex)")
+
+            return UIImage(contentsOfFile: thumbImageURL.path)? .jpegData(compressionQuality: 0.5)
         }
     }
+
     @Persisted public var weather: Weather?
     @Persisted public var weatherDetailText: String?
     @Persisted public var place: Place?
@@ -80,6 +66,8 @@ public class TempSaveModelRealm: Object, Codable {
         self.title = diaryModel.title
         self.desc = diaryModel.desc
         self.image = diaryModel.image
+        self.thumbImageIndex = diaryModel.thumbImageIndex
+        self.imageCount = diaryModel.imageCount
         self.weather = diaryModel.weather?.weather
         self.weatherDetailText = diaryModel.weather?.detailText
         self.place = diaryModel.place?.place
@@ -98,6 +86,8 @@ public class TempSaveModelRealm: Object, Codable {
         case title
         case desc
         case image
+        case thumbImageIndex
+        case imageCount
         case weather
         case weatherDetailText
         case place
@@ -114,6 +104,8 @@ public class TempSaveModelRealm: Object, Codable {
         title = try container.decode(String.self, forKey: .title)
         desc = try container.decode(String.self, forKey: .desc)
         image = try container.decode(Bool.self, forKey: .image)
+        thumbImageIndex = try container.decodeIfPresent(Int.self, forKey: .thumbImageIndex) ?? 0
+        imageCount = try container.decodeIfPresent(Int.self, forKey: .imageCount) ?? 1
         // weather = try container.decodeIfPresent(Weather.self, forKey: .weather)
         if let weatherRawValue = try container.decodeIfPresent(String.self, forKey: .weather),
             let weather = Weather(rawValue: weatherRawValue) {
@@ -142,11 +134,27 @@ public class TempSaveModelRealm: Object, Codable {
         try container.encode(title, forKey: .title)
         try container.encode(desc, forKey: .desc)
         try container.encode(image, forKey: .image)
+        try container.encodeIfPresent(thumbImageIndex, forKey: .thumbImageIndex)
+        try container.encodeIfPresent(imageCount, forKey: .imageCount)
         try container.encodeIfPresent(weather?.rawValue ?? "", forKey: .weather)
         try container.encodeIfPresent(weatherDetailText, forKey: .weatherDetailText)
         try container.encodeIfPresent(place?.rawValue ?? "", forKey: .place)
         try container.encodeIfPresent(placeDetailText, forKey: .placeDetailText)
         try container.encode(createdAt, forKey: .createdAt)
         try container.encode(isDeleted, forKey: .isDeleted)
+    }
+}
+
+// MARK: - Extension
+
+extension TempSaveModelRealm {
+    private func getDiaryFolderPath() -> String? {
+        guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+
+        let folderURL: URL = documentDirectory.appendingPathComponent(self.uuid)
+
+        return folderURL.path
     }
 }

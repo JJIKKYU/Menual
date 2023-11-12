@@ -31,7 +31,6 @@ public class MomentsCell: UICollectionViewCell {
         super.init(frame: frame)
         self.isUserInteractionEnabled = true
         setViews()
-        // 여기서 init 진행
     }
     
     required init?(coder: NSCoder) {

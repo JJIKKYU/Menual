@@ -5,37 +5,50 @@
 //  Created by 정진균 on 2022/04/16.
 //
 
-import RIBs
-import RxSwift
-import RxRelay
-import UIKit
-import Then
-import SnapKit
-import RealmSwift
-import MenualEntity
 import DesignSystem
+import MenualEntity
 import MenualUtil
 import MessageUI
+import RealmSwift
+import RIBs
+import RxRelay
+import RxSwift
+import SnapKit
+import Then
+import UIKit
+
+// MARK: - DiaryDetailPresentableListener
 
 public protocol DiaryDetailPresentableListener: AnyObject {
+    var diaryModelArrRelay: BehaviorRelay<[DiaryModelRealm]> { get }
+
     func pressedBackBtn(isOnlyDetach: Bool)
     func pressedReplySubmitBtn(desc: String)
-    func pressedIndicatorButton(offset: Int, isInitMode: Bool)
     func pressedMenuMoreBtn()
     func pressedReminderBtn()
     
-    func pressedImageView()
-    
+    func pressedImageView(index: Int)
+
     func hideDiary()
     func deleteReply(replyModel: DiaryReplyModelRealm)
     
     var diaryReplyArr: [DiaryReplyModelRealm] { get }
     var currentDiaryPage: Int { get }
+    var uploadImagesRelay: BehaviorRelay<[Data]> { get }
+    var currentDiaryModelRelay: BehaviorRelay<DiaryModelRealm?> { get }
+    var currentDiaryModelIndexRelay: BehaviorRelay<Int> { get }
 }
+
+// MARK: - DiaryDetailViewController
 
 final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable, DiaryDetailViewControllable {
     
     weak var listener: DiaryDetailPresentableListener?
+
+    private let collectionView: UICollectionView = .init(frame: .zero, collectionViewLayout: .init())
+
+    // 첫 진입때만 이동하도록
+    private var isFirstCurrentPage: Bool = true
     private var pageNum: Int = 0
     private var isEnableImageView: Bool = false
     // 기본 크기 40에서 추가된 사이즈만큼 Height 조절
@@ -47,164 +60,18 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     private var isShowKeboard: Bool  = false
     private var willDeleteReplyUUID: String?
     private var willDeleteReplyModel: DiaryReplyModelRealm?
-    
-    private let tableViewHeaderView = UIView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-//        $0.backgroundColor = Colors.background
-        $0.backgroundColor = .clear
-    }
-    
-    private lazy var replyBottomView = ReplyBottomView().then {
-        $0.categoryName = "reply"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.writeBtn.addTarget(self, action: #selector(pressedSubmitReplyBtn), for: .touchUpInside)
-        $0.replyTextView.delegate = self
-    }
 
-    lazy var naviView = MenualNaviView(type: .menualDetail).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
-        
-        $0.rightButton1.addTarget(self, action: #selector(pressedMenuMoreBtn), for: .touchUpInside)
-        $0.rightButton2.addTarget(self, action: #selector(pressedReminderBtn), for: .touchUpInside)
-    }
-    
-    private let titleLabel = UILabel().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.font = UIFont.AppTitle(.title_5)
-        $0.textColor = Colors.grey.g200
-        $0.text = "텍스트입ㄴ다"
-        $0.numberOfLines = 0
-    }
-    
-    private let createdAtPageView = CreatedAtPageView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private let weatherLocationStackView = UIStackView(frame: .zero).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .clear
-        $0.axis = .vertical
-        $0.alignment = .fill
-        $0.spacing = 13
-        $0.distribution = .fill
-    }
-    
-    private let divider1 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private lazy var weatherSelectView = WeatherLocationSelectView(type: .weather).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isUserInteractionEnabled = false
-        $0.selected = true
-        $0.selectedWeatherType = .rain
-        $0.selectTitle = ""
-        $0.isDeleteBtnEnabled = false
-    }
-    
-    private let divider2 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    private lazy var locationSelectView = WeatherLocationSelectView(type: .location).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.isUserInteractionEnabled = false
-        $0.selected = true
-        $0.selectedPlaceType = .company
-        $0.selectTitle = ""
-        $0.isDeleteBtnEnabled = false
-    }
-    
-    private let divider3 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    lazy var descriptionTextView = UITextView().then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.text = ""
-        $0.isScrollEnabled = false
-        $0.isEditable = false
-        $0.backgroundColor = .clear
-        $0.textContainerInset = .zero
-        $0.textContainer.lineFragmentPadding = 0
-    }
-    
-    private let divider4 = Divider(type: ._1px).then {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    
-    lazy var imageView = UIImageView().then {
-        $0.contentMode = .scaleAspectFill
-        $0.layer.masksToBounds = true
-        $0.backgroundColor = Colors.background
-        $0.AppCorner(._4pt)
-    }
-    
-    private lazy var imageViewGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(pressedImageView))
-    
-    lazy var replyTableView = UITableView(frame: .zero, style: .grouped).then {
-        $0.categoryName = "replyList"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.delegate = self
-        $0.dataSource = self
-        $0.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 100, right: 0)
-        $0.register(ReplyCell.self, forCellReuseIdentifier: "ReplyCell")
-        
-        $0.estimatedRowHeight = 44
-        $0.rowHeight = UITableView.automaticDimension
-        
-        // $0.sectionHeaderHeight = UITableView.automaticDimension
-        // $0.estimatedSectionHeaderHeight = 64
-        
-        $0.showsVerticalScrollIndicator = false
-        $0.backgroundColor = Colors.background
-        
-        $0.tableFooterView = nil
-        $0.separatorStyle = .none
-    }
-    
-    lazy var spaceRequiredFAB = FAB(fabType: .spacRequired, fabStatus: .default_).then {
-        $0.categoryName = "inddicator"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.spaceRequiredRightArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
-        $0.spaceRequiredLeftArrowBtn.addTarget(self, action: #selector(pressedIndicatorBtn(sender:)), for: .touchUpInside)
-    }
-    
-    lazy var hideView = UIView().then {
-        $0.categoryName = "hide"
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        let lockEmptyView = Empty().then {
-            $0.screenType = .writing
-            $0.writingType = .lock
-        }
-        lazy var btn = CapsuleButton(frame: .zero, includeType: .iconText).then {
-            $0.actionName = "unhide"
-            $0.title = "숨김 해제하기"
-            $0.image = Asset._16px.Circle.front.image.withRenderingMode(.alwaysTemplate)
-        }
-        btn.addTarget(self, action: #selector(pressedLockBtn), for: .touchUpInside)
-        $0.addSubview(lockEmptyView)
-        $0.addSubview(btn)
+    private let replyBottomView: ReplyBottomView = .init()
 
-        lockEmptyView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(81)
-            make.width.equalTo(160)
-            make.height.equalTo(180)
-            make.centerX.equalToSuperview()
-        }
-        btn.snp.makeConstraints { make in
-            make.top.equalTo(lockEmptyView.snp.bottom).offset(12)
-            make.width.equalTo(113)
-            make.height.equalTo(28)
-            make.centerX.equalToSuperview()
-        }
-        $0.isHidden = true
-    }
+    private let naviView: MenualNaviView = .init(type: .menualDetail)
+    private let hideView: UIView = .init()
     
     init() {
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
+
+        configureUI()
+        setViews()
     }
     
     required init?(coder: NSCoder) {
@@ -215,363 +82,66 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = Colors.background
-        setViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         MenualLog.logEventAction("detail_willappear")
-        
-        weatherSelectView.selectTextView.centerVerticalText()
-        locationSelectView.selectTextView.centerVerticalText()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         MenualLog.logEventAction("detail_appear")
-        
-        replyTableView.delegate = self
+
         replyBottomView.replyTextView.delegate = self
-        
-        imageViewGesture.numberOfTapsRequired = 1
-        imageView.isUserInteractionEnabled = true
-        imageView.addGestureRecognizer(imageViewGesture)
 
         // keyboard observer등록
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
                 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
+
         // 바깥쪽 터치했을때 키보드 내려가게
-        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
-        view.addGestureRecognizer(tap)
+        // let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        // view.addGestureRecognizer(tap)
     }
-    
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setCurrentPageDiary()
+    }
+
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+    }
+
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+
         if isMovingFromParent || isBeingDismissed {
-            print("!!?")
             listener?.pressedBackBtn(isOnlyDetach: true)
         }
-        
-        replyTableView.delegate = nil
+
         replyBottomView.replyTextView.delegate = nil
-        imageView.removeGestureRecognizer(imageViewGesture)
         
         // Keyboard observer해제
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
                 
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        print("DiaryDetail :: presentingVC = \(presentingViewController?.classForCoder)")
-    }
-
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        print("DiaryDetail :: ViewWillLayoutSubviews!")
-        
-        var changedHeight: CGFloat = 0
-        var enabledImageViewHeight: CGFloat = 0
-
-        if isEnableImageView == true {
-            enabledImageViewHeight = 16 + divider4.frame.height + 12 + imageView.frame.height
-        }
-
-        print("DiaryDetail :: isEnableImageView = \(isEnableImageView), enabledImageViewHeight = \(enabledImageViewHeight)")
-
-
-        // 숨김처리가 아닐 경우에만
-        if isHide == false {
-//            changedHeight += 24 + titleLabel.frame.height + 16 + createdAtPageView.frame.height + 8 + divider1.frame.height + 12 + weatherSelectView.frame.height + 12 + divider2.frame.height + 12 + locationSelectView.frame.height + 12 + divider3.frame.height + 16 + descriptionTextView.frame.height + enabledImageViewHeight
-            changedHeight += 24 + titleLabel.frame.height + 16 + createdAtPageView.frame.height + 8 + weatherLocationStackView.frame.height + 16 + descriptionTextView.frame.height + enabledImageViewHeight + 28
-
-            tableViewHeaderView.snp.updateConstraints { make in
-                make.height.equalTo(changedHeight)
-            }
-        }
-        print("DiaryDetail :: changedHeight = \(changedHeight)")
-
-
-
-        DispatchQueue.main.async {
-             self.replyTableView.reloadData()
-        }
-    }
-    
-    func setViews() {
-        navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        
-        self.view.addSubview(replyTableView)
-        replyTableView.tableHeaderView = tableViewHeaderView
-
-        self.view.addSubview(replyBottomView)
-        self.view.addSubview(spaceRequiredFAB)
-        
-        self.view.addSubview(naviView)
-        
-        tableViewHeaderView.addSubview(titleLabel)
-        tableViewHeaderView.addSubview(createdAtPageView)
-        tableViewHeaderView.addSubview(weatherLocationStackView)
-        weatherLocationStackView.addArrangedSubview(divider1)
-        weatherLocationStackView.addArrangedSubview(weatherSelectView)
-        weatherLocationStackView.addArrangedSubview(divider2)
-        weatherLocationStackView.addArrangedSubview(locationSelectView)
-        weatherLocationStackView.addArrangedSubview(divider3)
-        tableViewHeaderView.addSubview(descriptionTextView)
-        tableViewHeaderView.addSubview(divider4)
-        tableViewHeaderView.addSubview(imageView)
-        tableViewHeaderView.addSubview(hideView)
-        
-        self.view.bringSubviewToFront(naviView)
-        self.view.bringSubviewToFront(replyBottomView)
-        self.view.bringSubviewToFront(spaceRequiredFAB)
-        
-        naviView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
-            make.top.equalToSuperview()
-            make.width.equalToSuperview()
-        }
-        
-        replyTableView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.top.equalToSuperview()
-        }
-        
-        tableViewHeaderView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.top.equalToSuperview()
-            make.height.equalTo(350)
-        }
-        
-        replyBottomView.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalToSuperview()
-            make.bottom.equalToSuperview()
-            make.height.equalTo(106)
-        }
-        
-        spaceRequiredFAB.snp.makeConstraints { make in
-            make.bottom.equalTo(replyBottomView.snp.top).offset(-20)
-            make.width.equalTo(160)
-            make.height.equalTo(40)
-            make.centerX.equalToSuperview()
-        }
-        
-        titleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalToSuperview().offset(24)
-        }
-
-        createdAtPageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview()
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
-            make.height.equalTo(15)
-        }
-        
-        weatherLocationStackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(createdAtPageView.snp.bottom).offset(8)
-        }
-        
-        divider1.snp.makeConstraints { make in
-            make.height.equalTo(1)
-        }
-        
-        weatherSelectView.snp.makeConstraints { make in
-            make.height.equalTo(24)
-            make.leading.equalToSuperview()
-        }
-        
-        divider2.snp.makeConstraints { make in
-            make.height.equalTo(1)
-        }
-        
-        locationSelectView.snp.makeConstraints { make in
-            make.height.equalTo(24)
-            make.leading.equalToSuperview()
-        }
-        
-        divider3.snp.makeConstraints { make in
-            make.height.equalTo(1)
-        }
-
-        descriptionTextView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(weatherLocationStackView.snp.bottom).offset(20)
-        }
-        
-        divider4.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.height.equalTo(1)
-            make.top.equalTo(descriptionTextView.snp.bottom).offset(20)
-        }
-        
-        imageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.width.equalToSuperview().inset(20)
-            make.top.equalTo(divider4.snp.bottom).offset(12)
-            make.height.equalTo(80)
-        }
-
-        hideView.snp.makeConstraints { make in
-            make.top.bottom.width.height.equalToSuperview()
-        }
-
-    }
-    
-    func setFAB(leftArrowIsEnabled: Bool, rightArrowIsEnabled: Bool) {
-        spaceRequiredFAB.leftArrowIsEnabled = leftArrowIsEnabled
-        spaceRequiredFAB.rightArrowIsEnabled = rightArrowIsEnabled
-    }
-    
-    func loadDiaryDetail(model: DiaryModelRealm?) {
-        guard let model = model else { return }
-        print("DiaryDetail :: loadDiaryDetail!")
-        print("DiaryDetail :: model.isHide = \(model.isHide)")
-        // FAB Button
-        spaceRequiredFAB.spaceRequiredCurrentPage = String(model.pageNum)
-        
-        setImageConstraint(image: model.cropImage)
-        
-        // cell 생성에 필요한 정보 임시 저장
-        pageNum = model.pageNum
-        print("pageNum = \(pageNum)")
-        
-        isHide = model.isHide
-        isHideMenual(isHide: model.isHide)
-        if isHide { return }
-
-        // print("DiaryDetail :: \(model)")
-        
-        titleLabel.text = model.title
-        titleLabel.setLineHeight(lineHeight: 1.28)
-        titleLabel.lineBreakStrategy = .hangulWordPriority
-        titleLabel.sizeToFit()
-        
-        // DiaryModel에서 WeatherModel을 UnWerapping해서 세팅
-        if let weatherModel: WeatherModelRealm = model.weather {
-            weatherSelectView.selected = true
-            weatherSelectView.selectedWeatherType = weatherModel.weather
-            weatherSelectView.selectTitle = weatherModel.detailText
-            if weatherModel.weather == nil {
-                print("DiaryDetail :: weather이 없습니다.")
-                divider2.isHidden = true
-                weatherSelectView.isHidden = true
-            }
-        }
-
-        // DiaryModel에서 PlaceModel을 UnWerapping해서 세팅
-        if let placeModel: PlaceModelRealm = model.place {
-            locationSelectView.selected = true
-            locationSelectView.selectedPlaceType = placeModel.place
-            locationSelectView.selectTitle = placeModel.detailText
-            if placeModel.place == nil {
-                print("DiaryDetail :: place가 없습니다.")
-                divider3.isHidden = true
-                locationSelectView.isHidden = true
-            }
-        }
-        
-        descriptionTextView.attributedText = UIFont.AppBodyWithText(.body_4,
-                                                                     Colors.grey.g100,
-                                                                     text: model.desc)
-        descriptionTextView.sizeToFit()
-        
-        createdAtPageView.createdAt = model.createdAt.toString()
-        createdAtPageView.page = String(model.pageNum)
-        
-        replyTableView.reloadData()
-    }
-    
-    func isHideMenual(isHide: Bool) {
-        switch isHide {
-        case true:
-            print("DiaryDetail :: isHide! = \(isHide)")
-            titleLabel.isHidden = true
-            divider1.isHidden = true
-            weatherSelectView.isHidden = true
-            divider2.isHidden = true
-            locationSelectView.isHidden = true
-            divider3.isHidden = true
-            descriptionTextView.isHidden = true
-            createdAtPageView.isHidden = true
-            divider4.isHidden = true
-            imageView.isHidden = true
-            
-            tableViewHeaderView.snp.updateConstraints { make in
-                make.height.equalTo(400)
-            }
-            hideView.isHidden = false
-            replyTableView.reloadData()
-
-        case false:
-            print("DiaryDetail :: isHide! = \(isHide)")
-            titleLabel.isHidden = false
-            divider1.isHidden = false
-            weatherSelectView.isHidden = false
-            divider2.isHidden = false
-            locationSelectView.isHidden = false
-            divider3.isHidden = false
-            descriptionTextView.isHidden = false
-            createdAtPageView.isHidden = false
-            
-            print("DiaryDetail :: isHide! -> isEnableImageView = \(isEnableImageView)")
-            if isEnableImageView == true {
-                divider4.isHidden = false
-                imageView.isHidden = false
-            } else {
-                divider4.isHidden = true
-                imageView.isHidden = true
-            }
-            
-            hideView.isHidden = true
-            replyTableView.reloadData()
-        }
-    }
-    
-    func setImageConstraint(image: Data?) {
-        let isImageEnabled: Bool = image != nil ? true : false
-
-        print("DiaryDetail :: isImageEnabled = \(isEnableImageView)")
-
-        switch isImageEnabled {
-        case true:
-            guard let image = image else {
-                return
-            }
-            
-            isEnableImageView = true
-            divider4.isHidden = false
-            imageView.isHidden = false
-            
-            DispatchQueue.main.async {
-                self.imageView.image = UIImage(data: image)
-            }
-        case false:
-            divider4.isHidden = true
-            imageView.isHidden = true
-            isEnableImageView = false
-            
-            DispatchQueue.main.async {
-                self.imageView.image = nil
-            }
-        }
     }
     
     func reloadTableView() {
-        print("diaryDetailViewController reloadTableView!")
-        self.replyTableView.reloadData()
+        print("DiaryDetail :: reloadTableView!")
+        collectionView.reloadData()
     }
-    
+
+    func reloadCurrentCell() {
+        let index: Int = listener?.currentDiaryModelIndexRelay.value ?? 0
+        let indexPath: IndexPath = .init(row: index, section: 0)
+        guard let cell: DiaryDetailCell = collectionView.cellForItem(at: indexPath) as? DiaryDetailCell else { return }
+
+        cell.reloadTableView()
+    }
+
     func reminderCompViewshowToast(type: ReminderToastType) {
         var message: String = ""
         switch type {
@@ -650,16 +220,6 @@ extension DiaryDetailViewController {
         )
     }
     
-    @objc
-    func pressedIndicatorBtn(sender: UIButton) {
-        MenualLog.logEventAction(responder: sender)
-        print("DiaryDetail :: sender.s tag = \(sender.tag)")
-        listener?.pressedIndicatorButton(offset: sender.tag, isInitMode: false)
-        DispatchQueue.main.async {
-            self.replyTableView.reloadData()
-        }
-    }
-    
     // 숨김 해제하기 버튼
     @objc
     func pressedLockBtn(_ button: UIButton) {
@@ -675,14 +235,7 @@ extension DiaryDetailViewController {
         )
         
     }
-    
-    @objc
-    func pressedImageView(_ button: UIButton) {
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        MenualLog.logEventAction("detail_image")
-        print("DiaryDetail :: pressedImageView!")
-        listener?.pressedImageView()
-    }
+
     func enableBackSwipe() {
         navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
@@ -693,8 +246,6 @@ extension DiaryDetailViewController {
         print("DiaryDetail :: pressedRelyCloseBtn!, sender.tag = \(sender.tag)")
         guard let willDeleteReply = listener?.diaryReplyArr[safe: sender.tag] else { return }
         self.willDeleteReplyModel = willDeleteReply
-        // print("DiaryDetail :: uuid = \(cell.replyUUID)")
-        // self.willDeleteReplyUUID = cell.replyUUID
         
         showDialog(
              dialogScreen: .diaryDetail(.replyDelete),
@@ -707,110 +258,46 @@ extension DiaryDetailViewController {
     }
 }
 
-// MARK: - ReplayTableView
-extension DiaryDetailViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let index = indexPath.row
-        
-        guard let replies = listener?.diaryReplyArr else { return 0 }
-        let desc = replies[index].desc
-        let lblDescLong = UITextView()
-        lblDescLong.textContainerInset = UIEdgeInsets(top: 17, left: 16, bottom: 19, right: 16)
-        lblDescLong.textAlignment = .left
-        // lblDescLong.text = desc
-        // lblDescLong.font = UIFont.AppBodyOnlyFont(.body_2)
-        lblDescLong.attributedText = UIFont.AppBodyWithText(.body_3,
-                                                    Colors.grey.g300,
-                                                    text: desc
-        )
-        lblDescLong.sizeToFit()
-        let width = UIScreen.main.bounds.width - 40
-        let newSize = lblDescLong.sizeThatFits(CGSize(width: width, height: CGFloat.greatestFiniteMagnitude))
-        let moreBtnSizeHeight: CGFloat = 50
-        print("width = \(width), newSize = \(newSize), cellReplyText = \(desc)")
-        return newSize.height + moreBtnSizeHeight
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listener?.diaryReplyArr.count ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("DiaryDetail :: cellForRowAt!")
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ReplyCell") as? ReplyCell else { return UITableViewCell() }
-        
-        let index = indexPath.row
-        
-        guard let replies = listener?.diaryReplyArr else { return UITableViewCell() }
-        
-        let desc = replies[index].desc
-        let createdAt = replies[index].createdAt
-        let replyNum = replies[index].replyNum
-        let uuid = replies[index].uuid
-
-        cell.backgroundColor = .clear
-        // cell이 클릭되지 않도록
-        cell.selectionStyle = .none
-//        cell.title = desc
-        cell.replyText = desc
-        cell.replyNum = replyNum
-        cell.createdAt = createdAt
-        cell.pageNum = pageNum
-        cell.replyUUID = uuid
-        cell.closeBtn.tag = indexPath.row
-        cell.closeBtn.addTarget(self, action: #selector(pressedReplyCloseBtn(sender:)), for: .touchUpInside)
-        cell.actionName = "reply"
-        // cell.replyTextView.sizeToFit()
-        
-//        if let currentDiaryPage = listener?.currentDiaryPage {
-//            cell.pageAndReview = "p.\(currentDiaryPage)-" + String(replyNum)
-//        }
-        
-//        cell.dateAndTime = createdAt.toStringWithHourMin()
-
-        return cell
-    }
-}
-
 // MARK: - Keyboard Extension
 extension DiaryDetailViewController {
     @objc
-    func keyboardWillShow(_ notification: NSNotification) {
-        guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
-        print("keyboardWillShow! - \(keyboardHeight)")
-        
-        spaceRequiredFAB.isHidden = true
-        isShowKeboard = true
-        
-        replyTableView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview().inset(keyboardHeight)
-        }
-        
-        replyBottomView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview().inset(keyboardHeight)
-            make.height.equalTo(84 + replyBottomViewPlusHeight)
+    private func keyboardWillShow(_ notification: NSNotification) {
+        DispatchQueue.main.async {
+            guard let keyboardHeight = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height else { return }
+            print("keyboardWillShow! - \(keyboardHeight)")
+
+            self.isShowKeboard = true
+
+            self.collectionView.snp.updateConstraints { make in
+                make.bottom.equalToSuperview().inset(keyboardHeight)
+            }
+
+            self.replyBottomView.snp.updateConstraints { make in
+                make.bottom.equalToSuperview().inset(keyboardHeight)
+                make.height.equalTo(84 + self.replyBottomViewPlusHeight)
+            }
         }
     }
     
     @objc
-    func keyboardWillHide(_ notification: NSNotification) {
+    private func keyboardWillHide(_ notification: NSNotification) {
         print("keyboardWillHide!")
-        
-        isShowKeboard = false
-        spaceRequiredFAB.isHidden = false
-        
-        replyTableView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview()
-        }
-        
-        replyBottomView.snp.updateConstraints { make in
-            make.bottom.equalToSuperview()
-            make.height.equalTo(106 + replyBottomViewPlusHeight)
+        DispatchQueue.main.async {
+            self.isShowKeboard = false
+
+            self.collectionView.snp.updateConstraints { make in
+                make.bottom.equalToSuperview()
+            }
+
+            self.replyBottomView.snp.updateConstraints { make in
+                make.bottom.equalToSuperview()
+                make.height.equalTo(106 + self.replyBottomViewPlusHeight)
+            }
         }
     }
     
-    @objc func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+    @objc
+    private func dismissKeyboard() {
         view.endEditing(true)
     }
 }
@@ -997,5 +484,219 @@ extension DiaryDetailViewController: MFMailComposeViewControllerDelegate {
             sendMailErrorAlert.addAction(cancleAction)
             self.present(sendMailErrorAlert, animated: true, completion: nil)
         }
+    }
+}
+
+// MARK: - UI Setting
+
+extension DiaryDetailViewController {
+    private func configureUI() {
+        replyBottomView.do {
+            $0.categoryName = "reply"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.writeBtn.addTarget(self, action: #selector(pressedSubmitReplyBtn), for: .touchUpInside)
+            $0.replyTextView.delegate = self
+        }
+
+        naviView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backButton.addTarget(self, action: #selector(pressedBackBtn), for: .touchUpInside)
+
+            $0.rightButton1.addTarget(self, action: #selector(pressedMenuMoreBtn), for: .touchUpInside)
+            $0.rightButton2.addTarget(self, action: #selector(pressedReminderBtn), for: .touchUpInside)
+        }
+
+        hideView.do {
+            $0.categoryName = "hide"
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            let lockEmptyView = Empty().then {
+                $0.screenType = .writing
+                $0.writingType = .lock
+            }
+            lazy var btn = CapsuleButton(frame: .zero, includeType: .iconText).then {
+                $0.actionName = "unhide"
+                $0.title = "숨김 해제하기"
+                $0.image = Asset._16px.Circle.front.image.withRenderingMode(.alwaysTemplate)
+            }
+            btn.addTarget(self, action: #selector(pressedLockBtn), for: .touchUpInside)
+            $0.addSubview(lockEmptyView)
+            $0.addSubview(btn)
+
+            lockEmptyView.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(81)
+                make.width.equalTo(160)
+                make.height.equalTo(180)
+                make.centerX.equalToSuperview()
+            }
+            btn.snp.makeConstraints { make in
+                make.top.equalTo(lockEmptyView.snp.bottom).offset(12)
+                make.width.equalTo(113)
+                make.height.equalTo(28)
+                make.centerX.equalToSuperview()
+            }
+            $0.isHidden = true
+        }
+
+        collectionView.do {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.backgroundColor = Colors.background
+
+            let layout: UICollectionViewFlowLayout = .init()
+            layout.scrollDirection = .horizontal
+            layout.minimumLineSpacing = 0
+            layout.minimumLineSpacing = 0
+            $0.setCollectionViewLayout(layout, animated: true)
+
+            $0.isPagingEnabled = true
+            $0.showsHorizontalScrollIndicator = false
+
+            $0.delegate = self
+            $0.dataSource = self
+            $0.register(DiaryDetailCell.self, forCellWithReuseIdentifier: "DiaryDetailCell")
+        }
+    }
+
+    private func setViews() {
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        view.addSubview(naviView)
+        view.addSubview(collectionView)
+        view.addSubview(replyBottomView)
+        view.bringSubviewToFront(naviView)
+
+        naviView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.height.equalTo(44 + UIApplication.topSafeAreaHeight)
+            make.top.equalToSuperview()
+            make.width.equalToSuperview()
+        }
+
+        collectionView.snp.makeConstraints { make in
+            make.top.equalTo(naviView.snp.bottom)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+
+        replyBottomView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(106)
+        }
+    }
+}
+
+// MARK: - CollectionViewDelegate
+
+extension DiaryDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return listener?.diaryModelArrRelay.value.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell: DiaryDetailCell = collectionView.dequeueReusableCell(withReuseIdentifier: "DiaryDetailCell", for: indexPath) as? DiaryDetailCell else { return UICollectionViewCell() }
+
+        guard let diaryModel: DiaryModelRealm = listener?.diaryModelArrRelay.value[safe: indexPath.row] else { return UICollectionViewCell() }
+
+        print("DiaryDetail :: cureent Index = \(indexPath.row)")
+        cell.delegate = self
+        cell.diaryModel = diaryModel
+        // cell.hideImageUploadCollectionView()
+
+        cell.sizeToFit()
+        cell.layoutIfNeeded()
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        return .init(
+            width: collectionView.frame.width,
+            height: collectionView.frame.height
+        )
+    }
+}
+
+// MARK: - CollectionViewType DiaryDetail
+
+extension DiaryDetailViewController {
+    private func findCurrentPageIndex() -> Int? {
+        guard let currentDiaryPage: Int = listener?.currentDiaryPage else { return nil }
+
+        guard let diaryModelArr: [DiaryModelRealm] = listener?.diaryModelArrRelay.value else { return nil }
+
+        guard let currentIndex: Int = diaryModelArr
+            .enumerated()
+            .filter ({ $0.element.pageNum == currentDiaryPage })
+            .first?
+            .offset
+        else { return nil }
+
+        print("currentIndex = \(currentIndex)")
+        return currentIndex
+    }
+
+    internal func setCurrentPageDiary() {
+        print("DiaryDetail :: setCurrentPageDiary")
+        guard let currentPageIndex: Int = findCurrentPageIndex() else { return }
+        if !isFirstCurrentPage { return }
+
+        let destinationIndexPath: IndexPath = .init(item: currentPageIndex, section: 0)
+
+        // 해당 페이지까지 애니메이션 없는 스크롤 처리
+        collectionView.isPagingEnabled = false
+        collectionView.scrollToItem(at: destinationIndexPath, at: .centeredHorizontally, animated: false)
+        collectionView.isPagingEnabled = true
+        isFirstCurrentPage = false
+
+        // 노티피케이션 등록을 위한 index aceept
+        listener?.currentDiaryModelIndexRelay.accept(currentPageIndex)
+    }
+}
+
+// MARK: - UploadImageViewDelegate, DiaryDetailCellDelegate
+
+extension DiaryDetailViewController: ImageUploadViewDelegate, DiaryDetailCellDelegate {
+    var uploadImagesRelay: RxRelay.BehaviorRelay<[Data]>? {
+        listener?.uploadImagesRelay
+    }
+
+    var thumbImageIndexRelay: BehaviorRelay<Int>? {
+        return nil
+    }
+
+    func pressedDetailImage(index: Int, uuid: String) {
+        listener?.pressedImageView(index: index)
+    }
+
+    func didScroll() {
+        view.endEditing(true)
+    }
+}
+
+// MARK: - ScrollViewDelegate
+
+extension DiaryDetailViewController: UIScrollViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if scrollView != collectionView { return }
+
+        // 현재 화면에서 보이는 셀의 IndexPath를 가져옵니다.
+        let visibleCells: [IndexPath] = collectionView.indexPathsForVisibleItems
+        if visibleCells.isEmpty { return }
+
+        let cellWidth: CGFloat = scrollView.frame.size.width
+        let currentIdx = Int((scrollView.contentOffset.x + cellWidth / 2) / cellWidth)
+        print("DiaryDetail :: currentPage = \(currentIdx)")
+
+        guard let currentDiaryModel: DiaryModelRealm = listener?.diaryModelArrRelay.value[safe: currentIdx] else { return }
+
+        // 이전과 같은 index를 가지고 있다면 2번 refresh할 필요 없음
+        if let beforeIdx: Int = listener?.currentDiaryModelIndexRelay.value {
+            if beforeIdx == currentIdx { return }
+        }
+
+        listener?.currentDiaryModelRelay.accept(currentDiaryModel)
+        listener?.currentDiaryModelIndexRelay.accept(currentIdx)
+        print("DiaryDetail :: uuid = \(currentDiaryModel.uuid), \(currentDiaryModel.title)")
     }
 }
