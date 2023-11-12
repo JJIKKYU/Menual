@@ -113,7 +113,7 @@ public class ListCell: UITableViewCell {
         $0.translatesAutoresizingMaskIntoConstraints = false
     }
 
-    private let menualImageView = UIImageView().then {
+    private let menualImageView = ListCellImageView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .clear
         $0.contentMode = .scaleAspectFill
@@ -262,6 +262,7 @@ public class ListCell: UITableViewCell {
             if let image = image {
                 DispatchQueue.main.async {
                     self.menualImageView.image = image
+                    self.menualImageView.imageCount = self.testModel?.imageCount
                 }
             }
             menualImageView.snp.remakeConstraints { make in
@@ -348,6 +349,7 @@ public class ListCell: UITableViewCell {
             if let image = image {
                 DispatchQueue.main.async {
                     self.menualImageView.image = image
+                    self.menualImageView.imageCount = self.testModel?.imageCount
                 }
             }
             menualImageView.snp.remakeConstraints { make in
