@@ -170,11 +170,11 @@ public final class ImageUploadView: UIView {
 //                    self.reloadDataWithAnimation()
 //                }
                 switch self.state {
-                case .edit, .writing:
+                case .writing:
                     print("ImageUpload :: reload!")
                     self.collectionView.reloadData()
 
-                case .detail:
+                case .detail, .edit:
                     break
                 }
                 // self.collectionView.reloadData()

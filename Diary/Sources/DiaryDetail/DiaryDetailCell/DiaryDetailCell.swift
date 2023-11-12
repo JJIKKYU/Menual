@@ -403,6 +403,7 @@ public final class DiaryDetailCell: UICollectionViewCell {
             ) { [weak self] imageDataArr in
                 guard let self = self else { return }
                 self.imageUploadView.images = imageDataArr
+                self.delegate?.uploadImagesRelay?.accept(imageDataArr)
             }
             self.thumbImageIndexRelay?.accept(diaryModel.thumbImageIndex)
         }

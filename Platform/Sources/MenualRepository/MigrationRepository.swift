@@ -81,14 +81,6 @@ public final class MigrationRepositoryImp: MigrationRepository {
                     continue
                 }
 
-                // 이동하고자 하는 파일의 이름을 우선 변경
-                let changeFileName: URL = documentDirectory
-                    .deletingLastPathComponent()
-                    .appendingPathComponent("images_0.jpg")
-                if type != .typeDirectory {
-                    try fileManager.moveItem(at: fileURL, to: changeFileName)
-                }
-
                 // 앞서 획득한 UUID로 폴더 생성
                 let folderName: String = "\(uuid)/"
                 let destinationFolderURL: URL = documentDirectory.appendingPathComponent(folderName)
@@ -105,7 +97,7 @@ public final class MigrationRepositoryImp: MigrationRepository {
 
                 let destinationFileURL: URL = destinationFolderURL.appendingPathComponent("images_0.jpg")
 
-                try fileManager.moveItem(at: changeFileName, to: destinationFileURL)
+                try fileManager.moveItem(at: fileURL, to: destinationFileURL)
 
                 print("Moved file from \(fileURL.path) to \(destinationFileURL.path)")
             }
