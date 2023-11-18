@@ -64,7 +64,6 @@ final class DiaryDetailViewController: UIViewController, DiaryDetailPresentable,
     private let replyBottomView: ReplyBottomView = .init()
 
     private let naviView: MenualNaviView = .init(type: .menualDetail)
-    private let hideView: UIView = .init()
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -506,37 +505,6 @@ extension DiaryDetailViewController {
             $0.rightButton2.addTarget(self, action: #selector(pressedReminderBtn), for: .touchUpInside)
         }
 
-        hideView.do {
-            $0.categoryName = "hide"
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            let lockEmptyView = Empty().then {
-                $0.screenType = .writing
-                $0.writingType = .lock
-            }
-            lazy var btn = CapsuleButton(frame: .zero, includeType: .iconText).then {
-                $0.actionName = "unhide"
-                $0.title = "숨김 해제하기"
-                $0.image = Asset._16px.Circle.front.image.withRenderingMode(.alwaysTemplate)
-            }
-            btn.addTarget(self, action: #selector(pressedLockBtn), for: .touchUpInside)
-            $0.addSubview(lockEmptyView)
-            $0.addSubview(btn)
-
-            lockEmptyView.snp.makeConstraints { make in
-                make.top.equalToSuperview().offset(81)
-                make.width.equalTo(160)
-                make.height.equalTo(180)
-                make.centerX.equalToSuperview()
-            }
-            btn.snp.makeConstraints { make in
-                make.top.equalTo(lockEmptyView.snp.bottom).offset(12)
-                make.width.equalTo(113)
-                make.height.equalTo(28)
-                make.centerX.equalToSuperview()
-            }
-            $0.isHidden = true
-        }
-
         collectionView.do {
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.backgroundColor = Colors.background
@@ -601,6 +569,9 @@ extension DiaryDetailViewController: UICollectionViewDelegate, UICollectionViewD
         print("DiaryDetail :: cureent Index = \(indexPath.row)")
         cell.delegate = self
         cell.diaryModel = diaryModel
+        // cell.hideButton.addTarget(self, action: #selector(pressedLockBtn), for: .touchUpInside)
+
+        // btn.addTarget(self, action: #selector(pressedLockBtn), for: .touchUpInside)
         // cell.hideImageUploadCollectionView()
 
         cell.sizeToFit()

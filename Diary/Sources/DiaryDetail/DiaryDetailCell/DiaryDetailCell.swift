@@ -41,6 +41,7 @@ public final class DiaryDetailCell: UICollectionViewCell {
     }
 
     private let hideView: UIView = .init()
+    public var hideButton: CapsuleButton = .init(frame: .zero, includeType: .iconText)
 
     private let titleLabel: UILabel = .init()
     private let createdAtPageView: CreatedAtPageView = .init()
@@ -179,29 +180,32 @@ public final class DiaryDetailCell: UICollectionViewCell {
             $0.register(ReplyCell.self, forCellReuseIdentifier: "ReplyCell")
         }
 
+        hideButton.do {
+            $0.isUserInteractionEnabled = true
+            $0.actionName = "unhide"
+            $0.title = "숨김 해제하기"
+            $0.image = Asset._16px.Circle.front.image.withRenderingMode(.alwaysTemplate)
+            $0.addTarget(self, action: #selector(pressedLockBtn), for: .touchUpInside)
+        }
+
         hideView.do {
             $0.categoryName = "hide"
             $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.isUserInteractionEnabled = true
             let lockEmptyView = Empty().then {
                 $0.screenType = .writing
                 $0.writingType = .lock
             }
-            lazy var btn = CapsuleButton(frame: .zero, includeType: .iconText).then {
-                $0.actionName = "unhide"
-                $0.title = "숨김 해제하기"
-                $0.image = Asset._16px.Circle.front.image.withRenderingMode(.alwaysTemplate)
-            }
-            btn.addTarget(self, action: #selector(pressedLockBtn), for: .touchUpInside)
             $0.addSubview(lockEmptyView)
-            $0.addSubview(btn)
+            $0.addSubview(hideButton)
 
             lockEmptyView.snp.makeConstraints { make in
                 make.top.equalToSuperview().offset(81)
-                make.width.equalTo(160)
+                make.leading.trailing.equalToSuperview()
                 make.height.equalTo(180)
                 make.centerX.equalToSuperview()
             }
-            btn.snp.makeConstraints { make in
+            hideButton.snp.makeConstraints { make in
                 make.top.equalTo(lockEmptyView.snp.bottom).offset(12)
                 make.width.equalTo(113)
                 make.height.equalTo(28)
@@ -276,7 +280,8 @@ public final class DiaryDetailCell: UICollectionViewCell {
 
         hideView.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.centerX.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(300)
         }
     }
 
@@ -531,12 +536,10 @@ extension DiaryDetailCell {
 
 extension DiaryDetailCell: UIScrollViewDelegate {
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        print("DiaryDetail :: scrollViewWillBeginDragging")
         delegate?.didScroll()
     }
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("DiaryDetail :: scrollViewDidScroll")
         delegate?.didScroll()
     }
 }
