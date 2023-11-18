@@ -155,6 +155,23 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         let originalURL = documentDirectory.appendingPathComponent(diaryUUID + "Original")
         let thumblURL = documentDirectory.appendingPathComponent(diaryUUID + "Thumb")
 
+        // 11월 : 이미지 여러개 선택 기능 출시 후 폴더안에 있는 모든 파일을 삭제 해야함
+        // 3. 이미지 폴더 내의 모든 파일 삭제
+        do {
+            let fileURLs = try FileManager.default.contentsOfDirectory(at: imageURL, includingPropertiesForKeys: nil, options: [])
+            for fileURL in fileURLs {
+                try FileManager.default.removeItem(at: fileURL)
+            }
+
+            // 4. 이미지 폴더 삭제
+            try FileManager.default.removeItem(at: imageURL)
+            print("DiaryWriting :: DiaryRepository :: 모든 이미지 삭제 완료")
+            completionHandler(true)
+        } catch {
+            print("DiaryWriting :: DiaryRepository :: 이미지를 삭제하지 못했습니다.")
+            completionHandler(false)
+        }
+
         // 3. 이미지 삭제
         if FileManager.default.fileExists(atPath: imageURL.path) {
             // 4. 이미지가 존재한다면 기존 경로에 있는 이미지 삭제

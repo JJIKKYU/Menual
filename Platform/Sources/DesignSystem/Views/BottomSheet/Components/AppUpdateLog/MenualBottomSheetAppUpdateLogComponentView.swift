@@ -134,14 +134,15 @@ public final class MenualBottomSheetAppUpdateLogComponentView: UIView {
     }
 
     private func setViews() {
-        addSubview(titleLabel)
-        addSubview(descriptionLabel)
+        // addSubview(titleLabel)
+        // addSubview(descriptionLabel)
         addSubview(collectionView)
         addSubview(collectionViewPagination)
         addSubview(confirmBtn)
         addSubview(prevBtn)
         addSubview(nextBtn)
 
+        /*
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.top.equalToSuperview()
@@ -153,11 +154,13 @@ public final class MenualBottomSheetAppUpdateLogComponentView: UIView {
             make.top.equalTo(titleLabel.snp.bottom).offset(8)
             make.trailing.equalToSuperview()
         }
+        */
 
         collectionView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().inset(20)
-            make.top.equalTo(descriptionLabel.snp.bottom).offset(16)
+            // make.top.equalTo(descriptionLabel.snp.bottom).offset(16)
+            make.top.equalToSuperview()
             make.height.equalTo(251)
         }
 

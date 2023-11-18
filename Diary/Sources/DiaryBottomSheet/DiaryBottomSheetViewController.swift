@@ -354,7 +354,7 @@ final class DiaryBottomSheetViewController: UIViewController, DiaryBottomSheetPr
             let appUpdateLogComponentView: MenualBottomSheetAppUpdateLogComponentView = .init(
                 updateImages: [
                     Asset.UpdateImages.updateImage01.image,
-                    Asset.UpdateImages.updateimage02.image,
+                    Asset.UpdateImages.updateImage02.image,
                     Asset.UpdateImages.updateImage03.image,
                 ]
             )
@@ -531,7 +531,7 @@ extension DiaryBottomSheetViewController {
 
         case .update:
             bottomSheetTitle = "Menual 업데이트"
-            bottomSheetHeight = 610
+            bottomSheetHeight = 470
         }
     }
 
