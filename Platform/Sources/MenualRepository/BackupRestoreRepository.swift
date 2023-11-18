@@ -154,7 +154,7 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
         let imageURL = documentDirectory.appendingPathComponent(diaryUUID)
         let originalURL = documentDirectory.appendingPathComponent(diaryUUID + "Original")
         let thumblURL = documentDirectory.appendingPathComponent(diaryUUID + "Thumb")
-        
+
         // 3. 이미지 삭제
         if FileManager.default.fileExists(atPath: imageURL.path) {
             // 4. 이미지가 존재한다면 기존 경로에 있는 이미지 삭제

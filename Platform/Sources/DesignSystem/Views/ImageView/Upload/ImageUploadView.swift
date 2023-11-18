@@ -152,8 +152,6 @@ public final class ImageUploadView: UIView {
 
     private func bind() {
         delegate?.uploadImagesRelay?
-            // .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-//            .debounce(.milliseconds(500), scheduler: MainScheduler.asyncInstance)
             .subscribe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] images in
                 guard let self = self else { return }
@@ -165,19 +163,6 @@ public final class ImageUploadView: UIView {
                 } else {
                     deleteButton.isHidden = false
                 }
-
-//                DispatchQueue.main.async {
-//                    self.reloadDataWithAnimation()
-//                }
-                switch self.state {
-                case .writing:
-                    print("ImageUpload :: reload!")
-                    // self.collectionView.reloadData()
-
-                case .detail, .edit:
-                    break
-                }
-                // self.collectionView.reloadData()
             })
             .disposed(by: disPoseBag)
     }

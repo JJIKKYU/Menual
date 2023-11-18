@@ -177,7 +177,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                 print("DiaryDetail :: model = \(model as? DiaryModelRealm)")
                 guard let model = model as? DiaryModelRealm else { return }
 
-                self.diaryModel?.getImages(completion: { [weak self] imageeDataArr in
+                self.currentDiaryModelRelay.value?.getImages(completion: { [weak self] imageeDataArr in
                     guard let self = self else { return }
                     self.uploadImagesRelay.accept(imageeDataArr)
                 })
@@ -259,11 +259,11 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                     
                 case .edit:
                     self.router?.detachBottomSheet(isWithDiaryDetatil: false)
-                    guard let diaryModel = self.diaryModel else { return }
+                    guard let diaryModel: DiaryModelRealm = self.currentDiaryModelRelay.value else { return }
                     self.router?.attachDiaryWriting(diaryModel: diaryModel, page: diaryModel.pageNum)
                     
                 case .delete:
-                    guard let diaryModel = self.diaryModel else { return }
+                    guard let diaryModel: DiaryModelRealm = self.currentDiaryModelRelay.value else { return }
                     self.dependency.diaryRepository
                         .deleteDiary(info: diaryModel)
                     self.listener?.diaryDeleteNeedToast(isNeedToast: true)
@@ -283,7 +283,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
                       let isEditing = model.isEditing
                 else { return }
                 
-                if let diaryModelRequestDate = self.diaryModel?.reminder?.requestDate {
+                if let diaryModelRequestDate = self.currentDiaryModelRelay.value?.reminder?.requestDate {
                     if diaryModelRequestDate == model.requestDate {
                         print("DiaryDetail :: reminder가 다이어리모델과 동일하므로 세팅하지 않습니다.")
                         return
@@ -404,7 +404,7 @@ final class DiaryDetailInteractor: PresentableInteractor<DiaryDetailPresentable>
     func deleteReminderDate() {
         print("DiaryDetail :: deleteReminderDate!")
         
-        guard let diaryModel = self.diaryModel else {
+        guard let diaryModel: DiaryModelRealm = self.currentDiaryModelRelay.value else {
             print("DiaryDetail :: 삭제할 reminder UUID가 없습니다.")
             return
         }
