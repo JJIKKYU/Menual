@@ -32,21 +32,15 @@ public struct RestoreFile {
     }
 }
 
-public enum ImageFileType: String {
-    case original = "Original"
-    case crop = ""
-    case thumb = "Thumb"
-}
-
 public struct ImageFile {
     public var fileName: String
     public var data: Data
-    public var type: ImageFileType
-    
-    public init(fileName: String, data: Data, type: ImageFileType) {
+    public var diaryUUID: String
+
+    public init(fileName: String, data: Data, diaryUUID: String) {
         self.fileName = fileName
         self.data = data
-        self.type = type
+        self.diaryUUID = diaryUUID
     }
 }
 

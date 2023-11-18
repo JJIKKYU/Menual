@@ -355,10 +355,28 @@ public final class BackupRestoreRepositoryImp: BackupRestoreRepository {
     public func restoreWithJsonSaveImageData(diaryModelRealm: [DiaryModelRealm], imageFiles: [ImageFile]) {
 
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-        
+
         for imageFile in imageFiles {
-            let imageURL = documentDirectory.appendingPathComponent(imageFile.fileName + imageFile.type.rawValue)
-            try? imageFile.data.write(to: imageURL)
+            let path: String = "\(imageFile.diaryUUID)/\(imageFile.fileName)"
+            let imageURL = documentDirectory.appendingPathComponent(path)
+
+            // 폴더가 없다면 생성
+            let diaryUUIDFolderURL = documentDirectory.appendingPathComponent(imageFile.diaryUUID)
+            if !FileManager.default.fileExists(atPath: diaryUUIDFolderURL.path) {
+                do {
+                    try FileManager.default.createDirectory(at: diaryUUIDFolderURL, withIntermediateDirectories: true, attributes: nil)
+                } catch {
+                    print("backupRepo :: Error creating directory: \(error.localizedDescription)")
+                    continue
+                }
+            }
+
+            // 이미지 write
+            do {
+                try imageFile.data.write(to: imageURL)
+            } catch {
+                print("backupRepo :: Error writing image data: \(error.localizedDescription)")
+            }
         }
     }
     
