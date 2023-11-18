@@ -36,18 +36,16 @@ public class AppUpdateInfoRepositoryImp: AppUpdateInfoRepository {
         // let result = compareVersions(getInstalledAppVersion(), getSavedAppVersion())
         // print("AppUpdateInfoRepository :: compareResult = \(result)")
 
-        // checkNeedUpdateLog()
-        // saveAppVersion()
+        checkNeedUpdateLog()
+        saveAppVersion()
     }
 
     // 업데이트 내역을 표시할 필요가 있는지 체크하는 함수
     public func checkNeedUpdateLog() {
         // DebugMode일 경우 나타나는 것 강제 세팅
-        /*
         if DebugMode.isDebugMode || DebugMode.isAlpha {
             UserDefaults().setValue("2.2.1", forKey: UserDefaultsModel.appVersion.rawValue)
         }
-        */
 
         // 설치된 버전이 저장된 버전보다 클 경우에 표시해야 함
         let result: ComparisonResult = compareVersions(getInstalledAppVersion(), getSavedAppVersion())
