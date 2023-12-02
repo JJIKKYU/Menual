@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.overrideUserInterfaceStyle = .dark
         // 1. config 설정(이전 버전에서 다음 버전으로 마이그레이션될때 어떻게 변경될것인지)
         let config = Realm.Configuration(
-            schemaVersion: 12, // 새로운 스키마 버전 설정
+            schemaVersion: 13, // 새로운 스키마 버전 설정
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion <= 2 {
                     // 1-1. 마이그레이션 수행(버전 2보다 작은 경우 버전 2에 맞게 데이터베이스 수정)
@@ -92,7 +92,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 // 이미지 개수 증가로 인한 마이그레이션 작업 Diary Version 추가
                 if oldSchemaVersion <= 12 {
                     migration.enumerateObjects(ofType: DiaryModelRealm.className()) { oldObject, newObject in
-                        oldObject?["version"] = 0.1
+                        newObject?["version"] = 0.1
+                    }
+                }
+
+                if oldSchemaVersion <= 13 {
+                    migration.enumerateObjects(ofType: DiaryModelRealm.className()) { oldObject, newObject in
+                        newObject?["thumbImageIndex"] = 0
+                        newObject?["imageCount"] = 0
+                        // imageCount가 없을 경우
+                        if let isImage: Bool = newObject?["image"] as? Bool,
+                           isImage {
+                            // 이미지가 있을 경우에는 이전에는 1개밖에 없었으므로 1로 세팅
+                            newObject?["imageCount"] = isImage ? 1 : 0
+                        }
                     }
                 }
             }

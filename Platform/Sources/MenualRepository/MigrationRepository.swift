@@ -116,10 +116,10 @@ public final class MigrationRepositoryImp: MigrationRepository {
 
         print("MigrationRepo :: hasMigrated = \(hasMigrated)")
 
-//        if hasMigrated {
-//            migrationStateRelay.accept(.notNeeded)
-//            return
-//        }
+        if hasMigrated {
+            migrationStateRelay.accept(.notNeeded)
+            return
+        }
 
         migrationStateRelay.accept(.inProgress)
         reorganizeFilesInDocumentDirectory { [weak self] isCompleted in

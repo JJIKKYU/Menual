@@ -78,7 +78,7 @@ public final class ImageUploadCell: UICollectionViewCell {
 
     private func configureUI() {
         isUserInteractionEnabled = true
-        layer.cornerRadius = 8
+        layer.cornerRadius = 4
         layer.masksToBounds = true
         backgroundColor = .clear
 

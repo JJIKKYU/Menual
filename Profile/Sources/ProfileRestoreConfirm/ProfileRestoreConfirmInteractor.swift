@@ -128,7 +128,6 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
 
         // FileManager에서 복원하고자 하는 파일을 캐시
         let fileManager = FileManager.default
-        let decoder = JSONDecoder()
         do {
             let fileURLs = try fileManager.contentsOfDirectory(atPath: path)
 
@@ -165,21 +164,35 @@ final class ProfileRestoreConfirmInteractor: PresentableInteractor<ProfileRestor
                     }
                 } else {
                     if fileURL == ".DS_Store" { continue }
+                    if fileURL.contains("realm") { continue }
+                    // 이미지 멀티 셀렉트 이전 버전
                     if let imageData = try? Data(contentsOf: filePath) {
-                        var fileName: String = ""
-                        var imageType: ImageFileType = .original
-                        if fileURL.contains("Original") {
-                            fileName = fileURL.replacingOccurrences(of: "Original", with: "")
-                            imageType = .original
-                        } else if fileURL.contains("Thumb") {
-                            fileName = fileURL.replacingOccurrences(of: "Thumb", with: "")
-                            imageType = .thumb
-                        } else {
-                            fileName = fileURL
-                            imageType = .crop
-                        }
-                        let imageFile = ImageFile(fileName: fileName, data: imageData, type: imageType)
+                        // Orignal 외에는 복원할 필요가 업으므로 Pass
+                        if !fileURL.contains("Original") { continue }
+                        let newFileURL: String = fileURL.replacingOccurrences(of: "Original", with: "")
+
+                        let imageFile = ImageFile(fileName: "images_0.jpg", data: imageData, diaryUUID: newFileURL)
                         restoreFile.imageDataArr.append(imageFile)
+                    }
+
+                    // 이미지 멀티 셀렉트 이후 버전
+                    var isDirectory: ObjCBool = false
+                    if fileManager.fileExists(atPath: filePath.path, isDirectory: &isDirectory) {
+                        if isDirectory.boolValue {
+                            print("Restore :: 폴더입니다.")
+                            let imageFileURLs = try fileManager.contentsOfDirectory(atPath: filePath.path)
+                            var imageFileArr: [ImageFile] = []
+                            for imageFileURL in imageFileURLs {
+                                print("Restore :: 폴더 안에 있는 이미지입니다. \(imageFileURL)")
+                                let fileName: String = imageFileURL
+                                let imageData: Data = (try? Data(contentsOf: filePath.appending(component: imageFileURL))) ?? Data()
+                                let imageFile: ImageFile = .init(fileName: fileName, data: imageData, diaryUUID: fileURL)
+                                imageFileArr.append(imageFile)
+                            }
+                            restoreFile.imageDataArr.append(contentsOf: imageFileArr)
+                        } else {
+                            print("Restore :: 파일입니다.")
+                        }
                     }
                 }
             }

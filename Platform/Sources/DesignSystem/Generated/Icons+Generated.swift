@@ -445,8 +445,8 @@ public enum Asset {
   }
   public enum UpdateImages {
     public static let updateImage01 = ImageAsset(name: "UpdateImages/updateImage01")
+    public static let updateImage02 = ImageAsset(name: "UpdateImages/updateImage02")
     public static let updateImage03 = ImageAsset(name: "UpdateImages/updateImage03")
-    public static let updateimage02 = ImageAsset(name: "UpdateImages/updateimage02")
   }
   public static let splashMenual = ImageAsset(name: "splashMenual")
 }
