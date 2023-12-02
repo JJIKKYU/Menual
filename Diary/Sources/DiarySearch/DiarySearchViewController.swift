@@ -481,7 +481,14 @@ extension DiarySearchViewController: UITableViewDelegate, UITableViewDataSource 
                         guard let cell = cell,
                               let imageData: Data = imageData
                         else { return }
-                        cell.image = UIImage(data: imageData)
+
+                        if let image: UIImage = UIImage(data: imageData) {
+                            let resizeImageData = UIImage().imageWithImage(
+                                sourceImage: image,
+                                scaledToWidth: 100
+                            )
+                            cell.image = resizeImageData
+                        }
                     }
                 }
                 else {

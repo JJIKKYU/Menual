@@ -22,7 +22,6 @@ final class AppRootViewController:
     // MARK: - RootPresentable
 
     weak var listener: AppRootPresentableListener?
-    private let progressView: MenualProgressView = .init(frame: .zero)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,19 +35,9 @@ final class AppRootViewController:
 // MARK: -
 
 extension AppRootViewController {
-    private func configureUI() {
-        progressView.do {
-            $0.isHidden = false
-        }
-    }
+    private func configureUI() {}
 
-    private func setViews() {
-        view.addSubview(progressView)
-
-        progressView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-    }
+    private func setViews() {}
 }
 
 // MARK: - RootViewControllable
